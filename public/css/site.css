@@ -349,3 +349,27 @@ small { font-size: .85em; }
 .receipt-ret .tag { display: inline-block; font-size: .72rem; font-weight: 600; letter-spacing: .04em; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 2px 7px; vertical-align: middle; margin-left: 6px; }
 .receipt-body { flex: 0 0 auto; }
 .receipt-grid { grid-auto-rows: minmax(0, auto); align-items: stretch; }
+
+/* --- deep green-black theme (owner 2026-08-30) --- */
+:root { --bg: #070d0a; --surface: #0b1410; --surface-2: #0f1a14; --border: #1a2b22; }
+body { background: radial-gradient(1200px 600px at 15% -10%, rgba(62, 185, 120, .10), transparent 60%), radial-gradient(900px 500px at 100% 0%, rgba(62, 185, 120, .06), transparent 55%), var(--bg); }
+.section:nth-of-type(even) { background: linear-gradient(180deg, rgba(62,185,120,.03), transparent); }
+/* examples library */
+.examples .ex { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); margin: 12px 0; overflow: hidden; }
+.examples summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: auto auto 1fr; gap: 12px; align-items: center; padding: 14px 18px; }
+.examples summary::-webkit-details-marker { display: none; }
+.examples summary::after { content: "+"; color: var(--muted); font-size: 1.2rem; justify-self: end; }
+.examples details[open] summary::after { content: "−"; }
+.examples .ex-emoji { font-size: 1.25rem; }
+.examples .ex-title { font-weight: 700; font-size: 1.02rem; }
+.examples .ex-how { color: var(--muted); font-size: .86rem; }
+.examples .ex-body { padding: 4px 18px 18px; border-top: 1px solid var(--border); }
+.examples .ex-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 18px; padding-top: 14px; }
+.examples .ex-after { display: flex; flex-direction: column; gap: 6px; }
+.examples .ex-after-num { font-size: 1.9rem; font-weight: 700; margin: 2px 0; line-height: 1.1; }
+.examples .ex-after-num small { display: block; font-size: .74rem; font-weight: 500; color: var(--muted); }
+.examples .ex-after-txt { margin: 0; line-height: 1.55; }
+.examples .muted { color: var(--muted); font-size: .9rem; }
+.bubble-user { background: #1f3b2f; color: #e8f5ee; border-left-color: var(--neon); border-radius: 14px 14px 4px 14px; margin-left: 20%; }
+.receipt-grid { align-items: start; }
+@media (max-width: 760px) { .examples summary { grid-template-columns: auto 1fr; } .examples .ex-how { grid-column: 1 / -1; } .examples .ex-grid { grid-template-columns: 1fr; } .bubble-user { margin-left: 0; } }
