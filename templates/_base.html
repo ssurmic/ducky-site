@@ -11,7 +11,7 @@
 {% endfor %}
 <link rel="alternate" hreflang="x-default" href="{{ x_default }}">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Ducky Bot">
+<meta property="og:site_name" content="Ducky TradeBot">
 <meta property="og:title" content="{% block og_title %}{{ t('meta.og_title') }}{% endblock %}">
 <meta property="og:description" content="{{ self.description() }}">
 <meta property="og:url" content="{{ canonical }}">
@@ -21,7 +21,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0b0f14" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/mascot.svg" type="image/svg+xml">
+<link rel="alternate icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/avatar-group.jpg">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="stylesheet" href="/css/site.css">
 <script src="/config.js" defer></script>
@@ -33,7 +35,7 @@
 
 <header class="nav" id="nav">
   <div class="wrap nav-row">
-    <a class="brand" href="{{ url('/') }}"><span class="brand-duck" aria-hidden="true">🦆</span> {{ t('nav.brand') }}</a>
+    <a class="brand" href="{{ url('/') }}"><img class="avatar-mark" src="/avatar-group.jpg" alt="" width="28" height="28" decoding="async"> {{ t('nav.brand') }}</a>
     <nav class="nav-links" aria-label="primary">
       <a href="{{ url('/') }}#proof">{{ t('nav.proof') }}</a>
       <a href="{{ url('/') }}#boards">{{ t('nav.boards') }}</a>

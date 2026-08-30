@@ -9,6 +9,13 @@ truth; this one only points at it.
   only in `i18n/zh.json` + `i18n/en.json` (flat keys). The build fails if the two key sets differ.
 - `scripts/lint_copy.py` fails on: `ALL-IN` `买这只` `目标价` `满仓` `buy now` `现在买` `建议买入`; any
   `data-winrate` without `data-n`; missing disclaimer lines; leaked private ids; any `<script src="http…">`.
+- `lint_copy.py` also enforces SYSTEMDESIGN §5.1 brand/tech rules (`BANNED_IMPL`, everywhere except `vendor/` and
+  the nightly data exports): the product is **Ducky TradeBot** (never "Ducky Bot"); the tech is described as
+  "AI-backed / AI 驱动 / AI 引擎" only — no model, hardware, storage or competitor names in user-facing copy.
+- The 🌊 liquidity receipt card + `/track-record/#liquidity` render from `public/receipts/liquidity-2026.json` and
+  `liquidity-score-2026.csv` at build time (`build.py: load_liquidity`, `tf()` = `t()` + `str.format`).
+- Brand mark: `public/avatar-group.jpg` circle-cropped (`.avatar-mark`, neon-green halo) in nav / hero / app header;
+  `public/mascot.svg` for favicon, OG (`public/og.svg`), 404 and empty states. `favicon.svg` is a copy of `mascot.svg`.
 - **No third-party scripts on the landing.** CSP is `script-src 'self' https://telegram.org` (only the Login
   Widget in `/app/` is whitelisted). No analytics, no fonts from Google, no CDN. Everything is self-hosted.
 - No inline `<script>` (CSP has no `'unsafe-inline'` for scripts). Inline `style=""` is allowed.

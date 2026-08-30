@@ -1,6 +1,6 @@
 # ducky-site 🦆
 
-Public marketing site for **Ducky Bot** (`duckybot.app`): a static, bilingual (中文 at `/`, English at `/en/`),
+Public marketing site for **Ducky TradeBot** (`duckybot.app`): a static, bilingual (中文 at `/`, English at `/en/`),
 zero-third-party-script landing + disclaimer, built with a ~200-line Jinja2 script. Track record, trending,
 ideas and the `/app/` Mini App shell are added by later packs on top of the same pipeline.
 

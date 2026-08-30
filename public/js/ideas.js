@@ -95,7 +95,7 @@
     var title = $("idea-title");
     if (!it) { title.textContent = L.not_found || "Not found"; var e = $("idea-error"); if (e) { e.hidden = false; e.textContent = L.not_found; } return; }
     var t0 = it.title || it.slug;
-    document.title = (it.ticker && t0.indexOf(it.ticker) !== 0 ? it.ticker + " · " : "") + t0 + " · Ducky Bot";
+    document.title = (it.ticker && t0.indexOf(it.ticker) !== 0 ? it.ticker + " · " : "") + t0 + " · Ducky TradeBot";
     title.textContent = it.title || it.slug;
     var head = $("idea-head"); head.appendChild(bookPill(it.book)); head.appendChild(statusPill(it.status));
     var meta = $("idea-meta"); meta.innerHTML = "";

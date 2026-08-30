@@ -8,6 +8,9 @@ What it does (see SYSTEMDESIGN.md §5):
   * t(key) reads i18n/<lang>.json — flat keys; the build FAILS if the two key sets differ
   * public/ is copied verbatim into dist/
   * dist/config.js, dist/_headers (CSP), dist/sitemap.xml are generated from site.config.json
+  * public/receipts/liquidity-2026.json + liquidity-score-2026.csv are read at build time: the 🌊 USD-liquidity
+    receipt card renders its numbers and an inline SVG sparkline (2026 daily score, dot on the signal day) from
+    them, so the landing stays fully static (no runtime fetch)
   * local asset URLs get ?v=<git sha8 | 'dev'> appended — in HTML href/src AND in the relative ES-module
     specifiers under dist/js/app/ (static `from "./x.js"` and dynamic `import("./views/x.js")`), so the
     immutable /js/* cache (_headers) can never pair a new main.js with a year-old tg.js/api.js
@@ -28,10 +31,15 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoes
 ROOT = Path(__file__).resolve().parent
 TEMPLATES, I18N, PUBLIC, DIST = ROOT / "templates", ROOT / "i18n", ROOT / "public", ROOT / "dist"
 CONFIG = ROOT / "site.config.json"
+RECEIPTS = PUBLIC / "receipts"
+LIQ_JSON, LIQ_CSV = RECEIPTS / "liquidity-2026.json", RECEIPTS / "liquidity-score-2026.csv"
+LIQ_EVENT = "2026-04-08"                 # first 🟢 ABUNDANT print of 2026 (SYSTEMDESIGN §5.2 A)
+LIQ_ABUNDANT = 80                        # regime threshold drawn on the sparkline
+BRAND_ASSETS = ("avatar-group.jpg", "mascot.svg", "og.svg")   # must land in dist/ (§5.1 avatar rule)
 LANGS = ("zh", "en")                     # zh is the default, no-prefix locale
 HREFLANG = {"zh": "zh-CN", "en": "en"}
 HTML_LANG = {"zh": "zh-CN", "en": "en"}
-ASSET_RE = re.compile(r'((?:href|src)=")(/[^"?#]+\.(?:css|js|svg|woff2|webmanifest|png|webp|json))(")')
+ASSET_RE = re.compile(r'((?:href|src)=")(/[^"?#]+\.(?:css|js|svg|woff2|webmanifest|png|webp|jpg|jpeg|json))(")')
 # relative ES-module specifiers: `from "./tg.js"`, `import("./views/login.js")`, `import("../api.js")`
 IMPORT_RE = re.compile(r'''((?:\bfrom\s+|\bimport\s*\(\s*)["'])(\.{1,2}/[^"'?#]+\.js)(["'])''')
 
@@ -130,7 +138,70 @@ def version_module_imports(version: str) -> int:
     return n
 
 
-def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, version: str) -> dict:
+def load_liquidity() -> dict:
+    """Read the 🌊 USD-liquidity receipt data (public/receipts/) and pre-compute everything the templates
+    print: formatted numbers for the exact §5.2 copy, plus an inline SVG sparkline of the 2026 daily score
+    with a dot on the signal day. Pure data → the page stays static."""
+    if not LIQ_JSON.exists() or not LIQ_CSV.exists():
+        fail(f"liquidity receipt data missing: {LIQ_JSON.name} / {LIQ_CSV.name}")
+    data = json.loads(LIQ_JSON.read_text(encoding="utf-8"))
+    res = data["results"].get(LIQ_EVENT)
+    if not res:
+        fail(f"{LIQ_JSON.name}: no results for {LIQ_EVENT}")
+
+    rows: list[tuple[str, float, str, float, float]] = []
+    with LIQ_CSV.open(encoding="utf-8", newline="") as fh:
+        for i, line in enumerate(fh):
+            parts = line.rstrip("\n").split(",")
+            if i == 0 or len(parts) < 5 or not parts[0]:
+                continue
+            rows.append((parts[0], float(parts[1]), parts[2], float(parts[3]), float(parts[4])))
+    if not rows:
+        fail(f"{LIQ_CSV.name}: empty")
+    idx = {d: i for i, (d, *_rest) in enumerate(rows)}
+    if LIQ_EVENT not in idx:
+        fail(f"{LIQ_CSV.name}: no row for {LIQ_EVENT}")
+    k = idx[LIQ_EVENT]
+    _, score, regime, spread_bp, chg13w = rows[k]
+
+    # sparkline geometry (viewBox units; the SVG scales with the card)
+    w, h, pad = 240, 56, 3
+    n = len(rows)
+    def xy(i: int, v: float) -> tuple[float, float]:
+        x = pad + (w - 2 * pad) * (i / (n - 1) if n > 1 else 0)
+        y = pad + (h - 2 * pad) * (1 - max(0.0, min(100.0, v)) / 100)
+        return round(x, 1), round(y, 1)
+    pts = [xy(i, r[1]) for i, r in enumerate(rows)]
+    path = "M" + " L".join(f"{x},{y}" for x, y in pts)
+    area = f"{path} L{pts[-1][0]},{h - pad} L{pts[0][0]},{h - pad} Z"
+    dot_x, dot_y = pts[k]
+    y80 = xy(0, LIQ_ABUNDANT)[1]
+
+    def pct(v: float) -> str:
+        return f"{v:+.1f}%"
+
+    fmt = {
+        "date": LIQ_EVENT, "as_of": res.get("as_of", ""),
+        "score": f"{score:.0f}", "spread_bp": f"{abs(spread_bp):.0f}",
+        "chg13w_b": f"{chg13w:.0f}", "chg13w_yi": f"{round(chg13w) * 10:.0f}",
+        "qqq_1w": pct(res["QQQ"]["ret_1w"]), "qqq_1m": pct(res["QQQ"]["ret_1m"]),
+        "qqq_3m": pct(res["QQQ"]["ret_3m"]), "qqq_now": pct(res["QQQ"]["ret_pct"]),
+        "qqq_px0": f"{res['QQQ']['px0']:.0f}", "qqq_px1": f"{res['QQQ']['px_now']:.0f}",
+        "spy_now": pct(res["SPY"]["ret_pct"]), "spy_1w": pct(res["SPY"]["ret_1w"]),
+        "spy_1m": pct(res["SPY"]["ret_1m"]), "spy_3m": pct(res["SPY"]["ret_3m"]),
+        "smh_now": pct(res["SMH"]["ret_pct"]), "smh_1w": pct(res["SMH"]["ret_1w"]),
+        "smh_1m": pct(res["SMH"]["ret_1m"]), "smh_3m": pct(res["SMH"]["ret_3m"]),
+        "n": 1,
+    }
+    return {
+        "event": LIQ_EVENT, "as_of": fmt["as_of"], "score": score, "regime": regime, "fmt": fmt,
+        "results": res, "tickers": ("QQQ", "SPY", "SMH"), "label": data.get("label", "BACKTEST · N=1"),
+        "spark": {"w": w, "h": h, "path": path, "area": area, "dot_x": dot_x, "dot_y": dot_y, "y80": y80,
+                  "first": rows[0][0], "last": rows[-1][0], "n": n},
+    }
+
+
+def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, version: str, liq: dict) -> dict:
     table = tables[lang]
     other = "en" if lang == "zh" else "zh"
 
@@ -142,6 +213,12 @@ def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, versi
 
     def t2(key: str) -> str:  # same key in the other language (bilingual footer)
         return tables[other][key]
+
+    def tf(key: str, **kw) -> str:  # t() + str.format — for copy that prints build-time numbers ({qqq_now} …)
+        try:
+            return t(key).format(**kw)
+        except (KeyError, IndexError, ValueError) as e:
+            fail(f"i18n key '{key}' ({lang}): bad placeholder {e}")
 
     def tg(slug: str) -> str:
         return cfg["deeplink"]["pattern"].format(bot=cfg["bot"], slug=slug)
@@ -156,7 +233,7 @@ def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, versi
 
     return {
         "lang": lang, "html_lang": HTML_LANG[lang], "other_lang": other, "is_zh": lang == "zh",
-        "page": page, "t": t, "t2": t2, "tg": tg, "primary": primary, "url": url,
+        "page": page, "t": t, "t2": t2, "tf": tf, "tg": tg, "primary": primary, "url": url, "liq": liq,
         "cfg": cfg, "prices": cfg["prices"], "channel_url": channel_url, "has_channel": bool(channel_url),
         "bot_url": f"https://t.me/{cfg['bot']}", "miniapp_url": f"https://t.me/{cfg['bot']}/{cfg['miniapp']}",
         "canonical": cfg["site_url"] + page_url(lang, rel),
@@ -203,11 +280,16 @@ def main() -> None:
     args = ap.parse_args()
 
     cfg, tables, version = load_config(args.api_base), load_i18n(), git_sha()
-    pages, env = page_targets(), make_env()
+    pages, env, liq = page_targets(), make_env(), load_liquidity()
 
     if DIST.exists():
         shutil.rmtree(DIST)
-    shutil.copytree(PUBLIC, DIST)
+    shutil.copytree(PUBLIC, DIST)          # public/ is copied whole (avatar-group.jpg, mascot.svg, receipts/ …)
+    for name in BRAND_ASSETS:
+        if not (DIST / name).is_file():
+            fail(f"brand asset public/{name} missing from dist/ (SYSTEMDESIGN §5.1 avatar rule)")
+    # favicon.svg is the legacy fallback path: always the same bytes as mascot.svg
+    shutil.copyfile(DIST / "mascot.svg", DIST / "favicon.svg")
     font = PUBLIC / "fonts" / "JetBrainsMono-sub.woff2"
     if not font.exists():
         print("build.py: note: public/fonts/JetBrainsMono-sub.woff2 missing — system mono fallback "
@@ -217,7 +299,7 @@ def main() -> None:
     for tpl_name, rel in pages:
         tpl = env.get_template(tpl_name)
         for lang in LANGS:
-            ctx = build_context(cfg, tables, lang, Path(tpl_name).stem, rel, version)
+            ctx = build_context(cfg, tables, lang, Path(tpl_name).stem, rel, version, liq)
             html = version_assets(tpl.render(**ctx), version)
             out = DIST / lang_prefix(lang).strip("/") / rel
             out.parent.mkdir(parents=True, exist_ok=True)

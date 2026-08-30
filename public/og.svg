@@ -1,16 +1,63 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <!-- placeholder OG image — replace with a rendered 1200x630 og.png (most crawlers ignore SVG) -->
-  <rect width="1200" height="630" fill="#0b0f14"/>
-  <rect x="0" y="0" width="1200" height="630" fill="url(#g)"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Ducky TradeBot">
+  <!-- OG card: mascot.svg composition, 1200×630. Most crawlers prefer raster; a rendered og.png can replace this later (site.config.json → og_image). -->
   <defs>
-    <radialGradient id="g" cx="85%" cy="0%" r="70%">
-      <stop offset="0" stop-color="#f5c33b" stop-opacity=".22"/>
+    <radialGradient id="bgglow" cx="82%" cy="45%" r="55%">
+      <stop offset="0" stop-color="#5ee36a" stop-opacity=".22"/>
       <stop offset="1" stop-color="#0b0f14" stop-opacity="0"/>
     </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#b9ff8a" stop-opacity="0.95"/>
+      <stop offset="60%" stop-color="#5ee36a" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0b0e11" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="body" cx="42%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#f3ffd6"/>
+      <stop offset="45%" stop-color="#bff58e"/>
+      <stop offset="100%" stop-color="#7fd65a"/>
+    </radialGradient>
+    <radialGradient id="cheek" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffb3a7" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#ffb3a7" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="beak" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffcf6b"/>
+      <stop offset="100%" stop-color="#f0a02a"/>
+    </linearGradient>
   </defs>
-  <text x="80" y="150" font-size="96" font-family="Apple Color Emoji,Segoe UI Emoji,Noto Color Emoji,sans-serif">🦆</text>
-  <text x="80" y="290" fill="#e6edf3" font-size="64" font-weight="800" font-family="-apple-system,Segoe UI,PingFang SC,Noto Sans CJK SC,sans-serif">Ducky Bot</text>
-  <text x="80" y="360" fill="#9aa7b4" font-size="34" font-family="-apple-system,Segoe UI,PingFang SC,Noto Sans CJK SC,sans-serif">证据，不是荐股 · That's what the indicator did — not a call.</text>
-  <text x="80" y="440" fill="#9aa7b4" font-size="26" font-family="ui-monospace,Menlo,monospace">SEC Form 4 · 13D/13G · 13F · 8-K · K-index · IV/HV · gamma walls</text>
-  <text x="80" y="540" fill="#6b7784" font-size="22" font-family="ui-monospace,Menlo,monospace">duckybot.app · data / signal / education tool · not investment advice</text>
+  <rect width="1200" height="630" fill="#0b0f14"/>
+  <rect width="1200" height="630" fill="url(#bgglow)"/>
+  <!-- faint grid / tape line -->
+  <path d="M0 520 L1200 520" stroke="#223041" stroke-width="1"/>
+  <path d="M80 470 l90 -30 l70 12 l80 -50 l70 20 l90 -70 l80 30 l70 -40" stroke="#3fb950" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".35"/>
+
+  <!-- mascot (public/mascot.svg, 256 viewBox → ×1.55) -->
+  <g transform="translate(790 105) scale(1.55)">
+    <circle cx="128" cy="128" r="124" fill="url(#glow)"/>
+    <ellipse cx="128" cy="132" rx="92" ry="86" fill="url(#body)"/>
+    <path d="M132 48 c4 -16 20 -22 28 -12 c-10 2 -16 8 -20 18 z" fill="#bff58e"/>
+    <path d="M120 50 c-2 -14 -14 -20 -22 -12 c8 2 14 6 18 14 z" fill="#bff58e"/>
+    <circle cx="76" cy="150" r="20" fill="url(#cheek)"/>
+    <circle cx="180" cy="150" r="20" fill="url(#cheek)"/>
+    <ellipse cx="98" cy="118" rx="15" ry="17" fill="#1d1f24"/>
+    <ellipse cx="158" cy="118" rx="15" ry="17" fill="#1d1f24"/>
+    <circle cx="104" cy="111" r="5.5" fill="#fff"/>
+    <circle cx="164" cy="111" r="5.5" fill="#fff"/>
+    <circle cx="93" cy="124" r="2.5" fill="#fff" opacity="0.8"/>
+    <circle cx="153" cy="124" r="2.5" fill="#fff" opacity="0.8"/>
+    <path d="M84 96 q14 -8 28 0" stroke="#1d1f24" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M144 96 q14 -8 28 0" stroke="#1d1f24" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M96 152 q32 -10 64 0 q-8 30 -32 30 q-24 0 -32 -30 z" fill="url(#beak)"/>
+    <path d="M100 154 q28 8 56 0" stroke="#c9741a" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse cx="118" cy="150" rx="2.6" ry="1.8" fill="#c9741a"/>
+    <ellipse cx="138" cy="150" rx="2.6" ry="1.8" fill="#c9741a"/>
+    <path d="M40 210 l16 -14 l12 8 l22 -26" stroke="#ffe27a" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+  </g>
+
+  <!-- wordmark + taglines -->
+  <text x="80" y="128" fill="#7dff6a" font-size="26" letter-spacing="4" font-family="ui-monospace,Menlo,Consolas,monospace">TELEGRAM · 中文 / EN</text>
+  <text x="80" y="228" fill="#e6edf3" font-size="88" font-weight="800" font-family="-apple-system,Segoe UI,PingFang SC,Noto Sans CJK SC,sans-serif">Ducky TradeBot</text>
+  <text x="80" y="318" fill="#e6edf3" font-size="40" font-weight="600" font-family="-apple-system,Segoe UI,PingFang SC,Noto Sans CJK SC,sans-serif">一套会算的 AI 盯盘系统，直接推到你的 Telegram。</text>
+  <text x="80" y="372" fill="#9aa7b4" font-size="30" font-family="-apple-system,Segoe UI,PingFang SC,Noto Sans CJK SC,sans-serif">AI-backed market signals, pushed to your Telegram before Twitter finds them.</text>
+  <text x="80" y="440" fill="#9aa7b4" font-size="24" font-family="ui-monospace,Menlo,Consolas,monospace">SEC Form 4 · 13D/13G · 13F · 8-K · K-index · USD liquidity · IV/HV · gamma walls</text>
+  <text x="80" y="568" fill="#6b7784" font-size="22" font-family="ui-monospace,Menlo,Consolas,monospace">duckybot.app · 证据，不是荐股 · data / signal / education tool · not investment advice</text>
 </svg>

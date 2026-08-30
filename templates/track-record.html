@@ -71,6 +71,33 @@
       </div>
     </div>
 
+    <div class="subsection" id="liquidity">
+      <h2 class="mono-h2">{{ t('track.liq_h2') }} <span class="badge badge-backtest badge-inline">{{ t('label.backtest') }}</span></h2>
+      <p class="caption">{{ tf('track.liq_note', **liq.fmt) }}</p>
+      <div class="table-wrap">
+        <table class="data" id="liquidity-table">
+          <thead><tr>
+            <th>{{ t('track.col_asset') }}</th><th class="num">{{ tf('track.col_px', **liq.fmt) }}</th>
+            <th class="num">{{ t('track.col_1w') }}</th><th class="num">{{ t('track.col_1m') }}</th>
+            <th class="num">{{ t('track.col_3m') }}</th><th class="num">{{ t('track.col_now') }}</th>
+          </tr></thead>
+          <tbody>
+          {% for tk in liq.tickers %}{% set r = liq.results[tk] %}
+            <tr>
+              <td class="mono"><b>{{ tk }}</b></td>
+              <td class="num">{{ '%.0f'|format(r.px0) }} → {{ '%.0f'|format(r.px_now) }}</td>
+              {% for v in [r.ret_1w, r.ret_1m, r.ret_3m, r.ret_pct] %}
+              <td class="num {{ 'pos' if v >= 0 else 'neg' }}">{{ '%+.1f'|format(v) }}%</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="caption">{{ tf('proof.liq_foot', **liq.fmt) }}</p>
+      <p class="caption mono">{{ t('proof.liq_disclaimer') }}</p>
+    </div>
+
     <div class="subsection">
       <h2 class="mono-h2">{{ t('track.equity_h2') }} <span class="badge badge-live badge-inline">{{ t('label.live') }}</span></h2>
       <div class="chart-box"><div class="chart" id="equity"></div></div>

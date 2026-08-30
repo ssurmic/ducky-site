@@ -190,3 +190,8 @@ h3 { font-size: 1rem; margin: 0 0 4px; }
 .modal-body p { margin-bottom: .5em; font-size: .92rem; }
 .modal-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 @media (min-width: 600px) { #modal { align-items: center; padding: 20px; } .modal-box { border-radius: 16px; padding-bottom: 18px; } }
+
+/* ---- brand mark + empty states (mascot.svg; SYSTEMDESIGN §5.2 C) ---- */
+.app-top .brand { display: inline-flex; align-items: center; gap: 6px; }
+.app-top .avatar-mark { width: 26px; height: 26px; box-shadow: 0 0 0 2px color-mix(in srgb, var(--neon, #7dff6a) 70%, transparent), 0 0 10px 1px color-mix(in srgb, var(--neon, #7dff6a) 45%, transparent); }
+.empty::before { content: ""; display: block; width: 72px; height: 72px; margin: 0 auto 8px; background: url("/mascot.svg") center / contain no-repeat; opacity: .9; }

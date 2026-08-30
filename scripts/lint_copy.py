@@ -7,6 +7,9 @@ Checks (exit 1 on any failure):
   3. both disclaimer lines exist in dist/index.html and dist/en/index.html (zh + en variants)
   4. no private identifiers leak into the public site (supergroup chat id, personal email, private handles)
   5. no third-party <script src="http…"> on any page (landing has no third-party scripts)
+  6. brand + implementation terms banned from user-facing copy (SYSTEMDESIGN.md §5.1): "Ducky Bot", model /
+     hardware / storage names, competitor names — checked everywhere in dist/ except vendor/ and the nightly
+     data exports (track-record.json, feed.json, ideas.json)
 """
 from __future__ import annotations
 
@@ -18,6 +21,17 @@ ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
 
 BANNED = re.compile(r"ALL-IN|买这只|目标价|满仓|buy now|现在买|建议买入", re.IGNORECASE)
+# §5.1 brand + "how we describe the tech" rules — separate from the compliance strings above. The product is
+# "Ducky TradeBot"; the tech is "AI-backed / AI 驱动" and nothing more; no competitor names. vendor/ is skipped.
+BANNED_IMPL = re.compile(
+    r"本地大模型|大语言模型|\bLLMs?\b|Qwen|Ollama|GB10|\bDGX\b|一台本地机器|本地机器|云成本|云 ?API|self-hosted|"
+    r"\bSQLite\b|Unusual Whales|千亿|\b80B\b|\bDucky[ -]Bot\b|local (?:model|LLM|box)|runs on one box|"
+    r"\bone box\b|本地模型",
+    re.IGNORECASE)
+VENDOR_DIR = "vendor"
+# nightly data exports (outcomes.py → push_track_record.sh) carry third-party headlines, e.g. a blog title naming a
+# model — they are data, not our copy, so only the compliance BANNED / PRIVATE checks apply to them
+DATA_EXPORTS = {"track-record.json", "feed.json", "ideas.json"}
 PRIVATE = re.compile(r"-100\d{9,}|@DuckyAgentBot|Baobao|DakiDaki|Duckyduckyduck\b|gmail\.com|choppyducky", re.IGNORECASE)
 TAG_WITH_WINRATE = re.compile(r"<[^>]*\bdata-winrate\b[^>]*>")
 EXTERNAL_SCRIPT = re.compile(r"""<script[^>]+src=["']https?://""", re.IGNORECASE)
@@ -50,6 +64,10 @@ def main() -> int:
         for m in PRIVATE.finditer(text):
             line = text.count("\n", 0, m.start()) + 1
             errors.append(f"{rel}:{line}: private identifier leaked {m.group()!r}")
+        if VENDOR_DIR not in rel.parts and rel.name not in DATA_EXPORTS:
+            for m in BANNED_IMPL.finditer(text):
+                line = text.count("\n", 0, m.start()) + 1
+                errors.append(f"{rel}:{line}: implementation/brand term in copy {m.group()!r} (SYSTEMDESIGN §5.1)")
         if p.suffix == ".html":
             for m in TAG_WITH_WINRATE.finditer(text):
                 if "data-n=" not in m.group():
@@ -75,8 +93,9 @@ def main() -> int:
             print("  " + e)
         return 1
     n_win = sum(len(TAG_WITH_WINRATE.findall(p.read_text(encoding="utf-8"))) for p in files if p.suffix == ".html")
-    print(f"lint_copy: OK — {len(files)} files scanned, 0 banned strings, {n_win} win-rate tags all carry data-n, "
-          f"disclaimer lines present in {', '.join(MUST_HAVE_DISCLAIMER)}, no third-party scripts")
+    print(f"lint_copy: OK — {len(files)} files scanned, 0 banned strings, 0 implementation/brand terms, "
+          f"{n_win} win-rate tags all carry data-n, disclaimer lines present in {', '.join(MUST_HAVE_DISCLAIMER)}, "
+          f"no third-party scripts")
     return 0
 
 

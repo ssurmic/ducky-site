@@ -23,6 +23,31 @@
         {{ links(primary('feed'), '#proof', t('proof.c1_caption'), sec_na=True) }}
       </article>
 
+      {# 🌊 USD-liquidity receipt (SYSTEMDESIGN §5.2 A). Numbers + sparkline come from public/receipts/*.json|csv at build time. #}
+      <article class="receipt receipt-liq" data-kind="liquidity" id="receipt-liquidity">
+        <span class="badge badge-backtest">{{ t('label.backtest') }}</span>
+        <h3>{{ t('proof.liq_title') }}</h3>
+        <p class="receipt-meta mono">{{ tf('proof.liq_meta', **liq.fmt) }}</p>
+        <figure class="liq-spark" aria-label="{{ tf('proof.liq_spark_label', **liq.fmt) }}">
+          <svg viewBox="0 0 {{ liq.spark.w }} {{ liq.spark.h }}" width="100%" role="img" aria-hidden="true" focusable="false">
+            <path class="liq-area" d="{{ liq.spark.area }}"/>
+            <line class="liq-th" x1="0" x2="{{ liq.spark.w }}" y1="{{ liq.spark.y80 }}" y2="{{ liq.spark.y80 }}"/>
+            <path class="liq-line" d="{{ liq.spark.path }}"/>
+            <circle class="liq-dot-halo" cx="{{ liq.spark.dot_x }}" cy="{{ liq.spark.dot_y }}" r="7"/>
+            <circle class="liq-dot" cx="{{ liq.spark.dot_x }}" cy="{{ liq.spark.dot_y }}" r="3.5"/>
+          </svg>
+          <figcaption class="mono">{{ liq.spark.first }} → {{ liq.spark.last }} · {{ tf('proof.liq_spark_label', **liq.fmt) }}</figcaption>
+        </figure>
+        <p class="receipt-ret pos mono">{{ liq.fmt.qqq_now }} <small>{{ t('proof.liq_ret_label') }}</small></p>
+        <p class="receipt-body">{{ tf('proof.liq_body', **liq.fmt) }}</p>
+        <p class="receipt-foot">{{ tf('proof.liq_foot', **liq.fmt) }}</p>
+        <p class="receipt-foot receipt-disc mono">{{ t('proof.liq_disclaimer') }}</p>
+        <div class="receipt-links mono">
+          <a href="{{ url('/track-record/') }}#liquidity" data-planned>{{ t('proof.liq_link') }}</a>
+          <button type="button" class="copy" data-caption="{{ tf('proof.liq_caption', **liq.fmt) }}" data-copied="{{ t('label.copied') }}">{{ t('label.copy_caption') }}</button>
+        </div>
+      </article>
+
       <article class="receipt receipt-win" data-kind="8k">
         <span class="badge badge-live">{{ t('label.live') }}</span>
         <h3>{{ t('proof.c2_title') }}</h3>
@@ -70,6 +95,12 @@
         {{ links(primary('feed'), '#proof', t('proof.c6_caption'), sec_na=True) }}
       </article>
     </div>
+
+    <aside class="reviewed" id="reviewed">
+      <span class="reviewed-pulse" aria-hidden="true"></span>
+      <b>{{ t('proof.reviewed_title') }}</b>
+      <span>{{ t('proof.reviewed') }}</span>
+    </aside>
 
     <div class="honesty">
       <p>{{ t('proof.honesty') }}</p>
