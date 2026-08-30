@@ -49,10 +49,16 @@
     });
   }
 
+  function tbodyOf(id) {   // templates may omit <tbody>; never let that blank the ledger
+    var t = $(id); if (!t) return null;
+    return t.tBodies[0] || t.appendChild(document.createElement("tbody"));
+  }
+  var HIDE_KINDS = (CFG.HIDE_KINDS || ["nvdev"]);   // kinds whose entity mapping is not yet trusted for the public ledger
+
   function renderRows() {
-    var tbody = $("ledger").tBodies[0];
+    var tbody = tbodyOf("ledger"); if (!tbody) return;
     tbody.innerHTML = "";
-    var rows = (data.rows || []).slice().sort(function (a, b) { return a.ts < b.ts ? 1 : a.ts > b.ts ? -1 : 0; });
+    var rows = (data.rows || []).filter(function (r) { return HIDE_KINDS.indexOf(r.kind) < 0; }).slice().sort(function (a, b) { return a.ts < b.ts ? 1 : a.ts > b.ts ? -1 : 0; });
     var tk = filter.ticker.trim().toUpperCase();
     var shown = rows.filter(function (r) {
       return (filter.kind === "*" || r.kind === filter.kind) && (filter.mode === "*" || r.mode === filter.mode) &&
@@ -91,9 +97,9 @@
   }
 
   function renderRates() {
-    var tbody = $("rates").tBodies[0];
+    var tbody = tbodyOf("rates"); if (!tbody) return;
     tbody.innerHTML = "";
-    var src = (data.by_source || []).slice().sort(function (a, b) {
+    var src = (data.by_source || []).filter(function (s) { return HIDE_KINDS.indexOf(s.kind) < 0; }).slice().sort(function (a, b) {
       if (a.mode !== b.mode) return a.mode === "LIVE" ? -1 : 1;   // LIVE block first, BACKTEST after — never interleaved
       return (b.n || 0) - (a.n || 0);
     });
@@ -185,6 +191,7 @@
     renderMeta();
     var kinds = [], modes = [];
     (data.rows || []).forEach(function (r) {
+      if (HIDE_KINDS.indexOf(r.kind) >= 0) return;
       if (r.kind && kinds.indexOf(r.kind) < 0) kinds.push(r.kind);
       if (r.mode && modes.indexOf(r.mode) < 0) modes.push(r.mode);
     });
@@ -203,7 +210,7 @@
 
   function fail(msg) {
     var e = $("track-error"); if (e) { e.hidden = false; e.textContent = msg || L.load_error; }
-    ["ledger", "rates"].forEach(function (id) { var tb = $(id) && $(id).tBodies[0]; if (tb) tb.innerHTML = ""; });
+    ["ledger", "rates"].forEach(function (id) { var tb = tbodyOf(id); if (tb) tb.innerHTML = ""; });
   }
 
   fetch(SRC, { cache: "no-cache", credentials: "omit" })
@@ -212,5 +219,5 @@
       if (!j || !Array.isArray(j.rows)) throw new Error("bad schema");
       data = j; render();
     })
-    .catch(function () { fail(L.load_error); });
+    .catch(function (e) { if (window.console && console.error) console.error("track-record render failed:", e); fail(L.load_error); });
 })();
