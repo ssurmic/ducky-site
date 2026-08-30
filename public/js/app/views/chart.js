@@ -43,6 +43,7 @@ export async function mount(root, params) {
   root.append(head, form, periodRow, legendRow, host, status);
 
   if (!ticker) {
+    host.hidden = true; legendRow.hidden = true; periodRow.hidden = true;
     const wl = store.get("watchlist") || [];
     const chips = el("div.chips", wl.map((t) => el("a.chip.mono", { href: "#/chart/" + t }, "$" + t)));
     status.append(el("p.muted", s("chart.pick_hint")), chips);

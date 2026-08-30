@@ -69,6 +69,30 @@ export async function mount(root) {
     const next = new URLSearchParams(location.hash.split("?")[1] || "").get("next");
     if (next) card.appendChild(el("p", el("a.btn.btn-ghost.btn-sm", { href: "#/" + next }, s("profile.continue"))));
 
+    // §14.6 login password (web email+password sign-in)
+    const pw = el("section.pwsec");
+    pw.append(el("h2", s("profile.pw_title")), el("p.muted.small", s("profile.pw_hint")));
+    const newPw = el("input.input", { type: "password", autocomplete: "new-password", placeholder: s("profile.pw_new") });
+    const oldPw = el("input.input", { type: "password", autocomplete: "current-password", placeholder: s("profile.pw_old") });
+    const pwBtn = el("button.btn.btn-primary.btn-sm", { type: "button" }, s("profile.pw_btn"));
+    pwBtn.addEventListener("click", async () => {
+      pwBtn.disabled = true;
+      try {
+        const body = { password: newPw.value };
+        if (prof.has_password) body.old_password = oldPw.value;
+        await api.profile.setPassword(body);
+        toast(s("profile.pw_saved"), "ok");
+        prof.has_password = true; newPw.value = ""; oldPw.value = "";
+        render();
+      } catch (err) { toast(s("common.error", { msg: err.message }), "err"); }
+      finally { pwBtn.disabled = false; }
+    });
+    const pwRow = el("div.cta-row");
+    if (prof.has_password) pwRow.appendChild(oldPw);
+    pwRow.append(newPw, pwBtn);
+    pw.appendChild(pwRow);
+    card.appendChild(pw);
+
     const danger = el("details.danger", el("summary", s("profile.delete_title")), el("p.muted.small", s("profile.delete_sub")));
     const del = el("button.btn.btn-danger.btn-sm", { type: "button" }, s("profile.delete_btn"));
     del.addEventListener("click", async () => {

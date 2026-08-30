@@ -100,6 +100,7 @@ export const auth = {
   miniapp: (initData) => post("/auth/miniapp", { initData }, { auth: false }),
   widget: (user) => post("/auth/widget", user, { auth: false }),
   nonce: () => post("/auth/nonce", {}, { auth: false }),
+  password: (email, password) => post("/auth/password", { email, password }, { auth: false }),
   poll: (nonce) => get("/auth/poll?nonce=" + encodeURIComponent(nonce), { auth: false }),
 };
 export const me = () => get("/me");
@@ -120,6 +121,7 @@ export const profile = {
   save: (body) => post("/me/profile", body),
   verify: (code) => post("/me/profile/verify", { code }),
   resend: () => post("/me/profile/resend", {}),
+  setPassword: (body) => post("/me/profile/password", body),
   remove: () => post("/me/delete", {}),
 };
 export const billing = {

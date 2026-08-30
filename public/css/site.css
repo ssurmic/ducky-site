@@ -446,3 +446,13 @@ body.gl-open .gl-backdrop { opacity: 1; pointer-events: auto; } body.gl-open .gl
 @media (max-width: 800px) { .whystrip-grid { grid-template-columns: 1fr; } }
 .whystrip-col { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
 .whystrip-col p { margin: 0; color: var(--muted); }
+
+/* ── login v2: QR + password (§5.4) ─────────────────────────────────────────── */
+.qr-block .qr-host { display: flex; justify-content: center; margin: 10px 0 4px; }
+.qr-svg { width: 184px; height: 184px; background: #fff; padding: 8px; border-radius: 14px; display: block; }
+.qr-meta { display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
+.login-h2 { font-size: 15px; margin: 0 0 2px; }
+.pw-form { display: flex; flex-direction: column; gap: 8px; }
+details.login-other { margin-top: 14px; }
+details.login-other summary { cursor: pointer; color: var(--muted, #8b949e); font-size: 13px; }
+.pwsec { margin-top: 18px; }

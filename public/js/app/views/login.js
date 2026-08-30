@@ -1,6 +1,11 @@
-// views/login.js — web login: (a) Telegram Login Widget (lazy, redirect mode — auth.js consumes the return on boot),
-// (b) "Open in Telegram" nonce flow with 5 s poll; the browser shows the confirmation code the bot echoes.
+// views/login.js — web login v2 (SYSTEMDESIGN §5.4 / §14.6):
+//   ① QR / nonce — PRIMARY, auto-starts: scan with phone Telegram, tap Start, page polls and signs in
+//   ② email + password (§14.6, verified email = username)
+//   ③ Telegram Login Widget behind a fold (redirect mode; auth.js consumes the return on boot;
+//      stays folded until BotFather /setdomain is done — the iframe errors before that)
+// In-Telegram: retry initData only.
 import { s, CFG } from "../strings.js";
+import * as api from "../api.js";
 import * as auth from "../auth.js";
 import * as tg from "../tg.js";
 import * as router from "../router.js";
@@ -14,12 +19,11 @@ export async function mount(root) {
   card.append(el("h1", s("login.title")), el("p.muted", s("login.sub")));
 
   if (tg.inTG) {
-    // Mini App launched but /auth/miniapp failed (auth.boot already tried) — offer a retry.
     const msg = el("p.errbox", s("login.miniapp_failed"));
     const retry = el("button.btn.btn-primary", { type: "button" }, s("common.retry"));
     retry.addEventListener("click", async () => {
       retry.disabled = true;
-      try { await auth.establish(await (await import("../api.js")).auth.miniapp(tg.initData)); done(); }
+      try { await auth.establish(await api.auth.miniapp(tg.initData)); done(); }
       catch (e) { toast(s("login.failed", { msg: e.message })); retry.disabled = false; }
     });
     card.append(msg, retry);
@@ -27,10 +31,77 @@ export async function mount(root) {
     return;
   }
 
-  // (a) Login Widget — injected only on click (keeps the third-party script off the page until needed).
-  //     Redirect mode: Telegram sends the user back to /app/?tglogin=1&id=…&hash=…; auth.boot() finishes the login.
+  // ── ① QR / nonce ──
+  const qrBlock = el("div.login-block.qr-block");
+  const qrHost = el("div.qr-host");
+  const qrMeta = el("div.qr-meta");
+  qrBlock.append(el("h2.login-h2", s("login.open_tg")), el("p.muted.small", s("login.qr_hint")), qrHost, qrMeta);
+  card.appendChild(qrBlock);
+
+  function startNonce() {
+    if (nonceCtl) nonceCtl.stop();
+    clear(qrHost); clear(qrMeta);
+    qrHost.appendChild(spinner());
+    nonceCtl = auth.startNonceLogin({
+      onLink(link, nonce, code) {
+        clear(qrHost);
+        try {
+          if (window.qrcode) {
+            const q = window.qrcode(0, "M");
+            q.addData(link); q.make();
+            qrHost.innerHTML = q.createSvgTag(4, 8);
+            const svg = qrHost.querySelector("svg");
+            if (svg) { svg.removeAttribute("width"); svg.removeAttribute("height"); svg.classList.add("qr-svg"); }
+          }
+        } catch (e) { /* QR lib unavailable — the deep link below still works */ }
+        const a = el("a.btn.btn-primary", { href: link, target: "_blank", rel: "noopener" }, s("login.open_tg"));
+        const cmd = "/start login_" + nonce;
+        qrMeta.append(a,
+          el("p.nonce-code", s("login.nonce_code", { code: "" }), el("strong.mono", code || "—")),
+          el("p.muted.small", s("login.nonce_manual", { bot: CFG.BOT, cmd: "" }), el("code.mono", cmd)),
+          el("p.waiting.mono", { "data-wait": "" }, s("login.waiting", { s: 120 })));
+      },
+      onTick(left) { const w = qrMeta.querySelector("[data-wait]"); if (w) w.textContent = s("login.waiting", { s: left }); },
+      onDone: done,
+      onExpired() {
+        clear(qrHost); clear(qrMeta);
+        const again = el("button.btn.btn-primary", { type: "button" }, s("login.regen"));
+        again.addEventListener("click", startNonce);
+        qrMeta.append(el("p.errbox", s("login.expired")), again);
+      },
+      onError(e) {
+        clear(qrHost); clear(qrMeta);
+        const again = el("button.btn.btn-ghost.btn-sm", { type: "button" }, s("common.retry"));
+        again.addEventListener("click", startNonce);
+        qrMeta.append(el("p.errbox", s("login.failed", { msg: e.message })), again);
+      },
+    });
+  }
+  startNonce();
+
+  card.append(el("div.login-or.mono", s("login.or")));
+
+  // ── ② email + password ──
+  const pwForm = el("form.login-block.pw-form");
+  const email = el("input.input", { type: "email", name: "email", placeholder: s("login.pw_email"), autocomplete: "email", required: "" });
+  const pass = el("input.input", { type: "password", name: "password", placeholder: s("login.pw_pass"), autocomplete: "current-password", required: "" });
+  const pwBtn = el("button.btn.btn-ghost.btn-lg", { type: "submit" }, s("login.pw_btn"));
+  pwForm.append(el("h2.login-h2", s("login.pw_title")), email, pass, pwBtn, el("p.muted.small", s("login.pw_hint")));
+  pwForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    pwBtn.disabled = true;
+    try { await auth.establish(await api.auth.password(email.value.trim(), pass.value)); done(); }
+    catch (err) {
+      toast(s("login.failed", { msg: err.status === 401 ? s("login.pw_bad") : err.message }), "err");
+      pwBtn.disabled = false;
+    }
+  });
+  card.appendChild(pwForm);
+
+  // ── ③ widget, folded ──
+  const other = el("details.login-other", el("summary", s("login.other")));
   const widgetHost = el("div.widget-host");
-  const widgetBtn = el("button.btn.btn-primary.btn-lg", { type: "button" }, s("login.widget"));
+  const widgetBtn = el("button.btn.btn-ghost", { type: "button" }, s("login.widget"));
   widgetBtn.addEventListener("click", () => {
     widgetBtn.hidden = true;
     clear(widgetHost);
@@ -42,35 +113,9 @@ export async function mount(root) {
     });
     sc.addEventListener("error", () => { clear(widgetHost); widgetHost.appendChild(el("p.errbox", s("login.widget_blocked"))); });
   });
-  card.append(el("div.login-block", widgetBtn, widgetHost));
-  card.append(el("div.login-or.mono", s("login.or")));
+  other.append(el("div.login-block", widgetBtn, widgetHost));
+  card.appendChild(other);
 
-  // (b) Nonce — zero-script fallback for mainland users.
-  const nonceHost = el("div.nonce-host");
-  const nonceBtn = el("button.btn.btn-ghost.btn-lg", { type: "button" }, s("login.open_tg"));
-  nonceBtn.addEventListener("click", () => {
-    nonceBtn.disabled = true;
-    clear(nonceHost);
-    nonceHost.appendChild(spinner());
-    if (nonceCtl) nonceCtl.stop();
-    nonceCtl = auth.startNonceLogin({
-      onLink(link, nonce, code) {
-        clear(nonceHost);
-        const a = el("a.btn.btn-primary", { href: link, target: "_blank", rel: "noopener" }, s("login.open_tg"));
-        const cmd = "/start login_" + nonce;
-        nonceHost.append(a,
-          el("p.nonce-code", s("login.nonce_code", { code: "" }), el("strong.mono", code || "—")),
-          el("p.muted.small", s("login.nonce_manual", { bot: CFG.BOT, cmd: "" }), el("code.mono", cmd)),
-          el("p.waiting.mono", { "data-wait": "" }, s("login.waiting", { s: 120 })));
-        try { a.click(); } catch (e) { /* popup blocked: user taps */ }
-      },
-      onTick(left) { const w = nonceHost.querySelector("[data-wait]"); if (w) w.textContent = s("login.waiting", { s: left }); },
-      onDone: done,
-      onExpired() { clear(nonceHost); nonceHost.appendChild(el("p.errbox", s("login.expired"))); nonceBtn.disabled = false; },
-      onError(e) { clear(nonceHost); nonceHost.appendChild(el("p.errbox", s("login.failed", { msg: e.message }))); nonceBtn.disabled = false; },
-    });
-  });
-  card.append(el("div.login-block", nonceBtn, el("p.muted.small", s("login.nonce_hint")), nonceHost));
   root.appendChild(card);
   return () => { if (nonceCtl) nonceCtl.stop(); };
 }

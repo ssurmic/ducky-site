@@ -119,7 +119,8 @@ export async function mount(root) {
     store.patch("snapshots", { [t]: { pending: true } });
     try {
       const r = await api.snapshot(t, { tries: 6, onWait: () => store.patch("snapshots", { [t]: { pending: true } }) });
-      store.patch("snapshots", { [t]: api.isAccepted(r) ? { ok: false, error: { message: s("common.building") } } : r });
+      const snap = r && r.snapshot ? r.snapshot : r;   // API wraps: {ticker, snapshot:{…}} (§4.2)
+      store.patch("snapshots", { [t]: api.isAccepted(r) ? { ok: false, error: { message: s("common.building") } } : snap });
     } catch (err) {
       if (err.status === 401) return;
       store.patch("snapshots", { [t]: { ok: false, error: err } });
