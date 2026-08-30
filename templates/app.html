@@ -10,6 +10,7 @@
   "nav.alerts",
   "nav.chart",
   "nav.billing",
+  "nav.profile",
   "nav.home",
   "nav.lang",
   "noscript",
@@ -166,6 +167,9 @@
   "billing.rail_alipay",
   "billing.rail_wechat",
   "billing.rail_usdt",
+  "billing.rail_usdc_erc20",
+  "billing.rail_usdc_trc20",
+  "billing.rail_btc",
   "billing.rail_stripe",
   "billing.soon",
   "billing.stars_btn",
@@ -177,6 +181,13 @@
   "billing.usdt_addr",
   "billing.usdt_memo",
   "billing.usdt_hint",
+  "billing.need_profile",
+  "billing.crypto_network",
+  "billing.crypto_addr",
+  "billing.crypto_amount",
+  "billing.crypto_hint",
+  "billing.crypto_warn",
+  "billing.crypto_noaddr",
   "billing.paid",
   "billing.cancelled",
   "billing.status_pending",
@@ -253,7 +264,10 @@
     <a href="#/watchlist" data-route="watchlist"><span class="ico" aria-hidden="true">📋</span><span>{{ t('app.nav.watchlist') }}</span></a>
     <a href="#/alerts" data-route="alerts"><span class="ico" aria-hidden="true">🔔</span><span>{{ t('app.nav.alerts') }}</span></a>
     <a href="#/chart" data-route="chart"><span class="ico" aria-hidden="true">📈</span><span>{{ t('app.nav.chart') }}</span></a>
-    <a href="#/billing" data-route="billing"><span class="ico" aria-hidden="true">⭐</span><span>{{ t('app.nav.billing') }}</span></a><a href="#/profile" data-route="profile"><span class="ico" aria-hidden="true">⭐</span><span>{{ t('app.nav.billing') }}</span>{{ t('app.nav.profile') }}</a>
+    <a href="#/billing" data-route="billing"><span class="ico" aria-hidden="true">⭐</span><span>{{ t('app.nav.billing') }}</span></a>
+    {# finding app.html:256 — profile tab anchor was fused onto the billing anchor and duplicated the ⭐ icon +
+       billing label before the profile text (rendering a garbled 5th tab). Repaired into its own anchor. #}
+    <a href="#/profile" data-route="profile"><span class="ico" aria-hidden="true">👤</span><span>{{ t('app.nav.profile') }}</span></a>
   </nav>
 </div>
 <div id="toasts" aria-live="polite" aria-atomic="false"></div>

@@ -29,6 +29,10 @@ function applyTheme() {
     }
     if (ver("7.10") && tp.secondary_bg_color) WA.setBottomBarColor(tp.secondary_bg_color);
   } catch (e) { /* older client */ }
+  // finding tg.js:65 — themeChanged repaints CSS vars, but Lightweight-Charts resolves its colors once at
+  // draw() via getComputedStyle, so the canvas keeps the old palette on the new background. Announce the flip
+  // so the chart view (listener removed in its cleanup) re-applies chart/series options with fresh colors.
+  try { window.dispatchEvent(new CustomEvent("ducky:themechange")); } catch (e) { /* ignore */ }
 }
 
 function applySafeArea() {

@@ -15,6 +15,7 @@ export function normalizeList(resp) {
 
 export async function mount(root) {
   const unsubs = [];
+  const inflight = new Map();   // finding watchlist.js:118 — ticker -> in-flight fetch promise (dedup)
   const head = el("div.view-head", el("h1", s("watch.title")), el("span.count.mono", { id: "watch-count" }));
   const input = el("input.input.mono", { type: "text", placeholder: s("watch.placeholder"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "10", "aria-label": s("watch.placeholder") });
   const addBtn = el("button.btn.btn-primary", { type: "submit" }, s("watch.add"));
@@ -33,7 +34,9 @@ export async function mount(root) {
       toast(s("watch.added", { t }), "ok");
       tg.haptic("success");
       await load();
-      loadSnapshot(t, true);
+      // finding watchlist.js:118 — load() sets watchlist, which fires the subscriber below that already
+      // fetches every ticker's snapshot; the old explicit loadSnapshot(t,true) here doubled it into two
+      // concurrent 6-try polling loops per add. The subscriber (with in-flight dedup) covers it.
     } catch (err) {
       if (err.status !== 402) toast(s("common.error", { msg: err.message }), "err");
     } finally { addBtn.disabled = false; }
@@ -51,7 +54,8 @@ export async function mount(root) {
   function render() {
     const items = store.get("watchlist") || [];
     const me = store.get("me") || {};
-    const cap = me.caps && me.caps.watches;
+    // finding watchlist.js:54 — GET /me serves the cap top-level as watch_cap (app.py), never me.caps.watches.
+    const cap = me.watch_cap;
     const cnt = document.getElementById("watch-count");
     if (cnt) cnt.textContent = cap ? s("watch.count", { n: items.length, cap }) : String(items.length);
     clear(list);
@@ -106,25 +110,42 @@ export async function mount(root) {
   function posWord(p) { return p < 0.25 ? s("watch.pos_low") : p > 0.75 ? s("watch.pos_high") : s("watch.pos_mid"); }
 
   async function load() {
+    // finding watchlist.js:123 — a /watchlist response in flight when logout() wipes the store would
+    // otherwise repopulate it; capture the epoch and drop the write if the session changed.
+    const epoch = store.epoch();
     try {
-      store.set("watchlist", normalizeList(await api.watchlist.list()));
+      const items = normalizeList(await api.watchlist.list());
+      if (store.epoch() !== epoch) return;
+      store.set("watchlist", items);
     } catch (err) {
+      if (store.epoch() !== epoch) return;
       clear(list); list.appendChild(errorBox(err, load));
     }
   }
 
-  async function loadSnapshot(t, force) {
+  function loadSnapshot(t, force) {
     const snaps = store.get("snapshots") || {};
-    if (!force && snaps[t] && !snaps[t].pending && snaps[t].ok) return;
+    // finding watchlist.js:118 — in-flight dedup: reuse the running fetch instead of starting a parallel
+    // 6-try polling loop when a watchlist re-emit (or a double add) asks for the same ticker again.
+    if (!force && inflight.has(t)) return inflight.get(t);
+    if (!force && snaps[t] && !snaps[t].pending && snaps[t].ok) return Promise.resolve();
+    const epoch = store.epoch();   // finding watchlist.js:123 — session guard for late responses
     store.patch("snapshots", { [t]: { pending: true } });
-    try {
-      const r = await api.snapshot(t, { tries: 6, onWait: () => store.patch("snapshots", { [t]: { pending: true } }) });
-      const snap = r && r.snapshot ? r.snapshot : r;   // API wraps: {ticker, snapshot:{…}} (§4.2)
-      store.patch("snapshots", { [t]: api.isAccepted(r) ? { ok: false, error: { message: s("common.building") } } : snap });
-    } catch (err) {
-      if (err.status === 401) return;
-      store.patch("snapshots", { [t]: { ok: false, error: err } });
-    }
+    const p = (async () => {
+      try {
+        const r = await api.snapshot(t, { tries: 6, onWait: () => { if (store.epoch() === epoch) store.patch("snapshots", { [t]: { pending: true } }); } });
+        if (store.epoch() !== epoch) return;   // logged out mid-flight — don't repopulate the wiped store
+        const snap = r && r.snapshot ? r.snapshot : r;   // API wraps: {ticker, snapshot:{…}} (§4.2)
+        store.patch("snapshots", { [t]: api.isAccepted(r) ? { ok: false, error: { message: s("common.building") } } : snap });
+      } catch (err) {
+        if (err.status === 401 || store.epoch() !== epoch) return;
+        store.patch("snapshots", { [t]: { ok: false, error: err } });
+      } finally {
+        inflight.delete(t);
+      }
+    })();
+    inflight.set(t, p);
+    return p;
   }
 
   unsubs.push(store.subscribe("watchlist", () => { render(); for (const t of store.get("watchlist")) loadSnapshot(t, false); }));

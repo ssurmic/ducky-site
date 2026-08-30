@@ -11,7 +11,11 @@ import * as auth from "../auth.js";
 import { el, clear, toast, spinner, errorBox, tierName, date, num } from "../ui.js";
 
 let selected = { tier: "paid", months: 12 };
-let plansCache = null;
+// finding billing.js:14 — plansCache was module-level and never invalidated, so the rails list ("only the
+// rails the server can honour right now") and every price froze at the first Billing visit of the session.
+// Give it a short TTL so a server-side rails/price change is reflected within a minute.
+let plansCache = null, plansCacheAt = 0;
+const PLANS_TTL_MS = 60000;
 let onPayStars = null;
 
 /** Backend rail id for a button; the QR route wants the short name back (manual_alipay → alipay). */
@@ -70,10 +74,13 @@ export function normalizePlans(resp) {
 }
 
 export async function mount(root) {
-  let plans = plansCache, busy = false;
+  let plans = (Date.now() - plansCacheAt < PLANS_TTL_MS) ? plansCache : null, busy = false;   // finding billing.js:14
   const me = store.get("me") || {};
+  // finding billing.js:76 — GET /me nests expiry under subscription.expires_at (app.py), not me.expires_at,
+  // so a paying subscriber never saw their plan end date.
+  const sub = me.subscription || {};
   const head = el("div.view-head", el("h1", s("billing.title")),
-    el("span.muted.small", s("billing.current", { tier: tierName(me.tier) }) + (me.expires_at ? " · " + s("tier.expires", { date: date(me.expires_at) }) : "")));
+    el("span.muted.small", s("billing.current", { tier: tierName(me.tier) }) + (sub.expires_at ? " · " + s("tier.expires", { date: date(sub.expires_at) }) : "")));
   const picker = el("div.picker", el("b", s("billing.pick_title")), el("ul", el("li", s("billing.pick_signal")), el("li", s("billing.pick_pro"))));
   const toggle = el("div.seg.mono", { role: "group" },
     ["monthly", "annual"].map((m) => el("button", { type: "button", "data-m": m, class: (m === "annual") === (selected.months === 12) ? "on" : "", onclick: () => { selected.months = m === "annual" ? 12 : 1; toggle.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.m === m)); renderTiers(); renderRails(); } }, s("billing." + m))));
@@ -240,7 +247,7 @@ export async function mount(root) {
   }
 
   if (!plans) {
-    try { plans = plansCache = normalizePlans(await api.billing.plans()); }
+    try { plans = plansCache = normalizePlans(await api.billing.plans()); plansCacheAt = Date.now(); }   // finding billing.js:14
     catch (err) { plans = normalizePlans(null); }
   }
   renderTiers(); renderRails(); loadOrders();

@@ -30,8 +30,16 @@
   // Wrap the first occurrence of each term inside a container (text nodes only, never inside links/buttons/code).
   function annotate(root, terms) {
     var done = {};
-    var entries = Object.keys(terms).map(function (id) { return { id: id, names: names(id, terms[id]) }; })
-      .filter(function (e) { return e.names.length; });
+    // finding glossary.js:49 — precompile each term's RegExp ONCE. It used to be rebuilt per name per text node
+    // (~300 names × ~1000 nodes ≈ 300k compiles on the main thread at DOMContentLoaded). The regexes carry no
+    // /g flag, so they hold no lastIndex state and are safe to reuse across every node.
+    var entries = Object.keys(terms).map(function (id) {
+      return { id: id, res: names(id, terms[id]).map(function (nm) {
+        return /^[\x00-\x7f]+$/.test(nm)
+          ? new RegExp("(^|[^A-Za-z0-9])(" + escapeRe(nm) + ")(?![A-Za-z0-9])", "i")
+          : new RegExp("(" + escapeRe(nm) + ")");
+      }) };
+    }).filter(function (e) { return e.res.length; });
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode: function (n) {
         var p = n.parentNode;
@@ -45,8 +53,7 @@
       var text = node.nodeValue, best = null;
       entries.forEach(function (e) {
         if (done[e.id]) return;
-        e.names.forEach(function (nm) {
-          var re = /^[\x00-\x7f]+$/.test(nm) ? new RegExp("(^|[^A-Za-z0-9])(" + escapeRe(nm) + ")(?![A-Za-z0-9])", "i") : new RegExp("(" + escapeRe(nm) + ")");
+        e.res.forEach(function (re) {
           var m = re.exec(text);
           if (m && (!best || m.index < best.index)) best = { id: e.id, index: m.index + (m[1] && m.length > 2 ? m[1].length : 0), len: (m[2] || m[1]).length };
         });

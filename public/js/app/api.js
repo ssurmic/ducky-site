@@ -32,11 +32,24 @@ export async function request(method, path, opts) {
   if (opts.auth !== false && token) headers.Authorization = "Bearer " + token;
   let body;
   if (opts.body !== undefined) { headers["Content-Type"] = "application/json"; body = JSON.stringify(opts.body); }
+  // finding api.js:37 — fetch had no timeout: a black-holed request (tunnel flap; CF 524 hangs ~100s) leaves
+  // the view's mount promise pending forever, so router.render never runs the old view's cleanup and its store
+  // subscriptions leak while the user stares at a spinner. Bound every request with a 15s AbortController;
+  // abort maps to ApiError(0,{detail:'network'}) so the existing offline handling + errorBox retry engage. An
+  // optional opts.signal lets a caller (router cleanup) abort in-flight requests on view switch.
+  const ctl = new AbortController();
+  const to = setTimeout(() => { try { ctl.abort(); } catch (e) { /* ignore */ } }, opts.timeout || 15000);
+  if (opts.signal) {
+    if (opts.signal.aborted) { try { ctl.abort(); } catch (e) { /* ignore */ } }
+    else opts.signal.addEventListener("abort", () => { try { ctl.abort(); } catch (e) { /* ignore */ } }, { once: true });
+  }
   let res;
   try {
-    res = await fetch(base() + path, { method, headers, body, credentials: "omit", cache: "no-store" });
+    res = await fetch(base() + path, { method, headers, body, credentials: "omit", cache: "no-store", signal: ctl.signal });
   } catch (e) {
     throw new ApiError(0, { detail: "network" }, path);
+  } finally {
+    clearTimeout(to);
   }
   if (opts.raw) return res;
   const data = await parse(res);

@@ -16,12 +16,19 @@ const PUBLIC = new Set(["login"]);
 let current = null, cleanup = null, seq = 0;
 
 export function parse(hash) {
-  const h = (hash || "").replace(/^#\/?/, "");
-  const parts = h.split("/").filter(Boolean);
+  // finding router.js:20 — strip the query string BEFORE matching, else '#/profile?next=billing' yields the
+  // route name 'profile?next=billing', misses ROUTES, and silently falls back to watchlist — killing every
+  // '?next=' flow (main.js first-login prompt, billing profile-required bounce, profile 'continue' link).
+  const raw = (hash || "").replace(/^#\/?/, "");
+  const qi = raw.indexOf("?");
+  const path = qi === -1 ? raw : raw.slice(0, qi);
+  let query;
+  try { query = new URLSearchParams(qi === -1 ? "" : raw.slice(qi + 1)); } catch (e) { query = new URLSearchParams(); }
+  const parts = path.split("/").filter(Boolean);
   const name = parts[0] || "watchlist";
-  if (name === "chart") return { name, params: { ticker: (parts[1] || "").toUpperCase() } };
-  if (ROUTES[name]) return { name, params: {} };
-  return { name: "watchlist", params: {} };
+  if (name === "chart") return { name, params: { ticker: (parts[1] || "").toUpperCase(), query } };
+  if (ROUTES[name]) return { name, params: { query } };
+  return { name: "watchlist", params: { query } };
 }
 
 export function go(hash) { if (location.hash !== hash) location.hash = hash; else render(); }

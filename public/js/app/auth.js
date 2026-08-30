@@ -14,17 +14,52 @@ export function loadToken() { try { const st = storage(); return st ? st.getItem
 export function saveToken(token) { try { const st = storage(); if (st) st.setItem(KEY, token); } catch (e) { /* private mode */ } }
 export function clearToken() { try { const st = storage(); if (st) st.removeItem(KEY); } catch (e) { /* ignore */ } }
 
-/** Apply an auth response {token, user, tier, expires} then hydrate /me. */
+/** Apply an auth response {token, user, tier, expires} then hydrate the session. */
 export async function establish(resp) {
   if (!resp || !resp.token) throw new Error("no token");
   saveToken(resp.token);
   store.set("token", resp.token);
-  const me = await api.me();
+  return hydrate();
+}
+
+/** finding auth.js:22 — collapse the boot waterfall: /me and /watchlist are independent after auth, so fire
+ *  them together instead of serially, then prefetch every watchlist snapshot in parallel (L2 hits, §18.2.4)
+ *  so the dashboard paints from the warmed store instead of a 4-deep serial chain. */
+async function hydrate() {
+  const [me, wl] = await Promise.all([
+    api.me(),
+    api.watchlist.list().catch(() => null),   // non-fatal: the watchlist view re-fetches on mount
+  ]);
   store.set("me", me);
+  if (wl) {
+    const tickers = normalizeWatch(wl);
+    store.set("watchlist", tickers);
+    prefetchSnapshots(tickers);               // fire-and-forget, all in parallel
+  }
   return me;
 }
 
+/** Extract [TICKER] from a /watchlist payload without importing a view module (keeps boot lean). */
+function normalizeWatch(resp) {
+  const arr = Array.isArray(resp) ? resp : (resp && (resp.items || resp.watchlist || resp.tickers)) || [];
+  return arr.map((x) => (typeof x === "string" ? x : x && (x.ticker || x.symbol))).filter(Boolean).map((t) => String(t).toUpperCase());
+}
+
+/** §18.2.4 prefetch: warm store.snapshots for every watchlist ticker in parallel (L2 hits). Unwraps the
+ *  {ticker, snapshot:{…}} envelope like the views do; guarded by the session epoch so a logout mid-flight drops it. */
+function prefetchSnapshots(tickers) {
+  const epoch = store.epoch();
+  for (const t of tickers || []) {
+    api.snapshot(t, { tries: 1, silent402: true }).then((r) => {
+      if (store.epoch() !== epoch || api.isAccepted(r)) return;
+      const snap = r && r.snapshot ? r.snapshot : r;
+      store.patch("snapshots", { [t]: snap });
+    }).catch(() => { /* non-fatal: the view fetches on mount */ });
+  }
+}
+
 export function logout() {
+  store.bumpEpoch();   // finding watchlist.js:123 — invalidate in-flight fetches before wiping the store
   clearToken();
   store.set("token", null);
   store.set("me", null);
@@ -58,7 +93,7 @@ export async function boot() {
   const token = loadToken();
   if (token) {
     store.set("token", token);
-    try { await refreshMe(); return true; } catch (e) { clearToken(); store.set("token", null); }
+    try { await hydrate(); return true; } catch (e) { clearToken(); store.set("token", null); }
   }
   return false;
 }
@@ -111,14 +146,21 @@ export function startNonceLogin(handlers) {
     const tick = async () => {
       if (stopped) return;
       if (Date.now() > deadline) { handlers.onExpired(); return; }
+      let wait = 5000;
       try {
         const r = await api.auth.poll(nonce);
         if (r && r.token) { await establish(r); handlers.onDone(); return; }
       } catch (e) {
-        if (e.status && e.status !== 204 && e.status !== 404 && e.status !== 0) { handlers.onError(e); return; }
+        // finding auth.js:118 — abort ONLY on a definitive error (bad/expired/forbidden nonce). A shared-IP
+        // 429, a 5xx tunnel blip, or a network hiccup (status 0) is transient: keep polling within the
+        // deadline, honoring Retry-After. This is the flow the mainland path relies on.
+        const st = e.status;
+        if (st === 400 || st === 401 || st === 403) { handlers.onError(e); return; }
+        const ra = Number((e.body && e.body.retry_after) || 0);
+        if (ra > 0) wait = Math.min(Math.max(ra, 1), 30) * 1000;
       }
       handlers.onTick(Math.max(0, Math.round((deadline - Date.now()) / 1000)));
-      timer = setTimeout(tick, 5000);
+      timer = setTimeout(tick, wait);
     };
     timer = setTimeout(tick, 5000);
   })();

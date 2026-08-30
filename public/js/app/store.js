@@ -9,6 +9,12 @@ const state = {
 };
 const listeners = new Map(); // key -> Set<fn>
 
+// finding watchlist.js:123 — session epoch: logout() bumps it; async fetches capture it at start and
+// drop their store writes if it changed, so responses in flight at logout can't repopulate a wiped store.
+let _epoch = 0;
+export function epoch() { return _epoch; }
+export function bumpEpoch() { return ++_epoch; }
+
 export function get(key) { return key ? state[key] : state; }
 
 export function set(key, value) {

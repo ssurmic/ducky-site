@@ -15,11 +15,13 @@ export function normalizeAlerts(resp) {
     condition: a.condition || a.condition_nl || a.text || "",
     state: stateOf(a),
     created_at: a.created_at || a.created || null,
-    fired_at: a.fired_at || a.triggered_at || null,
+    // finding alerts.js:14 — GET /alerts rows carry last_fired (db.list_alerts), not fired_at/triggered_at.
+    fired_at: a.last_fired || a.fired_at || a.triggered_at || null,
   }));
 }
 export function stateOf(a) {
-  if (a.fired_at || a.triggered_at || a.status === "fired" || a.status === "triggered") return "fired";
+  // finding alerts.js:14 — the row's fired stamp is last_fired; compile_state (not status) drives pending/error.
+  if (a.last_fired || a.fired_at || a.triggered_at || a.status === "fired" || a.status === "triggered") return "fired";
   const raw = String(a.compile_state || a.status || a.state || "done").toLowerCase();
   if (/pending|queued|compiling/.test(raw)) return "pending";
   if (/error|fail|invalid|reject/.test(raw)) return "error";
@@ -68,7 +70,8 @@ export async function mount(root) {
   function render() {
     const items = store.get("alerts") || [];
     const me = store.get("me") || {};
-    const cap = me.caps && me.caps.alerts;
+    // finding alerts.js:71 — GET /me serves the cap top-level as alert_cap (app.py), never me.caps.alerts.
+    const cap = me.alert_cap;
     const cnt = document.getElementById("alerts-count");
     if (cnt) cnt.textContent = cap ? s("alerts.count", { n: items.length, cap }) : String(items.length);
     clear(list);
