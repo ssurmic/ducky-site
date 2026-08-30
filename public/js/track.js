@@ -20,7 +20,7 @@
     var td = el("td", "num");
     if (!isNum(x)) { td.appendChild(el("span", "pending", L.pending || "pending")); return td; }
     td.textContent = pct(x);
-    td.classList.add(x < 0 ? "neg" : x > 0 ? "pos" : "");
+    if (x < 0) td.classList.add("neg"); else if (x > 0) td.classList.add("pos");   // classList.add("") throws
     return td;
   }
   function badge(mode) {
