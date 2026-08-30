@@ -10,6 +10,7 @@ const ROUTES = {
   alerts: () => import("./views/alerts.js"),
   chart: () => import("./views/chart.js"),
   billing: () => import("./views/billing.js"),
+  profile: () => import("./views/profile.js"),
 };
 const PUBLIC = new Set(["login"]);
 let current = null, cleanup = null, seq = 0;
@@ -51,7 +52,7 @@ export async function render() {
     const mb = mod.mainButton();
     if (mb) tg.showMain(mb.text, mb.onClick); else tg.hideMain();
   } else tg.hideMain();
-  if (route.name === "chart" || route.name === "billing" || route.name === "alerts") tg.showBack(() => go("#/watchlist"));
+  if (route.name === "chart" || route.name === "billing" || route.name === "alerts" || route.name === "profile") tg.showBack(() => go("#/watchlist"));
   else tg.hideBack();
 }
 

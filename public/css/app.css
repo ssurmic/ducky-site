@@ -195,3 +195,12 @@ h3 { font-size: 1rem; margin: 0 0 4px; }
 .app-top .brand { display: inline-flex; align-items: center; gap: 6px; }
 .app-top .avatar-mark { width: 26px; height: 26px; box-shadow: 0 0 0 2px color-mix(in srgb, var(--neon, #7dff6a) 70%, transparent), 0 0 10px 1px color-mix(in srgb, var(--neon, #7dff6a) 45%, transparent); }
 .empty::before { content: ""; display: block; width: 72px; height: 72px; margin: 0 auto 8px; background: url("/mascot.svg") center / contain no-repeat; opacity: .9; }
+
+/* §14 profile */
+.card.profile .form { display: grid; gap: 12px; margin-top: 12px; }
+.card.profile .field { display: grid; gap: 4px; } .card.profile .label { font-size: .82rem; color: var(--muted); }
+.card.profile .check { display: flex; align-items: center; gap: 8px; font-size: .92rem; }
+.card.profile .verify { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
+.card.profile .danger { margin-top: 22px; color: var(--muted); } .card.profile .danger summary { cursor: pointer; }
+.btn-danger { background: #3a1216; color: #ff8a80; border: 1px solid #5a1c22; }
+.ok { color: var(--green); }

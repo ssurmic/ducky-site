@@ -20,6 +20,12 @@ async function boot() {
   try { ok = await auth.boot(); } catch (e) { console.warn(e); }
   if (!ok) history.replaceState(null, "", location.pathname + location.search + "#/login");
   else if (!location.hash.startsWith("#/") || location.hash === "#/login") history.replaceState(null, "", location.pathname + location.search + "#/watchlist");
+  // §14: first login → complete profile (email) once; the dashboard stays usable, billing requires it
+  const me0 = store.get("me");
+  if (ok && me0 && me0.profile_complete === false && !sessionStorage.getItem("ducky_profile_prompted")) {
+    sessionStorage.setItem("ducky_profile_prompted", "1");
+    history.replaceState(null, "", location.pathname + location.search + "#/profile?next=watchlist");
+  }
   ui.renderTierBadge();
   if (logoutBtn) logoutBtn.hidden = !ok || tg.inTG;
   await router.start();

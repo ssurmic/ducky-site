@@ -115,6 +115,13 @@ export const alerts = {
   add: (ticker, condition) => post("/alerts", { ticker, condition }),
   remove: (id) => del("/alerts/" + encodeURIComponent(id)),
 };
+export const profile = {
+  get: () => get("/me/profile"),
+  save: (body) => post("/me/profile", body),
+  verify: (code) => post("/me/profile/verify", { code }),
+  resend: () => post("/me/profile/resend", {}),
+  remove: () => post("/me/delete", {}),
+};
 export const billing = {
   plans: () => get("/billing/plans", { auth: false }),
   order: (tier, months, rail) => post("/billing/order", { tier, months, rail }),

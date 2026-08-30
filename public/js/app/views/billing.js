@@ -98,6 +98,12 @@ export async function mount(root) {
 
   async function order(rail) {
     if (busy) return null;
+    const me = store.get("me") || {};
+    if (me.profile_complete === false) {
+      toast(s("billing.need_profile"), "err");
+      location.hash = "#/profile?next=billing";
+      return null;
+    }
     busy = true; tg.mainProgress(true);
     panel.hidden = false; clear(panel); panel.appendChild(spinner(s("billing.creating")));
     try {
