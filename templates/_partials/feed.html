@@ -1,0 +1,52 @@
+<section class="section feed" id="feed">
+  <div class="wrap">
+    <h2>{{ t('feed.h2') }}</h2>
+    <p class="lead">{{ t('feed.lead') }}</p>
+
+    <div class="feed-grid">
+      <div class="feed-item">
+        <h3>{{ t('feed.a_title') }}</h3>
+        <p class="spec mono">{{ t('feed.a_spec') }}</p>
+        <div class="bubble bubble-insider">
+          <div class="bubble-line bubble-title">{{ t('feed.a_l1') }}</div>
+          <div class="bubble-line">{{ t('feed.a_l2') }}</div>
+          <div class="bubble-line">{{ t('feed.a_l3') }}</div>
+          <div class="bubble-line">{{ t('feed.a_l4') }}</div>
+          <div class="bubble-line">{{ t('feed.a_l5') }}</div>
+          <div class="bubble-line bubble-quote">{{ t('feed.a_l6') }}</div>
+          <div class="bubble-line bubble-cta">{{ t('feed.cta_line') }}</div>
+        </div>
+        <p class="caption">{{ t('feed.a_caption') }}</p>
+      </div>
+
+      <div class="feed-item">
+        <h3>{{ t('feed.b_title') }}</h3>
+        <p class="spec mono">{{ t('feed.b_spec') }}</p>
+        <div class="bubble bubble-strategic">
+          <div class="bubble-line bubble-title">{{ t('feed.b_l1') }}</div>
+          <div class="bubble-line bubble-quote">{{ t('feed.b_l2') }}</div>
+          <div class="bubble-line bubble-cta">{{ t('feed.cta_line') }}</div>
+        </div>
+        <p class="caption">{{ t('feed.b_caption') }}</p>
+      </div>
+
+      <div class="feed-item">
+        <h3>{{ t('feed.c_title') }}</h3>
+        <p class="spec mono">{{ t('feed.c_spec') }}</p>
+        <div class="bubble bubble-kindex">
+          <span class="badge badge-backtest badge-inline">{{ t('label.backtest') }}</span>
+          <div class="bubble-line bubble-title">{{ t('feed.c_l1') }}</div>
+          <div class="bubble-line">{{ t('feed.c_l2_pre') }}<span class="rate" data-winrate="100" data-n="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ t('feed.c_l2_rate') }} <small class="n">({{ t('label.n_short') }})</small></span>{{ t('feed.c_l2_post') }}</div>
+          <div class="bubble-line">{{ t('feed.c_l3') }}</div>
+          <div class="bubble-line bubble-cta">{{ t('feed.cta_line') }}</div>
+        </div>
+        <p class="caption">{{ t('feed.c_caption') }}</p>
+      </div>
+    </div>
+
+    <p class="guardrail">{{ t('feed.guardrail') }}</p>
+    <div class="cta-row center">
+      <a class="btn btn-primary" href="{{ primary('feed') }}" rel="noopener">{{ t('feed.cta_channel') if has_channel else t('feed.cta_bot') }}</a>
+    </div>
+  </div>
+</section>

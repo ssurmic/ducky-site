@@ -1,0 +1,90 @@
+{
+ "generated_at": "2026-08-30T02:05:00Z",
+ "note": "FIXTURE — last public LIVE pushes; replaced nightly by outcomes.py",
+ "items": [
+  {
+   "ts": "2026-08-28T15:20:00Z",
+   "kind": "insider",
+   "ticker": "VRT",
+   "direction": 1,
+   "summary": "CEO open-market buy $1.3M"
+  },
+  {
+   "ts": "2026-08-27T13:48:00Z",
+   "kind": "stake",
+   "ticker": "AEHR",
+   "direction": 1,
+   "summary": "13D/A: stake raised to 7.1%"
+  },
+  {
+   "ts": "2026-08-25T13:15:00Z",
+   "kind": "insider",
+   "ticker": "CRDO",
+   "direction": 1,
+   "summary": "CFO open-market buy $350k"
+  },
+  {
+   "ts": "2026-08-20T14:10:00Z",
+   "kind": "political",
+   "ticker": "PLTR",
+   "direction": 1,
+   "summary": "PTR: Senate member buy $100k–$250k"
+  },
+  {
+   "ts": "2026-08-18T13:31:00Z",
+   "kind": "insider",
+   "ticker": "SITM",
+   "direction": 1,
+   "summary": "Director open-market buy $205k"
+  },
+  {
+   "ts": "2026-08-13T12:44:00Z",
+   "kind": "partner",
+   "ticker": "IONQ",
+   "direction": 1,
+   "summary": "8-K: sovereign-fund strategic PIPE $150M"
+  },
+  {
+   "ts": "2026-08-11T13:07:00Z",
+   "kind": "insider",
+   "ticker": "MPWR",
+   "direction": 1,
+   "summary": "CEO open-market buy $600k"
+  },
+  {
+   "ts": "2026-08-06T14:02:00Z",
+   "kind": "13f",
+   "ticker": "AMD",
+   "direction": 1,
+   "summary": "13F: ADDED, multi-strategy fund"
+  },
+  {
+   "ts": "2026-08-04T13:20:00Z",
+   "kind": "insider",
+   "ticker": "AVGO",
+   "direction": 1,
+   "summary": "Officer open-market buy $240k"
+  },
+  {
+   "ts": "2026-07-30T12:33:00Z",
+   "kind": "partner",
+   "ticker": "NBIS",
+   "direction": 1,
+   "summary": "8-K: Tier-1 GPU vendor strategic investment"
+  },
+  {
+   "ts": "2026-07-28T13:55:00Z",
+   "kind": "insider",
+   "ticker": "FN",
+   "direction": 1,
+   "summary": "Director open-market buy $280k"
+  },
+  {
+   "ts": "2026-07-23T13:12:00Z",
+   "kind": "stake",
+   "ticker": "LITE",
+   "direction": 1,
+   "summary": "13D: >5% active stake, board seat sought"
+  }
+ ]
+}

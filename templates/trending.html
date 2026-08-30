@@ -1,0 +1,38 @@
+{% extends "_base.html" %}
+{% block title %}{{ t('meta.trend_title') }}{% endblock %}
+{% block og_title %}{{ t('meta.trend_title') }}{% endblock %}
+{% block description %}{{ t('meta.trend_desc') }}{% endblock %}
+{% block head %}{% include "_data_style.html" %}{% endblock %}
+{% block content %}
+<section class="section page-data page-trending" id="trending"
+  data-path="/public/trending.json"
+  data-l10n='{{ {
+    "loading": t('data.loading'), "offline": t('data.offline'), "cached_from": t('data.cached_from'),
+    "no_cache": t('data.no_cache'), "empty": t('trend.empty'), "updated": t('trend.updated'),
+    "cached": t('trend.cached'), "hidden": t('data.hidden_lt5'), "as_of": t('data.as_of')
+  } | tojson }}'>
+  <div class="wrap">
+    <h1>{{ t('trend.h1') }}</h1>
+    <p class="lead">{{ t('trend.lead') }}</p>
+    <div class="meta-row mono"><span id="trend-updated"></span></div>
+    <div class="banner banner-error" id="trend-offline" role="status" hidden></div>
+    <div class="table-wrap">
+      <table class="data" id="trend-table">
+        <thead><tr>
+          <th>{{ t('trend.col_ticker') }}</th><th class="num">{{ t('trend.col_watchers') }}</th>
+          <th class="num">{{ t('trend.col_24h') }}</th><th class="num">{{ t('trend.col_7d') }}</th>
+          <th>{{ t('trend.col_conditions') }}</th><th>{{ t('trend.col_cowatch') }}</th>
+        </tr></thead>
+        <tbody><tr><td class="empty" colspan="6">{{ t('data.loading') }}</td></tr></tbody>
+      </table>
+    </div>
+    <p class="caption" style="margin-top:.8rem">{{ t('trend.k_note') }}</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="{{ tg('trending') }}" rel="noopener">{{ t('trend.cta') }}</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="/js/trending.js" defer></script>
+{% endblock %}

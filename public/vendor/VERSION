@@ -1,0 +1,11 @@
+# Vendored third-party scripts (self-hosted: CSP script-src is 'self' + https://telegram.org only)
+# Refresh: curl -sSL <url> -o public/vendor/<file>; update the sha256 + date here.
+
+telegram-web-app.js
+  source : https://telegram.org/js/telegram-web-app.js
+  fetched: 2026-08-30
+  sha256 : 3549138a7934039fe7dfd1291a4ee739bd2b705a614308053a8b08a87d85c451
+
+lightweight-charts/  (vendored by the track-record pack; /app/ reuses it — see lightweight-charts/VERSION)
+  version: 5.2.1 (Apache-2.0, TradingView)
+  sha256 : e21cc5caa0226ef30bd8549c50b9ef926615f2a4ee6b4e486353477a55f598cf

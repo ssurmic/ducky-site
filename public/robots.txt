@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /app/
+Disallow: /go/
+
+Sitemap: https://duckybot.app/sitemap.xml

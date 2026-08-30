@@ -1,0 +1,219 @@
+{# /app/ — website dashboard + Telegram Mini App, one codebase (SYSTEMDESIGN.md §5, pack S3).
+   Standalone layout (no marketing nav/footer): the Mini App needs a compact shell. Rendered to /app/ and /en/app/.
+   Copy: every app.* key from i18n/<lang>.json is embedded as a JSON data block (type="application/json" is not
+   executed, so CSP script-src does not apply); public/js/app/strings.js reads it. Keep app_keys in sync with i18n. #}
+{% set app_keys = [
+  "title",
+  "description",
+  "brand",
+  "nav.watchlist",
+  "nav.alerts",
+  "nav.chart",
+  "nav.billing",
+  "nav.home",
+  "nav.lang",
+  "noscript",
+  "foot.disclaimer",
+  "common.loading",
+  "common.building",
+  "common.retry",
+  "common.close",
+  "common.delete",
+  "common.copy",
+  "common.copied",
+  "common.logout",
+  "common.offline",
+  "common.error",
+  "common.unlock",
+  "common.lock_hint",
+  "tier.free",
+  "tier.paid",
+  "tier.pro",
+  "tier.expires",
+  "login.title",
+  "login.sub",
+  "login.widget",
+  "login.widget_loading",
+  "login.widget_blocked",
+  "login.or",
+  "login.open_tg",
+  "login.nonce_hint",
+  "login.nonce_manual",
+  "login.nonce_code",
+  "login.widget_hint",
+  "login.waiting",
+  "login.expired",
+  "login.failed",
+  "login.miniapp_failed",
+  "login.ok",
+  "watch.title",
+  "watch.placeholder",
+  "watch.add",
+  "watch.empty",
+  "watch.count",
+  "watch.remove",
+  "watch.chart",
+  "watch.added",
+  "watch.removed",
+  "watch.rsi",
+  "watch.dd",
+  "watch.vs50",
+  "watch.vs200",
+  "watch.retrace",
+  "watch.rs",
+  "watch.ivhv",
+  "watch.gamma",
+  "watch.expected",
+  "watch.oversold",
+  "watch.not_oversold",
+  "watch.no_data",
+  "watch.pos_low",
+  "watch.pos_high",
+  "watch.pos_mid",
+  "alerts.title",
+  "alerts.help",
+  "alerts.ticker_ph",
+  "alerts.cond_ph",
+  "alerts.add",
+  "alerts.queued",
+  "alerts.empty",
+  "alerts.count",
+  "alerts.state_pending",
+  "alerts.state_done",
+  "alerts.state_error",
+  "alerts.state_fired",
+  "alerts.cap_title",
+  "alerts.cap_body",
+  "alerts.cap_cta",
+  "alerts.deleted",
+  "alerts.confirm_delete",
+  "upsell.title",
+  "upsell.body",
+  "chart.title",
+  "chart.pick",
+  "chart.pick_hint",
+  "chart.go",
+  "chart.period",
+  "chart.period_3mo",
+  "chart.period_6mo",
+  "chart.period_1y",
+  "chart.period_2y",
+  "chart.rsi",
+  "chart.overlays",
+  "chart.lock",
+  "chart.no_bars",
+  "chart.no_overlays",
+  "chart.loading_snapshot",
+  "chart.legend_call",
+  "chart.legend_put",
+  "chart.legend_flip",
+  "chart.legend_exp",
+  "chart.legend_d20",
+  "billing.title",
+  "billing.current",
+  "billing.pick_title",
+  "billing.pick_signal",
+  "billing.pick_pro",
+  "billing.monthly",
+  "billing.annual",
+  "billing.per_mo",
+  "billing.per_yr",
+  "billing.desc_paid",
+  "billing.desc_pro",
+  "billing.choose",
+  "billing.plan",
+  "billing.rail_title",
+  "billing.rail_stars",
+  "billing.rail_alipay",
+  "billing.rail_wechat",
+  "billing.rail_usdt",
+  "billing.rail_stripe",
+  "billing.soon",
+  "billing.stars_btn",
+  "billing.stars_only_tg",
+  "billing.creating",
+  "billing.order_code",
+  "billing.amount",
+  "billing.manual_hint",
+  "billing.usdt_addr",
+  "billing.usdt_memo",
+  "billing.usdt_hint",
+  "billing.paid",
+  "billing.cancelled",
+  "billing.status_pending",
+  "billing.status_paid",
+  "billing.status_settled",
+  "billing.status_rejected",
+  "billing.status_expired",
+  "billing.status_failed",
+  "billing.status_cancelled",
+  "billing.orders",
+  "billing.orders_empty",
+  "billing.qr_fail",
+  "billing.open_bot",
+  "billing.disclaimer",
+  "billing.disclaimer_link"
+] %}
+<!doctype html>
+<html lang="{{ html_lang }}" data-lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{ t('app.title') }}</title>
+<meta name="description" content="{{ t('app.description') }}">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="{{ canonical }}">
+{% for hl, href in hreflang.items() %}
+<link rel="alternate" hreflang="{{ hl }}" href="{{ href }}">
+{% endfor %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ducky Bot">
+<meta property="og:title" content="{{ t('app.title') }}">
+<meta property="og:description" content="{{ t('app.description') }}">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:image" content="{{ og_image }}">
+<meta name="theme-color" content="#0b0f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/css/site.css">
+<link rel="stylesheet" href="/css/app.css">
+<script src="/vendor/telegram-web-app.js"></script>
+<script src="/config.js" defer></script>
+<script src="/vendor/lightweight-charts/lightweight-charts.standalone.production.js" defer></script>
+<script src="/js/lang.js" defer></script>
+<script type="module" src="/js/app/main.js"></script>
+<script type="application/json" id="ducky-strings">{
+{% for k in app_keys %}
+  {{ k|tojson }}: {{ t('app.' ~ k)|tojson }}{{ "," if not loop.last }}
+{% endfor %}
+}</script>
+</head>
+<body class="lang-{{ lang }} page-{{ page }}">
+<div class="app-shell" id="app">
+  <header class="app-top">
+    <a class="brand" href="{{ url('/') }}" title="{{ t('app.nav.home') }}"><span class="brand-duck" aria-hidden="true">🦆</span> {{ t('app.brand') }}</a>
+    <span class="tier-host" id="tier-badge"></span>
+    <span class="spacer"></span>
+    <a class="lang-toggle mono" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" lang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle>{{ t('app.nav.lang') }}</a>
+    <a class="btn btn-ghost btn-sm" id="logout" href="#/login" hidden>{{ t('app.common.logout') }}</a>
+  </header>
+
+  <main class="app-main" id="main">
+    <div class="app-view" id="view" aria-live="polite"></div>
+    <p class="app-foot">{{ t('app.foot.disclaimer') }} <a href="{{ url('/disclaimer/') }}">{{ t('app.billing.disclaimer_link') }}</a></p>
+    <noscript><p class="errbox">{{ t('app.noscript') }}</p></noscript>
+  </main>
+
+  <nav class="app-nav" aria-label="app">
+    <a href="#/watchlist" data-route="watchlist"><span class="ico" aria-hidden="true">📋</span><span>{{ t('app.nav.watchlist') }}</span></a>
+    <a href="#/alerts" data-route="alerts"><span class="ico" aria-hidden="true">🔔</span><span>{{ t('app.nav.alerts') }}</span></a>
+    <a href="#/chart" data-route="chart"><span class="ico" aria-hidden="true">📈</span><span>{{ t('app.nav.chart') }}</span></a>
+    <a href="#/billing" data-route="billing"><span class="ico" aria-hidden="true">⭐</span><span>{{ t('app.nav.billing') }}</span></a>
+  </nav>
+</div>
+<div id="toasts" aria-live="polite" aria-atomic="false"></div>
+<div id="modal" hidden></div>
+</body>
+</html>

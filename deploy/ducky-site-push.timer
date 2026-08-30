@@ -1,0 +1,12 @@
+# ~/.config/systemd/user/ducky-site-push.timer — 02:15 UTC nightly, 15 min after firehose@outcomes (02:00 UTC)
+[Unit]
+Description=Ducky — nightly ducky-site notary push (02:15 UTC)
+
+[Timer]
+OnCalendar=*-*-* 02:15:00 UTC
+Persistent=true
+RandomizedDelaySec=60
+Unit=ducky-site-push.service
+
+[Install]
+WantedBy=timers.target

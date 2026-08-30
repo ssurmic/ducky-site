@@ -1,0 +1,26 @@
+# ~/.config/systemd/user/ducky-site-push.service — nightly notary (SYSTEMDESIGN §4.4: ducky-site-push.timer 02:15 UTC)
+# Install on the DGX (user ssurmic):
+#   mkdir -p ~/.config/systemd/user && cp deploy/ducky-site-push.{service,timer} ~/.config/systemd/user/
+#   systemctl --user daemon-reload && systemctl --user enable --now ducky-site-push.timer
+#   systemctl --user start ducky-site-push.service      # one manual run
+# Deploy key: ssh-keygen -t ed25519 -f ~/.ssh/ducky-site-deploy -N '' → GitHub ssurmic/ducky-site → Deploy keys (write).
+[Unit]
+Description=Ducky — push nightly track-record/feed/ideas JSON to ducky-site (git notary)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=-%h/invest-watchlist/.env
+Environment=DUCKY_ROOT=%h/invest-watchlist
+Environment=DUCKY_SITE_DIR=%h/.cache/ducky-site
+Environment=DUCKY_SITE_DEPLOY_KEY=%h/.ssh/ducky-site-deploy
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+# bootstrap: the script lives in the repo it pushes to, so clone once if missing
+ExecStartPre=/bin/sh -c 'test -x "$DUCKY_SITE_DIR/scripts/push_track_record.sh" || GIT_SSH_COMMAND="ssh -i $DUCKY_SITE_DEPLOY_KEY -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new" git clone --quiet git@github.com:ssurmic/ducky-site.git "$DUCKY_SITE_DIR"'
+ExecStart=/bin/sh -c 'exec "$DUCKY_SITE_DIR/scripts/push_track_record.sh"'
+TimeoutStartSec=300
+Nice=10
+
+[Install]
+WantedBy=default.target

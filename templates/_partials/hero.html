@@ -1,0 +1,47 @@
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow mono">{{ t('hero.eyebrow') }}</p>
+      <h1>{{ t('hero.h1') }}</h1>
+      <p class="sub">{{ t('hero.sub') }}</p>
+      <div class="cta-row">
+        <a class="btn btn-primary btn-lg" href="{{ primary('web') }}" rel="noopener">{{ t('hero.cta_channel') if has_channel else t('hero.cta_bot') }}</a>
+        <a class="btn btn-ghost btn-lg" href="#proof">{{ t('hero.cta_secondary') }}</a>
+      </div>
+      <p class="try">{{ t('hero.cta_try_prefix') }} <a class="mono" href="{{ tg('dm') }}" rel="noopener">@{{ cfg.bot }}</a> {{ t('hero.cta_try_suffix') }}</p>
+      <p class="proof-strip mono">{{ t('hero.proof_strip') }}</p>
+    </div>
+
+    <div class="hero-visual" role="img" aria-label="{{ t('hero.phone_label') }}">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-head">
+          <span class="avatar" aria-hidden="true">🦆</span>
+          <div class="phone-head-text"><b>{{ t('hero.phone_header') }}</b><small>{{ t('hero.phone_status') }}</small></div>
+        </div>
+        <div class="phone-body">
+          <div class="bubble bubble-insider">
+            <div class="bubble-line bubble-title">{{ t('hero.b1_l1') }}</div>
+            <div class="bubble-line">{{ t('hero.b1_l2') }}</div>
+            <div class="bubble-line">{{ t('hero.b1_l3') }}</div>
+            <div class="bubble-line">{{ t('hero.b1_l4') }}</div>
+            <div class="bubble-line">{{ t('hero.b1_l5') }}</div>
+            <time class="bubble-ts">{{ t('hero.b1_ts') }}</time>
+          </div>
+          <div class="bubble bubble-strategic">
+            <div class="bubble-line bubble-title">{{ t('hero.b2_l1') }}</div>
+            <div class="bubble-line">{{ t('hero.b2_l2') }}</div>
+            <time class="bubble-ts">{{ t('hero.b2_ts') }}</time>
+          </div>
+          <div class="bubble bubble-kindex">
+            <div class="bubble-line bubble-title">{{ t('hero.b3_l1') }}</div>
+            <div class="bubble-line">{{ t('hero.b3_l2_pre') }}<span class="rate" data-winrate="100" data-n="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ t('hero.b3_l2_rate') }} <small class="n">({{ t('label.n_short') }})</small></span></div>
+            <div class="bubble-line">{{ t('hero.b3_l3') }}</div>
+            <time class="bubble-ts">{{ t('hero.b3_ts') }}</time>
+          </div>
+        </div>
+      </div>
+      <div class="duck-peek" aria-hidden="true">🦆</div>
+    </div>
+  </div>
+</section>

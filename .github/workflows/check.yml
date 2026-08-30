@@ -1,0 +1,29 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+      - run: pip install -r requirements.txt
+      - name: build (zh + en, i18n key parity)
+        run: python3 build.py
+      - name: lint copy (banned strings, data-winrate ⇔ data-n, disclaimer lines, no third-party scripts)
+        run: python3 scripts/lint_copy.py
+      - name: internal link check
+        run: python3 scripts/check_links.py
+      - name: sanity — both landings exist
+        run: test -s dist/index.html && test -s dist/en/index.html && test -s dist/_headers

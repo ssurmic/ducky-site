@@ -1,0 +1,64 @@
+{
+ "event": "2026-04-08 first \ud83d\udfe2 ABUNDANT print of 2026 (score 80; SOFR\u2212IORB \u22126bp; net liquidity 13w +172B)",
+ "score_series_csv": "liq2026.csv",
+ "results": {
+  "2026-04-08": {
+   "signal_date": "2026-04-08",
+   "as_of": "2026-08-28",
+   "QQQ": {
+    "px0": 605.42,
+    "px_now": 716.43,
+    "ret_pct": 18.3,
+    "ret_1w": 5.2,
+    "ret_1m": 14.7,
+    "ret_3m": 19.5
+   },
+   "SPY": {
+    "px0": 674.27,
+    "px_now": 769.35,
+    "ret_pct": 14.1,
+    "ret_1w": 3.5,
+    "ret_1m": 8.2,
+    "ret_3m": 11.5
+   },
+   "SMH": {
+    "px0": 422.92,
+    "px_now": 553.11,
+    "ret_pct": 30.8,
+    "ret_1w": 7.1,
+    "ret_1m": 27.7,
+    "ret_3m": 43.7
+   }
+  },
+  "2026-04-09": {
+   "signal_date": "2026-04-09",
+   "as_of": "2026-08-28",
+   "QQQ": {
+    "px0": 609.52,
+    "px_now": 716.43,
+    "ret_pct": 17.5,
+    "ret_1w": 5.0,
+    "ret_1m": 16.6,
+    "ret_3m": 19.0
+   },
+   "SPY": {
+    "px0": 678.16,
+    "px_now": 769.35,
+    "ret_pct": 13.4,
+    "ret_1w": 3.2,
+    "ret_1m": 8.5,
+    "ret_3m": 11.3
+   },
+   "SMH": {
+    "px0": 430.31,
+    "px_now": 553.11,
+    "ret_pct": 28.5,
+    "ret_1w": 5.7,
+    "ret_1m": 31.7,
+    "ret_3m": 42.0
+   }
+  }
+ },
+ "method": "score = liquidity_pull.py/backtest_liquidity.py formula reconstructed from FRED (SOFR, IORB, RRPONTSYD, WRESBAL, WTREGEN, WALCL); regime ABUNDANT >= 80; returns = adjusted close, buy at signal-date close",
+ "label": "BACKTEST (reconstructed) \u00b7 N=1 event"
+}

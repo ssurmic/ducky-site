@@ -1,0 +1,16 @@
+{% extends "_base.html" %}
+{% block title %}{{ t('meta.404_title') }}{% endblock %}
+{% block og_title %}{{ t('meta.404_title') }}{% endblock %}
+{% block content %}
+<section class="section page-404">
+  <div class="wrap narrow center">
+    <p class="big-duck" aria-hidden="true">🦆</p>
+    <h1>{{ t('e404.h1') }}</h1>
+    <p class="lead">{{ t('e404.body') }}</p>
+    <div class="cta-row center">
+      <a class="btn btn-ghost" href="{{ url('/') }}">{{ t('e404.home') }}</a>
+      <a class="btn btn-primary" href="{{ tg('404') }}" rel="noopener">{{ t('e404.bot') }}</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

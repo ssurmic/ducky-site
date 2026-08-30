@@ -1,0 +1,20 @@
+{
+  "domain": "duckybot.app",
+  "site_url": "https://duckybot.app",
+  "bot": "DuckyduckyTradeBot",
+  "miniapp": "app",
+  "channel": null,
+  "api_base": "https://api.duckybot.app",
+  "track_json": "/track-record.json",
+  "feed_json": "/feed.json",
+  "prices": {
+    "signal": { "monthly_usd": 12, "annual_usd": 99 },
+    "pro": { "monthly_usd": 29, "annual_usd": 249 },
+    "china": { "annual_cny": 299 }
+  },
+  "deeplink": {
+    "pattern": "https://t.me/{bot}?start=src_{slug}",
+    "note": "Every Telegram CTA carries an attribution payload: t.me/<bot>?start=src_<slug>. Slugs used on the landing: web, free, signal, pro, cn, dm, feed, band, sticky, nav, footer. /go/<slug> (Pages Function, later pack) 302s to the same URL. When `channel` is null every 'join the free channel' CTA falls back to the bot deep link."
+  },
+  "og_image": "/og.svg"
+}

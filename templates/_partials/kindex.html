@@ -1,0 +1,40 @@
+<section class="section kindex" id="kindex">
+  <div class="wrap">
+    <h2 class="mono-h2">{{ t('kindex.h2') }}</h2>
+    <p class="lead">{{ t('kindex.lead') }}</p>
+
+    <div class="kindex-grid">
+      <div class="ladder" aria-label="{{ t('kindex.ladder_title') }}">
+        <h3>{{ t('kindex.ladder_title') }}</h3>
+        <ol class="ladder-list">
+          <li class="band band-1">{{ t('kindex.l1') }}</li>
+          <li class="band band-2">{{ t('kindex.l2') }}</li>
+          <li class="band band-3">{{ t('kindex.l3') }}</li>
+          <li class="band band-4">{{ t('kindex.l4') }}</li>
+        </ol>
+      </div>
+
+      <div class="backtest-box">
+        <span class="badge badge-backtest">{{ t('label.backtest') }}</span>
+        <h3>{{ t('kindex.bt_title') }}</h3>
+        <p class="mono bt-line">{{ t('kindex.bt_pre') }}<span class="rate" data-winrate="100" data-n="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ t('kindex.bt_rate') }} <small class="n">({{ t('label.n_short') }})</small></span>{{ t('kindex.bt_post') }}</p>
+        <p class="mono bt-stop">{{ t('kindex.bt_stop') }}</p>
+      </div>
+    </div>
+
+    <div class="kindex-cols">
+      <div>
+        <h3>{{ t('kindex.deliver_title') }}</h3>
+        <ul class="checks">
+          <li>{{ t('kindex.d1') }}</li>
+          <li>{{ t('kindex.d2') }}</li>
+          <li>{{ t('kindex.d3') }}</li>
+        </ul>
+      </div>
+      <div>
+        <p class="tier-note">{{ t('kindex.tier') }}</p>
+        <p class="caveat">{{ t('kindex.caveat') }}</p>
+      </div>
+    </div>
+  </div>
+</section>

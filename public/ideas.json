@@ -1,0 +1,65 @@
+{
+ "generated_at": "2026-08-30T02:05:00Z",
+ "note": "FIXTURE — one sample idea (paper book); replaced by ideas_sync.py export",
+ "ideas": [
+  {
+   "slug": "alab-2026-07",
+   "ticker": "ALAB",
+   "title": "ALAB · 8-K 供货协议 + 股东加仓后的观察",
+   "status": "added",
+   "structure": "shares",
+   "book": "paper",
+   "lang": "zh",
+   "opened_d": "2026-07-10",
+   "closed_d": null,
+   "entry_px": 92.4,
+   "exit_px": null,
+   "last_px": 101.15,
+   "last_px_d": "2026-08-28",
+   "thesis_md": "**为什么看 ALAB（Astera Labs）**\n\n- 2026-07-01 的 8-K：一家超大规模云厂商签了多年供货协议，这是公开文件，不是传闻。\n- 一周后 10% 股东在公开市场加仓 $2.4M（Form 4），方向和 8-K 一致。\n- 互连（PCIe / CXL retimer）是算力上游里少数还在放量的细分。\n\n**我在意的风险**\n\n- 客户集中：前两家占营收大头，任何砍单都会直接体现在指引里。\n- 估值不便宜，前瞻 PE 高于板块中位数，回撤会比指数大。\n- 这是 *paper* 账本：模拟仓位，用来记录判断是否成立，不代表任何真实账户。\n\n**失效条件**\n\n1. 下一季指引低于共识，或大客户公开转向自研。\n2. 20 日线跌破且 50 日线走平——我会在时间线里记一笔「invalidated」，不删除本页。\n\n记录，不是荐股。",
+   "updated_at": "2026-08-28T21:10:00Z",
+   "src_path": "ideas/alab-2026-07.md",
+   "src_commit": "fixture0",
+   "events": [
+    {
+     "d": "2026-07-02",
+     "kind": "watching",
+     "px": 89.9,
+     "note_md": "8-K 后先观察一周，看 Form 4 有没有跟上。"
+    },
+    {
+     "d": "2026-07-10",
+     "kind": "opened",
+     "px": 92.4,
+     "note_md": "paper 开仓（shares）。理由见论点。"
+    },
+    {
+     "d": "2026-08-05",
+     "kind": "added",
+     "px": 97.8,
+     "note_md": "财报后指引上调，paper 加一次。**不追高**：只在 20 日线附近。"
+    },
+    {
+     "d": "2026-08-28",
+     "kind": "note",
+     "px": 101.15,
+     "note_md": "月末记录：+9.5%，未触发失效条件。"
+    }
+   ],
+   "signals": [
+    {
+     "ts": "2026-07-01T13:02:00Z",
+     "kind": "partner",
+     "direction": 1,
+     "summary": "8-K: hyperscaler multi-year supply agreement"
+    },
+    {
+     "ts": "2026-07-08T14:15:00Z",
+     "kind": "insider",
+     "direction": 1,
+     "summary": "10%-owner open-market buy $2.4M"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- placeholder OG image — replace with a rendered 1200x630 og.png (most crawlers ignore SVG) -->
+  <rect width="1200" height="630" fill="#0b0f14"/>
+  <rect x="0" y="0" width="1200" height="630" fill="url(#g)"/>
+  <defs>
+    <radialGradient id="g" cx="85%" cy="0%" r="70%">
+      <stop offset="0" stop-color="#f5c33b" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#0b0f14" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <text x="80" y="150" font-size="96" font-family="Apple Color Emoji,Segoe UI Emoji,Noto Color Emoji,sans-serif">🦆</text>
+  <text x="80" y="290" fill="#e6edf3" font-size="64" font-weight="800" font-family="-apple-system,Segoe UI,PingFang SC,Noto Sans CJK SC,sans-serif">Ducky Bot</text>
+  <text x="80" y="360" fill="#9aa7b4" font-size="34" font-family="-apple-system,Segoe UI,PingFang SC,Noto Sans CJK SC,sans-serif">证据，不是荐股 · That's what the indicator did — not a call.</text>
+  <text x="80" y="440" fill="#9aa7b4" font-size="26" font-family="ui-monospace,Menlo,monospace">SEC Form 4 · 13D/13G · 13F · 8-K · K-index · IV/HV · gamma walls</text>
+  <text x="80" y="540" fill="#6b7784" font-size="22" font-family="ui-monospace,Menlo,monospace">duckybot.app · data / signal / education tool · not investment advice</text>
+</svg>

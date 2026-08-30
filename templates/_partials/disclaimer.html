@@ -1,0 +1,17 @@
+{# Final CTA band + on-page disclaimer anchor. The full bilingual text lives in the footer (_base.html) and /disclaimer/. #}
+<section class="cta-band" id="band">
+  <div class="wrap band-row">
+    <h2>{{ t('band.h2') }}</h2>
+    <div class="cta-row">
+      <a class="btn btn-primary btn-lg" href="{{ primary('band') }}" rel="noopener">{{ t('band.cta_channel') if has_channel else t('band.cta_bot') }}</a>
+      <a class="btn btn-ghost btn-lg" href="{{ tg('band_subscribe') }}" rel="noopener">{{ t('band.ghost') }}</a>
+    </div>
+  </div>
+</section>
+
+<section class="section disclaimer-anchor" id="disclaimer">
+  <div class="wrap narrow">
+    <p class="strip mono">{{ t('proof.strip') }}</p>
+    <p class="strip mono"><span data-line="backtest">{{ t('footer.backtest_line') }}</span> <span data-line="affiliation">{{ t('footer.affiliation_line') }}</span> <a href="{{ url('/disclaimer/') }}">{{ t('footer.links_disclaimer') }} →</a></p>
+  </div>
+</section>

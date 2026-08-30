@@ -1,0 +1,15 @@
+<section class="section boards" id="boards">
+  <div class="wrap">
+    <h2>{{ t('boards.h2') }}</h2>
+    <p class="lead">{{ t('boards.lead') }}</p>
+    <div class="board-grid">
+      {% for i in range(1, 9) %}
+      <div class="tile">
+        <h3>{{ t('boards.' ~ i ~ '.name') }}</h3>
+        <p>{{ t('boards.' ~ i ~ '.desc') }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="footnote">{{ t('boards.foot') }}</p>
+  </div>
+</section>

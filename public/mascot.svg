@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Ducky TradeBot mascot">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#b9ff8a" stop-opacity="0.95"/>
+      <stop offset="60%" stop-color="#5ee36a" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0b0e11" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="body" cx="42%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#f3ffd6"/>
+      <stop offset="45%" stop-color="#bff58e"/>
+      <stop offset="100%" stop-color="#7fd65a"/>
+    </radialGradient>
+    <radialGradient id="cheek" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffb3a7" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#ffb3a7" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="beak" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffcf6b"/>
+      <stop offset="100%" stop-color="#f0a02a"/>
+    </linearGradient>
+  </defs>
+  <!-- neon halo -->
+  <circle cx="128" cy="128" r="124" fill="url(#glow)"/>
+  <!-- head -->
+  <ellipse cx="128" cy="132" rx="92" ry="86" fill="url(#body)"/>
+  <!-- tuft -->
+  <path d="M132 48 c4 -16 20 -22 28 -12 c-10 2 -16 8 -20 18 z" fill="#bff58e"/>
+  <path d="M120 50 c-2 -14 -14 -20 -22 -12 c8 2 14 6 18 14 z" fill="#bff58e"/>
+  <!-- cheeks -->
+  <circle cx="76" cy="150" r="20" fill="url(#cheek)"/>
+  <circle cx="180" cy="150" r="20" fill="url(#cheek)"/>
+  <!-- eyes: big, glossy, slightly smiling -->
+  <ellipse cx="98" cy="118" rx="15" ry="17" fill="#1d1f24"/>
+  <ellipse cx="158" cy="118" rx="15" ry="17" fill="#1d1f24"/>
+  <circle cx="104" cy="111" r="5.5" fill="#fff"/>
+  <circle cx="164" cy="111" r="5.5" fill="#fff"/>
+  <circle cx="93" cy="124" r="2.5" fill="#fff" opacity="0.8"/>
+  <circle cx="153" cy="124" r="2.5" fill="#fff" opacity="0.8"/>
+  <!-- brows -->
+  <path d="M84 96 q14 -8 28 0" stroke="#1d1f24" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M144 96 q14 -8 28 0" stroke="#1d1f24" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <!-- beak: wide smile -->
+  <path d="M96 152 q32 -10 64 0 q-8 30 -32 30 q-24 0 -32 -30 z" fill="url(#beak)"/>
+  <path d="M100 154 q28 8 56 0" stroke="#c9741a" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <ellipse cx="118" cy="150" rx="2.6" ry="1.8" fill="#c9741a"/>
+  <ellipse cx="138" cy="150" rx="2.6" ry="1.8" fill="#c9741a"/>
+  <!-- tiny chart sparkle on the halo (brand wink) -->
+  <path d="M40 210 l16 -14 l12 8 l22 -26" stroke="#ffe27a" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+</svg>

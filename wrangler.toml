@@ -1,0 +1,11 @@
+# NOTE: Analytics Engine binding disabled until the account enables AE (dashboard → Workers → Analytics Engine). functions/go/[slug].js guards on env.ANALYTICS.
+# wrangler.toml — only for `wrangler pages dev dist` (local) and to declare the Analytics Engine binding.
+# Production binding: Pages project → Settings → Functions → Analytics Engine bindings → ANALYTICS → dataset ducky_go.
+name = "ducky-site"
+compatibility_date = "2026-08-01"
+pages_build_output_dir = "dist"
+
+# [[analytics_engine_datasets]]
+# binding = "ANALYTICS"
+# dataset = "ducky_go"
+

@@ -1,0 +1,37 @@
+<section class="section analyst" id="analyst">
+  <div class="wrap">
+    <h2>{{ t('dm.h2') }}</h2>
+    <p class="lead">{{ t('dm.lead_pre') }} <a class="mono" href="{{ tg('dm') }}" rel="noopener">@{{ cfg.bot }}</a>{{ t('dm.lead_post') }}</p>
+
+    <div class="analyst-grid">
+      <div class="card-mock mono" aria-label="全景 card">
+        <div class="card-line card-title">{{ t('dm.card_l1') }}</div>
+        <div class="card-line">{{ t('dm.card_l2') }}</div>
+        <div class="card-line">{{ t('dm.card_l3') }}</div>
+        <div class="card-line">{{ t('dm.card_l4') }}</div>
+        <div class="card-line card-pro">{{ t('dm.card_l5') }}</div>
+        <div class="card-line card-pro">{{ t('dm.card_l6') }}</div>
+        <div class="card-line card-pro">{{ t('dm.card_l7') }}</div>
+        <div class="card-note">{{ t('dm.card_note') }}</div>
+      </div>
+      <div>
+        <p class="caption">{{ t('dm.caption') }}</p>
+        <div id="alerts">
+          <h3>{{ t('dm.h3') }}</h3>
+          <div class="chips">
+            <span class="chip">{{ t('dm.ex1') }}</span>
+            <span class="chip">{{ t('dm.ex2') }}</span>
+            <span class="chip">{{ t('dm.ex3') }}</span>
+            <span class="chip">{{ t('dm.ex4') }}</span>
+          </div>
+          <dl class="kv">
+            <dt>{{ t('dm.how_label') }}</dt><dd>{{ t('dm.how') }}</dd>
+            <dt>{{ t('dm.why_label') }}</dt><dd>{{ t('dm.why') }}</dd>
+            <dt>{{ t('dm.caps_label') }}</dt><dd>{{ t('dm.caps') }}</dd>
+          </dl>
+          <a class="btn btn-primary" href="{{ tg('dm') }}" rel="noopener">{{ t('dm.cta') }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

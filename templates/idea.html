@@ -1,0 +1,51 @@
+{% extends "_base.html" %}
+{# Detail page. Built once at /idea/ (and /en/idea/); served at /ideas/<slug>/ by functions/ideas/[[slug]].js
+   (rewrite, same HTML). The slug is read from the path (/ideas/<slug>/) or the hash (/idea/#<slug>). #}
+{% block title %}{{ t('meta.idea_title') }}{% endblock %}
+{% block og_title %}{{ t('meta.idea_title') }}{% endblock %}
+{% block description %}{{ t('meta.ideas_desc') }}{% endblock %}
+{% block head %}{% include "_data_style.html" %}{% endblock %}
+{% block content %}
+<section class="section page-data page-idea" id="idea" data-view="detail"
+  data-path="/public/ideas.json" data-fallback="/ideas.json" data-detail-base="{{ url('/ideas/') }}"
+  data-l10n='{{ {
+    "loading": t('data.loading'), "load_error": t('data.load_error'), "not_found": t('idea.not_found'),
+    "fixture": t('data.fixture_badge'), "generated": t('data.generated'), "static": t('data.static_copy'),
+    "book_paper": t('ideas.book_paper'), "book_live": t('ideas.book_live'),
+    "st_watching": t('ideas.st_watching'), "st_opened": t('ideas.st_opened'), "st_added": t('ideas.st_added'),
+    "st_trimmed": t('ideas.st_trimmed'), "st_closed": t('ideas.st_closed'), "st_invalidated": t('ideas.st_invalidated'),
+    "st_note": t('ideas.st_note'), "signals_empty": t('idea.signals_empty'), "outcome_na": t('idea.outcome_na'),
+    "outcome_struct_note": t('idea.outcome_struct_note'), "structure": t('idea.structure'),
+    "entry": t('idea.entry'), "exit": t('idea.exit'), "last": t('idea.last'), "updated": t('idea.updated'),
+    "dir_up": t('data.direction_up'), "dir_down": t('data.direction_down'), "dir_flat": t('data.direction_flat')
+  } | tojson }}'>
+  <div class="wrap">
+    <p><a href="{{ url('/ideas/') }}">{{ t('idea.back') }}</a></p>
+    <div class="banner banner-error" id="idea-error" role="alert" hidden></div>
+    <div class="idea-head" id="idea-head"><h1 id="idea-title">{{ t('data.loading') }}</h1></div>
+    <div class="meta-row mono" id="idea-meta"></div>
+    <p class="log-line">{{ t('data.log_not_call') }}</p>
+
+    <div class="idea-grid">
+      <div>
+        <h2 class="mono-h2">{{ t('idea.thesis_h') }}</h2>
+        <div class="thesis" id="idea-thesis"></div>
+      </div>
+      <aside>
+        <h2 class="mono-h2">{{ t('idea.outcome_h') }}</h2>
+        <div class="outcome" id="idea-outcome"></div>
+        <h2 class="mono-h2">{{ t('idea.timeline_h') }}</h2>
+        <ol class="timeline" id="idea-timeline"></ol>
+        <h2 class="mono-h2" style="margin-top:1.4rem">{{ t('idea.signals_h') }}</h2>
+        <ul class="signals-list" id="idea-signals"></ul>
+      </aside>
+    </div>
+
+    <p class="caption" style="margin-top:2rem">{{ t('idea.source_note') }}</p>
+    <p class="strip mono"><span data-line="backtest">{{ t('footer.backtest_line') }}</span> <span data-line="affiliation">{{ t('footer.affiliation_line') }}</span></p>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="/js/ideas.js" defer></script>
+{% endblock %}

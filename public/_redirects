@@ -1,0 +1,2 @@
+# Cloudflare Pages redirects — www → apex (301). /go/* is a Pages Function (functions/go/, later pack), not a redirect.
+https://www.duckybot.app/* https://duckybot.app/:splat 301

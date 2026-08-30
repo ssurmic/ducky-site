@@ -1,0 +1,99 @@
+{% extends "_base.html" %}
+{% block title %}{{ t('meta.track_title') }}{% endblock %}
+{% block og_title %}{{ t('meta.track_title') }}{% endblock %}
+{% block description %}{{ t('meta.track_desc') }}{% endblock %}
+{% block head %}{% include "_data_style.html" %}{% endblock %}
+{% block content %}
+{% set github_json = 'https://github.com/ssurmic/ducky-site/commits/main/public/track-record.json' %}
+<section class="section page-data page-track" id="track"
+  data-src="{{ cfg.get('track_json', '/track-record.json') }}"
+  data-github="{{ github_json }}"
+  data-l10n='{{ {
+    "stale": t('data.stale'), "loading": t('data.loading'), "load_error": t('data.load_error'),
+    "fixture": t('data.fixture_badge'), "pending": t('data.pending'), "generated": t('data.generated'),
+    "all": t('track.filter_all'), "rows_shown": t('track.rows_shown'), "empty": t('track.empty'),
+    "n_label": t('data.n_label'), "live": t('label.live'), "backtest": t('label.backtest'),
+    "equity_nochart": t('track.equity_nochart'), "backtest_line": t('track.backtest_line'),
+    "backtest_win": t('track.backtest_win'), "backtest_avg": t('track.backtest_avg'),
+    "dir_up": t('data.direction_up'), "dir_down": t('data.direction_down'), "dir_flat": t('data.direction_flat')
+  } | tojson }}'>
+  <div class="wrap">
+    <h1>{{ t('track.h1') }}</h1>
+    <p class="lead">{{ t('track.lead') }}</p>
+    <div class="meta-row mono">
+      <span id="track-generated"></span>
+      <span id="track-fixture"></span>
+      <a href="{{ github_json }}" rel="noopener">{{ t('data.verify_github') }}</a>
+    </div>
+    <div class="banner banner-stale" id="track-stale" role="status" hidden></div>
+    <div class="banner banner-error" id="track-error" role="alert" hidden></div>
+
+    <h2 class="mono-h2">{{ t('track.ledger_h2') }}</h2>
+    <div class="filters" id="track-filters">
+      <div class="filter-group" id="filter-kind"><span class="filter-label">{{ t('track.filter_kind') }}</span></div>
+      <div class="filter-group" id="filter-mode"><span class="filter-label">{{ t('track.filter_mode') }}</span></div>
+      <div class="filter-group">
+        <label class="filter-label" for="filter-ticker">{{ t('track.filter_ticker') }}</label>
+        <input class="filter-input" id="filter-ticker" type="text" autocomplete="off" spellcheck="false" placeholder="{{ t('track.filter_ticker_ph') }}" maxlength="8">
+      </div>
+      <span class="rows-shown" id="rows-shown"></span>
+    </div>
+    <div class="table-wrap">
+      <table class="data" id="ledger">
+        <thead><tr>
+          <th>{{ t('track.col_kind') }}</th><th>{{ t('track.col_ticker') }}</th><th>{{ t('track.col_ts') }}</th>
+          <th class="num">{{ t('track.col_r1') }}</th><th class="num">{{ t('track.col_r5') }}</th><th class="num">{{ t('track.col_r20') }}</th>
+          <th>{{ t('track.col_mode') }}</th><th>{{ t('track.col_summary') }}</th>
+        </tr></thead>
+        <tbody><tr><td class="empty" colspan="8">{{ t('data.loading') }}</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="subsection">
+      <h2 class="mono-h2">{{ t('track.rates_h2') }}</h2>
+      <p class="caption">{{ t('track.rates_note') }}</p>
+      <div class="table-wrap">
+        <table class="data" id="rates">
+          <thead><tr>
+            <th>{{ t('track.col_kind') }}</th><th>{{ t('track.col_mode') }}</th><th class="num">{{ t('track.col_n') }}</th>
+            <th class="num">{{ t('track.col_hit5') }}</th><th class="num">{{ t('track.col_hit20') }}</th><th class="num">{{ t('track.col_avg20') }}</th>
+          </tr></thead>
+          <tbody><tr><td class="empty" colspan="6">{{ t('data.loading') }}</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h2 class="mono-h2">{{ t('track.backtest_h2') }}</h2>
+      <div class="backtest-box" id="backtest-box">
+        <span class="badge badge-backtest">{{ t('label.backtest') }}</span>
+        <p class="mono bt-line" id="backtest-line">{{ t('data.loading') }}</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h2 class="mono-h2">{{ t('track.equity_h2') }} <span class="badge badge-live badge-inline">{{ t('label.live') }}</span></h2>
+      <div class="chart-box"><div class="chart" id="equity"></div></div>
+      <p class="chart-cap">{{ t('track.equity_note') }}</p>
+    </div>
+
+    <div class="subsection notes">
+      <h2 class="mono-h2">{{ t('track.notes_h') }}</h2>
+      <ol>
+        <li>{{ t('track.note_1') }}</li>
+        <li>{{ t('track.note_2') }}</li>
+        <li>{{ t('track.note_3') }}</li>
+      </ol>
+    </div>
+
+    <div class="strip strip-bi">
+      <p class="mono" lang="{{ html_lang }}"><span data-line="backtest">{{ t('footer.backtest_line') }}</span> <span data-line="affiliation">{{ t('footer.affiliation_line') }}</span></p>
+      <p class="mono" lang="{{ 'en' if is_zh else 'zh-CN' }}"><span data-line="backtest">{{ t2('footer.backtest_line') }}</span> <span data-line="affiliation">{{ t2('footer.affiliation_line') }}</span></p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="/vendor/lightweight-charts/lightweight-charts.standalone.production.js" defer></script>
+<script src="/js/track.js" defer></script>
+{% endblock %}

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="{{ html_lang }}" data-lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ t('meta.title') }}{% endblock %}</title>
+<meta name="description" content="{% block description %}{{ t('meta.description') }}{% endblock %}">
+<link rel="canonical" href="{{ canonical }}">
+{% for hl, href in hreflang.items() %}
+<link rel="alternate" hreflang="{{ hl }}" href="{{ href }}">
+{% endfor %}
+<link rel="alternate" hreflang="x-default" href="{{ x_default }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ducky Bot">
+<meta property="og:title" content="{% block og_title %}{{ t('meta.og_title') }}{% endblock %}">
+<meta property="og:description" content="{{ self.description() }}">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:image" content="{{ og_image }}">
+<meta property="og:locale" content="{{ 'zh_CN' if is_zh else 'en_US' }}">
+<meta property="og:locale:alternate" content="{{ 'en_US' if is_zh else 'zh_CN' }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b0f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/css/site.css">
+<script src="/config.js" defer></script>
+<script src="/js/lang.js" defer></script>
+{% block head %}{% endblock %}
+</head>
+<body class="lang-{{ lang }} page-{{ page }}">
+<a class="skip" href="#main">{{ t('nav.skip') }}</a>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="{{ url('/') }}"><span class="brand-duck" aria-hidden="true">🦆</span> {{ t('nav.brand') }}</a>
+    <nav class="nav-links" aria-label="primary">
+      <a href="{{ url('/') }}#proof">{{ t('nav.proof') }}</a>
+      <a href="{{ url('/') }}#boards">{{ t('nav.boards') }}</a>
+      <a href="{{ url('/') }}#pricing">{{ t('nav.pricing') }}</a>
+      <a href="{{ url('/') }}#faq">{{ t('nav.faq') }}</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="lang-toggle mono" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" lang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle aria-label="{{ t('nav.lang_toggle_aria') }}">{{ t('nav.lang_toggle') }}</a>
+      <a class="btn btn-primary btn-sm" href="{{ primary('nav') }}">{{ t('nav.cta_channel') if has_channel else t('nav.cta_bot') }}</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+{% block content %}{% endblock %}
+</main>
+
+<footer class="footer" id="footer">
+  <div class="wrap">
+    <div class="footer-disclaimer">
+      <div class="footer-lang" lang="{{ html_lang }}">
+        <p>{{ t('footer.p1') }}</p>
+        <p>{{ t('footer.p2') }}</p>
+        <p>{{ t('footer.p3') }}</p>
+        <p>{{ t('footer.p4') }}</p>
+        <p class="footer-lines"><span data-line="backtest">{{ t('footer.backtest_line') }}</span> <span data-line="affiliation">{{ t('footer.affiliation_line') }}</span></p>
+      </div>
+      <div class="footer-lang footer-other" lang="{{ 'en' if is_zh else 'zh-CN' }}">
+        <p>{{ t2('footer.p1') }}</p>
+        <p>{{ t2('footer.p2') }}</p>
+        <p>{{ t2('footer.p3') }}</p>
+        <p>{{ t2('footer.p4') }}</p>
+        <p class="footer-lines"><span data-line="backtest">{{ t2('footer.backtest_line') }}</span> <span data-line="affiliation">{{ t2('footer.affiliation_line') }}</span></p>
+      </div>
+    </div>
+    <div class="footer-row mono">
+      <span>{{ t('footer.copyright') }}</span>
+      <nav class="footer-links" aria-label="footer">
+        <a href="{{ url('/disclaimer/') }}">{{ t('footer.links_disclaimer') }}</a>
+        <a href="{{ url('/track-record/') }}" data-planned>{{ t('footer.links_ledger') }}</a>
+        <a href="{{ tg('footer') }}" rel="noopener">{{ t('footer.links_bot') }}</a>
+        <a href="{{ alt_url }}" data-lang-toggle-footer hreflang="{{ 'en' if is_zh else 'zh-CN' }}">{{ t('footer.lang_other') }}</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+{% block scripts %}{% endblock %}
+</body>
+</html>

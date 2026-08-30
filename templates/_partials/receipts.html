@@ -1,0 +1,80 @@
+{# Receipts wall. Every card: BACKTEST/LIVE badge · Original post ↗ · SEC filing ↗ · copy-caption. One red row on purpose. #}
+{% set edgar = 'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&type=8-K&owner=include&count=40&CIK=' %}
+{% macro links(post_href, sec_href, caption, sec_na=False) %}
+  <div class="receipt-links mono">
+    <a href="{{ post_href }}" rel="noopener" data-placeholder="original-post">{{ t('label.original_post') }}</a>
+    <a href="{{ sec_href }}" rel="noopener" data-placeholder="sec-filing"{% if sec_na %} class="na" aria-disabled="true"{% endif %}>{{ t('label.sec_filing') }}</a>
+    <button type="button" class="copy" data-caption="{{ caption }}" data-copied="{{ t('label.copied') }}">{{ t('label.copy_caption') }}</button>
+  </div>
+{% endmacro %}
+<section class="section proof" id="proof">
+  <div class="wrap">
+    <h2>{{ t('proof.h2') }}</h2>
+    <p class="lead">{{ t('proof.lead') }}</p>
+
+    <div class="receipt-grid">
+      <article class="receipt receipt-kindex" data-kind="kindex">
+        <span class="badge badge-backtest">{{ t('label.backtest') }}</span>
+        <h3>{{ t('proof.c1_title') }}</h3>
+        <p class="receipt-meta mono">{{ t('proof.c1_meta') }}</p>
+        <div class="receipt-pair" aria-hidden="true"><div class="pane pane-alert">🩸 K &lt; 1</div><div class="pane pane-chart"><span class="spark"></span>SMH · 60d</div></div>
+        <p class="receipt-body">{{ t('proof.c1_body_pre') }}<span class="rate" data-winrate="100" data-n="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ t('proof.c1_rate') }} <small class="n">({{ t('label.n_short') }})</small></span>{{ t('proof.c1_body_post') }}</p>
+        <p class="receipt-foot">{{ t('proof.c1_foot') }}</p>
+        {{ links(primary('feed'), '#proof', t('proof.c1_caption'), sec_na=True) }}
+      </article>
+
+      <article class="receipt receipt-win" data-kind="8k">
+        <span class="badge badge-live">{{ t('label.live') }}</span>
+        <h3>{{ t('proof.c2_title') }}</h3>
+        <p class="receipt-meta mono">{{ t('proof.c2_meta') }}</p>
+        <p class="receipt-ret pos mono">+367%</p>
+        <p class="receipt-body">{{ t('proof.c2_body') }}</p>
+        {{ links(primary('feed'), edgar ~ 'CRWV', t('proof.c2_caption')) }}
+      </article>
+
+      <article class="receipt receipt-win" data-kind="8k">
+        <span class="badge badge-live">{{ t('label.live') }}</span>
+        <h3>{{ t('proof.c3_title') }}</h3>
+        <p class="receipt-meta mono">{{ t('proof.c3_meta') }}</p>
+        <p class="receipt-ret pos mono">+73%</p>
+        <p class="receipt-body">{{ t('proof.c3_body') }}</p>
+        {{ links(primary('feed'), edgar ~ 'POWL', t('proof.c3_caption')) }}
+      </article>
+
+      <article class="receipt receipt-win" data-kind="8k">
+        <span class="badge badge-live">{{ t('label.live') }}</span>
+        <h3>{{ t('proof.c4_title') }}</h3>
+        <p class="receipt-meta mono">{{ t('proof.c4_meta') }}</p>
+        <p class="receipt-ret pos mono">+150%</p>
+        <p class="receipt-body">{{ t('proof.c4_body') }}</p>
+        {{ links(primary('feed'), edgar ~ 'PENG', t('proof.c4_caption')) }}
+      </article>
+
+      <article class="receipt" data-kind="278t">
+        <span class="badge badge-live">{{ t('label.live') }}</span>
+        <h3>{{ t('proof.c5_title') }}</h3>
+        <p class="receipt-meta mono">{{ t('proof.c5_meta') }}</p>
+        <p class="receipt-ret mono">−2 d</p>
+        <p class="receipt-body">{{ t('proof.c5_body') }}</p>
+        {{ links(primary('feed'), '#proof', t('proof.c5_caption'), sec_na=True) }}
+      </article>
+
+      <article class="receipt receipt-loss" data-kind="loser" data-placeholder="loser">
+        <span class="badge badge-live">{{ t('label.live') }}</span>
+        <span class="badge badge-placeholder">{{ t('label.placeholder') }}</span>
+        <h3>{{ t('proof.c6_title') }}</h3>
+        <p class="receipt-meta mono">{{ t('proof.c6_meta') }}</p>
+        <p class="receipt-ret neg mono">−—%</p>
+        <p class="receipt-body">{{ t('proof.c6_body') }}</p>
+        <p class="receipt-foot">{{ t('proof.c6_note') }}</p>
+        {{ links(primary('feed'), '#proof', t('proof.c6_caption'), sec_na=True) }}
+      </article>
+    </div>
+
+    <div class="honesty">
+      <p>{{ t('proof.honesty') }}</p>
+      <a class="mono" href="{{ url('/track-record/') }}" data-planned>{{ t('proof.ledger_link') }}</a>
+    </div>
+    <p class="strip mono">{{ t('proof.strip') }}</p>
+  </div>
+</section>

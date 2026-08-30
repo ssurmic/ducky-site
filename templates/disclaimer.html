@@ -1,0 +1,36 @@
+{% extends "_base.html" %}
+{% block title %}{{ t('meta.disclaimer_title') }}{% endblock %}
+{% block og_title %}{{ t('meta.disclaimer_title') }}{% endblock %}
+{% block content %}
+<section class="section page-disclaimer">
+  <div class="wrap narrow">
+    <h1>{{ t('disc.h1') }}</h1>
+
+    <h2>{{ t('disc.is_title') }}</h2>
+    <ul class="checks">
+      <li>{{ t('disc.is_1') }}</li>
+      <li>{{ t('disc.is_2') }}</li>
+      <li>{{ t('disc.is_3') }}</li>
+    </ul>
+
+    <h2>{{ t('disc.isnot_title') }}</h2>
+    <ul class="crosses">
+      <li>{{ t('disc.isnot_1') }}</li>
+      <li>{{ t('disc.isnot_2') }}</li>
+      <li>{{ t('disc.isnot_3') }}</li>
+    </ul>
+
+    <h2>{{ t('disc.backtest_title') }}</h2>
+    <p>{{ t('disc.backtest') }}</p>
+
+    <h2>{{ t('disc.latency_title') }}</h2>
+    <p>{{ t('disc.latency') }}</p>
+
+    <h2>{{ t('disc.contact_title') }}</h2>
+    <p>{{ t('disc.contact') }} <a class="mono" href="{{ tg('disclaimer') }}" rel="noopener">@{{ cfg.bot }}</a></p>
+
+    <p class="strip mono"><span data-line="backtest">{{ t('footer.backtest_line') }}</span> <span data-line="affiliation">{{ t('footer.affiliation_line') }}</span></p>
+    <p><a class="btn btn-ghost" href="{{ url('/') }}">{{ t('disc.back') }}</a></p>
+  </div>
+</section>
+{% endblock %}

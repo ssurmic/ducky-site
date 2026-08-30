@@ -1,0 +1,856 @@
+{
+ "schema": 1,
+ "generated_at": "2026-08-30T02:05:00Z",
+ "note": "FIXTURE — synthetic sample rows for layout and schema validation only. Replaced by the nightly outcomes.py export (.signals/export/track-record.json). Includes losing rows on purpose; losers are never filtered.",
+ "rows": [
+  {
+   "ts": "2026-08-28T15:20:00Z",
+   "kind": "insider",
+   "ticker": "VRT",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.64,
+   "px0": 131.2,
+   "r1": null,
+   "r5": null,
+   "r20": null,
+   "summary": "CEO open-market buy $1.3M"
+  },
+  {
+   "ts": "2026-08-27T13:48:00Z",
+   "kind": "stake",
+   "ticker": "AEHR",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.55,
+   "px0": 13.4,
+   "r1": -0.8,
+   "r5": null,
+   "r20": null,
+   "summary": "13D/A: stake raised to 7.1%"
+  },
+  {
+   "ts": "2026-08-25T13:15:00Z",
+   "kind": "insider",
+   "ticker": "CRDO",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.78,
+   "px0": 71.6,
+   "r1": 1.6,
+   "r5": null,
+   "r20": null,
+   "summary": "CFO open-market buy $350k"
+  },
+  {
+   "ts": "2026-08-20T14:10:00Z",
+   "kind": "political",
+   "ticker": "PLTR",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.3,
+   "px0": 158.2,
+   "r1": 0.7,
+   "r5": 1.9,
+   "r20": null,
+   "summary": "PTR: Senate member buy $100k–$250k"
+  },
+  {
+   "ts": "2026-08-18T13:31:00Z",
+   "kind": "insider",
+   "ticker": "SITM",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.7,
+   "px0": 212.4,
+   "r1": -0.9,
+   "r5": -3.2,
+   "r20": null,
+   "summary": "Director open-market buy $205k"
+  },
+  {
+   "ts": "2026-08-13T12:44:00Z",
+   "kind": "partner",
+   "ticker": "IONQ",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.72,
+   "px0": 38.9,
+   "r1": 5.1,
+   "r5": -2.8,
+   "r20": null,
+   "summary": "8-K: sovereign-fund strategic PIPE $150M"
+  },
+  {
+   "ts": "2026-08-11T13:07:00Z",
+   "kind": "insider",
+   "ticker": "MPWR",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.63,
+   "px0": 742.0,
+   "r1": 1.2,
+   "r5": 3.0,
+   "r20": null,
+   "summary": "CEO open-market buy $600k"
+  },
+  {
+   "ts": "2026-08-06T14:02:00Z",
+   "kind": "13f",
+   "ticker": "AMD",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.38,
+   "px0": 168.0,
+   "r1": -1.1,
+   "r5": 0.4,
+   "r20": null,
+   "summary": "13F: ADDED, multi-strategy fund"
+  },
+  {
+   "ts": "2026-08-04T13:20:00Z",
+   "kind": "insider",
+   "ticker": "AVGO",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.52,
+   "px0": 301.5,
+   "r1": 0.5,
+   "r5": 1.6,
+   "r20": null,
+   "summary": "Officer open-market buy $240k"
+  },
+  {
+   "ts": "2026-07-30T12:33:00Z",
+   "kind": "partner",
+   "ticker": "NBIS",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.83,
+   "px0": 52.7,
+   "r1": 8.9,
+   "r5": 15.2,
+   "r20": 22.8,
+   "summary": "8-K: Tier-1 GPU vendor strategic investment"
+  },
+  {
+   "ts": "2026-07-28T13:55:00Z",
+   "kind": "insider",
+   "ticker": "FN",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.69,
+   "px0": 255.0,
+   "r1": 0.4,
+   "r5": -1.9,
+   "r20": -4.6,
+   "summary": "Director open-market buy $280k"
+  },
+  {
+   "ts": "2026-07-23T13:12:00Z",
+   "kind": "stake",
+   "ticker": "LITE",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.6,
+   "px0": 88.2,
+   "r1": -2.1,
+   "r5": -3.6,
+   "r20": 2.4,
+   "summary": "13D: >5% active stake, board seat sought"
+  },
+  {
+   "ts": "2026-07-21T14:05:00Z",
+   "kind": "kindex",
+   "ticker": "SMH",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.9,
+   "px0": 246.1,
+   "r1": 0.7,
+   "r5": 2.1,
+   "r20": 6.9,
+   "summary": "K = 0.98 (F&G 21 ÷ VIX 21.4) → capitulation band"
+  },
+  {
+   "ts": "2026-07-16T13:41:00Z",
+   "kind": "insider",
+   "ticker": "COHR",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.74,
+   "px0": 96.4,
+   "r1": 1.8,
+   "r5": 4.4,
+   "r20": 13.1,
+   "summary": "CFO open-market buy $310k"
+  },
+  {
+   "ts": "2026-07-14T12:50:00Z",
+   "kind": "earnings",
+   "ticker": "ASML",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.65,
+   "px0": 842.0,
+   "r1": 2.2,
+   "r5": 0.8,
+   "r20": -2.7,
+   "summary": "Post-earnings: bookings beat, guide flat"
+  },
+  {
+   "ts": "2026-07-10T13:20:00Z",
+   "kind": "political",
+   "ticker": "NVDA",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.3,
+   "px0": 171.2,
+   "r1": -0.5,
+   "r5": 1.0,
+   "r20": 3.2,
+   "summary": "OGE 278-T: executive-branch official buy"
+  },
+  {
+   "ts": "2026-07-08T14:15:00Z",
+   "kind": "insider",
+   "ticker": "ALAB",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.8,
+   "px0": 93.7,
+   "r1": 0.6,
+   "r5": 2.9,
+   "r20": 7.5,
+   "summary": "10%-owner open-market buy $2.4M"
+  },
+  {
+   "ts": "2026-07-07T13:33:00Z",
+   "kind": "insider",
+   "ticker": "ONTO",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.71,
+   "px0": 152.3,
+   "r1": 1.4,
+   "r5": 3.3,
+   "r20": 8.8,
+   "summary": "CEO open-market buy $520k"
+  },
+  {
+   "ts": "2026-07-01T13:02:00Z",
+   "kind": "partner",
+   "ticker": "ALAB",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.88,
+   "px0": 90.1,
+   "r1": 2.7,
+   "r5": 6.2,
+   "r20": 10.4,
+   "summary": "8-K: hyperscaler multi-year supply agreement"
+  },
+  {
+   "ts": "2026-06-30T12:20:00Z",
+   "kind": "stake",
+   "ticker": "AEHR",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.62,
+   "px0": 14.1,
+   "r1": 3.5,
+   "r5": 2.2,
+   "r20": -5.8,
+   "summary": "13G: >5% passive stake"
+  },
+  {
+   "ts": "2026-06-26T14:44:00Z",
+   "kind": "insider",
+   "ticker": "ANET",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.58,
+   "px0": 106.9,
+   "r1": 0.9,
+   "r5": 2.4,
+   "r20": 6.3,
+   "summary": "Officer open-market buy $260k"
+  },
+  {
+   "ts": "2026-06-24T13:10:00Z",
+   "kind": "13f",
+   "ticker": "TSM",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.35,
+   "px0": 212.4,
+   "r1": 0.2,
+   "r5": 1.1,
+   "r20": 5.0,
+   "summary": "13F: NEW position, large-cap value fund"
+  },
+  {
+   "ts": "2026-06-23T15:02:00Z",
+   "kind": "insider",
+   "ticker": "NVTS",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.66,
+   "px0": 5.82,
+   "r1": -1.2,
+   "r5": -4.0,
+   "r20": -12.6,
+   "summary": "Director open-market buy $205k"
+  },
+  {
+   "ts": "2026-06-19T13:30:00Z",
+   "kind": "partner",
+   "ticker": "POWL",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.85,
+   "px0": 190.2,
+   "r1": 4.1,
+   "r5": 12.7,
+   "r20": 31.5,
+   "summary": "8-K: anonymous large-customer order"
+  },
+  {
+   "ts": "2026-06-17T12:40:00Z",
+   "kind": "earnings",
+   "ticker": "MU",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.7,
+   "px0": 126.5,
+   "r1": -3.8,
+   "r5": -6.1,
+   "r20": -9.4,
+   "summary": "Post-earnings gap; guide above consensus"
+  },
+  {
+   "ts": "2026-06-16T14:12:00Z",
+   "kind": "kindex",
+   "ticker": "SMH",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.95,
+   "px0": 238.6,
+   "r1": 1.9,
+   "r5": 4.8,
+   "r20": 9.7,
+   "summary": "K = 0.94 (F&G 19 ÷ VIX 20.2) → capitulation band"
+  },
+  {
+   "ts": "2026-06-12T13:55:00Z",
+   "kind": "insider",
+   "ticker": "CRDO",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.77,
+   "px0": 63.1,
+   "r1": 2.3,
+   "r5": 5.6,
+   "r20": 18.9,
+   "summary": "CFO open-market buy $330k"
+  },
+  {
+   "ts": "2026-06-10T20:31:00Z",
+   "kind": "political",
+   "ticker": "LMT",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.4,
+   "px0": 462.0,
+   "r1": 0.3,
+   "r5": 1.7,
+   "r20": 4.4,
+   "summary": "PTR: House member buy $250k–$500k"
+  },
+  {
+   "ts": "2026-06-09T13:05:00Z",
+   "kind": "stake",
+   "ticker": "MRVL",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.55,
+   "px0": 74.3,
+   "r1": 0.8,
+   "r5": -2.2,
+   "r20": -7.9,
+   "summary": "13D: activist >5% stake disclosed"
+  },
+  {
+   "ts": "2026-06-05T14:20:00Z",
+   "kind": "insider",
+   "ticker": "VRT",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.61,
+   "px0": 118.0,
+   "r1": -0.4,
+   "r5": 1.2,
+   "r20": -3.1,
+   "summary": "Director open-market buy $410k"
+  },
+  {
+   "ts": "2026-06-03T12:07:00Z",
+   "kind": "partner",
+   "ticker": "PENG",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.9,
+   "px0": 41.2,
+   "r1": 6.4,
+   "r5": 9.1,
+   "r20": 14.2,
+   "summary": "8-K: Tier-1 telecom strategic PIPE $200M"
+  },
+  {
+   "ts": "2026-06-02T13:41:00Z",
+   "kind": "insider",
+   "ticker": "ALAB",
+   "mode": "LIVE",
+   "direction": 1,
+   "strength": 0.82,
+   "px0": 88.4,
+   "r1": 1.1,
+   "r5": 3.9,
+   "r20": 11.8,
+   "summary": "CEO open-market buy $1.1M · 12,500 sh @ $88.40"
+  },
+  {
+   "ts": "2025-11-20T21:00:00Z",
+   "kind": "kindex",
+   "ticker": "SMH",
+   "mode": "BACKTEST",
+   "direction": 1,
+   "strength": 1.0,
+   "px0": 251.8,
+   "r1": -1.6,
+   "r5": -3.1,
+   "r20": -2.2,
+   "summary": "BACKTEST K<1 (F&G 23 ÷ VIX 25.7)"
+  },
+  {
+   "ts": "2025-04-08T20:00:00Z",
+   "kind": "kindex",
+   "ticker": "SMH",
+   "mode": "BACKTEST",
+   "direction": 1,
+   "strength": 1.0,
+   "px0": 171.2,
+   "r1": 4.1,
+   "r5": 18.3,
+   "r20": 34.7,
+   "summary": "BACKTEST K<1 (F&G 4 ÷ VIX 52.3)"
+  },
+  {
+   "ts": "2024-08-05T20:00:00Z",
+   "kind": "kindex",
+   "ticker": "SMH",
+   "mode": "BACKTEST",
+   "direction": 1,
+   "strength": 1.0,
+   "px0": 213.5,
+   "r1": 2.4,
+   "r5": 6.8,
+   "r20": 12.9,
+   "summary": "BACKTEST K<1 (F&G 20 ÷ VIX 38.6)"
+  },
+  {
+   "ts": "2023-03-13T20:00:00Z",
+   "kind": "kindex",
+   "ticker": "SMH",
+   "mode": "BACKTEST",
+   "direction": 1,
+   "strength": 1.0,
+   "px0": 240.1,
+   "r1": -0.9,
+   "r5": 2.7,
+   "r20": 9.8,
+   "summary": "BACKTEST K<1 (F&G 18 ÷ VIX 26.5)"
+  },
+  {
+   "ts": "2022-10-13T20:00:00Z",
+   "kind": "kindex",
+   "ticker": "SMH",
+   "mode": "BACKTEST",
+   "direction": 1,
+   "strength": 1.0,
+   "px0": 178.9,
+   "r1": 3.6,
+   "r5": 9.2,
+   "r20": 21.4,
+   "summary": "BACKTEST K<1 (F&G 22 ÷ VIX 31.9)"
+  },
+  {
+   "ts": "2022-06-16T20:00:00Z",
+   "kind": "kindex",
+   "ticker": "SMH",
+   "mode": "BACKTEST",
+   "direction": 1,
+   "strength": 1.0,
+   "px0": 196.3,
+   "r1": 1.2,
+   "r5": 4.9,
+   "r20": 11.6,
+   "summary": "BACKTEST K<1 (F&G 17 ÷ VIX 32.9)"
+  }
+ ],
+ "by_source": [
+  {
+   "kind": "13f",
+   "mode": "LIVE",
+   "n": 2,
+   "n5": 2,
+   "n20": 1,
+   "hit5": 100.0,
+   "hit20": 100.0,
+   "avg20": 5.0
+  },
+  {
+   "kind": "earnings",
+   "mode": "LIVE",
+   "n": 2,
+   "n5": 2,
+   "n20": 2,
+   "hit5": 50.0,
+   "hit20": 0.0,
+   "avg20": -6.05
+  },
+  {
+   "kind": "insider",
+   "mode": "LIVE",
+   "n": 14,
+   "n5": 12,
+   "n20": 9,
+   "hit5": 75.0,
+   "hit20": 66.7,
+   "avg20": 5.12
+  },
+  {
+   "kind": "kindex",
+   "mode": "BACKTEST",
+   "n": 6,
+   "n5": 6,
+   "n20": 6,
+   "hit5": 83.3,
+   "hit20": 83.3,
+   "avg20": 14.7
+  },
+  {
+   "kind": "kindex",
+   "mode": "LIVE",
+   "n": 2,
+   "n5": 2,
+   "n20": 2,
+   "hit5": 100.0,
+   "hit20": 100.0,
+   "avg20": 8.3
+  },
+  {
+   "kind": "partner",
+   "mode": "LIVE",
+   "n": 5,
+   "n5": 5,
+   "n20": 4,
+   "hit5": 80.0,
+   "hit20": 100.0,
+   "avg20": 19.73
+  },
+  {
+   "kind": "political",
+   "mode": "LIVE",
+   "n": 3,
+   "n5": 3,
+   "n20": 2,
+   "hit5": 100.0,
+   "hit20": 100.0,
+   "avg20": 3.8
+  },
+  {
+   "kind": "stake",
+   "mode": "LIVE",
+   "n": 4,
+   "n5": 3,
+   "n20": 3,
+   "hit5": 33.3,
+   "hit20": 33.3,
+   "avg20": -3.77
+  }
+ ],
+ "equity": [
+  {
+   "d": "2026-06-01",
+   "v": 100.73
+  },
+  {
+   "d": "2026-06-02",
+   "v": 101.07
+  },
+  {
+   "d": "2026-06-03",
+   "v": 102.28
+  },
+  {
+   "d": "2026-06-04",
+   "v": 103.25
+  },
+  {
+   "d": "2026-06-05",
+   "v": 104.35
+  },
+  {
+   "d": "2026-06-08",
+   "v": 103.84
+  },
+  {
+   "d": "2026-06-09",
+   "v": 102.59
+  },
+  {
+   "d": "2026-06-10",
+   "v": 101.83
+  },
+  {
+   "d": "2026-06-11",
+   "v": 101.54
+  },
+  {
+   "d": "2026-06-12",
+   "v": 103.54
+  },
+  {
+   "d": "2026-06-15",
+   "v": 104.15
+  },
+  {
+   "d": "2026-06-16",
+   "v": 102.34
+  },
+  {
+   "d": "2026-06-17",
+   "v": 103.04
+  },
+  {
+   "d": "2026-06-18",
+   "v": 105.35
+  },
+  {
+   "d": "2026-06-19",
+   "v": 104.39
+  },
+  {
+   "d": "2026-06-22",
+   "v": 104.13
+  },
+  {
+   "d": "2026-06-23",
+   "v": 104.49
+  },
+  {
+   "d": "2026-06-24",
+   "v": 103.5
+  },
+  {
+   "d": "2026-06-25",
+   "v": 104.83
+  },
+  {
+   "d": "2026-06-26",
+   "v": 104.64
+  },
+  {
+   "d": "2026-06-29",
+   "v": 105.23
+  },
+  {
+   "d": "2026-06-30",
+   "v": 104.69
+  },
+  {
+   "d": "2026-07-01",
+   "v": 104.54
+  },
+  {
+   "d": "2026-07-02",
+   "v": 104.17
+  },
+  {
+   "d": "2026-07-03",
+   "v": 103.22
+  },
+  {
+   "d": "2026-07-06",
+   "v": 101.48
+  },
+  {
+   "d": "2026-07-07",
+   "v": 103.6
+  },
+  {
+   "d": "2026-07-08",
+   "v": 102.95
+  },
+  {
+   "d": "2026-07-09",
+   "v": 103.09
+  },
+  {
+   "d": "2026-07-10",
+   "v": 104.03
+  },
+  {
+   "d": "2026-07-13",
+   "v": 104.61
+  },
+  {
+   "d": "2026-07-14",
+   "v": 104.08
+  },
+  {
+   "d": "2026-07-15",
+   "v": 103.33
+  },
+  {
+   "d": "2026-07-16",
+   "v": 104.72
+  },
+  {
+   "d": "2026-07-17",
+   "v": 105.41
+  },
+  {
+   "d": "2026-07-20",
+   "v": 105.73
+  },
+  {
+   "d": "2026-07-21",
+   "v": 105.94
+  },
+  {
+   "d": "2026-07-22",
+   "v": 106.99
+  },
+  {
+   "d": "2026-07-23",
+   "v": 108.14
+  },
+  {
+   "d": "2026-07-24",
+   "v": 106.57
+  },
+  {
+   "d": "2026-07-27",
+   "v": 106.69
+  },
+  {
+   "d": "2026-07-28",
+   "v": 107.33
+  },
+  {
+   "d": "2026-07-29",
+   "v": 106.43
+  },
+  {
+   "d": "2026-07-30",
+   "v": 107.29
+  },
+  {
+   "d": "2026-07-31",
+   "v": 108.15
+  },
+  {
+   "d": "2026-08-03",
+   "v": 108.64
+  },
+  {
+   "d": "2026-08-04",
+   "v": 107.68
+  },
+  {
+   "d": "2026-08-05",
+   "v": 107.74
+  },
+  {
+   "d": "2026-08-06",
+   "v": 107.38
+  },
+  {
+   "d": "2026-08-07",
+   "v": 107.36
+  },
+  {
+   "d": "2026-08-10",
+   "v": 107.42
+  },
+  {
+   "d": "2026-08-11",
+   "v": 106.81
+  },
+  {
+   "d": "2026-08-12",
+   "v": 106.77
+  },
+  {
+   "d": "2026-08-13",
+   "v": 107.46
+  },
+  {
+   "d": "2026-08-14",
+   "v": 107.18
+  },
+  {
+   "d": "2026-08-17",
+   "v": 107.1
+  },
+  {
+   "d": "2026-08-18",
+   "v": 108.12
+  },
+  {
+   "d": "2026-08-19",
+   "v": 107.34
+  },
+  {
+   "d": "2026-08-20",
+   "v": 107.6
+  },
+  {
+   "d": "2026-08-21",
+   "v": 107.49
+  },
+  {
+   "d": "2026-08-24",
+   "v": 109.5
+  },
+  {
+   "d": "2026-08-25",
+   "v": 110.03
+  },
+  {
+   "d": "2026-08-26",
+   "v": 111.1
+  },
+  {
+   "d": "2026-08-27",
+   "v": 112.43
+  },
+  {
+   "d": "2026-08-28",
+   "v": 113.59
+  }
+ ],
+ "equity_note": "LIVE signals, equal-weight, +20 trading-day hold, index=100, no fees/slippage/taxes (hypothetical)",
+ "backtest": {
+  "kindex": {
+   "n": 6,
+   "target": "SMH",
+   "window": 20,
+   "win20": 83.3,
+   "avg20": 14.7,
+   "note": "FIXTURE numbers; replaced by outcomes.py (win20/avg20 = +20d horizon, percent)"
+  }
+ }
+}

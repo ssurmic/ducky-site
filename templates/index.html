@@ -1,0 +1,23 @@
+{% extends "_base.html" %}
+{% block content %}
+{% include "_partials/hero.html" %}
+{% include "_partials/receipts.html" %}
+{% include "_partials/feed.html" %}
+{% include "_partials/kindex.html" %}
+{% include "_partials/boards.html" %}
+{% include "_partials/dm.html" %}
+{% include "_partials/local.html" %}
+{% include "_partials/who.html" %}
+{% include "_partials/pricing.html" %}
+{% include "_partials/faq.html" %}
+{% include "_partials/disclaimer.html" %}
+
+{# Mobile sticky bar: free + subscribe $12 only. Never a ¥ price here (¥ lives inside #pricing only). #}
+<div class="sticky-bar" id="sticky-bar" aria-hidden="true">
+  <a class="btn btn-ghost" href="{{ primary('sticky') }}">{{ t('sticky.free') }}</a>
+  <a class="btn btn-primary" href="{{ tg('sticky_signal') }}">{{ t('sticky.subscribe') }}</a>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="/js/site.js" defer></script>
+{% endblock %}
