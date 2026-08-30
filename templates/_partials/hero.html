@@ -6,40 +6,71 @@
       <p class="sub">{{ t('hero.sub') }}</p>
       <div class="cta-row">
         <a class="btn btn-primary btn-lg" href="{{ primary('web') }}" rel="noopener">{{ t('hero.cta_channel') if has_channel else t('hero.cta_bot') }}</a>
-        <a class="btn btn-ghost btn-lg" href="#proof">{{ t('hero.cta_secondary') }}</a>
+        <a class="btn btn-ghost btn-lg" href="{{ url('/track-record/') }}">{{ t('hero.cta_ledger') }}</a>
       </div>
-      <p class="try">{{ t('hero.cta_try_prefix') }} <a class="mono" href="{{ tg('dm') }}" rel="noopener">@{{ cfg.bot }}</a> {{ t('hero.cta_try_suffix') }}</p>
+      <p class="try"><a href="#examples">{{ t('hero.cta_secondary') }}</a> · {{ t('hero.cta_try_prefix') }} <a class="mono" href="{{ tg('dm') }}" rel="noopener">@{{ cfg.bot }}</a> {{ t('hero.cta_try_suffix') }}</p>
       <p class="proof-strip mono">{{ t('hero.proof_strip') }}</p>
     </div>
 
-    <div class="hero-visual" role="img" aria-label="{{ t('hero.phone_label') }}">
-      <div class="phone">
-        <div class="phone-notch"></div>
-        <div class="phone-head">
-          <img class="avatar-mark avatar-md" src="/avatar-160.jpg" alt="" width="34" height="34" loading="eager" fetchpriority="high" decoding="sync">
-          <div class="phone-head-text"><b>{{ t('hero.phone_header') }}</b><small>{{ t('hero.phone_status') }}</small></div>
+    <div class="hero-visual">
+      {# §5.3.5 hero carousel: slide 1 = phone pushes, slide 2 = 战绩卡 (equity curve + ledger CTA).
+         Pure CSS scroll-snap; dots / arrows / one-shot auto-advance live in /js/hero.js (landing only). #}
+      <div class="hero-carousel" id="hero-carousel" tabindex="0" role="group" aria-roledescription="carousel" aria-label="{{ t('hero.carousel_label') }}">
+        <div class="hero-slide" role="img" aria-label="{{ t('hero.phone_label') }}">
+          <div class="phone">
+            <div class="phone-notch"></div>
+            <div class="phone-head">
+              <img class="avatar-mark avatar-md" src="/avatar-160.jpg" alt="" width="34" height="34" loading="eager" fetchpriority="high" decoding="sync">
+              <div class="phone-head-text"><b>{{ t('hero.phone_header') }}</b><small>{{ t('hero.phone_status') }}</small></div>
+            </div>
+            <div class="phone-body">
+              <div class="bubble bubble-insider">
+                <div class="bubble-line bubble-title">{{ t('hero.b1_l1') }}</div>
+                <div class="bubble-line">{{ t('hero.b1_l2') }}</div>
+                <div class="bubble-line">{{ t('hero.b1_l3') }}</div>
+                <div class="bubble-line">{{ t('hero.b1_l4') }}</div>
+                <div class="bubble-line">{{ t('hero.b1_l5') }}</div>
+                <time class="bubble-ts">{{ t('hero.b1_ts') }}</time>
+              </div>
+              <div class="bubble bubble-strategic">
+                <div class="bubble-line bubble-title">{{ t('hero.b2_l1') }}</div>
+                <div class="bubble-line">{{ t('hero.b2_l2') }}</div>
+                <time class="bubble-ts">{{ t('hero.b2_ts') }}</time>
+              </div>
+              <div class="bubble bubble-kindex">
+                <div class="bubble-line bubble-title">{{ t('hero.b3_l1') }}</div>
+                <div class="bubble-line">{{ t('hero.b3_l2_pre') }}<span class="rate" data-winrate="100" data-n="{{ track_n }}" title="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ t('hero.b3_l2_rate') }} <small class="n">({{ tf('label.n_short', n=track_n) }})</small></span></div>
+                <div class="bubble-line">{{ t('hero.b3_l3') }}</div>
+                <time class="bubble-ts">{{ t('hero.b3_ts') }}</time>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="phone-body">
-          <div class="bubble bubble-insider">
-            <div class="bubble-line bubble-title">{{ t('hero.b1_l1') }}</div>
-            <div class="bubble-line">{{ t('hero.b1_l2') }}</div>
-            <div class="bubble-line">{{ t('hero.b1_l3') }}</div>
-            <div class="bubble-line">{{ t('hero.b1_l4') }}</div>
-            <div class="bubble-line">{{ t('hero.b1_l5') }}</div>
-            <time class="bubble-ts">{{ t('hero.b1_ts') }}</time>
-          </div>
-          <div class="bubble bubble-strategic">
-            <div class="bubble-line bubble-title">{{ t('hero.b2_l1') }}</div>
-            <div class="bubble-line">{{ t('hero.b2_l2') }}</div>
-            <time class="bubble-ts">{{ t('hero.b2_ts') }}</time>
-          </div>
-          <div class="bubble bubble-kindex">
-            <div class="bubble-line bubble-title">{{ t('hero.b3_l1') }}</div>
-            <div class="bubble-line">{{ t('hero.b3_l2_pre') }}<span class="rate" data-winrate="100" data-n="{{ track_n }}" title="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ t('hero.b3_l2_rate') }} <small class="n">({{ tf('label.n_short', n=track_n) }})</small></span></div>
-            <div class="bubble-line">{{ t('hero.b3_l3') }}</div>
-            <time class="bubble-ts">{{ t('hero.b3_ts') }}</time>
+        <div class="hero-slide">
+          <div class="track-card" aria-label="{{ t('hero.s2_label') }}">
+            {% if track_stats.ok %}
+            <p class="track-card-head mono">{{ tf('hero.s2_stats', live=track_stats.live) }}</p>
+            <figure class="track-mini">
+              <svg viewBox="0 0 {{ track_stats.eq.w }} {{ track_stats.eq.h }}" width="100%" role="img" aria-label="{{ t('hero.s2_label') }}" focusable="false">
+                <polyline class="eq-spy" points="{{ track_stats.eq.spy }}"/>
+                <polyline class="eq-nav" points="{{ track_stats.eq.nav }}"/>
+              </svg>
+              <figcaption class="mono">{{ track_stats.eq.first }} → {{ track_stats.eq.last }} · <span class="eq-nav-key">{{ t('hero.s2_nav') }} {{ track_stats.eq.nav_last }}</span> · <span class="eq-spy-key">SPY {{ track_stats.eq.spy_last }}</span></figcaption>
+            </figure>
+            <p class="track-card-note">{{ t('hero.s2_note') }}</p>
+            {% else %}
+            <p class="track-card-head mono">{{ t('stats.notary_big') }}</p>
+            <p class="track-card-note">{{ t('stats.notary') }}</p>
+            {% endif %}
+            <a class="btn btn-primary" href="{{ url('/track-record/') }}">{{ t('hero.s2_cta') }}</a>
           </div>
         </div>
+      </div>
+      <div class="hero-dots" id="hero-dots">
+        <button type="button" class="hero-arrow" data-hero-arrow="-1" aria-label="{{ t('hero.prev') }}">‹</button>
+        <button type="button" class="hero-dot on" aria-label="{{ t('hero.dot1') }}"></button>
+        <button type="button" class="hero-dot" aria-label="{{ t('hero.dot2') }}"></button>
+        <button type="button" class="hero-arrow" data-hero-arrow="1" aria-label="{{ t('hero.next') }}">›</button>
       </div>
       <img class="avatar-mark avatar-peek" src="/avatar-160.jpg" alt="" width="76" height="76" loading="eager" fetchpriority="high" decoding="sync" aria-hidden="true">
     </div>

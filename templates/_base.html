@@ -19,7 +19,7 @@
 <meta property="og:locale" content="{{ 'zh_CN' if is_zh else 'en_US' }}">
 <meta property="og:locale:alternate" content="{{ 'en_US' if is_zh else 'zh_CN' }}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0b0f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/mascot.svg" type="image/svg+xml">
 <link rel="alternate icon" href="/favicon.svg" type="image/svg+xml">
@@ -39,8 +39,9 @@
   <div class="wrap nav-row">
     <a class="brand" href="{{ url('/') }}"><img class="avatar-mark" src="/avatar-160.jpg" alt="" width="28" height="28" loading="eager" fetchpriority="high" decoding="sync"> {{ t('nav.brand') }}</a>
     <nav class="nav-links" aria-label="primary">
-      <a href="{{ url('/') }}#proof">{{ t('nav.proof') }}</a>
+      <a href="{{ url('/') }}#examples">{{ t('nav.proof') }}</a>
       <a href="{{ url('/') }}#boards">{{ t('nav.boards') }}</a>
+      <a class="nav-strong" href="{{ url('/track-record/') }}">{{ t('nav.track') }}</a>
       <a href="{{ url('/') }}#pricing">{{ t('nav.pricing') }}</a>
       <a href="{{ url('/') }}#faq">{{ t('nav.faq') }}</a>
     </nav>

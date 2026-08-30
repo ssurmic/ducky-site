@@ -221,8 +221,51 @@ def load_track_n() -> int:
     return n
 
 
+def load_track_stats() -> dict:
+    """§5.3.4/5: the proof stats band + the hero slide-2 战绩卡, computed from the nightly notary at
+    build time. Total signal count, the LIVE hit20 of the largest-N source (with its own denominator
+    as the printed N=), and the LIVE equity curve (nav vs SPY) as two ready-to-print polylines.
+    Graceful: returns {'ok': False} when the JSON is missing or malformed — the band and slide-2 curve
+    simply don't render (load_track_n still hard-fails the build for the K-index N)."""
+    try:
+        doc = json.loads(TRACK_JSON.read_text(encoding="utf-8"))
+        rows = doc.get("rows") or []
+        total = len(rows)
+        live = sum(1 for r in rows if isinstance(r, dict) and r.get("mode") == "LIVE")
+        srcs = [s for s in (doc.get("by_source") or [])
+                if isinstance(s, dict) and s.get("mode") == "LIVE"
+                and s.get("hit20") is not None and s.get("n_hit20")]
+        best = max(srcs, key=lambda s: (s.get("n_hit20", 0), s.get("n", 0)), default=None)
+        eq = [p_ for p_ in (doc.get("equity") or [])
+              if isinstance(p_, dict) and p_.get("v") is not None and p_.get("spy") is not None]
+        if not (total and best and len(eq) >= 2):
+            return {"ok": False}
+        w, h, pad = 280, 96, 6
+        vals = [p_["v"] for p_ in eq] + [p_["spy"] for p_ in eq]
+        lo, hi = min(vals), max(vals)
+        span = (hi - lo) or 1.0
+        n = len(eq)
+
+        def pts(key: str) -> str:
+            return " ".join(
+                f"{round(pad + (w - 2 * pad) * (i / (n - 1)), 1)},"
+                f"{round(pad + (h - 2 * pad) * (1 - (p_[key] - lo) / span), 1)}"
+                for i, p_ in enumerate(eq))
+
+        return {
+            "ok": True, "total": total, "live": live,
+            "hit20": int(round(best["hit20"])), "hit20_n": int(best["n_hit20"]), "hit20_kind": best["kind"],
+            "eq": {"w": w, "h": h, "nav": pts("v"), "spy": pts("spy"),
+                    "first": eq[0]["d"], "last": eq[-1]["d"],
+                    "nav_last": f"{(eq[-1]['v'] - 1) * 100:+.1f}%",
+                    "spy_last": f"{(eq[-1]['spy'] - 1) * 100:+.1f}%"},
+        }
+    except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError):
+        return {"ok": False}
+
+
 def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, version: str, liq: dict,
-                  track_n: int = 0) -> dict:
+                  track_n: int = 0, track_stats: dict | None = None) -> dict:
     table = tables[lang]
     other = "en" if lang == "zh" else "zh"
 
@@ -255,7 +298,7 @@ def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, versi
     return {
         "lang": lang, "html_lang": HTML_LANG[lang], "other_lang": other, "is_zh": lang == "zh",
         "page": page, "t": t, "t2": t2, "tf": tf, "tg": tg, "primary": primary, "url": url, "liq": liq,
-        "track_n": track_n,
+        "track_n": track_n, "track_stats": track_stats or {"ok": False},
         "cfg": cfg, "prices": cfg["prices"], "channel_url": channel_url, "has_channel": bool(channel_url),
         "bot_url": f"https://t.me/{cfg['bot']}", "miniapp_url": f"https://t.me/{cfg['bot']}/{cfg['miniapp']}",
         "canonical": cfg["site_url"] + page_url(lang, rel),
@@ -309,6 +352,7 @@ def main() -> None:
 
     cfg, tables, version = load_config(args.api_base), load_i18n(), git_sha()
     pages, env, liq, track_n = page_targets(), make_env(), load_liquidity(), load_track_n()
+    track_stats = load_track_stats()   # §5.3.4/5 — graceful {'ok': False} when the notary JSON is absent
 
     if DIST.exists():
         shutil.rmtree(DIST)
@@ -327,7 +371,7 @@ def main() -> None:
     for tpl_name, rel in pages:
         tpl = env.get_template(tpl_name)
         for lang in LANGS:
-            ctx = build_context(cfg, tables, lang, Path(tpl_name).stem, rel, version, liq, track_n)
+            ctx = build_context(cfg, tables, lang, Path(tpl_name).stem, rel, version, liq, track_n, track_stats)
             html = version_assets(tpl.render(**ctx), version)
             out = DIST / lang_prefix(lang).strip("/") / rel
             out.parent.mkdir(parents=True, exist_ok=True)

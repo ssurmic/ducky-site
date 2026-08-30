@@ -1,0 +1,27 @@
+{# Proof stats band (SYSTEMDESIGN §5.3.4): live numbers computed from public/track-record.json at build
+   time (build.py: load_track_stats). Tiles are clickable → the track record (the notary tile → the
+   GitHub commit history). The band disappears gracefully when the notary JSON is missing. #}
+{% if track_stats.ok %}
+<section class="section stats-band" id="stats" aria-label="{{ t('stats.aria') }}">
+  <div class="wrap">
+    <div class="stats-grid">
+      <a class="stat-tile" href="{{ url('/track-record/') }}">
+        <b class="mono">{{ track_stats.total }}</b>
+        <span>{{ t('stats.signals') }}</span>
+      </a>
+      <a class="stat-tile" href="{{ url('/track-record/') }}">
+        <b class="mono"><span class="rate" data-winrate="{{ track_stats.hit20 }}" data-n="{{ track_stats.hit20_n }}" title="{{ t('label.n_caveat') }}">{{ track_stats.hit20 }}% <small class="n">({{ tf('label.n_short', n=track_stats.hit20_n) }})</small></span></b>
+        <span>{{ tf('stats.hit20_label', kind=t('stats.kind_' ~ track_stats.hit20_kind), n=track_stats.hit20_n) }}</span>
+      </a>
+      <a class="stat-tile" href="{{ url('/track-record/') }}#liquidity">
+        <b class="mono pos">{{ liq.fmt.qqq_now }}</b>
+        <span>{{ t('stats.best') }}</span>
+      </a>
+      <a class="stat-tile" href="https://github.com/ssurmic/ducky-site/commits/main/public/track-record.json" rel="noopener">
+        <b>{{ t('stats.notary_big') }}</b>
+        <span>{{ t('stats.notary') }}</span>
+      </a>
+    </div>
+  </div>
+</section>
+{% endif %}
