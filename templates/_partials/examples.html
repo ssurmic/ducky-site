@@ -12,11 +12,30 @@
   <div class="wrap">
     <h2>{{ t('ex.h2') }}</h2>
     <p class="lead">{{ t('ex.lead') }}</p>
+    <p class="edge">{{ t('ex.edge') }}</p>
 
     {# ── 4. 大佬入股 ── #}
     <details class="ex" open>
       <summary><span class="ex-emoji">🤝</span><span class="ex-title">{{ t('ex.stake_t') }}</span><span class="ex-how">{{ t('ex.stake_how') }}</span></summary>
       <div class="ex-body">
+        {# NVIDIA → Nokia — the marquee strategic-stake example (real prices, honestly a swing) #}
+        <div class="ex-grid">
+          <div class="bubble bubble-strategic">
+            <div class="bubble-line bubble-title">🤝 STRATEGIC STAKE — NVIDIA → $NOK</div>
+            <div class="bubble-line">{{ t('ex.nok_l2') }}</div>
+            <div class="bubble-line">🏢 {{ t('ex.nok_biz') }}</div>
+            <div class="bubble-line">🦆 {{ t('ex.nok_read') }}</div>
+            <div class="bubble-line bubble-cta">{{ t('feed.cta_line') }}</div>
+            <span class="bubble-ts">2025-10-28 · Nokia 6-K / Inside Information</span>
+          </div>
+          <div class="ex-after">
+            <span class="badge badge-backtest badge-inline">{{ t('ex.demo_badge') }}</span>
+            <p class="ex-after-num pos mono">+27%<small>{{ t('ex.nok_peak') }}</small></p>
+            <p class="ex-after-txt">{{ t('ex.nok_after') }}</p>
+            <p class="ex-after-txt muted">{{ t('ex.nok_honest') }}</p>
+            <p class="ex-after-txt muted">{{ t('ex.nok_coverage') }}</p>
+          </div>
+        </div>
         <div class="ex-grid">
           <div class="bubble bubble-strategic">
             <div class="bubble-line bubble-title">🤝 13G — Berkshire Hathaway → $LEN</div>

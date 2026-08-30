@@ -478,3 +478,8 @@ h1, h2, h3, .btn, .login-h2 { font-family: ui-rounded, var(--font); }
 .lang-zh .tiers .tier-pro { order: 4; }
 .lang-zh .tier-signal { border-color: var(--border); box-shadow: none; }
 .lang-zh .tier-cn { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+
+/* ── 信息差 edge line under the examples lead ─────────────────────────────── */
+.examples .edge { margin: 4px 0 18px; padding: 12px 14px; border-left: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 7%, transparent); border-radius: 0 12px 12px 0;
+  font-size: .95rem; line-height: 1.6; color: var(--ink); }
