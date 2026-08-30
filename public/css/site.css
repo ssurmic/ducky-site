@@ -462,3 +462,19 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 h1, h2, h3, .btn, .login-h2 { font-family: ui-rounded, var(--font); }
 .input, .btn { border-radius: 14px; }
 .card, .stat-tile { border-radius: 18px; }
+
+/* ── copy v3 (2026-08-30): two-line hero, CTA microcopy, WHO strip, stats/pricing rework ── */
+.hero-line2 { font-size: 1.18rem; font-weight: 600; color: var(--muted); margin: .15rem 0 .35rem; max-width: 52ch; }
+.cta-note { font-size: 12px; line-height: 1.6; color: var(--faint); max-width: 56ch; margin-top: .55rem; }
+.whostrip { padding: 16px 0; background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.whostrip-line { margin: 0; color: var(--muted); font-size: .95rem; line-height: 1.6; max-width: 78ch; }
+.whostrip-line b { color: var(--text); }
+.track-card-caption { font-size: .74rem; line-height: 1.5; color: #b7c2cc; margin: 0; }
+.band-note { margin: 0 0 14px; color: var(--muted); font-size: .95rem; max-width: 72ch; }
+/* zh pricing: ¥ annual card sits in slot 2 and carries the highlight; the USD Signal card hands it over */
+.lang-zh .tiers .tier-free { order: 1; }
+.lang-zh .tiers .tier-cn { order: 2; }
+.lang-zh .tiers .tier-signal { order: 3; }
+.lang-zh .tiers .tier-pro { order: 4; }
+.lang-zh .tier-signal { border-color: var(--border); box-shadow: none; }
+.lang-zh .tier-cn { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }

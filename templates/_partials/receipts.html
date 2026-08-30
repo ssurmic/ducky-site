@@ -18,7 +18,7 @@
         <h3>{{ t('proof.c1_title') }}</h3>
         <p class="receipt-meta mono">{{ t('proof.c1_meta') }}</p>
         <div class="receipt-pair" aria-hidden="true"><div class="pane pane-alert">🩸 K &lt; 1</div><div class="pane pane-chart"><span class="spark"></span>SMH · 60d</div></div>
-        <p class="receipt-body">{{ t('proof.c1_body_pre') }}<span class="rate" data-winrate="100" data-n="{{ track_n }}" title="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ t('proof.c1_rate') }} <small class="n">({{ tf('label.n_short', n=track_n) }})</small></span>{{ t('proof.c1_body_post') }}</p>
+        <p class="receipt-body">{{ tf('proof.c1_body_pre', n=track_n) }}<span class="rate" data-winrate="100" data-n="{{ track_n }}" title="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ tf('proof.c1_rate', n=track_n) }} <small class="n">({{ tf('label.n_short', n=track_n) }})</small></span>{{ t('proof.c1_body_post') }}</p>
         <p class="receipt-foot">{{ t('proof.c1_foot') }}</p>
         {{ links(primary('feed'), '#proof', t('proof.c1_caption'), sec_na=True) }}
       </article>

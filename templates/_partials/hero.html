@@ -3,12 +3,13 @@
     <div class="hero-copy">
       <p class="eyebrow mono">{{ t('hero.eyebrow') }}</p>
       <h1>{{ t('hero.h1') }}</h1>
+      <p class="hero-line2">{{ t('hero.h2') }}</p>
       <p class="sub">{{ t('hero.sub') }}</p>
       <div class="cta-row">
         <a class="btn btn-primary btn-lg" href="{{ primary('web') }}" rel="noopener">{{ t('hero.cta_channel') if has_channel else t('hero.cta_bot') }}</a>
         <a class="btn btn-ghost btn-lg" href="{{ url('/track-record/') }}">{{ t('hero.cta_ledger') }}</a>
       </div>
-      <p class="try"><a href="#examples">{{ t('hero.cta_secondary') }}</a> · {{ t('hero.cta_try_prefix') }} <a class="mono" href="{{ tg('dm') }}" rel="noopener">@{{ cfg.bot }}</a> {{ t('hero.cta_try_suffix') }}</p>
+      <p class="cta-note">{{ t('hero.cta_note') }}</p>
       <p class="proof-strip mono">{{ t('hero.proof_strip') }}</p>
     </div>
 
@@ -29,7 +30,6 @@
                 <div class="bubble-line">{{ t('hero.b1_l2') }}</div>
                 <div class="bubble-line">{{ t('hero.b1_l3') }}</div>
                 <div class="bubble-line">{{ t('hero.b1_l4') }}</div>
-                <div class="bubble-line">{{ t('hero.b1_l5') }}</div>
                 <time class="bubble-ts">{{ t('hero.b1_ts') }}</time>
               </div>
               <div class="bubble bubble-strategic">
@@ -39,7 +39,7 @@
               </div>
               <div class="bubble bubble-kindex">
                 <div class="bubble-line bubble-title">{{ t('hero.b3_l1') }}</div>
-                <div class="bubble-line">{{ t('hero.b3_l2_pre') }}<span class="rate" data-winrate="100" data-n="{{ track_n }}" title="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ t('hero.b3_l2_rate') }} <small class="n">({{ tf('label.n_short', n=track_n) }})</small></span></div>
+                <div class="bubble-line">{{ tf('hero.b3_l2_pre', n=track_n) }}<span class="rate" data-winrate="100" data-n="{{ track_n }}" title="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ tf('hero.b3_l2_rate', n=track_n) }} <small class="n">({{ tf('label.n_short', n=track_n) }})</small></span></div>
                 <div class="bubble-line">{{ t('hero.b3_l3') }}</div>
                 <time class="bubble-ts">{{ t('hero.b3_ts') }}</time>
               </div>
@@ -57,6 +57,7 @@
               </svg>
               <figcaption class="mono">{{ track_stats.eq.first }} → {{ track_stats.eq.last }} · <span class="eq-nav-key">{{ t('hero.s2_nav') }} {{ track_stats.eq.nav_last }}</span> · <span class="eq-spy-key">SPY {{ track_stats.eq.spy_last }}</span></figcaption>
             </figure>
+            <p class="track-card-caption">{{ tf('hero.s2_caption', nav=track_stats.eq.nav_last, spy=track_stats.eq.spy_last) }}</p>
             <p class="track-card-note">{{ t('hero.s2_note') }}</p>
             {% else %}
             <p class="track-card-head mono">{{ t('stats.notary_big') }}</p>

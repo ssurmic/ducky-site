@@ -13,89 +13,8 @@
     <h2>{{ t('ex.h2') }}</h2>
     <p class="lead">{{ t('ex.lead') }}</p>
 
-    {# ── 1. 高管买入 ── #}
-    <details class="ex" open>
-      <summary><span class="ex-emoji">💰</span><span class="ex-title">{{ t('ex.insider_t') }}</span><span class="ex-how">{{ t('ex.insider_how') }}</span></summary>
-      <div class="ex-body">
-        <div class="ex-grid">
-          <div class="bubble bubble-insider">
-            <div class="bubble-line bubble-title">🚨🟢 INSIDER BUY — $1.12M / $TTMI</div>
-            <div class="bubble-line">Roks Edwin · Dir, President &amp; CEO · @ $121.70 · <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=TTMI&amp;type=4&amp;owner=include&amp;count=40" rel="noopener">SEC EDGAR ›</a></div>
-            <div class="bubble-line">🏢 {{ t('ex.insider_ttmi_biz') }}</div>
-            <div class="bubble-line">{{ t('ex.insider_ttmi_read') }}</div>
-            <div class="bubble-line bubble-cta">{{ t('feed.cta_line') }}</div>
-            <span class="bubble-ts">2026-08-26 07:42 UTC · Form 4</span>
-          </div>
-          <div class="ex-after">
-            <span class="badge badge-live badge-inline">LIVE</span>
-            <p class="ex-after-num pos mono">+8.4%<small>{{ t('ex.pushday') }}</small></p>
-            <p class="ex-after-txt">{{ t('ex.insider_after') }}</p>
-            <p class="ex-after-txt muted">{{ t('ex.insider_sgi') }}</p>
-          </div>
-        </div>
-      </div>
-    </details>
-
-    {# ── 2. 集群买入 ── #}
-    <details class="ex">
-      <summary><span class="ex-emoji">🧲</span><span class="ex-title">{{ t('ex.cluster_t') }}</span><span class="ex-how">{{ t('ex.cluster_how') }}</span></summary>
-      <div class="ex-body">
-        <div class="ex-grid">
-          <div class="bubble bubble-insider">
-            <div class="bubble-line bubble-title">🟢 CLUSTER BUY — TSM</div>
-            <div class="bubble-line">Taiwan Semiconductor · {{ t('ex.cluster_tsm_ind') }}</div>
-            <div class="bubble-line">💰 {{ t('ex.cluster_tsm_line') }} · buy ~$403.31</div>
-            <div class="bubble-line">📅 trade 2026-07-30</div>
-            <div class="bubble-line bubble-cta">{{ t('feed.cta_line') }}</div>
-            <span class="bubble-ts">2026-07-30 13:33 UTC</span>
-          </div>
-          <div class="ex-after">
-            <span class="badge badge-live badge-inline">LIVE</span>
-            <p class="ex-after-num pos mono">+5.9%<small>+20 {{ t('ex.tdays') }}</small></p>
-            <p class="ex-after-txt">{{ t('ex.cluster_after') }}</p>
-            <p class="ex-after-txt muted">{{ t('ex.cluster_loser') }}</p>
-          </div>
-        </div>
-      </div>
-    </details>
-
-    {# ── 3. 财报划重点 ── #}
-    <details class="ex">
-      <summary><span class="ex-emoji">📊</span><span class="ex-title">{{ t('ex.earn_t') }}</span><span class="ex-how">{{ t('ex.earn_how') }}</span></summary>
-      <div class="ex-body">
-        <div class="ex-grid">
-          <div class="bubble bubble-strategic">
-            <div class="bubble-line bubble-title">📊 NVDA · {{ t('ex.earn_nvda_l1') }}</div>
-            <div class="bubble-line">{{ t('ex.earn_nvda_l2') }}</div>
-            <div class="bubble-line">{{ t('ex.earn_nvda_l3') }}</div>
-            <div class="bubble-line bubble-cta">{{ t('feed.cta_line') }}</div>
-            <span class="bubble-ts">2026-08-27 11:05 UTC · @ $227.98</span>
-          </div>
-          <div class="ex-after">
-            <span class="badge badge-live badge-inline">LIVE</span>
-            <p class="ex-after-num neg mono">−4.6%<small>{{ t('ex.next_day') }}</small></p>
-            <p class="ex-after-txt">{{ t('ex.earn_after') }}</p>
-            <p class="ex-after-txt muted">{{ t('ex.earn_mrvl') }}</p>
-          </div>
-        </div>
-        <div class="ex-more">
-          <p class="ex-more-title">{{ t('ex.more') }}</p>
-          <article class="receipt receipt-row receipt-loss" data-kind="loser" id="receipt-cohr">
-            <div class="receipt-row-head">
-              <span class="badge badge-live">{{ t('label.live') }}</span>
-              <h4>{{ t('proof.c6_title') }}</h4>
-              <span class="receipt-meta mono">{{ t('proof.c6_meta') }}</span>
-              <span class="receipt-ret neg mono">−11.4% <small>{{ t('proof.c6_ret_label') }}</small></span>
-            </div>
-            <p class="receipt-body">{{ t('proof.c6_body') }} {{ t('proof.c6_note') }}</p>
-            {{ links(primary('feed'), 'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=COHR&type=8-K&owner=include&count=40', t('proof.c6_caption')) }}
-          </article>
-        </div>
-      </div>
-    </details>
-
     {# ── 4. 大佬入股 ── #}
-    <details class="ex">
+    <details class="ex" open>
       <summary><span class="ex-emoji">🤝</span><span class="ex-title">{{ t('ex.stake_t') }}</span><span class="ex-how">{{ t('ex.stake_how') }}</span></summary>
       <div class="ex-body">
         <div class="ex-grid">
@@ -143,6 +62,87 @@
             </div>
             <p class="receipt-body">{{ t('proof.c4_body') }}</p>
             {{ links(primary('feed'), edgar ~ 'PENG', t('proof.c4_caption')) }}
+          </article>
+        </div>
+      </div>
+    </details>
+
+    {# ── 1. 高管买入 ── #}
+    <details class="ex">
+      <summary><span class="ex-emoji">💰</span><span class="ex-title">{{ t('ex.insider_t') }}</span><span class="ex-how">{{ t('ex.insider_how') }}</span></summary>
+      <div class="ex-body">
+        <div class="ex-grid">
+          <div class="bubble bubble-insider">
+            <div class="bubble-line bubble-title">🚨🟢 INSIDER BUY — $1.12M / $TTMI</div>
+            <div class="bubble-line">Roks Edwin · Dir, President &amp; CEO · @ $121.70 · <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=TTMI&amp;type=4&amp;owner=include&amp;count=40" rel="noopener">SEC EDGAR ›</a></div>
+            <div class="bubble-line">🏢 {{ t('ex.insider_ttmi_biz') }}</div>
+            <div class="bubble-line">{{ t('ex.insider_ttmi_read') }}</div>
+            <div class="bubble-line bubble-cta">{{ t('feed.cta_line') }}</div>
+            <span class="bubble-ts">2026-08-26 07:42 UTC · Form 4</span>
+          </div>
+          <div class="ex-after">
+            <span class="badge badge-live badge-inline">LIVE</span>
+            <p class="ex-after-num pos mono">+8.4%<small>{{ t('ex.pushday') }}</small></p>
+            <p class="ex-after-txt">{{ t('ex.insider_after') }}</p>
+            <p class="ex-after-txt muted">{{ t('ex.insider_sgi') }}</p>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    {# ── 2. 集群买入 ── #}
+    <details class="ex">
+      <summary><span class="ex-emoji">🧲</span><span class="ex-title">{{ t('ex.cluster_t') }}</span><span class="ex-how">{{ t('ex.cluster_how') }}</span></summary>
+      <div class="ex-body">
+        <div class="ex-grid">
+          <div class="bubble bubble-insider">
+            <div class="bubble-line bubble-title">🟢 CLUSTER BUY — TSM</div>
+            <div class="bubble-line">Taiwan Semiconductor · {{ t('ex.cluster_tsm_ind') }}</div>
+            <div class="bubble-line">💰 {{ t('ex.cluster_tsm_line') }}</div>
+            <div class="bubble-line">📅 trade 2026-07-30</div>
+            <div class="bubble-line bubble-cta">{{ t('feed.cta_line') }}</div>
+            <span class="bubble-ts">2026-07-30 13:33 UTC</span>
+          </div>
+          <div class="ex-after">
+            <span class="badge badge-live badge-inline">LIVE</span>
+            <p class="ex-after-num pos mono">+5.9%<small>+20 {{ t('ex.tdays') }}</small></p>
+            <p class="ex-after-txt">{{ t('ex.cluster_after') }}</p>
+            <p class="ex-after-txt muted">{{ t('ex.cluster_loser') }}</p>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    {# ── 3. 财报划重点 ── #}
+    <details class="ex">
+      <summary><span class="ex-emoji">📊</span><span class="ex-title">{{ t('ex.earn_t') }}</span><span class="ex-how">{{ t('ex.earn_how') }}</span></summary>
+      <div class="ex-body">
+        <div class="ex-grid">
+          <div class="bubble bubble-strategic">
+            <div class="bubble-line bubble-title">📊 NVDA · {{ t('ex.earn_nvda_l1') }}</div>
+            <div class="bubble-line">{{ t('ex.earn_nvda_l2') }}</div>
+            <div class="bubble-line">{{ t('ex.earn_nvda_l3') }}</div>
+            <div class="bubble-line bubble-cta">{{ t('feed.cta_line') }}</div>
+            <span class="bubble-ts">2026-08-27 11:05 UTC · @ $227.98</span>
+          </div>
+          <div class="ex-after">
+            <span class="badge badge-live badge-inline">LIVE</span>
+            <p class="ex-after-num neg mono">−4.6%<small>{{ t('ex.next_day') }}</small></p>
+            <p class="ex-after-txt">{{ t('ex.earn_after') }}</p>
+            <p class="ex-after-txt muted">{{ t('ex.earn_mrvl') }}</p>
+          </div>
+        </div>
+        <div class="ex-more">
+          <p class="ex-more-title">{{ t('ex.more') }}</p>
+          <article class="receipt receipt-row receipt-loss" data-kind="loser" id="receipt-cohr">
+            <div class="receipt-row-head">
+              <span class="badge badge-live">{{ t('label.live') }}</span>
+              <h4>{{ t('proof.c6_title') }}</h4>
+              <span class="receipt-meta mono">{{ t('proof.c6_meta') }}</span>
+              <span class="receipt-ret neg mono">−11.4% <small>{{ t('proof.c6_ret_label') }}</small></span>
+            </div>
+            <p class="receipt-body">{{ t('proof.c6_body') }} {{ t('proof.c6_note') }}</p>
+            {{ links(primary('feed'), 'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=COHR&type=8-K&owner=include&count=40', t('proof.c6_caption')) }}
           </article>
         </div>
       </div>
@@ -207,7 +207,7 @@
             <h4>{{ t('proof.c1_title') }}</h4>
             <p class="receipt-meta mono">{{ t('proof.c1_meta') }}</p>
             <div class="receipt-pair" aria-hidden="true"><div class="pane pane-alert">🩸 K &lt; 1</div><div class="pane pane-chart"><span class="spark"></span>SMH · 60d</div></div>
-            <p class="receipt-body">{{ t('proof.c1_body_pre') }}<span class="rate" data-winrate="100" data-n="{{ track_n }}" title="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ t('proof.c1_rate') }} <small class="n">({{ tf('label.n_short', n=track_n) }})</small></span>{{ t('proof.c1_body_post') }}</p>
+            <p class="receipt-body">{{ tf('proof.c1_body_pre', n=track_n) }}<span class="rate" data-winrate="100" data-n="{{ track_n }}" title="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ tf('proof.c1_rate', n=track_n) }} <small class="n">({{ tf('label.n_short', n=track_n) }})</small></span>{{ t('proof.c1_body_post') }}</p>
             <p class="receipt-foot">{{ t('proof.c1_foot') }}</p>
             {{ links(primary('feed'), '#kindex', t('proof.c1_caption'), sec_na=True) }}
           </article>

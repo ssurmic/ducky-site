@@ -40,7 +40,8 @@
           <dt>{{ t('pricing.row_cadence') }}</dt><dd>{{ t('pricing.signal_cadence') }}</dd>
           <dt>{{ t('pricing.row_extras') }}</dt><dd>{{ t('pricing.signal_extras') }}</dd>
         </dl>
-        <a class="btn btn-primary" href="{{ tg('signal') }}" rel="noopener">{{ t('pricing.signal_cta') }}</a>
+        <a class="btn {{ 'btn-ghost' if is_zh else 'btn-primary' }}" href="{{ tg('signal') }}" rel="noopener">{{ t('pricing.signal_cta') }}</a>
+        {% if is_zh %}<a class="tier-alt mono" href="#tier-cn">{{ t('pricing.signal_cn_anchor') }}</a>{% endif %}
       </article>
 
       <article class="tier tier-pro">
@@ -60,7 +61,7 @@
         <a class="btn btn-ghost" href="{{ tg('pro') }}" rel="noopener">{{ t('pricing.pro_cta') }}</a>
       </article>
 
-      <article class="tier tier-cn">
+      <article class="tier tier-cn" id="tier-cn">
         <h3>{{ t('pricing.cn_name') }}</h3>
         <p class="price mono"><span class="price-cny">¥{{ cn.annual_cny }}<small>{{ t('pricing.per_yr') }}</small></span></p>
         <p class="price-note mono">{{ t('pricing.cn_price_note') }}</p>
@@ -72,7 +73,7 @@
           <dt>{{ t('pricing.row_cadence') }}</dt><dd>{{ t('pricing.cn_cadence') }}</dd>
           <dt>{{ t('pricing.row_extras') }}</dt><dd>{{ t('pricing.cn_extras') }}</dd>
         </dl>
-        <a class="btn btn-ghost" href="{{ tg('cn') }}" rel="noopener">{{ t('pricing.cn_cta') }}</a>
+        <a class="btn {{ 'btn-primary' if is_zh else 'btn-ghost' }}" href="{{ tg('cn') }}" rel="noopener">{{ t('pricing.cn_cta') }}</a>
       </article>
     </div>
 
