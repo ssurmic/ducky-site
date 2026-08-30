@@ -1,5 +1,5 @@
 // glossary.js — "这是什么? / What's this?" one-tap explanations (SYSTEMDESIGN §13).
-// Loads /glossary.json (same origin, built from ducky-bot/bin/glossary.json), auto-annotates the first
+// Loads /glossary.json (same origin, exported nightly from the backend glossary), auto-annotates the first
 // occurrence of each term name/alias inside [data-glossary] containers, and opens a bottom sheet on tap.
 // Deterministic, no network beyond the same-origin JSON, no third-party code.
 (function () {
