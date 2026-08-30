@@ -387,3 +387,4 @@ body.gl-open .gl-backdrop { opacity: 1; pointer-events: auto; } body.gl-open .gl
 .gl-long summary { cursor: pointer; color: var(--muted); font-size: .85rem; } .gl-long p { font-size: .9rem; line-height: 1.55; }
 .gl-see { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; } .gl-foot { color: var(--faint); font-size: .74rem; margin: 12px 0 0; }
 .warn { color: #f0b429; }
+#basket-chart, .chart-box { min-height: 220px; }
