@@ -17,7 +17,7 @@
       <div class="backtest-box">
         <span class="badge badge-backtest">{{ t('label.backtest') }}</span>
         <h3>{{ t('kindex.bt_title') }}</h3>
-        <p class="mono bt-line">{{ t('kindex.bt_pre') }}<span class="rate" data-winrate="100" data-n="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ t('kindex.bt_rate') }} <small class="n">({{ t('label.n_short') }})</small></span>{{ t('kindex.bt_post') }}</p>
+        <p class="mono bt-line">{{ t('kindex.bt_pre') }}<span class="rate" data-winrate="100" data-n="{{ track_n }}" title="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ t('kindex.bt_rate') }} <small class="n">({{ tf('label.n_short', n=track_n) }})</small></span>{{ t('kindex.bt_post') }}</p>
         <p class="mono bt-stop">{{ t('kindex.bt_stop') }}</p>
       </div>
     </div>

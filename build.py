@@ -11,6 +11,9 @@ What it does (see SYSTEMDESIGN.md §5):
   * public/receipts/liquidity-2026.json + liquidity-score-2026.csv are read at build time: the 🌊 USD-liquidity
     receipt card renders its numbers and an inline SVG sparkline (2026 daily score, dot on the signal day) from
     them, so the landing stays fully static (no runtime fetch)
+  * public/track-record.json (the nightly notary) supplies `track_n` = backtest.kindex.n — the numeric N printed
+    beside every K-index win-rate on the landing (SYSTEMDESIGN §0.5: every win-rate carries its N=); the build
+    fails when that number is missing rather than print a rate without it
   * local asset URLs get ?v=<git sha8 | 'dev'> appended — in HTML href/src AND in the relative ES-module
     specifiers under dist/js/app/ (static `from "./x.js"` and dynamic `import("./views/x.js")`), so the
     immutable /js/* cache (_headers) can never pair a new main.js with a year-old tg.js/api.js
@@ -33,6 +36,7 @@ TEMPLATES, I18N, PUBLIC, DIST = ROOT / "templates", ROOT / "i18n", ROOT / "publi
 CONFIG = ROOT / "site.config.json"
 RECEIPTS = PUBLIC / "receipts"
 LIQ_JSON, LIQ_CSV = RECEIPTS / "liquidity-2026.json", RECEIPTS / "liquidity-score-2026.csv"
+TRACK_JSON = PUBLIC / "track-record.json"
 LIQ_EVENT = "2026-04-08"                 # first 🟢 ABUNDANT print of 2026 (SYSTEMDESIGN §5.2 A)
 LIQ_ABUNDANT = 80                        # regime threshold drawn on the sparkline
 BRAND_ASSETS = ("avatar-group.jpg", "mascot.svg", "og.svg")   # must land in dist/ (§5.1 avatar rule)
@@ -201,7 +205,24 @@ def load_liquidity() -> dict:
     }
 
 
-def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, version: str, liq: dict) -> dict:
+def load_track_n() -> int:
+    """N of the K-index backtest the landing quotes (backtest.kindex.n in public/track-record.json = the
+    number of K<1 fires the ledger holds; the SMH 60-day figure is computed over those same fires).
+    A landing that prints a win-rate must print its N, so a missing/non-numeric value fails the build."""
+    if not TRACK_JSON.exists():
+        fail(f"{TRACK_JSON.name} missing — the landing's win-rate needs backtest.kindex.n")
+    try:
+        doc = json.loads(TRACK_JSON.read_text(encoding="utf-8"))
+        n = int(((doc.get("backtest") or {}).get("kindex") or {}).get("n"))
+    except (ValueError, TypeError, json.JSONDecodeError) as e:
+        fail(f"{TRACK_JSON.name}: backtest.kindex.n missing or not an integer ({e}) — run the nightly export first")
+    if n <= 0:
+        fail(f"{TRACK_JSON.name}: backtest.kindex.n must be > 0 (got {n})")
+    return n
+
+
+def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, version: str, liq: dict,
+                  track_n: int = 0) -> dict:
     table = tables[lang]
     other = "en" if lang == "zh" else "zh"
 
@@ -234,6 +255,7 @@ def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, versi
     return {
         "lang": lang, "html_lang": HTML_LANG[lang], "other_lang": other, "is_zh": lang == "zh",
         "page": page, "t": t, "t2": t2, "tf": tf, "tg": tg, "primary": primary, "url": url, "liq": liq,
+        "track_n": track_n,
         "cfg": cfg, "prices": cfg["prices"], "channel_url": channel_url, "has_channel": bool(channel_url),
         "bot_url": f"https://t.me/{cfg['bot']}", "miniapp_url": f"https://t.me/{cfg['bot']}/{cfg['miniapp']}",
         "canonical": cfg["site_url"] + page_url(lang, rel),
@@ -286,7 +308,7 @@ def main() -> None:
     args = ap.parse_args()
 
     cfg, tables, version = load_config(args.api_base), load_i18n(), git_sha()
-    pages, env, liq = page_targets(), make_env(), load_liquidity()
+    pages, env, liq, track_n = page_targets(), make_env(), load_liquidity(), load_track_n()
 
     if DIST.exists():
         shutil.rmtree(DIST)
@@ -305,7 +327,7 @@ def main() -> None:
     for tpl_name, rel in pages:
         tpl = env.get_template(tpl_name)
         for lang in LANGS:
-            ctx = build_context(cfg, tables, lang, Path(tpl_name).stem, rel, version, liq)
+            ctx = build_context(cfg, tables, lang, Path(tpl_name).stem, rel, version, liq, track_n)
             html = version_assets(tpl.render(**ctx), version)
             out = DIST / lang_prefix(lang).strip("/") / rel
             out.parent.mkdir(parents=True, exist_ok=True)

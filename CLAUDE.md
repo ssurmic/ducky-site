@@ -8,7 +8,9 @@ truth; this one only points at it.
 - `python3 build.py` renders `templates/*.html` × {zh, en} → `dist/` (zh, no prefix) and `dist/en/`. Copy lives
   only in `i18n/zh.json` + `i18n/en.json` (flat keys). The build fails if the two key sets differ.
 - `scripts/lint_copy.py` fails on: `ALL-IN` `买这只` `目标价` `满仓` `buy now` `现在买` `建议买入`; any
-  `data-winrate` without `data-n`; missing disclaimer lines; leaked private ids; any `<script src="http…">`.
+  `data-winrate` without an integer `data-n` (the landing's K-index N comes from `public/track-record.json`
+  `backtest.kindex.n` at build time — `build.py: load_track_n`, template var `track_n`); missing disclaimer
+  lines; leaked private ids; any `<script src="http…">`.
 - `lint_copy.py` also enforces SYSTEMDESIGN §5.1 brand/tech rules (`BANNED_IMPL`, everywhere except `vendor/` and
   the nightly data exports): the product is **Ducky TradeBot** (never "Ducky Bot"); the tech is described as
   "AI-backed / AI 驱动 / AI 引擎" only — no model, hardware, storage or competitor names in user-facing copy.

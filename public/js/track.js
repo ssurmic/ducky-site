@@ -109,8 +109,9 @@
       var tdk = el("td"); tdk.appendChild(el("span", "kind", s.kind)); tr.appendChild(tdk);
       var tdm = el("td"); tdm.appendChild(badge(s.mode)); tr.appendChild(tdm);
       tr.appendChild(el("td", "num", String(s.n != null ? s.n : "—")));
-      tr.appendChild(rateCell(s.hit5, s.n5 != null ? s.n5 : s.n));
-      tr.appendChild(rateCell(s.hit20, s.n20 != null ? s.n20 : s.n));
+      // the N beside a hit-rate is ITS denominator (directional signals: n_hit5 / n_hit20), never the return count
+      tr.appendChild(rateCell(s.hit5, s.n_hit5 != null ? s.n_hit5 : (s.n5 != null ? s.n5 : s.n)));
+      tr.appendChild(rateCell(s.hit20, s.n_hit20 != null ? s.n_hit20 : (s.n20 != null ? s.n20 : s.n)));
       var avg = retCell(s.avg20);
       if (isNum(s.avg20)) { var n20 = s.n20 != null ? s.n20 : s.n; avg.appendChild(el("small", "n", " " + (L.n_label || "N=") + n20)); }
       tr.appendChild(avg);
@@ -214,6 +215,13 @@
   }
 
   // ---- §12 scorecard (live API, edge-cached; graceful offline) ----
+  // §12.2 step 3: the public page only DISPLAYS rate cells with n ≥ min_display_n (the payload flags each
+  // source with `shown`); thin rows keep their kind + N and print "sample too small" instead of a rate.
+  function lowNCell(min) {
+    var td = el("td", "num rate-cell low-n");
+    td.appendChild(el("span", "pending", fmt(L.score_low_n || "N<{min}", { min: min })));
+    return td;
+  }
   function renderScorecard() {
     var tb = tbodyOf("scorecard-table"), reg = $("score-regime"), box = $("basket-chart"), disc = $("score-disclaimer");
     if (!tb) return;
@@ -223,16 +231,23 @@
       .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
       .then(function (sc) {
         tb.innerHTML = "";
+        var minN = isNum(sc.min_display_n) ? sc.min_display_n : 10;
         var src = (sc.sources || []).filter(function (x) { return HIDE_KINDS.indexOf(x.kind) < 0; })
           .sort(function (a, b) { return (b.n || 0) - (a.n || 0); });
         if (!src.length) { var tr0 = el("tr"); var td0 = el("td", "empty", L.empty || "—"); td0.colSpan = 6; tr0.appendChild(td0); tb.appendChild(tr0); }
         src.forEach(function (x) {
+          var shown = x.shown === undefined ? (x.n || 0) >= minN : x.shown === true;
           var tr = el("tr");
+          if (!shown) tr.className = "low-n";
           var tdk = el("td"); tdk.appendChild(el("span", "kind", x.kind)); tr.appendChild(tdk);
           tr.appendChild(el("td", "num", String(x.n != null ? x.n : "—")));
-          tr.appendChild(rateCell(x.hit20, x.n));
-          var ex = retCell(x.avg_excess20); if (isNum(x.avg_excess20)) ex.appendChild(el("small", "n", " " + (L.n_label || "N=") + (x.n || 0))); tr.appendChild(ex);
-          tr.appendChild(rateCell(x.win_vs_spy, x.n));
+          if (shown) {
+            tr.appendChild(rateCell(x.hit20, x.n_hit != null ? x.n_hit : x.n));
+            var ex = retCell(x.avg_excess20); if (isNum(x.avg_excess20)) ex.appendChild(el("small", "n", " " + (L.n_label || "N=") + (x.n || 0))); tr.appendChild(ex);
+            tr.appendChild(rateCell(x.win_vs_spy, x.n));
+          } else {
+            tr.appendChild(lowNCell(minN)); tr.appendChild(lowNCell(minN)); tr.appendChild(lowNCell(minN));
+          }
           var aw = el("td");
           if (x.all_weather === true) aw.appendChild(el("span", "badge badge-live badge-inline", L.aw_yes || "all-weather"));
           else { var b = el("span", "badge badge-inline", L.aw_no || "not yet"); var why = (x.all_weather_fail || []).map(function (f) { return f.regime + ": " + f.why + (f.n ? " (n=" + f.n + ")" : ""); }).join(" · "); if (why) b.title = (L.aw_why || "why") + ": " + why; aw.appendChild(b); }

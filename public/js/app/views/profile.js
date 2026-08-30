@@ -50,8 +50,12 @@ export async function mount(root) {
       const btn = el("button.btn.btn-primary.btn-sm", { type: "button" }, s("profile.verify_btn"));
       const resend = el("button.btn.btn-ghost.btn-sm", { type: "button" }, s("profile.resend"));
       btn.addEventListener("click", async () => {
-        try { prof = await api.profile.verify(code.value.trim()); toast(s("profile.verified"), "ok"); await auth.refreshMe(); render(); }
-        catch (err) { toast(s("common.error", { msg: err.message }), "err"); }
+        try {
+          const res = await api.profile.verify(code.value.trim());
+          // the verify route returns the full profile view; re-fetch if an older backend only sent the flags
+          prof = (res && res.email !== undefined) ? res : await api.profile.get();
+          toast(s("profile.verified"), "ok"); await auth.refreshMe(); render();
+        } catch (err) { toast(s("common.error", { msg: err.message }), "err"); }
       });
       resend.addEventListener("click", async () => {
         try { await api.profile.resend(); toast(s("profile.resent"), "ok"); } catch (err) { toast(s("common.error", { msg: err.message }), "err"); }

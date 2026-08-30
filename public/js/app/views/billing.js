@@ -1,5 +1,8 @@
 // views/billing.js — plans from /billing/plans · tier cards + "Which one?" · rails: Stars (inside TG, MainButton),
 // Alipay/WeChat QR + order code + "/paid DK-xxxx", USDT address+memo, Stripe (data-soon unless checkout_url) · orders.
+// Rail ids sent to POST /billing/order are the backend's canonical ids (manual_alipay / manual_wechat / manual_usdt /
+// usdc_* / btc / stars / stripe); /billing/qr/{alipay|wechat} keeps the short name. CNY rails are sold per year only,
+// so an order on them always carries months=12 whatever the monthly/annual toggle says (the bot does the same).
 import { s, has, CFG, LANG } from "../strings.js";
 import * as api from "../api.js";
 import * as store from "../store.js";
@@ -11,35 +14,58 @@ let selected = { tier: "paid", months: 12 };
 let plansCache = null;
 let onPayStars = null;
 
+/** Backend rail id for a button; the QR route wants the short name back (manual_alipay → alipay). */
+const CNY_RAILS = ["manual_alipay", "manual_wechat"];
+export function isCnyRail(rail) { return CNY_RAILS.includes(rail); }
+export function qrName(rail) { return String(rail).replace(/^manual_/, ""); }
+/** Months an order on `rail` is created with: CNY rails only exist as 12-month plans. */
+export function orderMonths(rail, months) { return isCnyRail(rail) ? 12 : months; }
+
 /** Router hook: MainButton config (Telegram only). */
 export function mainButton() {
   if (!tg.inTG) return null;
   return { text: s("billing.stars_btn") + " · " + tierName(selected.tier), onClick: () => { if (onPayStars) onPayStars(); } };
 }
 
+/** Fold the real /billing/plans shape — one row per {tier, months, currency, amount, rails} (billing.list_plans) —
+ *  into per-tier price fields; object/legacy shapes and the CFG.PRICES fallback fill whatever is still missing. */
 export function normalizePlans(resp) {
   const out = { paid: null, pro: null, rails: null, usdt: null };
   const pick = (o, keys) => { for (const k of keys) if (o && o[k] !== undefined && o[k] !== null) return Number(o[k]); return null; };
+  const tierId = (v) => { const id = String(v || "").toLowerCase(); return id === "pro" ? "pro" : /paid|signal/.test(id) ? "paid" : null; };
+  const blank = (id) => ({ tier: id, name: id === "pro" ? "Pro" : "Signal", monthly_usd: null, annual_usd: null, annual_cny: null, stars_monthly: null, stars_annual: null });
   const norm = (id, o) => ({
-    tier: o.tier || o.id || id,
-    name: o.name || (id === "pro" ? "Pro" : "Signal"),
+    tier: id, name: o.name || (id === "pro" ? "Pro" : "Signal"),
     monthly_usd: pick(o, ["monthly_usd", "usd_monthly", "monthly", "price_monthly_usd", "usd_month"]),
     annual_usd: pick(o, ["annual_usd", "usd_annual", "annual", "yearly_usd", "usd_year"]),
     annual_cny: pick(o, ["annual_cny", "cny_annual", "cny_year"]),
     stars_monthly: pick(o, ["stars_monthly", "stars", "stars_month"]),
     stars_annual: pick(o, ["stars_annual", "stars_year"]),
   });
-  let plans = resp && (resp.plans || resp.tiers || resp);
+  // {currency, months} → field on the tier object (list_plans row shape)
+  const FIELD = { "USD:1": "monthly_usd", "USD:12": "annual_usd", "CNY:12": "annual_cny", "XTR:1": "stars_monthly", "XTR:12": "stars_annual" };
+  const isRow = (p) => p && p.currency !== undefined && p.amount !== undefined && p.months !== undefined;
+  const plans = resp && (resp.plans || resp.tiers || resp);
   if (Array.isArray(plans)) {
-    for (const p of plans) { const id = String(p.tier || p.id || "").toLowerCase(); if (id === "pro") out.pro = norm("pro", p); else if (/paid|signal/.test(id)) out.paid = norm("paid", p); }
+    for (const p of plans) {
+      const id = tierId(p.tier || p.id); if (!id) continue;
+      if (isRow(p)) {
+        const t = out[id] || (out[id] = blank(id));
+        const f = FIELD[String(p.currency).toUpperCase() + ":" + Number(p.months)];
+        if (f && t[f] === null) t[f] = Number(p.amount);
+        if (p.label) t.name = p.label;
+      } else out[id] = norm(id, p);
+    }
   } else if (plans && typeof plans === "object") {
-    for (const k of Object.keys(plans)) { const id = k.toLowerCase(); if (id === "pro") out.pro = norm("pro", plans[k]); else if (/paid|signal/.test(id)) out.paid = norm("paid", plans[k]); }
+    for (const k of Object.keys(plans)) { const id = tierId(k); if (id) out[id] = norm(id, plans[k]); }
   }
   if (resp && Array.isArray(resp.rails)) out.rails = resp.rails.map((r) => String(r.id || r).toLowerCase());
   if (resp && resp.usdt) out.usdt = resp.usdt;
+  // CFG fallback fills any price the API did not provide (or everything when the API is unreachable)
   const P = CFG.PRICES || {};
-  if (!out.paid && P.signal) out.paid = norm("paid", { monthly_usd: P.signal.monthly_usd, annual_usd: P.signal.annual_usd, annual_cny: P.china && P.china.annual_cny });
-  if (!out.pro && P.pro) out.pro = norm("pro", { monthly_usd: P.pro.monthly_usd, annual_usd: P.pro.annual_usd });
+  const fill = (id, src) => { if (!src) return; const t = out[id] || (out[id] = blank(id)); for (const k of Object.keys(src)) if (t[k] === null && src[k] !== undefined && src[k] !== null) t[k] = Number(src[k]); };
+  if (P.signal) fill("paid", { monthly_usd: P.signal.monthly_usd, annual_usd: P.signal.annual_usd, annual_cny: P.china && P.china.annual_cny });
+  if (P.pro) fill("pro", { monthly_usd: P.pro.monthly_usd, annual_usd: P.pro.annual_usd });
   return out;
 }
 
@@ -86,11 +112,11 @@ export async function mount(root) {
     const row = el("div.rail-row");
     if (tg.inTG) row.appendChild(el("button.btn.btn-primary", { type: "button", onclick: payStars }, "⭐ " + s("billing.stars_btn")));
     else row.appendChild(el("a.btn.btn-ghost", { href: "https://t.me/" + CFG.BOT + "/" + CFG.MINIAPP + "?startapp=billing", target: "_blank", rel: "noopener", title: s("billing.stars_only_tg") }, "⭐ " + s("billing.rail_stars")));
-    row.appendChild(el("button.btn.btn-ghost", { type: "button", onclick: () => manual("alipay") }, s("billing.rail_alipay")));
-    row.appendChild(el("button.btn.btn-ghost", { type: "button", onclick: () => manual("wechat") }, s("billing.rail_wechat")));
-    row.appendChild(el("button.btn.btn-ghost", { type: "button", onclick: () => manual("usdt") }, s("billing.rail_usdt")));
+    // canonical backend ids; /billing/plans lists only the rails the server can honour right now
+    [["manual_alipay", "billing.rail_alipay"], ["manual_wechat", "billing.rail_wechat"], ["manual_usdt", "billing.rail_usdt"]]
+      .forEach(([r, key]) => { if (railEnabled(r)) row.appendChild(el("button.btn.btn-ghost", { type: "button", onclick: () => manual(r) }, s(key) + (isCnyRail(r) ? " · " + s("billing.annual") : ""))); });
     ["usdc_erc20", "usdc_trc20", "btc"].forEach((r) => { if (railEnabled(r)) row.appendChild(el("button.btn.btn-ghost", { type: "button", onclick: () => crypto(r) }, s("billing.rail_" + r))); });
-    const stripeOk = plans && plans.rails && plans.rails.includes("stripe");
+    const stripeOk = !!(plans && plans.rails && plans.rails.includes("stripe"));
     row.appendChild(el("button.btn.btn-ghost", { type: "button", disabled: !stripeOk, "data-soon": stripeOk ? null : "", onclick: stripe }, s("billing.rail_stripe") + (stripeOk ? "" : " · " + s("billing.soon"))));
     rails.appendChild(row);
     if (!tg.inTG) rails.appendChild(el("p.muted.small", s("billing.stars_only_tg")));
@@ -107,7 +133,7 @@ export async function mount(root) {
     busy = true; tg.mainProgress(true);
     panel.hidden = false; clear(panel); panel.appendChild(spinner(s("billing.creating")));
     try {
-      const o = await api.billing.order(selected.tier, selected.months, rail);
+      const o = await api.billing.order(selected.tier, orderMonths(rail, selected.months), rail);
       loadOrders();
       return o;
     } catch (err) {
@@ -136,7 +162,7 @@ export async function mount(root) {
     return el("div.order-head",
       el("div", el("span.muted", s("billing.order_code") + " "), el("b.mono", o.order_code)),
       el("div", el("span.muted", s("billing.amount") + " "), el("b.mono", num(o.amount, o.currency === "XTR" ? 0 : 2) + " " + (o.currency || ""))),
-      el("div", el("span.muted", s("billing.plan") + " "), el("b", tierName(selected.tier) + " · " + (selected.months === 12 ? s("billing.annual") : s("billing.monthly")))));
+      el("div", el("span.muted", s("billing.plan") + " "), el("b", tierName(o.tier || selected.tier) + " · " + (Number(o.months || selected.months) === 12 ? s("billing.annual") : s("billing.monthly")))));
   }
   function paidHint(o) {
     const cmd = "/paid " + o.order_code;
@@ -149,7 +175,7 @@ export async function mount(root) {
     const o = await order(rail);
     if (!o) return;
     clear(panel); panel.appendChild(orderHead(o));
-    if (rail === "usdt") {
+    if (rail === "manual_usdt") {
       const addr = (o.payload && o.payload.address) || (plans && plans.usdt && plans.usdt.address) || "";
       const memo = (o.payload && o.payload.memo) || o.order_code;
       panel.append(
@@ -158,11 +184,11 @@ export async function mount(root) {
         el("p.muted.small", s("billing.usdt_hint", { code: o.order_code })), paidHint(o));
       return;
     }
-    const img = el("img.qr", { alt: s("billing.rail_" + rail) + " QR" });
+    const img = el("img.qr", { alt: s("billing.rail_" + qrName(rail)) + " QR" });
     const qrBox = el("div.qr-box", spinner());
     panel.append(qrBox, o.payload && o.payload.caption ? el("p.muted.small", o.payload.caption) : null, paidHint(o));
     try {
-      img.src = (o.payload && o.payload.qr_url && /^data:/.test(o.payload.qr_url)) ? o.payload.qr_url : await api.billing.qr(rail);
+      img.src = (o.payload && o.payload.qr_url && /^data:/.test(o.payload.qr_url)) ? o.payload.qr_url : await api.billing.qr(qrName(rail));
       clear(qrBox); qrBox.appendChild(img);
     } catch (err) { clear(qrBox); qrBox.appendChild(el("p.errbox", s("billing.qr_fail"))); }
   }

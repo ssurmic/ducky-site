@@ -3,7 +3,7 @@
 
 Checks (exit 1 on any failure):
   1. banned strings anywhere in dist/ (case-insensitive): ALL-IN 买这只 目标价 满仓 buy now 现在买 建议买入
-  2. every element carrying data-winrate also carries data-n
+  2. every element carrying data-winrate also carries data-n="<integer>" (a real N, not a caveat string)
   3. both disclaimer lines exist in dist/index.html and dist/en/index.html (zh + en variants)
   4. no private identifiers leak into the public site (supergroup chat id, personal email, private handles)
   5. no third-party <script src="http…"> on any page (landing has no third-party scripts)
@@ -34,6 +34,7 @@ VENDOR_DIR = "vendor"
 DATA_EXPORTS = {"track-record.json", "feed.json", "ideas.json"}
 PRIVATE = re.compile(r"-100\d{9,}|@DuckyAgentBot|Baobao|DakiDaki|Duckyduckyduck\b|gmail\.com|choppyducky", re.IGNORECASE)
 TAG_WITH_WINRATE = re.compile(r"<[^>]*\bdata-winrate\b[^>]*>")
+DATA_N_INT = re.compile(r"""\bdata-n=["'](\d+)["']""")
 EXTERNAL_SCRIPT = re.compile(r"""<script[^>]+src=["']https?://""", re.IGNORECASE)
 DISCLAIMER_LINES = {
     "en.backtest": "backtests are hypothetical and exclude fees, slippage and taxes",
@@ -70,9 +71,11 @@ def main() -> int:
                 errors.append(f"{rel}:{line}: implementation/brand term in copy {m.group()!r} (SYSTEMDESIGN §5.1)")
         if p.suffix == ".html":
             for m in TAG_WITH_WINRATE.finditer(text):
+                line = text.count("\n", 0, m.start()) + 1
                 if "data-n=" not in m.group():
-                    line = text.count("\n", 0, m.start()) + 1
                     errors.append(f"{rel}:{line}: data-winrate without data-n: {m.group()[:80]}")
+                elif not DATA_N_INT.search(m.group()):
+                    errors.append(f"{rel}:{line}: data-n is not an integer N (§0.5): {m.group()[:80]}")
             for m in EXTERNAL_SCRIPT.finditer(text):
                 line = text.count("\n", 0, m.start()) + 1
                 errors.append(f"{rel}:{line}: third-party script tag: {m.group()}")
@@ -94,7 +97,7 @@ def main() -> int:
         return 1
     n_win = sum(len(TAG_WITH_WINRATE.findall(p.read_text(encoding="utf-8"))) for p in files if p.suffix == ".html")
     print(f"lint_copy: OK — {len(files)} files scanned, 0 banned strings, 0 implementation/brand terms, "
-          f"{n_win} win-rate tags all carry data-n, disclaimer lines present in {', '.join(MUST_HAVE_DISCLAIMER)}, "
+          f"{n_win} win-rate tags all carry an integer data-n, disclaimer lines present in {', '.join(MUST_HAVE_DISCLAIMER)}, "
           f"no third-party scripts")
     return 0
 

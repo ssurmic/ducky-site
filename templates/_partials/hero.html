@@ -35,7 +35,7 @@
           </div>
           <div class="bubble bubble-kindex">
             <div class="bubble-line bubble-title">{{ t('hero.b3_l1') }}</div>
-            <div class="bubble-line">{{ t('hero.b3_l2_pre') }}<span class="rate" data-winrate="100" data-n="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ t('hero.b3_l2_rate') }} <small class="n">({{ t('label.n_short') }})</small></span></div>
+            <div class="bubble-line">{{ t('hero.b3_l2_pre') }}<span class="rate" data-winrate="100" data-n="{{ track_n }}" title="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ t('hero.b3_l2_rate') }} <small class="n">({{ tf('label.n_short', n=track_n) }})</small></span></div>
             <div class="bubble-line">{{ t('hero.b3_l3') }}</div>
             <time class="bubble-ts">{{ t('hero.b3_ts') }}</time>
           </div>

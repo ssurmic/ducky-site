@@ -36,7 +36,7 @@
         <div class="bubble bubble-kindex">
           <span class="badge badge-backtest badge-inline">{{ t('label.backtest') }}</span>
           <div class="bubble-line bubble-title">{{ t('feed.c_l1') }}</div>
-          <div class="bubble-line">{{ t('feed.c_l2_pre') }}<span class="rate" data-winrate="100" data-n="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ t('feed.c_l2_rate') }} <small class="n">({{ t('label.n_short') }})</small></span>{{ t('feed.c_l2_post') }}</div>
+          <div class="bubble-line">{{ t('feed.c_l2_pre') }}<span class="rate" data-winrate="100" data-n="{{ track_n }}" title="{{ t('label.n_caveat') }}" data-n-key="kindex_lt1_smh_60d">{{ t('feed.c_l2_rate') }} <small class="n">({{ tf('label.n_short', n=track_n) }})</small></span>{{ t('feed.c_l2_post') }}</div>
           <div class="bubble-line">{{ t('feed.c_l3') }}</div>
           <div class="bubble-line bubble-cta">{{ t('feed.cta_line') }}</div>
         </div>
