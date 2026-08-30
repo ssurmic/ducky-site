@@ -4,7 +4,6 @@
   "meta.og_title": "Ducky TradeBot — 证据，不是荐股",
   "meta.disclaimer_title": "免责声明 · Ducky TradeBot",
   "meta.404_title": "找不到页面 · Ducky TradeBot",
-
   "nav.brand": "Ducky TradeBot",
   "nav.proof": "证据",
   "nav.boards": "板块",
@@ -15,7 +14,6 @@
   "nav.lang_toggle": "EN",
   "nav.lang_toggle_aria": "Switch to English",
   "nav.skip": "跳到正文",
-
   "hero.eyebrow": "Ducky TradeBot · Ducky 交易鸭 · Telegram · 中文 / EN",
   "hero.h1": "一套会算的 AI 盯盘系统，直接推到你的 Telegram。",
   "hero.sub": "高管公开市场买入 ≥ $20 万，申报后 2–5 分钟就到了你手机；NVIDIA / SK Telecom / 沙特 PIF 入股的 8-K，当天早上就推了。AI 引擎读完每一份文件，只写最要紧的两句——不下单，不荐股，账本公开。",
@@ -42,7 +40,6 @@
   "hero.b3_l2_rate": "胜率 100%",
   "hero.b3_l3": "⚠️ 务必设止损：约 −8% 减仓 / 止损",
   "hero.b3_ts": "盘中 · 边沿触发",
-
   "label.backtest": "BACKTEST · 回测",
   "label.live": "LIVE · 实盘推送",
   "label.roadmap": "规划中 · roadmap",
@@ -53,11 +50,10 @@
   "label.sec_filing": "SEC 文件 ↗",
   "label.copy_caption": "复制文案（中文 / EN）",
   "label.copied": "已复制 ✓",
-
   "proof.h2": "这是「指标做了什么」，不是喊单。",
   "proof.lead": "下面每张卡都是「当时推了什么 + 之后价格走了什么」，带原始时间戳，BACKTEST / LIVE 分开标。全部过去式，没有价格目标。",
   "proof.c1_title": "🌊 K 指数 receipt",
-  "proof.c1_meta": "两图：原始推送含日期 | 60 天后 SMH 走势",
+  "proof.c1_meta": "近 5 年回测 · K 跌破 1 后 SMH 60 天",
   "proof.c1_body_pre": "🩸 K 指数跌破 1（资本臣服）→ 近 5 年每一次跌破 1 之后，SMH 60 天平均 +49%，",
   "proof.c1_rate": "胜率 100%",
   "proof.c1_body_post": "；纳指 QQQ 约 +17%。",
@@ -80,15 +76,15 @@
   "proof.c5_body": "当天早上抓到并推送，CNBC 两天后才报。目前盯 12 位官员。",
   "proof.c5_caption": "🏛 官员 278-T 申报 2026-05-08：Ducky 当天早上推送，CNBC 两天后才报。目前盯 12 位官员。→ duckybot.app\n🏛 OGE 278-T filed 2026-05-08: Ducky pushed it that morning, CNBC reported two days later. 12 officials tracked. → duckybot.app",
   "proof.c6_title": "🔻 红字也列",
-  "proof.c6_meta": "$—— · 8-K · 日期 @ $——",
-  "proof.c6_body": "推送当天 @ $——。20 个交易日后 −—%。这条也在台账里，不删。",
+  "proof.c6_meta": "COHR · 财报 · 2026-08-13 @ $327.23",
+  "proof.c6_body": "财报后看多推了，5 个交易日 −11.4%（+20 天待回填）。这条也在台账里，不删。",
   "proof.c6_note": "我们也把这些放出来。没有红字的账本叫宣传册。",
-  "proof.c6_caption": "🔻 红字也列：没有红字的账本叫宣传册。→ duckybot.app\n🔻 We show these too. A ledger with no red rows is a brochure. → duckybot.app",
+  "proof.c6_caption": "🔻 红字也列：COHR 2026-08-13 财报后看多推送，5 天 −11.4%。没有红字的账本叫宣传册。→ duckybot.app",
   "proof.liq_title": "🌊 美元流动性指数 receipt",
   "proof.liq_meta": "{date} · 今年首次亮 🟢 ABUNDANT · 数据截至 {as_of}",
   "proof.liq_ret_label": "QQQ 当天收盘买入 · 至今",
-  "proof.liq_body": "🌊 美元流动性指数 · {date} · 今年首次亮 🟢 ABUNDANT（{score} 分：SOFR 低于 IORB {spread_bp}bp，净流动性 13 周 +${chg13w_yi} 亿，正值 eSLR 放宽窗口）→ 若当天收盘买入 QQQ：1 周 {qqq_1w}，1 个月 {qqq_1m}，至今 {qqq_now}（{qqq_px0} → {qqq_px1}）。同窗 SPY {spy_now}，SMH {smh_now}。",
-  "proof.liq_foot": "重建回测（BACKTEST）· N={n} 次事件 · 指数 = 资金利率价差 + 银行准备金 + TGA 变动 + 净流动性动量，每个交易日复盘，档位变化即推送 · 是记录不是承诺",
+  "proof.liq_body": "🌊 美元流动性指数 · {date} · 今年首次亮 🟢 ABUNDANT（{score} 分）→ 若当天收盘买入 QQQ：1 周 {qqq_1w}，1 个月 {qqq_1m}，至今 {qqq_now}（{qqq_px0} → {qqq_px1}）。同窗 SPY {spy_now}，SMH {smh_now}。",
+  "proof.liq_foot": "当日读数：SOFR 低于 IORB {spread_bp}bp · 净流动性 13 周 +${chg13w_yi} 亿 · eSLR 放宽窗口 · 重建回测（BACKTEST）· N={n} 次事件 · 指数 = 资金利率价差 + 银行准备金 + TGA 变动 + 净流动性动量，每个交易日复盘，档位变化即推送 · 是记录不是承诺",
   "proof.liq_spark_label": "2026 年每日分数（0–100）· 虚线 = 🟢 ABUNDANT 门槛 80 · 圆点 = {date}",
   "proof.liq_disclaimer": "假设性、等权、不含费用/滑点/税；过去表现不代表未来；不构成投资建议。",
   "proof.liq_link": "看流动性台账 →",
@@ -98,7 +94,6 @@
   "proof.reviewed_title": "每天复盘",
   "proof.reviewed": "每个交易日收盘后复盘：昨天推了什么、今天走成什么样，都进台账。信号及时，账本公开。",
   "proof.strip": "🦆 数据 / 信号 / 教育工具 · 不构成投资建议 · 过往业绩不代表未来表现 · 回测为假设性结果，不含手续费、滑点与税费",
-
   "feed.h2": "你的 Telegram 里会收到什么。",
   "feed.lead": "三种真实格式，直接来自 firehose。不是生数据流——AI 引擎把每条读一遍，只写最要紧的两句。",
   "feed.a_title": "💰 高管在悄悄买入",
@@ -127,7 +122,6 @@
   "feed.cta_line": "想盯你自己名单的？→ /subscribe",
   "feed.cta_channel": "进免费频道 →",
   "feed.cta_bot": "在 bot 里免费开始 →",
-
   "kindex.h2": "K 指数 = 恐慌贪婪 ÷ VIX",
   "kindex.lead": "平时 >2。跌破 1 = 散户在割肉、波动率同时爆表——资本臣服。它是一个描述「水位」的指标，不是指令。",
   "kindex.ladder_title": "四档",
@@ -146,7 +140,6 @@
   "kindex.d3": "台账：每次打印带时间戳入库，结果之后回填。改不了，补不了。",
   "kindex.tier": "免费 vs Signal：免费频道看到的是延迟 / 预告版档位 + 公开台账。Signal（$12/月）在档位变化那一刻收到实时盘中推送 + 抄底指数。",
   "kindex.caveat": "提醒（明示不藏）：「近 5 年胜率 100%」是几次事件，不是几百次。样本小。它是给定投分层用的「水位」指标——不是保证，不是价格目标。",
-
   "boards.h2": "八个板块，只看你要的。",
   "boards.lead": "一个 Telegram 超级群，Topics 模式。不想看的直接静音。",
   "boards.1.name": "🧭 今日划重点 & 大盘",
@@ -166,7 +159,6 @@
   "boards.8.name": "📅 本周前瞻 & 盘前盘后",
   "boards.8.desc": "周日发下周日程（精确到美东时间 + 图）；每天收盘前给交易模式判断（PIN / TREND / EVENT-VOL），有 grounding 校验，编不出不存在的价位。",
   "boards.foot": "🦆 鸭子的交易是手动板块——builder 自己的记录，「不是荐股，是记录 + 一起讨论」。",
-
   "dm.h2": "私信一个代码，一张卡看全景。",
   "dm.lead_pre": "给",
   "dm.lead_post": "发「NVDA 怎么样」，回来的是全景快照：",
@@ -191,7 +183,6 @@
   "dm.caps_label": "上限",
   "dm.caps": "免费 3 条 · Signal 25 条 · Pro 100 条。",
   "dm.cta": "现在试一条 →",
-
   "why.h2": "为什么便宜又私密",
   "why.s1_big": "AI 驱动",
   "why.s1_sub": "AI 引擎读完每一份文件，写出最要紧的两句——不是转发原文。",
@@ -206,14 +197,12 @@
   "why.p2": "全部隐私化——你的名单和提醒条件只属于你：加密存储、不共享、不出售、随时可删。",
   "why.thin_title": "哪里薄（我们先说）",
   "why.thin": "我们不是数据最全的那家，也还没有名气。我们有的是：文件速度（申报后几分钟到你手机）、AI 读懂每一份文件而不是转发、一本你随时能查、含亏损的公开台账。",
-
   "who.h2": "给两种人做的。",
   "who.c1_title": "你在富途 / 老虎 / IBKR 做美股，中英文都看。",
   "who.c1_body": "你要的是文件比推特早、中文、带理由——不是 200 行英文 PDF。Signal $12/月，或者 ¥ 年费版。",
   "who.c2_title": "你定投，只想知道一件事：什么时候加。",
   "who.c2_body": "你不需要 15 个板块。你要 K 指数打印、抄底指数、台账。其它全静音。Signal。",
   "who.oneliners": "一句话：从 $48–149/月 的期权流工具逃出来 → Pro $29。没时间盯终端的上班族 → 答案直接到 Telegram。",
-
   "pricing.h2": "免费是真的免费。付费买的是「盯你的票」。",
   "pricing.lead": "免费频道就是产品的活体演示——每份文件、K 指数预告、公开台账。付费 = 它盯你自己的名单。",
   "pricing.toggle_monthly": "月付",
@@ -272,7 +261,6 @@
   "pricing.microfaq_q": "「Pro 比 Signal 值吗？」",
   "pricing.microfaq_a": "只有你做期权才值：gamma 墙、IV–HV、本周预期区间、细分板块相对强弱都在 Pro。",
   "pricing.strip": "🦆 付费买的是个性化（盯你的名单），不是「秘密选股」· 数据 / 信号 / 教育工具 · 不构成投资建议",
-
   "faq.h2": "常见问题",
   "faq.q1": "这是荐股吗？",
   "faq.a1": "不是。Ducky 抓文件、算指标、跑回测，然后解释给你听。它从不喊单，不给价格目标。receipt 故意全用过去式。这是数据 / 信号 / 教育工具。我们在任何地区都不是持牌投顾。",
@@ -286,15 +274,12 @@
   "faq.a5": "Form 4 在 EDGAR 挂出后 2–5 分钟到你手机。8-K 合作当天早上。K 指数盘中、边沿触发。",
   "faq.q6": "亏的呢？",
   "faq.a6": "台账在结果出来之前就把每条信号带时间戳记下来。战绩页会按来源列出 +1/+5/+20 天收益，亏的一起列。",
-
   "band.h2": "🦆 想让它盯你自己的票？",
   "band.cta_channel": "进免费频道 →",
   "band.cta_bot": "免费开始 →",
   "band.ghost": "在 bot 里订阅 →",
-
   "sticky.free": "🦆 免费",
   "sticky.subscribe": "订阅 $12/月",
-
   "footer.p1": "🦆 Ducky TradeBot 是个人投资研究用的数据 / 信号 / 教育工具。这些工具是给个人投资研究用的。不构成投资建议。过往业绩不代表未来表现。实际投资决策请咨询持牌财务顾问。",
   "footer.p2": "本站及 Telegram 频道所有内容——包括高管买入、机构入股、K 指数、回测、「receipt」截图——均为「指标 / 工具当时做了什么」的过去式记录与数据教育，不是荐股，不是买卖指令，不含价格目标、不含收益承诺。我们不是中国证监会或任何司法辖区的持牌投资顾问，不提供投顾、代客理财、跟单或「内幕名单」服务。",
   "footer.p3": "Ducky 不是交易机器人：不连接任何券商账户，永远不下单。K 指数每条推送均附止损提醒；回测样本有限，历史「胜率 100%」不代表未来。付费内容的区别是个性化（盯你的名单），不是「秘密选股」。",
@@ -306,7 +291,6 @@
   "footer.links_bot": "Telegram bot",
   "footer.copyright": "© 2026 Ducky TradeBot",
   "footer.lang_other": "English",
-
   "disc.h1": "免责声明",
   "disc.is_title": "Ducky 是什么",
   "disc.is_1": "一套数据 / 信号 / 教育工具：抓 SEC 公开文件（Form 4、13D/13G、13F、8-K、OGE 278-T），算指标（K 指数、RSI、IV/HV、gamma 墙），跑回测，并由 AI 引擎把文件读成人话。",
@@ -323,12 +307,10 @@
   "disc.contact_title": "联系方式",
   "disc.contact": "只通过 Telegram bot：私信 @DuckyduckyTradeBot。本站不收集邮箱，没有表单。",
   "disc.back": "← 返回首页",
-
   "e404.h1": "404 · 这页不在台账里。",
   "e404.body": "链接可能过期了。回首页，或者直接去 bot。",
   "e404.home": "← 回首页",
   "e404.bot": "去 Telegram bot →",
-
   "meta.track_title": "战绩台账 · Ducky TradeBot",
   "meta.track_desc": "append-only 信号台账：每条信号带时间戳入库，回填 +1 / +5 / +20 天收益，亏的一起列。BACKTEST 与 LIVE 分开标，每个胜率旁边都有 N=。",
   "meta.trend_title": "大家在盯什么 · Ducky TradeBot",
@@ -336,7 +318,6 @@
   "meta.ideas_title": "鸭子的交易板块 · Ducky TradeBot",
   "meta.ideas_desc": "builder 个人的想法日志：append-only，带日期，模拟账本单独标。记录，不是荐股。",
   "meta.idea_title": "想法 · Ducky TradeBot",
-
   "data.fixture_badge": "FIXTURE · 示例数据，等首个夜间导出",
   "data.stale": "台账已超过 30 小时未更新（{h} 小时前生成）。夜间导出可能没跑；GitHub 提交历史可查。",
   "data.loading": "加载中…",
@@ -355,7 +336,6 @@
   "data.direction_up": "看多",
   "data.direction_down": "看空",
   "data.direction_flat": "中性",
-
   "track.h1": "战绩台账",
   "track.lead": "每条信号在结果出来之前就带时间戳入库，之后回填 +1 / +5 / +20 个交易日收益。亏的一起列，不删。BACKTEST 与 LIVE 分开标、从不混算。每晚一次 git 提交就是公证。",
   "track.filter_kind": "类型",
@@ -399,7 +379,6 @@
   "track.note_1": "+1 / +5 / +20 = 信号后第 1 / 5 / 20 个交易日收盘价相对信号日收盘价的变化（%）。空着的是还没到日子。",
   "track.note_2": "BACKTEST 行来自历史回放，LIVE 行是当时真的推送过的；两者分开统计，永远不混。",
   "track.note_3": "台账文件每晚提交到 GitHub，历史记录里能看到每一次改动。",
-
   "trend.h1": "大家在盯什么",
   "trend.lead": "来自 Ducky 用户 watchlist 的 k-匿名聚合：人数少于 5 的一律不显示，条件只按编译后的字段统计，从不按原文。",
   "trend.col_ticker": "代码",
@@ -413,7 +392,6 @@
   "trend.cta": "把你自己的名单加进来 →",
   "trend.updated": "更新于",
   "trend.cached": "（缓存）",
-
   "ideas.h1": "鸭子的交易板块",
   "ideas.lead": "builder 个人的想法日志：append-only，带日期，模拟账本（paper）单独标。不是荐股，是记录 + 一起讨论。",
   "ideas.col_ticker": "代码",
@@ -432,7 +410,6 @@
   "ideas.st_closed": "已平",
   "ideas.st_invalidated": "失效",
   "ideas.st_note": "备注",
-
   "idea.back": "← 全部想法",
   "idea.thesis_h": "论点",
   "idea.timeline_h": "状态时间线",
@@ -448,7 +425,6 @@
   "idea.last": "最新",
   "idea.updated": "更新",
   "idea.source_note": "内容在 git 里，每次改动都有提交记录；本页只渲染，不改写。",
-
   "app._comment": "/app/ dashboard + Telegram Mini App (pack S3). Keys are embedded into templates/app.html as a JSON block; keep app.* in sync with the app_keys list there.",
   "app.title": "Ducky TradeBot · 控制台",
   "app.description": "Ducky TradeBot 控制台：名单全景、人话提醒、K 线 + gamma 墙、订阅。网页与 Telegram Mini App 共用。",
@@ -599,5 +575,7 @@
   "app.billing.qr_fail": "二维码加载失败，请重试。",
   "app.billing.open_bot": "去 bot →",
   "app.billing.disclaimer": "订阅买的是「盯你的票」的工具，不是投资建议。",
-  "app.billing.disclaimer_link": "免责声明"
+  "app.billing.disclaimer_link": "免责声明",
+  "proof.c6_ret_label": "+5 个交易日 · LIVE",
+  "proof.c5_ret": "快 2 天"
 }

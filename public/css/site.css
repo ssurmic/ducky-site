@@ -1,12 +1,5 @@
 /* ducky-site — dark-first, light via prefers-color-scheme. No third-party CSS, no runtime fetches. */
 
-@font-face {
-  font-family: "JetBrains Mono";
-  src: url("/fonts/JetBrainsMono-sub.woff2") format("woff2"); /* subset: scripts/fonts.sh */
-  font-weight: 400 700;
-  font-style: normal;
-  font-display: swap;
-}
 
 :root {
   --bg: #0b0f14;
@@ -348,3 +341,11 @@ small { font-size: .85em; }
 .reviewed-pulse { width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 60%, transparent); animation: pulse 2.4s ease-out infinite; flex: 0 0 auto; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 60%, transparent); } 70% { box-shadow: 0 0 0 10px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
 @media (prefers-reduced-motion: reduce) { .reviewed-pulse { animation: none; } }
+
+/* --- UI polish 2026-08-30 --- */
+.avatar-mark { background: color-mix(in srgb, var(--neon) 22%, #0b0f14); }
+.mono, .receipt-ret, .price { font-variant-numeric: tabular-nums; }
+.receipt-ret { font-weight: 700; letter-spacing: -0.01em; }
+.receipt-ret .tag { display: inline-block; font-size: .72rem; font-weight: 600; letter-spacing: .04em; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 2px 7px; vertical-align: middle; margin-left: 6px; }
+.receipt-body { flex: 0 0 auto; }
+.receipt-grid { grid-auto-rows: minmax(0, auto); align-items: stretch; }

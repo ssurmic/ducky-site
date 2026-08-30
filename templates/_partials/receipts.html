@@ -79,20 +79,19 @@
         <span class="badge badge-live">{{ t('label.live') }}</span>
         <h3>{{ t('proof.c5_title') }}</h3>
         <p class="receipt-meta mono">{{ t('proof.c5_meta') }}</p>
-        <p class="receipt-ret mono">−2 d</p>
+        <p class="receipt-ret">{{ t('proof.c5_ret') }} <span class="tag mono">−2d</span></p>
         <p class="receipt-body">{{ t('proof.c5_body') }}</p>
         {{ links(primary('feed'), '#proof', t('proof.c5_caption'), sec_na=True) }}
       </article>
 
-      <article class="receipt receipt-loss" data-kind="loser" data-placeholder="loser">
+      <article class="receipt receipt-loss" data-kind="loser" id="receipt-cohr">
         <span class="badge badge-live">{{ t('label.live') }}</span>
-        <span class="badge badge-placeholder">{{ t('label.placeholder') }}</span>
         <h3>{{ t('proof.c6_title') }}</h3>
         <p class="receipt-meta mono">{{ t('proof.c6_meta') }}</p>
-        <p class="receipt-ret neg mono">−—%</p>
+        <p class="receipt-ret neg mono">−11.4% <small>{{ t('proof.c6_ret_label') }}</small></p>
         <p class="receipt-body">{{ t('proof.c6_body') }}</p>
         <p class="receipt-foot">{{ t('proof.c6_note') }}</p>
-        {{ links(primary('feed'), '#proof', t('proof.c6_caption'), sec_na=True) }}
+        {{ links(primary('feed'), 'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=COHR&type=8-K&owner=include&count=40', t('proof.c6_caption')) }}
       </article>
     </div>
 

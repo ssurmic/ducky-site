@@ -24,6 +24,7 @@
 <link rel="icon" href="/mascot.svg" type="image/svg+xml">
 <link rel="alternate icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/avatar-group.jpg">
+<link rel="preload" as="image" href="/avatar-160.jpg">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="stylesheet" href="/css/site.css">
 <script src="/config.js" defer></script>
@@ -35,7 +36,7 @@
 
 <header class="nav" id="nav">
   <div class="wrap nav-row">
-    <a class="brand" href="{{ url('/') }}"><img class="avatar-mark" src="/avatar-group.jpg" alt="" width="28" height="28" decoding="async"> {{ t('nav.brand') }}</a>
+    <a class="brand" href="{{ url('/') }}"><img class="avatar-mark" src="/avatar-160.jpg" alt="" width="28" height="28" loading="eager" fetchpriority="high" decoding="sync"> {{ t('nav.brand') }}</a>
     <nav class="nav-links" aria-label="primary">
       <a href="{{ url('/') }}#proof">{{ t('nav.proof') }}</a>
       <a href="{{ url('/') }}#boards">{{ t('nav.boards') }}</a>

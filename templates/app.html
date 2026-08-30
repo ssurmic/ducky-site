@@ -195,7 +195,7 @@
 <body class="lang-{{ lang }} page-{{ page }}">
 <div class="app-shell" id="app">
   <header class="app-top">
-    <a class="brand" href="{{ url('/') }}" title="{{ t('app.nav.home') }}"><img class="avatar-mark" src="/avatar-group.jpg" alt="" width="26" height="26" decoding="async"> {{ t('app.brand') }}</a>
+    <a class="brand" href="{{ url('/') }}" title="{{ t('app.nav.home') }}"><img class="avatar-mark" src="/avatar-160.jpg" alt="" width="26" height="26" loading="eager" fetchpriority="high" decoding="sync"> {{ t('app.brand') }}</a>
     <span class="tier-host" id="tier-badge"></span>
     <span class="spacer"></span>
     <a class="lang-toggle mono" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" lang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle>{{ t('app.nav.lang') }}</a>

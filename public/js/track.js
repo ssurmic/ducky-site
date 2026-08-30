@@ -27,7 +27,7 @@
     var live = mode === "LIVE";
     return el("span", "badge " + (live ? "badge-live" : "badge-backtest") + " badge-inline", live ? (L.live || "LIVE") : (L.backtest || "BACKTEST"));
   }
-  function tsShort(ts) { return String(ts || "").replace("T", " ").replace(/:\d\d(\.\d+)?Z$/, "").replace(/Z$/, ""); }
+  function tsShort(ts) { var m = /^(\d{4}-\d\d-\d\d)T(\d\d:\d\d)/.exec(String(ts || "")); return m ? m[1] + " " + m[2] : String(ts || "").replace("T", " "); }
   function dirLabel(d) { return d > 0 ? L.dir_up : d < 0 ? L.dir_down : L.dir_flat; }
 
   // ---- state + filters ----

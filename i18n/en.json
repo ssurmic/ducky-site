@@ -4,7 +4,6 @@
   "meta.og_title": "Ducky TradeBot — receipts, not calls",
   "meta.disclaimer_title": "Disclaimer · Ducky TradeBot",
   "meta.404_title": "Page not found · Ducky TradeBot",
-
   "nav.brand": "Ducky TradeBot",
   "nav.proof": "Receipts",
   "nav.boards": "Boards",
@@ -15,7 +14,6 @@
   "nav.lang_toggle": "中文",
   "nav.lang_toggle_aria": "切换到中文",
   "nav.skip": "Skip to content",
-
   "hero.eyebrow": "Ducky TradeBot · Telegram · 中文 / EN",
   "hero.h1": "AI-backed market signals, pushed to your Telegram before Twitter finds them.",
   "hero.sub": "Insiders buying ≥ $200k of their own stock reached your phone 2–5 minutes after the filing; NVIDIA, SK Telecom and Saudi PIF stake 8-Ks went out the same morning. AI reads every filing and writes the two lines that matter — no orders, no picks, public ledger.",
@@ -42,7 +40,6 @@
   "hero.b3_l2_rate": "100% positive",
   "hero.b3_l3": "⚠️ Always with a stop: around −8%, trim or stop out",
   "hero.b3_ts": "intraday · edge-triggered",
-
   "label.backtest": "BACKTEST",
   "label.live": "LIVE · pushed",
   "label.roadmap": "roadmap · 规划中",
@@ -53,11 +50,10 @@
   "label.sec_filing": "SEC filing ↗",
   "label.copy_caption": "Copy caption (中文 / EN)",
   "label.copied": "Copied ✓",
-
   "proof.h2": "That's what the indicator did — not a call.",
   "proof.lead": "Every card below is “what was pushed + what price did afterwards”, with its original timestamp, BACKTEST and LIVE labeled apart. Past tense. No targets.",
   "proof.c1_title": "🌊 K-index receipt",
-  "proof.c1_meta": "two images: original alert with date | SMH chart 60 days later",
+  "proof.c1_meta": "5-year backtest · SMH 60 days after K<1",
   "proof.c1_body_pre": "🩸 K-index flashed capitulation (K<1) → SMH +49% avg over the next 60 days across every sub-1 print in the last 5 years (",
   "proof.c1_rate": "100% of them positive",
   "proof.c1_body_post": "). Same window, QQQ ≈ +17%.",
@@ -80,15 +76,15 @@
   "proof.c5_body": "Caught and pushed that morning; CNBC reported it two days later. 12 officials tracked.",
   "proof.c5_caption": "🏛 官员 278-T 申报 2026-05-08：Ducky 当天早上推送，CNBC 两天后才报。目前盯 12 位官员。→ duckybot.app\n🏛 OGE 278-T filed 2026-05-08: Ducky pushed it that morning, CNBC reported two days later. 12 officials tracked. → duckybot.app",
   "proof.c6_title": "🔻 Red rows too",
-  "proof.c6_meta": "$—— · 8-K · date @ $——",
-  "proof.c6_body": "Pushed on filing day @ $——. 20 trading days later: −—%. This one stays on the ledger too.",
+  "proof.c6_meta": "COHR · earnings · 2026-08-13 @ $327.23",
+  "proof.c6_body": "Pushed bullish after earnings; −11.4% five trading days later (+20d pending). It stays in the ledger.",
   "proof.c6_note": "We show these too. A ledger with no red rows is a brochure.",
-  "proof.c6_caption": "🔻 红字也列：没有红字的账本叫宣传册。→ duckybot.app\n🔻 We show these too. A ledger with no red rows is a brochure. → duckybot.app",
+  "proof.c6_caption": "🔻 Red rows too: COHR, pushed bullish after earnings on 2026-08-13, −11.4% five days later. A ledger with no red rows is a brochure. → duckybot.app",
   "proof.liq_title": "🌊 USD Liquidity Index receipt",
   "proof.liq_meta": "{date} · first 🟢 ABUNDANT print of 2026 · data as of {as_of}",
   "proof.liq_ret_label": "QQQ from that close · to date",
-  "proof.liq_body": "🌊 USD Liquidity Index · {date} · first 🟢 ABUNDANT print of 2026 (score {score}: SOFR {spread_bp} bp below IORB, net liquidity +${chg13w_b}B over 13 weeks, during the eSLR relief window) → had you bought QQQ at that close: {qqq_1w} in a week, {qqq_1m} in a month, {qqq_now} to date ({qqq_px0} → {qqq_px1}). Same window: SPY {spy_now}, SMH {smh_now}.",
-  "proof.liq_foot": "Reconstructed backtest (BACKTEST) · N={n} event · index = funding spread + bank reserves + TGA flow + net-liquidity momentum, reviewed every trading day, pushed on regime change · a record, not a promise",
+  "proof.liq_body": "🌊 USD Liquidity Index · {date} · first 🟢 ABUNDANT print of 2026 (score {score}) → had you bought QQQ at that close: {qqq_1w} in a week, {qqq_1m} in a month, {qqq_now} to date ({qqq_px0} → {qqq_px1}). Same window: SPY {spy_now}, SMH {smh_now}.",
+  "proof.liq_foot": "That day: SOFR {spread_bp} bp below IORB · net liquidity +${chg13w_b}B over 13 weeks · eSLR relief window · Reconstructed backtest (BACKTEST) · N={n} event · index = funding spread + bank reserves + TGA flow + net-liquidity momentum, reviewed every trading day, pushed on regime change · a record, not a promise",
   "proof.liq_spark_label": "2026 daily score (0–100) · dashed = 🟢 ABUNDANT threshold 80 · dot = {date}",
   "proof.liq_disclaimer": "Hypothetical, equal-weight, excludes fees, slippage and taxes. Past performance is not indicative of future results. Not investment advice.",
   "proof.liq_link": "See the liquidity ledger →",
@@ -98,7 +94,6 @@
   "proof.reviewed_title": "Reviewed daily",
   "proof.reviewed": "Every trading day after the close we log what we pushed and what happened next. Timely signals, public ledger.",
   "proof.strip": "🦆 Data / signal / education tool · not investment advice · past performance does not predict future results · backtests are hypothetical and exclude fees, slippage and taxes",
-
   "feed.h2": "What lands in your Telegram.",
   "feed.lead": "Three real formats, straight from the firehoses. Not a raw tape — the AI engine reads each one and writes the two lines that matter.",
   "feed.a_title": "💰 Insider buy",
@@ -127,7 +122,6 @@
   "feed.cta_line": "Want it watching YOUR names? → /subscribe",
   "feed.cta_channel": "Join the free channel →",
   "feed.cta_bot": "Start free in the bot →",
-
   "kindex.h2": "K-index = Fear & Greed ÷ VIX",
   "kindex.lead": "Normally above 2. Under 1, the crowd is puking and vol is spiking at the same time — capitulation. It describes the water level; it is not an instruction.",
   "kindex.ladder_title": "Four bands",
@@ -146,7 +140,6 @@
   "kindex.d3": "Ledger: every print is logged with its timestamp before the outcome exists; returns are back-filled later. No edits, no back-dating.",
   "kindex.tier": "Free vs Signal: the free channel sees delayed / teased band prints + the public ledger. Signal ($12/mo) gets the live intraday push the moment the band changes, plus the dip gauge.",
   "kindex.caveat": "Stated up front: “100% over 5 years” is a handful of events, not hundreds. The sample is small. It is a water-level indicator for layering a DCA — not a guarantee, not a price target.",
-
   "boards.h2": "Eight boards. Pick the ones you read.",
   "boards.lead": "One Telegram supergroup, Topics mode. Mute what you don't need.",
   "boards.1.name": "🧭 Daily brief & the tape",
@@ -166,7 +159,6 @@
   "boards.8.name": "📅 Week ahead & pre/post market",
   "boards.8.desc": "Sunday: next week's schedule (exact ET times + chart). Daily pre-close: the trading-mode read (PIN / TREND / EVENT-VOL), grounding-checked so it can't invent a level.",
   "boards.foot": "🦆 Ducky's trades is a manual board — the builder's own log, “not a pick, a record + a discussion”.",
-
   "dm.h2": "DM it a ticker. Get the whole picture in one card.",
   "dm.lead_pre": "Type “NVDA 怎么样” (or “how's NVDA”) to",
   "dm.lead_post": ". Back comes the 全景 snapshot:",
@@ -191,7 +183,6 @@
   "dm.caps_label": "Caps",
   "dm.caps": "Free 3 · Signal 25 · Pro 100.",
   "dm.cta": "Try one now →",
-
   "why.h2": "Why it's affordable and private",
   "why.s1_big": "AI-backed",
   "why.s1_sub": "An AI engine reads every filing and writes the two lines that matter — it doesn't forward the raw text.",
@@ -206,14 +197,12 @@
   "why.p2": "Fully private — your watchlist and alert rules belong to you: encrypted, never shared, never sold, deletable any time.",
   "why.thin_title": "Where it's thin (we say it first)",
   "why.thin": "We're not the biggest data shop and we don't have a brand yet. What we do have: speed on filings (minutes, not hours), AI that reads every filing instead of forwarding it, and a public ledger you can check any time — losers included.",
-
   "who.h2": "Built for two kinds of people.",
   "who.c1_title": "You trade US stocks from Futu / Tiger / IBKR and read both languages.",
   "who.c1_body": "You want the filing before FinTwit, in Chinese, with the reasoning — not a 200-line English PDF. Signal, $12/mo, or the ¥ annual pass.",
   "who.c2_title": "You DCA and only want one thing: when to add.",
   "who.c2_body": "You don't want 15 boards. You want the K-index print, the gauge, and the ledger. Mute everything else. Signal.",
   "who.oneliners": "One-liners: options / flow refugee from a $48–149/mo tool → Pro, $29. Busy professional with no time for a terminal → the answer arrives in Telegram.",
-
   "pricing.h2": "Free is real. Paid is personal.",
   "pricing.lead": "The free channel is the product's live demo — every filing, every K-index tease, the public ledger. Paid means it watches YOUR names.",
   "pricing.toggle_monthly": "Monthly",
@@ -272,7 +261,6 @@
   "pricing.microfaq_q": "“Is Pro worth it over Signal?”",
   "pricing.microfaq_a": "Only if you trade options: gamma walls, IV–HV, the weekly expected range and sub-sector RS live there.",
   "pricing.strip": "🦆 Paid buys personalization (your watchlist), not “secret picks” · data / signal / education tool · not investment advice",
-
   "faq.h2": "FAQ",
   "faq.q1": "Is this stock picking?",
   "faq.a1": "No. Ducky surfaces filings, indicators and backtests, and explains them. It never tells you to buy anything and never gives a price target. Receipts are past tense on purpose. It is a data / signal / education tool. We are not a licensed adviser anywhere.",
@@ -286,15 +274,12 @@
   "faq.a5": "Form 4 alerts land 2–5 minutes after EDGAR posts. 8-K partner filings the same morning. K-index prints intraday, edge-triggered.",
   "faq.q6": "What about the losers?",
   "faq.a6": "The ledger records every signal with a timestamp before the outcome exists. The track-record page lists +1/+5/+20-day returns by source — losers included.",
-
   "band.h2": "🦆 Want it watching YOUR names?",
   "band.cta_channel": "Join the free channel →",
   "band.cta_bot": "Start free →",
   "band.ghost": "Subscribe in the bot →",
-
   "sticky.free": "🦆 Free",
   "sticky.subscribe": "Subscribe $12/mo",
-
   "footer.p1": "🦆 Ducky TradeBot is a data / signal / education tool for personal investment research. Nothing here is investment advice. Past performance does not predict future results. Consult a licensed financial adviser before making investment decisions.",
   "footer.p2": "Everything on this site and in the Telegram channel — insider buys, institutional stakes, the K-index, backtests, “receipt” screenshots — is a past-tense record of what an indicator or tool did, plus data education. It is not a stock pick, not an instruction to buy or sell, and carries no price targets and no promise of returns. We are not a licensed investment adviser with the CSRC or in any jurisdiction, and we do not offer advisory, managed-account, copy-trading or “insider list” services.",
   "footer.p3": "Ducky is not a trading bot: it connects to no brokerage account and never places an order. Every K-index push carries a stop-loss reminder; the backtest sample is limited and a historical “100%” does not predict the future. Paid tiers differ by personalization (watching your list), not by “secret picks”.",
@@ -306,7 +291,6 @@
   "footer.links_bot": "Telegram bot",
   "footer.copyright": "© 2026 Ducky TradeBot",
   "footer.lang_other": "中文",
-
   "disc.h1": "Disclaimer",
   "disc.is_title": "What Ducky is",
   "disc.is_1": "A data / signal / education tool: it pulls public SEC filings (Form 4, 13D/13G, 13F, 8-K, OGE 278-T), computes indicators (K-index, RSI, IV/HV, gamma walls), runs backtests, and uses an AI engine to read filings into plain language.",
@@ -323,12 +307,10 @@
   "disc.contact_title": "Contact",
   "disc.contact": "Telegram bot only: DM @DuckyduckyTradeBot. This site collects no email and has no forms.",
   "disc.back": "← Back to home",
-
   "e404.h1": "404 · This page isn't on the ledger.",
   "e404.body": "The link may have expired. Head home, or straight to the bot.",
   "e404.home": "← Home",
   "e404.bot": "Open the Telegram bot →",
-
   "meta.track_title": "Track record · Ducky TradeBot",
   "meta.track_desc": "Append-only signal ledger: every signal is timestamped before its outcome, then +1 / +5 / +20 day returns are filled in — losers included. BACKTEST and LIVE labeled apart; N= beside every rate.",
   "meta.trend_title": "What people watch · Ducky TradeBot",
@@ -336,7 +318,6 @@
   "meta.ideas_title": "Ducky's trades · Ducky TradeBot",
   "meta.ideas_desc": "The builder's personal idea log: append-only, dated, paper book labeled apart. A log, not a call.",
   "meta.idea_title": "Idea · Ducky TradeBot",
-
   "data.fixture_badge": "FIXTURE · sample data until the first nightly export",
   "data.stale": "This ledger is more than 30 h old (generated {h} h ago). The nightly export may not have run; the GitHub history shows the last commit.",
   "data.loading": "Loading…",
@@ -355,7 +336,6 @@
   "data.direction_up": "long",
   "data.direction_down": "short",
   "data.direction_flat": "neutral",
-
   "track.h1": "Track record",
   "track.lead": "Every signal is logged with a timestamp before its outcome exists; +1 / +5 / +20 trading-day returns are filled in afterwards. Losers stay. BACKTEST and LIVE are labeled apart and never mixed. One git commit a night is the notary.",
   "track.filter_kind": "Kind",
@@ -399,7 +379,6 @@
   "track.note_1": "+1 / +5 / +20 = close on the 1st / 5th / 20th trading day after the signal vs. the signal-day close (%). Blank means the day hasn't arrived.",
   "track.note_2": "BACKTEST rows are historical replays; LIVE rows were actually pushed at the time. They are tallied separately and never mixed.",
   "track.note_3": "The ledger file is committed to GitHub nightly; the history shows every change.",
-
   "trend.h1": "What people are watching",
   "trend.lead": "k-anonymous aggregates from Ducky users' watchlists: anything under 5 people is hidden, and conditions are counted by compiled field only — never by raw text.",
   "trend.col_ticker": "ticker",
@@ -413,7 +392,6 @@
   "trend.cta": "Add your own names →",
   "trend.updated": "updated",
   "trend.cached": "(cached)",
-
   "ideas.h1": "Ducky's trades",
   "ideas.lead": "The builder's personal idea log: append-only, dated, paper book labeled apart. Not picks — a log, and something to discuss.",
   "ideas.col_ticker": "ticker",
@@ -432,7 +410,6 @@
   "ideas.st_closed": "closed",
   "ideas.st_invalidated": "invalidated",
   "ideas.st_note": "note",
-
   "idea.back": "← All ideas",
   "idea.thesis_h": "Thesis",
   "idea.timeline_h": "Status timeline",
@@ -448,7 +425,6 @@
   "idea.last": "last",
   "idea.updated": "updated",
   "idea.source_note": "Content lives in git; every edit is a commit. This page only renders it.",
-
   "app._comment": "/app/ dashboard + Telegram Mini App (pack S3). Keys are embedded into templates/app.html as a JSON block; keep app.* in sync with the app_keys list there.",
   "app.title": "Ducky TradeBot · Dashboard",
   "app.description": "Ducky TradeBot dashboard: watchlist snapshots, plain-language alerts, candles + gamma walls, subscription. Same app on the web and inside Telegram.",
@@ -599,5 +575,7 @@
   "app.billing.qr_fail": "The QR code failed to load — try again.",
   "app.billing.open_bot": "Open the bot →",
   "app.billing.disclaimer": "A subscription buys tooling that watches your names — not investment advice.",
-  "app.billing.disclaimer_link": "Disclaimer"
+  "app.billing.disclaimer_link": "Disclaimer",
+  "proof.c6_ret_label": "+5 trading days · LIVE",
+  "proof.c5_ret": "2 days earlier"
 }
