@@ -9,7 +9,7 @@
   Cache-Control: public, max-age=31536000, immutable
 
 /js/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
 
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
