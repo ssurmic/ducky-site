@@ -456,3 +456,9 @@ body.gl-open .gl-backdrop { opacity: 1; pointer-events: auto; } body.gl-open .gl
 details.login-other { margin-top: 14px; }
 details.login-other summary { cursor: pointer; color: var(--muted, #8b949e); font-size: 13px; }
 .pwsec { margin-top: 18px; }
+
+/* ── polish v2: rounder type, softer edges (owner feedback 2026-08-30) ─────── */
+body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+h1, h2, h3, .btn, .login-h2 { font-family: ui-rounded, var(--font); }
+.input, .btn { border-radius: 14px; }
+.card, .stat-tile { border-radius: 18px; }
