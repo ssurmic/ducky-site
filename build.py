@@ -274,6 +274,12 @@ def write_sitemap(cfg: dict, pages: list[tuple[str, str]], today: str) -> None:
     (DIST / "sitemap.xml").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def write_glossary(dist):
+    src = ROOT / "i18n" / "glossary.json"
+    if src.exists():
+        (dist / "glossary.json").write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--api-base", help="override api_base from site.config.json")
@@ -307,6 +313,7 @@ def main() -> None:
             count += 1
 
     write_config_js(cfg, version)
+    write_glossary(DIST)
     n_imports = version_module_imports(version)
     headers = env.get_template("_headers.tpl").render(cfg=cfg)
     (DIST / "_headers").write_text(headers.rstrip() + "\n", encoding="utf-8")

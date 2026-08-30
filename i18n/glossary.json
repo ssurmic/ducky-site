@@ -1,0 +1,1222 @@
+{
+  "13d_13g": {
+    "aliases": [
+      "13d",
+      "13g",
+      "13d/13g",
+      "sc 13d",
+      "大股东申报",
+      "5%"
+    ],
+    "en": {
+      "example": "A large technology company discloses a 7.2% stake in a small-cap via 13D with \"strategic collaboration\" as the stated purpose → strategic-partner signal.",
+      "long": "Anyone crossing 5% ownership of a US-listed company must file. Schedule 13D is for holders who intend to influence management or control (activist funds, strategic investors); it is due within five business days of crossing 5% and discloses the source of funds and purpose. Schedule 13G is for passive institutional holders (index funds and the like) with far lighter requirements. 13D filers must also update on ±1% changes. Ducky's strategic-partner signal scans 13D filings for Tier-1 corporates or sovereign funds taking stakes.",
+      "name": "13D / 13G (beneficial-owner filings)",
+      "short": "SEC filings required above 5% ownership. 13D = intent to influence the company (activist / strategic holder), 13G = passive holding."
+    },
+    "group": "filings",
+    "see_also": [
+      "8k",
+      "pipe",
+      "13f",
+      "form4"
+    ],
+    "zh": {
+      "example": "一家大型科技公司披露持有某小型公司 7.2% 股份并提交 13D,目的栏写明「战略合作」 → 触发战略伙伴信号。",
+      "long": "任何人或机构持有一家美股公司超过 5% 的股份就必须申报。13D 用于有意影响公司经营或控制权的持有者(激进基金、战略投资人),须在越过 5% 后 5 个工作日内提交,并说明资金来源和目的;13G 用于被动的机构投资者(指数基金等),要求宽松得多。13D 申报之后的持股变动(±1%)也要更新。Ducky 的战略伙伴信号会在 13D 中寻找 Tier-1 企业或主权基金的入股。",
+      "name": "13D / 13G 大股东申报",
+      "short": "持股超过 5% 时的 SEC 申报。13D = 有意影响公司(激进 / 战略投资者),13G = 被动持有。"
+    }
+  },
+  "13f": {
+    "aliases": [
+      "13f",
+      "机构持仓",
+      "基金持仓",
+      "holdings"
+    ],
+    "en": {
+      "example": "A well-known fund's 13F filed 2025-05-15 (positions as of March 31) shows a new 2M-share position → pushed with a NEW tag and \"as of March 31\".",
+      "long": "A 13F lists an institution's long equity and option positions once per quarter; it excludes shorts, bonds and non-US holdings. Because it arrives up to 45 days after quarter end, the manager may already have changed the position, so it is better read for direction and trend than copied. Ducky's 13F signal diffs a well-known fund's consecutive quarters (NEW / ADDED / CLOSED) and prints both the filing date and the quarter-end date so a 45-day-old move is not mistaken for a current one.",
+      "name": "13F (institutional holdings)",
+      "short": "The quarterly snapshot of US long positions that managers with ≥ $100M must file within 45 days of quarter end; up to 45 days stale."
+    },
+    "group": "filings",
+    "see_also": [
+      "13d_13g",
+      "form4",
+      "signal_date"
+    ],
+    "zh": {
+      "example": "某著名基金 2025-05-15 提交的 13F(覆盖 3 月 31 日持仓)显示新建仓某公司 200 万股 → 推送「NEW」标签,并标明数据截至 3 月 31 日。",
+      "long": "13F 是每个季度一次的机构持仓清单,只包含多头股票和期权,不包含空头、债券和非美股。因为在季度结束后 45 天才披露,看到时机构可能早已调仓,所以它更适合看「趋势和方向」而不是抄作业。Ducky 的 13F 信号比较著名基金相邻两季的持仓差异:新建仓、加仓、清仓,并注明申报日期和季度末日期,避免把 45 天前的动作当成现在的动作。",
+      "name": "13F 机构持仓申报",
+      "short": "管理规模 ≥ $1 亿的机构每季度末后 45 天内披露的美股多头持仓快照;滞后最多 45 天。"
+    }
+  },
+  "8k": {
+    "aliases": [
+      "8-k",
+      "8k",
+      "重大事件",
+      "临时公告",
+      "current report"
+    ],
+    "en": {
+      "example": "An 8-K containing Item 1.01 (supply agreement with a large corporate) and Item 3.02 ($150M of shares issued to that corporate) → strategic-partner signal.",
+      "long": "An 8-K is a US company's ad-hoc disclosure, organised by item number: Item 1.01 entry into a material agreement, 2.02 results, 3.02 unregistered sale of equity, 5.02 officer or director changes, 8.01 other events. Ducky's strategic-partner signal focuses on the 1.01 + 3.02 combination — a signed agreement plus shares issued to the counterparty usually means a strategic stake — and on 5.02 events coinciding with insider buying. The 8-K is the primary source; the card extracts amount, counterparty and terms.",
+      "name": "8-K (current report)",
+      "short": "The filing a listed company must make within four business days of a material event: acquisitions, financings, executive changes, major contracts."
+    },
+    "group": "filings",
+    "see_also": [
+      "pipe",
+      "13d_13g",
+      "form4",
+      "confluence"
+    ],
+    "zh": {
+      "example": "某公司 8-K 同时含 Item 1.01(与某大厂签订供货协议)和 Item 3.02(向该大厂增发 $1.5 亿股票)→ 战略伙伴信号。",
+      "long": "8-K 是美股公司的「临时公告」,按事项编号分类:Item 1.01 签订重大协议,2.02 业绩发布,3.02 非公开发行股票,5.02 高管或董事变动,8.01 其他重大事件。Ducky 的战略伙伴信号主要盯 1.01 + 3.02 的组合——签了协议并向对方增发股票,通常意味着战略入股;也会看 5.02 与内部人买入的共振。8-K 是原始文件,推送卡片会摘出金额、对手方和条款。",
+      "name": "8-K 重大事件公告",
+      "short": "上市公司在重大事件发生后 4 个工作日内向 SEC 提交的即时公告:收购、融资、高管变动、重大合同等。"
+    }
+  },
+  "algo_version": {
+    "aliases": [
+      "版本",
+      "算法版本",
+      "version",
+      "algo version"
+    ],
+    "en": {
+      "example": "Insider signal v2 (after raising the dollar threshold): LIVE N=35, 20-day average excess +2.4%; v1 on the same regime cell: N=120, +1.1% → version delta +1.3 points (N=35, still under observation).",
+      "long": "Signal rules (thresholds, scoring, data sources) change over time. To avoid mixing old and new results, every signal carries the version in force when it was pushed. The scorecard reports each signal kind per version and diffs the latest version against the previous one on the same regime cells (hit rate, average excess), so an update gets a preliminary verdict after roughly 20 trading days. Historical signals are versioned \"legacy\".",
+      "name": "Algorithm version",
+      "short": "Each signal records the rule version that produced it; the scorecard splits by version so a rule change can be judged as an improvement or not."
+    },
+    "group": "scorecard",
+    "see_also": [
+      "backtest_vs_live",
+      "n_sample",
+      "all_weather"
+    ],
+    "zh": {
+      "example": "内部人信号 v2(提高金额门槛后)LIVE N=35,20 日平均超额 +2.4%;v1 同天气格 N=120,+1.1% → 版本差异 +1.3 个百分点(N=35,仍在观察)。",
+      "long": "信号规则(门槛、打分方式、数据源)会随时间调整。为了不把新旧规则的结果混在一起,每条信号在推送时带上当时的版本号。计分板对每个信号种类按版本分别统计,并把最新版本与上一版本在相同天气格子里的命中率和平均超额做差,通常在约 20 个交易日后就能看到一次更新的初步结果。历史信号的版本标为「legacy」。",
+      "name": "算法版本",
+      "short": "每条信号记录当时使用的规则版本号;计分板按版本切分,能看出一次规则更新是让结果变好还是变差。"
+    }
+  },
+  "all_weather": {
+    "aliases": [
+      "全天候",
+      "all weather",
+      "allweather",
+      "☀️"
+    ],
+    "en": {
+      "example": "A kind with calm-up +2.1% (N=88), calm-down +0.9% (N=31), stress +1.4% (N=15), capitulation +3.0% (N=12) → ☀️ all-weather. If the stress cell were −1.2% it would show \"lags in stress\" instead.",
+      "long": "Market weather comes in four regimes: calm-up, calm-down, stress and capitulation. For each signal kind (and each algorithm version) the 20-day average excess return is computed inside every regime. All four cells must satisfy \"N ≥ 10 and average excess > 0\" for the badge; if any cell lacks samples or is ≤ 0, the kind is not all-weather and the failing regimes are named, e.g. \"lags in stress\". It is a past-tense statistic, not a promise.",
+      "name": "All-weather",
+      "short": "A signal kind earns the ☀️ all-weather badge only when all four market regimes have N ≥ 10 samples and a positive 20-day average excess; otherwise the failing regimes are listed."
+    },
+    "formula": "all_weather = 1 iff for every regime r in {calm-up, calm-down, stress, capitulation}: N_r ≥ 10 and avg_excess_20d_r > 0",
+    "group": "scorecard",
+    "see_also": [
+      "regime",
+      "excess_return",
+      "n_sample",
+      "backtest_vs_live"
+    ],
+    "zh": {
+      "example": "某类信号在平静上行 +2.1%(N=88)、平静下行 +0.9%(N=31)、压力 +1.4%(N=15)、资本臣服 +3.0%(N=12)→ ☀️ 全天候。若压力格是 −1.2%,则显示「压力期落后」。",
+      "long": "市场天气分四种:平静上行、平静下行、压力、资本臣服。对每一类信号(和每个算法版本),分别在四种天气里统计 20 日平均超额收益。四格都满足「样本数 ≥ 10 且平均超额 > 0」就是全天候;任何一格样本不足或平均超额 ≤ 0,就不是,并且标注失败的天气,比如「压力期落后」。这是过去表现的统计描述,不是对未来的承诺。",
+      "name": "全天候",
+      "short": "一类信号在四种市场天气里都有 N≥10 的样本且 20 日平均超额都 > 0,才标 ☀️ 全天候;否则列出它在哪种天气里落后。"
+    }
+  },
+  "backtest_vs_live": {
+    "aliases": [
+      "回测",
+      "backtest",
+      "live",
+      "实盘",
+      "实盘记录",
+      "回测vs实盘"
+    ],
+    "en": {
+      "example": "K-index capitulation: backtest N=17 (historical prints since 2019, BACKTEST); since going live in August 2025, LIVE N=2. Shown as two rows, never as \"N=19\".",
+      "long": "A backtest runs today's rule over past data: many samples and coverage of several regimes, but the rule may have been tuned to that very data, so results tend to be optimistic. A LIVE record was pushed the moment the signal occurred, written to the ledger, and later filled with real 1 / 5 / 20-day outcomes; it cannot be edited afterwards and losers cannot be dropped. Every Ducky number states which kind it is, and the public page never merges the two into one total. Whether a signal kind really works is judged by its LIVE N and results.",
+      "name": "Backtest vs live (BACKTEST / LIVE)",
+      "short": "BACKTEST = recomputed after the fact on historical data; LIVE = actually pushed at the time, with a timestamp. Always labelled separately, never pooled."
+    },
+    "group": "scorecard",
+    "see_also": [
+      "n_sample",
+      "ledger",
+      "signal_date",
+      "hit_rate"
+    ],
+    "zh": {
+      "example": "K 指数资本臣服:回测 N=17(2019 年以来的历史打印,BACKTEST);2025 年 8 月上线后 LIVE N=2。页面分别显示,不会写成「N=19」。",
+      "long": "回测是拿今天的规则去跑过去的数据,好处是样本多、能覆盖多种市场天气,坏处是规则可能被过去的数据「调」出来,结果往往偏乐观。LIVE 记录是信号在发生当下就推送出去、写进台账、之后再用真实价格回填 1 / 5 / 20 日结果,无法事后修改,也不能挑掉亏损的。Ducky 的每个数字都注明是哪一种;公开页上两者永远不合并成一个总数。判断一类信号是否真的有效,以 LIVE 的 N 和表现为准。",
+      "name": "回测 vs 实盘记录 (BACKTEST / LIVE)",
+      "short": "BACKTEST = 用历史数据事后重算的结果;LIVE = 当时真的推送过、带时间戳的记录。两者永远分开标注,不混在一起统计。"
+    }
+  },
+  "block_trade": {
+    "aliases": [
+      "大宗",
+      "大宗交易",
+      "block",
+      "block trade",
+      "大单"
+    ],
+    "en": {
+      "example": "A 2.5M-share block at $48.00 (about $120M) printed slightly above the ask → logged as a block trade, tagged \"buyer-initiated (inferred)\".",
+      "long": "A block is a large order negotiated off the open book and printed in one piece on an exchange or a dark pool. Its information is that someone was willing to move that much stock at that price, and the price often becomes a later support / resistance reference. As with dark pools, public data does not reveal the aggressor; a print above the prevailing ask is often read as buyer-initiated and below the bid as seller-initiated, but that is inference, not fact.",
+      "name": "Block trade",
+      "short": "A single very large execution (commonly 10,000+ shares or $200k+), usually negotiated between institutions."
+    },
+    "group": "flow",
+    "see_also": [
+      "dark_pool",
+      "open_interest"
+    ],
+    "zh": {
+      "example": "盘中一笔 250 万股、$48.00 的大宗成交(约 $1.2 亿),成交价略高于当时卖价 → 记为大宗交易,标注「偏买方主动(推断)」。",
+      "long": "大宗交易是机构在场外协商后一次性成交的大单,通过交易所或暗池打印。它的信息量在于「有人在这个价位愿意一次性交易这么多」,价格常成为后续的支撑 / 阻力参考。和暗池一样,公开数据里看不到主动方是买还是卖;成交价高于当时卖价常被解读为买方主动,低于买价常被解读为卖方主动,但这只是推断。",
+      "name": "大宗交易",
+      "short": "单笔规模很大的成交(常见门槛 10,000 股或 $20 万以上),通常是机构之间协商成交。"
+    }
+  },
+  "capitulation": {
+    "aliases": [
+      "臣服",
+      "capitulation",
+      "k<1",
+      "投降"
+    ],
+    "en": {
+      "example": "Fear & Greed 10, VIX 40 → K = 0.25, a capitulation print; the actual SPY path over the next 20 days is logged whatever it turns out to be.",
+      "long": "When CNN Fear & Greed divided by VIX drops below 1 the market is in the capitulation band. Intuitively: the fear gauge is already very low while volatility is already very high, i.e. most participants have been selling. In the regime label it overrides everything else. Ducky pushes a card when a K < 1 print occurs and logs the following 5 / 20-day SPY path on the ledger (BACKTEST for the reconstructed history, LIVE after the push), including the times it did not work. It describes past statistics; it does not predict a bottom.",
+      "name": "Capitulation",
+      "short": "The K-index < 1 band: extreme fear together with high volatility, historically seen late in sharp sell-offs."
+    },
+    "formula": "capitulation iff K = CNN_Fear_Greed / VIX < 1",
+    "group": "macro",
+    "see_also": [
+      "k_index",
+      "vix",
+      "regime",
+      "backtest_vs_live"
+    ],
+    "zh": {
+      "example": "恐慌贪婪 10、VIX 40 → K = 0.25,资本臣服区打印;之后 20 日 SPY 的实际走势会被记入台账,无论涨跌。",
+      "long": "当 CNN 恐慌贪婪指数除以 VIX 小于 1,就进入资本臣服区。直觉上是「恐慌指数已经很低,同时波动率已经很高」,也就是多数人已经在抛售。在市场天气里它覆盖其他标签。Ducky 会在打印 K < 1 时推送,并把之后 5 / 20 日的 SPY 表现写进台账(回测部分标 BACKTEST,推送后的标 LIVE),包含表现不好的次数。它描述的是过去的统计规律,不预测底部。",
+      "name": "资本臣服",
+      "short": "K 指数 < 1 的区间:恐慌情绪极端且波动很高,历史上常出现在急跌的尾段。"
+    }
+  },
+  "confluence": {
+    "aliases": [
+      "共振",
+      "confluence",
+      "叠加",
+      "多信号"
+    ],
+    "en": {
+      "example": "An insider-buy signal on March 4, then on March 6 the overview shows oversold with price sitting on the $120 put wall → ledger tag \"confluence: insider + oversold + gamma support\".",
+      "long": "Any single signal carries noise; signals from different sources with different mechanisms coinciding are less likely to be chance. Ducky's confluence tag means two or more signal families from separate data sources fired on the same name within a short window (usually 5 trading days): filings (insider, 8-K, 13D), technical state (oversold, RSI), option structure (gamma wall, IV/HV). Confluence is stored as a combination tag on the ledger so the performance of \"signals with confluence\" versus \"single signals\" can be compared afterwards.",
+      "name": "Confluence",
+      "short": "Several independent signals pointing the same way on the same name in the same window, e.g. insider buy + oversold + a put wall underneath."
+    },
+    "group": "technical",
+    "see_also": [
+      "oversold",
+      "gamma_wall",
+      "form4",
+      "smart_money_score"
+    ],
+    "zh": {
+      "example": "某标的 3 月 4 日出现内部人买入信号,3 月 6 日全景显示超跌且现价贴着 $120 的 put 墙 → 台账标注「共振:内部人 + 超跌 + gamma 支撑」。",
+      "long": "单个信号都有自己的噪音;来源不同、机制不同的信号同时出现,巧合的可能性更小。Ducky 的共振是指在一个短窗口内(通常 5 个交易日)同一标的出现了两类以上来自不同数据源的信号——申报文件类(内部人、8-K、13D)、技术状态类(超跌、RSI)、期权结构类(gamma 墙、IV/HV)。共振在台账里作为组合标签记录,可以事后统计「有共振的信号」与「单一信号」的表现差异。",
+      "name": "共振",
+      "short": "多个互相独立的信号在同一标的、同一时间段指向同一方向,例如内部人买入 + 超跌 + 下方 gamma 墙支撑。"
+    }
+  },
+  "dark_pool": {
+    "aliases": [
+      "暗池",
+      "dark pool",
+      "darkpool",
+      "ats"
+    ],
+    "en": {
+      "example": "Dark-pool volume was 48% of the day's total with the heaviest prints near $95 → the overview marks $95 as a dark-pool volume cluster, without a directional read.",
+      "long": "Dark pools are alternative trading systems run by brokers or exchanges where neither side sees the other's orders; executions are reported afterwards through FINRA's trade reporting facility. Institutions use them to reduce the market impact of large orders. Public data shows size and price but not direction (buy or sell), so a \"dark pool print\" by itself is neither bullish nor bearish; it shows that heavy institutional volume changed hands near a price, and those prices often become reference levels later.",
+      "name": "Dark pool",
+      "short": "An off-exchange venue with no public order book; large trades match there and print to the tape afterwards. Used to see where institutional volume clustered."
+    },
+    "group": "flow",
+    "see_also": [
+      "block_trade",
+      "open_interest"
+    ],
+    "zh": {
+      "example": "某标的当天暗池成交占总量 48%,其中 $95 附近成交最集中 → 全景标注 $95 为暗池成交密集位,不判断方向。",
+      "long": "暗池是券商或交易所运营的另类交易系统(ATS),买卖双方看不到对方的挂单,成交后再通过 FINRA 的 TRF 报出。机构用它来减少大单对价格的冲击。公开数据能看到的是成交量和价格,看不到方向(是买还是卖),所以「暗池大单」本身并不说明看多或看空,只说明某个价位附近有大量机构成交,这些价位常成为后续的参考位。",
+      "name": "暗池",
+      "short": "不公开挂单簿的场外撮合场所,大单在这里成交后才打印到公开数据流;用来观察机构成交量的分布。"
+    }
+  },
+  "dma_200": {
+    "aliases": [
+      "200日线",
+      "200日均线",
+      "200dma",
+      "200-dma",
+      "200 dma",
+      "200ma",
+      "年线"
+    ],
+    "en": {
+      "example": "SPY's 200-day average is $560 and it closes at $585 → above the line, regime in the calm family; a close at $548 → below, calm-down or stress depending on the VIX.",
+      "long": "The 200-day moving average is the most cited long-term trend reference, covering about ten months of trading days. Price above a rising line is usually described as a long-term uptrend; below a falling line the opposite. It lags and does not predict turns, but because it is so widely watched, volume often picks up when price approaches it. Ducky uses SPY's position versus its 200-day line as one dimension of the market regime and supports alerts such as \"tell me when it closes below the 200-day\".",
+      "name": "200-day moving average",
+      "short": "The average of the last 200 daily closes, widely treated as the long-term trend line; above it is long-term strong, below it weak."
+    },
+    "formula": "dma_200 = mean(close over the last 200 trading days)",
+    "group": "technical",
+    "see_also": [
+      "regime",
+      "retrace_d20",
+      "relative_strength"
+    ],
+    "zh": {
+      "example": "SPY 200 日均线 $560,收盘 $585 → 在线上,天气归入平静类;若收盘 $548 → 在线下,归入平静下行或压力(视 VIX 而定)。",
+      "long": "200 日均线是最常被引用的长期趋势参考线,大约覆盖 10 个月的交易日。价格在线上、线本身向上,通常被描述为长期上升趋势;跌破且线向下则相反。它是滞后指标,不预测转折,但因为被广泛使用,价格接近它时常出现放量。Ducky 用 SPY 与 200 日线的相对位置作为市场天气的一个维度,也支持「跌破 200 日线提醒我」这类自定义提醒。",
+      "name": "200 日均线",
+      "short": "最近 200 个交易日收盘价的平均值,常被视为长期趋势的分水岭;价格在其上方为长期偏强,下方为偏弱。"
+    }
+  },
+  "equal_weight": {
+    "aliases": [
+      "等权",
+      "equal weight",
+      "等权重",
+      "equal-weight"
+    ],
+    "en": {
+      "example": "A basket holds five names one day with returns +2%, −1%, +0.5%, +3%, −0.5% → equal-weight basket return = the mean, +0.8%.",
+      "long": "Equal weighting is the simplest and least opinionated scheme: with n holdings each is 1/n, and the basket's daily return is the arithmetic mean of the constituents' daily returns. Unlike cap weighting it does not let a couple of mega-caps drive the curve; unlike signal-strength weighting it adds no extra rule. The cost is daily rebalancing, which would incur real trading costs — one reason paper baskets are labelled \"excludes fees\".",
+      "name": "Equal weight",
+      "short": "Every constituent gets the same share; ten names at 10% each. Stops one giant or one big winner from dominating the result."
+    },
+    "formula": "basket_ret_d = mean(constituent returns on day d)",
+    "group": "scorecard",
+    "see_also": [
+      "paper_basket",
+      "max_drawdown"
+    ],
+    "zh": {
+      "example": "某天篮子持有 5 个标的,日收益分别为 +2%、−1%、+0.5%、+3%、−0.5% → 等权篮子当天收益 = 平均值 +0.8%。",
+      "long": "等权是最简单也最不带主观判断的加权方式:当天持有 n 个标的,每个占 1/n,篮子的日收益就是成分日收益的算术平均。相比市值加权,它不会让一两个巨头决定曲线;相比按信号强度加权,它不引入额外的规则。代价是需要每天再平衡,真实操作中会产生交易成本,这也是纸面篮子标注「不含费用」的原因之一。",
+      "name": "等权",
+      "short": "篮子里每个成分占相同比例;10 个标的各 10%。避免某一个大市值或大涨的标的主导结果。"
+    }
+  },
+  "excess_return": {
+    "aliases": [
+      "超额",
+      "excess",
+      "alpha",
+      "avg_excess",
+      "平均超额"
+    ],
+    "en": {
+      "example": "20 trading days after the signal-date close the name is +7.0% and SPY is +2.5% over the same window → 20-day excess +4.5%.",
+      "long": "Every ledger signal records the 1 / 5 / 20-trading-day return from the signal-date close, alongside SPY's return over exactly the same window; the difference is the excess return. In a month where everything rallies, a signal that gained half of what the index did is not counted as a success; in a sell-off, falling less than the index shows up as positive excess. The scorecard's \"average excess\" is the mean over all signals of a kind and is always printed with its N=.",
+      "name": "Excess return",
+      "short": "The name's return minus SPY's return over the identical window; positive = beat the index."
+    },
+    "formula": "excess_n = ret_n − SPY_n  (n = 1, 5, 20 trading days)",
+    "group": "scorecard",
+    "see_also": [
+      "hit_rate",
+      "sharpe_like",
+      "win_vs_spy",
+      "signal_date"
+    ],
+    "zh": {
+      "example": "信号日收盘后 20 个交易日,标的 +7.0%,SPY 同窗 +2.5% → 20 日超额 +4.5%。",
+      "long": "台账里每条信号都记录信号日收盘后 1 / 5 / 20 个交易日的收益,同时记录 SPY 在完全相同窗口的收益,两者之差就是超额收益。这样在大盘普涨的月份里,一条只涨了大盘一半的信号不会被当成成功;在大盘大跌时,跌得少也会记为正超额。计分板上的「平均超额」是这一类信号所有超额收益的平均值,永远和 N= 一起显示。",
+      "name": "超额收益",
+      "short": "标的在同一窗口里的收益减去 SPY 的收益;正数 = 跑赢大盘。"
+    }
+  },
+  "expected_range": {
+    "aliases": [
+      "预期区间",
+      "expected move",
+      "本周区间",
+      "straddle",
+      "跨式"
+    ],
+    "en": {
+      "example": "Spot $100, this week's ATM straddle $4 → expected range about $96–$104 for the week (one standard deviation).",
+      "long": "Adding the at-the-money call and put prices (the straddle) gives the option market's price for movement until expiry, corresponding to about one standard deviation (~68% probability). Equivalently: spot × IV × √(days to expiry ÷ 365). It tells you how much movement the market is paying for, not where price will go; actual moves land outside the band roughly one time in three. Earnings weeks price markedly wider ranges.",
+      "name": "Expected range",
+      "short": "The price band the options market is pricing for the week (or until an expiry), roughly spot ± the at-the-money straddle price."
+    },
+    "formula": "range ≈ spot ± ATM straddle ≈ spot × IV × sqrt(days / 365)",
+    "group": "options",
+    "see_also": [
+      "iv",
+      "gamma_wall",
+      "opex"
+    ],
+    "zh": {
+      "example": "现价 $100,本周平值跨式 $4 → 本周预期区间约 $96–$104(一个标准差)。",
+      "long": "把平值 call 和平值 put 的价格加起来(跨式),就是期权市场对到期前波动幅度的定价,约对应一个标准差(约 68% 概率)。也可以用隐含波动率换算:现价 × IV × √(到期天数 ÷ 365)。它反映的是「市场愿意为多大的波动买单」,不是价格会走到哪里;实际走势落在区间之外的情况大约每三次有一次。财报周的区间通常明显更宽。",
+      "name": "预期区间",
+      "short": "期权市场为本周(或到某到期日)定价的价格波动范围,约等于现价 ± 平值跨式的价格。"
+    }
+  },
+  "form4": {
+    "aliases": [
+      "form 4",
+      "form4",
+      "内部人",
+      "内部人买入",
+      "insider",
+      "insider buy",
+      "高管买入"
+    ],
+    "en": {
+      "example": "A CEO buys 5,000 shares at $42.10 on 2025-03-04 (code P, about $210k) and files the Form 4 on March 6 → passes the threshold and enters the insider ledger.",
+      "long": "A Form 4 records every change in an insider's holdings: code P is an open-market purchase with their own money, S a sale, A a company grant (RSU / options), M an option exercise, F shares withheld for taxes. Ducky's insider signal considers P transactions only, above a dollar threshold, because grants and exercises are not a paid-for bullish view. The filing also carries the insider's role, the trade price and holdings after the trade, all of which appear on the card. Whether it was open-market, how large, and who bought are the three basic dimensions of a filing's strength.",
+      "name": "Form 4 (insider filing)",
+      "short": "The SEC filing an officer, director or ≥10% holder must submit within two business days of a change in holdings; transaction code P = open-market purchase."
+    },
+    "group": "filings",
+    "see_also": [
+      "insider_cluster",
+      "smart_money_score",
+      "13d_13g",
+      "8k"
+    ],
+    "zh": {
+      "example": "某公司 CEO 2025-03-04 以 $42.10 买入 5,000 股(代码 P,总额约 $21 万),3 月 6 日提交 Form 4 → 满足门槛,进入内部人信号台账。",
+      "long": "Form 4 记录内部人每一笔持股变动:交易代码 P 是用自己的钱在公开市场买入,S 是卖出,A 是公司授予(RSU / 期权),M 是行权,F 是为交税被扣的股份。Ducky 的内部人信号只看 P 类交易,并设有金额门槛,因为授予和行权不是「掏钱看多」。申报里还有内部人的职位、交易价格、交易后持股数,这些都在推送卡片上。是否公开市场买入、金额多大、是谁买,是判断信号强弱的三个基本维度。",
+      "name": "Form 4 内部人申报",
+      "short": "美股高管、董事或持股 ≥10% 的股东在持股变动后 2 个工作日内向 SEC 提交的申报;代码 P = 公开市场买入。"
+    }
+  },
+  "gamma_flip": {
+    "aliases": [
+      "翻转位",
+      "gamma flip",
+      "gamma翻转",
+      "零gamma",
+      "zero gamma"
+    ],
+    "en": {
+      "example": "Flip at $125, price at $128 → above the flip, intraday ranges have tended to compress; at $123 the same headline has historically produced noticeably larger swings.",
+      "long": "Sum call and put open interest at each strike weighted by gamma to get dealers' net gamma across price levels. With positive net gamma dealers sell rallies and buy dips, compressing volatility; with negative net gamma they chase rallies and sell dips, amplifying it. The crossover is the flip level. Above the flip, trading tends to be choppy and mean-reverting; below it the same news tends to produce wider swings. The level moves every day with option positioning.",
+      "name": "Gamma flip",
+      "short": "The price where dealers' net gamma turns from positive to negative. Above it hedging damps moves; below it hedging amplifies them."
+    },
+    "formula": "flip = price where net dealer gamma (Σ call OI·γ − Σ put OI·γ) crosses zero",
+    "group": "options",
+    "see_also": [
+      "gamma_wall",
+      "open_interest",
+      "vix"
+    ],
+    "zh": {
+      "example": "翻转位 $125,现价 $128 在上方 → 近期日内波动收敛;若跌到 $123,同样的消息面下,历史上波动幅度往往明显放大。",
+      "long": "把每个行权价的 call 与 put 未平仓按 gamma 加权后相加,得到做市商在不同价位的净 gamma。净 gamma 为正时,做市商「涨了卖、跌了买」,波动被压制;为负时反过来,「涨了追、跌了砍」,波动被放大。两者交界的价位就是翻转位。价格在翻转位上方,行情往往震荡收敛;跌破翻转位后,同样的消息常带来更大的波幅。翻转位每天随期权持仓变化。",
+      "name": "Gamma 翻转位",
+      "short": "做市商净 gamma 由正转负的价位。上方对冲压制波动,下方对冲放大波动。"
+    }
+  },
+  "gamma_wall": {
+    "aliases": [
+      "gamma墙",
+      "gamma 墙",
+      "伽马墙",
+      "call墙",
+      "put墙",
+      "期权墙",
+      "gamma"
+    ],
+    "en": {
+      "example": "Most call open interest at the $130 strike and most put open interest at $120 → upper wall $130, lower wall $120. At $126 the name sits between the walls, where moves have tended to stay compressed until one side breaks on volume or expiry resets the map.",
+      "long": "Aggregate open interest across expiries by strike: the strike with the most call open interest is the upper gamma wall, the one with the most put open interest is the lower wall. Market makers hold the other side of those contracts and hedge dynamically; near a wall their hedging trades push against price moves, so walls often act as resistance or support. Walls shift with each day's option flow and can relocate after expiration (OPEX). It describes option positioning, not a price forecast.",
+      "name": "Gamma wall",
+      "short": "A strike where option open interest piles up. Dealer hedging around it tends to damp volatility, so price often \"sticks\" nearby."
+    },
+    "formula": "upper wall = argmax over strikes of call OI; lower wall = argmax over strikes of put OI",
+    "group": "options",
+    "see_also": [
+      "gamma_flip",
+      "open_interest",
+      "opex",
+      "max_pain",
+      "expected_range"
+    ],
+    "zh": {
+      "example": "某标的 $130 行权价 call 未平仓最多、$120 行权价 put 未平仓最多 → 上方墙 $130、下方墙 $120;现价 $126 处在两墙之间,近期波动往往被压在区间里,直到某侧被放量突破或到期日重置。",
+      "long": "把某标的所有到期日的期权按行权价汇总未平仓合约,call 最集中的行权价是上方 gamma 墙,put 最集中的是下方 gamma 墙。做市商持有这些合约的对手方,需要动态对冲:价格接近墙时,他们的买卖会反向抵消价格波动,所以墙常表现为阻力或支撑。墙的位置随每天的期权交易变化,到期日(OPEX)后可能整体挪动。它描述的是期权持仓结构,不是价格预测。",
+      "name": "Gamma 墙",
+      "short": "期权未平仓集中的行权价。做市商在这些价位附近的对冲交易往往压制波动,价格靠近时容易「粘住」。"
+    }
+  },
+  "hit_rate": {
+    "aliases": [
+      "命中",
+      "胜率",
+      "win rate",
+      "hit",
+      "hit20",
+      "hit5"
+    ],
+    "en": {
+      "example": "24 of 40 signals were higher 20 trading days later → 20-day hit rate 60% (N=40).",
+      "long": "Hit rate = number of signals with return > 0 ÷ total samples. It answers \"how often did it go up\", not \"by how much\": a kind can hit 70% of the time and still lose on average (small wins, large losses). That is why the scorecard shows hit rate, average excess and the Sharpe-like ratio side by side, and every percentage carries its sample count N. A hit rate on a tiny N has no statistical meaning.",
+      "name": "Hit rate",
+      "short": "Share of a signal kind's samples whose N-day return was positive; always read together with its N=."
+    },
+    "formula": "hit_rate_n = count(ret_n > 0) / N",
+    "group": "scorecard",
+    "see_also": [
+      "excess_return",
+      "n_sample",
+      "sharpe_like"
+    ],
+    "zh": {
+      "example": "N=40 的信号里 24 条在 20 个交易日后收涨 → 20 日命中率 60%(N=40)。",
+      "long": "命中率 = 收益 > 0 的信号数 ÷ 样本总数。它只回答「有多少次是涨的」,不回答「涨了多少」:一类信号可以命中率 70% 但平均收益为负(赢的时候小赢、输的时候大输)。所以计分板把命中率、平均超额、类夏普并排放在一起,并且每个百分比后面都跟着样本数 N。N 很小时的命中率没有统计意义。",
+      "name": "命中率",
+      "short": "一类信号里,信号日之后 N 日收益为正的比例;永远带 N= 一起看。"
+    }
+  },
+  "hv": {
+    "aliases": [
+      "历史波动率",
+      "已实现波动率",
+      "realized vol",
+      "realised volatility",
+      "hv"
+    ],
+    "en": {
+      "example": "Daily return std over the last 20 trading days is 1.6% → 20-day HV ≈ 1.6% × √252 ≈ 25%.",
+      "long": "Take the daily log returns of the last N days (20 or 30 are common), compute their standard deviation and multiply by √252 to annualise; this is historical, or realised, volatility. It looks only at real past moves and contains no expectation about the future. HV of 20% means daily moves averaged roughly 1.3%. It is usually compared with implied volatility: IV well above HV says the market expects more turbulence ahead than it has seen (or an event is coming).",
+      "name": "Historical volatility (HV)",
+      "short": "The annualised standard deviation of actual daily returns over the last N trading days; volatility that has already happened."
+    },
+    "formula": "HV_N = std(daily log returns over N days) × sqrt(252)",
+    "group": "options",
+    "see_also": [
+      "iv",
+      "iv_hv_ratio"
+    ],
+    "zh": {
+      "example": "过去 20 个交易日日收益率标准差 1.6% → 20 日 HV ≈ 1.6% × √252 ≈ 25%。",
+      "long": "取最近 N 天(常用 20 或 30)的每日对数收益率,算标准差,再乘以 √252 换算成年化,就是历史波动率,也叫已实现波动率。它只看过去的真实走势,不包含市场对未来的预期。HV 20% 意味着过去这段时间的日均波动大约 1.3%。它常和隐含波动率对比:IV 明显高于 HV,说明市场预期未来比过去更动荡(或有事件在前)。",
+      "name": "历史波动率 (HV)",
+      "short": "过去 N 个交易日实际日收益率的年化标准差;衡量「已经发生的」波动。"
+    }
+  },
+  "insider_cluster": {
+    "aliases": [
+      "扎堆",
+      "扎堆买入",
+      "cluster",
+      "cluster buy",
+      "集体买入"
+    ],
+    "en": {
+      "example": "CFO (Mar 2), an independent director (Mar 9) and the COO (Mar 20) each buy $100–300k → three insiders inside 30 days, cluster signal.",
+      "long": "One executive buying may be personal finance; three different officers / directors each paying their own money within 30 days is far less likely to be coincidence — they are all looking at the same internal picture. Ducky's cluster rule: same company, 30-day window, at least three distinct insiders, each an open-market purchase (Form 4 code P) above the dollar threshold. Cluster buys are their own signal kind on the ledger with their own N= and hit rate.",
+      "name": "Insider cluster buy",
+      "short": "Several insiders of the same company each buying on the open market within a short window; less noisy than a single purchase."
+    },
+    "group": "filings",
+    "see_also": [
+      "form4",
+      "smart_money_score",
+      "confluence"
+    ],
+    "zh": {
+      "example": "某公司 CFO(3/2)、独立董事(3/9)、COO(3/20)各自买入 $10–30 万 → 30 天内 3 人,触发扎堆信号。",
+      "long": "一个高管买入可能是个人财务安排,三个不同的高管 / 董事在 30 天内各自掏钱买入,巧合的可能性就小得多——他们看到的是同一份内部信息。Ducky 的扎堆定义是:同一公司、30 天内、至少 3 名不同内部人、每人都是公开市场买入(Form 4 代码 P)且各自超过金额门槛。扎堆买入在台账里是独立的信号种类,有自己的 N= 和命中率。",
+      "name": "内部人扎堆买入",
+      "short": "同一家公司多名内部人在短时间内各自公开市场买入;比单人买入更少受个人因素影响。"
+    }
+  },
+  "iv": {
+    "aliases": [
+      "隐含波动率",
+      "隐波",
+      "implied vol",
+      "implied volatility",
+      "iv"
+    ],
+    "en": {
+      "example": "IV 40% → about ±40% one-sigma over a year, ±2.5% per day; IV climbs from 40% to 70% into earnings and falls back to 38% afterwards.",
+      "long": "In an option price everything except volatility (spot, strike, time, rates) is known, so solving for it gives implied volatility. IV of 40% roughly means the market is paying for a ±40% one-standard-deviation move over a year; per day that is about 40% ÷ √252 ≈ 2.5%. IV rises into earnings and major events and often collapses right after (the \"IV crush\"). Comparing it with historical volatility shows whether options are rich or cheap relative to the name's own past.",
+      "name": "Implied volatility (IV)",
+      "short": "The annualised volatility the market expects, backed out of option prices; high IV = expensive options."
+    },
+    "formula": "daily σ ≈ IV / sqrt(252)",
+    "group": "options",
+    "see_also": [
+      "hv",
+      "iv_hv_ratio",
+      "expected_range",
+      "vix"
+    ],
+    "zh": {
+      "example": "IV 40% → 一年一个标准差约 ±40%,一天约 ±2.5%;财报前 IV 从 40% 升到 70%,财报后回到 38%。",
+      "long": "期权价格里除了标的价格、行权价、时间和利率,唯一的未知数就是波动率,把它解出来就是隐含波动率。IV 40% 大致意味着市场为「一年内 ±40%(一个标准差)」的波动买单;换算到一天约是 40% ÷ √252 ≈ 2.5%。IV 在财报、重大事件前上升,事件后往往迅速回落(所谓「IV 挤压」)。和历史波动率对比,可以看出期权相对自身过去是贵还是便宜。",
+      "name": "隐含波动率 (IV)",
+      "short": "从期权价格反推出来的、市场对未来波动的年化预期;IV 高 = 期权贵。"
+    }
+  },
+  "iv_hv_ratio": {
+    "aliases": [
+      "iv/hv",
+      "iv hv",
+      "iv便宜",
+      "iv贵",
+      "iv cheap",
+      "iv rich"
+    ],
+    "en": {
+      "example": "IV 45% ÷ 20-day HV 30% = 1.5 → options rich versus recent realised moves; IV 22% ÷ HV 30% ≈ 0.73 → cheap.",
+      "long": "IV is what the market pays for future movement, HV is what actually happened recently, so the ratio is the premium of option prices over recent reality. Rules of thumb treat 1.2+ as rich and below 0.8 as cheap, but context matters: an elevated ratio ahead of earnings or an event is normal. In Ducky's ticker overview the \"IV cheap / IV rich\" tag is a banding of this ratio; it describes option pricing, it does not suggest any action.",
+      "name": "IV / HV ratio",
+      "short": "Implied divided by historical volatility. Well above 1 = options rich versus the name's own past; well below 1 = cheap."
+    },
+    "formula": "ratio = IV / HV_20",
+    "group": "options",
+    "see_also": [
+      "iv",
+      "hv",
+      "expected_range"
+    ],
+    "zh": {
+      "example": "IV 45% ÷ 20 日 HV 30% = 1.5 → 期权相对近期实际波动偏贵;IV 22% ÷ HV 30% ≈ 0.73 → 偏便宜。",
+      "long": "IV 是市场对未来波动的定价,HV 是过去真实发生的波动,两者相除就是「期权价格相对近期现实的溢价」。经验上 1.2 以上常被视为偏贵、0.8 以下偏便宜,但要结合原因:财报或事件前比值偏高是正常的。Ducky 全景里「IV 便宜 / IV 贵」就是这个比值的分档描述,只描述期权定价状态,不建议任何操作。",
+      "name": "IV / HV 比",
+      "short": "隐含波动率除以历史波动率。明显大于 1 = 期权相对自身历史偏贵,明显小于 1 = 偏便宜。"
+    }
+  },
+  "k_index": {
+    "aliases": [
+      "k指数",
+      "k index",
+      "kindex",
+      "k-index",
+      "恐慌贪婪",
+      "fear greed"
+    ],
+    "en": {
+      "example": "Fear & Greed 30 ÷ VIX 25 = 1.2 (cautious, not capitulating); Fear & Greed 18 ÷ VIX 35 ≈ 0.51 → K < 1, capitulation band.",
+      "long": "The K-index folds two public readings into one number: the numerator is CNN's Fear & Greed index (0–100, lower = more fear), the denominator is the VIX (30-day implied volatility of the S&P 500). As panic builds the numerator shrinks and the denominator grows, so K is squeezed from both sides, which makes it more sensitive to sentiment extremes than either input alone. K < 1 is called capitulation; the SPY path after historical prints is logged on the public ledger, labelled BACKTEST with its N=. It is a sentiment thermometer, not an instruction.",
+      "name": "K-index",
+      "short": "CNN Fear & Greed ÷ VIX. The more fearful the mood and the higher the volatility, the lower K; K < 1 is the capitulation band."
+    },
+    "formula": "K = CNN_Fear_Greed / VIX",
+    "group": "macro",
+    "see_also": [
+      "capitulation",
+      "vix",
+      "regime"
+    ],
+    "zh": {
+      "example": "恐慌贪婪 30 ÷ VIX 25 = 1.2(偏谨慎但未臣服);恐慌贪婪 18 ÷ VIX 35 ≈ 0.51 → K < 1,资本臣服区。",
+      "long": "K 指数把两个公开数据合成一个数:分子是 CNN 恐慌贪婪指数(0–100,越低越恐慌),分母是 VIX(标普 500 未来 30 天的隐含波动率)。恐慌加剧时分子变小、分母变大,K 会同时被两头压低,所以它对「情绪极端」比单看任何一个指标都敏感。K < 1 被称为资本臣服;历史回测里这些打印后的 SPY 表现记在公开台账里,标注 BACKTEST 和 N=。它是一个情绪温度计,不是买卖指令。",
+      "name": "K 指数",
+      "short": "CNN 恐慌贪婪指数 ÷ VIX。情绪越恐慌、波动越高,K 越小;K < 1 是资本臣服区。"
+    }
+  },
+  "leaps": {
+    "aliases": [
+      "leaps",
+      "长期期权",
+      "长期 call",
+      "leap"
+    ],
+    "en": {
+      "example": "A name's January-2027 calls show 38% implied volatility while this month's show 45% → the long end is priced calmer than the front, an inverted term structure.",
+      "long": "LEAPS (Long-term Equity AnticiPation Securities) are options expiring typically one to three years ahead. Compared with short-dated options they lose far less time value per day, are more sensitive to changes in implied volatility, and cost more up front. Ducky's overview fields on LEAPS describe the implied volatility and open interest of long-dated contracts to show how the long end is priced; they are not a contract selection or a suggestion to act.",
+      "name": "LEAPS (long-dated options)",
+      "short": "Option contracts expiring more than a year out; slow time decay, often used to express long-horizon views."
+    },
+    "group": "options",
+    "see_also": [
+      "iv",
+      "open_interest"
+    ],
+    "zh": {
+      "example": "某标的 2027 年 1 月到期的 call 隐含波动率 38%,而本月到期的 45% → 长期合约隐波低于短期,链上呈现「近高远低」。",
+      "long": "LEAPS(Long-term Equity AnticiPation Securities)是到期日通常在 1–3 年后的期权。和短期期权相比,每天的时间价值损耗小得多,对隐含波动率的变化更敏感,买入价格更高。Ducky 全景里的 LEAPS 相关字段只描述链上长期合约的隐含波动率和未平仓情况,用于说明长期期权的定价状态;它不构成任何合约选择或操作建议。",
+      "name": "LEAPS 长期期权",
+      "short": "到期日在一年以上的期权合约;时间价值衰减慢,常用于表达长期观点。"
+    }
+  },
+  "ledger": {
+    "aliases": [
+      "台账",
+      "ledger",
+      "track record",
+      "记录",
+      "账本"
+    ],
+    "en": {
+      "example": "2025-03-06 14:02, insider-buy push, signal-date close $42.50; later filled in as 1-day +1.2%, 5-day −2.0%, 20-day +6.8% with SPY +1.1% over 20 days → 20-day excess +5.7%, published together with the losing 5-day leg.",
+      "long": "The ledger is Ducky's evidence layer. Each push writes a row the moment it goes out; every night real closes fill in the 1 / 5 / 20-trading-day returns and SPY's return over the same windows. Rules: rows are never edited, losers are never removed, BACKTEST and LIVE are labelled separately, every statistic carries its N=. The public /track-record page and the API read the same ledger; the static file is committed nightly, so the commit history acts as the notary.",
+      "name": "Ledger",
+      "short": "The public record of every push: timestamp, name, signal kind, and the real 1 / 5 / 20-day outcome; losers included, append-only."
+    },
+    "group": "scorecard",
+    "see_also": [
+      "signal_date",
+      "backtest_vs_live",
+      "n_sample",
+      "excess_return"
+    ],
+    "zh": {
+      "example": "2025-03-06 14:02 推送某公司内部人买入,信号日收盘 $42.50;之后回填 1 日 +1.2%、5 日 −2.0%、20 日 +6.8%,同期 SPY 20 日 +1.1% → 20 日超额 +5.7%,连同亏损的 5 日一起公开。",
+      "long": "台账是 Ducky 的证据层。每次推送在发出的同时写入一条记录,之后每晚用真实收盘价回填 1 / 5 / 20 个交易日的收益和同期 SPY 的收益。规则:记录不能修改,亏损的不能删,BACKTEST 与 LIVE 分开标注,每个统计带 N=。公开页面 /track-record 和 API 读的都是同一份台账,静态文件每晚提交到版本库,提交历史就是公证。",
+      "name": "台账",
+      "short": "每条推送的公开记录:时间戳、标的、信号种类、之后 1 / 5 / 20 日的真实表现;含亏损,只追加不删除。"
+    }
+  },
+  "max_drawdown": {
+    "aliases": [
+      "回撤",
+      "drawdown",
+      "mdd",
+      "max dd"
+    ],
+    "en": {
+      "example": "Basket NAV 1.00 → 1.30 → 1.04 → 1.50: max drawdown = (1.04 − 1.30) ÷ 1.30 = −20%.",
+      "long": "Walk along the NAV curve, at every point measure the fall from the highest NAV seen so far, and take the deepest one. It ignores the final result and only measures the worst stretch in between: two baskets can both double, one with a −10% max drawdown and one with −45%, and the second was far harder to sit through. For paper baskets it is a hypothetical, equal-weight, cost-free figure.",
+      "name": "Max drawdown",
+      "short": "The largest peak-to-trough fall of a NAV curve; the most painful stretch along the way."
+    },
+    "formula": "max_dd = min over t of (NAV_t − max(NAV_0..t)) / max(NAV_0..t)",
+    "group": "scorecard",
+    "see_also": [
+      "paper_basket",
+      "sharpe_like",
+      "equal_weight"
+    ],
+    "zh": {
+      "example": "篮子净值 1.00 → 1.30 → 1.04 → 1.50:最大回撤 = (1.04 − 1.30) ÷ 1.30 = −20%。",
+      "long": "沿着净值曲线走,记录每个时点相对此前最高净值的跌幅,其中最深的那一次就是最大回撤。它不看最终收益,只看过程中的最大痛苦程度:两个篮子最终都翻倍,一个最大回撤 −10%、另一个 −45%,后者持有过程要难受得多。纸面篮子的最大回撤是假设性、等权、不含费用的计算结果。",
+      "name": "最大回撤",
+      "short": "净值曲线从某个高点到之后最低点的最大跌幅;衡量「路上最难受的一段」。"
+    }
+  },
+  "max_pain": {
+    "aliases": [
+      "最大痛点",
+      "max pain",
+      "痛点",
+      "maxpain"
+    ],
+    "en": {
+      "example": "This week's max pain sits at $125, price is $128, the call wall is $130 → the overview lists all three as reference levels without a directional call.",
+      "long": "For each possible expiry price, add up the intrinsic value of all open calls and puts; the price with the smallest total is max pain. The theory is that option sellers (mostly market makers) have an incentive to nudge price toward it into expiry; in practice its explanatory power comes and goes, and it moves daily with open interest. Together with gamma walls it describes option positioning; it does not mean price must get there.",
+      "name": "Max pain",
+      "short": "The expiry price at which all option holders combined would be worth the least (best for option sellers); a reference level near expiry, not a forecast."
+    },
+    "formula": "max_pain = argmin over price P of Σ intrinsic value of all open calls and puts at P",
+    "group": "options",
+    "see_also": [
+      "gamma_wall",
+      "open_interest",
+      "opex"
+    ],
+    "zh": {
+      "example": "某标的本周到期期权的最大痛点在 $125,现价 $128,上方 call 墙 $130 → 全景列出三个参考位,不做方向判断。",
+      "long": "对每个可能的到期价,计算所有未平仓 call 和 put 在该价位的内在价值总和,总和最小的价位就是最大痛点。理论依据是期权卖方(多为做市商)有动力在到期日把价格「拉」向对自己有利的位置;实际上它的解释力时有时无,且随未平仓每天变化。它与 gamma 墙一起用来描述期权持仓结构,不表示价格一定会到那里。",
+      "name": "最大痛点",
+      "short": "期权到期时让所有期权买方合计价值最小(卖方最有利)的价位;常被当作到期日附近的参考位,不是预测。"
+    }
+  },
+  "n_sample": {
+    "aliases": [
+      "n=",
+      "样本",
+      "样本数",
+      "sample size",
+      "n"
+    ],
+    "en": {
+      "example": "\"80% 20-day hit rate in stress\" looks strong but N=5; \"58% 20-day hit rate in calm-up\" has N=210 → only the second is statistically meaningful.",
+      "long": "Every hit rate, average excess and Sharpe-like figure is computed from a finite number of samples; the fewer samples, the more luck drives the result. Ducky's rule: every statistic is printed with its N=, the public page only shows cells with N ≥ 10 (smaller cells read \"insufficient sample\"), and each regime / version cell carries its own N. When a percentage looks impressive, read the N first, then whether it is BACKTEST or LIVE.",
+      "name": "Sample size (N=)",
+      "short": "The number of samples behind every percentage. Tiny N is meaningless: 100% on N=3 versus 58% on N=200 — the second is far more credible."
+    },
+    "group": "scorecard",
+    "see_also": [
+      "hit_rate",
+      "backtest_vs_live",
+      "all_weather"
+    ],
+    "zh": {
+      "example": "「压力天气下 20 日命中率 80%」看起来很强,但 N=5;「平静上行 20 日命中率 58%」N=210 → 后者才有统计意义。",
+      "long": "任何命中率、平均超额、类夏普都是从有限的样本算出来的,样本越少,结果越容易被运气左右。Ducky 的规则是每个统计数字必须和 N= 一起出现,公开页面只显示 N≥10 的格子(数字太小时显示为「样本不足」),按天气 / 版本切分时每个格子各自有 N。看到一个漂亮的百分比,先看 N,再看是 BACKTEST 还是 LIVE。",
+      "name": "样本数 N=",
+      "short": "每个百分比后面的样本数量。N 太小的比例没有意义:N=3 的 100% 和 N=200 的 58%,后者可信得多。"
+    }
+  },
+  "open_interest": {
+    "aliases": [
+      "未平仓",
+      "oi",
+      "open interest",
+      "持仓量"
+    ],
+    "en": {
+      "example": "Next month's $150 calls carry 38,000 contracts of open interest, far above neighbouring strikes → $150 is the upper gamma wall.",
+      "long": "Each newly opened contract adds one to open interest; closing or expiring removes one. Unlike volume (how much traded today), open interest is the accumulated positioning still alive. Its distribution across strikes locates the walls: the strike with the most call OI is the upper gamma wall, the most put OI the lower wall; the expiry with the largest OI shows which date (e.g. earnings) the market is pricing around.",
+      "name": "Open interest (OI)",
+      "short": "The number of option contracts still open at a strike / expiry; aggregated by strike it shows where the gamma walls are."
+    },
+    "group": "options",
+    "see_also": [
+      "gamma_wall",
+      "put_call_ratio",
+      "opex",
+      "max_pain"
+    ],
+    "zh": {
+      "example": "某标的下月到期 $150 call 未平仓 38,000 张,远高于相邻行权价 → $150 是上方 gamma 墙。",
+      "long": "每开一张新的期权合约,未平仓数加一;平仓或到期减一。它和成交量不同:成交量是当天换手了多少,未平仓是累积还「活着」的头寸。按行权价看未平仓的分布,call 最多的地方是上方 gamma 墙,put 最多的地方是下方墙;未平仓最大的到期日说明市场在为哪个时间点(比如财报)定价。",
+      "name": "未平仓合约 (OI)",
+      "short": "某个行权价 / 到期日上尚未平仓的期权合约总数;按行权价汇总就能看到 gamma 墙在哪里。"
+    }
+  },
+  "opex": {
+    "aliases": [
+      "opex",
+      "到期日",
+      "期权到期",
+      "expiration",
+      "第三个周五"
+    ],
+    "en": {
+      "example": "The third Friday is OPEX; after the $130 call wall expires, next week's open-interest cluster sits at $135 → the overview's gamma wall updates accordingly.",
+      "long": "OPEX is when option contracts expire and settle. US monthly options expire on the third Friday of the month; many names also have weekly expiries every Friday. Around expiry, dealer hedges unwind as the contracts disappear, so a price that had been pinned by a gamma wall can \"unstick\" afterwards, and the walls redistribute with the new positioning. Index expiries also bring heavy mechanical rebalancing volume.",
+      "name": "Options expiration (OPEX)",
+      "short": "The day option contracts expire; monthly options on the third Friday of each month. Gamma walls often weaken or relocate around it."
+    },
+    "group": "options",
+    "see_also": [
+      "gamma_wall",
+      "quad_witching",
+      "open_interest",
+      "max_pain"
+    ],
+    "zh": {
+      "example": "某月第三个周五是 OPEX,$130 的 call 墙到期后,下周的未平仓集中位挪到了 $135 → 全景中的 gamma 墙相应更新。",
+      "long": "OPEX(options expiration)是期权合约到期结算的日子。美股月度期权在每月第三个周五到期,许多标的还有每周五到期的周期权。到期日附近,做市商的对冲头寸随合约消失而解除,原来由 gamma 墙压制的价格可能在到期后「松绑」,墙的位置也会随新的持仓重新分布。指数期权的到期还会带来大量被动的调仓成交。",
+      "name": "期权到期日 (OPEX)",
+      "short": "期权合约到期的日子;月度期权在每月第三个周五。到期前后 gamma 墙常常失效或挪位。"
+    }
+  },
+  "oversold": {
+    "aliases": [
+      "超跌",
+      "oversold",
+      "跌过头",
+      "超卖"
+    ],
+    "en": {
+      "example": "RSI 26, 20-day retrace −14%, close under the lower Bollinger band → tagged oversold; RSI 26 with only a −3% retrace → not tagged.",
+      "long": "Ducky's \"oversold\" tag combines independent short-term readings: is the daily RSI below 30, how deep is the 20-day retrace, did price close below the lower Bollinger band, is volume elevated. Several must agree before the tag appears. Historically, oversold prints have been followed both by bounces and by further declines, and the ledger records both. Members can use the state in their own alerts (\"tell me when it is oversold and IV is cheap\"); the alert reports that the state occurred, it does not tell anyone what to do.",
+      "name": "Oversold",
+      "short": "Several short-term gauges agreeing that a name has fallen \"too far, too fast\": low RSI, deep 20-day retrace, close below the lower Bollinger band. A state description, not an instruction."
+    },
+    "group": "technical",
+    "see_also": [
+      "rsi",
+      "retrace_d20",
+      "iv_hv_ratio",
+      "confluence"
+    ],
+    "zh": {
+      "example": "RSI 26、20 日回踩 −14%、收盘在布林下轨之下 → 全景标「超跌」;若只有 RSI 26 而回踩仅 −3%,则不标。",
+      "long": "Ducky 全景里的「超跌」是把几个独立的短线指标合起来打分:日线 RSI 是否低于 30、20 日回踩有多深、是否跌破布林带下轨、成交量是否放大。多项同时满足才会被标为超跌。历史上超跌之后既有反弹也有继续下跌,台账里两种情况都记录。用户可以用它写自定义提醒,例如「超跌且 IV 便宜时提醒我」——提醒的是状态出现,而不是给出操作。",
+      "name": "超跌",
+      "short": "多个短线指标同时指向「跌过头」的状态:RSI 低、20 日回踩深、跌破布林下轨等。它是一个状态描述,不是买卖指令。"
+    }
+  },
+  "paper_basket": {
+    "aliases": [
+      "篮子",
+      "纸面篮子",
+      "basket",
+      "paper basket",
+      "paper"
+    ],
+    "en": {
+      "example": "The \"insider basket\" starts at NAV 1.00 on the first signal date and reads 1.34 after 300 trading days versus SPY at 1.21, with a −17% max drawdown → shown as PAPER · hypothetical · excludes costs.",
+      "long": "Every basket on the scorecard is a paper calculation: a fixed rule (e.g. \"hold each insider signal for 20 trading days\" or \"each day's top-10 by upward pull\") decides the day's holdings, each holding is equal-weighted, the basket's daily return is computed from real closes, compounded into a NAV curve, and SPY's NAV over the same period is drawn beside it. It ignores trading costs, slippage, taxes and liquidity, so it is more optimistic than anything achievable. Baskets exist to compare \"rule A vs rule B vs SPY\"; they are labelled PAPER, are not a portfolio we run, and there is no follow-this-basket feature.",
+      "name": "Paper basket (PAPER)",
+      "short": "A hypothetical portfolio assembled after the fact from a signal rule: equal-weight, rebalanced daily, no fees / slippage / taxes, plotted next to SPY; never actually run."
+    },
+    "group": "scorecard",
+    "see_also": [
+      "equal_weight",
+      "max_drawdown",
+      "backtest_vs_live",
+      "excess_return"
+    ],
+    "zh": {
+      "example": "「内部人篮子」从第一条信号日起净值 1.00,300 个交易日后 1.34,同期 SPY 净值 1.21,最大回撤 −17% → 显示为 PAPER · 假设性 · 不含费用。",
+      "long": "计分板上的每个篮子都是纸面计算:按固定规则(比如「持有每条内部人信号 20 个交易日」或「每天的向上引力前十」)决定当天持有哪些标的,每个标的等权,每天用真实收盘价计算篮子收益,累计成净值曲线,并把 SPY 同期净值画在旁边。它不含交易成本、滑点、税和流动性限制,因此比真实可实现的结果乐观。篮子用来比较「规则 A 与规则 B 与 SPY」,标注 PAPER,不是我们运作的组合,也不提供跟单。",
+      "name": "纸面篮子 (PAPER)",
+      "short": "用信号规则事后拼出的假设性组合:等权、每日再平衡、不含费用 / 滑点 / 税,和 SPY 并排画净值;从未真实运作。"
+    }
+  },
+  "pipe": {
+    "aliases": [
+      "pipe",
+      "定向增发",
+      "私募增发",
+      "增发",
+      "private placement"
+    ],
+    "en": {
+      "example": "A large corporate subscribes $200M of new shares at $10 (market $9.20, a 9% premium) together with a three-year supply agreement, disclosed via 8-K → strategic-partner signal, dilution 6% noted.",
+      "long": "A PIPE (Private Investment in Public Equity) skips a public offering and sells new shares directly to one or a few institutions. Three things matter: is the buyer a financial or a strategic / industrial investor; is the price a discount or a premium to market; does it come with a commercial agreement (supply, partnership, a board seat). A strategic buyer paying a premium alongside a business deal and a financial buyer taking a deep discount are very different events. A PIPE dilutes existing holders; the card states the issue size as a share of the float.",
+      "name": "PIPE (private placement)",
+      "short": "A listed company selling new shares (or convertibles) privately to selected institutions; who buys and at what price is the story."
+    },
+    "group": "filings",
+    "see_also": [
+      "8k",
+      "13d_13g",
+      "smart_money_score"
+    ],
+    "zh": {
+      "example": "某大厂以 $10/股(当日市价 $9.2,溢价 9%)认购某公司 $2 亿新股,并签订三年供货协议,8-K 披露 → 战略伙伴信号,标注稀释 6%。",
+      "long": "PIPE(Private Investment in Public Equity)是上市公司绕开公开发行,直接向一家或几家机构出售新股。要点有三:认购方是财务投资者还是产业 / 战略方;认购价相对市价是折价还是溢价;是否附带业务协议(供货、合作、董事席位)。战略方溢价认购并附业务协议,和财务投资者大幅折价认购,是性质完全不同的两种事件。PIPE 会稀释现有股东,推送卡片会写明发行规模占总股本的比例。",
+      "name": "PIPE 定向增发",
+      "short": "上市公司向特定机构私下发行新股(或可转债)融资;认购方是谁、价格如何,是看点。"
+    }
+  },
+  "put_call_ratio": {
+    "aliases": [
+      "put/call",
+      "pcr",
+      "put call",
+      "看跌看涨比",
+      "看跌/看涨"
+    ],
+    "en": {
+      "example": "60,000 puts and 40,000 calls traded in a name today → put / call 1.5, defensive lean; the market-wide ratio at 0.55 → optimistic lean.",
+      "long": "Divide a name's (or the whole market's) put volume by its call volume. A high number means demand for protection or downside bets; a low number means demand to chase upside. It is often used as a contrarian sentiment gauge: extreme highs tend to appear late in panics and extreme lows in euphoria, but \"tend to\" is not \"always\". Volume-based ratios reflect the day's mood; open-interest-based ratios reflect the accumulated positioning.",
+      "name": "Put / call ratio",
+      "short": "Put volume (or open interest) divided by call volume. Well above 1 leans defensive, well below 0.7 leans optimistic; a sentiment reading, not a forecast."
+    },
+    "formula": "P/C = put volume / call volume  (or put OI / call OI)",
+    "group": "options",
+    "see_also": [
+      "open_interest",
+      "vix",
+      "k_index"
+    ],
+    "zh": {
+      "example": "某标的当天 put 成交 60,000 张、call 成交 40,000 张 → 看跌 / 看涨比 1.5,偏防御;市场整体比值 0.55 → 偏乐观。",
+      "long": "把某标的(或整个市场)的 put 成交量除以 call 成交量,得到看跌 / 看涨比。数字高说明买保护或做空的需求多,数字低说明追涨的需求多。它常被当作逆向情绪指标:极端高值经常出现在恐慌尾段,极端低值经常出现在过度乐观时,但「经常」不等于「总是」。按成交量算反映当天情绪,按未平仓算反映累积的头寸结构。",
+      "name": "看跌 / 看涨比",
+      "short": "put 的成交量(或未平仓)除以 call 的。明显大于 1 偏防御,明显小于 0.7 偏乐观;是情绪读数,不是预测。"
+    }
+  },
+  "quad_witching": {
+    "aliases": [
+      "四巫",
+      "四巫日",
+      "quad witching",
+      "triple witching",
+      "witching"
+    ],
+    "en": {
+      "example": "The third Friday of June is quad witching; closing-auction volume runs 4× a normal day, and signals logged that day carry a \"quad witching\" flag.",
+      "long": "Quad witching is the quarterly mass expiry when four derivative types settle on the same day, often coinciding with quarterly index rebalances, so volume (especially in the closing auction) can be several times a normal day. Price moves on that day owe more to mechanical rolling and rebalancing than to fundamentals, which is why the day is flagged separately in after-the-fact statistics.",
+      "name": "Quad witching",
+      "short": "The third Friday of March / June / September / December, when index futures, index options, single-stock options and single-stock futures all expire; volume is usually unusually heavy."
+    },
+    "group": "options",
+    "see_also": [
+      "opex",
+      "gamma_wall"
+    ],
+    "zh": {
+      "example": "某年 6 月的第三个周五是四巫日,收盘竞价成交量是平日的 4 倍,当天的信号台账会标注「四巫日」以便事后区分。",
+      "long": "四巫日是季度性的集中到期日,四类衍生品同一天结算,再叠加标普等指数的季度成分调整,当天(尤其收盘竞价)的成交量常是平日的数倍。价格在这一天的波动更多来自机械性的头寸展期和再平衡,而不是基本面,所以这一天的走势和成交量在事后统计里常被单独标注。",
+      "name": "四巫日",
+      "short": "每年 3 / 6 / 9 / 12 月的第三个周五,指数期货、指数期权、个股期权、个股期货同日到期,成交量通常异常放大。"
+    }
+  },
+  "regime": {
+    "aliases": [
+      "天气",
+      "市场状态",
+      "regime",
+      "市场天气"
+    ],
+    "en": {
+      "example": "VIX closes at 15 with SPY above its 200-day average → calm-up; VIX at 32 → stress; K-index 0.8 that day → capitulation (overrides the rest).",
+      "long": "Each night the VIX close is placed in a band (below 18 / 18–28 / above 28) and SPY is checked against its 200-day moving average to label the day calm-up, calm-down or stress; a K-index below 1 on that day overrides the label to capitulation. The scorecard splits every signal kind by regime to answer \"in which weather did this kind work\". Pro members also see today's label.",
+      "name": "Market regime",
+      "short": "A per-trading-day weather label — calm-up / calm-down / stress / capitulation — from the VIX band, SPY vs its 200-day average, and the K-index."
+    },
+    "formula": "regime = f(VIX band <18 / 18–28 / >28, SPY above/below 200-dma); K-index < 1 → capitulation",
+    "group": "scorecard",
+    "see_also": [
+      "vix",
+      "dma_200",
+      "k_index",
+      "capitulation",
+      "all_weather"
+    ],
+    "zh": {
+      "example": "VIX 收 15、SPY 在 200 日线上方 → 平静上行;VIX 收 32 → 压力;当天 K 指数 0.8 → 资本臣服(覆盖其他判定)。",
+      "long": "每晚用 VIX 收盘价所在区间(低于 18 / 18–28 / 高于 28)和 SPY 是否在 200 日均线上方,把当天归入平静上行、平静下行或压力;如果当天 K 指数 < 1,则覆盖为资本臣服。计分板按天气切分每类信号的表现,回答「这类信号在什么天气里管用」。Pro 档还能看到今天的天气标签。",
+      "name": "市场天气",
+      "short": "每个交易日的市场状态标签:平静上行 / 平静下行 / 压力 / 资本臣服,由 VIX 区间、SPY 与 200 日线的位置和 K 指数决定。"
+    }
+  },
+  "relative_strength": {
+    "aliases": [
+      "相对强弱",
+      "rs line",
+      "rs",
+      "板块强弱",
+      "相对强度"
+    ],
+    "en": {
+      "example": "A name is −3% over a month while its sector ETF is −8% → relative strength +5 points; it held up better inside a falling sector.",
+      "long": "Subtract the sector ETF's (or SPY's) return over the same period (e.g. 20 days) from the name's own return: positive means it has been stronger than its peers, negative weaker. Falling less in a sell-off or rising more in a rally both count as relative strength. It is distinct from RSI: RSI is the name's own momentum, RS is a comparison against others. The overview's \"sector strength\" tag is a banding of this difference.",
+      "name": "Relative strength (RS)",
+      "short": "The name's return minus its sector ETF's or SPY's return over the same window; is it leading or lagging its peers."
+    },
+    "formula": "RS = ret_name(window) − ret_benchmark(window)",
+    "group": "technical",
+    "see_also": [
+      "rsi",
+      "excess_return"
+    ],
+    "zh": {
+      "example": "某标的一个月 −3%,同期板块 ETF −8% → 相对强弱 +5 个百分点,在下跌板块里相对抗跌。",
+      "long": "把标的最近一段时间(如 20 日)的收益减去它所在板块 ETF 或 SPY 的同期收益,正数说明它比同伴强,负数说明弱。大盘下跌时跌得更少、大盘上涨时涨得更多,都是相对强的表现。这与 RSI 是两个不同的东西:RSI 是标的自己的动量,RS 是和别人比。全景里的「板块强弱」就是这个差值的分档。",
+      "name": "相对强弱 (RS)",
+      "short": "标的与板块或 SPY 在同一窗口的收益之差;衡量它是领先还是落后于同伴。"
+    }
+  },
+  "retrace_d20": {
+    "aliases": [
+      "回踩",
+      "回调",
+      "retrace",
+      "pullback",
+      "20日回踩",
+      "d20"
+    ],
+    "en": {
+      "example": "Highest close of the last 20 days $150, price now $132 → 20-day retrace −12%.",
+      "long": "Take the highest close of the last 20 trading days and measure today's price against it. It only answers \"how far down from the recent high\", not why, nor whether the pullback is over. The same −10% is routine for a high-volatility name and extreme for a quiet one, which is why the overview reads it next to RSI and IV/HV.",
+      "name": "20-day retrace",
+      "short": "How far price sits below its highest close of the last 20 trading days, in percent; the depth of the short-term pullback."
+    },
+    "formula": "retrace_20 = price / max(close over 20 days) − 1",
+    "group": "technical",
+    "see_also": [
+      "oversold",
+      "rsi",
+      "dma_200"
+    ],
+    "zh": {
+      "example": "20 日最高收盘 $150,现价 $132 → 20 日回踩 −12%。",
+      "long": "取最近 20 个交易日的最高收盘价,算现价相对它的跌幅。它只回答「从近期高点下来了多少」,不判断原因,也不判断是否结束。同样的 −10%,在高波动的标的上可能是常态,在低波动的标的上可能已经很极端,所以全景里会和 RSI、IV/HV 一起看。",
+      "name": "20 日回踩",
+      "short": "现价距最近 20 个交易日最高收盘价的跌幅百分比;衡量短期回调深度。"
+    }
+  },
+  "rsi": {
+    "aliases": [
+      "rsi",
+      "相对强弱指标",
+      "超买超卖"
+    ],
+    "en": {
+      "example": "After two straight down weeks RSI reads 24 → oversold zone; two flat days later it is back at 34, oversold no longer, without price having recovered.",
+      "long": "RSI takes the average gain and average loss over the last 14 trading days and maps them to 0–100: near 100 means almost only up-days, near 0 almost only down-days. 30 / 70 are the customary oversold / overbought lines, but in a strong trend RSI can sit in an extreme zone for weeks, so \"oversold\" is not the same as \"about to bounce\". Ducky's overview uses the daily 14-period RSI purely as a description of current momentum.",
+      "name": "RSI (Relative Strength Index)",
+      "short": "A 0–100 momentum gauge comparing recent 14-day gains with losses; below 30 is commonly called oversold, above 70 overbought."
+    },
+    "formula": "RSI = 100 − 100 / (1 + avg_gain_14 / avg_loss_14)",
+    "group": "technical",
+    "see_also": [
+      "oversold",
+      "retrace_d20",
+      "relative_strength"
+    ],
+    "zh": {
+      "example": "连续两周下跌后 RSI 24 → 处于超卖区;之后横盘两天 RSI 回到 34,超卖状态解除,并不意味着价格已经回升。",
+      "long": "RSI 取最近 14 个交易日的平均涨幅与平均跌幅,算成一个 0–100 的数:接近 100 说明这段时间几乎只涨不跌,接近 0 说明几乎只跌不涨。30 / 70 是常用的超卖 / 超买分界,但在强趋势里 RSI 可以长时间停在极端区,「超卖」不等于会反弹。Ducky 全景里的 RSI 用的是日线 14 周期,只是描述当前动量状态。",
+      "name": "RSI 相对强弱指标",
+      "short": "0–100 的动量指标,衡量最近 14 天涨幅与跌幅的相对大小;低于 30 常称超卖,高于 70 常称超买。"
+    }
+  },
+  "sharpe_like": {
+    "aliases": [
+      "夏普",
+      "类sharpe",
+      "sharpe",
+      "sharpe ratio",
+      "夏普比率"
+    ],
+    "en": {
+      "example": "Insider-buy signals, N=120: mean 20-day excess +1.8%, std 6.0% → Sharpe-like 0.30. Another kind with the same +1.8% mean but 12% std → 0.15; the first was steadier in the past.",
+      "long": "For one signal kind, take every signal's 20-trading-day return in excess of SPY (measured from the signal-date close), then divide the mean by the standard deviation. It is not a textbook annualised Sharpe ratio (no risk-free rate, no annualisation), hence \"Sharpe-like\". At the same average excess, a higher number means outcomes cluster more tightly and rely less on a few big winners; near zero or negative means the kind did not beat SPY on average, or did so erratically. Only meaningful with enough samples; the public page shows cells with N ≥ 10 only.",
+      "name": "Sharpe-like ratio",
+      "short": "Mean excess return ÷ its standard deviation: how steady a signal kind's edge over SPY has been; higher is steadier."
+    },
+    "formula": "mean(excess_20d) / std(excess_20d), where excess_20d = ret_20d − SPY_20d",
+    "group": "scorecard",
+    "see_also": [
+      "excess_return",
+      "hit_rate",
+      "max_drawdown",
+      "n_sample"
+    ],
+    "zh": {
+      "example": "内部人买入类信号 N=120,20 日超额均值 +1.8%、标准差 6.0% → 类夏普 0.30;另一类均值同样 +1.8% 但标准差 12% → 0.15,前者过去更「稳」。",
+      "long": "对某一类信号,取每条信号从信号日收盘起 20 个交易日相对 SPY 的超额收益,求均值再除以标准差。它不是教科书上的年化夏普比率(没有无风险利率、不按年折算),所以叫「类夏普」。平均超额相同时,数字越大说明结果越集中、越少靠个别大赢家撑起来;接近 0 或为负说明平均下来没有跑赢,或忽好忽坏。只有样本数足够时才有参考意义,公开页只显示 N≥10 的格子。",
+      "name": "类夏普比率",
+      "short": "超额收益的均值 ÷ 标准差,衡量一类信号跑赢 SPY 的「稳定程度」,越高越稳。"
+    }
+  },
+  "signal_date": {
+    "aliases": [
+      "信号日",
+      "signal date",
+      "推送日",
+      "起算日"
+    ],
+    "en": {
+      "example": "A push at 21:30 on Friday (after hours) → signal date is the following Monday and the starting price is Monday's close; the 20-day return = the close 20 trading days later ÷ Monday's close − 1.",
+      "long": "The ledger uses the signal-date close as the common starting point because the price at push time differs from reader to reader, while the close is unique and verifiable. For after-hours or weekend pushes the signal date is the next trading day. \"20-day\" means 20 trading days, not calendar days. This way every signal's outcome can be recomputed from public daily data.",
+      "name": "Signal date",
+      "short": "The trading day a push occurred. All 1 / 5 / 20-day returns are measured from that day's close, not from the price at the moment of the push."
+    },
+    "group": "scorecard",
+    "see_also": [
+      "ledger",
+      "excess_return",
+      "backtest_vs_live"
+    ],
+    "zh": {
+      "example": "周五 21:30(盘后)推送 → 信号日为下周一,起点为周一收盘价;20 日收益 = 之后第 20 个交易日收盘 ÷ 周一收盘 − 1。",
+      "long": "台账用信号日的收盘价作为统一起点,原因是:推送时刻的价格因人而异(看到的时间不同),而收盘价是唯一、可核对的。盘后或周末的推送,信号日是下一个交易日。「20 日」指 20 个交易日,不是自然日。这样每条信号的表现都能用公开的日线数据复算。",
+      "name": "信号日",
+      "short": "推送发生的交易日。所有 1 / 5 / 20 日收益都从信号日的收盘价起算,而不是推送那一刻的价格。"
+    }
+  },
+  "smart_money_score": {
+    "aliases": [
+      "聪明钱",
+      "smart money",
+      "smart money score",
+      "sms",
+      "评分",
+      "分数"
+    ],
+    "en": {
+      "example": "A CEO putting in roughly three years of salary, a net-cash company, price near the 52-week low → 8.5; a director buying $210k in a richly valued company near its 52-week high → 3.",
+      "long": "Every insider / strategic-partner signal gets a 0–10 score from dimensions such as: purchase size relative to the buyer's wealth and the company's market cap, the buyer's role (CEO / CFO weigh more than an ordinary director), whether it is part of a cluster, valuation and net-cash position, and where price sits in its 52-week range. A higher score means the purchase is more unusual along those dimensions. It exists to rank dozens of daily filings and to group them for after-the-fact statistics (hit rate of high-score vs low-score groups); it is not a rating of the company and not a suggestion to act.",
+      "name": "Smart Money Score",
+      "short": "A 0–10 composite ranking score built from trade size, the buyer's role, company fundamentals and price location; used to order pushes, not a rating."
+    },
+    "group": "filings",
+    "see_also": [
+      "form4",
+      "insider_cluster",
+      "pipe",
+      "confluence"
+    ],
+    "zh": {
+      "example": "CEO 用相当于年薪 3 倍的资金买入、公司净现金、价格在 52 周低位附近 → 8.5 分;一位董事买入 $21 万、公司高估值、价格在 52 周高位 → 3 分。",
+      "long": "每条内部人 / 战略伙伴信号都会得到一个 0–10 的分数,考虑的维度包括:买入金额相对买入者身家和公司市值的比例、买入者的角色(CEO / CFO 比普通董事权重高)、是否扎堆、公司估值和净现金状况、价格在 52 周区间里的位置。分数越高,说明这笔买入在这些维度上越「不寻常」。它的用途是在一天几十条申报里排出先后,并作为事后统计的分组依据(高分组 vs 低分组的命中率);它不是对公司的评级,也不是对任何操作的建议。",
+      "name": "聪明钱分数",
+      "short": "0–10 的综合排序分,由交易规模、买入者角色、公司基本面与价格位置等维度合成;用来排序推送,不是评级。"
+    }
+  },
+  "vix": {
+    "aliases": [
+      "vix",
+      "恐慌指数",
+      "波动率指数"
+    ],
+    "en": {
+      "example": "VIX closes at 15 → calm band; at 32 → stress band; a jump from 16 to 28 in one day → the regime label flips from calm to stress that day.",
+      "long": "The VIX is computed from S&P 500 index option prices and expresses what the market pays for the next 30 days of movement, as an annualised percentage. A VIX of 20 corresponds roughly to a ±5.8% one-standard-deviation move over the next month. It spikes in sharp sell-offs and sags in slow bull markets. Ducky uses VIX bands as one dimension of the market regime and as the denominator of the K-index.",
+      "name": "VIX (volatility index)",
+      "short": "The S&P 500's 30-day implied volatility, nicknamed the fear gauge. Below 18 calm, 18–28 alert, above 28 stress."
+    },
+    "formula": "expected 30-day 1σ move ≈ VIX / sqrt(12)",
+    "group": "macro",
+    "see_also": [
+      "k_index",
+      "regime",
+      "iv",
+      "capitulation"
+    ],
+    "zh": {
+      "example": "VIX 收 15 → 平静区;VIX 收 32 → 压力区;VIX 从 16 一天跳到 28 → 天气标签当天从平静切到压力。",
+      "long": "VIX 由标普 500 指数期权的价格计算,反映市场为未来 30 天波动付的价格,年化百分比表示。VIX 20 大致对应未来一个月 ±5.8% 的一个标准差波动。它在急跌时飙升、在慢牛中低迷。Ducky 用 VIX 区间作为市场天气的一个维度,并作为 K 指数的分母。",
+      "name": "VIX 波动率指数",
+      "short": "标普 500 未来 30 天的隐含波动率,俗称恐慌指数。低于 18 平静,18–28 警惕,高于 28 压力。"
+    }
+  },
+  "win_vs_spy": {
+    "aliases": [
+      "跑赢spy",
+      "跑赢",
+      "win vs spy",
+      "beat spy",
+      "win_vs_spy"
+    ],
+    "en": {
+      "example": "70 of 100 signals were up after 20 days (hit rate 70%), but only 48 beat SPY over the same window → win vs SPY 48% (N=100).",
+      "long": "Hit rate answers \"did it go up\", win-vs-SPY answers \"did it beat SPY\". In a one-way bull market a kind can post a 75% hit rate but only 45% win-vs-SPY — most went up, most did not beat the index; in a sell-off the reverse can happen. Reading the two side by side separates \"the signal works\" from \"it rode a bull market\". Always printed with N=.",
+      "name": "Win vs SPY",
+      "short": "Share of a signal kind's samples whose 20-day excess return was > 0 — how often it beat the index; unlike hit rate, which only looks at absolute up or down."
+    },
+    "formula": "win_vs_spy = count(excess_20d > 0) / N",
+    "group": "scorecard",
+    "see_also": [
+      "hit_rate",
+      "excess_return",
+      "sharpe_like"
+    ],
+    "zh": {
+      "example": "N=100 的信号中 70 条 20 日后收涨(命中率 70%),但只有 48 条跑赢同期 SPY → 跑赢比例 48%(N=100)。",
+      "long": "命中率回答「涨了没有」,跑赢比例回答「比 SPY 强没有」。在大盘单边上涨的时期,一类信号可以命中率 75% 但跑赢比例只有 45%——大多数涨了,但多数没跑赢指数;在大盘下跌时则可能相反。两个数字并排看,才能区分「信号有效」和「赶上了牛市」。永远带 N=。",
+      "name": "跑赢 SPY 比例",
+      "short": "一类信号里 20 日超额收益 > 0 的比例,即「多少次跑赢了大盘」;与命中率不同,命中率只看绝对涨跌。"
+    }
+  }
+}

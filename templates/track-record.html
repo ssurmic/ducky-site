@@ -9,6 +9,8 @@
   data-src="{{ cfg.get('track_json', '/track-record.json') }}"
   data-github="{{ github_json }}"
   data-l10n='{{ {
+    "aw_yes": t('track.aw_yes'), "aw_no": t('track.aw_no'), "aw_why": t('track.aw_why'),
+    "score_regime": t('track.score_regime'), "score_offline": t('track.score_offline'),
     "stale": t('data.stale'), "loading": t('data.loading'), "load_error": t('data.load_error'),
     "fixture": t('data.fixture_badge'), "pending": t('data.pending'), "generated": t('data.generated'),
     "all": t('track.filter_all'), "rows_shown": t('track.rows_shown'), "empty": t('track.empty'),
@@ -71,6 +73,20 @@
       </div>
     </div>
 
+    <div class="subsection" id="scorecard">
+      <h2 class="mono-h2">{{ t('track.score_h2') }}</h2>
+      <p class="lead small">{{ t('track.score_lead') }}</p>
+      <p class="muted small" id="score-regime"></p>
+      <div class="table-wrap">
+        <table class="data" id="scorecard-table">
+          <thead><tr><th>{{ t('track.score_kind') }}</th><th class="num">{{ t('track.score_n') }}</th><th class="num">{{ t('track.score_hit') }}</th><th class="num">{{ t('track.score_excess') }}</th><th class="num">{{ t('track.score_win') }}</th><th>{{ t('track.score_aw') }}</th></tr></thead>
+          <tbody><tr><td class="empty" colspan="6">{{ t('data.loading') }}</td></tr></tbody>
+        </table>
+      </div>
+      <h3 class="mono-h3">{{ t('track.score_basket') }}</h3>
+      <div class="chart-box" id="basket-chart"></div>
+      <p class="muted small" id="score-disclaimer"></p>
+    </div>
     <div class="subsection" id="liquidity">
       <h2 class="mono-h2">{{ t('track.liq_h2') }} <span class="badge badge-backtest badge-inline">{{ t('label.backtest') }}</span></h2>
       <p class="caption">{{ tf('track.liq_note', **liq.fmt) }}</p>

@@ -89,6 +89,7 @@ export async function mount(root) {
     row.appendChild(el("button.btn.btn-ghost", { type: "button", onclick: () => manual("alipay") }, s("billing.rail_alipay")));
     row.appendChild(el("button.btn.btn-ghost", { type: "button", onclick: () => manual("wechat") }, s("billing.rail_wechat")));
     row.appendChild(el("button.btn.btn-ghost", { type: "button", onclick: () => manual("usdt") }, s("billing.rail_usdt")));
+    ["usdc_erc20", "usdc_trc20", "btc"].forEach((r) => { if (railEnabled(r)) row.appendChild(el("button.btn.btn-ghost", { type: "button", onclick: () => crypto(r) }, s("billing.rail_" + r))); });
     const stripeOk = plans && plans.rails && plans.rails.includes("stripe");
     row.appendChild(el("button.btn.btn-ghost", { type: "button", disabled: !stripeOk, "data-soon": stripeOk ? null : "", onclick: stripe }, s("billing.rail_stripe") + (stripeOk ? "" : " · " + s("billing.soon"))));
     rails.appendChild(row);
@@ -158,6 +159,21 @@ export async function mount(root) {
       img.src = (o.payload && o.payload.qr_url && /^data:/.test(o.payload.qr_url)) ? o.payload.qr_url : await api.billing.qr(rail);
       clear(qrBox); qrBox.appendChild(img);
     } catch (err) { clear(qrBox); qrBox.appendChild(el("p.errbox", s("billing.qr_fail"))); }
+  }
+  async function crypto(rail) {
+    const o = await order(rail);
+    if (!o) return;
+    clear(panel); panel.appendChild(orderHead(o));
+    const p = o.payload || {};
+    if (!p.address) { panel.appendChild(el("p.errbox", s("billing.crypto_noaddr"))); return; }
+    const amt = p.amount_str || String(o.amount);
+    panel.append(
+      el("div.kv-grid",
+        el("dt", s("billing.crypto_network")), el("dd", p.network || ""),
+        el("dt", s("billing.crypto_addr")), el("dd.mono.break", p.address, " ", el("button.copy", { type: "button", onclick: () => copy(p.address) }, s("common.copy"))),
+        el("dt", s("billing.crypto_amount")), el("dd.mono", amt + " " + (p.asset || ""), " ", el("button.copy", { type: "button", onclick: () => copy(amt) }, s("common.copy")))),
+      el("p.muted.small", s("billing.crypto_hint", { asset: p.asset || "", network: p.network || "", hours: p.expires_h || 48 })),
+      el("p.small.warn", s("billing.crypto_warn", { network: p.network || "" })));
   }
   async function stripe() {
     const o = await order("stripe");

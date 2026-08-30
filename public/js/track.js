@@ -213,11 +213,57 @@
     ["ledger", "rates"].forEach(function (id) { var tb = tbodyOf(id); if (tb) tb.innerHTML = ""; });
   }
 
+  // ---- §12 scorecard (live API, edge-cached; graceful offline) ----
+  function renderScorecard() {
+    var tb = tbodyOf("scorecard-table"), reg = $("score-regime"), box = $("basket-chart"), disc = $("score-disclaimer");
+    if (!tb) return;
+    var api = (window.DUCKY && window.DUCKY.API_BASE) || "";
+    if (!api) return;
+    fetch(api.replace(/\/+$/, "") + "/public/scorecard.json", { credentials: "omit" })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function (sc) {
+        tb.innerHTML = "";
+        var src = (sc.sources || []).filter(function (x) { return HIDE_KINDS.indexOf(x.kind) < 0; })
+          .sort(function (a, b) { return (b.n || 0) - (a.n || 0); });
+        if (!src.length) { var tr0 = el("tr"); var td0 = el("td", "empty", L.empty || "—"); td0.colSpan = 6; tr0.appendChild(td0); tb.appendChild(tr0); }
+        src.forEach(function (x) {
+          var tr = el("tr");
+          var tdk = el("td"); tdk.appendChild(el("span", "kind", x.kind)); tr.appendChild(tdk);
+          tr.appendChild(el("td", "num", String(x.n != null ? x.n : "—")));
+          tr.appendChild(rateCell(x.hit20, x.n));
+          var ex = retCell(x.avg_excess20); if (isNum(x.avg_excess20)) ex.appendChild(el("small", "n", " " + (L.n_label || "N=") + (x.n || 0))); tr.appendChild(ex);
+          tr.appendChild(rateCell(x.win_vs_spy, x.n));
+          var aw = el("td");
+          if (x.all_weather === true) aw.appendChild(el("span", "badge badge-live badge-inline", L.aw_yes || "all-weather"));
+          else { var b = el("span", "badge badge-inline", L.aw_no || "not yet"); var why = (x.all_weather_fail || []).map(function (f) { return f.regime + ": " + f.why + (f.n ? " (n=" + f.n + ")" : ""); }).join(" · "); if (why) b.title = (L.aw_why || "why") + ": " + why; aw.appendChild(b); }
+          tr.appendChild(aw);
+          tb.appendChild(tr);
+        });
+        if (reg && sc.regime_today) reg.textContent = (L.score_regime || "Today's regime") + ": " + (sc.regime_today.regime || "—") + " (" + (sc.regime_today.d || "") + ")";
+        if (disc) disc.textContent = sc.disclaimer || "";
+        var nav = (sc.baskets && sc.baskets["ducky-all"]) || [];
+        if (box) {
+          box.innerHTML = "";
+          var LW = window.LightweightCharts;
+          if (!nav.length) { box.appendChild(el("div", "chart-fallback", "—")); return; }
+          if (!LW || typeof LW.createChart !== "function") { box.appendChild(el("div", "chart-fallback", "NAV " + nav[0].nav + " → " + nav[nav.length - 1].nav + " · SPY " + nav[0].spy + " → " + nav[nav.length - 1].spy)); return; }
+          var chart = LW.createChart(box, { layout: { background: { type: "solid", color: "transparent" }, textColor: cssVar("--muted") || "#9aa7b4", attributionLogo: false }, grid: { vertLines: { color: cssVar("--border") }, horzLines: { color: cssVar("--border") } }, autoSize: true, handleScroll: false, handleScale: false });
+          var s1 = chart.addSeries(LW.LineSeries, { color: cssVar("--green") || "#3fb950", lineWidth: 2, title: "ducky-all" });
+          var s2 = chart.addSeries(LW.LineSeries, { color: cssVar("--muted") || "#9aa7b4", lineWidth: 1, title: "SPY" });
+          s1.setData(nav.map(function (p) { return { time: p.d, value: p.nav }; }));
+          s2.setData(nav.map(function (p) { return { time: p.d, value: p.spy }; }));
+          chart.timeScale().fitContent();
+        }
+      })
+      .catch(function () { tb.innerHTML = ""; var tr = el("tr"); var td = el("td", "empty", L.score_offline || "offline"); td.colSpan = 6; tr.appendChild(td); tb.appendChild(tr); });
+  }
+
   fetch(SRC, { cache: "no-cache", credentials: "omit" })
     .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
     .then(function (j) {
       if (!j || !Array.isArray(j.rows)) throw new Error("bad schema");
       data = j; render();
+      try { renderScorecard(); } catch (e) { if (window.console) console.error("scorecard:", e); }
     })
     .catch(function (e) { if (window.console && console.error) console.error("track-record render failed:", e); fail(L.load_error); });
 })();

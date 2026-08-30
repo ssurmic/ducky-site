@@ -373,3 +373,17 @@ body { background: radial-gradient(1200px 600px at 15% -10%, rgba(62, 185, 120, 
 .bubble-user { background: #1f3b2f; color: #e8f5ee; border-left-color: var(--neon); border-radius: 14px 14px 4px 14px; margin-left: 20%; }
 .receipt-grid { align-items: start; }
 @media (max-width: 760px) { .examples summary { grid-template-columns: auto 1fr; } .examples .ex-how { grid-column: 1 / -1; } .examples .ex-grid { grid-template-columns: 1fr; } .bubble-user { margin-left: 0; } }
+
+/* --- glossary (§13) --- */
+abbr.term { text-decoration: underline dotted color-mix(in srgb, var(--neon) 70%, transparent); text-underline-offset: 3px; cursor: help; border: 0; }
+abbr.term:hover, abbr.term:focus { background: color-mix(in srgb, var(--neon) 14%, transparent); border-radius: 3px; outline: none; }
+.gl-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.55); opacity: 0; pointer-events: none; transition: opacity .18s; z-index: 60; }
+.gl-sheet { position: fixed; left: 0; right: 0; bottom: 0; max-height: 78vh; overflow: auto; background: var(--surface); color: var(--text); border-top: 1px solid var(--border); border-radius: 16px 16px 0 0; padding: 16px 18px calc(18px + env(safe-area-inset-bottom)); transform: translateY(105%); transition: transform .22s ease; z-index: 61; box-shadow: 0 -10px 30px rgba(0,0,0,.4); }
+@media (min-width: 760px) { .gl-sheet { left: auto; right: 24px; bottom: 24px; width: 420px; border-radius: 16px; border: 1px solid var(--border); } }
+body.gl-open .gl-backdrop { opacity: 1; pointer-events: auto; } body.gl-open .gl-sheet { transform: translateY(0); }
+.gl-head { display: flex; align-items: center; gap: 8px; } .gl-name { margin: 0; font-size: 1.1rem; flex: 1; }
+.gl-lang, .gl-close { background: transparent; color: var(--muted); border: 1px solid var(--border); border-radius: 8px; padding: 4px 8px; cursor: pointer; font: inherit; }
+.gl-short { margin: 10px 0 6px; font-size: .98rem; } .gl-formula { color: var(--muted); font-size: .85rem; margin: 4px 0; } .gl-example { color: var(--muted); font-size: .9rem; margin: 6px 0; } .gl-label { color: var(--neon); }
+.gl-long summary { cursor: pointer; color: var(--muted); font-size: .85rem; } .gl-long p { font-size: .9rem; line-height: 1.55; }
+.gl-see { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; } .gl-foot { color: var(--faint); font-size: .74rem; margin: 12px 0 0; }
+.warn { color: #f0b429; }

@@ -183,6 +183,7 @@
 <link rel="stylesheet" href="/css/app.css">
 <script src="/vendor/telegram-web-app.js"></script>
 <script src="/config.js" defer></script>
+<script src="/js/glossary.js" defer></script>
 <script src="/vendor/lightweight-charts/lightweight-charts.standalone.production.js" defer></script>
 <script src="/js/lang.js" defer></script>
 <script type="module" src="/js/app/main.js"></script>
@@ -202,7 +203,7 @@
     <a class="btn btn-ghost btn-sm" id="logout" href="#/login" hidden>{{ t('app.common.logout') }}</a>
   </header>
 
-  <main class="app-main" id="main">
+  <main class="app-main" id="main" data-glossary>
     <div class="app-view" id="view" aria-live="polite"></div>
     <p class="app-foot">{{ t('app.foot.disclaimer') }} <a href="{{ url('/disclaimer/') }}">{{ t('app.billing.disclaimer_link') }}</a></p>
     <noscript><p class="errbox">{{ t('app.noscript') }}</p></noscript>
