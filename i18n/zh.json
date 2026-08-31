@@ -919,5 +919,6 @@
   "dm.card_aria": "全景卡",
   "ex.k_ix": "K指数",
   "app.chart.macd": "MACD",
-  "app.watch.quote_loading": "已加入名单，行情加载中，可点重试"
+  "app.watch.quote_loading": "已加入名单，行情加载中，可点重试",
+  "track.insider_note": "怎么读 insider 信号：我们不是什么都推。AI 读完每一份 Form 4，对照我们的主题库看这门生意在不在风口（半导体 CapEx 放量、内存 / AIDC、先进封装…），再看内部人是谁、用了多少自己的钱。高管在公开市场自购，亮出的是内部人自己的成本价——比嘴上看好更硬的信号。评分越高，越是我们偏好的方向；亏的也照列。"
 }

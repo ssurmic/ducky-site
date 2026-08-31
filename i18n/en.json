@@ -919,5 +919,6 @@
   "dm.card_aria": "snapshot card",
   "ex.k_ix": "K-index",
   "app.chart.macd": "MACD",
-  "app.watch.quote_loading": "Added — quote still loading, tap retry"
+  "app.watch.quote_loading": "Added — quote still loading, tap retry",
+  "track.insider_note": "How to read the insider rows — we don’t push everything. Our AI reads each Form 4 and checks the business against our theme database (semiconductor CapEx ramp, memory / AIDC, advanced packaging…), then weighs who bought and how much of their own money. An open-market insider buy shows the insider’s own cost basis — a firmer signal than talk. A higher score is a name we lean toward; losers are listed too."
 }

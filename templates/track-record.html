@@ -42,6 +42,10 @@
       <span class="rows-shown" id="rows-shown"></span>
     </div>
     <p class="caption">{{ t('track.sort_note') }}</p>
+    <details class="insider-note" data-glossary>
+      <summary>{{ t('boards.2.name') }} — {{ t('track.col_summary') }}</summary>
+      <p class="muted">{{ t('track.insider_note') }}</p>
+    </details>
     <div class="table-wrap">
       <table class="data data-sortable" id="ledger">
         {% macro th(key, type, label, num=False) -%}
