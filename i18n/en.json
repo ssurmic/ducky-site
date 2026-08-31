@@ -333,7 +333,7 @@
   "pricing.pro_name": "Pro",
   "pricing.pro_position": "+ options timing desk",
   "pricing.pro_firehose": "Everything in Signal",
-  "pricing.pro_dm": "+ gamma call/put walls & flip · weekly expected range · IV–HV history · sub-sector RS (ALAB vs CRDO/MRVL/ANET)",
+  "pricing.pro_dm": "+ gamma call/put walls & flip · weekly expected range · IV–HV history · sub-sector RS (ALAB vs CRDO/MRVL/ANET) · 🎙️ Creators: your favorite finance YouTubers, watched + summarized for you by AI",
   "pricing.pro_dm_roadmap": "😱 retail-sentiment contrarian card",
   "pricing.pro_alerts": "100",
   "pricing.pro_cadence": "Every 15 min intraday · paid-priority queue",
@@ -972,5 +972,8 @@
   "app.creators.take_bull": "bull",
   "app.creators.take_bear": "bear",
   "app.creators.take_neutral": "neutral",
-  "app.creators.load_error": "Couldn't load"
+  "app.creators.load_error": "Couldn't load",
+  "app.creators.pro_badge": "Pro",
+  "app.creators.pro_hint": "Following creators + getting their video summaries pushed is a Pro feature.",
+  "app.creators.upgrade": "Upgrade to Pro →"
 }

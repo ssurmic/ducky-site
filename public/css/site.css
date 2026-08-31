@@ -807,3 +807,7 @@ button.cr-chip.on { background: var(--accent); border-color: var(--accent); colo
 button.cr-chip.on:hover { background: var(--accent-2, var(--accent)); border-color: var(--accent-2, var(--accent)); }
 button.cr-chip:not(.on):hover { border-color: var(--accent); color: var(--text); }
 button.cr-chip[disabled] { opacity: .55; cursor: default; }
+
+/* creators view — Pro upsell banner */
+.cr-pro-banner { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 12px 0 16px; padding: 10px 14px; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 12px; background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.cr-pro-badge { font-weight: 700; color: #10130f; background: var(--accent); padding: 2px 9px; border-radius: 999px; font-size: .85em; }

@@ -333,7 +333,7 @@
   "pricing.pro_name": "Pro",
   "pricing.pro_position": "+ 期权择时台",
   "pricing.pro_firehose": "Signal 全部",
-  "pricing.pro_dm": "+ gamma call/put 墙 & flip · 本周预期区间 · IV–HV 历史 · 细分板块相对强弱（ALAB vs CRDO/MRVL/ANET）",
+  "pricing.pro_dm": "+ gamma call/put 墙 & flip · 本周预期区间 · IV–HV 历史 · 细分板块相对强弱（ALAB vs CRDO/MRVL/ANET） · 🎙️ 财经博主：你关注的 YouTube 博主，AI 替你看完新视频并总结",
   "pricing.pro_dm_roadmap": "😱 散户情绪逆向卡",
   "pricing.pro_alerts": "100",
   "pricing.pro_cadence": "盘中每 15 分钟 · 付费专属优先队列",
@@ -972,5 +972,8 @@
   "app.creators.take_bull": "看多",
   "app.creators.take_bear": "看空",
   "app.creators.take_neutral": "中性",
-  "app.creators.load_error": "加载失败"
+  "app.creators.load_error": "加载失败",
+  "app.creators.pro_badge": "Pro 专属",
+  "app.creators.pro_hint": "关注博主、接收「新视频总结」推送是 Pro 功能。",
+  "app.creators.upgrade": "升级 Pro 解锁 →"
 }

@@ -3,6 +3,8 @@
 // the creator's view (attributed, tickers, bull/bear), never our advice.
 import { s } from "../strings.js";
 import * as api from "../api.js";
+import * as store from "../store.js";
+import * as router from "../router.js";
 import { el, clear, toast, spinner, empty } from "../ui.js";
 
 const TAKE_CLS = { bull: "cr-bull", bear: "cr-bear", neutral: "cr-neutral" };
@@ -36,13 +38,22 @@ export async function mount(root) {
     clear(card);
     card.append(el("h1", s("creators.h1")), el("p.muted", s("creators.sub")));
 
+    const isPro = store.isPro();
+    if (!isPro) {
+      const banner = el("div.cr-pro-banner",
+        el("span.cr-pro-badge", s("creators.pro_badge")),
+        el("span", " " + s("creators.pro_hint") + " "),
+        el("a.btn.btn-primary.btn-sm", { href: "#/billing" }, s("creators.upgrade")));
+      card.appendChild(banner);
+    }
+
     card.appendChild(el("h2.cr-sub", s("creators.grid_h")));
     const grid = el("div.cr-grid");
     for (const k of kols) {
       const on = following.has(k.id);
-      const chip = el("button.cr-chip" + (on ? ".on" : ""), { type: "button" },
-        "🎙️ " + (k.name || k.id) + " · " + (on ? s("creators.following") : s("creators.follow")));
-      chip.addEventListener("click", () => toggle(k.id, chip));
+      const label = "🎙️ " + (k.name || k.id) + " · " + (isPro ? (on ? s("creators.following") : s("creators.follow")) : "🔒 " + s("creators.pro_badge"));
+      const chip = el("button.cr-chip" + (on && isPro ? ".on" : ""), { type: "button" }, label);
+      chip.addEventListener("click", () => { if (isPro) toggle(k.id, chip); else router.go("#/billing"); });
       grid.appendChild(chip);
     }
     card.appendChild(grid);
