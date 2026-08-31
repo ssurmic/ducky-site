@@ -82,12 +82,17 @@
         </div>
         <div class="hero-slide">
           {# slide 4 — 大盘总结 / 市场天气. 天气+水位 = real regime read (track_stats.regime); 主线 = illustrative. #}
-          <div class="mw-card" aria-label="{{ t('hero.s4_label') }}">
+          <div class="mw-card" aria-label="{{ t('hero.s4_label') }}"{% if track_stats.regime %} data-mw='{{ {
+                 "asof": t("hero.s4_asof"), "level": t("hero.s4_level_v"), "d": track_stats.regime.d,
+                 "wx": {"calm-up": t("hero.s4_wx_calmup"), "calm-down": t("hero.s4_wx_calmdown"),
+                        "stress": t("hero.s4_wx_stress"), "capitulation": t("hero.s4_wx_capitulation"),
+                        "unknown": t("hero.s4_wx_unknown")}
+               } | tojson }}'{% endif %}>
             {% if track_stats.regime %}
             <p class="mw-head mono">{{ t('hero.s4_title') }} <span class="mw-asof">{{ t('hero.s4_asof') }}{{ track_stats.regime.d }}</span></p>
             <dl class="mw-rows">
               <div class="mw-row"><dt>{{ t('hero.s4_weather_k') }}</dt><dd class="mw-wx">{{ t(track_stats.regime.wx_key) }}</dd></div>
-              <div class="mw-row"><dt>{{ t('hero.s4_level_k') }}</dt><dd>{{ tf('hero.s4_level_v', vix=track_stats.regime.vix, trend=track_stats.regime.trend) }}</dd></div>
+              <div class="mw-row"><dt>{{ t('hero.s4_level_k') }}</dt><dd class="mw-level">{{ tf('hero.s4_level_v', vix=track_stats.regime.vix, trend=track_stats.regime.trend) }}</dd></div>
               <div class="mw-row"><dt>{{ t('hero.s4_theme_k') }}</dt><dd class="mw-theme">{{ t('hero.s4_theme_v') }}</dd></div>
             </dl>
             <p class="mw-note">{{ t('hero.s4_note') }}</p>
