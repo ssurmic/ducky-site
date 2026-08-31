@@ -19,6 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
+I18N = ROOT / "i18n"
 
 BANNED = re.compile(r"ALL-IN|买这只|目标价|满仓|buy now|现在买|建议买入", re.IGNORECASE)
 # §5.1 brand + "how we describe the tech" rules — separate from the compliance strings above. The product is
@@ -46,11 +47,66 @@ MUST_HAVE_DISCLAIMER = ["index.html", "en/index.html"]
 TEXT_EXT = {".html", ".js", ".css", ".xml", ".txt", ".json", ".webmanifest", ".svg", ""}
 
 
+# §5.1 i18n hygiene — an EN config value must never contain Chinese, and a ZH value must never carry stray Latin
+# prose. We only hard-fail the EN→CJK direction (the user-reported failure: Chinese leaking onto the English page).
+# The allowlist below is the *complete* set of EN keys allowed to hold CJK: every one is a deliberate bilingual
+# toggle (a control that shows the OTHER language's name) or a stamp that is bilingual by design. Adding a new EN
+# string with Chinese in it fails CI until the string is translated or the key is consciously allowlisted here.
+CJK = re.compile(r"[\u3400-\u9fff\uf900-\ufaff\u3040-\u30ff]")
+EN_CJK_ALLOW = {
+    "nav.lang_toggle",       # "中文"  — switch-to-Chinese control
+    "nav.lang_toggle_aria",  # "切换到中文" — its aria-label
+    "footer.lang_other",     # "中文"  — footer language switch
+    "app.nav.lang",          # "中文"  — Mini App language switch
+    "hero.eyebrow",          # "… · 中文 / EN" — advertises bilingual availability
+    "label.copy_caption",    # "Copy caption (中文 / EN)" — copies the bilingual caption
+    "data.log_not_call",     # "记录，不是荐股 / a log, not a call" — bilingual by design
+}
+
+
+def check_i18n_en_cjk() -> list[str]:
+    import json
+    errs: list[str] = []
+    enp = I18N / "en.json"
+    if not enp.exists():
+        return errs
+    en = json.loads(enp.read_text(encoding="utf-8"))
+    for k, v in en.items():
+        if isinstance(v, str) and CJK.search(v) and k not in EN_CJK_ALLOW:
+            errs.append(f"i18n/en.json: EN value {k!r} contains Chinese: {v!r} "
+                        f"(translate it, or allowlist the key in lint_copy.EN_CJK_ALLOW if it is a deliberate toggle)")
+    return errs
+
+
+TEMPLATES = ROOT / "templates"
+JINJA = re.compile(r"\{\{.*?\}\}|\{%.*?%\}|\{#.*?#\}", re.DOTALL)
+
+
+def check_template_hardcoded_cjk() -> list[str]:
+    """No Chinese may be hardcoded in a shared template — all visible copy must route through t()/t2() so each
+    language renders cleanly. A CJK run left after stripping Jinja expressions/blocks/comments is a hardcode that
+    would leak onto the other language's page (e.g. an aria-label or a bubble prefix)."""
+    errs: list[str] = []
+    if not TEMPLATES.is_dir():
+        return errs
+    for tp in sorted(TEMPLATES.rglob("*.html")):
+        text = tp.read_text(encoding="utf-8")
+        stripped = JINJA.sub("", text)
+        for m in CJK.finditer(stripped):
+            line = stripped.count("\n", 0, m.start()) + 1
+            ctx = stripped[max(0, m.start() - 20):m.start() + 20].replace("\n", " ").strip()
+            errs.append(f"templates/{tp.relative_to(TEMPLATES)}:~{line}: hardcoded Chinese in template "
+                        f"(route it through t()/t2()): …{ctx}…")
+    return errs
+
+
 def main() -> int:
     if not DIST.is_dir():
         print("lint_copy: dist/ missing — run build.py first")
         return 1
     errors: list[str] = []
+    errors += check_i18n_en_cjk()
+    errors += check_template_hardcoded_cjk()
     files = [p for p in DIST.rglob("*") if p.is_file() and p.suffix in TEXT_EXT]
 
     for p in files:
@@ -98,7 +154,7 @@ def main() -> int:
     n_win = sum(len(TAG_WITH_WINRATE.findall(p.read_text(encoding="utf-8"))) for p in files if p.suffix == ".html")
     print(f"lint_copy: OK — {len(files)} files scanned, 0 banned strings, 0 implementation/brand terms, "
           f"{n_win} win-rate tags all carry an integer data-n, disclaimer lines present in {', '.join(MUST_HAVE_DISCLAIMER)}, "
-          f"no third-party scripts")
+          f"no third-party scripts, EN config free of Chinese, no hardcoded CJK in templates")
     return 0
 
 
