@@ -1,0 +1,84 @@
+{# "我们是谁 / Who we are" (owner brief 2026-08-30). Warm, from-one-investor-to-another block that leads
+   into pricing: (1) who we are + the "one meal a month" price + the goal, (2) a FAIR competitor comparison
+   framed as 「为什么我们这样决定」 vs a typical paid signal service (never named), (3) a clearly-marked KOL /
+   财经博主 roadmap teaser. §5.1 rules: the tech is only "AI / 懂投资的 AI" — never a model name / "LLM" /
+   hardware; no competitor names; no 目标价 / 满仓 / ALL-IN etc. Palette: orange = brand/actions, green/red
+   reserved for market data — this block leans on the orange accent only. Sits between honesty and pricing. #}
+<section class="section whoweare" id="who-we-are" aria-labelledby="wwa-h2">
+  <div class="wrap narrow">
+    <p class="wwa-eyebrow mono">{{ t('wwa.eyebrow') }}</p>
+    <h2 id="wwa-h2">{{ t('wwa.h2') }}</h2>
+    <p class="lead">{{ t('wwa.lead') }}</p>
+
+    {# two punch cards: price = one meal a month · goal = earn it back #}
+    <div class="wwa-punch">
+      <div class="wwa-punch-card">
+        <b class="wwa-punch-big">{{ t('wwa.punch1_big') }}</b>
+        <span class="wwa-punch-sub">{{ t('wwa.punch1_sub') }}</span>
+      </div>
+      <div class="wwa-punch-card">
+        <b class="wwa-punch-big">{{ t('wwa.punch2_big') }}</b>
+        <span class="wwa-punch-sub">{{ t('wwa.punch2_sub') }}</span>
+      </div>
+    </div>
+
+    <p class="wwa-stance">{{ t('wwa.stance') }}</p>
+
+    {# FAIR comparison — us vs a typical paid signal service (never named). Facts only, no disparagement. #}
+    <div class="cmp">
+      <p class="cmp-eyebrow mono">{{ t('wwa.cmp_eyebrow') }}</p>
+      <p class="cmp-lead">{{ t('wwa.cmp_lead') }}</p>
+      <div class="cmp-scroll">
+        <table class="cmp-table">
+          <caption class="sr-only">{{ t('wwa.cmp_aria') }}</caption>
+          <thead>
+            <tr>
+              <td class="cmp-dim" aria-hidden="true"></td>
+              <th scope="col" class="cmp-us">{{ t('wwa.cmp_col_us') }}</th>
+              <th scope="col" class="cmp-them">{{ t('wwa.cmp_col_them') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">{{ t('wwa.cmp_r1_k') }}</th>
+              <td class="cmp-us">{{ t('wwa.cmp_r1_us') }}</td>
+              <td class="cmp-them">{{ t('wwa.cmp_r1_them') }}</td>
+            </tr>
+            <tr>
+              <th scope="row">{{ t('wwa.cmp_r2_k') }}</th>
+              <td class="cmp-us">{{ t('wwa.cmp_r2_us') }}</td>
+              <td class="cmp-them">{{ t('wwa.cmp_r2_them') }}</td>
+            </tr>
+            <tr>
+              <th scope="row">{{ t('wwa.cmp_r3_k') }}</th>
+              <td class="cmp-us">{{ t('wwa.cmp_r3_us') }}</td>
+              <td class="cmp-them">{{ t('wwa.cmp_r3_them') }}</td>
+            </tr>
+            <tr>
+              <th scope="row">{{ t('wwa.cmp_r4_k') }}</th>
+              <td class="cmp-us">{{ t('wwa.cmp_r4_us') }}</td>
+              <td class="cmp-them">{{ t('wwa.cmp_r4_them') }}</td>
+            </tr>
+            <tr>
+              <th scope="row">{{ t('wwa.cmp_r5_k') }}</th>
+              <td class="cmp-us">{{ t('wwa.cmp_r5_us') }}</td>
+              <td class="cmp-them">{{ t('wwa.cmp_r5_them') }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="cmp-foot">{{ t('wwa.cmp_foot') }}</p>
+      <a class="wwa-ledger-link" href="{{ url('/track-record/') }}">{{ t('wwa.ledger_link') }}</a>
+    </div>
+
+    {# KOL / 财经博主 roadmap teaser — clearly marked roadmap, NOT live. #}
+    <div class="wwa-kol" role="group" aria-label="{{ t('wwa.kol_t') }}">
+      <div class="wwa-kol-head">
+        <span class="badge badge-roadmap">{{ t('label.roadmap') }}</span>
+        <b>{{ t('wwa.kol_t') }}</b>
+      </div>
+      <p class="wwa-kol-body">{{ t('wwa.kol_body') }}</p>
+      <p class="wwa-kol-note">{{ t('wwa.kol_note') }}</p>
+    </div>
+  </div>
+</section>
