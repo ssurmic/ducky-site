@@ -950,5 +950,14 @@
   "creators.take_bear": "bear",
   "creators.take_neutral": "neutral",
   "creators.orig": "original",
-  "creators.sample_note": "illustrative sample · replaced automatically once real summaries land"
+  "creators.sample_note": "illustrative sample · replaced automatically once real summaries land",
+  "app.profile.push_title": "Web push",
+  "app.profile.push_hint": "Get pushes right in this browser — no Telegram needed.",
+  "app.profile.push_btn": "Enable web push",
+  "app.profile.push_on": "Web push is on ✅",
+  "app.profile.push_off": "Web push turned off",
+  "app.profile.push_unsupported": "This browser doesn’t support web push",
+  "app.profile.push_soon": "Web push is coming soon",
+  "app.profile.push_denied": "You blocked notifications — re-enable them in your browser settings",
+  "app.profile.push_test": "Send a test push"
 }

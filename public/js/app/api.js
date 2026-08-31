@@ -143,3 +143,9 @@ export const billing = {
   orders: () => get("/billing/orders"),
   qr: (rail) => getDataUri("/billing/qr/" + encodeURIComponent(rail)),
 };
+export const push = {
+  config: () => get("/push/config", { auth: false }),   // {enabled, vapid_public} — public key isn't secret
+  subscribe: (subscription) => post("/push/subscribe", { subscription }),
+  unsubscribe: (endpoint) => del("/push/subscribe", { body: { endpoint } }),
+  test: () => post("/push/test", {}),
+};

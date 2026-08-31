@@ -93,6 +93,16 @@ export async function mount(root) {
     pw.appendChild(pwRow);
     card.appendChild(pw);
 
+    // §web-push — browser notifications without Telegram (progressive: hidden where unsupported).
+    if ("serviceWorker" in navigator && "PushManager" in window && "Notification" in window) {
+      const ps = el("section.pushsec");
+      ps.append(el("h2", s("profile.push_title")), el("p.muted.small", s("profile.push_hint")));
+      const pbtn = el("button.btn.btn-primary.btn-sm", { type: "button" }, s("profile.push_btn"));
+      pbtn.addEventListener("click", () => enableWebPush(pbtn));
+      ps.appendChild(el("div.cta-row", pbtn));
+      card.appendChild(ps);
+    }
+
     const danger = el("details.danger", el("summary", s("profile.delete_title")), el("p.muted.small", s("profile.delete_sub")));
     const del = el("button.btn.btn-danger.btn-sm", { type: "button" }, s("profile.delete_btn"));
     del.addEventListener("click", async () => {
@@ -108,4 +118,33 @@ export async function mount(root) {
     const e = el("input.input", { type, name: nm, value, required: required ? "" : null, autocomplete: nm === "email" ? "email" : "off" });
     return { el: e, wrap: field(label + (required ? " *" : ""), e) };
   }
+}
+
+function urlB64ToUint8(b64) {
+  const pad = "=".repeat((4 - (b64.length % 4)) % 4);
+  const b64s = (b64 + pad).replace(/-/g, "+").replace(/_/g, "/");
+  const raw = atob(b64s), arr = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) arr[i] = raw.charCodeAt(i);
+  return arr;
+}
+
+// Enable Web Push: fetch the VAPID public key, ask permission, register the SW, subscribe, POST it. Fires a
+// test push on success. No-ops gracefully where push isn't configured on the backend yet (button stays usable).
+async function enableWebPush(btn) {
+  btn.disabled = true;
+  try {
+    const cfg = await api.push.config();
+    if (!cfg || !cfg.enabled || !cfg.vapid_public) { toast(s("profile.push_soon")); return; }
+    const perm = await Notification.requestPermission();
+    if (perm !== "granted") { toast(s("profile.push_denied"), "err"); return; }
+    const reg = await navigator.serviceWorker.register("/sw.js");
+    await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlB64ToUint8(cfg.vapid_public) });
+    await api.push.subscribe(sub.toJSON());
+    toast(s("profile.push_on"), "ok");
+    try { await api.push.test(); } catch (e) { /* best-effort test ping */ }
+  } catch (err) {
+    toast(s("common.error", { msg: (err && err.message) || "push" }), "err");
+  } finally { btn.disabled = false; }
 }
