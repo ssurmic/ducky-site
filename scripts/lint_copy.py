@@ -100,12 +100,44 @@ def check_template_hardcoded_cjk() -> list[str]:
     return errs
 
 
+# The mirror of check_i18n_en_cjk: a ZH value must not be untranslated English prose (owner rule: "英文配置里不
+#能有中文，反之亦然"). Heuristic — a value with NO CJK that still packs 3+ English words (len>=3) is almost always
+# a leak (an English example left untranslated). Pure tickers / codes / crypto-network names have too few words to
+# trip it; the few legitimate all-Latin ZH values (stylised demo-alert headers, crypto rails, dev comments) are
+# allowlisted explicitly.
+ZH_EN_ALLOW = {
+    "hero.b1_l1", "feed.a_l1",   # stylised demo-alert headers ("🚨🟢 INSIDER BUY — $1.12M / $TTMI"), same in both langs
+    "billing.rail_usdc_trc20",   # "USDC · TRON TRC20" — a crypto network name, universal
+    "app._comment",              # a developer note, never rendered
+}
+_EN_WORD = re.compile(r"[A-Za-z]{3,}")
+
+
+def check_i18n_zh_english() -> list[str]:
+    import json
+    errs: list[str] = []
+    zhp = I18N / "zh.json"
+    if not zhp.exists():
+        return errs
+    zh = json.loads(zhp.read_text(encoding="utf-8"))
+    for k, v in zh.items():
+        if not isinstance(v, str) or k in ZH_EN_ALLOW:
+            continue
+        if CJK.search(v):            # has Chinese → fine
+            continue
+        if len(_EN_WORD.findall(v)) >= 3:
+            errs.append(f"i18n/zh.json: ZH value {k!r} looks like untranslated English: {v!r} "
+                        f"(translate it, or allowlist the key in lint_copy.ZH_EN_ALLOW if it is intentional)")
+    return errs
+
+
 def main() -> int:
     if not DIST.is_dir():
         print("lint_copy: dist/ missing — run build.py first")
         return 1
     errors: list[str] = []
     errors += check_i18n_en_cjk()
+    errors += check_i18n_zh_english()
     errors += check_template_hardcoded_cjk()
     files = [p for p in DIST.rglob("*") if p.is_file() and p.suffix in TEXT_EXT]
 
@@ -154,7 +186,7 @@ def main() -> int:
     n_win = sum(len(TAG_WITH_WINRATE.findall(p.read_text(encoding="utf-8"))) for p in files if p.suffix == ".html")
     print(f"lint_copy: OK — {len(files)} files scanned, 0 banned strings, 0 implementation/brand terms, "
           f"{n_win} win-rate tags all carry an integer data-n, disclaimer lines present in {', '.join(MUST_HAVE_DISCLAIMER)}, "
-          f"no third-party scripts, EN config free of Chinese, no hardcoded CJK in templates")
+          f"no third-party scripts, EN config free of Chinese, ZH config free of untranslated English, no hardcoded CJK in templates")
     return 0
 
 
