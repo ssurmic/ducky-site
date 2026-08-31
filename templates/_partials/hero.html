@@ -68,7 +68,9 @@
         </div>
         <div class="hero-slide">
           {# slide 3 — 本周前瞻 Week Ahead preview. Clearly a SAMPLE: real generator ships Monday; this is layout. #}
-          <div class="wa-card" aria-label="{{ t('hero.s3_label') }}">
+          <div class="wa-card" aria-label="{{ t('hero.s3_label') }}" data-wa='{{ {
+                 "earn": t("hero.s3_earn"), "badge": t("hero.s3_live_badge"), "note": t("hero.s3_note_live")
+               } | tojson }}'>
             <p class="wa-head mono"><span class="wa-badge">{{ t('hero.s3_badge') }}</span>{{ t('hero.s3_title') }}</p>
             <ul class="wa-events">
               <li><span class="wa-day mono">{{ t('hero.s3_e1_day') }}</span><span class="wa-ev">{{ t('hero.s3_e1') }}</span></li>
