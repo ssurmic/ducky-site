@@ -9,15 +9,15 @@
   "feed_json": "/feed.json",
   "prices": {
     "signal": {
-      "monthly_usd": 12,
-      "annual_usd": 108
+      "monthly_usd": 15,
+      "annual_usd": 135
     },
     "pro": {
-      "monthly_usd": 29,
-      "annual_usd": 261
+      "monthly_usd": 39,
+      "annual_usd": 351
     },
     "china": {
-      "annual_cny": 599
+      "annual_cny": 749
     }
   },
   "deeplink": {
