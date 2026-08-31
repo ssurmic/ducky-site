@@ -267,3 +267,37 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
    (the add already succeeded, so it must not contradict the "已添加" toast). */
 .snap-loading { display: flex; align-items: center; gap: 10px; padding: 6px 2px 2px; flex-wrap: wrap; }
 .snap-loading .muted { color: var(--muted); }
+
+/* ── investment calendar: month grid (click a day → its events) ─────────── */
+.cal-bar { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
+.cal-fchip { border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: 999px; padding: 5px 12px; font-size: var(--fs-xs); cursor: pointer; }
+.cal-fchip.on { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+.cal-fchip.cal-mine.on { border-color: var(--accent); color: var(--accent); }
+.cal-mhead { display: flex; align-items: center; gap: 8px; margin: 14px 0 8px; }
+.cal-mnav { width: 34px; height: 34px; border: 1px solid var(--border); background: var(--surface); color: var(--fg); border-radius: 8px; font-size: 20px; line-height: 1; cursor: pointer; }
+.cal-mtitle { font-weight: 700; font-size: var(--fs-md); min-width: 120px; text-align: center; }
+.cal-today { margin-left: auto; border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: 8px; padding: 6px 12px; font-size: var(--fs-xs); cursor: pointer; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-wd { text-align: center; font-size: var(--fs-2xs); color: var(--muted); padding: 4px 0; }
+.cal-cell { position: relative; aspect-ratio: 1 / 1; min-height: 40px; border: 1px solid var(--border); background: var(--surface); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 5px 2px 2px; cursor: pointer; color: var(--fg); font: inherit; }
+.cal-cell.cal-empty { border: 0; background: transparent; cursor: default; }
+.cal-dnum { font-size: var(--fs-xs); line-height: 1; }
+.cal-cell.cal-has .cal-dnum { font-weight: 700; }
+.cal-cell.cal-is-today { border-color: var(--accent); }
+.cal-cell.cal-is-today .cal-dnum { color: var(--accent); }
+.cal-cell.cal-sel { background: var(--surface-2); outline: 2px solid var(--accent); outline-offset: -2px; }
+.cal-cell.cal-mine-cell::after { content: "★"; position: absolute; top: 2px; right: 3px; font-size: 8px; color: var(--accent); }
+.cal-dots { display: flex; gap: 2px; margin-top: auto; margin-bottom: 2px; flex-wrap: wrap; justify-content: center; }
+.cal-dot { width: 5px; height: 5px; border-radius: 50%; display: inline-block; }
+.cal-detail { margin-top: 16px; }
+.cal-day-h { font-weight: 700; font-size: var(--fs-sm); color: var(--muted); padding: 6px 0; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+.cal-empty-day { padding: 12px 0; }
+.cal-ev { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.cal-ico { font-size: var(--fs-md); flex: 0 0 auto; }
+.cal-main { flex: 1 1 auto; min-width: 0; }
+.cal-title { font-size: var(--fs-sm); font-weight: 600; }
+.cal-note { font-size: var(--fs-xs); margin-top: 3px; line-height: 1.5; }
+.cal-tk { display: inline-block; margin-left: 6px; font-size: var(--fs-2xs); color: var(--muted); }
+.cal-tk.on { color: var(--accent); font-weight: 700; }
+.cal-mine-badge { display: inline-block; margin-left: 6px; font-size: var(--fs-2xs); color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 0 6px; }
+.cal-ev.cal-mine-ev { background: color-mix(in srgb, var(--accent) 6%, transparent); border-radius: 6px; padding-left: 6px; }

@@ -1,0 +1,21 @@
+<section class="section entry" id="how">
+  <div class="wrap">
+    <h2>{{ t('entry.h2') }}</h2>
+    <p class="lead">{{ t('entry.sub') }}</p>
+    <div class="entry-grid">
+      <div class="entry-card entry-web">
+        <span class="entry-tag mono">{{ t('entry.web_tag') }}</span>
+        <h3>{{ t('entry.web_h') }}</h3>
+        <p>{{ t('entry.web_b') }}</p>
+        <a class="btn btn-primary" href="{{ url('/app/') }}">{{ t('entry.web_cta') }}</a>
+      </div>
+      <div class="entry-card entry-tg">
+        <span class="entry-tag mono">{{ t('entry.tg_tag') }}</span>
+        <h3>{{ t('entry.tg_h') }}</h3>
+        <p>{{ t('entry.tg_b') }}</p>
+        <a class="btn btn-ghost" href="{{ primary('entry') }}" rel="noopener">{{ t('entry.tg_cta') }}</a>
+      </div>
+    </div>
+    <p class="entry-note muted">{{ t('entry.note') }}</p>
+  </div>
+</section>

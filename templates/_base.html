@@ -48,6 +48,7 @@
     </nav>
     <div class="nav-actions">
       <a class="lang-toggle mono" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" lang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle aria-label="{{ t('nav.lang_toggle_aria') }}">{{ t('nav.lang_toggle') }}</a>
+      <a class="btn btn-ghost btn-sm nav-signin" href="{{ url('/app/') }}">{{ t('nav.cta_app') }}</a>
       <a class="btn btn-primary btn-sm" href="{{ primary('nav') }}">{{ t('nav.cta_channel') if has_channel else t('nav.cta_bot') }}</a>
     </div>
   </div>

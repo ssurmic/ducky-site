@@ -1000,5 +1000,17 @@
   "app.calendar.t_rebal": "调仓",
   "app.calendar.day_empty": "这天没有重点事件",
   "app.calendar.jump_today": "回到今天",
-  "app.calendar.more": "+{n}"
+  "app.calendar.more": "+{n}",
+  "nav.cta_app": "网页登录",
+  "entry.h2": "两种用法，一次登录",
+  "entry.sub": "同一个账号，网页和 Telegram 通用——你的 Telegram 账号就是你的账号，不用另注册。",
+  "entry.web_tag": "网页版",
+  "entry.web_h": "登录就能用，管理一切",
+  "entry.web_b": "看你的自选名单、K 线叠加、投资日历、财经博主摘要——在浏览器里全都管得到，手机电脑都行。",
+  "entry.web_cta": "网页登录 →",
+  "entry.tg_tag": "Telegram",
+  "entry.tg_h": "推送弹窗，秒达不漏",
+  "entry.tg_b": "实时信号（SEC 申报、市场恐慌水位、财报）要秒到、不能漏。Telegram 的推送最可靠、最省事——不用装新 app，能刷推特就能用。所以交付走 Telegram，你只管收。",
+  "entry.tg_cta": "免费开始（3 条提醒，不绑卡）→",
+  "entry.note": "为什么用 Telegram？因为把提醒秒推到你手机、又不用装新 app，它是最省心的那条路；顺带它也是你的登录方式——一个账号，网页和推送两头通。"
 }

@@ -830,3 +830,16 @@ button.cr-chip[disabled] { opacity: .55; cursor: default; }
 .cal-mine-ev { background: color-mix(in srgb, var(--accent) 5%, transparent); border-radius: 8px; }
 .cal-t-earnings .cal-title { color: var(--green, #3fb950); }
 .cal-t-witching .cal-title, .cal-t-opex .cal-title { color: var(--accent); }
+
+/* ── entry: 两种用法,一次登录 (what this is + why Telegram) ──────────────── */
+.nav-signin { margin-right: 8px; }
+.entry-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+@media (max-width: 760px) { .entry-grid { grid-template-columns: 1fr; } }
+.entry-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 22px 22px 24px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.entry-card.entry-tg { border-left: 3px solid var(--accent); }
+.entry-card.entry-web { border-left: 3px solid #4ea1ff; }
+.entry-tag { display: inline-block; font-size: var(--fs-xs); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); background: var(--surface-2); border-radius: 999px; padding: 3px 10px; }
+.entry-card h3 { margin: 2px 0 0; font-size: var(--fs-lg); }
+.entry-card p { margin: 0; color: var(--muted); line-height: 1.7; font-size: var(--fs-sm); flex: 1 1 auto; }
+.entry-card .btn { margin-top: 6px; }
+.entry-note { margin-top: 16px; font-size: var(--fs-sm); line-height: 1.6; }

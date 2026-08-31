@@ -1000,5 +1000,17 @@
   "app.calendar.t_rebal": "Rebalance",
   "app.calendar.day_empty": "No major events this day",
   "app.calendar.jump_today": "Today",
-  "app.calendar.more": "+{n}"
+  "app.calendar.more": "+{n}",
+  "nav.cta_app": "Sign in",
+  "entry.h2": "Two ways in, one login",
+  "entry.sub": "Same account on web and Telegram — your Telegram account is your account, no separate sign-up.",
+  "entry.web_tag": "Web",
+  "entry.web_h": "Sign in and manage everything",
+  "entry.web_b": "Your watchlist, chart overlays, the investing calendar, creator digests — all managed in the browser, on phone or desktop.",
+  "entry.web_cta": "Sign in on the web →",
+  "entry.tg_tag": "Telegram",
+  "entry.tg_h": "Push alerts, instant, never missed",
+  "entry.tg_b": "Real-time signals (SEC filings, market panic levels, earnings) have to land in seconds and never get missed. Telegram push is the most reliable, lowest-friction rail — no new app to install. Delivery runs through Telegram; you just receive.",
+  "entry.tg_cta": "Start free (3 alerts, no card) →",
+  "entry.note": "Why Telegram? It's the simplest way to push an alert to your phone in seconds without installing a new app — and it doubles as your login. One account, both web and push."
 }
