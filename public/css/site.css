@@ -632,3 +632,12 @@ abbr.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px;
    scope-color them here (green/red = market data, §5.3.3) so the number and its currentColor accent bar read as data. */
 .examples .ex-after-num.pos { color: var(--green); }
 .examples .ex-after-num.neg { color: var(--red); }
+
+/* ── example caveats collapsed to one tap (novice sees the result first) ────── */
+.ex-honest { margin-top: 6px; }
+.ex-honest > summary { cursor: pointer; list-style: none; color: var(--faint); font-size: .82rem;
+  padding: 4px 0; min-height: 32px; display: inline-flex; align-items: center; }
+.ex-honest > summary::-webkit-details-marker { display: none; }
+.ex-honest > summary:hover { color: var(--accent); }
+.ex-honest[open] > summary { color: var(--muted); }
+.ex-honest .ex-after-txt { margin-top: 6px; }

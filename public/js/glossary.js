@@ -106,7 +106,31 @@
   }
   function closeSheet() { document.body.classList.remove("gl-open"); }
 
+
+  // Collapse each example card's trailing "muted" caveat lines (honesty / coverage boundary /
+  // technical detail) into a one-tap <details> so a novice sees the eye-catching result first,
+  // not a wall of caveats. Progressive enhancement: with JS off, the caveats simply show.
+  function collapseHonest() {
+    var lang = (document.documentElement.lang || "zh").slice(0, 2);
+    var label = lang === "en" ? "The honest details \u203a" : "\u8bda\u5b9e\u8bf4 / \u6280\u672f\u7ec6\u8282 \u203a";
+    var blocks = document.querySelectorAll(".ex-after");
+    for (var i = 0; i < blocks.length; i++) {
+      var a = blocks[i];
+      var muted = [];
+      for (var j = 0; j < a.children.length; j++) {
+        var ch = a.children[j];
+        if (ch.classList && ch.classList.contains("ex-after-txt") && ch.classList.contains("muted")) muted.push(ch);
+      }
+      if (!muted.length) continue;
+      var det = document.createElement("details"); det.className = "ex-honest";
+      var sum = document.createElement("summary"); sum.textContent = label; det.appendChild(sum);
+      muted[0].parentNode.insertBefore(det, muted[0]);
+      for (var k = 0; k < muted.length; k++) det.appendChild(muted[k]);
+    }
+  }
+
   function init() {
+    try { collapseHonest(); } catch (e) { /* non-fatal */ }
     var roots = document.querySelectorAll("[data-glossary]");
     if (!roots.length) return;
     load().then(function (terms) {

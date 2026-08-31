@@ -8,9 +8,17 @@
   "track_json": "/track-record.json",
   "feed_json": "/feed.json",
   "prices": {
-    "signal": { "monthly_usd": 12, "annual_usd": 99 },
-    "pro": { "monthly_usd": 29, "annual_usd": 249 },
-    "china": { "annual_cny": 599 }
+    "signal": {
+      "monthly_usd": 12,
+      "annual_usd": 108
+    },
+    "pro": {
+      "monthly_usd": 29,
+      "annual_usd": 261
+    },
+    "china": {
+      "annual_cny": 599
+    }
   },
   "deeplink": {
     "pattern": "https://t.me/{bot}?start=src_{slug}",
