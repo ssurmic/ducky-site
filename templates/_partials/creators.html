@@ -1,0 +1,31 @@
+<section class="section creators" id="creators" data-creators='{{ {
+       "take": {"bull": t("creators.take_bull"), "bear": t("creators.take_bear"), "neutral": t("creators.take_neutral")},
+       "orig": t("creators.orig"), "sample": t("creators.sample_note"), "soon": t("creators.soon"),
+       "grid_h": t("creators.grid_h"), "feed_h": t("creators.feed_h")
+     } | tojson }}'>
+  <div class="wrap">
+    <h2>{{ t('creators.h2') }}</h2>
+    <p class="lead">{{ t('creators.lead') }}</p>
+
+    <h3 class="cr-sub mono">{{ t('creators.grid_h') }}</h3>
+    <div class="cr-grid" id="cr-grid" aria-live="polite">
+      {# populated from /public/kol-feed.json; a small static hint until it loads #}
+      <span class="cr-chip cr-skel">🎙️ Macro</span>
+      <span class="cr-chip cr-skel">🎙️ Stocks</span>
+      <span class="cr-chip cr-skel">🎙️ Semis · AI</span>
+      <span class="cr-chip cr-skel">🎙️ Options</span>
+    </div>
+
+    <h3 class="cr-sub mono">{{ t('creators.feed_h') }}</h3>
+    <div class="cr-feed" id="cr-feed" aria-live="polite">
+      {# illustrative sample — replaced by real summaries when kol-feed.json has posts #}
+      <article class="cr-post cr-sample">
+        <div class="cr-post-head"><b class="cr-who">🎙️ Meet Kevin</b><span class="cr-take cr-bull">{{ t('creators.take_bull') }}</span><span class="cr-tks mono">$NVDA · $TSM</span></div>
+        <p class="cr-sum">{{ t('creators.sample_note') }}</p>
+      </article>
+    </div>
+
+    <p class="cr-disclaimer muted">{{ t('creators.disclaimer') }}</p>
+    <a class="btn btn-primary" href="{{ url('/app/') }}#/creators">{{ t('creators.cta') }}</a>
+  </div>
+</section>

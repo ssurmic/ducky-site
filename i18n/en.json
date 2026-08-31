@@ -937,5 +937,18 @@
   "track.ih_lead": "Real open-market insider buys we caught. The return is measured from the insider’s own buy price (not our push price), as of 2026-08-31 — tap through to the original SEC Form 4. The ledger’s “since push” below is measured from our push-day price instead; two different baselines.",
   "hero.s3_live_badge": "This week · live",
   "hero.s3_earn": "earnings",
-  "hero.s3_note_live": "This week’s real schedule — the full read (historical base rates + implied vol) is DM’d every Monday."
+  "hero.s3_note_live": "This week’s real schedule — the full read (historical base rates + implied vol) is DM’d every Monday.",
+  "nav.creators": "Creators",
+  "creators.h2": "The finance creators you follow — I watch them for you",
+  "creators.lead": "Ten finance YouTubers, hours of video. Ducky watches every one and tells you in a line what they said, which tickers they named, and whether they leaned bull or bear. A record, not advice.",
+  "creators.grid_h": "Creators we watch",
+  "creators.feed_h": "What they just said",
+  "creators.cta": "Pick your creators in the app →",
+  "creators.disclaimer": "These are summaries of the creators' public views — attributed, with a link to the original. A record, not investment advice, and not Ducky's own view.",
+  "creators.soon": "Onboarding more creators — summaries are rolling in.",
+  "creators.take_bull": "bull",
+  "creators.take_bear": "bear",
+  "creators.take_neutral": "neutral",
+  "creators.orig": "original",
+  "creators.sample_note": "illustrative sample · replaced automatically once real summaries land"
 }
