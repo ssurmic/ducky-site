@@ -1,0 +1,45 @@
+{# "最诚实的投资伴侣 / The most honest investment companion" — the owner's #1 differentiator:
+   trust through what we DELIBERATELY DON'T do. Sits between the why/who strip and pricing.
+   §5.1 rules: describe the tech only as "AI / AI 驱动", no model / hardware / storage words, never
+   name a competitor. Palette: orange = brand/actions (the ✕ chips + payoff accent), green/red stay
+   reserved for market data — so this positioning block leans on the orange accent only. #}
+<section class="section refuse" id="honesty" aria-labelledby="refuse-h2">
+  <div class="wrap narrow">
+    <p class="refuse-eyebrow mono">{{ t('refuse.eyebrow') }}</p>
+    <h2 id="refuse-h2">{{ t('refuse.h2') }}</h2>
+    <p class="lead">{{ t('refuse.lead') }}</p>
+
+    <ul class="refuse-list">
+      <li class="refuse-row">
+        <span class="refuse-x" aria-hidden="true">✕</span>
+        <div class="refuse-txt">
+          <b>{{ t('refuse.r1') }}</b>
+          <span>{{ t('refuse.r1_why') }}</span>
+        </div>
+      </li>
+      <li class="refuse-row">
+        <span class="refuse-x" aria-hidden="true">✕</span>
+        <div class="refuse-txt">
+          <b>{{ t('refuse.r2') }}</b>
+          <span>{{ t('refuse.r2_why') }}</span>
+        </div>
+      </li>
+      <li class="refuse-row">
+        <span class="refuse-x" aria-hidden="true">✕</span>
+        <div class="refuse-txt">
+          <b>{{ t('refuse.r3') }}</b>
+          <span>{{ t('refuse.r3_why') }}</span>
+        </div>
+      </li>
+      <li class="refuse-row">
+        <span class="refuse-x" aria-hidden="true">✕</span>
+        <div class="refuse-txt">
+          <b>{{ t('refuse.r4') }}</b>
+          <span>{{ t('refuse.r4_why') }} <a class="refuse-ledger-link" href="{{ url('/track-record/') }}">{{ t('refuse.r4_link') }}</a></span>
+        </div>
+      </li>
+    </ul>
+
+    <p class="refuse-payoff">{{ t('refuse.payoff') }} <b>{{ t('refuse.payoff_em') }}</b></p>
+  </div>
+</section>

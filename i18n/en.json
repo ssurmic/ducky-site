@@ -786,5 +786,19 @@
   "ws.why_title": "Two promises",
   "ws.why": "① It never places an order — not a trading bot, never connected to your broker. ② Fully private — your watchlist and rules are yours alone, deletable any time.",
   "ws.who_title": "Who it's for",
-  "ws.who": "US-stock traders who want the filing before FinTwit — and DCA folks who just want one ping when the water level is there. The answer lands in Telegram, 中文 / EN."
+  "ws.who": "US-stock traders who want the filing before FinTwit — and DCA folks who just want one ping when the water level is there. The answer lands in Telegram, 中文 / EN.",
+  "refuse.eyebrow": "What we refuse to do",
+  "refuse.h2": "The most honest investment companion",
+  "refuse.lead": "Trust is built on restraint. Here is what we deliberately choose NOT to do — and it is exactly why we can be honest with you.",
+  "refuse.r1": "Don't connect to your brokerage · can't touch your account · never place a trade",
+  "refuse.r1_why": "Your money never passes through us — nothing to hack, nothing to front-run.",
+  "refuse.r2": "Don't do your taxes · don't do personalized financial planning",
+  "refuse.r2_why": "We're not a licensed advisor, and we won't pretend to know your whole financial life.",
+  "refuse.r3": "Don't sell your data · don't take payment-for-order-flow kickbacks",
+  "refuse.r3_why": "You pay us, so you're the customer — never the product being resold.",
+  "refuse.r4": "Don't hide losers — every signal, win OR loss, is on the public ledger",
+  "refuse.r4_why": "Red ink stays on the record, so you can check us yourself.",
+  "refuse.r4_link": "See the public ledger →",
+  "refuse.payoff": "Because we're not trying to be your broker or your advisor, we can just be honest —",
+  "refuse.payoff_em": "an investment companion whose only job is to be honest with you."
 }

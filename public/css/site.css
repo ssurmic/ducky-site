@@ -554,3 +554,34 @@ summary:focus-visible { outline-offset: 0; }
 
 /* finding app.css:186 — honor prefers-reduced-motion for the marketing sticky CTA bar's slide transition. */
 @media (prefers-reduced-motion: reduce) { .sticky-bar { transition: none; } }
+
+/* ══════════════════════════════════════════════════════════════════════════════════════════════
+   honesty / 最诚实的投资伴侣 — "我们故意不做什么" (templates/_partials/honesty.html)
+   Positioning-through-refusal block above pricing. Uses the shared .section rhythm (72px) + .lead so
+   it lines up with its siblings; orange = brand/actions (✕ chips, payoff accent), green/red stay data.
+   ══════════════════════════════════════════════════════════════════════════════════════════════ */
+.refuse-eyebrow { color: var(--accent); font-size: var(--fs-xs); letter-spacing: .08em; text-transform: uppercase; margin: 0 0 .5rem; }
+.refuse-list { list-style: none; margin: 0 0 1.6rem; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 760px) { .refuse-list { grid-template-columns: 1fr; } }
+.refuse-row { display: flex; gap: 14px; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px 18px; }
+.refuse-x { flex: 0 0 auto; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-sm); font-weight: 800; font-size: var(--fs-md); line-height: 1; color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border)); }
+.refuse-txt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.refuse-txt b { color: var(--text); font-size: var(--fs-md); line-height: 1.35; }
+.refuse-txt span { color: var(--muted); font-size: var(--fs-base); line-height: 1.55; }
+.refuse-ledger-link { color: var(--accent); font-weight: 600; white-space: nowrap; }
+.refuse-ledger-link:hover { color: var(--accent-2); }
+.refuse-payoff { margin: 0; padding: 16px 18px; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 7%, var(--surface)); border-radius: 0 var(--r-md) var(--r-md) 0; font-size: var(--fs-lg); line-height: 1.6; color: var(--text); }
+.refuse-payoff b { color: var(--accent); font-weight: 700; }
+
+/* entrance: scroll-driven fade-up, progressive (only where supported) and reduced-motion-safe.
+   Browsers without animation-timeline (older Telegram WebView) simply render the block visible. */
+@keyframes refuse-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .refuse-row, .refuse-payoff { animation: refuse-in linear both; animation-timeline: view(); animation-range: entry 0% cover 26%; }
+  }
+}
+
+/* polish: footer links were the one link cluster with no hover feedback (nav-links, stat-tile, etc.
+   all have one) — add the same muted→text lift for consistency. */
+.footer-links a:hover { color: var(--text); }
