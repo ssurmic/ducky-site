@@ -641,3 +641,62 @@ abbr.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px;
 .ex-honest > summary:hover { color: var(--accent); }
 .ex-honest[open] > summary { color: var(--muted); }
 .ex-honest .ex-after-txt { margin-top: 6px; }
+
+/* ══════════════════════════════════════════════════════════════════════════════════════════════
+   为什么我们不一样 / Why we're different (templates/_partials/why-different.html) + weekly-outlook strip
+   Positioning block between the examples wall and boards. §5.3.3 palette: orange = brand/actions,
+   green/red reserved for market data — this block uses the accent only. Shares the .section rhythm.
+   ══════════════════════════════════════════════════════════════════════════════════════════════ */
+.whydiff-eyebrow { color: var(--accent); font-size: var(--fs-xs); letter-spacing: .08em; text-transform: uppercase; margin: 0 0 .5rem; }
+.whydiff-list { list-style: none; margin: 0 0 1.8rem; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 760px) { .whydiff-list { grid-template-columns: 1fr; } }
+.whydiff-row { display: flex; gap: 16px; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px; }
+.whydiff-ico { flex: 0 0 auto; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-md); color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--border)); }
+.whydiff-ico svg { width: 24px; height: 24px; display: block; }
+.whydiff-txt { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.whydiff-txt > b { color: var(--text); font-size: var(--fs-lg); line-height: 1.3; }
+.whydiff-txt > span { color: var(--muted); font-size: var(--fs-base); line-height: 1.6; }
+.whydiff-contrast { border-left: 3px solid color-mix(in srgb, var(--accent) 55%, var(--border)); padding-left: 11px; color: var(--text) !important; }
+.whydiff-roadmap { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.badge-roadmap { flex: 0 0 auto; font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .04em; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border)); border-radius: var(--r-pill); padding: 2px 9px; white-space: nowrap; }
+.whydiff-closer { color: var(--text) !important; font-weight: 600; font-size: var(--fs-md); line-height: 1.5; border-top: 1px dashed var(--border); padding-top: 11px; margin-top: 2px; }
+
+/* weekly-outlook strip: 前瞻 · 周报 · 大盘总结 as three first-class benefit chips */
+.wo-strip { margin-top: .3rem; border-top: 1px solid var(--border); padding-top: 1.4rem; }
+.wo-lead { margin: 0 0 .9rem; color: var(--faint); font-size: var(--fs-sm); letter-spacing: .01em; }
+.wo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 760px) { .wo-grid { grid-template-columns: 1fr; } }
+.wo-chip { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+.wo-ico { color: var(--accent); }
+.wo-ico svg { width: 24px; height: 24px; display: block; }
+.wo-chip b { color: var(--text); font-size: var(--fs-md); line-height: 1.3; }
+.wo-chip span { color: var(--muted); font-size: var(--fs-base); line-height: 1.55; }
+
+@keyframes whydiff-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .whydiff-row, .wo-chip { animation: whydiff-in linear both; animation-timeline: view(); animation-range: entry 0% cover 24%; }
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════════════════════
+   hero carousel slides 3 & 4 (§5.3.5): 本周前瞻 Week Ahead (sample) + 大盘总结/市场天气 (real regime).
+   Same shell as .track-card so all four slides read as one deck. Dark in both themes (phone-mockup
+   aesthetic, matching slides 1–2); no motion beyond the shared reduced-motion-safe carousel behavior.
+   ══════════════════════════════════════════════════════════════════════════════════════════════ */
+.wa-card, .mw-card { width: 320px; max-width: 100%; background: var(--phone); border: 1px solid var(--border); border-radius: var(--r-xl); box-shadow: var(--shadow); padding: 20px 18px; display: flex; flex-direction: column; gap: 12px; color: #e6edf3; }
+.wa-head, .mw-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-weight: 700; font-size: var(--fs-base); margin: 0; }
+.wa-badge { flex: 0 0 auto; font-size: var(--fs-2xs); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-ink); background: var(--accent); border-radius: var(--r-sm); padding: 2px 7px; }
+.wa-events { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.wa-events li { display: flex; gap: 10px; align-items: baseline; font-size: var(--fs-sm); border-left: 2px solid color-mix(in srgb, var(--accent) 55%, transparent); padding-left: 10px; }
+.wa-day { flex: 0 0 auto; min-width: 40px; color: #b7c2cc; font-size: var(--fs-2xs); }
+.wa-ev { color: #e6edf3; line-height: 1.4; }
+.wa-odds { margin: 0; font-size: var(--fs-xs); line-height: 1.55; color: #cdd6df; background: color-mix(in srgb, var(--accent) 12%, transparent); border-left: 3px solid var(--accent); padding: 8px 11px; border-radius: 0 var(--r-sm) var(--r-sm) 0; }
+.wa-note, .mw-note { margin: 0; font-size: var(--fs-2xs); color: #8b98a5; line-height: 1.5; }
+.mw-asof { color: #8b98a5; font-size: var(--fs-2xs); font-weight: 400; }
+.mw-rows { margin: 0; display: flex; flex-direction: column; gap: 9px; }
+.mw-row { display: grid; grid-template-columns: 52px 1fr; gap: 12px; align-items: baseline; font-size: var(--fs-sm); }
+.mw-row dt { margin: 0; color: #8b98a5; font-size: var(--fs-2xs); letter-spacing: .04em; }
+.mw-row dd { margin: 0; color: #e6edf3; line-height: 1.4; }
+.mw-wx { font-weight: 700; }
+.mw-theme { color: #cdd6df; }

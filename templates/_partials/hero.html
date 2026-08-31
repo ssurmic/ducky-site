@@ -14,8 +14,8 @@
     </div>
 
     <div class="hero-visual">
-      {# §5.3.5 hero carousel: slide 1 = phone pushes, slide 2 = 战绩卡 (equity curve + ledger CTA).
-         Pure CSS scroll-snap; dots / arrows / one-shot auto-advance live in /js/hero.js (landing only). #}
+      {# §5.3.5 hero carousel: 1 = phone pushes · 2 = 战绩卡 (equity curve) · 3 = 本周前瞻 (sample) · 4 = 大盘总结/市场天气.
+         Pure CSS scroll-snap; hero.js drives dots/arrows/auto-advance for N slides (dot count = slide count). #}
       <div class="hero-carousel" id="hero-carousel" tabindex="0" role="group" aria-roledescription="carousel" aria-label="{{ t('hero.carousel_label') }}">
         <div class="hero-slide" role="img" aria-label="{{ t('hero.phone_label') }}">
           <div class="phone">
@@ -66,11 +66,49 @@
             <a class="btn btn-primary" href="{{ url('/track-record/') }}">{{ t('hero.s2_cta') }}</a>
           </div>
         </div>
+        <div class="hero-slide">
+          {# slide 3 — 本周前瞻 Week Ahead preview. Clearly a SAMPLE: real generator ships Monday; this is layout. #}
+          <div class="wa-card" aria-label="{{ t('hero.s3_label') }}">
+            <p class="wa-head mono"><span class="wa-badge">{{ t('hero.s3_badge') }}</span>{{ t('hero.s3_title') }}</p>
+            <ul class="wa-events">
+              <li><span class="wa-day mono">{{ t('hero.s3_e1_day') }}</span><span class="wa-ev">{{ t('hero.s3_e1') }}</span></li>
+              <li><span class="wa-day mono">{{ t('hero.s3_e2_day') }}</span><span class="wa-ev">{{ t('hero.s3_e2') }}</span></li>
+              <li><span class="wa-day mono">{{ t('hero.s3_e3_day') }}</span><span class="wa-ev">{{ t('hero.s3_e3') }}</span></li>
+            </ul>
+            <p class="wa-odds">{{ t('hero.s3_odds') }}</p>
+            <p class="wa-note">{{ t('hero.s3_note') }}</p>
+            <a class="btn btn-primary" href="{{ primary('hero_weekahead') }}" rel="noopener">{{ t('hero.s3_cta') }}</a>
+          </div>
+        </div>
+        <div class="hero-slide">
+          {# slide 4 — 大盘总结 / 市场天气. 天气+水位 = real regime read (track_stats.regime); 主线 = illustrative. #}
+          <div class="mw-card" aria-label="{{ t('hero.s4_label') }}">
+            {% if track_stats.regime %}
+            <p class="mw-head mono">{{ t('hero.s4_title') }} <span class="mw-asof">{{ t('hero.s4_asof') }}{{ track_stats.regime.d }}</span></p>
+            <dl class="mw-rows">
+              <div class="mw-row"><dt>{{ t('hero.s4_weather_k') }}</dt><dd class="mw-wx">{{ t(track_stats.regime.wx_key) }}</dd></div>
+              <div class="mw-row"><dt>{{ t('hero.s4_level_k') }}</dt><dd>{{ tf('hero.s4_level_v', vix=track_stats.regime.vix, trend=track_stats.regime.trend) }}</dd></div>
+              <div class="mw-row"><dt>{{ t('hero.s4_theme_k') }}</dt><dd class="mw-theme">{{ t('hero.s4_theme_v') }}</dd></div>
+            </dl>
+            <p class="mw-note">{{ t('hero.s4_note') }}</p>
+            {% else %}
+            <p class="mw-head mono">{{ t('hero.s4_sample_head') }}</p>
+            <dl class="mw-rows">
+              <div class="mw-row"><dt>{{ t('hero.s4_weather_k') }}</dt><dd class="mw-wx">{{ t('hero.s4_wx_calmup') }}</dd></div>
+              <div class="mw-row"><dt>{{ t('hero.s4_theme_k') }}</dt><dd class="mw-theme">{{ t('hero.s4_theme_v') }}</dd></div>
+            </dl>
+            <p class="mw-note">{{ t('hero.s4_sample_note') }}</p>
+            {% endif %}
+            <a class="btn btn-primary" href="{{ url('/track-record/') }}">{{ t('hero.s4_cta') }}</a>
+          </div>
+        </div>
       </div>
       <div class="hero-dots" id="hero-dots">
         <button type="button" class="hero-arrow" data-hero-arrow="-1" aria-label="{{ t('hero.prev') }}">‹</button>
         <button type="button" class="hero-dot on" aria-label="{{ t('hero.dot1') }}"></button>
         <button type="button" class="hero-dot" aria-label="{{ t('hero.dot2') }}"></button>
+        <button type="button" class="hero-dot" aria-label="{{ t('hero.dot3') }}"></button>
+        <button type="button" class="hero-dot" aria-label="{{ t('hero.dot4') }}"></button>
         <button type="button" class="hero-arrow" data-hero-arrow="1" aria-label="{{ t('hero.next') }}">›</button>
       </div>
       <img class="avatar-mark avatar-peek" src="/avatar-160.jpg" alt="" width="76" height="76" loading="eager" fetchpriority="high" decoding="sync" aria-hidden="true">

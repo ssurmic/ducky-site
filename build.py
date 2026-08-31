@@ -252,8 +252,23 @@ def load_track_stats() -> dict:
                 f"{round(pad + (h - 2 * pad) * (1 - (p_[key] - lo) / span), 1)}"
                 for i, p_ in enumerate(eq))
 
+        # §5.3.5 slide 4 (market weather): real regime read from regimes_today, resolved to a fixed
+        # weather token here so the template's t() lookup can never miss a key (build-fatal otherwise).
+        rt = doc.get("regimes_today") or {}
+        regime = None
+        raw = rt.get("regime")
+        if raw:
+            tok = {"calm-up": "calmup", "calm-down": "calmdown",
+                   "stress": "stress", "capitulation": "capitulation"}.get(raw, "unknown")
+            vc, tr = rt.get("vix_close"), rt.get("spx_vs_200dma")
+            regime = {
+                "wx_key": f"hero.s4_wx_{tok}",
+                "vix": f"{vc:.1f}" if isinstance(vc, (int, float)) else "—",
+                "trend": f"{tr * 100:+.1f}%" if isinstance(tr, (int, float)) else "—",
+                "d": rt.get("d") or "",
+            }
         return {
-            "ok": True, "total": total, "live": live,
+            "ok": True, "total": total, "live": live, "regime": regime,
             "hit20": int(round(best["hit20"])), "hit20_n": int(best["n_hit20"]), "hit20_kind": best["kind"],
             "eq": {"w": w, "h": h, "nav": pts("v"), "spy": pts("spy"),
                     "first": eq[0]["d"], "last": eq[-1]["d"],

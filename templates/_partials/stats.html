@@ -1,6 +1,6 @@
 {# Proof stats band (SYSTEMDESIGN §5.3.4): live numbers computed from public/track-record.json at build
    time (build.py: load_track_stats). Tiles are clickable → the track record (the notary tile → the
-   GitHub commit history). The band disappears gracefully when the notary JSON is missing.
+   track-record page, which carries the public verification link). The band disappears gracefully when the notary JSON is missing.
    Each tile carries a small inline-SVG glyph + a thin accent bar + a bolder number (redesign: more visual
    proof). Glyphs are decorative iconography (no invented data series); the +367% up-trend uses green = data. #}
 {% if track_stats.ok %}
@@ -25,7 +25,7 @@
         <span class="stat-bar" aria-hidden="true"></span>
         <span>{{ t('stats.crwv') }}</span>
       </a>
-      <a class="stat-tile" href="https://github.com/ssurmic/ducky-site/commits/main/public/track-record.json" rel="noopener">
+      <a class="stat-tile" href="{{ url('/track-record/') }}">
         <svg class="stat-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 2l6 3v4c0 4-2.7 7-6 9-3.3-2-6-5-6-9V5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 10l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <b>{{ t('stats.notary_big') }}</b>
         <span class="stat-bar" aria-hidden="true"></span>
