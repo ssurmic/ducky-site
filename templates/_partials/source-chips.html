@@ -1,0 +1,36 @@
+{# Source chips (SYSTEMDESIGN §5.3 / redesign): replaces the dense acronym proof-strip with a scannable row of
+   plain-Chinese source chips. The 7 that map to a glossary term are <button> + data-term — tappable, opening the
+   bottom sheet via the delegated handler in /js/glossary.js (window.DuckyGlossary.open) — and carry a "?" affordance.
+   官员交易 / Political trades and 美元流动性 / USD liquidity have no matching glossary term (regime = 市场天气 never
+   surfaces liquidity, so it would explain the wrong thing) — both stay plain text with a title tooltip; never invent
+   a glossary id or open a mismatched sheet. no-glossary keeps the auto-annotator off these labels. #}
+<div class="chip-src-row no-glossary" role="group" aria-label="{{ t('chips.lead') }}">
+  <p class="chip-src-lead mono">{{ t('chips.lead') }}</p>
+  <button type="button" class="chip-src" data-term="form4" title="{{ t('chips.explain_aria') }}" aria-label="{{ t('chips.form4') }} — {{ t('chips.explain_aria') }}">
+    <span class="chip-ico" aria-hidden="true">💰</span><span class="chip-txt">{{ t('chips.form4') }}</span><span class="chip-q" aria-hidden="true">?</span>
+  </button>
+  <button type="button" class="chip-src" data-term="13d_13g" title="{{ t('chips.explain_aria') }}" aria-label="{{ t('chips.stake') }} — {{ t('chips.explain_aria') }}">
+    <span class="chip-ico" aria-hidden="true">🤝</span><span class="chip-txt">{{ t('chips.stake') }}</span><span class="chip-q" aria-hidden="true">?</span>
+  </button>
+  <button type="button" class="chip-src" data-term="13f" title="{{ t('chips.explain_aria') }}" aria-label="{{ t('chips.holdings') }} — {{ t('chips.explain_aria') }}">
+    <span class="chip-ico" aria-hidden="true">🏦</span><span class="chip-txt">{{ t('chips.holdings') }}</span><span class="chip-q" aria-hidden="true">?</span>
+  </button>
+  <button type="button" class="chip-src" data-term="8k" title="{{ t('chips.explain_aria') }}" aria-label="{{ t('chips.news') }} — {{ t('chips.explain_aria') }}">
+    <span class="chip-ico" aria-hidden="true">📊</span><span class="chip-txt">{{ t('chips.news') }}</span><span class="chip-q" aria-hidden="true">?</span>
+  </button>
+  <span class="chip-src chip-plain" title="{{ t('chips.political_tip') }}">
+    <span class="chip-ico" aria-hidden="true">🏛</span><span class="chip-txt">{{ t('chips.political') }}</span>
+  </span>
+  <button type="button" class="chip-src" data-term="k_index" title="{{ t('chips.explain_aria') }}" aria-label="{{ t('chips.panic') }} — {{ t('chips.explain_aria') }}">
+    <span class="chip-ico" aria-hidden="true">🌡</span><span class="chip-txt">{{ t('chips.panic') }}</span><span class="chip-q" aria-hidden="true">?</span>
+  </button>
+  <span class="chip-src chip-plain" title="{{ t('chips.liquidity_tip') }}">
+    <span class="chip-ico" aria-hidden="true">🌊</span><span class="chip-txt">{{ t('chips.liquidity') }}</span>
+  </span>
+  <button type="button" class="chip-src" data-term="iv_hv_ratio" title="{{ t('chips.explain_aria') }}" aria-label="{{ t('chips.options') }} — {{ t('chips.explain_aria') }}">
+    <span class="chip-ico" aria-hidden="true">📈</span><span class="chip-txt">{{ t('chips.options') }}</span><span class="chip-q" aria-hidden="true">?</span>
+  </button>
+  <button type="button" class="chip-src" data-term="gamma_wall" title="{{ t('chips.explain_aria') }}" aria-label="{{ t('chips.orders') }} — {{ t('chips.explain_aria') }}">
+    <span class="chip-ico" aria-hidden="true">🧱</span><span class="chip-txt">{{ t('chips.orders') }}</span><span class="chip-q" aria-hidden="true">?</span>
+  </button>
+</div>

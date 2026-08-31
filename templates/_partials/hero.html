@@ -10,7 +10,7 @@
         <a class="btn btn-ghost btn-lg" href="{{ url('/track-record/') }}">{{ t('hero.cta_ledger') }}</a>
       </div>
       <p class="cta-note">{{ t('hero.cta_note') }}</p>
-      <p class="proof-strip mono">{{ t('hero.proof_strip') }}</p>
+      {% include "_partials/source-chips.html" %}
     </div>
 
     <div class="hero-visual">
@@ -22,7 +22,7 @@
             <div class="phone-notch"></div>
             <div class="phone-head">
               <img class="avatar-mark avatar-md" src="/avatar-160.jpg" alt="" width="34" height="34" loading="eager" fetchpriority="high" decoding="sync">
-              <div class="phone-head-text"><b>{{ t('hero.phone_header') }}</b><small>{{ t('hero.phone_status') }}</small></div>
+              <div class="phone-head-text"><b>{{ t('hero.phone_header') }}</b><small><span class="phone-live" aria-hidden="true"></span>{{ t('hero.phone_status') }}</small></div>
             </div>
             <div class="phone-body">
               <div class="bubble bubble-insider">

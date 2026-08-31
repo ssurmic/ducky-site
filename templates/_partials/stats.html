@@ -1,24 +1,34 @@
 {# Proof stats band (SYSTEMDESIGN §5.3.4): live numbers computed from public/track-record.json at build
    time (build.py: load_track_stats). Tiles are clickable → the track record (the notary tile → the
-   GitHub commit history). The band disappears gracefully when the notary JSON is missing. #}
+   GitHub commit history). The band disappears gracefully when the notary JSON is missing.
+   Each tile carries a small inline-SVG glyph + a thin accent bar + a bolder number (redesign: more visual
+   proof). Glyphs are decorative iconography (no invented data series); the +367% up-trend uses green = data. #}
 {% if track_stats.ok %}
 <section class="section stats-band" id="stats" aria-label="{{ t('stats.aria') }}">
   <div class="wrap">
     <div class="stats-grid">
       <a class="stat-tile" href="{{ url('/track-record/') }}">
+        <svg class="stat-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M3 5h11M3 10h14M3 15h9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         <b class="mono">{{ track_stats.total }}</b>
+        <span class="stat-bar" aria-hidden="true"></span>
         <span>{{ t('stats.signals') }}</span>
       </a>
       <a class="stat-tile" href="{{ url('/track-record/') }}">
+        <svg class="stat-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M11 2 4 11h4l-1 7 8-10h-4z" fill="currentColor"/></svg>
         <b class="mono">{{ t('stats.speed_big') }}</b>
+        <span class="stat-bar" aria-hidden="true"></span>
         <span>{{ t('stats.speed') }}</span>
       </a>
-      <a class="stat-tile" href="#examples">
+      <a class="stat-tile tile-pos" href="#examples">
+        <svg class="stat-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><polyline points="3,14 8,9 11,12 17,4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 4h-4M17 4v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <b class="mono pos">+367%</b>
+        <span class="stat-bar" aria-hidden="true"></span>
         <span>{{ t('stats.crwv') }}</span>
       </a>
       <a class="stat-tile" href="https://github.com/ssurmic/ducky-site/commits/main/public/track-record.json" rel="noopener">
+        <svg class="stat-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 2l6 3v4c0 4-2.7 7-6 9-3.3-2-6-5-6-9V5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 10l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <b>{{ t('stats.notary_big') }}</b>
+        <span class="stat-bar" aria-hidden="true"></span>
         <span>{{ t('stats.notary') }}</span>
       </a>
     </div>

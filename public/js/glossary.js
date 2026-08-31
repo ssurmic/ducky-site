@@ -121,6 +121,13 @@
       });
     });
   }
+  // Source chips (hero) and any [data-glossary-open] trigger open the sheet directly — always wired, even on
+  // pages with no [data-glossary] annotation root. Chips are <button>, so Enter/Space fire click natively.
+  document.addEventListener("click", function (e) {
+    var c = e.target.closest && e.target.closest(".chip-src[data-term], [data-glossary-open]");
+    if (c) { e.preventDefault(); openSheet(c.getAttribute("data-term") || c.getAttribute("data-glossary-open")); }
+  });
+
   window.DuckyGlossary = { open: openSheet, annotate: function (root) { load().then(function (t) { annotate(root, t); }); } };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();
