@@ -918,5 +918,7 @@
   "whydiff.edge3": "只算 open-market 公开市场买入；有些工具把股权奖励、期权行权也算成「内部人在买」，我们不算。每一笔还有 algorithm 打分，真掏钱买的分更高。",
   "track.sort_note": "点表头即可排序（时间 · 推送后至今 · +20d · 评分）；默认按时间倒序。",
   "dm.card_aria": "全景卡",
-  "ex.k_ix": "K指数"
+  "ex.k_ix": "K指数",
+  "app.chart.macd": "MACD",
+  "app.watch.quote_loading": "已加入名单，行情加载中，可点重试"
 }

@@ -76,7 +76,15 @@ export async function mount(root) {
     c.appendChild(head);
     if (!snap) { c.appendChild(spinner()); return c; }
     if (snap.pending) { c.appendChild(spinner(s("common.building"))); return c; }
-    if (snap.error && !snap.ok) { c.appendChild(errorBox(snap.error, () => loadSnapshot(t, true))); return c; }
+    if (snap.error && !snap.ok) {
+      // The ticker IS on the list — the add (POST /watchlist) succeeded, only the separate /snapshot quote fetch
+      // failed. Show a calm "added, quote loading — retry" state, never the red "API offline" box, so the card
+      // can never contradict the green "已添加" toast (owner: "已添加 then 出错了 is a bug").
+      const box = el("div.snap-loading");
+      box.append(el("span.muted.small", s("watch.quote_loading")),
+                 el("button.btn.btn-ghost.btn-sm", { type: "button", onclick: () => loadSnapshot(t, true) }, s("common.retry")));
+      c.appendChild(box); return c;
+    }
     if (!snap.ok) { c.appendChild(el("p.muted", s("watch.no_data"))); return c; }
 
     const te = snap.tech || {}, r20 = (snap.retrace || {}).d20, rs = snap.rs || {}, v = snap.vol || {};

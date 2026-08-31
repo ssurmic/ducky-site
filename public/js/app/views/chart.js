@@ -37,7 +37,7 @@ export async function mount(root, params) {
   const allowed = (p) => PERIOD_BARS[p] <= (PERIOD_BARS[maxPeriod] || PERIOD_BARS["6mo"]);
   // finding chart.js:63 — drawSeq is a per-draw token; candles/rsiSeries are hoisted so a Telegram theme flip
   // can re-apply their colors without a full refetch (finding tg.js:65).
-  let period = allowed("6mo") ? "6mo" : maxPeriod, chart = null, ro = null, ovl = null, alive = true, drawSeq = 0, candles = null, rsiSeries = null;
+  let period = allowed("6mo") ? "6mo" : maxPeriod, chart = null, ro = null, ovl = null, alive = true, drawSeq = 0, candles = null, rsiSeries = null, macdHist = null, macdLineS = null, macdSig = null;
 
   const input = el("input.input.mono", { type: "text", value: ticker, placeholder: s("chart.pick"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "10", "aria-label": s("chart.pick") });
   const form = el("form.add-row", { onsubmit: (e) => { e.preventDefault(); const t = input.value.trim().toUpperCase().replace(/^\$/, ""); if (TICKER_RE.test(t)) location.hash = "#/chart/" + t; } },
@@ -92,6 +92,9 @@ export async function mount(root, params) {
     });
     let levels = []; // overlay prices folded into autoscale so walls outside the candle range stay visible
     candles = chart.addSeries(LWC.CandlestickSeries, { upColor: up, downColor: down, borderUpColor: up, borderDownColor: down, wickUpColor: up, wickDownColor: down,
+      // the live price is the hero: a thick bright horizontal line + its up/down last-value badge, so it reads
+      // clearly above the (now axis-label-free) overlay lines (owner: "最新价格被靠墙 overshadow 了").
+      priceLineVisible: true, priceLineWidth: 2, priceLineColor: cssVar("--text", "#e6edf3"), lastValueVisible: true,
       autoscaleInfoProvider: (orig) => { const r = orig(); if (!r || !r.priceRange || !levels.length) return r; const lo = Math.min(r.priceRange.minValue, ...levels), hi = Math.max(r.priceRange.maxValue, ...levels); return { priceRange: { minValue: lo, maxValue: hi }, margins: r.margins }; } });
     candles.setData(bars);
     // RSI(14) in its own pane
@@ -100,6 +103,18 @@ export async function mount(root, params) {
     rsiSeries.createPriceLine({ price: 70, color: down, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" });
     rsiSeries.createPriceLine({ price: 30, color: up, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" });
     try { const panes = chart.panes(); if (panes[1]) panes[1].setHeight(110); } catch (e) { /* older lib */ }
+    // MACD(12,26,9) in its own pane: histogram (green above / red below) + MACD line + signal, zero line marked.
+    const m = overlays.macd(bars, 12, 26, 9);
+    if (m.macd.length) {
+      macdHist = chart.addSeries(LWC.HistogramSeries, { priceLineVisible: false, lastValueVisible: false, priceFormat: { type: "price", precision: 2, minMove: 0.01 } }, 2);
+      macdHist.setData(m.hist.map((p) => ({ time: p.time, value: p.value, color: p.value >= 0 ? up : down })));
+      macdSig = chart.addSeries(LWC.LineSeries, { color: cssVar("--accent", "#f5c33b"), lineWidth: 1, priceLineVisible: false, lastValueVisible: false }, 2);
+      macdSig.setData(m.signal);
+      macdLineS = chart.addSeries(LWC.LineSeries, { color: cssVar("--blue", "#58a6ff"), lineWidth: 1, priceLineVisible: false, lastValueVisible: true, title: s("chart.macd") }, 2);
+      macdLineS.setData(m.macd);
+      macdLineS.createPriceLine({ price: 0, color: text, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" });
+      try { const panes = chart.panes(); if (panes[2]) panes[2].setHeight(90); } catch (e) { /* older lib */ }
+    }
     chart.timeScale().fitContent();
 
     // Overlays: Pro only. Free/paid see a lock strip instead.
@@ -138,6 +153,9 @@ export async function mount(root, params) {
       chart.applyOptions({ layout: { textColor: text, panes: { separatorColor: grid } }, grid: { vertLines: { color: grid }, horzLines: { color: grid } }, rightPriceScale: { borderColor: grid }, timeScale: { borderColor: grid } });
       if (candles) candles.applyOptions({ upColor: up, downColor: down, borderUpColor: up, borderDownColor: down, wickUpColor: up, wickDownColor: down });
       if (rsiSeries) rsiSeries.applyOptions({ color: cssVar("--blue", "#58a6ff") });
+      if (candles) candles.applyOptions({ priceLineColor: cssVar("--text", "#e6edf3") });
+      if (macdLineS) macdLineS.applyOptions({ color: cssVar("--blue", "#58a6ff") });
+      if (macdSig) macdSig.applyOptions({ color: cssVar("--accent", "#f5c33b") });
     } catch (e) { /* ignore */ }
   }
   window.addEventListener("ducky:themechange", retheme);

@@ -259,3 +259,8 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
   .skel { animation: none; }
   #modal:not([hidden]), .modal-box, .toast { animation: none; transition: none; }
 }
+
+/* watchlist: a freshly-added ticker whose quote is still loading — a calm state, never a red error box
+   (the add already succeeded, so it must not contradict the "已添加" toast). */
+.snap-loading { display: flex; align-items: center; gap: 10px; padding: 6px 2px 2px; flex-wrap: wrap; }
+.snap-loading .muted { color: var(--muted); }

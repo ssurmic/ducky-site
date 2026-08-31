@@ -918,5 +918,7 @@
   "whydiff.edge3": "Only open-market purchases count. Some tools fold equity grants and option exercises into 'insiders buying' — we don't. Every buy is scored by an algorithm, and cash-on-the-table buys score higher.",
   "track.sort_note": "Click a header to sort (time · since push · +20d · strength); default is newest first.",
   "dm.card_aria": "snapshot card",
-  "ex.k_ix": "K-index"
+  "ex.k_ix": "K-index",
+  "app.chart.macd": "MACD",
+  "app.watch.quote_loading": "Added — quote still loading, tap retry"
 }

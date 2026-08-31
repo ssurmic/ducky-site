@@ -8,7 +8,10 @@ const Style = () => (LWC() && LWC().LineStyle) || { Solid: 0, Dotted: 1, Dashed:
 function line(series, price, color, title, style, width) {
   if (price === null || price === undefined || Number.isNaN(Number(price))) return null;
   return series.createPriceLine({
-    price: Number(price), color, lineWidth: width || 1, lineStyle: style, axisLabelVisible: true, title,
+    // axisLabelVisible:false on purpose — the wall/range values live in the top legend, and stacking 8 colored
+    // price tags on the right axis used to bury the ONE tag that matters: the live price (owner: "靠墙把最新价格
+    // overshadow 了"). The line + its on-chart title still show where each level sits.
+    price: Number(price), color, lineWidth: width || 1, lineStyle: style, axisLabelVisible: false, title,
   });
 }
 
@@ -79,4 +82,33 @@ export function rsi(bars, period) {
     out.push({ time: bars[i].time, value: al === 0 ? 100 : 100 - 100 / (1 + ag / al) });
   }
   return out;
+}
+
+/** EMA over a plain number[] (seeded with the first value). */
+export function ema(vals, period) {
+  const k = 2 / (period + 1), out = [];
+  let prev;
+  for (let i = 0; i < vals.length; i++) {
+    prev = i === 0 ? vals[i] : vals[i] * k + prev * (1 - k);
+    out.push(prev);
+  }
+  return out;
+}
+
+/** MACD(12,26,9) from closes → { macd, signal, hist } as [{time, value}] (warmup slice trimmed). */
+export function macd(bars, fast, slow, sig) {
+  fast = fast || 12; slow = slow || 26; sig = sig || 9;
+  if (!bars || bars.length <= slow + sig) return { macd: [], signal: [], hist: [] };
+  const closes = bars.map((b) => b.close);
+  const ef = ema(closes, fast), es = ema(closes, slow);
+  const macdLine = closes.map((_, i) => ef[i] - es[i]);
+  const signal = ema(macdLine, sig);
+  const start = slow;   // drop the EMA warmup so the seed distortion doesn't show
+  const macdOut = [], sigOut = [], histOut = [];
+  for (let i = start; i < bars.length; i++) {
+    macdOut.push({ time: bars[i].time, value: macdLine[i] });
+    sigOut.push({ time: bars[i].time, value: signal[i] });
+    histOut.push({ time: bars[i].time, value: macdLine[i] - signal[i] });
+  }
+  return { macd: macdOut, signal: sigOut, hist: histOut };
 }
