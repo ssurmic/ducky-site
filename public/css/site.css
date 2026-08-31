@@ -811,3 +811,22 @@ button.cr-chip[disabled] { opacity: .55; cursor: default; }
 /* creators view — Pro upsell banner */
 .cr-pro-banner { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 12px 0 16px; padding: 10px 14px; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 12px; background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .cr-pro-badge { font-weight: 700; color: #10130f; background: var(--accent); padding: 2px 9px; border-radius: 999px; font-size: .85em; }
+
+/* 投资日历 (calendar view) */
+.cal-bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 16px; }
+.cal-fchip { padding: 5px 12px; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--muted); cursor: pointer; font-size: .9em; transition: border-color .15s, color .15s, background .15s; }
+.cal-fchip:hover { border-color: var(--accent); color: var(--text); }
+.cal-fchip.on { background: var(--accent); border-color: var(--accent); color: #10130f; font-weight: 600; }
+.cal-mine.on { background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); border-color: var(--accent); }
+.cal-day-h { position: sticky; top: 0; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(6px); padding: 8px 2px 6px; color: var(--muted); font-size: .9em; z-index: 1; border-bottom: 1px solid var(--border); }
+.cal-ev { display: flex; gap: 10px; padding: 10px 4px; border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent); }
+.cal-ico { font-size: 1.1em; line-height: 1.4; }
+.cal-main { flex: 1; min-width: 0; }
+.cal-title { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; color: var(--text); font-weight: 600; }
+.cal-tk { font-size: .82em; padding: 1px 6px; border-radius: 6px; background: color-mix(in srgb, var(--muted) 18%, transparent); color: var(--muted); font-weight: 400; }
+.cal-tk.on { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent); }
+.cal-mine-badge { font-size: .72em; padding: 1px 7px; border-radius: 999px; background: var(--accent); color: #10130f; font-weight: 700; }
+.cal-note { margin-top: 3px; font-size: .88em; line-height: 1.45; }
+.cal-mine-ev { background: color-mix(in srgb, var(--accent) 5%, transparent); border-radius: 8px; }
+.cal-t-earnings .cal-title { color: var(--green, #3fb950); }
+.cal-t-witching .cal-title, .cal-t-opex .cal-title { color: var(--accent); }

@@ -12,6 +12,7 @@ const ROUTES = {
   billing: () => import("./views/billing.js"),
   profile: () => import("./views/profile.js"),
   creators: () => import("./views/creators.js"),
+  calendar: () => import("./views/calendar.js"),
 };
 const PUBLIC = new Set(["login"]);
 let current = null, cleanup = null, seq = 0;
@@ -60,7 +61,7 @@ export async function render() {
     const mb = mod.mainButton();
     if (mb) tg.showMain(mb.text, mb.onClick); else tg.hideMain();
   } else tg.hideMain();
-  if (route.name === "chart" || route.name === "billing" || route.name === "alerts" || route.name === "profile" || route.name === "creators") tg.showBack(() => go("#/watchlist"));
+  if (route.name === "chart" || route.name === "billing" || route.name === "alerts" || route.name === "profile" || route.name === "creators" || route.name === "calendar") tg.showBack(() => go("#/watchlist"));
   else tg.hideBack();
 }
 

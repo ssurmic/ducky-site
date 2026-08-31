@@ -149,6 +149,9 @@ export const kol = {
   sub: (id) => post("/kol/" + encodeURIComponent(id) + "/sub", {}),
   unsub: (id) => del("/kol/" + encodeURIComponent(id) + "/sub"),
 };
+export const calendar = {
+  feed: () => get("/public/calendar.json", { auth: false }),
+};
 export const push = {
   config: () => get("/push/config", { auth: false }),   // {enabled, vapid_public} — public key isn't secret
   subscribe: (subscription) => post("/push/subscribe", { subscription }),
