@@ -143,6 +143,12 @@ export const billing = {
   orders: () => get("/billing/orders"),
   qr: (rail) => getDataUri("/billing/qr/" + encodeURIComponent(rail)),
 };
+export const kol = {
+  feed: () => get("/public/kol-feed.json", { auth: false }),
+  mine: () => get("/me/kols"),
+  sub: (id) => post("/kol/" + encodeURIComponent(id) + "/sub", {}),
+  unsub: (id) => del("/kol/" + encodeURIComponent(id) + "/sub"),
+};
 export const push = {
   config: () => get("/push/config", { auth: false }),   // {enabled, vapid_public} — public key isn't secret
   subscribe: (subscription) => post("/push/subscribe", { subscription }),

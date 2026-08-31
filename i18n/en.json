@@ -959,5 +959,18 @@
   "app.profile.push_unsupported": "This browser doesn’t support web push",
   "app.profile.push_soon": "Web push is coming soon",
   "app.profile.push_denied": "You blocked notifications — re-enable them in your browser settings",
-  "app.profile.push_test": "Send a test push"
+  "app.profile.push_test": "Send a test push",
+  "app.nav.creators": "Creators",
+  "app.creators.h1": "Finance creators",
+  "app.creators.sub": "Follow the creators you like · Ducky watches each new video and sums it up in a line (their view, not advice).",
+  "app.creators.follow": "Follow",
+  "app.creators.following": "Following",
+  "app.creators.grid_h": "Pick your creators",
+  "app.creators.feed_h": "Latest summaries",
+  "app.creators.feed_empty": "No summaries yet — they'll appear here when a creator posts.",
+  "app.creators.orig": "original",
+  "app.creators.take_bull": "bull",
+  "app.creators.take_bear": "bear",
+  "app.creators.take_neutral": "neutral",
+  "app.creators.load_error": "Couldn't load"
 }

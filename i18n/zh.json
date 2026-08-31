@@ -959,5 +959,18 @@
   "app.profile.push_unsupported": "这个浏览器不支持网页推送",
   "app.profile.push_soon": "网页推送即将上线",
   "app.profile.push_denied": "你拒绝了通知权限，可在浏览器设置里改回",
-  "app.profile.push_test": "发条测试推送"
+  "app.profile.push_test": "发条测试推送",
+  "app.nav.creators": "博主",
+  "app.creators.h1": "财经博主",
+  "app.creators.sub": "关注你喜欢的博主 · Ducky 替你看完新视频、一句话总结（博主观点，不构成建议）。",
+  "app.creators.follow": "关注",
+  "app.creators.following": "已关注",
+  "app.creators.grid_h": "挑你的博主",
+  "app.creators.feed_h": "最近总结",
+  "app.creators.feed_empty": "还没有新总结——博主更新后会出现在这里。",
+  "app.creators.orig": "原视频",
+  "app.creators.take_bull": "看多",
+  "app.creators.take_bear": "看空",
+  "app.creators.take_neutral": "中性",
+  "app.creators.load_error": "加载失败"
 }

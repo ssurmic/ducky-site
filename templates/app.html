@@ -11,6 +11,8 @@
   "nav.chart",
   "nav.billing",
   "nav.profile",
+  "nav.creators",
+  "creators.h1", "creators.sub", "creators.follow", "creators.following", "creators.grid_h", "creators.feed_h", "creators.feed_empty", "creators.orig", "creators.take_bull", "creators.take_bear", "creators.take_neutral", "creators.load_error",
   "nav.home",
   "nav.lang",
   "noscript",
@@ -265,6 +267,7 @@
     <a href="#/alerts" data-route="alerts"><span class="ico" aria-hidden="true">🔔</span><span>{{ t('app.nav.alerts') }}</span></a>
     <a href="#/chart" data-route="chart"><span class="ico" aria-hidden="true">📈</span><span>{{ t('app.nav.chart') }}</span></a>
     <a href="#/billing" data-route="billing"><span class="ico" aria-hidden="true">⭐</span><span>{{ t('app.nav.billing') }}</span></a>
+    <a href="#/creators" data-route="creators"><span class="ico" aria-hidden="true">🎙️</span><span>{{ t('app.nav.creators') }}</span></a>
     {# finding app.html:256 — profile tab anchor was fused onto the billing anchor and duplicated the ⭐ icon +
        billing label before the profile text (rendering a garbled 5th tab). Repaired into its own anchor. #}
     <a href="#/profile" data-route="profile"><span class="ico" aria-hidden="true">👤</span><span>{{ t('app.nav.profile') }}</span></a>
