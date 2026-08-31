@@ -59,6 +59,14 @@ function prefetchSnapshots(tickers) {
 }
 
 export function logout() {
+  // Best-effort SERVER-SIDE revocation: bump users.session_epoch so a token copied before this
+  // logout dies NOW, not at its 24h expiry. Direct keepalive fetch with the still-present token
+  // (bypasses the api wrapper's 401→logout handler to avoid recursion); never blocks the UI.
+  try {
+    const tok = loadToken();
+    if (tok) fetch(api.base() + "/auth/logout", { method: "POST", keepalive: true,
+      headers: { Authorization: "Bearer " + tok } }).catch(() => {});
+  } catch (e) { /* ignore */ }
   store.bumpEpoch();   // finding watchlist.js:123 — invalidate in-flight fetches before wiping the store
   clearToken();
   store.set("token", null);
