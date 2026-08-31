@@ -60,14 +60,17 @@ body.page-app { overflow: hidden; overscroll-behavior: none; font-size: 15px; }
 .app-foot { max-width: 760px; margin: 28px auto 0; color: var(--faint); font-size: var(--fs-xs); text-align: center; }
 /* finding app.html:256 — 5 tabs (watchlist/alerts/chart/billing/profile) were in a 4-col grid and wrapped
    to a second row; the bar is 5 equal columns. */
-.app-nav { flex: 0 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); background: var(--surface); border-top: 1px solid var(--border); padding-bottom: var(--safe-bottom); }
-.app-nav a { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 7px 4px 6px; font-size: var(--fs-2xs); color: var(--muted); text-decoration: none; -webkit-tap-highlight-color: transparent; }
+/* count-agnostic: all tabs share one row regardless of how many (was hardcoded repeat(5) → 7 tabs wrapped
+   to a 2nd row that pushed off-screen in portrait, hiding the navbar). */
+.app-nav { flex: 0 0 auto; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--surface); border-top: 1px solid var(--border); padding-bottom: var(--safe-bottom); }
+.app-nav a { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 7px 2px 6px; font-size: var(--fs-2xs); color: var(--muted); text-decoration: none; -webkit-tap-highlight-color: transparent; min-width: 0; overflow: hidden; }
+.app-nav a span:not(.ico) { white-space: nowrap; }
 .app-nav a .ico { font-size: var(--fs-lg); line-height: 1.2; filter: grayscale(1); opacity: .75; }
 .app-nav a.on { color: var(--accent); font-weight: 700; }
 .app-nav a.on .ico { filter: none; opacity: 1; }
 body[data-route="login"] .app-nav { display: none; }
 @media (min-width: 800px) {
-  .app-nav { order: -1; grid-template-columns: repeat(5, max-content); justify-content: center; gap: 8px; border-top: 0; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+  .app-nav { order: -1; grid-auto-flow: column; grid-auto-columns: max-content; justify-content: center; gap: 8px; border-top: 0; border-bottom: 1px solid var(--border); padding-bottom: 0; }
   .app-top { order: -2; }
   .app-nav a { flex-direction: row; gap: 6px; padding: 8px 14px; font-size: var(--fs-base); }
   .app-nav a .ico { font-size: var(--fs-md); }

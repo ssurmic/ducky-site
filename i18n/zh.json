@@ -943,7 +943,7 @@
   "creators.lead": "10 个 YouTube 财经博主、几个小时的视频——Ducky 每条都看完，一句话告诉你他们说了啥、点了哪些票、看多还是看空。只做记录，不构成建议。",
   "creators.grid_h": "我们盯着的博主",
   "creators.feed_h": "最近说了啥",
-  "creators.cta": "在 App 里挑你的博主 →",
+  "creators.cta": "登录并挑你的博主 →",
   "creators.disclaimer": "以上为博主公开观点的摘要，已注明出处、附原视频链接；是记录，不是投资建议，也不代表 Ducky 的看法。",
   "creators.soon": "正在接入更多博主，摘要陆续上线中。",
   "creators.take_bull": "看多",
@@ -997,5 +997,8 @@
   "app.calendar.t_earnings": "财报",
   "app.calendar.t_opex": "期权交割",
   "app.calendar.t_witching": "四巫日",
-  "app.calendar.t_rebal": "调仓"
+  "app.calendar.t_rebal": "调仓",
+  "app.calendar.day_empty": "这天没有重点事件",
+  "app.calendar.jump_today": "回到今天",
+  "app.calendar.more": "+{n}"
 }

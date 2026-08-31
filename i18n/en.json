@@ -943,7 +943,7 @@
   "creators.lead": "Ten finance YouTubers, hours of video. Ducky watches every one and tells you in a line what they said, which tickers they named, and whether they leaned bull or bear. A record, not advice.",
   "creators.grid_h": "Creators we watch",
   "creators.feed_h": "What they just said",
-  "creators.cta": "Pick your creators in the app →",
+  "creators.cta": "Sign in & pick your creators →",
   "creators.disclaimer": "These are summaries of the creators' public views — attributed, with a link to the original. A record, not investment advice, and not Ducky's own view.",
   "creators.soon": "Onboarding more creators — summaries are rolling in.",
   "creators.take_bull": "bull",
@@ -997,5 +997,8 @@
   "app.calendar.t_earnings": "Earnings",
   "app.calendar.t_opex": "OPEX",
   "app.calendar.t_witching": "Quad witching",
-  "app.calendar.t_rebal": "Rebalance"
+  "app.calendar.t_rebal": "Rebalance",
+  "app.calendar.day_empty": "No major events this day",
+  "app.calendar.jump_today": "Today",
+  "app.calendar.more": "+{n}"
 }
