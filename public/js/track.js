@@ -23,6 +23,23 @@
     if (x < 0) td.classList.add("neg"); else if (x > 0) td.classList.add("pos");   // classList.add("") throws
     return td;
   }
+  // 推送后至今 / since push — same coloring as the fixed-horizon returns, "—" (not "pending") when the
+  // exporter has no rnow yet, and the as-of date (rnow_d) surfaced as the cell title.
+  function rnowCell(r) {
+    var td = el("td", "num rnow-cell"), x = r && r.rnow;
+    if (!isNum(x)) { td.appendChild(el("span", "pending", "—")); return td; }
+    td.textContent = pct(x);
+    if (x < 0) td.classList.add("neg"); else if (x > 0) td.classList.add("pos");
+    if (r.rnow_d) td.title = (L.rnow_asof || "as of") + " " + r.rnow_d;
+    return td;
+  }
+  // 评分 / strength — the signal's own conviction, shown 0–100 (strength is stored 0–1). "—" when absent.
+  function scoreCell(x) {
+    var td = el("td", "num");
+    if (!isNum(x)) { td.appendChild(el("span", "pending", "—")); return td; }
+    td.textContent = String(Math.round(x * 100));
+    return td;
+  }
   function badge(mode) {
     var live = mode === "LIVE";
     return el("span", "badge " + (live ? "badge-live" : "badge-backtest") + " badge-inline", live ? (L.live || "LIVE") : (L.backtest || "BACKTEST"));
@@ -30,8 +47,59 @@
   function tsShort(ts) { var m = /^(\d{4}-\d\d-\d\d)T(\d\d:\d\d)/.exec(String(ts || "")); return m ? m[1] + " " + m[2] : String(ts || "").replace("T", " "); }
   function dirLabel(d) { return d > 0 ? L.dir_up : d < 0 ? L.dir_down : L.dir_flat; }
 
-  // ---- state + filters ----
+  // ---- state + filters + sort ----
   var data = null, filter = { kind: "*", mode: "*", ticker: "" };
+  // Default sort is the honest chronological one: newest signal first (ts descending).
+  var sortState = { key: "ts", dir: -1 };   // dir: 1 = ascending, -1 = descending
+  var COLTYPE = {
+    kind: "str", ticker: "str", ts: "ts", r1: "num", r5: "num", r20: "num",
+    rnow: "num", strength: "num", mode: "str", summary: "str"
+  };
+  // Ties (and rows the sort key can't order — nulls/blanks) fall back to newest-first, so a sort never
+  // scrambles the chronological baseline and pending rows sink to the bottom instead of floating up.
+  function tieBreak(a, b) { return a.ts < b.ts ? 1 : a.ts > b.ts ? -1 : 0; }
+  function rowCmp(a, b) {
+    var k = sortState.key, t = COLTYPE[k] || "str", d = sortState.dir, av = a[k], bv = b[k];
+    if (t === "num") {
+      var an = isNum(av), bn = isNum(bv);
+      if (!an && !bn) return tieBreak(a, b);
+      if (!an) return 1; if (!bn) return -1;          // non-numbers always last
+      if (av !== bv) return (av < bv ? -1 : 1) * d;
+      return tieBreak(a, b);
+    }
+    var as = av == null ? "" : String(av), bs = bv == null ? "" : String(bv);
+    if (as === bs) return tieBreak(a, b);
+    if (as === "") return 1; if (bs === "") return -1;   // blanks always last
+    if (t === "ts") return (as < bs ? -1 : 1) * d;
+    return as.localeCompare(bs) * d;
+  }
+  function toggleSort(key) {
+    if (sortState.key === key) sortState.dir = -sortState.dir;
+    else { sortState.key = key; sortState.dir = (COLTYPE[key] === "str") ? 1 : -1; }   // numbers/dates: high→low first
+    renderRows(); updateSortIndicators();
+  }
+  function sortHeaders() {
+    var tbl = $("ledger");
+    return tbl && tbl.tHead ? tbl.tHead.querySelectorAll("th[data-key]") : [];
+  }
+  function wireSort() {
+    Array.prototype.forEach.call(sortHeaders(), function (th) {
+      var btn = th.querySelector(".th-sort");
+      if (!btn || btn.getAttribute("data-wired")) return;   // <button> is natively keyboard-operable
+      btn.setAttribute("data-wired", "1");
+      btn.addEventListener("click", function () { toggleSort(th.getAttribute("data-key")); });
+    });
+    updateSortIndicators();
+  }
+  function updateSortIndicators() {
+    Array.prototype.forEach.call(sortHeaders(), function (th) {
+      var active = th.getAttribute("data-key") === sortState.key, ind = th.querySelector(".sort-ind");
+      th.setAttribute("aria-sort", active ? (sortState.dir > 0 ? "ascending" : "descending") : "none");
+      if (!ind) return;
+      if (active) { ind.textContent = sortState.dir > 0 ? "▲" : "▼"; ind.classList.remove("dim"); }
+      else { ind.textContent = "⇅"; ind.classList.add("dim"); }
+    });
+  }
 
   function chipGroup(containerId, key, values) {
     var box = $(containerId);
@@ -58,14 +126,14 @@
   function renderRows() {
     var tbody = tbodyOf("ledger"); if (!tbody) return;
     tbody.innerHTML = "";
-    var rows = (data.rows || []).filter(function (r) { return HIDE_KINDS.indexOf(r.kind) < 0; }).slice().sort(function (a, b) { return a.ts < b.ts ? 1 : a.ts > b.ts ? -1 : 0; });
+    var rows = (data.rows || []).filter(function (r) { return HIDE_KINDS.indexOf(r.kind) < 0; }).slice().sort(rowCmp);
     var tk = filter.ticker.trim().toUpperCase();
     var shown = rows.filter(function (r) {
       return (filter.kind === "*" || r.kind === filter.kind) && (filter.mode === "*" || r.mode === filter.mode) &&
         (!tk || String(r.ticker || "").toUpperCase().indexOf(tk) === 0);
     });
     if (!shown.length) {
-      var tr0 = el("tr"); var td0 = el("td", "empty", L.empty || "No rows match."); td0.colSpan = 8; tr0.appendChild(td0); tbody.appendChild(tr0);
+      var tr0 = el("tr"); var td0 = el("td", "empty", L.empty || "No rows match."); td0.colSpan = 10; tr0.appendChild(td0); tbody.appendChild(tr0);
     }
     shown.forEach(function (r) {
       var tr = el("tr");
@@ -74,6 +142,7 @@
       var tdt = el("td"); tdt.appendChild(el("span", "tk", r.ticker || "—")); tr.appendChild(tdt);
       var tdts = el("td", "mono", tsShort(r.ts)); tdts.title = r.ts || ""; tr.appendChild(tdts);
       tr.appendChild(retCell(r.r1)); tr.appendChild(retCell(r.r5)); tr.appendChild(retCell(r.r20));
+      tr.appendChild(rnowCell(r)); tr.appendChild(scoreCell(r.strength));
       var tdm = el("td"); tdm.appendChild(badge(r.mode)); tr.appendChild(tdm);
       var tds = el("td", "summary");
       var dir = dirLabel(r.direction);
@@ -199,6 +268,7 @@
     kinds.sort(); modes.sort(function (a, b) { return a === "LIVE" ? -1 : b === "LIVE" ? 1 : 0; });
     chipGroup("filter-kind", "kind", kinds);
     chipGroup("filter-mode", "mode", modes);
+    wireSort();
     renderRows(); renderRates(); renderBacktest();
     try { renderEquity(); } catch (e) {   // a chart-library failure must never blank the ledger
       var box = $("equity"); var eq = data.equity || [];

@@ -39,6 +39,47 @@
       </li>
     </ul>
 
+    {# Competitive edge (owner brief): three places we go harder than a mechanical feed — speed, deeper 13F,
+       real-money-only insider buys. §5.1: no competitor names — the contrast is framed as "有些工具". #}
+    <div class="whydiff-edge">
+      <p class="whydiff-edge-eyebrow mono">{{ t('whydiff.edge_eyebrow') }}</p>
+      <ul class="whydiff-list whydiff-edge-list">
+        <li class="whydiff-row">
+          <span class="whydiff-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="M13 2 5 13h5l-1 9 8-12h-5z"/>
+            </svg>
+          </span>
+          <div class="whydiff-txt">
+            <b>{{ t('whydiff.edge1_t') }}</b>
+            <span>{{ t('whydiff.edge1') }}</span>
+          </div>
+        </li>
+        <li class="whydiff-row">
+          <span class="whydiff-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="M12 3 3 8l9 5 9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 16l9 5 9-5"/>
+            </svg>
+          </span>
+          <div class="whydiff-txt">
+            <b>{{ t('whydiff.edge2_t') }}</b>
+            <span>{{ t('whydiff.edge2') }}</span>
+          </div>
+        </li>
+        <li class="whydiff-row">
+          <span class="whydiff-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <circle cx="12" cy="12" r="8.5"/><path d="M12 7.2v9.6M14.4 9.1c-.5-.7-1.4-1.1-2.4-1.1-1.4 0-2.3.7-2.3 1.7 0 1 .8 1.5 2.4 1.8 1.6.3 2.5.9 2.5 1.9 0 1-.9 1.7-2.4 1.7-1.1 0-2-.4-2.5-1.2"/>
+            </svg>
+          </span>
+          <div class="whydiff-txt">
+            <b>{{ t('whydiff.edge3_t') }}</b>
+            <span>{{ t('whydiff.edge3') }}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
     {# Weekly-outlook highlight (owner brief §2): 前瞻 · 周报 · 大盘总结 as a first-class benefit strip. #}
     <div class="wo-strip" role="group" aria-label="{{ t('whydiff.wo_aria') }}">
       <p class="wo-lead mono">{{ t('whydiff.wo_lead') }}</p>

@@ -15,6 +15,7 @@
     "fixture": t('data.fixture_badge'), "pending": t('data.pending'), "generated": t('data.generated'),
     "all": t('track.filter_all'), "rows_shown": t('track.rows_shown'), "empty": t('track.empty'),
     "n_label": t('data.n_label'), "live": t('label.live'), "backtest": t('label.backtest'),
+    "rnow_asof": t('track.rnow_asof'), "sort_hint": t('track.sort_hint'),
     "equity_nochart": t('track.equity_nochart'), "backtest_line": t('track.backtest_line'),
     "backtest_win": t('track.backtest_win'), "backtest_avg": t('track.backtest_avg'),
     "dir_up": t('data.direction_up'), "dir_down": t('data.direction_down'), "dir_flat": t('data.direction_flat')
@@ -40,14 +41,19 @@
       </div>
       <span class="rows-shown" id="rows-shown"></span>
     </div>
+    <p class="caption">{{ t('track.sort_note') }}</p>
     <div class="table-wrap">
-      <table class="data" id="ledger">
+      <table class="data data-sortable" id="ledger">
+        {% macro th(key, type, label, num=False) -%}
+        <th class="th-s{{ ' num' if num else '' }}" data-key="{{ key }}" data-type="{{ type }}" aria-sort="none"><button type="button" class="th-sort" title="{{ t('track.sort_hint') }}">{{ label }}<span class="sort-ind dim" aria-hidden="true">⇅</span></button></th>
+        {%- endmacro %}
         <thead><tr>
-          <th>{{ t('track.col_kind') }}</th><th>{{ t('track.col_ticker') }}</th><th>{{ t('track.col_ts') }}</th>
-          <th class="num">{{ t('track.col_r1') }}</th><th class="num">{{ t('track.col_r5') }}</th><th class="num">{{ t('track.col_r20') }}</th>
-          <th>{{ t('track.col_mode') }}</th><th>{{ t('track.col_summary') }}</th>
+          {{ th('kind', 'str', t('track.col_kind')) }}{{ th('ticker', 'str', t('track.col_ticker')) }}{{ th('ts', 'ts', t('track.col_ts')) }}
+          {{ th('r1', 'num', t('track.col_r1'), num=True) }}{{ th('r5', 'num', t('track.col_r5'), num=True) }}{{ th('r20', 'num', t('track.col_r20'), num=True) }}
+          {{ th('rnow', 'num', t('track.col_rnow'), num=True) }}{{ th('strength', 'num', t('track.col_strength'), num=True) }}
+          {{ th('mode', 'str', t('track.col_mode')) }}{{ th('summary', 'str', t('track.col_summary')) }}
         </tr></thead>
-        <tbody><tr><td class="empty" colspan="8">{{ t('data.loading') }}</td></tr></tbody>
+        <tbody><tr><td class="empty" colspan="10">{{ t('data.loading') }}</td></tr></tbody>
       </table>
     </div>
 

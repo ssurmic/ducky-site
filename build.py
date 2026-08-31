@@ -252,6 +252,35 @@ def load_track_stats() -> dict:
                 f"{round(pad + (h - 2 * pad) * (1 - (p_[key] - lo) / span), 1)}"
                 for i, p_ in enumerate(eq))
 
+        # §5.2/§5.3 landing receipts: the strongest "推送后至今 / since push" number is a REAL figure from
+        # the notary (rows[].rnow, as of rows[].rnow_d) — never invented. `top_kindex` = the single best K-index
+        # dip-buy rnow (the SMH capitulation receipt the landing showcases, honestly BACKTEST-labeled); `rnow_by`
+        # maps "<TICKER>@<signal-date>" → the same figure so the curated example cards render their own rnow.
+        def _rnpct(v: float) -> str:
+            return f"{v:+.1f}%"
+
+        rnow_by: dict[str, dict] = {}
+        for r in rows:
+            if not isinstance(r, dict):
+                continue
+            rn = r.get("rnow")
+            if not isinstance(rn, (int, float)):
+                continue
+            key = f"{r.get('ticker')}@{str(r.get('ts') or '')[:10]}"
+            rnow_by[key] = {"rnow": round(rn, 1), "rnow_pct": _rnpct(rn), "rnow_d": r.get("rnow_d") or ""}
+
+        kx = [r for r in rows if isinstance(r, dict) and r.get("kind") == "kindex"
+              and isinstance(r.get("rnow"), (int, float))]
+        top_kindex = None
+        if kx:
+            b = max(kx, key=lambda r: r["rnow"])
+            top_kindex = {
+                "ticker": b.get("ticker") or "—",
+                "date": str(b.get("ts") or "")[:10],
+                "rnow": round(b["rnow"], 1), "rnow_pct": _rnpct(b["rnow"]),
+                "rnow_d": b.get("rnow_d") or "", "mode": b.get("mode") or "BACKTEST",
+            }
+
         # §5.3.5 slide 4 (market weather): real regime read from regimes_today, resolved to a fixed
         # weather token here so the template's t() lookup can never miss a key (build-fatal otherwise).
         rt = doc.get("regimes_today") or {}
@@ -269,6 +298,7 @@ def load_track_stats() -> dict:
             }
         return {
             "ok": True, "total": total, "live": live, "regime": regime,
+            "top_kindex": top_kindex, "rnow_by": rnow_by,
             "hit20": int(round(best["hit20"])), "hit20_n": int(best["n_hit20"]), "hit20_kind": best["kind"],
             "eq": {"w": w, "h": h, "nav": pts("v"), "spy": pts("spy"),
                     "first": eq[0]["d"], "last": eq[-1]["d"],

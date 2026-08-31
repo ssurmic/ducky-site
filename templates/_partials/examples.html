@@ -8,6 +8,13 @@
     <button type="button" class="copy" data-caption="{{ caption }}" data-copied="{{ t('label.copied') }}">{{ t('label.copy_caption') }}</button>
   </div>
 {% endmacro %}
+{# 推送后至今 / since push — the REAL rnow of a specific pushed signal, keyed "<TICKER>@<signal-date>", pulled
+   from the notary at build time (build.py load_track_stats.rnow_by). Renders nothing when the ledger has no
+   rnow for that signal, and colors honestly (green up / red down) — never dressed up. #}
+{% macro rnow_line(sig_key) -%}
+  {%- set rn = track_stats.rnow_by.get(sig_key) if track_stats.ok and track_stats.rnow_by else None -%}
+  {%- if rn -%}<p class="ex-after-rnow mono {{ 'pos' if rn.rnow >= 0 else 'neg' }}">{{ t('ex.rnow_since') }} {{ rn.rnow_pct }}<small>{{ tf('ex.rnow_asof', d=rn.rnow_d) }}</small></p>{%- endif -%}
+{%- endmacro %}
 <section id="examples" class="section examples">
   <div class="wrap">
     <h2>{{ t('ex.h2') }}</h2>
@@ -102,6 +109,7 @@
           <div class="ex-after">
             <span class="badge badge-live badge-inline">LIVE</span>
             <p class="ex-after-num pos mono">+8.4%<small>{{ t('ex.pushday') }}</small></p>
+            {{ rnow_line('TTMI@2026-08-26') }}
             <p class="ex-after-txt">{{ t('ex.insider_after') }}</p>
             <p class="ex-after-txt muted">{{ t('ex.insider_sgi') }}</p>
           </div>
@@ -125,6 +133,7 @@
           <div class="ex-after">
             <span class="badge badge-live badge-inline">LIVE</span>
             <p class="ex-after-num pos mono">+5.9%<small>+20 {{ t('ex.tdays') }}</small></p>
+            {{ rnow_line('TSM@2026-07-30') }}
             <p class="ex-after-txt">{{ t('ex.cluster_after') }}</p>
             <p class="ex-after-txt muted">{{ t('ex.cluster_loser') }}</p>
           </div>
@@ -147,6 +156,7 @@
           <div class="ex-after">
             <span class="badge badge-live badge-inline">LIVE</span>
             <p class="ex-after-num neg mono">−4.6%<small>{{ t('ex.next_day') }}</small></p>
+            {{ rnow_line('NVDA@2026-08-27') }}
             <p class="ex-after-txt">{{ t('ex.earn_after') }}</p>
             <p class="ex-after-txt muted">{{ t('ex.earn_mrvl') }}</p>
           </div>
@@ -221,6 +231,18 @@
         </div>
         <div class="ex-more">
           <p class="ex-more-title">{{ t('ex.more') }}</p>
+          {# Strongest REAL 推送后至今 winner — the SMH K-index capitulation dip-buy. Number is build-time from
+             the notary (track_stats.top_kindex.rnow_pct), honestly BACKTEST-labeled, single-event. #}
+          {% if track_stats.ok and track_stats.top_kindex %}{% set tkx = track_stats.top_kindex %}
+          <article class="receipt receipt-kindex receipt-win" data-kind="kindex">
+            <span class="badge badge-backtest">{{ t('label.backtest') }}</span>
+            <h4>{{ t('ex.k_cap_title') }}</h4>
+            <p class="receipt-meta mono">{{ tf('ex.k_cap_meta', tk=tkx.ticker, d=tkx.date) }}</p>
+            <p class="receipt-ret {{ 'pos' if tkx.rnow >= 0 else 'neg' }} mono">{{ tkx.rnow_pct }} <small>{{ tf('ex.k_cap_ret_label', asof=tkx.rnow_d) }}</small></p>
+            <p class="receipt-body">{{ tf('ex.k_cap_body', tk=tkx.ticker, d=tkx.date, asof=tkx.rnow_d) }}</p>
+            <p class="receipt-foot">{{ t('ex.k_cap_foot') }}</p>
+          </article>
+          {% endif %}
           <article class="receipt receipt-kindex" data-kind="kindex">
             <span class="badge badge-backtest">{{ t('label.backtest') }}</span>
             <h4>{{ t('proof.c1_title') }}</h4>
