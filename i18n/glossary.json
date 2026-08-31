@@ -1148,7 +1148,7 @@
       "example": "A CEO putting in roughly three years of salary, a net-cash company, price near the 52-week low → 8.5; a director buying $210k in a richly valued company near its 52-week high → 3.",
       "long": "Every insider / strategic-partner signal gets a 0–10 score from dimensions such as: purchase size relative to the buyer's wealth and the company's market cap, the buyer's role (CEO / CFO weigh more than an ordinary director), whether it is part of a cluster, valuation and net-cash position, and where price sits in its 52-week range. A higher score means the purchase is more unusual along those dimensions. It exists to rank dozens of daily filings and to group them for after-the-fact statistics (hit rate of high-score vs low-score groups); it is not a rating of the company and not a suggestion to act.",
       "name": "Smart Money Score",
-      "short": "A 0–10 composite ranking score built from trade size, the buyer's role, company fundamentals and price location; used to order pushes, not a rating."
+      "short": "A 0–10 composite ranking score built from trade size, the buyer's role, the company's fundamentals and where the stock trades in its range; used to order pushes, not a rating."
     },
     "group": "filings",
     "see_also": [
