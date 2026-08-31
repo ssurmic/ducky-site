@@ -932,5 +932,7 @@
   "ex.insider_hood_read": "🦆 “While the CEO and several execs were selling, fintech veteran Micky Malka (Ribbit Capital founder) bought ~$20M through his fund at ~$80.39, then added ~$15M on June 3 — smart money leaning in against the tape.”",
   "ex.insider_hood_after": "Up ~26% since the buy ($80.39 → ~$101 as of 8/31). Execs selling, this director buying — the disagreement is itself the signal. Winners and losers both logged; not advice.",
   "ex.since_lbl": "since the buy",
-  "ex.peak_lbl": "peak"
+  "ex.peak_lbl": "peak",
+  "track.ih_h": "📌 Insider conviction · SEC-verified",
+  "track.ih_lead": "Real open-market insider buys we caught. The return is measured from the insider’s own buy price (not our push price), as of 2026-08-31 — tap through to the original SEC Form 4. The ledger’s “since push” below is measured from our push-day price instead; two different baselines."
 }

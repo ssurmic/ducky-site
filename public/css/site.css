@@ -768,3 +768,15 @@ abbr.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px;
 .insider-note { margin: 4px 0 14px; border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; background: color-mix(in srgb, var(--accent) 5%, transparent); }
 .insider-note > summary { cursor: pointer; font-weight: 600; color: var(--text); }
 .insider-note > p { margin: 8px 0 2px; line-height: 1.55; }
+
+/* track-record: SEC-verified insider-conviction highlights band (distinct from the auto-ledger below) */
+.insider-highlights { margin: 8px 0 22px; }
+.ih-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-top: 10px; }
+.ih-card { display: flex; flex-direction: column; gap: 5px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: color-mix(in srgb, var(--green, #3fb950) 6%, transparent); text-decoration: none; color: var(--text); transition: border-color .15s, transform .15s; }
+.ih-card:hover { border-color: var(--green, #3fb950); transform: translateY(-1px); text-decoration: none; }
+.ih-top { display: flex; align-items: baseline; justify-content: space-between; }
+.ih-tk { font-size: var(--fs-lg); letter-spacing: .02em; }
+.ih-ret { font-size: var(--fs-lg); font-variant-numeric: tabular-nums; }
+.ih-ret.pos { color: var(--green, #3fb950); }
+.ih-who { color: var(--text); font-size: 0.9em; }
+.ih-buy { color: var(--muted); font-size: 0.82em; }

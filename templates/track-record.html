@@ -31,6 +31,28 @@
     <div class="banner banner-stale" id="track-stale" role="status" hidden></div>
     <div class="banner banner-error" id="track-error" role="alert" hidden></div>
 
+    <section class="insider-highlights" aria-label="{{ t('track.ih_h') }}">
+      <h2 class="mono-h2">{{ t('track.ih_h') }}</h2>
+      <p class="caption">{{ t('track.ih_lead') }}</p>
+      <div class="ih-grid">
+        <a class="ih-card" href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=HOOD&amp;type=4&amp;owner=include&amp;count=40" rel="noopener">
+          <span class="ih-top"><b class="ih-tk">$HOOD</b><b class="ih-ret pos">+26%</b></span>
+          <span class="ih-who">Micky Malka · Ribbit Capital · Director</span>
+          <span class="ih-buy mono">$20M @ $80.39 · 2026-05-28 · Form 4 ›</span>
+        </a>
+        <a class="ih-card" href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=TTMI&amp;type=4&amp;owner=include&amp;count=40" rel="noopener">
+          <span class="ih-top"><b class="ih-tk">$TTMI</b><b class="ih-ret pos">+6%</b></span>
+          <span class="ih-who">Edwin Roks · President &amp; CEO</span>
+          <span class="ih-buy mono">$1.12M @ $111.77 · 2026-08-25 · Form 4 ›</span>
+        </a>
+        <a class="ih-card" href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=SMMT&amp;type=4&amp;owner=include&amp;count=40" rel="noopener">
+          <span class="ih-top"><b class="ih-tk">$SMMT</b><b class="ih-ret pos">+3%</b></span>
+          <span class="ih-who">Robert Duggan · Director, Co-CEO</span>
+          <span class="ih-buy mono">$50M @ $13.12 · 2026-06-12 · Form 4 ›</span>
+        </a>
+      </div>
+    </section>
+
     <h2 class="mono-h2">{{ t('track.ledger_h2') }}</h2>
     <div class="filters" id="track-filters">
       <div class="filter-group" id="filter-kind"><span class="filter-label">{{ t('track.filter_kind') }}</span></div>
@@ -42,7 +64,7 @@
       <span class="rows-shown" id="rows-shown"></span>
     </div>
     <p class="caption">{{ t('track.sort_note') }}</p>
-    <details class="insider-note" data-glossary>
+    <details class="insider-note" data-glossary hidden>
       <summary>{{ t('boards.2.name') }} — {{ t('track.col_summary') }}</summary>
       <p class="muted">{{ t('track.insider_note') }}</p>
     </details>

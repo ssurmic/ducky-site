@@ -125,6 +125,10 @@
 
   function renderRows() {
     var tbody = tbodyOf("ledger"); if (!tbody) return;
+    // The "how to read insider signals" note only makes sense over insider rows — hide it under any other
+    // filter so it never looks like it's labelling e.g. a kindex/SMH row (SMH is an ETF, it has no insider).
+    var note = document.querySelector(".insider-note");
+    if (note) { note.hidden = (filter.kind !== "insider"); if (filter.kind === "insider") note.open = true; }
     tbody.innerHTML = "";
     var rows = (data.rows || []).filter(function (r) { return HIDE_KINDS.indexOf(r.kind) < 0; }).slice().sort(rowCmp);
     var tk = filter.ticker.trim().toUpperCase();
