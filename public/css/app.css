@@ -383,6 +383,7 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 @media (max-width: 640px) { .brd-grid, .brd-wide .brd-list { grid-template-columns: 1fr; } .brd-wide .brd-list > .brd-item:nth-child(2) { border-top: 1px solid color-mix(in srgb, var(--border) 55%, transparent); } }
 
 /* Week Ahead strip inside Radar (boards.js weekAheadCard) — scroll-snap day cards + ‹ › nav */
+.wa-card { width: 100%; }
 .wa-card .brd-head { align-items: center; }
 .wa-navs { margin-left: auto; display: inline-flex; gap: 6px; flex: 0 0 auto; }
 .wa-nav { width: 32px; height: 32px; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 8px; cursor: pointer; font-size: 16px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; transition: background .15s, border-color .15s, opacity .15s; }
