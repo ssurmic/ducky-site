@@ -101,7 +101,7 @@ export async function boot() {
   const token = loadToken();
   if (token) {
     store.set("token", token);
-    try { await hydrate(); return true; } catch (e) { clearToken(); store.set("token", null); }
+    try { await hydrate(); return true; } catch (e) { if (e && e.status === 401) { clearToken(); store.set("token", null); } /* transient (network/5xx) → keep the valid token */ }
   }
   return false;
 }

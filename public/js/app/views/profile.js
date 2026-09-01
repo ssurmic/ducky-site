@@ -12,7 +12,7 @@ export async function mount(root) {
   root.appendChild(card);
   card.appendChild(spinner());
   let prof = null;
-  try { prof = await api.profile.get(); } catch (e) { clear(card); card.appendChild(errorBox(e, () => mount(root))); return; }
+  try { prof = await api.profile.get(); } catch (e) { clear(card); card.appendChild(errorBox(e, () => { clear(root); mount(root); })); return; }
   render();
 
   function render() {

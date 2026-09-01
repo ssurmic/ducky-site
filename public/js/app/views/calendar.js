@@ -46,9 +46,11 @@ export async function mount(root) {
   for (const e of events) { if (!byDate.has(e.date)) byDate.set(e.date, []); byDate.get(e.date).push(e); }
 
   const todayIso = ymd(new Date());
-  const first = events.length ? new Date(events[0].date + "T00:00:00") : new Date(todayIso + "T00:00:00");
-  let viewY = first.getFullYear(), viewM = first.getMonth();  // month being shown
-  let selected = byDate.has(todayIso) ? todayIso : (events[0] && events[0].date) || todayIso;
+  // default the selected day to today (even if it has no events), and open the grid on today's month —
+  // NOT events[0], which is a backfilled prior-month event and would open last month on the 1st–5th.
+  let selected = byDate.has(todayIso) ? todayIso : todayIso;
+  const anchor = new Date((selected || todayIso) + "T00:00:00");
+  let viewY = anchor.getFullYear(), viewM = anchor.getMonth();  // month being shown
   let filter = "all", mineOnly = false;
   render();
 
@@ -131,21 +133,21 @@ export async function mount(root) {
 
     // selected-day detail
     const detail = el("div.cal-detail");
-    detail.appendChild(el("div.cal-day-h mono", dateLabel(selected)));
+    detail.appendChild(el("div.cal-day-h.mono", dateLabel(selected)));
     const evs = dayEvents(selected);
     if (!evs.length) { detail.appendChild(el("p.muted.cal-empty-day", s("calendar.day_empty"))); }
     else {
       for (const e of evs) {
         const isMine = isPro && evHasMine(e);
-        const row = el("div.cal-ev" + (isMine ? ".cal-mine-ev" : "") + " cal-t-" + e.type);
+        const row = el("div.cal-ev" + (isMine ? ".cal-mine-ev" : "") + ".cal-t-" + e.type);
         row.appendChild(el("span.cal-ico", { "aria-hidden": "true" }, ICON[e.type] || "•"));
         const main = el("div.cal-main");
         const title = el("div.cal-title", isZh ? (e.title || "") : (e.title_en || e.title || ""));
-        for (const t of (e.tickers || [])) title.appendChild(el("span.cal-tk mono" + (watchSet.has(String(t).toUpperCase()) ? ".on" : ""), "$" + t));
+        for (const t of (e.tickers || [])) title.appendChild(el("span.cal-tk.mono" + (watchSet.has(String(t).toUpperCase()) ? ".on" : ""), "$" + t));
         if (isMine) title.appendChild(el("span.cal-mine-badge", s("calendar.mine_badge")));
         main.appendChild(title);
         const note = isZh ? (e.note || "") : (e.note_en || e.note || "");
-        if (note) main.appendChild(el("div.cal-note muted", note));
+        if (note) main.appendChild(el("div.cal-note.muted", note));
         row.appendChild(main);
         detail.appendChild(row);
       }

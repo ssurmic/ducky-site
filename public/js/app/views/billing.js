@@ -11,6 +11,14 @@ import * as auth from "../auth.js";
 import { el, clear, toast, spinner, errorBox, tierName, date, num } from "../ui.js";
 
 let selected = { tier: "paid", months: 12 };
+// crypto orders carry a unique sub-cent / sat suffix (crypto_watch matches on it) — never round it away.
+// Prefer the server's authoritative amount string; else format at the rail's real precision, not 2dp.
+function amtStr(o) {
+  if (o && o.payload && o.payload.amount_str) return o.payload.amount_str + " " + (o.currency || "");
+  const cur = (o && o.currency) || "";
+  const dec = cur === "XTR" ? 0 : cur === "BTC" ? 8 : (cur === "USDT" || cur === "USDC") ? 6 : 2;
+  return num(o && o.amount, dec) + " " + cur;
+}
 // finding billing.js:14 — plansCache was module-level and never invalidated, so the rails list ("only the
 // rails the server can honour right now") and every price froze at the first Billing visit of the session.
 // Give it a short TTL so a server-side rails/price change is reflected within a minute.
@@ -171,7 +179,7 @@ export async function mount(root) {
   function orderHead(o) {
     return el("div.order-head",
       el("div", el("span.muted", s("billing.order_code") + " "), el("b.mono", o.order_code)),
-      el("div", el("span.muted", s("billing.amount") + " "), el("b.mono", num(o.amount, o.currency === "XTR" ? 0 : 2) + " " + (o.currency || ""))),
+      el("div", el("span.muted", s("billing.amount") + " "), el("b.mono", amtStr(o))),
       el("div", el("span.muted", s("billing.plan") + " "), el("b", tierName(o.tier || selected.tier) + " · " + (Number(o.months || selected.months) === 12 ? s("billing.annual") : s("billing.monthly")))));
   }
   function paidHint(o) {
@@ -241,7 +249,7 @@ export async function mount(root) {
         tbl.appendChild(el("div.order-row", { "data-status": st },
           el("b.mono", o.order_code || o.code || "—"),
           el("span", tierName(o.tier) + (o.months ? " · " + o.months + "m" : "")),
-          el("span.mono", num(o.amount, 2) + " " + (o.currency || "")),
+          el("span.mono", amtStr(o)),
           el("span.chip", { class: "chip-" + (st === "paid" || st === "settled" ? "done" : st === "rejected" || st === "expired" ? "error" : "pending") }, has("billing.status_" + st) ? s("billing.status_" + st) : st),
           el("span.muted.small.mono", date(o.created_at || o.created))));
       }

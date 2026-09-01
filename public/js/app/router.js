@@ -2,7 +2,7 @@
 // Owns the Telegram MainButton (billing only) and BackButton (any non-root route).
 import * as store from "./store.js";
 import * as tg from "./tg.js";
-import { clear } from "./ui.js";
+import { clear, errorBox } from "./ui.js";
 
 const ROUTES = {
   login: () => import("./views/login.js"),
@@ -50,7 +50,7 @@ export async function render() {
   clear(root);
   root.scrollTop = 0;
   let mod;
-  try { mod = await ROUTES[route.name](); } catch (e) { root.textContent = String(e); return; }
+  try { mod = await ROUTES[route.name](); } catch (e) { console.error("view import failed", e); clear(root); root.appendChild(errorBox(e, () => location.reload())); return; }
   if (my !== seq) return;
   current = route;
   const ret = await mod.mount(root, route.params);
