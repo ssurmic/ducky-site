@@ -43,10 +43,16 @@ export async function mount(root) {
   card.append(el("h1", s("boards.h1")), el("p.muted", s("boards.sub")));
   card.appendChild(spinner());
 
-  let results;
+  let results, wa = null;
   try {
-    results = await Promise.all(BOARDS.map((b) =>
-      api.signals.board(b.kinds, { days: 7, limit: 12 }).then((r) => (r && r.items) || []).catch(() => [])));
+    const [sig] = await Promise.all([
+      Promise.all(BOARDS.map((b) =>
+        api.signals.board(b.kinds, { days: 7, limit: 12 }).then((r) => (r && r.items) || []).catch(() => []))),
+      // Week Ahead is a static file on the site; it may 404 until the backend publishes it → skip the block.
+      fetch("/week-ahead.json", { cache: "no-store" }).then((r) => r.ok ? r.json() : null)
+        .then((j) => { if (j && Array.isArray(j.events) && j.events.length) wa = j; }).catch(() => {}),
+    ]);
+    results = sig;
   } catch (e) {
     clear(card); card.append(el("h1", s("boards.h1")), el("p.err", s("boards.load_error"))); return () => {};
   }
@@ -54,6 +60,7 @@ export async function mount(root) {
   clear(card);
   card.append(el("h1", s("boards.h1")), el("p.muted", s("boards.sub")));
   const grid = el("div.brd-grid");
+  if (wa) grid.appendChild(weekAheadCard(wa));
   BOARDS.forEach((b, i) => {
     const items = (results[i] || []).filter((it) => it && (it.ticker || (it.summary && String(it.summary).trim()) || it.key));
     const sec = el("section.brd-card" + (b.wide ? ".brd-wide" : ""));
@@ -72,6 +79,37 @@ export async function mount(root) {
   });
   card.appendChild(grid);
   return () => {};
+
+  function weekAheadCard(doc) {
+    const sec = el("section.brd-card.brd-wide.wa-card");
+    sec.appendChild(el("div.brd-head",
+      el("span.brd-ico", { "aria-hidden": "true" }, "📅"),
+      el("div.brd-htext",
+        el("div.brd-title", (isZh ? "本周前瞻" : "Week Ahead") + (doc.week_of ? " · " + doc.week_of : "")),
+        el("div.brd-desc.muted", isZh ? "本周高影响宏观 + 重点财报,一眼扫完。" : "This week's high-impact macro + key earnings at a glance."))));
+    const byDay = new Map();
+    for (const e of doc.events) {
+      const k = (isZh ? e.dow : (e.dow_en || e.dow)) + " " + (e.date || "");
+      if (!byDay.has(k)) byDay.set(k, []);
+      byDay.get(k).push(e);
+    }
+    const strip = el("div.wa-strip");
+    for (const [label, evs] of byDay) {
+      const col = el("div.wa-day");
+      col.appendChild(el("div.wa-dh", label));
+      for (const e of evs.slice(0, 6)) {
+        const isEr = e.kind === "earnings";
+        const row = el("div.wa-ev" + (isEr ? ".wa-er" : ".wa-macro"));
+        const et = e.et || (isZh ? e.et_zh : e.et_en) || "";
+        if (et) row.appendChild(el("span.wa-et.mono", et));
+        row.appendChild(el("span.wa-nm" + (isEr ? ".mono" : ""), (isEr ? "$" : "") + (e.name || "") + (e.watch ? " ★" : "")));
+        col.appendChild(row);
+      }
+      strip.appendChild(col);
+    }
+    sec.appendChild(strip);
+    return sec;
+  }
 
   function itemRow(it) {
     const [arrow, cls] = dirArrow(Number(it.direction) || 0);
