@@ -48,6 +48,56 @@ def _months(start: date, end: date):
         m += 1
         if m > 12: m, y = 1, y + 1
 
+
+# ── verified 2026 macro schedule (official sources; NEVER guessed) ───────────
+# FOMC: federalreserve.gov FOMC calendar (decision = day 2, 14:00 ET; SEP = dot-plot meeting).
+# CPI: BLS / usinflationcalculator release schedule (08:30 ET). NFP: BLS Employment Situation,
+# first Friday (08:30 ET). PCE: BEA Personal Income & Outlays (08:30 ET).
+FOMC_2026 = {  # decision date -> is a Summary-of-Economic-Projections (dot-plot) meeting
+    "2026-01-28": False, "2026-03-18": True, "2026-04-29": False, "2026-06-17": True,
+    "2026-07-29": False, "2026-09-16": True, "2026-10-28": False, "2026-12-09": True,
+}
+CPI_2026 = ["2026-01-13","2026-02-13","2026-03-11","2026-04-10","2026-05-12","2026-06-10",
+            "2026-07-14","2026-08-12","2026-09-11","2026-10-14","2026-11-10","2026-12-10"]
+PCE_2026 = ["2026-09-30"]   # BEA-verified; the live API feed fills later months
+# market-implied odds for the NEXT decision (CME FedWatch snapshot; the live API refreshes daily)
+NEXT_FOMC_ODDS = {"date": "2026-09-16", "cut_pct": 41, "as_of": "2026-08-25"}
+
+def _first_friday(y, m):
+    d = date(y, m, 1)
+    return d + timedelta(days=(4 - d.weekday()) % 7)
+
+def macro_events(start, end):
+    out = []
+    def m(d, title, title_en, note, note_en):
+        if start <= d <= end:
+            out.append({"date": d.isoformat(), "type": "macro", "title": title, "title_en": title_en,
+                        "tickers": [], "note": note, "note_en": note_en})
+    for ds, sep in FOMC_2026.items():
+        d = date.fromisoformat(ds)
+        extra_zh = " · 含点阵图/经济预测(SEP)" if sep else ""
+        extra_en = " · with dot-plot / SEP" if sep else ""
+        odds_zh = odds_en = ""
+        if NEXT_FOMC_ODDS and ds == NEXT_FOMC_ODDS["date"]:
+            odds_zh = f";市场隐含降息概率约 {NEXT_FOMC_ODDS['cut_pct']}%(截至 {NEXT_FOMC_ODDS['as_of']},每日更新)"
+            odds_en = f"; market-implied cut odds ~{NEXT_FOMC_ODDS['cut_pct']}% (as of {NEXT_FOMC_ODDS['as_of']}, updated daily)"
+        m(d, "美联储 FOMC 利率决议", "FOMC rate decision",
+          "14:00 ET 公布利率决议,14:30 ET 主席发布会" + extra_zh + odds_zh + "。",
+          "Rate decision 14:00 ET, press conference 14:30 ET" + extra_en + odds_en + ".")
+    for ds in CPI_2026:
+        m(date.fromisoformat(ds), "CPI 通胀数据", "CPI inflation",
+          "08:30 ET 公布上月 CPI;高影响,常放大波动。", "August CPI at 08:30 ET; high-impact, moves the tape.")
+    for y, mm in _months(start, end):
+        nf = _first_friday(y, mm)
+        m(nf, "非农就业 (NFP)", "Nonfarm payrolls (NFP)",
+          "08:30 ET 公布上月非农就业与失业率;月度最重磅数据之一。",
+          "Prior month's payrolls & unemployment at 08:30 ET — one of the biggest monthly prints.")
+    for ds in PCE_2026:
+        m(date.fromisoformat(ds), "PCE 物价(美联储偏好通胀)", "PCE price index (Fed's preferred gauge)",
+          "08:30 ET 公布;美联储最看重的通胀指标。", "08:30 ET; the Fed's preferred inflation gauge.")
+    return out
+
+
 def build(days: int = 90, backfill: int = 5) -> list[dict]:
     today = datetime.now(timezone.utc).date()
     start = today - timedelta(days=backfill)   # cover recent past + absorb UTC/local date skew
@@ -95,7 +145,8 @@ def build(days: int = 90, backfill: int = 5) -> list[dict]:
             ["QQQ"],
             "纳斯达克 100 年度成分调整生效(名单 12 月中旬公布);被剔除/纳入的科技股常有资金进出。",
             "Nasdaq-100 annual constituent changes take effect (list published mid-December); tech names added/removed often see flow.")
-    out.sort(key=lambda e: (e["date"], {"witching": 0, "opex": 1, "rebal": 2}.get(e["type"], 3)))
+    out.extend(macro_events(start, end))
+    out.sort(key=lambda e: (e["date"], {"macro": 0, "witching": 1, "opex": 2, "rebal": 3}.get(e["type"], 4)))
     return out
 
 def main() -> int:

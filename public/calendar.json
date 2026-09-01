@@ -1,7 +1,7 @@
 {
  "schema": "calendar/1",
- "generated_at": "2026-09-01T00:53:45+00:00",
- "as_of": "2026-09-01T00:53:45+00:00",
+ "generated_at": "2026-09-01T01:18:50+00:00",
+ "as_of": "2026-09-01T01:18:50+00:00",
  "window_days": 90,
  "partial": true,
  "source": "static-fallback",
@@ -30,6 +30,33 @@
    "note_en": "MSCI quarterly constituent changes take effect; the largest additions/deletions often see outsized closing prints (MSCI publishes the list ~2 weeks ahead)."
   },
   {
+   "date": "2026-09-04",
+   "type": "macro",
+   "title": "非农就业 (NFP)",
+   "title_en": "Nonfarm payrolls (NFP)",
+   "tickers": [],
+   "note": "08:30 ET 公布上月非农就业与失业率;月度最重磅数据之一。",
+   "note_en": "Prior month's payrolls & unemployment at 08:30 ET — one of the biggest monthly prints."
+  },
+  {
+   "date": "2026-09-11",
+   "type": "macro",
+   "title": "CPI 通胀数据",
+   "title_en": "CPI inflation",
+   "tickers": [],
+   "note": "08:30 ET 公布上月 CPI;高影响,常放大波动。",
+   "note_en": "August CPI at 08:30 ET; high-impact, moves the tape."
+  },
+  {
+   "date": "2026-09-16",
+   "type": "macro",
+   "title": "美联储 FOMC 利率决议",
+   "title_en": "FOMC rate decision",
+   "tickers": [],
+   "note": "14:00 ET 公布利率决议,14:30 ET 主席发布会 · 含点阵图/经济预测(SEP);市场隐含降息概率约 41%(截至 2026-08-25,每日更新)。",
+   "note_en": "Rate decision 14:00 ET, press conference 14:30 ET · with dot-plot / SEP; market-implied cut odds ~41% (as of 2026-08-25, updated daily)."
+  },
+  {
    "date": "2026-09-18",
    "type": "witching",
    "title": "四巫日 · 标普/纳指季度调仓",
@@ -52,6 +79,15 @@
   },
   {
    "date": "2026-09-30",
+   "type": "macro",
+   "title": "PCE 物价(美联储偏好通胀)",
+   "title_en": "PCE price index (Fed's preferred gauge)",
+   "tickers": [],
+   "note": "08:30 ET 公布;美联储最看重的通胀指标。",
+   "note_en": "08:30 ET; the Fed's preferred inflation gauge."
+  },
+  {
+   "date": "2026-09-30",
    "type": "rebal",
    "title": "月末调仓 · 养老金/基金再平衡",
    "title_en": "Month-end rebalance (pension/fund)",
@@ -60,6 +96,24 @@
    ],
    "note": "月末指数与养老金/基金再平衡资金流,尾盘最后几分钟常有巨量买/卖盘。",
    "note_en": "Month-end index + pension/fund rebalancing flows; the last minutes of the session often see outsized buy/sell prints."
+  },
+  {
+   "date": "2026-10-02",
+   "type": "macro",
+   "title": "非农就业 (NFP)",
+   "title_en": "Nonfarm payrolls (NFP)",
+   "tickers": [],
+   "note": "08:30 ET 公布上月非农就业与失业率;月度最重磅数据之一。",
+   "note_en": "Prior month's payrolls & unemployment at 08:30 ET — one of the biggest monthly prints."
+  },
+  {
+   "date": "2026-10-14",
+   "type": "macro",
+   "title": "CPI 通胀数据",
+   "title_en": "CPI inflation",
+   "tickers": [],
+   "note": "08:30 ET 公布上月 CPI;高影响,常放大波动。",
+   "note_en": "August CPI at 08:30 ET; high-impact, moves the tape."
   },
   {
    "date": "2026-10-16",
@@ -71,6 +125,15 @@
    "note_en": "Monthly stock options expire; gamma walls often shift or weaken around it."
   },
   {
+   "date": "2026-10-28",
+   "type": "macro",
+   "title": "美联储 FOMC 利率决议",
+   "title_en": "FOMC rate decision",
+   "tickers": [],
+   "note": "14:00 ET 公布利率决议,14:30 ET 主席发布会。",
+   "note_en": "Rate decision 14:00 ET, press conference 14:30 ET."
+  },
+  {
    "date": "2026-10-30",
    "type": "rebal",
    "title": "月末调仓 · 养老金/基金再平衡",
@@ -80,6 +143,24 @@
    ],
    "note": "月末指数与养老金/基金再平衡资金流,尾盘最后几分钟常有巨量买/卖盘。",
    "note_en": "Month-end index + pension/fund rebalancing flows; the last minutes of the session often see outsized buy/sell prints."
+  },
+  {
+   "date": "2026-11-06",
+   "type": "macro",
+   "title": "非农就业 (NFP)",
+   "title_en": "Nonfarm payrolls (NFP)",
+   "tickers": [],
+   "note": "08:30 ET 公布上月非农就业与失业率;月度最重磅数据之一。",
+   "note_en": "Prior month's payrolls & unemployment at 08:30 ET — one of the biggest monthly prints."
+  },
+  {
+   "date": "2026-11-10",
+   "type": "macro",
+   "title": "CPI 通胀数据",
+   "title_en": "CPI inflation",
+   "tickers": [],
+   "note": "08:30 ET 公布上月 CPI;高影响,常放大波动。",
+   "note_en": "August CPI at 08:30 ET; high-impact, moves the tape."
   },
   {
    "date": "2026-11-20",
