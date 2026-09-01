@@ -153,16 +153,21 @@ export async function mount(root) {
       strip.appendChild(col);
     }
     sec.appendChild(strip);
-    prev.addEventListener("click", () => strip.scrollBy({ left: -224, behavior: "smooth" }));
-    next.addEventListener("click", () => strip.scrollBy({ left: 224, behavior: "smooth" }));
+    const step = () => (strip.querySelector(".wa-day") ? strip.querySelector(".wa-day").offsetWidth : 200) + 10;
+    const sync = () => { prev.disabled = strip.scrollLeft <= 2; next.disabled = strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 2; };
+    prev.addEventListener("click", () => strip.scrollBy({ left: -step(), behavior: "smooth" }));
+    next.addEventListener("click", () => strip.scrollBy({ left: step(), behavior: "smooth" }));
+    strip.addEventListener("scroll", sync, { passive: true });
+    requestAnimationFrame(sync);
     return sec;
   }
 
   function waRows(evs) {
-    const macro = [], ern = [], seen = new Set();
+    const macro = [], ernW = [], ernO = [], seen = new Set();
     for (const e of evs) {
       if (e.kind === "earnings") {
-        ern.push({ cls: "er", time: (isZh ? e.et_zh : e.et_en) || "", label: "$" + (e.name || "") + (e.watch ? " ★" : ""), full: "$" + (e.name || "") });
+        const row = { cls: "er", time: (isZh ? e.et_zh : e.et_en) || "", label: "$" + (e.name || "") + (e.watch ? " ★" : ""), full: "$" + (e.name || "") };
+        (e.watch ? ernW : ernO).push(row);
       } else {
         const label = waMacroLabel(e.name || "", isZh);
         if (!label || seen.has(label)) continue;   // drop noise + collapse ISM sub-readings
@@ -170,7 +175,7 @@ export async function mount(root) {
         macro.push({ cls: "macro", time: String(e.et || "").replace(/\s*et$/i, ""), label: label, full: e.name || "" });
       }
     }
-    const all = macro.concat(ern);
+    const all = ernW.concat(macro, ernO);         // my watched earnings first, then macro, then the rest
     return { shown: all.slice(0, 6), more: Math.max(0, all.length - 6) };
   }
 
@@ -180,7 +185,7 @@ export async function mount(root) {
     if (it.ticker) row.appendChild(el("span.brd-tk.mono", "$" + String(it.ticker).toUpperCase()));
     const kl = KIND_LABEL[it.kind] || [it.kind || "", it.kind || ""];
     const label = (it.summary && String(it.summary).trim()) ? String(it.summary).trim() : (isZh ? kl[0] : kl[1]);
-    row.appendChild(el("span.brd-txt", label));
+    row.appendChild(el("span.brd-txt", { title: label }, label));
     if (arrow) row.appendChild(el("span.brd-dir." + cls, arrow));
     row.appendChild(el("span.brd-time.muted", ago(it.ts, isZh)));
     return row;

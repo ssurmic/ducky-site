@@ -290,7 +290,7 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 .cal-today:hover { color: var(--fg); border-color: var(--fg); }
 
 .cal-wdrow { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 8px; }
-.cal-wd { text-align: center; font-size: var(--fs-2xs); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: color-mix(in srgb, var(--muted) 75%, transparent); }
+.cal-wd { text-align: center; font-size: var(--fs-2xs); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
 
 /* shared day-cell look (month + biweekly) */
 .cal-grid, .cal-bigrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
@@ -332,7 +332,7 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 
 /* selected-day detail */
 .cal-detail { margin-top: 18px; border-top: 1px solid var(--border); padding-top: 14px; }
-.cal-day-h { font-weight: 700; font-size: var(--fs-sm); color: var(--muted); margin-bottom: 10px; }
+.cal-day-h { font-weight: 700; font-size: var(--fs-base); color: var(--text); margin-bottom: 10px; }
 .cal-empty-day { padding: 12px 0; color: var(--muted); }
 .cal-ev { display: flex; gap: 11px; align-items: flex-start; padding: 11px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); margin-bottom: 8px; }
 .cal-ev.cal-mine-ev { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); background: color-mix(in srgb, var(--accent) 6%, var(--surface)); }
@@ -366,7 +366,7 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 .brd-head { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; min-width: 0; }
 .brd-htext { min-width: 0; }
 .brd-ico { font-size: 20px; line-height: 1.15; flex: 0 0 auto; }
-.brd-title { font-weight: 700; font-size: var(--fs-sm); }
+.brd-title { font-weight: 700; font-size: var(--fs-base); }
 .brd-desc { font-size: var(--fs-xs); margin-top: 2px; line-height: 1.4; }
 .brd-list { display: flex; flex-direction: column; }
 .brd-wide .brd-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
@@ -384,19 +384,34 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 
 /* Week Ahead strip inside Radar (boards.js weekAheadCard) — scroll-snap day cards + ‹ › nav */
 .wa-card .brd-head { align-items: center; }
-.wa-navs { margin-left: auto; display: flex; gap: 6px; flex: 0 0 auto; }
-.wa-nav { width: 30px; height: 30px; border: 1px solid var(--border); background: var(--surface); color: var(--fg); border-radius: 8px; cursor: pointer; font-size: 17px; line-height: 1; transition: background .15s, border-color .15s; }
-.wa-nav:hover { background: var(--surface-2); border-color: var(--fg); }
-.wa-strip { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x proximity; padding: 2px 1px 8px; scrollbar-width: thin; }
-.wa-day { flex: 0 0 auto; width: 202px; scroll-snap-align: start; border: 1px solid color-mix(in srgb, var(--border) 70%, transparent); border-radius: 11px; padding: 10px 12px; background: color-mix(in srgb, var(--surface) 82%, transparent); }
-.wa-dh { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; margin-bottom: 8px; padding-bottom: 7px; border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent); }
-.wa-dow { font-weight: 700; font-size: var(--fs-sm); color: var(--fg); }
+.wa-navs { margin-left: auto; display: inline-flex; gap: 6px; flex: 0 0 auto; }
+.wa-nav { width: 32px; height: 32px; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 8px; cursor: pointer; font-size: 16px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; transition: background .15s, border-color .15s, opacity .15s; }
+.wa-nav:hover { background: var(--surface-2); border-color: var(--accent); }
+.wa-nav:disabled { opacity: .35; cursor: default; }
+.wa-strip { display: flex; gap: 10px; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; scroll-padding-left: 2px; padding: 2px 2px 8px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; -webkit-overflow-scrolling: touch; }
+.wa-strip::-webkit-scrollbar { height: 8px; }
+.wa-strip::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+.wa-day { flex: 0 0 202px; min-width: 0; scroll-snap-align: start; border: 1px solid color-mix(in srgb, var(--border) 70%, transparent); border-radius: 12px; padding: 9px 11px; background: color-mix(in srgb, var(--surface) 80%, transparent); }
+.wa-dh { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; margin-bottom: 8px; padding-bottom: 7px; border-bottom: 1px solid color-mix(in srgb, var(--border) 58%, transparent); }
+.wa-dow { font-weight: 700; font-size: var(--fs-sm); color: var(--text); }
 .wa-date { font-size: var(--fs-2xs); color: var(--muted); font-variant-numeric: tabular-nums; }
-.wa-ev { display: flex; gap: 9px; align-items: baseline; padding: 4px 0; font-size: var(--fs-xs); }
-.wa-et { flex: 0 0 auto; width: 56px; font-size: var(--fs-2xs); color: var(--muted); font-variant-numeric: tabular-nums; }
-.wa-nm { flex: 1 1 auto; min-width: 0; line-height: 1.4; overflow-wrap: anywhere; }
-.wa-macro .wa-nm { color: color-mix(in srgb, var(--accent) 82%, var(--fg)); font-weight: 600; }
-.wa-er .wa-nm { color: color-mix(in srgb, #4ea1ff 82%, var(--fg)); font-weight: 700; }
-.wa-more { font-size: var(--fs-2xs); margin-top: 5px; }
-.wa-empty { font-size: var(--fs-xs); padding: 4px 0; }
-@media (max-width: 560px) { .wa-day { width: 172px; } .wa-et { width: 50px; } }
+.wa-ev { display: block; padding: 6px 0; border-top: 1px solid color-mix(in srgb, var(--border) 45%, transparent); }
+.wa-day .wa-ev:first-of-type { border-top: 0; }
+.wa-et { display: block; font-size: var(--fs-2xs); color: var(--muted); letter-spacing: .2px; margin-bottom: 1px; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.wa-nm { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; white-space: normal; overflow-wrap: anywhere; font-size: var(--fs-xs); line-height: 1.3; }
+.wa-macro .wa-nm { color: color-mix(in srgb, var(--accent) 78%, var(--text)); font-weight: 600; }
+.wa-er .wa-nm { color: color-mix(in srgb, #4ea1ff 80%, var(--text)); font-weight: 700; }
+.wa-more { margin-top: 6px; font-size: var(--fs-2xs); color: var(--muted); }
+.wa-empty { font-size: var(--fs-xs); color: var(--muted); padding: 4px 0; }
+@media (max-width: 560px) { .wa-day { flex: 0 0 78vw; } }
+
+/* ── UI-audit polish: contrast, hierarchy, mobile tap-targets & month labels ── */
+@media (pointer: coarse) {
+  .cal-fchip, .cal-mode, .cal-today, .cr-chip { min-height: 44px; }
+  .cal-mnav, .wa-nav { width: 44px; height: 44px; }
+}
+@media (max-width: 400px) {
+  .cal-mini .pill-txt { display: none; }
+  .cal-mini { flex-direction: row; flex-wrap: wrap; gap: 4px; }
+  .cal-mini .bardot { width: 7px; height: 7px; }
+}

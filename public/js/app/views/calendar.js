@@ -100,7 +100,7 @@ export async function mount(root) {
   const todayIso = ymd(new Date());
   // default the selected day to today (even if it has no events), and open the grid on today's month —
   // NOT events[0], which is a backfilled prior-month event and would open last month on the 1st–5th.
-  let selected = byDate.has(todayIso) ? todayIso : todayIso;
+  let selected = todayIso;
   const anchor = new Date((selected || todayIso) + "T00:00:00");
   let viewY = anchor.getFullYear(), viewM = anchor.getMonth();  // month being shown
   let filter = "all", mineOnly = false;
