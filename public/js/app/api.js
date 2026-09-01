@@ -154,15 +154,25 @@ export const calendar = {
   // or hasn't shipped the route yet, fall back to the static file built into the site so the
   // calendar NEVER goes blank. Never throws — worst case an empty (but valid) doc.
   feed: async () => {
-    try {
-      const d = await get("/public/calendar.json", { auth: false });
-      if (d && Array.isArray(d.events) && d.events.length) return d;
-    } catch (e) { /* API down / 404 — fall through to the static fallback */ }
-    try {
-      const r = await fetch("/calendar.json", { cache: "no-store" });
-      if (r.ok) { const j = await r.json(); if (j && Array.isArray(j.events)) return j; }
-    } catch (e) { /* ignore */ }
-    return { events: [], partial: true, source: "empty" };
+    // Fetch BOTH the live API and the static fallback, then MERGE — neither alone is complete:
+    // the API has live earnings (and, once fully deployed, everything), the static fallback carries the
+    // verified macro schedule (FOMC/CPI/NFP/PCE). Merging is correct whether the API is stale or fresh.
+    let apiEv = [], staticEv = [], apiDoc = null;
+    try { apiDoc = await get("/public/calendar.json", { auth: false }); if (apiDoc && Array.isArray(apiDoc.events)) apiEv = apiDoc.events; } catch (e) { /* API down */ }
+    try { const r = await fetch("/calendar.json", { cache: "no-store" }); if (r.ok) { const j = await r.json(); if (j && Array.isArray(j.events)) staticEv = j.events; } } catch (e) { /* ignore */ }
+    if (!apiEv.length && !staticEv.length) return { events: [], partial: true, source: "empty" };
+    if (!staticEv.length) return apiDoc;
+    if (!apiEv.length) return { events: staticEv, partial: true, source: "static-fallback" };
+    const STRUCT = new Set(["opex", "witching", "rebal"]);
+    const out = apiEv.slice();
+    const seen = new Set(apiEv.map((e) => e.date + "|" + e.type + "|" + (e.title || "")));
+    const seenStruct = new Set(apiEv.filter((e) => STRUCT.has(e.type)).map((e) => e.date + "|" + e.type));
+    for (const e of staticEv) {
+      if (STRUCT.has(e.type)) { const k = e.date + "|" + e.type; if (!seenStruct.has(k)) { out.push(e); seenStruct.add(k); } }
+      else { const k = e.date + "|" + e.type + "|" + (e.title || ""); if (!seen.has(k)) { out.push(e); seen.add(k); } }
+    }
+    out.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+    return { events: out, as_of: (apiDoc && apiDoc.as_of) || undefined, source: "merged" };
   },
   _raw: () => get("/public/calendar.json", { auth: false }),
 };
