@@ -25,6 +25,15 @@ FILES=(track-record.json feed.json ideas.json week-ahead.json)
 log() { printf '%s push_track_record: %s\n' "$(date -u +%FT%TZ)" "$*" >&2; }
 
 [ -d "$EXPORT" ] || { log "export dir missing: $EXPORT (has outcomes.py run?)"; exit 3; }
+
+# the DGX's home-router DNS blips for minutes at a time (QA 2026-09-01: two runs died on
+# 'Could not resolve hostname github.com') — wait out a blip instead of losing the night
+for i in 1 2 3 4 5; do
+  getent hosts github.com >/dev/null 2>&1 && break
+  log "DNS for github.com not resolving (attempt $i/5) — sleeping 60s"
+  [ "$i" = 5 ] && { log "DNS still down; giving up"; exit 4; }
+  sleep 60
+done
 [ -s "$EXPORT/track-record.json" ] || { log "no track-record.json in $EXPORT"; exit 3; }
 if [ -f "$KEY" ]; then
   export GIT_SSH_COMMAND="ssh -i $KEY -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new -o BatchMode=yes"
