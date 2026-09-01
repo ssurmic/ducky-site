@@ -31,6 +31,34 @@ export async function mount(root) {
     return;
   }
 
+  // ── ⓪ Beta invite: a code + a username lets you start with NO Telegram and NO email ──
+  const invForm = el("form.login-block.invite-form");
+  const invCode = el("input.input.mono", { type: "text", placeholder: s("login.invite_code_ph"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", required: "" });
+  const invUser = el("input.input", { type: "text", placeholder: s("login.invite_user_ph"), autocomplete: "off", autocapitalize: "none", spellcheck: "false", maxlength: "20", required: "" });
+  const invBtn = el("button.btn.btn-primary.btn-lg", { type: "submit" }, s("login.invite_btn"));
+  invForm.append(el("h2.login-h2", s("login.invite_title")), el("p.muted.small", s("login.invite_hint")), invCode, invUser, invBtn);
+  invForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    invBtn.disabled = true;
+    try {
+      const resp = await auth.retryTransient(() => api.auth.redeem(invCode.value.trim(), invUser.value.trim()), 2);
+      await auth.establish(resp);
+      toast(s("login.invite_ok"), "ok");
+      done();
+    } catch (err) {
+      const code = err.body && err.body.error;
+      const msg = code === "username_taken" ? s("login.invite_taken")
+        : code === "bad_username" ? s("login.invite_bad_user")
+        : (code === "invite_invalid" || code === "invite_used") ? s("login.invite_bad_code")
+        : err.status === 429 ? s("login.rate_limited")
+        : err.message;
+      toast(s("login.failed", { msg }), "err");
+      invBtn.disabled = false;
+    }
+  });
+  card.appendChild(invForm);
+  card.append(el("div.login-or.mono", s("login.or")));
+
   // ── ① QR / nonce ──
   const qrBlock = el("div.login-block.qr-block");
   const qrHost = el("div.qr-host");

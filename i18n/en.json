@@ -1022,5 +1022,14 @@
   "app.watch.regime_pos": "bullish",
   "app.watch.regime_neg": "bearish",
   "app.watch.regime_neutral": "neutral",
-  "app.login.rate_limited": "Too many attempts — please try again shortly"
+  "app.login.rate_limited": "Too many attempts — please try again shortly",
+  "app.login.invite_title": "🎟️ Have an invite code? Start now",
+  "app.login.invite_hint": "Beta: enter an invite code + pick a username and start right away — no Telegram, no email.",
+  "app.login.invite_code_ph": "Invite code (e.g. INV-XXXXXX)",
+  "app.login.invite_user_ph": "Username (3–20 letters / digits / underscore)",
+  "app.login.invite_btn": "Start using Ducky →",
+  "app.login.invite_ok": "Welcome! You're in — loading…",
+  "app.login.invite_bad_code": "Invite code is invalid or used up",
+  "app.login.invite_bad_user": "Username must be 3–20 letters / digits / underscore",
+  "app.login.invite_taken": "That username is taken — pick another"
 }

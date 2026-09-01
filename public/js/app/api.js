@@ -115,6 +115,8 @@ export const auth = {
   nonce: () => post("/auth/nonce", {}, { auth: false }),
   password: (email, password) => post("/auth/password", { email, password }, { auth: false }),
   poll: (nonce) => get("/auth/poll?nonce=" + encodeURIComponent(nonce), { auth: false }),
+  register: (email, password) => post("/auth/register", { email, password }, { auth: false }),
+  redeem: (code, username) => post("/auth/redeem", { code, username }, { auth: false }),
 };
 export const me = () => get("/me");
 export const watchlist = {

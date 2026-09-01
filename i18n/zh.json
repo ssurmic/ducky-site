@@ -1022,5 +1022,14 @@
   "app.watch.regime_pos": "偏多",
   "app.watch.regime_neg": "偏空",
   "app.watch.regime_neutral": "中性",
-  "app.login.rate_limited": "请求太频繁，请稍后再试"
+  "app.login.rate_limited": "请求太频繁，请稍后再试",
+  "app.login.invite_title": "🎟️ 有邀请码?直接开始",
+  "app.login.invite_hint": "Beta 内测:输入邀请码 + 起个用户名,立刻开始用 —— 不用 Telegram、不用邮箱。",
+  "app.login.invite_code_ph": "邀请码(如 INV-XXXXXX)",
+  "app.login.invite_user_ph": "用户名(3–20 位字母/数字/下划线)",
+  "app.login.invite_btn": "开始使用 →",
+  "app.login.invite_ok": "欢迎!已开通,正在进入…",
+  "app.login.invite_bad_code": "邀请码无效或已用完",
+  "app.login.invite_bad_user": "用户名需 3–20 位字母 / 数字 / 下划线",
+  "app.login.invite_taken": "这个用户名已被占用,换一个吧"
 }
