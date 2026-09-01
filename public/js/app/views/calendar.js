@@ -13,6 +13,56 @@ const DOTC = { macro: "var(--accent)", earnings: "#4ea1ff", opex: "#c07cff", wit
 const FILTERS = ["all", "macro", "earnings", "opex", "rebal"];
 const FILTER_TYPES = { all: null, macro: ["macro"], earnings: ["earnings"], opex: ["opex", "witching"], rebal: ["rebal"] };
 
+// Compact, RECOGNISABLE labels for the narrow grid cells (never truncate a macro name to gibberish like
+// "初请失…"), plus a one-line economic-impact note shown in the day detail. Matched on the event title
+// (zh or en) so it works no matter which data source (live API vs static) wins the merge. ABBR order matters:
+// more-specific patterns (小非农/ADP) come before the generic ones (非农/NFP).
+const MACRO_META = [
+  { re: /小非农|ADP/i, abbr: ["ADP", "ADP"],
+    impact: ["大非农的前哨(私营就业),常引导市场对周五非农的预期。", "A lead-in to Friday's NFP (private payrolls) — often shapes the read."] },
+  { re: /非农|NFP|nonfarm|payroll/i, abbr: ["非农", "NFP"],
+    impact: ["月度最重磅就业数据:强劲=经济稳但压制降息;疲弱=衰退担忧但强化宽松预期。全球风险偏好的定调数据。",
+             "The month's biggest jobs print: strong = solid economy but fewer cuts; weak = recession worry but more easing. Sets global risk appetite."] },
+  { re: /初请|jobless|claims/i, abbr: ["初请", "Jobless"],
+    impact: ["每周劳动力市场的高频脉搏:意外走高=就业转弱→美联储更可能宽松(利好成长股/债);意外走低=经济稳但降息预期降温。",
+             "Weekly labor-market pulse: a spike = softening jobs → Fed likelier to ease (risk-on); a drop = resilient economy but cooling cut hopes."] },
+  { re: /CPI/i, abbr: ["CPI", "CPI"],
+    impact: ["消费者通胀核心读数:高于预期→利率预期上行、股债承压;低于预期→降息交易、风险资产走强。",
+             "Core consumer-inflation read: hotter → higher-for-longer, stocks/bonds pressured; cooler → rate-cut trade, risk assets rally."] },
+  { re: /PPI/i, abbr: ["PPI", "PPI"],
+    impact: ["通胀的上游(生产端)信号,常领先 CPI;走高预示消费端通胀压力。", "Upstream (producer-side) inflation, often leads CPI; hotter flags pipeline pressure."] },
+  { re: /PCE/i, abbr: ["PCE", "PCE"],
+    impact: ["美联储最看重的通胀指标,直接喂入政策路径。", "The Fed's preferred inflation gauge — feeds straight into the policy path."] },
+  { re: /零售|retail/i, abbr: ["零售", "Retail"],
+    impact: ["消费需求核心读数(约占美国经济七成):强劲=韧性,利好顺周期。", "Core consumer-demand read (~70% of US GDP): strong = resilience, supports cyclicals."] },
+  { re: /\bGDP\b/i, abbr: ["GDP", "GDP"],
+    impact: ["经济总量权威读数;增速定调衰退 vs 软着陆叙事。", "The headline growth number — frames the recession vs. soft-landing narrative."] },
+  { re: /FOMC|利率|rate decision|federal funds/i, abbr: ["FOMC", "FOMC"],
+    impact: ["美联储利率决议 + 发布会:全球资产定价之锚,当日波动通常最大;留意点阵图与措辞。",
+             "Fed rate decision + press conference — the anchor for global asset pricing; usually the day's biggest mover. Watch the dot-plot & tone."] },
+  { re: /ISM|PMI/i, abbr: ["ISM", "ISM"],
+    impact: ["制造业景气领先指标;荣枯线 50 上下切换预示周期拐点。", "Leading manufacturing gauge; crossing the 50 line flags cycle turns."] },
+];
+const STRUCT_ABBR = [
+  { re: /四巫|quad|witch/i, abbr: ["四巫", "Quad"] },
+  { re: /期权|OPEX|expir/i, abbr: ["OPEX", "OPEX"] },
+  { re: /月末|month.?end/i, abbr: ["月末", "Month-end"] },
+  { re: /MSCI/i, abbr: ["MSCI", "MSCI"] },
+  { re: /标普|S&P|SPX/i, abbr: ["标普", "S&P"] },
+  { re: /罗素|Russell/i, abbr: ["罗素", "Russell"] },
+  { re: /纳斯达克|纳指|Nasdaq/i, abbr: ["纳指", "Nasdaq"] },
+  { re: /富时|FTSE/i, abbr: ["富时", "FTSE"] },
+];
+function _hay(e) { return String(e.title || "") + " " + String(e.title_en || ""); }
+function macroMeta(e) { const h = _hay(e); for (const m of MACRO_META) if (m.re.test(h)) return m; return null; }
+function shortLabel(e, isZh) {
+  const full = isZh ? (e.title || "") : (e.title_en || e.title || "");
+  if (e.type === "macro") { const m = macroMeta(e); if (m) return isZh ? m.abbr[0] : m.abbr[1]; }
+  else { const h = _hay(e); for (const st of STRUCT_ABBR) if (st.re.test(h)) return isZh ? st.abbr[0] : st.abbr[1]; }
+  return full;
+}
+function macroImpact(e, isZh) { if (e.type !== "macro") return ""; const m = macroMeta(e); return m ? (isZh ? m.impact[0] : m.impact[1]) : ""; }
+
 function ymd(d) { const z = (n) => String(n).padStart(2, "0"); return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`; }
 function weekSunday(d) { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() - x.getDay()); return x; }
 function addDays(d, n) { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() + n); return x; }
@@ -117,14 +167,15 @@ export async function mount(root) {
       for (const e of evs.slice(0, 3)) {
         if (e.type === "earnings") {
           const sym = (e.tickers || [])[0] || "";
-          const pill = el("span.pill.pill-earn" + (isPro && evHasMine(e) ? ".mine" : ""));
+          const pill = el("span.pill.pill-earn" + (isPro && evHasMine(e) ? ".mine" : ""), { title: (sym + " " + (isZh ? (e.title || "") : (e.title_en || e.title || ""))).trim() });
           if (e.logo) pill.appendChild(el("img.pill-logo", { src: e.logo, alt: sym, loading: "lazy" }));
           pill.appendChild(el("span.pill-tk", sym || "ER"));
           box.appendChild(pill);
         } else {
-          const pill = el("span.pill.pill-" + e.type);
+          const full = isZh ? (e.title || "") : (e.title_en || e.title || "");
+          const pill = el("span.pill.pill-" + e.type, { title: full });
           pill.appendChild(el("span.pill-ic", { "aria-hidden": "true" }, ICON[e.type] || "•"));
-          pill.appendChild(el("span.pill-txt", isZh ? (e.title || "") : (e.title_en || e.title || "")));
+          pill.appendChild(el("span.pill-txt", shortLabel(e, isZh)));
           box.appendChild(pill);
         }
       }
@@ -138,8 +189,8 @@ export async function mount(root) {
       for (const e of evs.slice(0, 3)) {
         const b = el("div.mbar");
         const dot = el("i.bardot"); dot.style.background = DOTC[e.type] || "var(--muted)"; b.appendChild(dot);
-        const label = e.type === "earnings" ? ((e.tickers || [])[0] || (isZh ? "财报" : "ER"))
-          : (isZh ? (e.title || "") : (e.title_en || e.title || ""));
+        const label = e.type === "earnings" ? ((e.tickers || [])[0] || (isZh ? "财报" : "ER")) : shortLabel(e, isZh);
+        b.setAttribute("title", isZh ? (e.title || "") : (e.title_en || e.title || ""));
         b.appendChild(el("span.pill-txt" + (e.type === "earnings" && isPro && evHasMine(e) ? ".mine" : ""), label));
         box.appendChild(b);
       }
@@ -235,6 +286,13 @@ export async function mount(root) {
         main.appendChild(title);
         const note = isZh ? (e.note || "") : (e.note_en || e.note || "");
         if (note) main.appendChild(el("div.cal-note.muted", note));
+        const impact = macroImpact(e, isZh);
+        if (impact) {
+          const box = el("div.cal-impact");
+          box.appendChild(el("span.cal-impact-tag", "🌐 " + (isZh ? "对市场的影响" : "Market impact")));
+          box.appendChild(el("span.cal-impact-txt", impact));
+          main.appendChild(box);
+        }
         if (e.url) main.appendChild(el("a.cal-link.mono", { href: e.url, target: "_blank", rel: "noopener" }, isZh ? "详情 ↗" : "details ↗"));
         row.appendChild(main);
         detail.appendChild(row);
