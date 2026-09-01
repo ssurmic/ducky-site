@@ -1,0 +1,94 @@
+{
+ "schema": "calendar/1",
+ "generated_at": "2026-09-01T00:19:41+00:00",
+ "as_of": "2026-09-01T00:19:41+00:00",
+ "window_days": 90,
+ "partial": true,
+ "source": "static-fallback",
+ "events": [
+  {
+   "date": "2026-09-18",
+   "type": "witching",
+   "title": "四巫日 · 标普/纳指季度调仓",
+   "title_en": "Quad witching · S&P/Nasdaq rebalance",
+   "tickers": [
+    "SPY",
+    "QQQ"
+   ],
+   "note": "指数期货/期权 + 个股期货/期权同时到期,标普 & 纳斯达克季度成分调整同日生效,尾盘量常暴增。",
+   "note_en": "Index + single-stock futures & options all expire; S&P & Nasdaq-100 quarterly rebalances take effect the same day — closing volume usually spikes."
+  },
+  {
+   "date": "2026-09-18",
+   "type": "opex",
+   "title": "月度期权交割 · OPEX",
+   "title_en": "Monthly OPEX",
+   "tickers": [],
+   "note": "月度股票期权到期;gamma 墙常在此前后移动或减弱。",
+   "note_en": "Monthly stock options expire; gamma walls often shift or weaken around it."
+  },
+  {
+   "date": "2026-09-30",
+   "type": "rebal",
+   "title": "月末调仓 · 养老金/基金再平衡",
+   "title_en": "Month-end rebalance (pension/fund)",
+   "tickers": [
+    "SPY"
+   ],
+   "note": "月末指数与养老金/基金再平衡资金流,尾盘最后几分钟常有巨量买/卖盘。",
+   "note_en": "Month-end index + pension/fund rebalancing flows; the last minutes of the session often see outsized buy/sell prints."
+  },
+  {
+   "date": "2026-10-16",
+   "type": "opex",
+   "title": "月度期权交割 · OPEX",
+   "title_en": "Monthly OPEX",
+   "tickers": [],
+   "note": "月度股票期权到期;gamma 墙常在此前后移动或减弱。",
+   "note_en": "Monthly stock options expire; gamma walls often shift or weaken around it."
+  },
+  {
+   "date": "2026-10-30",
+   "type": "rebal",
+   "title": "月末调仓 · 养老金/基金再平衡",
+   "title_en": "Month-end rebalance (pension/fund)",
+   "tickers": [
+    "SPY"
+   ],
+   "note": "月末指数与养老金/基金再平衡资金流,尾盘最后几分钟常有巨量买/卖盘。",
+   "note_en": "Month-end index + pension/fund rebalancing flows; the last minutes of the session often see outsized buy/sell prints."
+  },
+  {
+   "date": "2026-11-20",
+   "type": "opex",
+   "title": "月度期权交割 · OPEX",
+   "title_en": "Monthly OPEX",
+   "tickers": [],
+   "note": "月度股票期权到期;gamma 墙常在此前后移动或减弱。",
+   "note_en": "Monthly stock options expire; gamma walls often shift or weaken around it."
+  },
+  {
+   "date": "2026-11-30",
+   "type": "rebal",
+   "title": "月末调仓 · 养老金/基金再平衡",
+   "title_en": "Month-end rebalance (pension/fund)",
+   "tickers": [
+    "SPY"
+   ],
+   "note": "月末指数与养老金/基金再平衡资金流,尾盘最后几分钟常有巨量买/卖盘。",
+   "note_en": "Month-end index + pension/fund rebalancing flows; the last minutes of the session often see outsized buy/sell prints."
+  },
+  {
+   "date": "2026-11-30",
+   "type": "rebal",
+   "title": "MSCI 半年度指数审议生效",
+   "title_en": "MSCI Semi-Annual Index Review effective",
+   "tickers": [
+    "ACWI",
+    "EFA"
+   ],
+   "note": "MSCI 半年度成分调整生效;权重最大的纳入/剔除名单常在尾盘出现巨量买卖(名单由 MSCI 提前约 2 周公布)。",
+   "note_en": "MSCI semi-annual constituent changes take effect; the largest additions/deletions often see outsized closing prints (MSCI publishes the list ~2 weeks ahead)."
+  }
+ ]
+}

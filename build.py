@@ -395,6 +395,13 @@ def main() -> None:
     ap.add_argument("--api-base", help="override api_base from site.config.json")
     args = ap.parse_args()
 
+    # refresh the static calendar fallback (deterministic index rebalances) so dates roll forward
+    try:
+        import subprocess
+        subprocess.run([sys.executable, str(ROOT / "scripts" / "gen_calendar.py")], check=True)
+    except Exception as e:  # noqa: BLE001
+        print(f"[build] gen_calendar skipped: {e}")
+
     cfg, tables, version = load_config(args.api_base), load_i18n(), git_sha()
     pages, env, liq, track_n = page_targets(), make_env(), load_liquidity(), load_track_n()
     track_stats = load_track_stats()   # §5.3.4/5 — graceful {'ok': False} when the notary JSON is absent

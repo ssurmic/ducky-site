@@ -150,7 +150,21 @@ export const kol = {
   unsub: (id) => del("/kol/" + encodeURIComponent(id) + "/sub"),
 };
 export const calendar = {
-  feed: () => get("/public/calendar.json", { auth: false }),
+  // Live from the API (enriched with grounded history server-side); if the API is down
+  // or hasn't shipped the route yet, fall back to the static file built into the site so the
+  // calendar NEVER goes blank. Never throws — worst case an empty (but valid) doc.
+  feed: async () => {
+    try {
+      const d = await get("/public/calendar.json", { auth: false });
+      if (d && Array.isArray(d.events) && d.events.length) return d;
+    } catch (e) { /* API down / 404 — fall through to the static fallback */ }
+    try {
+      const r = await fetch("/calendar.json", { cache: "no-store" });
+      if (r.ok) { const j = await r.json(); if (j && Array.isArray(j.events)) return j; }
+    } catch (e) { /* ignore */ }
+    return { events: [], partial: true, source: "empty" };
+  },
+  _raw: () => get("/public/calendar.json", { auth: false }),
 };
 export const push = {
   config: () => get("/push/config", { auth: false }),   // {enabled, vapid_public} — public key isn't secret
