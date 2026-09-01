@@ -382,12 +382,21 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 .brd-empty { padding: 8px 0 2px; font-size: var(--fs-xs); }
 @media (max-width: 640px) { .brd-grid, .brd-wide .brd-list { grid-template-columns: 1fr; } .brd-wide .brd-list > .brd-item:nth-child(2) { border-top: 1px solid color-mix(in srgb, var(--border) 55%, transparent); } }
 
-/* Week Ahead strip inside Radar (boards.js weekAheadCard) — horizontal day columns */
-.wa-strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
-.wa-day { flex: 1 1 0; min-width: 118px; border: 1px solid color-mix(in srgb, var(--border) 70%, transparent); border-radius: 10px; padding: 8px 9px; background: color-mix(in srgb, var(--surface) 80%, transparent); }
-.wa-dh { font-size: var(--fs-2xs); font-weight: 700; color: var(--muted); letter-spacing: .5px; margin-bottom: 6px; }
-.wa-ev { display: flex; align-items: baseline; gap: 6px; padding: 3px 0; font-size: var(--fs-xs); min-width: 0; }
-.wa-et { flex: 0 0 auto; font-size: var(--fs-2xs); color: var(--muted); }
-.wa-nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wa-macro .wa-nm { color: color-mix(in srgb, var(--accent) 78%, var(--fg)); font-weight: 600; }
-.wa-er .wa-nm { color: color-mix(in srgb, #4ea1ff 78%, var(--fg)); font-weight: 700; }
+/* Week Ahead strip inside Radar (boards.js weekAheadCard) — scroll-snap day cards + ‹ › nav */
+.wa-card .brd-head { align-items: center; }
+.wa-navs { margin-left: auto; display: flex; gap: 6px; flex: 0 0 auto; }
+.wa-nav { width: 30px; height: 30px; border: 1px solid var(--border); background: var(--surface); color: var(--fg); border-radius: 8px; cursor: pointer; font-size: 17px; line-height: 1; transition: background .15s, border-color .15s; }
+.wa-nav:hover { background: var(--surface-2); border-color: var(--fg); }
+.wa-strip { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x proximity; padding: 2px 1px 8px; scrollbar-width: thin; }
+.wa-day { flex: 0 0 auto; width: 202px; scroll-snap-align: start; border: 1px solid color-mix(in srgb, var(--border) 70%, transparent); border-radius: 11px; padding: 10px 12px; background: color-mix(in srgb, var(--surface) 82%, transparent); }
+.wa-dh { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; margin-bottom: 8px; padding-bottom: 7px; border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent); }
+.wa-dow { font-weight: 700; font-size: var(--fs-sm); color: var(--fg); }
+.wa-date { font-size: var(--fs-2xs); color: var(--muted); font-variant-numeric: tabular-nums; }
+.wa-ev { display: flex; gap: 9px; align-items: baseline; padding: 4px 0; font-size: var(--fs-xs); }
+.wa-et { flex: 0 0 auto; width: 56px; font-size: var(--fs-2xs); color: var(--muted); font-variant-numeric: tabular-nums; }
+.wa-nm { flex: 1 1 auto; min-width: 0; line-height: 1.4; overflow-wrap: anywhere; }
+.wa-macro .wa-nm { color: color-mix(in srgb, var(--accent) 82%, var(--fg)); font-weight: 600; }
+.wa-er .wa-nm { color: color-mix(in srgb, #4ea1ff 82%, var(--fg)); font-weight: 700; }
+.wa-more { font-size: var(--fs-2xs); margin-top: 5px; }
+.wa-empty { font-size: var(--fs-xs); padding: 4px 0; }
+@media (max-width: 560px) { .wa-day { width: 172px; } .wa-et { width: 50px; } }

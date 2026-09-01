@@ -27,6 +27,44 @@ const KIND_LABEL = {
   digest: ["划重点", "Highlight"], market: ["市场", "Market"], default: ["动态", "Update"],
 };
 
+// Week-Ahead macro cleanup: Nasdaq's feed is noisy (ISM sub-indices, IBD/TIPP, GDPNow) and English-only.
+// Map to a SHORT bilingual label, DROP low-signal noise, and collapse ISM sub-readings to one. Order matters
+// (specific before generic; the broad speaker rule is last).
+const WA_MACRO = [
+  { re: /initial jobless|jobless claims/i, zh: "初请失业金", en: "Jobless claims" },
+  { re: /nonfarm|payroll/i, zh: "非农就业", en: "Nonfarm payrolls" },
+  { re: /\bADP\b/i, zh: "小非农 ADP", en: "ADP payrolls" },
+  { re: /\bCPI\b/i, zh: "CPI 通胀", en: "CPI" },
+  { re: /\bPPI\b/i, zh: "PPI 物价", en: "PPI" },
+  { re: /\bPCE\b/i, zh: "PCE 物价", en: "PCE" },
+  { re: /retail sales/i, zh: "零售销售", en: "Retail sales" },
+  { re: /JOLTS/i, zh: "JOLTS 职位空缺", en: "JOLTS openings" },
+  { re: /ISM.*(services|non-?manufacturing)/i, zh: "ISM 服务业", en: "ISM Services" },
+  { re: /ISM.*manufacturing.*(employ|new orders|prices|inventor|backlog|supplier|export|import)/i, drop: true },
+  { re: /ISM.*manufacturing/i, zh: "ISM 制造业", en: "ISM Mfg" },
+  { re: /IBD|TIPP|optimism/i, drop: true },
+  { re: /GDPNow|atlanta fed/i, drop: true },
+  { re: /consumer confidence/i, zh: "消费者信心", en: "Consumer confidence" },
+  { re: /(consumer sentiment|michigan)/i, zh: "密歇根消费信心", en: "UMich sentiment" },
+  { re: /durable goods/i, zh: "耐用品订单", en: "Durable goods" },
+  { re: /(housing starts|building permits|home sales|existing home|new home)/i, zh: "房地产数据", en: "Housing" },
+  { re: /trade balance/i, zh: "贸易帐", en: "Trade balance" },
+  { re: /\bGDP\b/i, zh: "GDP", en: "GDP" },
+  { re: /FOMC|rate decision|federal funds|minutes/i, zh: "FOMC 利率", en: "FOMC" },
+  { re: /speaks|speech/i, zh: "美联储讲话", en: "Fed speaks", speaker: true },
+];
+function waMacroLabel(name, isZh) {
+  for (const m of WA_MACRO) {
+    if (m.re.test(name)) {
+      if (m.drop) return null;
+      if (m.speaker) { const mm = name.match(/([A-Z][a-zA-Z]+)\s+speaks/i); const who = mm ? mm[1] : "";
+        return (isZh ? "美联储讲话" : "Fed speaks") + (who ? (isZh ? " · " + who : ": " + who) : ""); }
+      return isZh ? m.zh : m.en;
+    }
+  }
+  return name;
+}
+
 function ago(iso, isZh) {
   const t = Date.parse(iso); if (isNaN(t)) return "";
   const m = Math.max(0, (Date.now() - t) / 60000);
@@ -82,33 +120,58 @@ export async function mount(root) {
 
   function weekAheadCard(doc) {
     const sec = el("section.brd-card.brd-wide.wa-card");
-    sec.appendChild(el("div.brd-head",
+    const head = el("div.brd-head",
       el("span.brd-ico", { "aria-hidden": "true" }, "📅"),
       el("div.brd-htext",
         el("div.brd-title", (isZh ? "本周前瞻" : "Week Ahead") + (doc.week_of ? " · " + doc.week_of : "")),
-        el("div.brd-desc.muted", isZh ? "本周高影响宏观 + 重点财报,一眼扫完。" : "This week's high-impact macro + key earnings at a glance."))));
+        el("div.brd-desc.muted", isZh ? "本周高影响宏观 + 重点财报(时间为美东 ET)。" : "This week's high-impact macro + key earnings (times ET).")));
+    const prev = el("button.wa-nav", { type: "button", "aria-label": isZh ? "上一天" : "previous" }, "‹");
+    const next = el("button.wa-nav", { type: "button", "aria-label": isZh ? "下一天" : "next" }, "›");
+    head.appendChild(el("div.wa-navs", prev, next));
+    sec.appendChild(head);
+
     const byDay = new Map();
     for (const e of doc.events) {
-      const k = (isZh ? e.dow : (e.dow_en || e.dow)) + " " + (e.date || "");
+      const k = (isZh ? e.dow : (e.dow_en || e.dow)) + "|" + (e.date || "");
       if (!byDay.has(k)) byDay.set(k, []);
       byDay.get(k).push(e);
     }
     const strip = el("div.wa-strip");
-    for (const [label, evs] of byDay) {
+    for (const [key, evs] of byDay) {
+      const dow = key.split("|")[0], dstr = key.split("|")[1] || "";
       const col = el("div.wa-day");
-      col.appendChild(el("div.wa-dh", label));
-      for (const e of evs.slice(0, 6)) {
-        const isEr = e.kind === "earnings";
-        const row = el("div.wa-ev" + (isEr ? ".wa-er" : ".wa-macro"));
-        const et = e.et || (isZh ? e.et_zh : e.et_en) || "";
-        if (et) row.appendChild(el("span.wa-et.mono", et));
-        row.appendChild(el("span.wa-nm" + (isEr ? ".mono" : ""), (isEr ? "$" : "") + (e.name || "") + (e.watch ? " ★" : "")));
+      col.appendChild(el("div.wa-dh", el("span.wa-dow", dow), el("span.wa-date.mono", dstr)));
+      const rows = waRows(evs);
+      for (const r of rows.shown) {
+        const row = el("div.wa-ev.wa-" + r.cls, { title: r.full });
+        row.appendChild(el("span.wa-et.mono", r.time || "—"));
+        row.appendChild(el("span.wa-nm" + (r.cls === "er" ? ".mono" : ""), r.label));
         col.appendChild(row);
       }
+      if (rows.more) col.appendChild(el("div.wa-more.muted", "+" + rows.more + (isZh ? " 项" : " more")));
+      if (!rows.shown.length) col.appendChild(el("div.wa-empty.muted", "—"));
       strip.appendChild(col);
     }
     sec.appendChild(strip);
+    prev.addEventListener("click", () => strip.scrollBy({ left: -224, behavior: "smooth" }));
+    next.addEventListener("click", () => strip.scrollBy({ left: 224, behavior: "smooth" }));
     return sec;
+  }
+
+  function waRows(evs) {
+    const macro = [], ern = [], seen = new Set();
+    for (const e of evs) {
+      if (e.kind === "earnings") {
+        ern.push({ cls: "er", time: (isZh ? e.et_zh : e.et_en) || "", label: "$" + (e.name || "") + (e.watch ? " ★" : ""), full: "$" + (e.name || "") });
+      } else {
+        const label = waMacroLabel(e.name || "", isZh);
+        if (!label || seen.has(label)) continue;   // drop noise + collapse ISM sub-readings
+        seen.add(label);
+        macro.push({ cls: "macro", time: String(e.et || "").replace(/\s*et$/i, ""), label: label, full: e.name || "" });
+      }
+    }
+    const all = macro.concat(ern);
+    return { shown: all.slice(0, 6), more: Math.max(0, all.length - 6) };
   }
 
   function itemRow(it) {
