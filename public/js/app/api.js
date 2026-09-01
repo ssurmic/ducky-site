@@ -1,6 +1,6 @@
 // api.js — fetch wrapper: CFG.API_BASE + bearer + JSON; 202 retry helper; 401 → logout hook;
 // 402 → upsell hook. Views never call fetch() directly.
-import { CFG } from "./strings.js";
+import { CFG, LANG } from "./strings.js";
 import * as store from "./store.js";
 
 export class ApiError extends Error {
@@ -115,8 +115,8 @@ export const auth = {
   nonce: () => post("/auth/nonce", {}, { auth: false }),
   password: (email, password) => post("/auth/password", { email, password }, { auth: false }),
   poll: (nonce) => get("/auth/poll?nonce=" + encodeURIComponent(nonce), { auth: false }),
-  register: (email, password) => post("/auth/register", { email, password }, { auth: false }),
-  redeem: (code, username) => post("/auth/redeem", { code, username }, { auth: false }),
+  register: (email, password) => post("/auth/register", { email, password, lang: LANG }, { auth: false }),
+  redeem: (code, username) => post("/auth/redeem", { code, username, lang: LANG }, { auth: false }),
 };
 export const me = () => get("/me");
 export const watchlist = {

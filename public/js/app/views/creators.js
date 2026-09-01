@@ -8,11 +8,28 @@ import * as router from "../router.js";
 import { el, clear, toast, spinner, empty } from "../ui.js";
 
 const TAKE_CLS = { bull: "cr-bull", bear: "cr-bear", neutral: "cr-neutral" };
+const CALL_ARROW = { bull: "▲", bear: "▼", neutral: "•" };
 
 function pickSummary(x, isZh) {
   if (x == null) return "";
   if (typeof x === "object") return isZh ? (x.zh || x.en || "") : (x.en || x.zh || "");
   try { const o = JSON.parse(x); return isZh ? (o.zh || o.en || "") : (o.en || o.zh || ""); } catch (e) { return String(x); }
+}
+
+function callChips(calls) {
+  // per-ticker gist the LLM dug out of the video: $SYM ▲/▼ + the target the CREATOR stated (attributed,
+  // never our own) + their one-line point. Compact chips so a promo/title-only video still yields signal.
+  const wrap = el("div.cr-calls");
+  for (const c of calls.slice(0, 6)) {
+    const st = (c.stance === "bull" || c.stance === "bear") ? c.stance : "neutral";
+    const chip = el("span.cr-call.cr-call-" + st);
+    chip.appendChild(el("b.cr-call-sym.mono", "$" + String(c.sym || "").toUpperCase()));
+    chip.appendChild(el("span.cr-call-arrow", CALL_ARROW[st] || "•"));
+    if (c.target) chip.appendChild(el("span.cr-call-tgt.mono", String(c.target)));
+    if (c.note) chip.appendChild(el("span.cr-call-note", String(c.note)));
+    wrap.appendChild(chip);
+  }
+  return wrap;
 }
 
 export async function mount(root) {
@@ -69,6 +86,7 @@ export async function mount(root) {
       if (p.tickers && p.tickers.length) head.appendChild(el("span.cr-tks.mono", p.tickers.slice(0, 4).map((t) => "$" + t).join(" · ")));
       art.appendChild(head);
       art.appendChild(el("p.cr-sum", pickSummary(p.summary, isZh)));
+      if (p.calls && p.calls.length) art.appendChild(callChips(p.calls));
       if (p.url) art.appendChild(el("a.cr-orig", { href: p.url, target: "_blank", rel: "noopener" }, s("creators.orig") + " ↗"));
       feed.appendChild(art);
     }

@@ -1000,6 +1000,8 @@
   "app.calendar.t_rebal": "Rebalance",
   "app.calendar.day_empty": "No major events this day",
   "app.calendar.jump_today": "Today",
+  "app.calendar.mode_biweekly": "2 weeks",
+  "app.calendar.mode_month": "Month",
   "app.calendar.more": "+{n}",
   "nav.cta_app": "Sign in",
   "entry.h2": "Two ways in, one login",

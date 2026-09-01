@@ -854,3 +854,42 @@ button.cr-chip[disabled] { opacity: .55; cursor: default; }
 .entry-card p { margin: 0; color: var(--muted); line-height: 1.7; font-size: var(--fs-sm); flex: 1 1 auto; }
 .entry-card .btn { margin-top: 6px; }
 .entry-note { margin-top: 16px; font-size: var(--fs-sm); line-height: 1.6; }
+
+/* KOL per-ticker call chips — the stance/target gist dug out of each video (creators.js callChips) */
+.cr-calls { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+.cr-call { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px;
+  font-size: .82em; border: 1px solid var(--border); background: color-mix(in srgb, var(--card, #fff) 92%, transparent); }
+.cr-call-sym { font-weight: 700; }
+.cr-call-arrow { font-size: .9em; line-height: 1; }
+.cr-call-tgt { color: var(--muted); }
+.cr-call-note { color: var(--muted); max-width: 15em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cr-call-bull { border-color: color-mix(in srgb, var(--green,#3fb950) 45%, transparent); }
+.cr-call-bull .cr-call-arrow, .cr-call-bull .cr-call-sym { color: var(--green, #3fb950); }
+.cr-call-bear { border-color: color-mix(in srgb, var(--red,#f85149) 45%, transparent); }
+.cr-call-bear .cr-call-arrow, .cr-call-bear .cr-call-sym { color: var(--red, #f85149); }
+.cr-call-neutral .cr-call-arrow { color: var(--muted); }
+
+/* Calendar — view-mode toggle + two-week (biweekly) grid with company logos (calendar.js) */
+.cal-modebar { display: inline-flex; gap: 4px; margin: 6px 0 10px; padding: 3px; border: 1px solid var(--border); border-radius: 10px; }
+.cal-mode { border: 0; background: transparent; color: var(--muted); font-size: .9em; padding: 5px 14px; border-radius: 7px; cursor: pointer; }
+.cal-mode.on { background: var(--accent); color: #fff; }
+.cal-bigrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.cal-bigrid .cal-wd { text-align: center; color: var(--muted); font-size: .78em; padding-bottom: 2px; }
+.cal-bicell { position: relative; min-height: 74px; padding: 4px; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--card, #fff); text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
+.cal-bicell.cal-has { border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); }
+.cal-bicell.cal-is-today { outline: 2px solid var(--accent); outline-offset: -2px; }
+.cal-bicell.cal-sel { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 55%, transparent) inset; }
+.cal-bicell.cal-mine-cell { background: color-mix(in srgb, var(--accent) 8%, var(--card, #fff)); }
+.cal-bidnum { font-size: .82em; color: var(--muted); font-weight: 600; }
+.cal-glyphs { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; }
+.cal-logo { width: 22px; height: 22px; border-radius: 5px; object-fit: contain; background: #fff; border: 1px solid var(--border); }
+.cal-glyph-tk { font-size: .68em; font-weight: 700; padding: 1px 4px; border-radius: 4px; border: 1px solid var(--border); color: var(--muted); }
+.cal-glyph-tk.on { color: var(--accent); border-color: var(--accent); }
+.cal-glyph-ic { font-size: .95em; line-height: 1; }
+.cal-glyph-more { font-size: .7em; }
+.cal-ev-logo { width: 26px; height: 26px; border-radius: 6px; object-fit: contain; background: #fff; border: 1px solid var(--border); flex: 0 0 auto; }
+@media (max-width: 560px) {
+  .cal-bicell { min-height: 62px; }
+  .cal-logo { width: 18px; height: 18px; }
+}

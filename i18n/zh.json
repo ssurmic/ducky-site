@@ -1000,6 +1000,8 @@
   "app.calendar.t_rebal": "调仓",
   "app.calendar.day_empty": "这天没有重点事件",
   "app.calendar.jump_today": "回到今天",
+  "app.calendar.mode_biweekly": "两周",
+  "app.calendar.mode_month": "整月",
   "app.calendar.more": "+{n}",
   "nav.cta_app": "网页登录",
   "entry.h2": "两种用法，一次登录",

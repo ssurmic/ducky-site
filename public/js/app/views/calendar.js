@@ -14,6 +14,8 @@ const FILTERS = ["all", "macro", "earnings", "opex", "rebal"];
 const FILTER_TYPES = { all: null, macro: ["macro"], earnings: ["earnings"], opex: ["opex", "witching"], rebal: ["rebal"] };
 
 function ymd(d) { const z = (n) => String(n).padStart(2, "0"); return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`; }
+function weekSunday(d) { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() - x.getDay()); return x; }
+function addDays(d, n) { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() + n); return x; }
 
 export async function mount(root) {
   const isZh = (document.documentElement.lang || "zh").slice(0, 2) !== "en";
@@ -52,6 +54,8 @@ export async function mount(root) {
   const anchor = new Date((selected || todayIso) + "T00:00:00");
   let viewY = anchor.getFullYear(), viewM = anchor.getMonth();  // month being shown
   let filter = "all", mineOnly = false;
+  let viewMode = "biweekly";                 // "biweekly" (default: at-a-glance earnings) | "month"
+  let biStart = weekSunday(new Date());      // Sunday on/before today; prev/next shift by 14d
   render();
 
   function typeMatch(e) { const t = FILTER_TYPES[filter]; return !t || t.includes(e.type); }
@@ -94,42 +98,109 @@ export async function mount(root) {
     bar.appendChild(mineBtn);
     card.appendChild(bar);
 
-    // month header + prev/next + today
-    const head = el("div.cal-mhead");
-    const prev = el("button.cal-mnav", { type: "button", "aria-label": "prev" }, "‹");
-    const next = el("button.cal-mnav", { type: "button", "aria-label": "next" }, "›");
-    prev.addEventListener("click", () => { viewM--; if (viewM < 0) { viewM = 11; viewY--; } render(); });
-    next.addEventListener("click", () => { viewM++; if (viewM > 11) { viewM = 0; viewY++; } render(); });
-    const todayBtn = el("button.cal-today", { type: "button" }, s("calendar.jump_today"));
-    todayBtn.addEventListener("click", () => { const d = new Date(); viewY = d.getFullYear(); viewM = d.getMonth(); selected = todayIso; render(); });
-    head.append(prev, el("div.cal-mtitle", MON(viewY, viewM)), next, todayBtn);
-    card.appendChild(head);
-
-    // weekday header
-    const grid = el("div.cal-grid");
-    for (const w of WD) grid.appendChild(el("div.cal-wd", w));
-
-    // leading blanks + day cells
-    const firstDow = new Date(viewY, viewM, 1).getDay();
-    const daysInMonth = new Date(viewY, viewM + 1, 0).getDate();
-    for (let i = 0; i < firstDow; i++) grid.appendChild(el("div.cal-cell.cal-empty"));
-    for (let day = 1; day <= daysInMonth; day++) {
-      const iso = ymd(new Date(viewY, viewM, day));
-      const evs = dayEvents(iso);
-      const mine = isPro && evs.some(evHasMine);
-      const cell = el("button.cal-cell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : ""),
-        { type: "button" });
-      cell.appendChild(el("span.cal-dnum", String(day)));
-      if (evs.length) {
-        const dots = el("span.cal-dots");
-        const kinds = [...new Set(evs.map((e) => e.type))].slice(0, 4);
-        for (const k of kinds) { const dot = el("i.cal-dot"); dot.style.background = DOTC[k] || "var(--muted)"; dots.appendChild(dot); }
-        cell.appendChild(dots);
-      }
-      cell.addEventListener("click", () => { selected = iso; render(); });
-      grid.appendChild(cell);
+    // view-mode toggle: 两周 (at-a-glance earnings) | 月
+    const modeBar = el("div.cal-modebar");
+    for (const m of ["biweekly", "month"]) {
+      const b = el("button.cal-mode" + (viewMode === m ? ".on" : ""), { type: "button" }, s("calendar.mode_" + m));
+      b.addEventListener("click", () => { viewMode = m; render(); });
+      modeBar.appendChild(b);
     }
-    card.appendChild(grid);
+    card.appendChild(modeBar);
+
+    if (viewMode === "month") card.appendChild(monthGrid());
+    else card.appendChild(biweekly());
+
+    function eventGlyphs(evs, withLogos) {
+      // compact per-day glyph strip: earnings show the company LOGO (data: URI) or a $TICKER chip so you can
+      // SEE who reports at a glance; macro/structural show their emoji. Dots are the fallback in dense month cells.
+      const strip = el("div.cal-glyphs");
+      for (const e of evs.slice(0, withLogos ? 8 : 4)) {
+        if (e.type === "earnings") {
+          const sym = (e.tickers || [])[0] || "";
+          if (withLogos && e.logo) {
+            const img = el("img.cal-logo", { src: e.logo, alt: sym, title: sym, loading: "lazy" });
+            strip.appendChild(img);
+          } else {
+            strip.appendChild(el("span.cal-glyph-tk.mono" + (isPro && evHasMine(e) ? ".on" : ""), sym || "📈"));
+          }
+        } else {
+          strip.appendChild(el("span.cal-glyph-ic", { title: e.type }, ICON[e.type] || "•"));
+        }
+      }
+      if (evs.length > (withLogos ? 8 : 4)) strip.appendChild(el("span.cal-glyph-more.muted", "+" + (evs.length - (withLogos ? 8 : 4))));
+      return strip;
+    }
+
+    function monthGrid() {
+      const box = el("div.cal-monthbox");
+      const head = el("div.cal-mhead");
+      const prev = el("button.cal-mnav", { type: "button", "aria-label": "prev" }, "‹");
+      const next = el("button.cal-mnav", { type: "button", "aria-label": "next" }, "›");
+      prev.addEventListener("click", () => { viewM--; if (viewM < 0) { viewM = 11; viewY--; } render(); });
+      next.addEventListener("click", () => { viewM++; if (viewM > 11) { viewM = 0; viewY++; } render(); });
+      const todayBtn = el("button.cal-today", { type: "button" }, s("calendar.jump_today"));
+      todayBtn.addEventListener("click", () => { const d = new Date(); viewY = d.getFullYear(); viewM = d.getMonth(); selected = todayIso; render(); });
+      head.append(prev, el("div.cal-mtitle", MON(viewY, viewM)), next, todayBtn);
+      box.appendChild(head);
+
+      const grid = el("div.cal-grid");
+      for (const w of WD) grid.appendChild(el("div.cal-wd", w));
+      const firstDow = new Date(viewY, viewM, 1).getDay();
+      const daysInMonth = new Date(viewY, viewM + 1, 0).getDate();
+      for (let i = 0; i < firstDow; i++) grid.appendChild(el("div.cal-cell.cal-empty"));
+      for (let day = 1; day <= daysInMonth; day++) {
+        const iso = ymd(new Date(viewY, viewM, day));
+        const evs = dayEvents(iso);
+        const mine = isPro && evs.some(evHasMine);
+        const cell = el("button.cal-cell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : ""),
+          { type: "button" });
+        cell.appendChild(el("span.cal-dnum", String(day)));
+        if (evs.length) {
+          const dots = el("span.cal-dots");
+          const kinds = [...new Set(evs.map((e) => e.type))].slice(0, 4);
+          for (const k of kinds) { const dot = el("i.cal-dot"); dot.style.background = DOTC[k] || "var(--muted)"; dots.appendChild(dot); }
+          cell.appendChild(dots);
+        }
+        cell.addEventListener("click", () => { selected = iso; render(); });
+        grid.appendChild(cell);
+      }
+      box.appendChild(grid);
+      return box;
+    }
+
+    function biweekly() {
+      const box = el("div.cal-bibox");
+      const head = el("div.cal-mhead");
+      const prev = el("button.cal-mnav", { type: "button", "aria-label": "prev" }, "‹");
+      const next = el("button.cal-mnav", { type: "button", "aria-label": "next" }, "›");
+      prev.addEventListener("click", () => { biStart = addDays(biStart, -14); render(); });
+      next.addEventListener("click", () => { biStart = addDays(biStart, 14); render(); });
+      const end = addDays(biStart, 13);
+      const span = (isZh
+        ? `${biStart.getMonth() + 1}月${biStart.getDate()}日 – ${end.getMonth() + 1}月${end.getDate()}日`
+        : `${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][biStart.getMonth()]} ${biStart.getDate()} – ${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][end.getMonth()]} ${end.getDate()}`);
+      const todayBtn = el("button.cal-today", { type: "button" }, s("calendar.jump_today"));
+      todayBtn.addEventListener("click", () => { biStart = weekSunday(new Date()); selected = todayIso; render(); });
+      head.append(prev, el("div.cal-mtitle", span), next, todayBtn);
+      box.appendChild(head);
+
+      const grid = el("div.cal-bigrid");
+      for (const w of WD) grid.appendChild(el("div.cal-wd", w));
+      for (let i = 0; i < 14; i++) {
+        const d = addDays(biStart, i);
+        const iso = ymd(d);
+        const evs = dayEvents(iso);
+        const mine = isPro && evs.some(evHasMine);
+        const cell = el("button.cal-bicell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : ""),
+          { type: "button" });
+        cell.appendChild(el("span.cal-bidnum", String(d.getDate())));
+        if (evs.length) cell.appendChild(eventGlyphs(evs, true));
+        cell.addEventListener("click", () => { selected = iso; render(); });
+        grid.appendChild(cell);
+      }
+      box.appendChild(grid);
+      return box;
+    }
 
     // selected-day detail
     const detail = el("div.cal-detail");
@@ -140,7 +211,8 @@ export async function mount(root) {
       for (const e of evs) {
         const isMine = isPro && evHasMine(e);
         const row = el("div.cal-ev" + (isMine ? ".cal-mine-ev" : "") + ".cal-t-" + e.type);
-        row.appendChild(el("span.cal-ico", { "aria-hidden": "true" }, ICON[e.type] || "•"));
+        if (e.type === "earnings" && e.logo) row.appendChild(el("img.cal-ev-logo", { src: e.logo, alt: (e.tickers || [])[0] || "", loading: "lazy" }));
+        else row.appendChild(el("span.cal-ico", { "aria-hidden": "true" }, ICON[e.type] || "•"));
         const main = el("div.cal-main");
         const title = el("div.cal-title", isZh ? (e.title || "") : (e.title_en || e.title || ""));
         for (const t of (e.tickers || [])) title.appendChild(el("span.cal-tk.mono" + (watchSet.has(String(t).toUpperCase()) ? ".on" : ""), "$" + t));
