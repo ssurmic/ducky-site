@@ -151,6 +151,11 @@ export const kol = {
   sub: (id) => post("/kol/" + encodeURIComponent(id) + "/sub", {}),
   unsub: (id) => del("/kol/" + encodeURIComponent(id) + "/sub"),
 };
+export const signals = {
+  // shared firehose boards (Radar) — public, compliance-scrubbed, filterable by kind CSV
+  board: (kinds, opts) => get("/public/signals/recent.json?kind=" + encodeURIComponent(kinds)
+    + "&days=" + ((opts && opts.days) || 7) + "&limit=" + ((opts && opts.limit) || 12), { auth: false }),
+};
 export const calendar = {
   // Live from the API (enriched with grounded history server-side); if the API is down
   // or hasn't shipped the route yet, fall back to the static file built into the site so the

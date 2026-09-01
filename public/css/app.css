@@ -354,3 +354,26 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
   .cal-bicell { min-height: 88px; }
   .pill-logo { width: 16px; height: 16px; }
 }
+
+/* ── 雷达 Radar: shared firehose boards (T-layout: wide top bar + grid below) — boards.js ── */
+.brd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.brd-wide { grid-column: 1 / -1; }
+.brd-card { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); padding: 13px 15px; }
+.brd-card.brd-wide { background: color-mix(in srgb, var(--accent) 5%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 22%, var(--border)); }
+.brd-head { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
+.brd-ico { font-size: 20px; line-height: 1.15; flex: 0 0 auto; }
+.brd-title { font-weight: 700; font-size: var(--fs-sm); }
+.brd-desc { font-size: var(--fs-xs); margin-top: 2px; line-height: 1.4; }
+.brd-list { display: flex; flex-direction: column; }
+.brd-wide .brd-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+.brd-item { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-top: 1px solid color-mix(in srgb, var(--border) 55%, transparent); font-size: var(--fs-xs); }
+.brd-list > .brd-item:first-child { border-top: 0; }
+.brd-wide .brd-list > .brd-item:nth-child(2) { border-top: 0; }
+.brd-tk { font-family: ui-monospace, Menlo, monospace; font-weight: 700; color: var(--accent); flex: 0 0 auto; }
+.brd-txt { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--fg); }
+.brd-dir { flex: 0 0 auto; font-size: .85em; line-height: 1; }
+.brd-dir.bull { color: var(--green, #3fb950); }
+.brd-dir.bear { color: var(--red, #f85149); }
+.brd-time { flex: 0 0 auto; font-size: var(--fs-2xs); }
+.brd-empty { padding: 8px 0 2px; font-size: var(--fs-xs); }
+@media (max-width: 640px) { .brd-grid, .brd-wide .brd-list { grid-template-columns: 1fr; } .brd-wide .brd-list > .brd-item:nth-child(2) { border-top: 1px solid color-mix(in srgb, var(--border) 55%, transparent); } }
