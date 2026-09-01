@@ -282,13 +282,15 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 .cal-cell { position: relative; aspect-ratio: 1 / 1; min-height: 40px; border: 1px solid var(--border); background: var(--surface); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 5px 2px 2px; cursor: pointer; color: var(--fg); font: inherit; }
 .cal-cell.cal-empty { border: 0; background: transparent; cursor: default; }
 .cal-dnum { font-size: var(--fs-xs); line-height: 1; }
-.cal-cell.cal-has .cal-dnum { font-weight: 700; }
+.cal-cell.cal-has { background: color-mix(in srgb, var(--accent) 9%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 32%, var(--border)); }
+.cal-cell.cal-has:hover { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); }
+.cal-cell.cal-has .cal-dnum { font-weight: 700; color: var(--fg); }
 .cal-cell.cal-is-today { border-color: var(--accent); }
 .cal-cell.cal-is-today .cal-dnum { color: var(--accent); }
 .cal-cell.cal-sel { background: var(--surface-2); outline: 2px solid var(--accent); outline-offset: -2px; }
 .cal-cell.cal-mine-cell::after { content: "★"; position: absolute; top: 2px; right: 3px; font-size: 8px; color: var(--accent); }
 .cal-dots { display: flex; gap: 2px; margin-top: auto; margin-bottom: 2px; flex-wrap: wrap; justify-content: center; }
-.cal-dot { width: 5px; height: 5px; border-radius: 50%; display: inline-block; }
+.cal-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; box-shadow: 0 0 0 1px color-mix(in srgb, var(--surface) 60%, transparent); }
 .cal-detail { margin-top: 16px; }
 .cal-day-h { font-weight: 700; font-size: var(--fs-sm); color: var(--muted); padding: 6px 0; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
 .cal-empty-day { padding: 12px 0; }
