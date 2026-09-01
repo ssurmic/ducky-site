@@ -271,8 +271,8 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 /* ── investment calendar: month grid (click a day → its events) ─────────── */
 .cal-bar { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
 .cal-fchip { border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: 999px; padding: 5px 12px; font-size: var(--fs-xs); cursor: pointer; }
-.cal-fchip.on { border-color: var(--accent); color: var(--accent); font-weight: 700; }
-.cal-fchip.cal-mine.on { border-color: var(--accent); color: var(--accent); }
+.cal-fchip.on { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 700; }
+.cal-fchip.cal-mine.on { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
 .cal-mhead { display: flex; align-items: center; gap: 8px; margin: 14px 0 8px; }
 .cal-mnav { width: 34px; height: 34px; border: 1px solid var(--border); background: var(--surface); color: var(--fg); border-radius: 8px; font-size: 20px; line-height: 1; cursor: pointer; }
 .cal-mtitle { font-weight: 700; font-size: var(--fs-md); min-width: 120px; text-align: center; }
@@ -303,3 +303,14 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 .cal-tk.on { color: var(--accent); font-weight: 700; }
 .cal-mine-badge { display: inline-block; margin-left: 6px; font-size: var(--fs-2xs); color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 0 6px; }
 .cal-ev.cal-mine-ev { background: color-mix(in srgb, var(--accent) 6%, transparent); border-radius: 6px; padding-left: 6px; }
+
+/* ── UX audit fixes ─────────────────────────────────────────────────────── */
+/* password / profile inputs in a .cta-row must grow to fit their placeholder (was clipping "min 8 ch…") */
+.cta-row .input { flex: 1 1 200px; min-width: 0; }
+/* narrow bottom-nav: let long EN labels (Watchlist/Calendar/Creators) wrap instead of clipping */
+@media (max-width: 480px) {
+  .app-nav a { padding: 6px 1px 5px; }
+  .app-nav a span:not(.ico) { white-space: normal; font-size: 9px; line-height: 1.1; text-align: center; word-break: break-word; }
+}
+/* long watchlist values (retrace range, expected band) wrap rather than being clipped off-screen */
+.kv-grid dd { overflow-wrap: anywhere; }

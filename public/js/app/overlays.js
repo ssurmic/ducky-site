@@ -48,12 +48,13 @@ export function legend(snap, colors) {
   const out = [];
   const g = snap && snap.gamma, e = snap && snap.expected, d = snap && snap.retrace && snap.retrace.d20;
   if (g) {
-    out.push({ color: c.call, label: s("chart.legend_call"), value: g.call_wall });
-    out.push({ color: c.put, label: s("chart.legend_put"), value: g.put_wall });
-    out.push({ color: c.flip, label: s("chart.legend_flip"), value: g.flip });
+    // skip a level that isn't present so the legend never prints "null" (e.g. no gamma flip)
+    if (g.call_wall != null) out.push({ color: c.call, label: s("chart.legend_call"), value: g.call_wall });
+    if (g.put_wall != null) out.push({ color: c.put, label: s("chart.legend_put"), value: g.put_wall });
+    if (g.flip != null) out.push({ color: c.flip, label: s("chart.legend_flip"), value: g.flip });
   }
-  if (e) out.push({ color: c.exp, label: s("chart.legend_exp"), value: e.low + "–" + e.high });
-  if (d) out.push({ color: c.band, label: s("chart.legend_d20"), value: d.lo + "–" + d.hi });
+  if (e && e.low != null && e.high != null) out.push({ color: c.exp, label: s("chart.legend_exp"), value: e.low + "–" + e.high });
+  if (d && d.lo != null && d.hi != null) out.push({ color: c.band, label: s("chart.legend_d20"), value: d.lo + "–" + d.hi });
   return out;
 }
 

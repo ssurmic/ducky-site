@@ -1012,5 +1012,14 @@
   "entry.tg_h": "推送弹窗，秒达不漏",
   "entry.tg_b": "实时信号（SEC 申报、市场恐慌水位、财报）要秒到、不能漏。Telegram 的推送最可靠、最省事——不用装新 app，能刷推特就能用。所以交付走 Telegram，你只管收。",
   "entry.tg_cta": "免费开始（3 条提醒，不绑卡）→",
-  "entry.note": "为什么用 Telegram？因为把提醒秒推到你手机、又不用装新 app，它是最省心的那条路；顺带它也是你的登录方式——一个账号，网页和推送两头通。"
+  "entry.note": "为什么用 Telegram？因为把提醒秒推到你手机、又不用装新 app，它是最省心的那条路；顺带它也是你的登录方式——一个账号，网页和推送两头通。",
+  "app.watch.v_cheap": "便宜",
+  "app.watch.v_fair": "合理",
+  "app.watch.v_rich": "偏贵",
+  "app.watch.rs_leading": "领先",
+  "app.watch.rs_lagging": "落后",
+  "app.watch.rs_inline": "持平",
+  "app.watch.regime_pos": "偏多",
+  "app.watch.regime_neg": "偏空",
+  "app.watch.regime_neutral": "中性"
 }

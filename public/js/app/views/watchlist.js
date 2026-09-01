@@ -95,8 +95,9 @@ export async function mount(root) {
     row(s("watch.vs50"), pct(te.vs_50dma), signClass(te.vs_50dma));
     row(s("watch.vs200"), pct(te.vs_200dma), signClass(te.vs_200dma));
     if (r20) row(s("watch.retrace"), int(r20.pos * 100) + "% · " + posWord(r20.pos) + " [" + num(r20.lo, 2) + "–" + num(r20.hi, 2) + "]", r20.pos < 0.25 ? "neg" : r20.pos > 0.75 ? "pos" : "");
-    if (rs.excess20 !== undefined && rs.excess20 !== null) row(s("watch.rs", { b: rs.benchmark || "—" }), pct(rs.excess20) + (rs.label ? " · " + rs.label : ""), signClass(rs.excess20));
-    if (v.iv || v.hv) row(s("watch.ivhv"), num(v.iv, 1) + "% / " + num(v.hv, 1) + "%" + (v.ratio ? " → " + num(v.ratio, 2) + " (" + v.label + ")" : ""));
+    if (rs.excess20 !== undefined && rs.excess20 !== null) row(s("watch.rs", { b: rs.benchmark || "—" }), pct(rs.excess20) + (rs.label ? " · " + rsWord(rs.label) : ""), signClass(rs.excess20));
+    const pctOrDash = (x) => (x == null ? "—" : num(x, 1) + "%");   // avoid a broken "—%" when only one side is present
+    if (v.iv || v.hv) row(s("watch.ivhv"), pctOrDash(v.iv) + " / " + pctOrDash(v.hv) + (v.ratio ? " → " + num(v.ratio, 2) + (v.label ? " (" + volWord(v.label) + ")" : "") : ""));
     c.appendChild(rows);
 
     // Pro rows: gamma walls + expected range
@@ -104,7 +105,7 @@ export async function mount(root) {
     const g = snap.gamma, ex = snap.expected;
     const proRow = (k, val) => pro.append(el("dt", k), el("dd.mono", val));
     if (store.isPro()) {
-      proRow(s("watch.gamma"), g ? px(g.call_wall) + " / " + px(g.put_wall) + " / " + px(g.flip) + (g.regime ? " · " + g.regime : "") : "—");
+      proRow(s("watch.gamma"), g ? px(g.call_wall) + " / " + px(g.put_wall) + " / " + px(g.flip) + (g.regime ? " · " + regimeWord(g.regime) : "") : "—");
       proRow(s("watch.expected"), ex ? px(ex.low) + "–" + px(ex.high) + " (±" + num(ex.move_pct, 1) + "%" + (ex.expiry ? " · " + ex.expiry : "") + ")" : "—");
       c.appendChild(pro);
     } else {
@@ -116,6 +117,11 @@ export async function mount(root) {
   }
 
   function posWord(p) { return p < 0.25 ? s("watch.pos_low") : p > 0.75 ? s("watch.pos_high") : s("watch.pos_mid"); }
+  // localize server-provided enum verdicts (they arrive in one language); unknown values pass through unchanged.
+  function enumWord(val, map) { const k = map[String(val).trim().toLowerCase()]; return k ? s(k) : (val == null ? "" : String(val)); }
+  function volWord(x) { return enumWord(x, { "便宜": "watch.v_cheap", "cheap": "watch.v_cheap", "合理": "watch.v_fair", "fair": "watch.v_fair", "偏贵": "watch.v_rich", "rich": "watch.v_rich", "expensive": "watch.v_rich" }); }
+  function rsWord(x) { return enumWord(x, { "领先": "watch.rs_leading", "leading": "watch.rs_leading", "落后": "watch.rs_lagging", "lagging": "watch.rs_lagging", "持平": "watch.rs_inline", "相当": "watch.rs_inline", "inline": "watch.rs_inline" }); }
+  function regimeWord(x) { return enumWord(x, { "positive": "watch.regime_pos", "偏多": "watch.regime_pos", "negative": "watch.regime_neg", "偏空": "watch.regime_neg", "neutral": "watch.regime_neutral", "中性": "watch.regime_neutral" }); }
 
   async function load() {
     // finding watchlist.js:123 — a /watchlist response in flight when logout() wipes the store would

@@ -76,6 +76,9 @@ export function normalizePlans(resp) {
 export async function mount(root) {
   let plans = (Date.now() - plansCacheAt < PLANS_TTL_MS) ? plansCache : null, busy = false;   // finding billing.js:14
   const me = store.get("me") || {};
+  // preselect a plan that reflects the user's context, not a hardcoded "Signal": a Pro subscriber sees
+  // Pro selected (renewal/current), everyone else sees Signal (the entry tier).
+  selected.tier = me.tier === "pro" ? "pro" : "paid";
   // finding billing.js:76 — GET /me nests expiry under subscription.expires_at (app.py), not me.expires_at,
   // so a paying subscriber never saw their plan end date.
   const sub = me.subscription || {};

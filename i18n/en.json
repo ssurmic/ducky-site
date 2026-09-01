@@ -1012,5 +1012,14 @@
   "entry.tg_h": "Push alerts, instant, never missed",
   "entry.tg_b": "Real-time signals (SEC filings, market panic levels, earnings) have to land in seconds and never get missed. Telegram push is the most reliable, lowest-friction rail — no new app to install. Delivery runs through Telegram; you just receive.",
   "entry.tg_cta": "Start free (3 alerts, no card) →",
-  "entry.note": "Why Telegram? It's the simplest way to push an alert to your phone in seconds without installing a new app — and it doubles as your login. One account, both web and push."
+  "entry.note": "Why Telegram? It's the simplest way to push an alert to your phone in seconds without installing a new app — and it doubles as your login. One account, both web and push.",
+  "app.watch.v_cheap": "cheap",
+  "app.watch.v_fair": "fair",
+  "app.watch.v_rich": "rich",
+  "app.watch.rs_leading": "leading",
+  "app.watch.rs_lagging": "lagging",
+  "app.watch.rs_inline": "inline",
+  "app.watch.regime_pos": "bullish",
+  "app.watch.regime_neg": "bearish",
+  "app.watch.regime_neutral": "neutral"
 }
