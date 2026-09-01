@@ -25,6 +25,20 @@ def _weekday_back(d: date) -> date:
         d -= timedelta(days=1)
     return d
 
+# US market full-day closures that can land on a 3rd Friday / month-end (best-effort static set; the
+# live API uses the authoritative market_calendar). Most-impactful case: Juneteenth on a 3rd Friday.
+_MKT_HOLIDAYS = {
+    "2026-01-01","2026-01-19","2026-02-16","2026-04-03","2026-05-25","2026-06-19","2026-07-03",
+    "2026-09-07","2026-11-26","2026-12-25",
+    "2027-01-01","2027-01-18","2027-02-15","2027-03-26","2027-05-31","2027-06-18","2027-07-05",
+    "2027-09-06","2027-11-25","2027-12-24",
+}
+
+def _prior_trading(d: date) -> date:
+    while d.weekday() >= 5 or d.isoformat() in _MKT_HOLIDAYS:
+        d -= timedelta(days=1)
+    return d
+
 def _third_friday(y: int, m: int) -> date:
     d = date(y, m, 1)
     d += timedelta(days=(4 - d.weekday()) % 7)   # first Friday
@@ -108,7 +122,7 @@ def build(days: int = 90, backfill: int = 5) -> list[dict]:
             out.append({"date": d.isoformat(), "type": typ, "title": title, "title_en": title_en,
                         "tickers": tickers, "note": note, "note_en": note_en})
     for y, m in _months(start, end):
-        opex = _third_friday(y, m)
+        opex = _prior_trading(_third_friday(y, m))   # roll a holiday 3rd Friday (e.g. Juneteenth) back
         add(opex, "opex", "月度期权交割 · OPEX", "Monthly OPEX", [],
             "月度股票期权到期;gamma 墙常在此前后移动或减弱。",
             "Monthly stock options expire; gamma walls often shift or weaken around it.")
