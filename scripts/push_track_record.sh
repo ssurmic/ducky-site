@@ -20,7 +20,7 @@ REPO="${DUCKY_SITE_REPO:-git@github.com:ssurmic/ducky-site.git}"
 KEY="${DUCKY_SITE_DEPLOY_KEY:-$HOME/.ssh/ducky-site-deploy}"
 BRANCH="${DUCKY_SITE_BRANCH:-main}"
 EXPORT="$DUCKY_ROOT/.signals/export"
-FILES=(track-record.json feed.json ideas.json)
+FILES=(track-record.json feed.json ideas.json week-ahead.json)
 
 log() { printf '%s push_track_record: %s\n' "$(date -u +%FT%TZ)" "$*" >&2; }
 
@@ -59,6 +59,8 @@ elif name == "feed.json":
     assert j.get("generated_at") and isinstance(j.get("items"), list), "feed schema"
 elif name == "ideas.json":
     assert isinstance(j.get("ideas"), list), "ideas schema"
+elif name == "week-ahead.json":
+    assert j.get("schema") == "week-ahead/1" and isinstance(j.get("events"), list), "week-ahead schema"
 banned = ("ALL-IN", "买这只", "目标价", "满仓", "buy now", "现在买", "建议买入")
 low = open(p, encoding="utf-8").read().lower()
 hit = [b for b in banned if b.lower() in low]
@@ -68,7 +70,7 @@ PYEOF
 done
 
 # 3. commit only on diff
-git add -- public/track-record.json public/feed.json public/ideas.json 2>/dev/null || true
+git add -- public/track-record.json public/feed.json public/ideas.json public/week-ahead.json 2>/dev/null || true
 if git diff --cached --quiet; then
   log "no change — nothing to notarize"
   exit 0
