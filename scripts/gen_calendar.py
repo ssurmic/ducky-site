@@ -73,7 +73,10 @@ FOMC_2026 = {  # decision date -> is a Summary-of-Economic-Projections (dot-plot
 }
 CPI_2026 = ["2026-01-13","2026-02-13","2026-03-11","2026-04-10","2026-05-12","2026-06-10",
             "2026-07-14","2026-08-12","2026-09-11","2026-10-14","2026-11-10","2026-12-10"]
-PCE_2026 = ["2026-09-30"]   # BEA-verified; the live API feed fills later months
+PCE_2026 = ["2026-09-30"]     # BEA-verified; the live API feed fills later months
+PPI_2026 = ["2026-09-10"]     # BLS-verified (Aug PPI); PPI usually the day before CPI
+RETAIL_2026 = ["2026-09-16"]  # Census-verified (Aug advance retail sales)
+GDP_2026 = ["2026-09-30"]     # BEA-verified: 2026 comprehensive/annual GDP update begins
 # market-implied odds for the NEXT decision (CME FedWatch snapshot; the live API refreshes daily)
 NEXT_FOMC_ODDS = {"date": "2026-09-16", "cut_pct": 41, "as_of": "2026-08-25"}
 
@@ -103,9 +106,30 @@ def macro_events(start, end):
           "08:30 ET 公布上月 CPI;高影响,常放大波动。", "August CPI at 08:30 ET; high-impact, moves the tape.")
     for y, mm in _months(start, end):
         nf = _first_friday(y, mm)
-        m(nf, "非农就业 (NFP)", "Nonfarm payrolls (NFP)",
+        m(nf, "大非农 · 非农就业 (NFP)", "Nonfarm payrolls (NFP)",
           "08:30 ET 公布上月非农就业与失业率;月度最重磅数据之一。",
           "Prior month's payrolls & unemployment at 08:30 ET — one of the biggest monthly prints.")
+        # 小非农 ADP: the Wednesday 2 days before the NFP Friday, 08:15 ET (a preview of the big NFP)
+        adp = nf - timedelta(days=2)
+        m(adp, "小非农 · ADP 私营就业", "ADP private payrolls (小非农)",
+          "08:15 ET 公布上月 ADP 私营部门就业;大非农的前哨,常引导预期。",
+          "Prior month's ADP private-sector jobs at 08:15 ET — a lead-in to the big NFP.")
+    # 初请失业金: every Thursday, 08:30 ET (weekly labor-market pulse)
+    d = start + timedelta(days=(3 - start.weekday()) % 7)   # first Thursday on/after start
+    while d <= end:
+        m(d, "初请失业金", "Initial jobless claims",
+          "08:30 ET 每周初请失业金人数;劳动力市场的高频脉搏。",
+          "Weekly initial jobless claims at 08:30 ET — the high-frequency labor pulse.")
+        d += timedelta(days=7)
+    for ds in PPI_2026:
+        m(date.fromisoformat(ds), "PPI 生产者物价", "PPI (producer prices)",
+          "08:30 ET 公布上月 PPI;通胀的上游信号,常先于 CPI。", "Prior-month PPI at 08:30 ET; upstream inflation signal.")
+    for ds in RETAIL_2026:
+        m(date.fromisoformat(ds), "零售销售", "Retail sales",
+          "08:30 ET 公布上月零售销售;消费需求的核心读数。", "Prior-month retail sales at 08:30 ET; core consumer-demand read.")
+    for ds in GDP_2026:
+        m(date.fromisoformat(ds), "GDP 年度修订", "GDP annual update",
+          "08:30 ET;GDP 与国民经济核算年度综合修订。", "08:30 ET; annual comprehensive update of GDP / national accounts.")
     for ds in PCE_2026:
         m(date.fromisoformat(ds), "PCE 物价(美联储偏好通胀)", "PCE price index (Fed's preferred gauge)",
           "08:30 ET 公布;美联储最看重的通胀指标。", "08:30 ET; the Fed's preferred inflation gauge.")
