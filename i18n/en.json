@@ -1021,5 +1021,6 @@
   "app.watch.rs_inline": "inline",
   "app.watch.regime_pos": "bullish",
   "app.watch.regime_neg": "bearish",
-  "app.watch.regime_neutral": "neutral"
+  "app.watch.regime_neutral": "neutral",
+  "app.login.rate_limited": "Too many attempts — please try again shortly"
 }

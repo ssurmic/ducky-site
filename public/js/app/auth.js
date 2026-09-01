@@ -14,12 +14,34 @@ export function loadToken() { try { const st = storage(); return st ? st.getItem
 export function saveToken(token) { try { const st = storage(); if (st) st.setItem(KEY, token); } catch (e) { /* private mode */ } }
 export function clearToken() { try { const st = storage(); if (st) st.removeItem(KEY); } catch (e) { /* ignore */ } }
 
+/** Retry a request on TRANSIENT failure only (network status 0, 5xx, or 429) with backoff; a definitive
+ *  4xx (bad/expired/forbidden) throws immediately. Used so a tunnel/CF blip doesn't dead-end the login. */
+export async function retryTransient(fn, tries = 3) {
+  let lastErr;
+  for (let i = 0; i < tries; i++) {
+    try { return await fn(); }
+    catch (e) {
+      lastErr = e;
+      const st = e && e.status;
+      const transient = st === 0 || st === 429 || (st >= 500 && st < 600);
+      if (!transient || i === tries - 1) throw e;
+      const ra = Number((e.body && e.body.retry_after) || 0);
+      const wait = ra > 0 ? Math.min(Math.max(ra, 1), 10) * 1000 : Math.min(1000 * 2 ** i, 4000);
+      await new Promise((r) => setTimeout(r, wait));
+    }
+  }
+  throw lastErr;
+}
+
 /** Apply an auth response {token, user, tier, expires} then hydrate the session. */
 export async function establish(resp) {
   if (!resp || !resp.token) throw new Error("no token");
   saveToken(resp.token);
   store.set("token", resp.token);
-  return hydrate();
+  // The token is already valid here. A transient /me or /watchlist blip during hydrate must NOT strand
+  // the login (the nonce is consumed, the destination view re-fetches on mount) — so never throw on it.
+  try { await hydrate(); } catch (e) { /* non-fatal: token saved, view re-hydrates */ }
+  return true;
 }
 
 /** finding auth.js:22 — collapse the boot waterfall: /me and /watchlist are independent after auth, so fire
@@ -121,8 +143,10 @@ export async function consumeWidgetRedirect() {
   if (!params.get("id") || !params.get("auth_date") || !params.get("hash")) return false;
   const user = {};
   WIDGET_FIELDS.forEach((k) => { const v = params.get(k); if (v != null && v !== "") user[k] = v; });   // exactly what Telegram signed
-  try { history.replaceState(null, "", location.pathname + (location.hash || "")); } catch (e) { /* ignore */ }   // credentials off the URL first
+  // Establish FIRST — only strip the signed credentials off the URL once the login succeeds, so a
+  // transient network/5xx during /auth/widget doesn't permanently lose the one-time signed payload.
   await establish(await api.auth.widget(user));
+  try { history.replaceState(null, "", location.pathname + (location.hash || "")); } catch (e) { /* ignore */ }
   return true;
 }
 
@@ -147,7 +171,12 @@ export function startNonceLogin(handlers) {
   const ctl = { stop() { stopped = true; if (timer) clearTimeout(timer); } };
   (async () => {
     let nonce, code;
-    try { const r = await api.auth.nonce(); nonce = r.nonce; code = r.code || ""; } catch (e) { handlers.onError(e); return; }
+    try {
+      // Retry the bootstrap on a transient blip (network/5xx/429) with backoff before failing — a single
+      // tunnel hiccup was surfacing the scary "登录失败：network" and the QR never rendered.
+      const r = await retryTransient(() => api.auth.nonce(), 3);
+      nonce = r.nonce; code = r.code || "";
+    } catch (e) { handlers.onError(e); return; }
     const link = "https://t.me/" + CFG.BOT + "?start=login_" + nonce;
     handlers.onLink(link, nonce, code);
     const deadline = Date.now() + 120000;

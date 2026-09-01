@@ -90,9 +90,15 @@ export async function mount(root) {
   pwForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     pwBtn.disabled = true;
-    try { await auth.establish(await api.auth.password(email.value.trim(), pass.value)); done(); }
-    catch (err) {
-      toast(s("login.failed", { msg: err.status === 401 ? s("login.pw_bad") : err.message }), "err");
+    try {
+      // retry a transient blip before surfacing an error, so a tunnel hiccup doesn't read as a login failure
+      const resp = await auth.retryTransient(() => api.auth.password(email.value.trim(), pass.value), 2);
+      await auth.establish(resp); done();
+    } catch (err) {
+      const msg = err.status === 401 ? s("login.pw_bad")
+        : err.status === 429 ? s("login.rate_limited")
+        : err.message;
+      toast(s("login.failed", { msg }), "err");
       pwBtn.disabled = false;
     }
   });

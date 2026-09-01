@@ -1021,5 +1021,6 @@
   "app.watch.rs_inline": "持平",
   "app.watch.regime_pos": "偏多",
   "app.watch.regime_neg": "偏空",
-  "app.watch.regime_neutral": "中性"
+  "app.watch.regime_neutral": "中性",
+  "app.login.rate_limited": "请求太频繁，请稍后再试"
 }
