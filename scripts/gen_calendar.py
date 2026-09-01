@@ -48,15 +48,16 @@ def _months(start: date, end: date):
         m += 1
         if m > 12: m, y = 1, y + 1
 
-def build(days: int = 90) -> list[dict]:
+def build(days: int = 90, backfill: int = 5) -> list[dict]:
     today = datetime.now(timezone.utc).date()
+    start = today - timedelta(days=backfill)   # cover recent past + absorb UTC/local date skew
     end = today + timedelta(days=days)
     out: list[dict] = []
     def add(d, typ, title, title_en, tickers, note, note_en):
-        if today <= d <= end:
+        if start <= d <= end:
             out.append({"date": d.isoformat(), "type": typ, "title": title, "title_en": title_en,
                         "tickers": tickers, "note": note, "note_en": note_en})
-    for y, m in _months(end.replace(day=1) if False else today, end):
+    for y, m in _months(start, end):
         opex = _third_friday(y, m)
         add(opex, "opex", "月度期权交割 · OPEX", "Monthly OPEX", [],
             "月度股票期权到期;gamma 墙常在此前后移动或减弱。",

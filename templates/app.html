@@ -265,16 +265,16 @@
     <noscript><p class="errbox">{{ t('app.noscript') }}</p></noscript>
   </main>
 
+  {# Order: daily-use analysis views first, then account (Me) + upgrade (订阅) at the far end —
+     Billing is an account action, not a mid-bar daily tab. #}
   <nav class="app-nav" aria-label="app">
     <a href="#/watchlist" data-route="watchlist"><span class="ico" aria-hidden="true">📋</span><span>{{ t('app.nav.watchlist') }}</span></a>
-    <a href="#/alerts" data-route="alerts"><span class="ico" aria-hidden="true">🔔</span><span>{{ t('app.nav.alerts') }}</span></a>
     <a href="#/chart" data-route="chart"><span class="ico" aria-hidden="true">📈</span><span>{{ t('app.nav.chart') }}</span></a>
-    <a href="#/billing" data-route="billing"><span class="ico" aria-hidden="true">⭐</span><span>{{ t('app.nav.billing') }}</span></a>
-    <a href="#/creators" data-route="creators"><span class="ico" aria-hidden="true">🎙️</span><span>{{ t('app.nav.creators') }}</span></a>
     <a href="#/calendar" data-route="calendar"><span class="ico" aria-hidden="true">📅</span><span>{{ t('app.nav.calendar') }}</span></a>
-    {# finding app.html:256 — profile tab anchor was fused onto the billing anchor and duplicated the ⭐ icon +
-       billing label before the profile text (rendering a garbled 5th tab). Repaired into its own anchor. #}
+    <a href="#/alerts" data-route="alerts"><span class="ico" aria-hidden="true">🔔</span><span>{{ t('app.nav.alerts') }}</span></a>
+    <a href="#/creators" data-route="creators"><span class="ico" aria-hidden="true">🎙️</span><span>{{ t('app.nav.creators') }}</span></a>
     <a href="#/profile" data-route="profile"><span class="ico" aria-hidden="true">👤</span><span>{{ t('app.nav.profile') }}</span></a>
+    <a href="#/billing" data-route="billing" class="app-nav-upgrade"><span class="ico" aria-hidden="true">⭐</span><span>{{ t('app.nav.billing') }}</span></a>
   </nav>
 </div>
 <div id="toasts" aria-live="polite" aria-atomic="false"></div>
