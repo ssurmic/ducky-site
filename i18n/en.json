@@ -1031,5 +1031,6 @@
   "app.login.invite_ok": "Welcome! You're in — loading…",
   "app.login.invite_bad_code": "Invite code is invalid or used up",
   "app.login.invite_bad_user": "Username must be 3–20 letters / digits / underscore",
-  "app.login.invite_taken": "That username is taken — pick another"
+  "app.login.invite_taken": "That username is taken — pick another",
+  "app.login.try_again": "Something went wrong or the service is briefly unavailable — please try again"
 }

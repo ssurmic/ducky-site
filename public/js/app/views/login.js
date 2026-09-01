@@ -51,7 +51,8 @@ export async function mount(root) {
         : code === "bad_username" ? s("login.invite_bad_user")
         : (code === "invite_invalid" || code === "invite_used") ? s("login.invite_bad_code")
         : err.status === 429 ? s("login.rate_limited")
-        : err.message;
+        : (code === "no_code") ? s("login.invite_bad_code")
+        : s("login.try_again");     // 404 (route not deployed) / 5xx / unknown → friendly, not a raw error
       toast(s("login.failed", { msg }), "err");
       invBtn.disabled = false;
     }

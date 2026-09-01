@@ -1031,5 +1031,6 @@
   "app.login.invite_ok": "欢迎!已开通,正在进入…",
   "app.login.invite_bad_code": "邀请码无效或已用完",
   "app.login.invite_bad_user": "用户名需 3–20 位字母 / 数字 / 下划线",
-  "app.login.invite_taken": "这个用户名已被占用,换一个吧"
+  "app.login.invite_taken": "这个用户名已被占用,换一个吧",
+  "app.login.try_again": "出错了或服务暂时不可用,请稍后再试"
 }
