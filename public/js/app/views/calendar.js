@@ -148,6 +148,7 @@ export async function mount(root) {
         main.appendChild(title);
         const note = isZh ? (e.note || "") : (e.note_en || e.note || "");
         if (note) main.appendChild(el("div.cal-note.muted", note));
+        if (e.url) main.appendChild(el("a.cal-link.mono", { href: e.url, target: "_blank", rel: "noopener" }, isZh ? "详情 ↗" : "details ↗"));
         row.appendChild(main);
         detail.appendChild(row);
       }
