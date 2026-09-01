@@ -62,6 +62,8 @@ def main() -> int:
                     warnings.append(f"{rel}: {parts.path} not built yet (later pack)")
                 else:
                     errors.append(f"{rel}: broken internal link {url}")
+            elif parts.fragment.startswith("/"):
+                continue  # hash-router route on another page (/app/#/creators) — SPA view, not an element id
             elif parts.fragment and parts.path.rstrip("/") != str(rel.parent).rstrip("/"):
                 target = DIST / parts.path.lstrip("/")
                 target = target / "index.html" if target.is_dir() else target
