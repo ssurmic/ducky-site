@@ -17,7 +17,7 @@ function pickSummary(x, isZh) {
 }
 
 function callChips(calls) {
-  // per-ticker gist the LLM dug out of the video: $SYM ▲/▼ + the target the CREATOR stated (attributed,
+  // per-ticker gist Ducky dug out of the video: $SYM ▲/▼ + the target the CREATOR stated (attributed,
   // never our own) + their one-line point. Compact chips so a promo/title-only video still yields signal.
   const wrap = el("div.cr-calls");
   for (const c of calls.slice(0, 6)) {

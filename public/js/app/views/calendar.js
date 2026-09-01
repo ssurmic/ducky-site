@@ -110,57 +110,77 @@ export async function mount(root) {
     if (viewMode === "month") card.appendChild(monthGrid());
     else card.appendChild(biweekly());
 
-    function eventGlyphs(evs, withLogos) {
-      // compact per-day glyph strip: earnings show the company LOGO (data: URI) or a $TICKER chip so you can
-      // SEE who reports at a glance; macro/structural show their emoji. Dots are the fallback in dense month cells.
-      const strip = el("div.cal-glyphs");
-      for (const e of evs.slice(0, withLogos ? 8 : 4)) {
+    function pills(evs) {
+      // biweekly: color-coded event pills — earnings show the company LOGO + $TICKER so you can SEE who
+      // reports at a glance; macro/opex/rebal show an icon + short label. Cap at 3, then "+N more".
+      const box = el("div.cal-events");
+      for (const e of evs.slice(0, 3)) {
         if (e.type === "earnings") {
           const sym = (e.tickers || [])[0] || "";
-          if (withLogos && e.logo) {
-            const img = el("img.cal-logo", { src: e.logo, alt: sym, title: sym, loading: "lazy" });
-            strip.appendChild(img);
-          } else {
-            strip.appendChild(el("span.cal-glyph-tk.mono" + (isPro && evHasMine(e) ? ".on" : ""), sym || "📈"));
-          }
+          const pill = el("span.pill.pill-earn" + (isPro && evHasMine(e) ? ".mine" : ""));
+          if (e.logo) pill.appendChild(el("img.pill-logo", { src: e.logo, alt: sym, loading: "lazy" }));
+          pill.appendChild(el("span.pill-tk", sym || "ER"));
+          box.appendChild(pill);
         } else {
-          strip.appendChild(el("span.cal-glyph-ic", { title: e.type }, ICON[e.type] || "•"));
+          const pill = el("span.pill.pill-" + e.type);
+          pill.appendChild(el("span.pill-ic", { "aria-hidden": "true" }, ICON[e.type] || "•"));
+          pill.appendChild(el("span.pill-txt", isZh ? (e.title || "") : (e.title_en || e.title || "")));
+          box.appendChild(pill);
         }
       }
-      if (evs.length > (withLogos ? 8 : 4)) strip.appendChild(el("span.cal-glyph-more.muted", "+" + (evs.length - (withLogos ? 8 : 4))));
-      return strip;
+      if (evs.length > 3) box.appendChild(el("span.pill-more", "+" + (evs.length - 3) + (isZh ? " 更多" : " more")));
+      return box;
+    }
+
+    function miniBars(evs) {
+      // month cells: compact colour-dot + label rows (ticker for earnings, name for macro/structural).
+      const box = el("div.cal-mini");
+      for (const e of evs.slice(0, 3)) {
+        const b = el("div.mbar");
+        const dot = el("i.bardot"); dot.style.background = DOTC[e.type] || "var(--muted)"; b.appendChild(dot);
+        const label = e.type === "earnings" ? ((e.tickers || [])[0] || (isZh ? "财报" : "ER"))
+          : (isZh ? (e.title || "") : (e.title_en || e.title || ""));
+        b.appendChild(el("span.pill-txt" + (e.type === "earnings" && isPro && evHasMine(e) ? ".mine" : ""), label));
+        box.appendChild(b);
+      }
+      if (evs.length > 3) box.appendChild(el("div.pill-more", "+" + (evs.length - 3)));
+      return box;
+    }
+
+    function weekdayRow() { const r = el("div.cal-wdrow"); for (const w of WD) r.appendChild(el("div.cal-wd", w)); return r; }
+
+    function navHead(title, onPrev, onNext) {
+      const head = el("div.cal-mhead");
+      const prev = el("button.cal-mnav", { type: "button", "aria-label": "prev" }, "‹");
+      const next = el("button.cal-mnav", { type: "button", "aria-label": "next" }, "›");
+      prev.addEventListener("click", onPrev);
+      next.addEventListener("click", onNext);
+      const todayBtn = el("button.cal-today", { type: "button" }, s("calendar.jump_today"));
+      todayBtn.addEventListener("click", () => { const d = new Date(); viewY = d.getFullYear(); viewM = d.getMonth(); biStart = weekSunday(d); selected = todayIso; render(); });
+      head.append(prev, el("div.cal-mtitle", title), next, todayBtn);
+      return head;
     }
 
     function monthGrid() {
       const box = el("div.cal-monthbox");
-      const head = el("div.cal-mhead");
-      const prev = el("button.cal-mnav", { type: "button", "aria-label": "prev" }, "‹");
-      const next = el("button.cal-mnav", { type: "button", "aria-label": "next" }, "›");
-      prev.addEventListener("click", () => { viewM--; if (viewM < 0) { viewM = 11; viewY--; } render(); });
-      next.addEventListener("click", () => { viewM++; if (viewM > 11) { viewM = 0; viewY++; } render(); });
-      const todayBtn = el("button.cal-today", { type: "button" }, s("calendar.jump_today"));
-      todayBtn.addEventListener("click", () => { const d = new Date(); viewY = d.getFullYear(); viewM = d.getMonth(); selected = todayIso; render(); });
-      head.append(prev, el("div.cal-mtitle", MON(viewY, viewM)), next, todayBtn);
-      box.appendChild(head);
-
+      box.appendChild(navHead(MON(viewY, viewM),
+        () => { viewM--; if (viewM < 0) { viewM = 11; viewY--; } render(); },
+        () => { viewM++; if (viewM > 11) { viewM = 0; viewY++; } render(); }));
+      box.appendChild(weekdayRow());
       const grid = el("div.cal-grid");
-      for (const w of WD) grid.appendChild(el("div.cal-wd", w));
       const firstDow = new Date(viewY, viewM, 1).getDay();
       const daysInMonth = new Date(viewY, viewM + 1, 0).getDate();
       for (let i = 0; i < firstDow; i++) grid.appendChild(el("div.cal-cell.cal-empty"));
       for (let day = 1; day <= daysInMonth; day++) {
-        const iso = ymd(new Date(viewY, viewM, day));
+        const dt = new Date(viewY, viewM, day);
+        const iso = ymd(dt);
         const evs = dayEvents(iso);
         const mine = isPro && evs.some(evHasMine);
-        const cell = el("button.cal-cell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : ""),
+        const wknd = dt.getDay() === 0 || dt.getDay() === 6;
+        const cell = el("button.cal-cell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : ""),
           { type: "button" });
         cell.appendChild(el("span.cal-dnum", String(day)));
-        if (evs.length) {
-          const dots = el("span.cal-dots");
-          const kinds = [...new Set(evs.map((e) => e.type))].slice(0, 4);
-          for (const k of kinds) { const dot = el("i.cal-dot"); dot.style.background = DOTC[k] || "var(--muted)"; dots.appendChild(dot); }
-          cell.appendChild(dots);
-        }
+        if (evs.length) cell.appendChild(miniBars(evs));
         cell.addEventListener("click", () => { selected = iso; render(); });
         grid.appendChild(cell);
       }
@@ -170,31 +190,26 @@ export async function mount(root) {
 
     function biweekly() {
       const box = el("div.cal-bibox");
-      const head = el("div.cal-mhead");
-      const prev = el("button.cal-mnav", { type: "button", "aria-label": "prev" }, "‹");
-      const next = el("button.cal-mnav", { type: "button", "aria-label": "next" }, "›");
-      prev.addEventListener("click", () => { biStart = addDays(biStart, -14); render(); });
-      next.addEventListener("click", () => { biStart = addDays(biStart, 14); render(); });
       const end = addDays(biStart, 13);
-      const span = (isZh
+      const M = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      const span = isZh
         ? `${biStart.getMonth() + 1}月${biStart.getDate()}日 – ${end.getMonth() + 1}月${end.getDate()}日`
-        : `${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][biStart.getMonth()]} ${biStart.getDate()} – ${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][end.getMonth()]} ${end.getDate()}`);
-      const todayBtn = el("button.cal-today", { type: "button" }, s("calendar.jump_today"));
-      todayBtn.addEventListener("click", () => { biStart = weekSunday(new Date()); selected = todayIso; render(); });
-      head.append(prev, el("div.cal-mtitle", span), next, todayBtn);
-      box.appendChild(head);
-
+        : `${M[biStart.getMonth()]} ${biStart.getDate()} – ${M[end.getMonth()]} ${end.getDate()}`;
+      box.appendChild(navHead(span,
+        () => { biStart = addDays(biStart, -14); render(); },
+        () => { biStart = addDays(biStart, 14); render(); }));
+      box.appendChild(weekdayRow());
       const grid = el("div.cal-bigrid");
-      for (const w of WD) grid.appendChild(el("div.cal-wd", w));
       for (let i = 0; i < 14; i++) {
         const d = addDays(biStart, i);
         const iso = ymd(d);
         const evs = dayEvents(iso);
         const mine = isPro && evs.some(evHasMine);
-        const cell = el("button.cal-bicell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : ""),
+        const wknd = d.getDay() === 0 || d.getDay() === 6;
+        const cell = el("button.cal-bicell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : ""),
           { type: "button" });
         cell.appendChild(el("span.cal-bidnum", String(d.getDate())));
-        if (evs.length) cell.appendChild(eventGlyphs(evs, true));
+        if (evs.length) cell.appendChild(pills(evs));
         cell.addEventListener("click", () => { selected = iso; render(); });
         grid.appendChild(cell);
       }
