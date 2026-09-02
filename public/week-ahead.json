@@ -1,7 +1,7 @@
 {
  "schema": "week-ahead/1",
- "generated_at": "2026-09-01T17:52:57+00:00",
- "as_of": "2026-09-01T17:52:57+00:00",
+ "generated_at": "2026-09-01T21:01:41+00:00",
+ "as_of": "2026-09-01T21:01:41+00:00",
  "week_of": "08/31–09/04",
  "events": [
   {
@@ -154,6 +154,96 @@
    "name": "HPE",
    "kind": "earnings",
    "watch": false
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "8:30am et",
+   "name": "Continuing Jobless Claims",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "8:30am et",
+   "name": "Initial Jobless Claims",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "8:30am et",
+   "name": "Jobless Claims 4-Week Avg.",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "8:30am et",
+   "name": "Nonfarm Productivity",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "10:00am et",
+   "name": "ISM Non-Manufacturing Business Activity",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "10:00am et",
+   "name": "ISM Non-Manufacturing Employment",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "10:00am et",
+   "name": "ISM Non-Manufacturing New Orders",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "10:00am et",
+   "name": "ISM Non-Manufacturing PMI",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "10:00am et",
+   "name": "ISM Non-Manufacturing Prices",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "8:30am et",
+   "name": "Fed Waller Speaks",
+   "kind": "macro",
+   "tier": "fed"
   },
   {
    "dow": "周四",
