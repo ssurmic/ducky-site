@@ -103,7 +103,7 @@ export async function mount(root) {
   const grid = el("div.brd-grid");
   if (wa) grid.appendChild(weekAheadCard(wa));
   BOARDS.forEach((b, i) => {
-    const items = (results[i] || []).filter((it) => it && (it.ticker || (it.summary && String(it.summary).trim()) || it.key));
+    const items = (results[i] || []).filter((it) => it && (it.ticker || (it.summary && String(it.summary).trim())));
     const sec = el("section.brd-card" + (b.wide ? ".brd-wide" : ""));
     sec.appendChild(el("div.brd-head",
       el("span.brd-ico", { "aria-hidden": "true" }, b.icon),
@@ -184,13 +184,29 @@ export async function mount(root) {
 
   function itemRow(it) {
     const [arrow, cls] = dirArrow(Number(it.direction) || 0);
-    const row = el("div.brd-item");
-    if (it.ticker) row.appendChild(el("span.brd-tk.mono", "$" + String(it.ticker).toUpperCase()));
     const kl = KIND_LABEL[it.kind] || [it.kind || "", it.kind || ""];
-    const label = (it.summary && String(it.summary).trim()) ? String(it.summary).trim() : (isZh ? kl[0] : kl[1]);
-    row.appendChild(el("span.brd-txt", { title: label }, label));
+    const sum = (it.summary && String(it.summary).trim()) ? String(it.summary).trim() : "";
+    const label = sum || (isZh ? kl[0] : kl[1]);
+    const tk = it.ticker ? String(it.ticker).toUpperCase() : "";
+
+    const wrap = el("div.brd-itemw");
+    const row = el("button.brd-item", { type: "button" });
+    if (tk) row.appendChild(el("span.brd-tk.mono", "$" + tk));
+    row.appendChild(el("span.brd-txt", label));
     if (arrow) row.appendChild(el("span.brd-dir." + cls, arrow));
     row.appendChild(el("span.brd-time.muted", ago(it.ts, isZh)));
-    return row;
+    row.appendChild(el("span.brd-caret", { "aria-hidden": "true" }, "⌄"));
+
+    const detail = el("div.brd-detail");
+    detail.appendChild(el("div.brd-full", label));
+    const meta = el("div.brd-meta");
+    meta.appendChild(el("span.brd-kind", isZh ? kl[0] : kl[1]));
+    if (it.ts) meta.appendChild(el("span.brd-when.muted", new Date(it.ts).toLocaleString(isZh ? "zh-CN" : "en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })));
+    if (tk) meta.appendChild(el("a.brd-chart", { href: "#/chart/" + tk }, (isZh ? "看 $" : "$") + tk + (isZh ? " 图表 →" : " chart →")));
+    detail.appendChild(meta);
+
+    row.addEventListener("click", () => { const open = wrap.classList.toggle("open"); row.setAttribute("aria-expanded", open ? "true" : "false"); });
+    wrap.append(row, detail);
+    return wrap;
   }
 }

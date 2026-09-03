@@ -1,20 +1,11 @@
 {
  "schema": "calendar/1",
- "generated_at": "2026-09-01T22:57:37+00:00",
- "as_of": "2026-09-01T22:57:37+00:00",
+ "generated_at": "2026-09-03T22:22:08+00:00",
+ "as_of": "2026-09-03T22:22:08+00:00",
  "window_days": 90,
  "partial": true,
  "source": "static-fallback",
  "events": [
-  {
-   "date": "2026-08-27",
-   "type": "macro",
-   "title": "初请失业金",
-   "title_en": "Initial jobless claims",
-   "tickers": [],
-   "note": "08:30 ET 每周初请失业金人数;劳动力市场的高频脉搏。",
-   "note_en": "Weekly initial jobless claims at 08:30 ET — the high-frequency labor pulse."
-  },
   {
    "date": "2026-08-31",
    "type": "rebal",
@@ -373,6 +364,15 @@
    ],
    "note": "MSCI 半年度成分调整生效;权重最大的纳入/剔除名单常在尾盘出现巨量买卖(名单由 MSCI 提前约 2 周公布)。",
    "note_en": "MSCI semi-annual constituent changes take effect; the largest additions/deletions often see outsized closing prints (MSCI publishes the list ~2 weeks ahead)."
+  },
+  {
+   "date": "2026-12-02",
+   "type": "macro",
+   "title": "小非农 · ADP 私营就业",
+   "title_en": "ADP private payrolls (小非农)",
+   "tickers": [],
+   "note": "08:15 ET 公布上月 ADP 私营部门就业;大非农的前哨,常引导预期。",
+   "note_en": "Prior month's ADP private-sector jobs at 08:15 ET — a lead-in to the big NFP."
   }
  ]
 }
