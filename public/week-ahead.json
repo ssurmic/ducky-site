@@ -1,87 +1,15 @@
 {
  "schema": "week-ahead/1",
- "generated_at": "2026-09-01T17:52:57+00:00",
- "as_of": "2026-09-01T17:52:57+00:00",
+ "generated_at": "2026-09-02T21:01:32+00:00",
+ "as_of": "2026-09-02T21:01:32+00:00",
  "week_of": "08/31–09/04",
  "events": [
   {
    "dow": "周二",
    "dow_en": "Tue",
    "date": "09/01",
-   "et": "10:00am et",
-   "name": "IBD/TIPP Economic Optimism",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周二",
-   "dow_en": "Tue",
-   "date": "09/01",
-   "et": "10:00am et",
-   "name": "ISM Manufacturing Employment",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周二",
-   "dow_en": "Tue",
-   "date": "09/01",
-   "et": "10:00am et",
-   "name": "ISM Manufacturing New Orders Index",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周二",
-   "dow_en": "Tue",
-   "date": "09/01",
-   "et": "10:00am et",
-   "name": "ISM Manufacturing PMI",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周二",
-   "dow_en": "Tue",
-   "date": "09/01",
-   "et": "10:00am et",
-   "name": "ISM Manufacturing Prices",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周二",
-   "dow_en": "Tue",
-   "date": "09/01",
-   "et": "10:00am et",
-   "name": "JOLTS Job Openings",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周二",
-   "dow_en": "Tue",
-   "date": "09/01",
-   "et": "11:50am et",
-   "name": "Atlanta Fed GDPNow",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周二",
-   "dow_en": "Tue",
-   "date": "09/01",
-   "et": "9:05am et",
-   "name": "Fed Vice Chair for Supervision Barr Speaks",
-   "kind": "macro",
-   "tier": "fed"
-  },
-  {
-   "dow": "周二",
-   "dow_en": "Tue",
-   "date": "09/01",
-   "et_zh": "盘后",
-   "et_en": "AH",
+   "et_zh": "",
+   "et_en": "",
    "name": "CRDO",
    "kind": "earnings",
    "watch": true
@@ -90,8 +18,8 @@
    "dow": "周二",
    "dow_en": "Tue",
    "date": "09/01",
-   "et_zh": "盘后",
-   "et_en": "AH",
+   "et_zh": "",
+   "et_en": "",
    "name": "PANW",
    "kind": "earnings",
    "watch": false
@@ -100,8 +28,8 @@
    "dow": "周二",
    "dow_en": "Tue",
    "date": "09/01",
-   "et_zh": "盘后",
-   "et_en": "AH",
+   "et_zh": "",
+   "et_en": "",
    "name": "DELL",
    "kind": "earnings",
    "watch": false
@@ -110,8 +38,8 @@
    "dow": "周二",
    "dow_en": "Tue",
    "date": "09/01",
-   "et_zh": "盘前",
-   "et_en": "BMO",
+   "et_zh": "",
+   "et_en": "",
    "name": "MDT",
    "kind": "earnings",
    "watch": false
@@ -120,10 +48,73 @@
    "dow": "周三",
    "dow_en": "Wed",
    "date": "09/02",
-   "et": "8:15am et",
-   "name": "ADP Nonfarm Employment Change",
+   "et": "10:00am et",
+   "name": "IBD/TIPP Economic Optimism",
    "kind": "macro",
    "tier": "high"
+  },
+  {
+   "dow": "周三",
+   "dow_en": "Wed",
+   "date": "09/02",
+   "et": "10:00am et",
+   "name": "ISM Manufacturing Employment",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周三",
+   "dow_en": "Wed",
+   "date": "09/02",
+   "et": "10:00am et",
+   "name": "ISM Manufacturing New Orders Index",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周三",
+   "dow_en": "Wed",
+   "date": "09/02",
+   "et": "10:00am et",
+   "name": "ISM Manufacturing PMI",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周三",
+   "dow_en": "Wed",
+   "date": "09/02",
+   "et": "10:00am et",
+   "name": "ISM Manufacturing Prices",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周三",
+   "dow_en": "Wed",
+   "date": "09/02",
+   "et": "10:00am et",
+   "name": "JOLTS Job Openings",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周三",
+   "dow_en": "Wed",
+   "date": "09/02",
+   "et": "11:50am et",
+   "name": "Atlanta Fed GDPNow",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周三",
+   "dow_en": "Wed",
+   "date": "09/02",
+   "et": "9:05am et",
+   "name": "Fed Vice Chair for Supervision Barr Speaks",
+   "kind": "macro",
+   "tier": "fed"
   },
   {
    "dow": "周三",
@@ -159,6 +150,96 @@
    "dow": "周四",
    "dow_en": "Thu",
    "date": "09/03",
+   "et": "8:30am et",
+   "name": "Continuing Jobless Claims",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "8:30am et",
+   "name": "Initial Jobless Claims",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "8:30am et",
+   "name": "Jobless Claims 4-Week Avg.",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "8:30am et",
+   "name": "Nonfarm Productivity",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "10:00am et",
+   "name": "ISM Non-Manufacturing Business Activity",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "10:00am et",
+   "name": "ISM Non-Manufacturing Employment",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "10:00am et",
+   "name": "ISM Non-Manufacturing New Orders",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "10:00am et",
+   "name": "ISM Non-Manufacturing PMI",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "10:00am et",
+   "name": "ISM Non-Manufacturing Prices",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
+   "et": "8:30am et",
+   "name": "Fed Waller Speaks",
+   "kind": "macro",
+   "tier": "fed"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/03",
    "et_zh": "盘前",
    "et_en": "BMO",
    "name": "CIEN",
@@ -170,54 +251,9 @@
    "dow_en": "Fri",
    "date": "09/04",
    "et": "8:30am et",
-   "name": "Government Payrolls",
+   "name": "Fed Waller Speaks",
    "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周五",
-   "dow_en": "Fri",
-   "date": "09/04",
-   "et": "8:30am et",
-   "name": "Manufacturing Payrolls",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周五",
-   "dow_en": "Fri",
-   "date": "09/04",
-   "et": "8:30am et",
-   "name": "Nonfarm Payrolls",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周五",
-   "dow_en": "Fri",
-   "date": "09/04",
-   "et": "8:30am et",
-   "name": "Private Nonfarm Payrolls",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周五",
-   "dow_en": "Fri",
-   "date": "09/04",
-   "et": "8:30am et",
-   "name": "U6 Unemployment Rate",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周五",
-   "dow_en": "Fri",
-   "date": "09/04",
-   "et": "8:30am et",
-   "name": "Unemployment Rate",
-   "kind": "macro",
-   "tier": "high"
+   "tier": "fed"
   }
  ]
 }
