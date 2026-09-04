@@ -1,7 +1,7 @@
 {
  "schema": "week-ahead/1",
- "generated_at": "2026-09-02T21:01:32+00:00",
- "as_of": "2026-09-02T21:01:32+00:00",
+ "generated_at": "2026-09-03T21:01:08+00:00",
+ "as_of": "2026-09-03T21:01:08+00:00",
  "week_of": "08/31–09/04",
  "events": [
   {
@@ -20,7 +20,7 @@
    "date": "09/01",
    "et_zh": "",
    "et_en": "",
-   "name": "PANW",
+   "name": "DELL",
    "kind": "earnings",
    "watch": false
   },
@@ -30,7 +30,7 @@
    "date": "09/01",
    "et_zh": "",
    "et_en": "",
-   "name": "DELL",
+   "name": "PANW",
    "kind": "earnings",
    "watch": false
   },
@@ -120,8 +120,8 @@
    "dow": "周三",
    "dow_en": "Wed",
    "date": "09/02",
-   "et_zh": "盘后",
-   "et_en": "AH",
+   "et_zh": "",
+   "et_en": "",
    "name": "AVGO",
    "kind": "earnings",
    "watch": false
@@ -130,8 +130,8 @@
    "dow": "周三",
    "dow_en": "Wed",
    "date": "09/02",
-   "et_zh": "盘后",
-   "et_en": "AH",
+   "et_zh": "",
+   "et_en": "",
    "name": "SNOW",
    "kind": "earnings",
    "watch": false
@@ -140,8 +140,8 @@
    "dow": "周三",
    "dow_en": "Wed",
    "date": "09/02",
-   "et_zh": "盘后",
-   "et_en": "AH",
+   "et_zh": "",
+   "et_en": "",
    "name": "HPE",
    "kind": "earnings",
    "watch": false
@@ -150,91 +150,10 @@
    "dow": "周四",
    "dow_en": "Thu",
    "date": "09/03",
-   "et": "8:30am et",
-   "name": "Continuing Jobless Claims",
+   "et": "8:15am et",
+   "name": "ADP Nonfarm Employment Change",
    "kind": "macro",
    "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/03",
-   "et": "8:30am et",
-   "name": "Initial Jobless Claims",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/03",
-   "et": "8:30am et",
-   "name": "Jobless Claims 4-Week Avg.",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/03",
-   "et": "8:30am et",
-   "name": "Nonfarm Productivity",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/03",
-   "et": "10:00am et",
-   "name": "ISM Non-Manufacturing Business Activity",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/03",
-   "et": "10:00am et",
-   "name": "ISM Non-Manufacturing Employment",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/03",
-   "et": "10:00am et",
-   "name": "ISM Non-Manufacturing New Orders",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/03",
-   "et": "10:00am et",
-   "name": "ISM Non-Manufacturing PMI",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/03",
-   "et": "10:00am et",
-   "name": "ISM Non-Manufacturing Prices",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/03",
-   "et": "8:30am et",
-   "name": "Fed Waller Speaks",
-   "kind": "macro",
-   "tier": "fed"
   },
   {
    "dow": "周四",
@@ -251,7 +170,97 @@
    "dow_en": "Fri",
    "date": "09/04",
    "et": "8:30am et",
+   "name": "Continuing Jobless Claims",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/04",
+   "et": "8:30am et",
+   "name": "Initial Jobless Claims",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/04",
+   "et": "8:30am et",
+   "name": "Jobless Claims 4-Week Avg.",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/04",
+   "et": "8:30am et",
+   "name": "Nonfarm Productivity",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/04",
+   "et": "10:00am et",
+   "name": "ISM Non-Manufacturing Business Activity",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/04",
+   "et": "10:00am et",
+   "name": "ISM Non-Manufacturing Employment",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/04",
+   "et": "10:00am et",
+   "name": "ISM Non-Manufacturing New Orders",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/04",
+   "et": "10:00am et",
+   "name": "ISM Non-Manufacturing PMI",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/04",
+   "et": "10:00am et",
+   "name": "ISM Non-Manufacturing Prices",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/04",
+   "et": "8:30am et",
    "name": "Fed Waller Speaks",
+   "kind": "macro",
+   "tier": "fed"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/04",
+   "et": "3:55pm et",
+   "name": "Fed Goolsbee Speaks",
    "kind": "macro",
    "tier": "fed"
   }
