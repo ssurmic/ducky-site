@@ -1,9 +1,81 @@
 {
  "schema": "week-ahead/1",
- "generated_at": "2026-09-03T21:01:08+00:00",
- "as_of": "2026-09-03T21:01:08+00:00",
+ "generated_at": "2026-09-04T21:01:10+00:00",
+ "as_of": "2026-09-04T21:01:10+00:00",
  "week_of": "08/31–09/04",
  "events": [
+  {
+   "dow": "周二",
+   "dow_en": "Tue",
+   "date": "09/01",
+   "et": "10:00am et",
+   "name": "IBD/TIPP Economic Optimism",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周二",
+   "dow_en": "Tue",
+   "date": "09/01",
+   "et": "10:00am et",
+   "name": "ISM Manufacturing Employment",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周二",
+   "dow_en": "Tue",
+   "date": "09/01",
+   "et": "10:00am et",
+   "name": "ISM Manufacturing New Orders Index",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周二",
+   "dow_en": "Tue",
+   "date": "09/01",
+   "et": "10:00am et",
+   "name": "ISM Manufacturing PMI",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周二",
+   "dow_en": "Tue",
+   "date": "09/01",
+   "et": "10:00am et",
+   "name": "ISM Manufacturing Prices",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周二",
+   "dow_en": "Tue",
+   "date": "09/01",
+   "et": "10:00am et",
+   "name": "JOLTS Job Openings",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周二",
+   "dow_en": "Tue",
+   "date": "09/01",
+   "et": "11:50am et",
+   "name": "Atlanta Fed GDPNow",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周二",
+   "dow_en": "Tue",
+   "date": "09/01",
+   "et": "9:05am et",
+   "name": "Fed Vice Chair for Supervision Barr Speaks",
+   "kind": "macro",
+   "tier": "fed"
+  },
   {
    "dow": "周二",
    "dow_en": "Tue",
@@ -43,69 +115,6 @@
    "name": "MDT",
    "kind": "earnings",
    "watch": false
-  },
-  {
-   "dow": "周三",
-   "dow_en": "Wed",
-   "date": "09/02",
-   "et": "10:00am et",
-   "name": "IBD/TIPP Economic Optimism",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周三",
-   "dow_en": "Wed",
-   "date": "09/02",
-   "et": "10:00am et",
-   "name": "ISM Manufacturing Employment",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周三",
-   "dow_en": "Wed",
-   "date": "09/02",
-   "et": "10:00am et",
-   "name": "ISM Manufacturing New Orders Index",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周三",
-   "dow_en": "Wed",
-   "date": "09/02",
-   "et": "10:00am et",
-   "name": "ISM Manufacturing PMI",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周三",
-   "dow_en": "Wed",
-   "date": "09/02",
-   "et": "10:00am et",
-   "name": "ISM Manufacturing Prices",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周三",
-   "dow_en": "Wed",
-   "date": "09/02",
-   "et": "10:00am et",
-   "name": "JOLTS Job Openings",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周三",
-   "dow_en": "Wed",
-   "date": "09/02",
-   "et": "11:50am et",
-   "name": "Atlanta Fed GDPNow",
-   "kind": "macro",
-   "tier": "high"
   },
   {
    "dow": "周三",
@@ -154,16 +163,6 @@
    "name": "ADP Nonfarm Employment Change",
    "kind": "macro",
    "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/03",
-   "et_zh": "盘前",
-   "et_en": "BMO",
-   "name": "CIEN",
-   "kind": "earnings",
-   "watch": false
   },
   {
    "dow": "周五",
