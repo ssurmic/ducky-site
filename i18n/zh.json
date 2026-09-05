@@ -23,7 +23,7 @@
   "hero.carousel_label": "手机推送示意与战绩卡，可左右滑动",
   "hero.s2_label": "战绩卡：LIVE 信号等权曲线 vs SPY",
   "hero.s2_stats": "LIVE {live} 条全公开 · 亏的也列 · 每晚公证存档 · 改不了",
-  "hero.s2_nav": "信号等权",
+  "hero.s2_nav": "模拟组合",
   "hero.s2_note": "假设性等权曲线（持有 20 个交易日、不含费用），不是任何真实账户 · 台账每晚公证存档，改不了",
   "hero.s2_caption": "LIVE 起步 7 周：信号等权 {nav}，SPY {spy}——不好看也照登，这才叫台账。",
   "hero.s2_cta": "看完整台账 →",
@@ -457,7 +457,7 @@
   "track.col_hit20": "+20d 命中",
   "track.col_avg20": "+20d 平均",
   "track.equity_h2": "假设性权益曲线",
-  "track.equity_note": "LIVE 信号等权、持有 20 个交易日、基准 100，不含手续费 / 滑点 / 税费。这是台账的另一种画法，不是任何真实账户。",
+  "track.equity_note": "以信号基准日收盘价起算：看多按多头、看空按空头，中性消息也默认按多头。每天对有效持仓的单日收益取平均，再逐日复利；重复消息可能重复计权。SPY 为同期买入持有。这是旧口径的模拟，不代表已筛选的超跌策略；完整亏损记录保留。 不含手续费、滑点、税费及借券成本。",
   "track.equity_nochart": "图表库未加载。曲线：{first} → {last}（{n} 个点）。",
   "track.backtest_h2": "K 指数回测",
   "track.backtest_line": "K<1 时买入 {target}，持有 {window} 个交易日：",
@@ -1080,8 +1080,8 @@
   "rev.proof_tag": "记录可以核对",
   "rev.proof_h": "当时记录了什么，后来怎样？",
   "rev.proof_b": "选例说明工具怎样工作，不代表整体胜率。实时记录与历史回测分别标注，完整台账保留亏损。",
-  "rev.curve": "整体表现也放在这里",
-  "rev.curve_note": "假设性等权信号组合，持有 20 个交易日。不是真实账户；不含费用、滑点和税。",
+  "rev.curve": "历史信号模拟组合",
+  "rev.curve_note": "按消息方向等权模拟，持有 20 个交易日；不含交易成本。",
   "rev.all_records": "看完整战绩与方法 →",
   "rev.case_vrt": "财报之后，继续跟踪",
   "rev.case_smh": "半导体恐慌阶段的历史重建",
@@ -1148,5 +1148,7 @@
   "app.watch.date_unknown": "时间未提供",
   "app.watch.refresh": "刷新",
   "app.chart.last_bar": "最近日线：{date} · 不是逐笔实时报价",
-  "app.creators.archive_hint": "仅保留视频标题和发布时间；尚无足够原文依据生成观点摘要。"
+  "app.creators.archive_hint": "仅保留视频标题和发布时间；尚无足够原文依据生成观点摘要。",
+  "rev.curve_method": "这条线怎么算？",
+  "rev.curve_method_body": "以信号基准日收盘价起算：看多按多头、看空按空头，中性消息也默认按多头。每天对有效持仓的单日收益取平均，再逐日复利；重复消息可能重复计权。SPY 为同期买入持有。这是旧口径的模拟，不代表已筛选的超跌策略；完整亏损记录保留。"
 }

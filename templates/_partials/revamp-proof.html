@@ -3,11 +3,11 @@
  <div class="proof-workspace">
   <div class="proof-curve">
    {% if track_stats.ok %}
-   <span class="badge badge-live">LIVE</span><h3>{{ t('rev.curve') }}</h3>
+   <span class="badge badge-backtest">PAPER · LIVE DATA</span><h3>{{ t('rev.curve') }}</h3>
    <figure class="track-mini"><svg viewBox="0 0 {{ track_stats.eq.w }} {{ track_stats.eq.h }}" role="img" aria-label="{{ t('hero.s2_label') }}">{% for tick in track_stats.eq.ticks %}<line class="eq-grid" x1="{{ track_stats.eq.left }}" x2="{{ track_stats.eq.right }}" y1="{{ tick.y }}" y2="{{ tick.y }}"/><text class="eq-axis" x="3" y="{{ tick.y + 3 }}">{{ tick.label }}</text>{% endfor %}<polyline class="eq-spy" points="{{ track_stats.eq.spy }}"/><polyline class="eq-nav" points="{{ track_stats.eq.nav }}"/></svg>
    <figcaption class="mono">{{ track_stats.eq.first }} → {{ track_stats.eq.last }}</figcaption></figure>
    <div class="proof-values"><div><small>{{ t('hero.s2_nav') }}</small><b class="mono">{{ track_stats.eq.nav_last }}</b></div><div><small>SPY</small><b class="mono">{{ track_stats.eq.spy_last }}</b></div></div>
-   <p class="muted small">{{ t('rev.curve_note') }}</p>
+   <p class="muted small">{{ t('rev.curve_note') }}</p><details class="small"><summary>{{ t('rev.curve_method') }}</summary><p class="muted">{{ t('rev.curve_method_body') }}</p></details>
    {% else %}<p>{{ t('stats.notary') }}</p>{% endif %}
    <a class="btn btn-ghost" href="{{ url('/track-record/') }}">{{ t('rev.all_records') }}</a>
   </div>

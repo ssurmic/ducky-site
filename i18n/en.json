@@ -23,7 +23,7 @@
   "hero.carousel_label": "Sample pushes and the track-record card — swipe sideways",
   "hero.s2_label": "Track-record card: LIVE signals equal-weight curve vs SPY",
   "hero.s2_stats": "{live} LIVE signals · full history, including losses",
-  "hero.s2_nav": "signals",
+  "hero.s2_nav": "Simulation",
   "hero.s2_note": "Hypothetical equal-weight basket, held for 20 trading days. Excludes fees. Historical signals, not an actual account.",
   "hero.s2_caption": "Over this window: signals {nav}, SPY {spy}. The full ledger includes every loss.",
   "hero.s2_cta": "See the full ledger →",
@@ -457,7 +457,7 @@
   "track.col_hit20": "+20d hit",
   "track.col_avg20": "+20d avg",
   "track.equity_h2": "Hypothetical equity curve",
-  "track.equity_note": "LIVE signals, equal-weight, held 20 trading days, base 100, no fees / slippage / taxes. Another drawing of the ledger — not any real account.",
+  "track.equity_note": "Positions begin at the signal base-date close: bullish messages are treated as long positions, bearish messages as shorts, and neutral messages as longs. Active positions’ daily returns are averaged and compounded; repeated messages can receive repeated weight. SPY is buy-and-hold over the same period. This legacy simulation is not a validated oversold strategy. All losses remain in the record. Fees, slippage, taxes and stock-borrow costs are excluded.",
   "track.equity_nochart": "Chart library not loaded. Curve: {first} → {last} ({n} points).",
   "track.backtest_h2": "K-index backtest",
   "track.backtest_line": "Buy {target} when K<1, hold {window} trading days:",
@@ -1080,8 +1080,8 @@
   "rev.proof_tag": "RECORDS YOU CAN CHECK",
   "rev.proof_h": "What did we record? What happened next?",
   "rev.proof_b": "Selected examples show how the tool works, not its overall success rate. Live records and backtests are labeled separately; losses remain in the full ledger.",
-  "rev.curve": "The whole picture, too",
-  "rev.curve_note": "Hypothetical equal-weight signal portfolio, held for 20 trading days. Not an actual account; excludes fees, slippage and taxes.",
+  "rev.curve": "Historical signal simulation",
+  "rev.curve_note": "Equal-weight simulation using message direction, with 20-session holds. Trading costs excluded.",
   "rev.all_records": "Full record and methodology →",
   "rev.case_vrt": "Following an earnings release",
   "rev.case_smh": "Reconstructing a semiconductor stress period",
@@ -1148,5 +1148,7 @@
   "app.watch.date_unknown": "time unavailable",
   "app.watch.refresh": "Refresh",
   "app.chart.last_bar": "Latest daily bar: {date} · not a real-time quote",
-  "app.creators.archive_hint": "Title and publication date only. There is not enough source evidence for a reliable summary."
+  "app.creators.archive_hint": "Title and publication date only. There is not enough source evidence for a reliable summary.",
+  "rev.curve_method": "How is this calculated?",
+  "rev.curve_method_body": "Positions begin at the signal base-date close: bullish messages are treated as long positions, bearish messages as shorts, and neutral messages as longs. Active positions’ daily returns are averaged and compounded; repeated messages can receive repeated weight. SPY is buy-and-hold over the same period. This legacy simulation is not a validated oversold strategy. All losses remain in the record."
 }
