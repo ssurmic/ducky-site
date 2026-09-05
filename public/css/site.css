@@ -926,3 +926,6 @@ button.cr-chip[disabled] { opacity: .55; cursor: default; }
 .proof-curve .btn { max-width: 100%; white-space: normal; }
 .case-result .pos { color: var(--green); }
 .case-result .neg { color: var(--red); }
+
+.eq-grid { stroke: var(--border); stroke-width: .7; stroke-dasharray: 3 4; }
+.eq-axis { fill: var(--muted); font: 9px ui-monospace, monospace; }

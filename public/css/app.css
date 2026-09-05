@@ -502,3 +502,10 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 .brd-full { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.75; }
 .brd-archive-tag { display: inline-block; margin: 12px 4px 0; padding: 3px 7px; border: 1px solid var(--border); border-radius: 5px; color: var(--muted); font-size: 10px; }
 .brd-receipt-note { padding-left: 10px; border-left: 2px solid var(--border); }
+
+.snap-freshness { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px; }
+
+.pill-ic .app-icon { width: 12px; height: 12px; }
+.cal-ico .app-icon { width: 18px; height: 18px; }
+
+.cr-chip.on { background: color-mix(in srgb, var(--accent) 10%, var(--surface)); color: var(--text); border-color: color-mix(in srgb, var(--accent) 28%, var(--border)); font-weight: 500; }

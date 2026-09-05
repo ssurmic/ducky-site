@@ -3,6 +3,12 @@
    Copy: every app.* key from i18n/<lang>.json is embedded as a JSON data block (type="application/json" is not
    executed, so CSP script-src does not apply); public/js/app/strings.js reads it. Keep app_keys in sync with i18n. #}
 {% set app_keys = [
+  "creators.archive_hint",
+  "watch.updated",
+  "watch.date_unknown",
+  "watch.refresh",
+  "chart.last_bar",
+
   "boards.history",
   "boards.history_note",
   "boards.missing_body",

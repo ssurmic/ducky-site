@@ -1,3 +1,4 @@
+import { icon } from "../icons.js";
 // views/calendar.js — 投资日历 (Pro): a real month GRID (not just a list) of the events that move a
 // US-stock watchlist — Fed speakers (ET times), FOMC / rate decisions, CPI/PPI/PCE macro, earnings,
 // OPEX / quad witching, index & month-end rebalances. Click a day → that day's events. The user's own
@@ -8,7 +9,7 @@ import * as store from "../store.js";
 import * as router from "../router.js";
 import { el, clear, spinner, empty } from "../ui.js";
 
-const ICON = { macro: "📊", earnings: "📈", opex: "🎰", witching: "🎰", rebal: "🔄" };
+const ICON = { macro: "liquidity", earnings: "chart", opex: "calendar", witching: "calendar", rebal: "digest" };
 const DOTC = { macro: "var(--accent)", earnings: "#4ea1ff", opex: "#c07cff", witching: "#c07cff", rebal: "#33c793" };
 const FILTERS = ["all", "macro", "earnings", "opex", "rebal"];
 const FILTER_TYPES = { all: null, macro: ["macro"], earnings: ["earnings"], opex: ["opex", "witching"], rebal: ["rebal"] };
@@ -176,7 +177,7 @@ export async function mount(root) {
         } else {
           const full = isZh ? (e.title || "") : (e.title_en || e.title || "");
           const pill = el("span.pill.pill-" + e.type, { title: full });
-          pill.appendChild(el("span.pill-ic", { "aria-hidden": "true" }, ICON[e.type] || "•"));
+          pill.appendChild(el("span.pill-ic", { "aria-hidden": "true" }, icon(ICON[e.type] || "calendar")));
           pill.appendChild(el("span.pill-txt", shortLabel(e, isZh)));
           box.appendChild(pill);
         }
@@ -280,7 +281,7 @@ export async function mount(root) {
         const isMine = isPro && evHasMine(e);
         const row = el("div.cal-ev" + (isMine ? ".cal-mine-ev" : "") + ".cal-t-" + e.type);
         if (e.type === "earnings" && e.logo) row.appendChild(el("img.cal-ev-logo", { src: e.logo, alt: (e.tickers || [])[0] || "", loading: "lazy" }));
-        else row.appendChild(el("span.cal-ico", { "aria-hidden": "true" }, ICON[e.type] || "•"));
+        else row.appendChild(el("span.cal-ico", { "aria-hidden": "true" }, icon(ICON[e.type] || "calendar")));
         const main = el("div.cal-main");
         const title = el("div.cal-title", isZh ? (e.title || "") : (e.title_en || e.title || ""));
         for (const t of (e.tickers || [])) title.appendChild(el("a.cal-tk.mono" + (watchSet.has(String(t).toUpperCase()) ? ".on" : ""), { href: "#/chart/" + encodeURIComponent(t) }, "$" + t));

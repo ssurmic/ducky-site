@@ -5,6 +5,7 @@ import * as store from "../store.js";
 import * as overlays from "../overlays.js";
 import { el, clear, spinner, errorBox, lock, px, num } from "../ui.js";
 import { normalizeList } from "./watchlist.js";
+import { unpackSnapshot, reusableSnapshot } from "../snapshot-model.js";
 
 const PERIODS = ["3mo", "6mo", "1y", "2y"];
 // server truth (app.py PERIOD_BARS / BARS_PERIOD): free→6mo, paid→1y, pro→2y. Used to gate the period
@@ -79,6 +80,7 @@ export async function mount(root, params) {
     clear(status);
     if (!bars.length) { status.appendChild(el("p.muted", s("chart.no_bars"))); return; }
     const spot = document.getElementById("chart-spot"); if (spot) spot.textContent = px(bars[bars.length - 1].close);
+    status.appendChild(el("p.muted.small", s("chart.last_bar", {date: String(bars[bars.length - 1].time)})));
 
     const text = cssVar("--muted", "#9aa7b4"), grid = cssVar("--border", "#223041"), up = cssVar("--green", "#3fb950"), down = cssVar("--red", "#f85149");
     chart = LWC.createChart(host, {
@@ -122,10 +124,10 @@ export async function mount(root, params) {
       legendRow.appendChild(spinner(s("chart.loading_snapshot")));
       try {
         const snaps = store.get("snapshots") || {};
-        let snap = snaps[ticker] && snaps[ticker].ok ? snaps[ticker] : null;
+        let snap = reusableSnapshot(snaps[ticker]) ? snaps[ticker] : null;
         // finding chart.js:97 — /snapshot wraps data as {ticker, snapshot:{…}} (app.py _snap_payload); unwrap it
         // (same class as the watchlist bug) so the .ok/overlays fields exist and the store isn't poisoned.
-        if (!snap) { const r = await api.snapshot(ticker, { tries: 6 }); if (!api.isAccepted(r)) { snap = r && r.snapshot ? r.snapshot : r; store.patch("snapshots", { [ticker]: snap }); } }
+        if (!snap) { const r = await api.snapshot(ticker, { tries: 6 }); if (!api.isAccepted(r)) { snap = unpackSnapshot(r); store.patch("snapshots", { [ticker]: snap }); } }
         if (my !== drawSeq || !alive || !chart) return;   // finding chart.js:63 — recheck before applying overlays
         clear(legendRow);
         if (snap && snap.ok) {

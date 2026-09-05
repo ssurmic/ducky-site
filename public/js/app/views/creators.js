@@ -99,9 +99,17 @@ export async function mount(root) {
       controls.appendChild(el("button.btn.btn-ghost.btn-sm", {type:"button", "aria-pressed":String(mine===value), onclick:()=>{mine=value;render();}},s(key)));
     }
     const search=el("input.input", {type:"search",value:query,"aria-label":s("creators.search"),placeholder:s("creators.search")});
-    search.addEventListener("input",()=>{query=search.value;const at=search.selectionStart;render();const next=card.querySelector('input[type="search"]');next.focus();next.setSelectionRange(at,at);});
+    search.addEventListener("input",()=>{query=search.value;renderContent();});
     controls.appendChild(search);card.appendChild(controls);
-    card.appendChild(el("h2.cr-sub", s(mine ? "creators.mine" : "creators.grid_h")));
+    card.appendChild(el("div.creators-content"));
+    renderContent();
+  }
+
+  function renderContent() {
+    const content = card.querySelector(".creators-content");
+    clear(content);
+    const isPro = store.isPro();
+    content.appendChild(el("h2.cr-sub", s(mine ? "creators.mine" : "creators.grid_h")));
     const grid = el("div.cr-grid");
     for (const k of kols.filter(k => (!mine || following.has(k.id)) && (!query || (k.name || k.id).toLocaleLowerCase().includes(query.toLocaleLowerCase())))) {
       const on = following.has(k.id);
@@ -110,14 +118,14 @@ export async function mount(root) {
       chip.addEventListener("click", () => { if (isPro) toggle(k.id, chip); else router.go("#/billing"); });
       grid.appendChild(chip);
     }
-    card.appendChild(grid);
+    content.appendChild(grid);
 
-    card.appendChild(el("h2.cr-sub", s("creators.feed_h")));
+    content.appendChild(el("h2.cr-sub", s("creators.feed_h")));
     const archiveBtn = el("button.btn.btn-ghost.btn-sm", { type: "button", "aria-pressed": String(archive), onclick: () => { archive = !archive; render(); } }, s(archive ? "creators.only_grounded" : "creators.show_archive"));
-    card.appendChild(archiveBtn);
-    if (mine && !following.size) {card.appendChild(empty(s("creators.no_following")));return;}
+    content.appendChild(archiveBtn);
+    if (mine && !following.size) {content.appendChild(empty(s("creators.no_following")));return;}
     const visiblePosts = filterPosts(posts, {following,mine,archive,query});
-    if (!visiblePosts.length) { card.appendChild(empty(s("creators.feed_empty"))); return; }
+    if (!visiblePosts.length) { content.appendChild(empty(s("creators.feed_empty"))); return; }
     const feed = el("div.cr-feed");
     for (const p of visiblePosts.slice(0, 40)) {
       const grounded = hasGroundedCalls(p);
@@ -126,17 +134,19 @@ export async function mount(root) {
       const head = el("div.cr-post-head",
         el("b.cr-who", (p.kol_name || p.kol_id || "")),
         el("span.cr-take." + TAKE_CLS[stance], grounded ? s("creators.take_" + stance) : s("creators.unverified")));
-      if (p.tickers && p.tickers.length) head.appendChild(el("span.cr-tks.mono", p.tickers.slice(0, 4).map((t) => "$" + t).join(" · ")));
+      if (grounded && p.tickers && p.tickers.length) head.appendChild(el("span.cr-tks.mono", p.tickers.slice(0, 4).map((t) => "$" + t).join(" · ")));
       art.appendChild(head);
       art.appendChild(el("time.muted.small", { datetime: p.published_at || "" }, s("creators.published") + " " + videoDate(p.published_at,isZh ? "zh-CN" : "en-US")));
       if (p.title) art.appendChild(el("h3.cr-video-title", p.title));
-      art.appendChild(el("p.cr-attribution.muted.small", s("creators.attribution", { name: p.kol_name || p.kol_id || "—" })));
-      art.appendChild(el("p.cr-sum", pickSummary(p.summary, isZh)));
+      if (grounded) {
+        art.appendChild(el("p.cr-attribution.muted.small", s("creators.attribution", { name: p.kol_name || p.kol_id || "—" })));
+        art.appendChild(el("p.cr-sum", pickSummary(p.summary, isZh)));
+      } else art.appendChild(el("p.muted.small", s("creators.archive_hint")));
       if (grounded && p.calls && p.calls.length) art.appendChild(callChips(p.calls, isZh));
       if (p.url) art.appendChild(el("a.cr-orig", { href: p.url, target: "_blank", rel: "noopener" }, s("creators.orig") + " ↗"));
       feed.appendChild(art);
     }
-    card.appendChild(feed);
+    content.appendChild(feed);
   }
 
   async function toggle(id, chip) {

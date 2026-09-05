@@ -101,8 +101,9 @@ export async function mount(root, params = {}) {
     } catch (err) { if (alive && store.epoch() === epoch) { clear(list); list.appendChild(errorBox(err, load)); } }
   }
   function scheduleRefresh() {
-    if (!alive || refreshTimer || refreshes >= 4) return;
-    refreshTimer = setTimeout(() => { refreshTimer = null; refreshes++; load(); }, 20000);
+    if (!alive || refreshTimer || document.visibilityState === "hidden") return;
+    // Long compiles must eventually settle in the UI; back off instead of stopping forever.
+    refreshTimer = setTimeout(() => { refreshTimer = null; refreshes++; load(); }, Math.min(60000, 20000 * (refreshes + 1)));
   }
 
   unsubs.push(store.subscribe("alerts", render));

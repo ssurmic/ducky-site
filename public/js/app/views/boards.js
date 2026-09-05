@@ -84,12 +84,12 @@ function dirArrow(n) { return n > 0 ? ["▲", "bull"] : n < 0 ? ["▼", "bear"] 
 
 export async function mount(root) {
   const isZh = (document.documentElement.lang || "zh").slice(0, 2) !== "en";
-  const card = el("section.card.boards-view");
+  const card = el("section.boards-view");
   root.appendChild(card);
   card.append(el("h1", s("boards.h1")), el("p.muted", s("boards.sub")));
   card.appendChild(spinner());
 
-  let results, wa = null, history = [];
+  let results, history = [];
   const staticCtl = new AbortController();
   const staticTimer = setTimeout(() => staticCtl.abort(), 15000);
   try {
@@ -98,9 +98,6 @@ export async function mount(root) {
         api.signals.board(b.kinds, { days: 7, limit: 12 }).then((r) => (r && r.items) || []).catch(() => null))),
       fetch("/radar-history.json", { signal: staticCtl.signal }).then(r => r.ok ? r.json() : null)
         .then(j => { history = j && Array.isArray(j.items) ? j.items : []; }).catch(() => {}),
-      // Week Ahead is a static file on the site; it may 404 until the backend publishes it → skip the block.
-      fetch("/week-ahead.json", { cache: "no-store", signal: staticCtl.signal }).then((r) => r.ok ? r.json() : null)
-        .then((j) => { if (j && Array.isArray(j.events) && j.events.length) wa = j; }).catch(() => {}),
     ]);
     clearTimeout(staticTimer);
     results = sig;
@@ -112,7 +109,6 @@ export async function mount(root) {
   card.append(el("h1", s("boards.h1")), el("p.muted", s("boards.sub")));
   card.appendChild(el("p.muted.small", s("boards.updated_window")));
   const grid = el("div.brd-grid");
-  if (wa) grid.appendChild(weekAheadCard(wa));
   BOARDS.forEach((b, i) => {
     const items = (results[i] || []).filter((it) => it && (it.ticker || it.summary || it.extra?.message_text));
     const sec = el("section.brd-card" + (b.wide ? ".brd-wide" : ""));
@@ -136,73 +132,11 @@ export async function mount(root) {
     }
     grid.appendChild(sec);
   });
+  card.appendChild(el("a.btn.btn-ghost.btn-sm", {href:"#/calendar"}, s("watch.events")));
   card.appendChild(grid);
   return () => {};
 
-  function weekAheadCard(doc) {
-    const sec = el("section.brd-card.brd-wide.wa-card");
-    const head = el("div.brd-head",
-      el("span.brd-ico", { "aria-hidden": "true" }, icon("calendar")),
-      el("div.brd-htext",
-        el("div.brd-title", (isZh ? "本周前瞻" : "Week Ahead") + (doc.week_of ? " · " + doc.week_of : "")),
-        el("div.brd-desc.muted", isZh ? "本周高影响宏观 + 重点财报(时间为美东 ET)。" : "This week's high-impact macro + key earnings (times ET).")));
-    const prev = el("button.wa-nav", { type: "button", "aria-label": isZh ? "上一天" : "previous" }, "‹");
-    const next = el("button.wa-nav", { type: "button", "aria-label": isZh ? "下一天" : "next" }, "›");
-    head.appendChild(el("div.wa-navs", prev, next));
-    sec.appendChild(head);
-
-    const byDay = new Map();
-    for (const e of doc.events) {
-      const k = (isZh ? e.dow : (e.dow_en || e.dow)) + "|" + (e.date || "");
-      if (!byDay.has(k)) byDay.set(k, []);
-      byDay.get(k).push(e);
-    }
-    const strip = el("div.wa-strip");
-    for (const [key, evs] of byDay) {
-      const dow = key.split("|")[0], dstr = key.split("|")[1] || "";
-      const col = el("div.wa-day");
-      col.appendChild(el("div.wa-dh", el("span.wa-dow", dow), el("span.wa-date.mono", dstr)));
-      const rows = waRows(evs);
-      for (const r of rows.shown) {
-        const row = el("div.wa-ev.wa-" + r.cls, { title: r.full });
-        row.appendChild(el("span.wa-et.mono", r.time || "—"));
-        row.appendChild(el("span.wa-nm" + (r.cls === "er" ? ".mono" : ""), r.label));
-        col.appendChild(row);
-      }
-      if (rows.more) col.appendChild(el("div.wa-more.muted", "+" + rows.more + (isZh ? " 项" : " more")));
-      if (!rows.shown.length) col.appendChild(el("div.wa-empty.muted", "—"));
-      strip.appendChild(col);
-    }
-    sec.appendChild(strip);
-    const step = () => (strip.querySelector(".wa-day") ? strip.querySelector(".wa-day").offsetWidth : 200) + 10;
-    const sync = () => { prev.disabled = strip.scrollLeft <= 2; next.disabled = strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 2; };
-    prev.addEventListener("click", () => strip.scrollBy({ left: -step(), behavior: "smooth" }));
-    next.addEventListener("click", () => strip.scrollBy({ left: step(), behavior: "smooth" }));
-    strip.addEventListener("scroll", sync, { passive: true });
-    requestAnimationFrame(sync);
-    return sec;
-  }
-
-  function waRows(evs) {
-    const watch = new Set((store.get("watchlist") || []).map(t => String(t).toUpperCase()));
-    const macro = [], ernW = [], ernO = [], seen = new Set();
-    for (const e of evs) {
-      if (e.kind === "earnings") {
-        const row = { cls: "er", time: (isZh ? e.et_zh : e.et_en) || "", label: "$" + (e.name || "") + (watch.has(String(e.name).toUpperCase()) ? " ★" : ""), full: "$" + (e.name || "") };
-        (watch.has(String(e.name).toUpperCase()) ? ernW : ernO).push(row);
-      } else {
-        const label = waMacroLabel(e.name || "", isZh);
-        if (!label || seen.has(label)) continue;   // drop noise + collapse ISM sub-readings
-        seen.add(label);
-        macro.push({ cls: "macro", time: String(e.et || "").replace(/\s*et$/i, ""), label: label, full: e.name || "" });
-      }
-    }
-    const all = ernW.concat(macro, ernO);         // my watched earnings first, then macro, then the rest
-    return { shown: all.slice(0, 6), more: Math.max(0, all.length - 6) };
-  }
-
   function itemRow(it) {
-    const [arrow, cls] = dirArrow(Number(it.direction) || 0);
     const kl = KIND_LABEL[it.kind] || [it.kind || "", it.kind || ""];
     const sum = (it.summary && String(it.summary).trim()) ? String(it.summary).trim() : "";
     const label = sum || (isZh ? kl[0] : kl[1]);

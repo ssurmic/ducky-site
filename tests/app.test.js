@@ -99,3 +99,38 @@ test('navigation retains all routes with named SVG links and a native mobile dis
  for(const a of links){assert.ok(a.textContent.trim());assert.ok(a.querySelector('svg[aria-hidden="true"] use'));}
  assert.ok(page.querySelector('.nav-more summary'));
 });
+
+test('snapshot browser cache preserves provenance and expires after one minute',async()=>{
+ const {unpackSnapshot,reusableSnapshot}=await import('../public/js/app/snapshot-model.js');
+ const snap=unpackSnapshot({snapshot:{ok:true,spot:123},built_at:'2026-09-04T20:00:00Z'},1000);
+ assert.equal(snap.built_at,'2026-09-04T20:00:00Z');
+ assert.equal(reusableSnapshot(snap,60999),true);assert.equal(reusableSnapshot(snap,61000),false);
+ assert.equal(reusableSnapshot(snap,0),false);assert.equal(reusableSnapshot({ok:true}),false);
+});
+
+test('long-running alert setup keeps polling with bounded backoff until ready',async()=>{
+ const oldTimer=globalThis.setTimeout;const oldClear=globalThis.clearTimeout;
+ const pending=[];let calls=0, timerId=0;const cancelled=new Set();
+ globalThis.setTimeout=(fn,ms)=>{const id=++timerId;pending.push({fn,ms,id});return id;};globalThis.clearTimeout=id=>cancelled.add(id);
+ globalThis.fetch=async()=>response({items:[{id:42,ticker:'NVDA',condition_nl:'RSI below 10',compile_state:++calls>=7?'done':'pending'}]});
+ store.set('alerts',[]);store.set('me',{tier:'pro'});const root=document.createElement('div');
+ let cleanup;
+ try {
+  cleanup=await alerts.mount(root);
+  for(let i=0;i<6;i++){
+   while(pending.length&&cancelled.has(pending[0].id))pending.shift();
+   const task=pending.shift();assert.ok(task,'polling stopped before the alert was ready');assert.ok(task.ms<=60000);task.fn();
+   for(let n=0;n<20;n++)await Promise.resolve();
+  }
+  assert.equal(calls,7);assert.equal(store.get('alerts')[0].state,'done');assert.equal(pending.filter(t=>!cancelled.has(t.id)).length,0);
+ }finally{cleanup?.();globalThis.setTimeout=oldTimer;globalThis.clearTimeout=oldClear;}
+});
+
+test('creator search keeps the input mounted and archives never show unsupported claims',async()=>{
+ globalThis.fetch=async(url)=>String(url).includes('/subs')?response({subs:['creator-a']}):response({kols:[{id:'creator-a',name:'Wall Street'}],posts:[{kol_id:'creator-a',kol_name:'Wall Street',title:'Memory report',published_at:'2026-09-04T20:02:00Z',tickers:['WRONG'],summary:'UNSUPPORTED CLAIM'}],subs:['creator-a']});
+ store.set('me',{tier:'pro'});const root=document.createElement('div');await creators.mount(root);
+ const search=root.querySelector('input[type="search"]');search.value='Wall Street';search.dispatchEvent(new window.Event('input'));
+ assert.equal(root.querySelector('input[type="search"]'),search);assert.equal(search.value,'Wall Street');
+ const archive=[...root.querySelectorAll('button')].find(b=>b.textContent===copy['app.creators.show_archive']);archive.click();
+ assert.ok(root.textContent.includes('Memory report'));assert.equal(root.textContent.includes('UNSUPPORTED CLAIM'),false);assert.equal(root.textContent.includes('$WRONG'),false);
+});

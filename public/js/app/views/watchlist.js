@@ -4,6 +4,7 @@ import { s } from "../strings.js";
 import * as api from "../api.js";
 import * as store from "../store.js";
 import * as tg from "../tg.js";
+import { unpackSnapshot, reusableSnapshot } from "../snapshot-model.js";
 import { el, clear, toast, spinner, empty, errorBox, lock, num, px, pct, int, signClass } from "../ui.js";
 
 const TICKER_RE = /^[A-Z][A-Z0-9.\-]{0,9}$/;
@@ -94,6 +95,10 @@ export async function mount(root) {
       c.appendChild(box); return c;
     }
     if (!snap.ok) { c.appendChild(el("p.muted", s("watch.no_data"))); return c; }
+    const stamp = snap.built_at ? new Date(snap.built_at) : null;
+    const stampText = stamp && !Number.isNaN(stamp.getTime()) ? stamp.toISOString().replace("T", " ").slice(0,16) + " UTC" : s("watch.date_unknown");
+    c.appendChild(el("div.snap-freshness", el("span.muted.small", s("watch.updated", {date:stampText})),
+      el("button.btn.btn-ghost.btn-sm", {type:"button",onclick:()=>loadSnapshot(t,true)},s("watch.refresh"))));
 
     const te = snap.tech || {}, r20 = (snap.retrace || {}).d20, rs = snap.rs || {}, v = snap.vol || {};
     const rows = el("dl.kv-grid");
@@ -153,15 +158,15 @@ export async function mount(root) {
     const snaps = store.get("snapshots") || {};
     // finding watchlist.js:118 — in-flight dedup: reuse the running fetch instead of starting a parallel
     // 6-try polling loop when a watchlist re-emit (or a double add) asks for the same ticker again.
-    if (!force && inflight.has(t)) return inflight.get(t);
-    if (!force && snaps[t] && !snaps[t].pending && snaps[t].ok) return Promise.resolve();
+    if (inflight.has(t)) return inflight.get(t);
+    if (!force && reusableSnapshot(snaps[t])) return Promise.resolve();
     const epoch = store.epoch();   // finding watchlist.js:123 — session guard for late responses
-    store.patch("snapshots", { [t]: { pending: true } });
+    if (!snaps[t]?.ok) store.patch("snapshots", { [t]: { pending: true } });
     const p = (async () => {
       try {
         const r = await api.snapshot(t, { tries: 6, onWait: () => { if (store.epoch() === epoch) store.patch("snapshots", { [t]: { pending: true } }); } });
         if (store.epoch() !== epoch) return;   // logged out mid-flight — don't repopulate the wiped store
-        const snap = r && r.snapshot ? r.snapshot : r;   // API wraps: {ticker, snapshot:{…}} (§4.2)
+        const snap = unpackSnapshot(r);
         store.patch("snapshots", { [t]: api.isAccepted(r) ? { ok: false, error: { message: s("common.building") } } : snap });
       } catch (err) {
         if (err.status === 401 || store.epoch() !== epoch) return;

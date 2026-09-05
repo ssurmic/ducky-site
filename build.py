@@ -240,15 +240,19 @@ def load_track_stats() -> dict:
               if isinstance(p_, dict) and p_.get("v") is not None and p_.get("spy") is not None]
         if not (total and best and len(eq) >= 2):
             return {"ok": False}
-        w, h, pad = 280, 96, 6
+        w, h, pad = 360, 160, 12
+        left = 42
         vals = [p_["v"] for p_ in eq] + [p_["spy"] for p_ in eq]
-        lo, hi = min(vals), max(vals)
+        lo, hi = min(min(vals), 1.0), max(max(vals), 1.0)
+        margin = max((hi - lo) * .12, .005)
+        lo -= margin
+        hi += margin
         span = (hi - lo) or 1.0
         n = len(eq)
 
         def pts(key: str) -> str:
             return " ".join(
-                f"{round(pad + (w - 2 * pad) * (i / (n - 1)), 1)},"
+                f"{round(left + (w - left - pad) * (i / (n - 1)), 1)},"
                 f"{round(pad + (h - 2 * pad) * (1 - (p_[key] - lo) / span), 1)}"
                 for i, p_ in enumerate(eq))
 
@@ -314,6 +318,8 @@ def load_track_stats() -> dict:
             "top_kindex": top_kindex, "rnow_by": rnow_by,
             "hit20": int(round(best["hit20"])), "hit20_n": int(best["n_hit20"]), "hit20_kind": best["kind"],
             "eq": {"w": w, "h": h, "nav": pts("v"), "spy": pts("spy"),
+                    "left": left, "right": w-pad,
+                    "ticks": [{"y": round(pad+(h-2*pad)*(1-(v-lo)/span),1), "label": f"{(v-1)*100:+.0f}%"} for v in sorted({lo+margin, 1.0, hi-margin})],
                     "first": eq[0]["d"], "last": eq[-1]["d"],
                     "nav_last": f"{(eq[-1]['v'] - 1) * 100:+.1f}%",
                     "spy_last": f"{(eq[-1]['spy'] - 1) * 100:+.1f}%"},
