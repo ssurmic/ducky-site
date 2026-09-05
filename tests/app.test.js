@@ -60,3 +60,12 @@ test('fast route changes keep late calendar results out of the active watchlist'
  for(let i=0;i<5;i++){await new Promise(r=>setTimeout(r,0));calendarResolve(response({events:[]}));}
  await first;assert.equal(document.querySelector('#view h1').textContent,copy['app.watch.title']);
 });
+
+test('free research view does not fetch or leak a ticker report',async()=>{
+ const research=await import('../public/js/app/views/research.js');
+ store.set('me',{tier:'free'});let requests=0;
+ globalThis.fetch=async()=>{requests++;return response({reports:[]});};
+ const root=document.createElement('div');await research.mount(root,{ticker:'AMKR'});
+ assert.equal(requests,0);assert.ok(root.querySelector('a[href="#/billing"]'));
+ assert.equal(root.textContent.includes('AMKR'),false);
+});

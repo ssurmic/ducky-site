@@ -915,3 +915,14 @@ button.cr-chip[disabled] { opacity: .55; cursor: default; }
  .review-preview, .proof-curve { padding: 22px; }
  .workflow-card p { margin-bottom: 14px; }
 }
+.proof-workspace > *, .proof-cases, .proof-case, .workflow-card, .tier { min-width: 0; }
+.proof-curve svg { max-width: 100%; }
+.tier dl { min-width: 0; }
+.tier dt, .tier dd { overflow-wrap: anywhere; min-width: 0; }
+@media (max-width: 600px) {
+ .tiers, .proof-workspace { grid-template-columns: minmax(0,1fr); }
+ .tier .btn { white-space: normal; }
+}
+.proof-curve .btn { max-width: 100%; white-space: normal; }
+.case-result .pos { color: var(--green); }
+.case-result .neg { color: var(--red); }

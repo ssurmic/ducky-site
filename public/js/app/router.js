@@ -5,6 +5,7 @@ import * as tg from "./tg.js";
 import { clear, errorBox, spinner } from "./ui.js";
 
 const ROUTES = {
+  research: () => import("./views/research.js"),
   login: () => import("./views/login.js"),
   watchlist: () => import("./views/watchlist.js"),
   alerts: () => import("./views/alerts.js"),
@@ -29,7 +30,7 @@ export function parse(hash) {
   try { query = new URLSearchParams(qi === -1 ? "" : raw.slice(qi + 1)); } catch (e) { query = new URLSearchParams(); }
   const parts = path.split("/").filter(Boolean);
   const name = parts[0] || "watchlist";
-  if (name === "chart") return { name, params: { ticker: (parts[1] || "").toUpperCase(), query } };
+  if (name === "chart" || name === "research") return { name, params: { ticker: (parts[1] || "").toUpperCase(), query } };
   if (ROUTES[name]) return { name, params: { query } };
   return { name: "watchlist", params: { query } };
 }
@@ -78,7 +79,7 @@ export async function render() {
     const mb = mod.mainButton();
     if (mb) tg.showMain(mb.text, mb.onClick); else tg.hideMain();
   } else tg.hideMain();
-  if (route.name === "chart" || route.name === "billing" || route.name === "alerts" || route.name === "profile" || route.name === "creators" || route.name === "calendar" || route.name === "boards") tg.showBack(() => go("#/watchlist"));
+  if (route.name === "research" || route.name === "chart" || route.name === "billing" || route.name === "alerts" || route.name === "profile" || route.name === "creators" || route.name === "calendar" || route.name === "boards") tg.showBack(() => go("#/watchlist"));
   else tg.hideBack();
 }
 

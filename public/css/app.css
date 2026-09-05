@@ -469,3 +469,9 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 .cr-evidence { flex-basis: 100%; font-size: 12px; line-height: 1.6; }
 .cr-evidence summary { cursor: pointer; color: var(--muted); }
 .cr-evidence blockquote { border-left: 2px solid var(--border); margin: 8px 0; padding-left: 10px; }
+.event-review h2 { margin: 12px 0; font-size: 21px; }
+.event-review-head { display: flex; flex-wrap: wrap; gap: 12px; color: var(--muted); }
+.event-price-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; padding: 20px 0; border-block: 1px solid var(--border); }
+.event-price-grid strong { display: block; font-size: 25px; margin: 10px 0; }
+.event-price-grid small { display: block; }
+@media (max-width: 420px) { .event-price-grid { gap: 8px; } .event-price-grid strong { font-size: 20px; } }

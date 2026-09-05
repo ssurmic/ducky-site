@@ -122,6 +122,7 @@ export async function mount(root) {
       c.appendChild(lock(pro));
     }
     c.appendChild(el("div.snap-actions",
+      el("a.btn.btn-ghost.btn-sm", { href: "#/research/" + encodeURIComponent(t) }, s("research.title")),
       el("a.btn.btn-primary.btn-sm", { href: "#/alerts?ticker=" + encodeURIComponent(t) }, s("watch.set_alert")),
       el("a.btn.btn-ghost.btn-sm", { href: "#/calendar" }, s("watch.events"))));
     return c;
