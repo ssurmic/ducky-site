@@ -302,6 +302,7 @@
   </header>
 
   <main class="app-main" id="main" data-glossary>
+    <p id="profile-reminder" class="profile-reminder" hidden>{{ t('app.profile.recovery_reminder') }} <a href="#/profile">{{ t('app.profile.recovery_action') }}</a></p>
     <div class="app-view" id="view" aria-live="polite"></div>
     <p class="app-foot">{{ t('app.foot.disclaimer') }} <a href="{{ url('/disclaimer/') }}">{{ t('app.billing.disclaimer_link') }}</a></p>
     <noscript><p class="errbox">{{ t('app.noscript') }}</p></noscript>

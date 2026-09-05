@@ -1127,5 +1127,7 @@
   "app.research.updated": "报告更新于",
   "app.research.source": "公司原始公告",
   "ex.smmt_t": "大额内部人买入",
-  "ex.smmt_after": "历史示例需刷新价格对照，请以带日期的台账为准。"
+  "ex.smmt_after": "历史示例需刷新价格对照，请以带日期的台账为准。",
+  "app.profile.recovery_reminder": "添加并验证邮箱，方便以后找回账号。",
+  "app.profile.recovery_action": "设置账号恢复"
 }

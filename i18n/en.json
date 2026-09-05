@@ -1127,5 +1127,7 @@
   "app.research.updated": "Report updated",
   "app.research.source": "Issuer announcement",
   "ex.smmt_t": "A substantial insider purchase in biotech",
-  "ex.smmt_after": "This historical example requires a refreshed price comparison. Check the dated ledger before drawing conclusions."
+  "ex.smmt_after": "This historical example requires a refreshed price comparison. Check the dated ledger before drawing conclusions.",
+  "app.profile.recovery_reminder": "Add a verified email so you can recover your account.",
+  "app.profile.recovery_action": "Set up recovery"
 }
