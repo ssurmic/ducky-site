@@ -7,6 +7,7 @@ import { s } from "../strings.js";
 import * as api from "../api.js";
 import * as store from "../store.js";
 import { el, clear, spinner } from "../ui.js";
+import { icon } from "../icons.js";
 
 // section → firehose kinds (mirrors the backend tg_topics TOPICS). `wide` = the "—" top bar of the T.
 const BOARDS = [
@@ -88,17 +89,20 @@ export async function mount(root) {
   card.append(el("h1", s("boards.h1")), el("p.muted", s("boards.sub")));
   card.appendChild(spinner());
 
-  let results, wa = null;
+  let results, wa = null, history = [];
   const staticCtl = new AbortController();
   const staticTimer = setTimeout(() => staticCtl.abort(), 15000);
   try {
     const [sig] = await Promise.all([
       Promise.all(BOARDS.map((b) =>
         api.signals.board(b.kinds, { days: 7, limit: 12 }).then((r) => (r && r.items) || []).catch(() => null))),
+      fetch("/radar-history.json", { signal: staticCtl.signal }).then(r => r.ok ? r.json() : null)
+        .then(j => { history = j && Array.isArray(j.items) ? j.items : []; }).catch(() => {}),
       // Week Ahead is a static file on the site; it may 404 until the backend publishes it → skip the block.
       fetch("/week-ahead.json", { cache: "no-store", signal: staticCtl.signal }).then((r) => r.ok ? r.json() : null)
-        .then((j) => { if (j && Array.isArray(j.events) && j.events.length) wa = j; }).catch(() => {}).finally(() => clearTimeout(staticTimer)),
+        .then((j) => { if (j && Array.isArray(j.events) && j.events.length) wa = j; }).catch(() => {}),
     ]);
+    clearTimeout(staticTimer);
     results = sig;
   } catch (e) {
     clear(card); card.append(el("h1", s("boards.h1")), el("p.err", s("boards.load_error"))); return () => {};
@@ -106,22 +110,29 @@ export async function mount(root) {
 
   clear(card);
   card.append(el("h1", s("boards.h1")), el("p.muted", s("boards.sub")));
+  card.appendChild(el("p.muted.small", s("boards.updated_window")));
   const grid = el("div.brd-grid");
   if (wa) grid.appendChild(weekAheadCard(wa));
   BOARDS.forEach((b, i) => {
-    const items = (results[i] || []).filter((it) => it && (it.ticker || (it.summary && String(it.summary).trim())));
+    const items = (results[i] || []).filter((it) => it && (it.ticker || it.summary || it.extra?.message_text));
     const sec = el("section.brd-card" + (b.wide ? ".brd-wide" : ""));
     sec.appendChild(el("div.brd-head",
-      el("span.brd-ico", { "aria-hidden": "true" }, b.icon),
+      el("span.brd-ico", { "aria-hidden": "true" }, icon(b.key)),
       el("div.brd-htext",
         el("div.brd-title", s("boards.t_" + b.key)),
         el("div.brd-desc.muted", s("boards.d_" + b.key)))));
     if (results[i] === null) { sec.appendChild(el("p.brd-empty.muted", { role: "status" }, s("boards.load_error"))); }
-    else if (!items.length) { sec.appendChild(el("p.brd-empty.muted", s("boards.empty"))); }
+    else if (!items.length) { sec.appendChild(el("p.brd-empty.muted", s(results[i]?.length ? "boards.missing_body" : "boards.empty"))); }
     else {
       const list = el("div.brd-list");
       for (const it of items.slice(0, b.wide ? 6 : 5)) list.appendChild(itemRow(it));
       sec.appendChild(list);
+    }
+    for (const receipt of history.filter(r => r.board === b.key).slice(0, 1)) {
+      const lang = isZh ? "zh" : "en";
+      sec.appendChild(itemRow({ticker: receipt.ticker, ts: receipt.ts, kind: b.key,
+        summary: receipt.summary?.[lang] || "", archived: true, source_url: receipt.source_url,
+        extra: {message_text: receipt.body?.[lang] || ""}}));
     }
     grid.appendChild(sec);
   });
@@ -131,7 +142,7 @@ export async function mount(root) {
   function weekAheadCard(doc) {
     const sec = el("section.brd-card.brd-wide.wa-card");
     const head = el("div.brd-head",
-      el("span.brd-ico", { "aria-hidden": "true" }, "📅"),
+      el("span.brd-ico", { "aria-hidden": "true" }, icon("calendar")),
       el("div.brd-htext",
         el("div.brd-title", (isZh ? "本周前瞻" : "Week Ahead") + (doc.week_of ? " · " + doc.week_of : "")),
         el("div.brd-desc.muted", isZh ? "本周高影响宏观 + 重点财报(时间为美东 ET)。" : "This week's high-impact macro + key earnings (times ET).")));
@@ -198,22 +209,27 @@ export async function mount(root) {
     const tk = it.ticker ? String(it.ticker).toUpperCase() : "";
 
     const wrap = el("div.brd-itemw");
-    const row = el("button.brd-item", { type: "button" });
+    const row = el("button.brd-item", { type: "button", "aria-expanded": "false" });
     if (tk) row.appendChild(el("span.brd-tk.mono", "$" + tk));
     row.appendChild(el("span.brd-txt", label));
-    if (arrow) row.appendChild(el("span.brd-dir." + cls, arrow));
-    row.appendChild(el("span.brd-time.muted", ago(it.ts, isZh)));
+    row.appendChild(el("span.brd-time.muted", it.archived ? String(it.ts).slice(0,10) : ago(it.ts, isZh)));
     row.appendChild(el("span.brd-caret", { "aria-hidden": "true" }, "⌄"));
 
     const detail = el("div.brd-detail");
-    detail.appendChild(el("div.brd-full", label));
+    if (it.archived) detail.appendChild(el("p.brd-receipt-note.muted.small", s("boards.history_note")));
+    detail.appendChild(el("div.brd-full", it.extra?.message_text || label));
+    if (it.extra?.message_truncated) detail.appendChild(el("p.muted.small", s("boards.truncated")));
     const meta = el("div.brd-meta");
     meta.appendChild(el("span.brd-kind", isZh ? kl[0] : kl[1]));
     if (it.ts) meta.appendChild(el("span.brd-when.muted", new Date(it.ts).toLocaleString(isZh ? "zh-CN" : "en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })));
     if (tk) meta.appendChild(el("a.brd-chart", { href: "#/chart/" + tk }, (isZh ? "看 $" : "$") + tk + (isZh ? " 图表 →" : " chart →")));
     detail.appendChild(meta);
+    if (it.archived && /^https:\/\/(www\.sec\.gov|job-boards\.greenhouse\.io)\//.test(it.source_url || "")) {
+      detail.appendChild(el("a", {href:it.source_url,target:"_blank",rel:"noopener noreferrer"},s("boards.source")));
+    }
 
     row.addEventListener("click", () => { const open = wrap.classList.toggle("open"); row.setAttribute("aria-expanded", open ? "true" : "false"); });
+    if (it.archived) wrap.appendChild(el("span.brd-archive-tag", s("boards.history")));
     wrap.append(row, detail);
     return wrap;
   }

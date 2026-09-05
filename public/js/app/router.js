@@ -89,9 +89,25 @@ function setActiveTab(name) {
     a.classList.toggle("on", on);
     if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
   });
+  const more = document.querySelector(".nav-more");
+  if (more) {
+    more.open = false;
+    more.classList.toggle("on", ["calendar", "creators", "profile", "billing"].includes(name));
+  }
 }
 
 export function start() {
+  document.addEventListener("keydown", (event) => {
+    const more = document.querySelector(".nav-more[open]");
+    if (event.key === "Escape" && more) {
+      more.open = false;
+      more.querySelector("summary")?.focus();
+    }
+  });
+  document.addEventListener("click", (event) => {
+    const more = document.querySelector(".nav-more[open]");
+    if (more && (!more.contains(event.target) || event.target.closest("a[data-route]"))) more.open = false;
+  });
   window.addEventListener("hashchange", render);
   store.subscribe("me", (me) => { if (!me && current && !PUBLIC.has(current.name)) render(); });
   return render();

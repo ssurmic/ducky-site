@@ -69,3 +69,33 @@ test('free research view does not fetch or leak a ticker report',async()=>{
  assert.equal(requests,0);assert.ok(root.querySelector('a[href="#/billing"]'));
  assert.equal(root.textContent.includes('AMKR'),false);
 });
+
+test('creator following, quality and search filters compose independently',()=>{
+ const posts=[{kol_id:'a',kol_name:'Alpha',title:'NVDA report'}, {kol_id:'b',kol_name:'Beta',title:'NVDA report'}];
+ assert.equal(creators.filterPosts(posts,{following:new Set(['a']),mine:true,archive:true}).length,1);
+ assert.equal(creators.filterPosts(posts,{following:new Set(['a']),mine:true,archive:false}).length,0);
+ assert.equal(creators.filterPosts(posts,{following:new Set(['a']),mine:true,archive:true,query:'Beta'}).length,0);
+ assert.equal(creators.filterPosts(posts,{following:new Set(),mine:false,archive:true,query:'Beta'}).length,1);
+ assert.ok(creators.videoDate('2026-09-04T18:00:00-04:00','en-US').includes('10:00 PM'));
+});
+
+test('radar preserves the delivered body, historical dates and incomplete archive state',async()=>{
+ globalThis.fetch=async(url)=>{
+  if(String(url).includes('radar-history'))return response({items:[{board:'insider',ticker:'TTMI',ts:'2026-08-26T07:42:00Z',summary:{zh:'Historical receipt',en:'Historical receipt'},body:{zh:'Identity not verified',en:'Identity not verified'}}]});
+  if(String(url).includes('week-ahead'))return response({});
+  return response({items:[{kind:'volscan',ts:'2026-09-04T19:02:00Z',summary:'IV scan',extra:{message_text:'META\nHV252 39%'}},{kind:'insider',ts:'2026-09-04',summary:null}]});
+ };
+ const root=document.createElement('div');await boards.mount(root);
+ assert.ok(root.textContent.includes('HV252 39%'));
+ assert.ok(root.textContent.includes('2026-08-26'));
+ assert.ok(root.querySelector('use[href="/vendor/lucide/icons.svg#insider"]'));
+ const button=root.querySelector('.brd-item');assert.equal(button.getAttribute('aria-expanded'),'false');button.click();assert.equal(button.getAttribute('aria-expanded'),'true');
+});
+test('navigation retains all routes with named SVG links and a native mobile disclosure',()=>{
+ const html=readFileSync('dist/app/index.html','utf8');const page=new JSDOM(html).window.document;
+ const links=[...page.querySelectorAll('.app-nav a')];
+ assert.equal(new Set(links.map(a=>a.dataset.route)).size,8);
+ assert.equal(page.querySelectorAll('.nav-more-panel a').length,4);
+ for(const a of links){assert.ok(a.textContent.trim());assert.ok(a.querySelector('svg[aria-hidden="true"] use'));}
+ assert.ok(page.querySelector('.nav-more summary'));
+});

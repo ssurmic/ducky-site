@@ -3,6 +3,20 @@
    Copy: every app.* key from i18n/<lang>.json is embedded as a JSON data block (type="application/json" is not
    executed, so CSP script-src does not apply); public/js/app/strings.js reads it. Keep app_keys in sync with i18n. #}
 {% set app_keys = [
+  "boards.history",
+  "boards.history_note",
+  "boards.missing_body",
+  "boards.source",
+  "boards.updated_window",
+  "boards.truncated",
+
+  "creators.mine",
+  "creators.discover",
+  "creators.search",
+  "creators.no_following",
+  "creators.published",
+  "creators.date_unknown",
+
   "research.title",
   "research.intro",
   "research.lock_title",
@@ -310,15 +324,21 @@
 
   {# Order: daily-use analysis views first, then account (Me) + upgrade (订阅) at the far end —
      Billing is an account action, not a mid-bar daily tab. #}
-  <nav class="app-nav" aria-label="app">
-    <a href="#/watchlist" data-route="watchlist"><span class="ico" aria-hidden="true">📋</span><span>{{ t('app.nav.watchlist') }}</span></a>
-    <a href="#/chart" data-route="chart"><span class="ico" aria-hidden="true">📈</span><span>{{ t('app.nav.chart') }}</span></a>
-    <a href="#/calendar" data-route="calendar"><span class="ico" aria-hidden="true">📅</span><span>{{ t('app.nav.calendar') }}</span></a>
-    <a href="#/boards" data-route="boards"><span class="ico" aria-hidden="true">📡</span><span>{{ t('app.nav.boards') }}</span></a>
-    <a href="#/alerts" data-route="alerts"><span class="ico" aria-hidden="true">🔔</span><span>{{ t('app.nav.alerts') }}</span></a>
-    <a href="#/creators" data-route="creators"><span class="ico" aria-hidden="true">🎙️</span><span>{{ t('app.nav.creators') }}</span></a>
-    <a href="#/profile" data-route="profile"><span class="ico" aria-hidden="true">👤</span><span>{{ t('app.nav.profile') }}</span></a>
-    <a href="#/billing" data-route="billing" class="app-nav-upgrade"><span class="ico" aria-hidden="true">⭐</span><span>{{ t('app.nav.billing') }}</span></a>
+  {% macro nav_icon(name) -%}
+  <svg class="app-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/vendor/lucide/icons.svg#{{ name }}"></use></svg>
+  {%- endmacro %}
+  <nav class="app-nav" aria-label="{{ t('app.nav.label') }}">
+    {% for route in ['watchlist', 'chart', 'calendar', 'boards', 'alerts', 'creators', 'profile', 'billing'] %}
+    <a href="#/{{ route }}" data-route="{{ route }}"{% if route in ['calendar', 'creators', 'profile', 'billing'] %} class="nav-secondary"{% endif %}>{{ nav_icon(route) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
+    {% endfor %}
+    <details class="nav-more">
+      <summary>{{ nav_icon('more') }}<span>{{ t('app.nav.more') }}</span></summary>
+      <div class="nav-more-panel">
+        {% for route in ['calendar', 'creators', 'profile', 'billing'] %}
+        <a href="#/{{ route }}" data-route="{{ route }}">{{ nav_icon(route) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
+        {% endfor %}
+      </div>
+    </details>
   </nav>
 </div>
 <div id="toasts" aria-live="polite" aria-atomic="false"></div>

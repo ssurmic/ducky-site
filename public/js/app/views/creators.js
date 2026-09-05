@@ -26,6 +26,18 @@ export function hasGroundedCalls(post) {
   return meta.quality === "grounded" && meta.source?.kind === "transcript" && (post.calls || []).some(c => typeof c.evidence === "string" && c.evidence.length >= 12);
 }
 
+export function filterPosts(posts, { following, mine, archive, query = "" }) {
+  const needle = query.trim().toLocaleLowerCase();
+  return posts.filter(p => (!mine || following.has(p.kol_id)) && (archive || hasGroundedCalls(p)) &&
+    (!needle || [p.kol_name, p.title, ...(p.tickers || [])].join(" ").toLocaleLowerCase().includes(needle)));
+}
+export function videoDate(value, lang) {
+  if (!value) return s("creators.date_unknown");
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? s("creators.date_unknown") :
+    new Intl.DateTimeFormat(lang, {dateStyle:"medium", timeStyle:"short", timeZone:"UTC"}).format(d) + " UTC";
+}
+
 function callChips(calls, isZh) {
   // per-ticker gist Ducky dug out of the video: $SYM ▲/▼ + the target the CREATOR stated (attributed,
   // never our own) + their one-line point. Compact chips so a promo/title-only video still yields signal.
@@ -46,6 +58,7 @@ function callChips(calls, isZh) {
 }
 
 export async function mount(root) {
+  const epoch = store.epoch();
   const isZh = (document.documentElement.lang || "zh").slice(0, 2) !== "en";
   const card = el("section.card.creators-view");
   root.appendChild(card);
@@ -54,15 +67,18 @@ export async function mount(root) {
 
   let doc, subs;
   try {
-    [doc, subs] = await Promise.all([api.kol.feed(), api.kol.mine().catch(() => ({ subs: [] }))]);
+    [doc, subs] = await Promise.all([api.kol.feed(), api.kol.mine()]);
   } catch (e) {
     clear(card); card.append(el("h1", s("creators.h1")), el("p.err", s("creators.load_error")));
     return () => {};
   }
   const following = new Set((subs && subs.subs) || []);
+  if (epoch !== store.epoch()) return () => {};
   const kols = (doc && doc.kols) || [];
   const posts = (doc && doc.posts) || [];
   let archive = false;
+  let mine = true;
+  let query = "";
   render();
 
   function render() {
@@ -78,11 +94,18 @@ export async function mount(root) {
       card.appendChild(banner);
     }
 
-    card.appendChild(el("h2.cr-sub", s("creators.grid_h")));
+    const controls = el("div.creators-controls");
+    for (const [value,key] of [[true,"creators.mine"],[false,"creators.discover"]]) {
+      controls.appendChild(el("button.btn.btn-ghost.btn-sm", {type:"button", "aria-pressed":String(mine===value), onclick:()=>{mine=value;render();}},s(key)));
+    }
+    const search=el("input.input", {type:"search",value:query,"aria-label":s("creators.search"),placeholder:s("creators.search")});
+    search.addEventListener("input",()=>{query=search.value;const at=search.selectionStart;render();const next=card.querySelector('input[type="search"]');next.focus();next.setSelectionRange(at,at);});
+    controls.appendChild(search);card.appendChild(controls);
+    card.appendChild(el("h2.cr-sub", s(mine ? "creators.mine" : "creators.grid_h")));
     const grid = el("div.cr-grid");
-    for (const k of kols) {
+    for (const k of kols.filter(k => (!mine || following.has(k.id)) && (!query || (k.name || k.id).toLocaleLowerCase().includes(query.toLocaleLowerCase())))) {
       const on = following.has(k.id);
-      const label = "🎙️ " + (k.name || k.id) + " · " + (isPro ? (on ? s("creators.following") : s("creators.follow")) : "🔒 " + s("creators.pro_badge"));
+      const label = (k.name || k.id) + " · " + (isPro ? (on ? s("creators.following") : s("creators.follow")) : "🔒 " + s("creators.pro_badge"));
       const chip = el("button.cr-chip" + (on && isPro ? ".on" : ""), { type: "button" }, label);
       chip.addEventListener("click", () => { if (isPro) toggle(k.id, chip); else router.go("#/billing"); });
       grid.appendChild(chip);
@@ -92,7 +115,8 @@ export async function mount(root) {
     card.appendChild(el("h2.cr-sub", s("creators.feed_h")));
     const archiveBtn = el("button.btn.btn-ghost.btn-sm", { type: "button", "aria-pressed": String(archive), onclick: () => { archive = !archive; render(); } }, s(archive ? "creators.only_grounded" : "creators.show_archive"));
     card.appendChild(archiveBtn);
-    const visiblePosts = archive ? posts : posts.filter(hasGroundedCalls);
+    if (mine && !following.size) {card.appendChild(empty(s("creators.no_following")));return;}
+    const visiblePosts = filterPosts(posts, {following,mine,archive,query});
     if (!visiblePosts.length) { card.appendChild(empty(s("creators.feed_empty"))); return; }
     const feed = el("div.cr-feed");
     for (const p of visiblePosts.slice(0, 40)) {
@@ -100,11 +124,12 @@ export async function mount(root) {
       const stance = grounded && ["bull", "bear"].includes(p.take) ? p.take : "neutral";
       const art = el("article.cr-post");
       const head = el("div.cr-post-head",
-        el("b.cr-who", "🎙️ " + (p.kol_name || p.kol_id || "")),
+        el("b.cr-who", (p.kol_name || p.kol_id || "")),
         el("span.cr-take." + TAKE_CLS[stance], grounded ? s("creators.take_" + stance) : s("creators.unverified")));
       if (p.tickers && p.tickers.length) head.appendChild(el("span.cr-tks.mono", p.tickers.slice(0, 4).map((t) => "$" + t).join(" · ")));
       art.appendChild(head);
-      if (p.published_at) art.appendChild(el("time.muted.small", { datetime: p.published_at }, String(p.published_at).replace("T", " ").slice(0, 16) + " UTC"));
+      art.appendChild(el("time.muted.small", { datetime: p.published_at || "" }, s("creators.published") + " " + videoDate(p.published_at,isZh ? "zh-CN" : "en-US")));
+      if (p.title) art.appendChild(el("h3.cr-video-title", p.title));
       art.appendChild(el("p.cr-attribution.muted.small", s("creators.attribution", { name: p.kol_name || p.kol_id || "—" })));
       art.appendChild(el("p.cr-sum", pickSummary(p.summary, isZh)));
       if (grounded && p.calls && p.calls.length) art.appendChild(callChips(p.calls, isZh));
@@ -120,10 +145,7 @@ export async function mount(root) {
     try {
       if (on) { await api.kol.unsub(id); following.delete(id); }
       else { await api.kol.sub(id); following.add(id); }
-      const nowOn = following.has(id);
-      chip.classList.toggle("on", nowOn);
-      const k = kols.find((x) => x.id === id) || {};
-      chip.textContent = "🎙️ " + (k.name || id) + " · " + (nowOn ? s("creators.following") : s("creators.follow"));
+      render();
     } catch (err) { toast(s("common.error", { msg: err.message }), "err"); }
     finally { chip.disabled = false; }
   }

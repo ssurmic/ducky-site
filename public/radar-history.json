@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "reviewed_at": "2026-09-05",
+  "provenance": "Manually reviewed excerpts of Ducky Telegram group messages. Message dates have minute precision; underlying financial claims are not independently reverified. No signal or performance ledger rows are created.",
+  "items": [
+    {
+      "id": "ttmi-20260826",
+      "board": "insider",
+      "ticker": "TTMI",
+      "ts": "2026-08-26T07:42:00Z",
+      "summary": {
+        "zh": "原消息记录 CEO／董事买入约 $1.1M",
+        "en": "The original alert reported a ~$1.1M purchase by a CEO/director"
+      },
+      "body": {
+        "zh": "原消息时点报价 $112.30；姓名未列出，客户关系标为未知。这里只保留当时消息的记录，买入金额、身份及逐笔申报仍需重新核对。",
+        "en": "The alert quoted $112.30 at the time. It omitted the buyer’s name and marked customer relationships as unknown. The amount, identity and individual filing still need to be rechecked."
+      },
+      "source_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=TTMI&type=4&count=10"
+    },
+    {
+      "id": "meta-iv-20260904",
+      "board": "volscan",
+      "ticker": "META",
+      "ts": "2026-09-04T19:02:00Z",
+      "summary": {
+        "zh": "IV30 34% · HV252 39% · IV/HV 0.868",
+        "en": "IV30 34% · HV252 39% · IV/HV 0.868"
+      },
+      "body": {
+        "zh": "原扫描还记录短周期 HV 为 33%，对应 IV/HV 为 1.028；IV 历史只有 8 天。不同窗口不能混用，比例低于 1 本身不代表价格会上涨。以上为当时扫描值，不是当前期权报价。",
+        "en": "The same scan reported short-window HV of 33% and a corresponding ratio of 1.028, with only eight days of IV history. The windows are not interchangeable, and a ratio below one does not predict a stock-price rise. These are archived scan values, not current option quotes."
+      }
+    },
+    {
+      "id": "crwv-hiring-20260904",
+      "board": "hiring",
+      "ticker": "CRWV",
+      "ts": "2026-09-04T22:02:00Z",
+      "summary": {
+        "zh": "CoreWeave · 数据中心扩容主题新增 8 个岗位",
+        "en": "CoreWeave · eight new roles tagged to data-center expansion"
+      },
+      "body": {
+        "zh": "Ducky 当时的招聘摘要记录了这些新增主题岗位。岗位数量是招聘活动线索，不等于已签订单、收入增量或对其他公司的利好确认。",
+        "en": "Ducky’s hiring digest recorded these newly detected, theme-tagged roles. Job openings indicate hiring activity; they do not establish new contracts, revenue or a benefit to another company."
+      },
+      "source_url": "https://job-boards.greenhouse.io/coreweave"
+    },
+    {
+      "id": "macro-20260904",
+      "board": "liquidity",
+      "ticker": "",
+      "ts": "2026-09-04T20:48:00Z",
+      "summary": {
+        "zh": "10Y 4.78% · SOFR−IORB +1bp · 准备金 $2.89T",
+        "en": "10Y 4.78% · SOFR−IORB +1bp · reserves $2.89T"
+      },
+      "body": {
+        "zh": "原盘后摘要：RRP $0.7B，净流动性约 $5.77T，13 周变化 −$66B。短端利差和较长周期流动性是两个观察窗口；这张历史卡不代表实时宏观状态。",
+        "en": "The closing digest recorded RRP of $0.7B, net liquidity of about $5.77T and a 13-week change of −$66B. Funding spreads and longer-term liquidity describe different horizons. This archived card is not a live macro reading."
+      }
+    },
+    {
+      "id": "crdo-digest-20260904",
+      "board": "digest",
+      "ticker": "CRDO",
+      "ts": "2026-09-04T21:49:00Z",
+      "summary": {
+        "zh": "日报技术面摘录 · 日 RSI 34.2／周 RSI 44.9",
+        "en": "Daily brief excerpt · daily RSI 34.2 / weekly RSI 44.9"
+      },
+      "body": {
+        "zh": "当时日报记录距高点回撤 43.6%，相对 200 日均线 −2.7%。保留技术面摘录供回看；原日报混入了未经核实的文章→ticker 映射，其综合排名不作为有效策略证据。",
+        "en": "The brief recorded a 43.6% drawdown and a price 2.7% below the 200-day average. This excerpt is retained for review. The original ranking also included unverified article-to-ticker mappings and is not treated as valid strategy evidence."
+      }
+    }
+  ]
+}
