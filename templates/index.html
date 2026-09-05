@@ -1,32 +1,18 @@
 {% extends "_base.html" %}
 {% block content %}
-{% include "_partials/hero.html" %}
-{% include "_partials/entry.html" %}
-{% include "_partials/whostrip.html" %}
-{% include "_partials/stats.html" %}
-{% include "_partials/examples.html" %}
-{% include "_partials/why-different.html" %}
-{% include "_partials/boards.html" %}
-{% include "_partials/creators.html" %}
-{% include "_partials/kindex.html" %}
-{% include "_partials/dm.html" %}
-{% include "_partials/whystrip.html" %}
-{% include "_partials/honesty.html" %}
-{% include "_partials/who-we-are.html" %}
+{% include "_partials/revamp-hero.html" %}
+{% include "_partials/revamp-proof.html" %}
+{% include "_partials/revamp-workflow.html" %}
 {% include "_partials/pricing.html" %}
 {% include "_partials/faq.html" %}
 {% include "_partials/disclaimer.html" %}
 
 {# Mobile sticky bar: free + subscribe $12 only. Never a ¥ price here (¥ lives inside #pricing only). #}
 <div class="sticky-bar" id="sticky-bar" aria-hidden="true">
-  <a class="btn btn-ghost" href="{{ primary('sticky') }}">{{ t('sticky.free') }}</a>
-  <a class="btn btn-primary" href="{{ tg('sticky_signal') }}">{{ t('sticky.subscribe') }}</a>
+  <a class="btn btn-ghost" href="{{ url('/app/') }}">{{ t('sticky.free') }}</a>
+  <a class="btn btn-primary" href="{{ url('/app/') ~ '#/billing' }}">{{ t('sticky.subscribe') }}</a>
 </div>
 {% endblock %}
 {% block scripts %}
 <script src="/js/site.js" defer></script>
-<script src="/js/hero.js" defer></script>
-<script src="/js/market-weather.js" defer></script>
-<script src="/js/week-ahead.js" defer></script>
-<script src="/js/creators.js" defer></script>
 {% endblock %}

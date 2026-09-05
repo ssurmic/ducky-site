@@ -5,6 +5,7 @@
 // attributed and time-stamped, never our own advice. Excludes 鸭子的交易 (personal trades).
 import { s } from "../strings.js";
 import * as api from "../api.js";
+import * as store from "../store.js";
 import { el, clear, spinner } from "../ui.js";
 
 // section → firehose kinds (mirrors the backend tg_topics TOPICS). `wide` = the "—" top bar of the T.
@@ -12,7 +13,7 @@ const BOARDS = [
   { key: "liquidity", icon: "🌊", kinds: "liquidity,kindex,macro", wide: true },
   { key: "digest",    icon: "🧭", kinds: "digest,market,default" },
   { key: "insider",   icon: "💰", kinds: "insider,cluster,political" },
-  { key: "partner",   icon: "🤝", kinds: "partner,stake,13f,nvdev" },
+  { key: "partner",   icon: "🤝", kinds: "partner,stake,13f" },
   { key: "earnings",  icon: "📊", kinds: "earnings" },
   { key: "hiring",    icon: "🧑‍💻", kinds: "hiring" },
   { key: "volscan",   icon: "📉", kinds: "volscan" },
@@ -31,6 +32,9 @@ const KIND_LABEL = {
 // Map to a SHORT bilingual label, DROP low-signal noise, and collapse ISM sub-readings to one. Order matters
 // (specific before generic; the broad speaker rule is last).
 const WA_MACRO = [
+  { re: /continuing jobless/i, zh: "续请失业金", en: "Continuing claims" },
+  { re: /nonfarm productivity/i, zh: "非农生产率", en: "Nonfarm productivity" },
+  { re: /\bADP\b/i, zh: "小非农 ADP", en: "ADP payrolls" },
   { re: /initial jobless|jobless claims/i, zh: "初请失业金", en: "Jobless claims" },
   { re: /nonfarm|payroll/i, zh: "非农就业", en: "Nonfarm payrolls" },
   { re: /\bADP\b/i, zh: "小非农 ADP", en: "ADP payrolls" },
@@ -56,7 +60,7 @@ const WA_MACRO = [
   { re: /FOMC|rate decision|federal funds|minutes/i, zh: "FOMC 利率", en: "FOMC" },
   { re: /speaks|speech/i, zh: "美联储讲话", en: "Fed speaks", speaker: true },
 ];
-function waMacroLabel(name, isZh) {
+export function waMacroLabel(name, isZh) {
   for (const m of WA_MACRO) {
     if (m.re.test(name)) {
       if (m.drop) return null;
@@ -85,13 +89,15 @@ export async function mount(root) {
   card.appendChild(spinner());
 
   let results, wa = null;
+  const staticCtl = new AbortController();
+  const staticTimer = setTimeout(() => staticCtl.abort(), 15000);
   try {
     const [sig] = await Promise.all([
       Promise.all(BOARDS.map((b) =>
-        api.signals.board(b.kinds, { days: 7, limit: 12 }).then((r) => (r && r.items) || []).catch(() => []))),
+        api.signals.board(b.kinds, { days: 7, limit: 12 }).then((r) => (r && r.items) || []).catch(() => null))),
       // Week Ahead is a static file on the site; it may 404 until the backend publishes it → skip the block.
-      fetch("/week-ahead.json", { cache: "no-store" }).then((r) => r.ok ? r.json() : null)
-        .then((j) => { if (j && Array.isArray(j.events) && j.events.length) wa = j; }).catch(() => {}),
+      fetch("/week-ahead.json", { cache: "no-store", signal: staticCtl.signal }).then((r) => r.ok ? r.json() : null)
+        .then((j) => { if (j && Array.isArray(j.events) && j.events.length) wa = j; }).catch(() => {}).finally(() => clearTimeout(staticTimer)),
     ]);
     results = sig;
   } catch (e) {
@@ -110,7 +116,8 @@ export async function mount(root) {
       el("div.brd-htext",
         el("div.brd-title", s("boards.t_" + b.key)),
         el("div.brd-desc.muted", s("boards.d_" + b.key)))));
-    if (!items.length) { sec.appendChild(el("p.brd-empty.muted", s("boards.empty"))); }
+    if (results[i] === null) { sec.appendChild(el("p.brd-empty.muted", { role: "status" }, s("boards.load_error"))); }
+    else if (!items.length) { sec.appendChild(el("p.brd-empty.muted", s("boards.empty"))); }
     else {
       const list = el("div.brd-list");
       for (const it of items.slice(0, b.wide ? 6 : 5)) list.appendChild(itemRow(it));
@@ -166,11 +173,12 @@ export async function mount(root) {
   }
 
   function waRows(evs) {
+    const watch = new Set((store.get("watchlist") || []).map(t => String(t).toUpperCase()));
     const macro = [], ernW = [], ernO = [], seen = new Set();
     for (const e of evs) {
       if (e.kind === "earnings") {
-        const row = { cls: "er", time: (isZh ? e.et_zh : e.et_en) || "", label: "$" + (e.name || "") + (e.watch ? " ★" : ""), full: "$" + (e.name || "") };
-        (e.watch ? ernW : ernO).push(row);
+        const row = { cls: "er", time: (isZh ? e.et_zh : e.et_en) || "", label: "$" + (e.name || "") + (watch.has(String(e.name).toUpperCase()) ? " ★" : ""), full: "$" + (e.name || "") };
+        (watch.has(String(e.name).toUpperCase()) ? ernW : ernO).push(row);
       } else {
         const label = waMacroLabel(e.name || "", isZh);
         if (!label || seen.has(label)) continue;   // drop noise + collapse ISM sub-readings

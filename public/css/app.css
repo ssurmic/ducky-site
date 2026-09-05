@@ -202,7 +202,7 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 /* ---- brand mark + empty states (mascot.svg; SYSTEMDESIGN §5.2 C) ---- */
 .app-top .brand { display: inline-flex; align-items: center; gap: 6px; }
 .app-top .avatar-mark { width: 26px; height: 26px; box-shadow: 0 0 0 2px color-mix(in srgb, var(--neon, #7dff6a) 70%, transparent), 0 0 10px 1px color-mix(in srgb, var(--neon, #7dff6a) 45%, transparent); }
-.empty::before { content: ""; display: block; width: 72px; height: 72px; margin: 0 auto 8px; background: url("/mascot.svg") center / contain no-repeat; opacity: .9; }
+.empty::before { content: ""; display: block; width: 72px; height: 72px; margin: 0 auto 8px; background: url("/avatar-160.jpg") center / cover no-repeat; border-radius: 50%; opacity: 1; }
 
 /* §14 profile */
 .card.profile .form { display: grid; gap: 12px; margin-top: 12px; }
@@ -427,3 +427,45 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
   .cal-mini { flex-direction: row; flex-wrap: wrap; gap: 4px; }
   .cal-mini .bardot { width: 7px; height: 7px; }
 }
+
+/* Review workspace: clearer hierarchy without changing the market-data palette. */
+.route-page { min-width: 0; }
+.view-intro { margin: -4px 0 20px; max-width: 62ch; line-height: 1.65; }
+.view-head h1 { font-size: clamp(22px, 3vw, 28px); letter-spacing: -.025em; }
+.snap { padding: 18px 20px; }
+.snap-head { flex-wrap: wrap; gap: 10px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+.snap .spot { font-size: 23px; font-weight: 700; letter-spacing: -.025em; }
+.snap .kv-grid { grid-template-columns: minmax(110px, .8fr) minmax(0, 1.2fr); gap: 10px 20px; padding: 14px 0; margin: 0; }
+.snap .kv-grid dd { overflow-wrap: anywhere; text-align: right; }
+.snap .pro-rows { border-top: 1px solid var(--border); }
+.snap-actions { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 14px; border-top: 1px solid var(--border); }
+.login-methods { display: flex; gap: 4px; padding: 4px; margin: 22px 0 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 14px; }
+.login-methods .btn { flex: 1; padding: 10px 6px; min-width: 0; font-size: 14px; border: 0; }
+.login-methods [aria-pressed="true"] { background: var(--surface-2); color: var(--text); box-shadow: 0 1px 3px #0003; }
+.login-label { display: flex; flex-direction: column; gap: 7px; text-align: left; color: var(--muted); font-size: 13px; }
+.login-label .input { width: 100%; color: var(--text); }
+.login .login-block { border: 0; padding-top: 8px; }
+.data-notice { font-size: 14px; line-height: 1.6; padding: 12px 14px; border-left: 3px solid var(--accent); background: var(--surface-2); border-radius: 0 10px 10px 0; }
+.page-app :is(a, button, summary):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.page-app .input, .page-app .btn { transition: border-color .15s, background-color .15s, box-shadow .15s; }
+@media (max-width: 799px) {
+  .app-nav { grid-auto-columns: minmax(68px, 1fr); overflow-x: auto; justify-content: start; scrollbar-width: thin; }
+  .app-nav a { min-height: 56px; padding: 8px 6px; }
+  .app-main { padding: 20px 16px 28px; }
+}
+@media (max-width: 420px) {
+  .snap { padding: 15px; }
+  .snap .kv-grid { grid-template-columns: minmax(90px, .8fr) minmax(0, 1.2fr); gap: 10px; font-size: 13px; }
+  .snap-head .spacer { display: none; }
+  .snap-head .spot { font-size: 21px; }
+  .app-top { gap: 7px; padding-left: 10px; padding-right: 10px; }
+  .app-top .brand { font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-app *, .page-app *::before, .page-app *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}
+.cr-feed { margin-top: 16px; }
+.cr-attribution { margin: 8px 0; line-height: 1.6; }
+.cr-evidence { flex-basis: 100%; font-size: 12px; line-height: 1.6; }
+.cr-evidence summary { cursor: pointer; color: var(--muted); }
+.cr-evidence blockquote { border-left: 2px solid var(--border); margin: 8px 0; padding-left: 10px; }

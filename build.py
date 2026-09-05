@@ -296,8 +296,21 @@ def load_track_stats() -> dict:
                 "trend": f"{tr * 100:+.1f}%" if isinstance(tr, (int, float)) else "—",
                 "d": rt.get("d") or "",
             }
+        cases = []
+        for ticker, day, key, horizon in [("VRT", "2026-07-29", "vrt", "r20"),
+                                           ("SMH", "2026-04-07", "smh", "r20"),
+                                           ("TTMI", "2026-08-26", "ttmi", "rnow")]:
+            row = next((r for r in rows if r.get("ticker") == ticker and
+                        str(r.get("ts", "")).startswith(day)), None)
+            if not row or not isinstance(row.get(horizon), (int, float)):
+                continue
+            value = row[horizon]
+            cases.append({"ticker": ticker, "date": day, "key": key, "horizon": horizon,
+                          "mode": row.get("mode", "BACKTEST"), "value": value,
+                          "display": f"{value:+.1f}%", "asof": row.get("rnow_d", ""),
+                          "summary": row.get("summary") or "—"})
         return {
-            "ok": True, "total": total, "live": live, "regime": regime,
+            "ok": True, "total": total, "cases": cases, "live": live, "regime": regime,
             "top_kindex": top_kindex, "rnow_by": rnow_by,
             "hit20": int(round(best["hit20"])), "hit20_n": int(best["n_hit20"]), "hit20_kind": best["kind"],
             "eq": {"w": w, "h": h, "nav": pts("v"), "spy": pts("spy"),

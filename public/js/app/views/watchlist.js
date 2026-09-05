@@ -15,13 +15,14 @@ export function normalizeList(resp) {
 
 export async function mount(root) {
   const unsubs = [];
+  const rendered = new Map();
   const inflight = new Map();   // finding watchlist.js:118 — ticker -> in-flight fetch promise (dedup)
   const head = el("div.view-head", el("h1", s("watch.title")), el("span.count.mono", { id: "watch-count" }));
   const input = el("input.input.mono", { type: "text", placeholder: s("watch.placeholder"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "10", "aria-label": s("watch.placeholder") });
   const addBtn = el("button.btn.btn-primary", { type: "submit" }, s("watch.add"));
   const form = el("form.add-row", { onsubmit: onAdd }, input, addBtn);
   const list = el("div.cards", { id: "watch-cards" });
-  root.append(head, form, list);
+  root.append(head, el("p.view-intro.muted", s("watch.workflow")), form, list);
 
   async function onAdd(e) {
     e.preventDefault();
@@ -58,10 +59,17 @@ export async function mount(root) {
     const cap = me.watch_cap;
     const cnt = document.getElementById("watch-count");
     if (cnt) cnt.textContent = cap ? s("watch.count", { n: items.length, cap }) : String(items.length);
-    clear(list);
-    if (!items.length) { list.appendChild(empty(s("watch.empty"))); return; }
+    if (!items.length) { clear(list); rendered.clear(); list.appendChild(empty(s("watch.empty"))); return; }
+    list.querySelectorAll(".empty, .errbox").forEach(n => n.remove());
+    for (const [t, old] of rendered) if (!items.includes(t)) { old.node.remove(); rendered.delete(t); }
     const snaps = store.get("snapshots") || {};
-    for (const t of items) list.appendChild(card(t, snaps[t]));
+    for (const t of items) {
+      const old = rendered.get(t);
+      if (old && old.snap === snaps[t] && old.pro === store.isPro()) continue;
+      const node = card(t, snaps[t]);
+      if (old && old.node.isConnected) old.node.replaceWith(node); else list.appendChild(node);
+      rendered.set(t, { node, snap: snaps[t], pro: store.isPro() });
+    }
   }
 
   function card(t, snap) {
@@ -113,14 +121,17 @@ export async function mount(root) {
       proRow(s("watch.expected"), "$000–$000 (±0.0%)");
       c.appendChild(lock(pro));
     }
+    c.appendChild(el("div.snap-actions",
+      el("a.btn.btn-primary.btn-sm", { href: "#/alerts?ticker=" + encodeURIComponent(t) }, s("watch.set_alert")),
+      el("a.btn.btn-ghost.btn-sm", { href: "#/calendar" }, s("watch.events"))));
     return c;
   }
 
   function posWord(p) { return p < 0.25 ? s("watch.pos_low") : p > 0.75 ? s("watch.pos_high") : s("watch.pos_mid"); }
   // localize server-provided enum verdicts (they arrive in one language); unknown values pass through unchanged.
   function enumWord(val, map) { const k = map[String(val).trim().toLowerCase()]; return k ? s(k) : (val == null ? "" : String(val)); }
-  function volWord(x) { return enumWord(x, { "便宜": "watch.v_cheap", "cheap": "watch.v_cheap", "合理": "watch.v_fair", "fair": "watch.v_fair", "偏贵": "watch.v_rich", "rich": "watch.v_rich", "expensive": "watch.v_rich" }); }
-  function rsWord(x) { return enumWord(x, { "领先": "watch.rs_leading", "leading": "watch.rs_leading", "落后": "watch.rs_lagging", "lagging": "watch.rs_lagging", "持平": "watch.rs_inline", "相当": "watch.rs_inline", "inline": "watch.rs_inline" }); }
+  function volWord(x) { return enumWord(x, { "便宜": "watch.v_cheap", "cheap": "watch.v_cheap", "合理": "watch.v_fair", "fair": "watch.v_fair", "贵": "watch.v_rich", "偏贵": "watch.v_rich", "rich": "watch.v_rich", "expensive": "watch.v_rich" }); }
+  function rsWord(x) { return enumWord(x, { "领先": "watch.rs_leading", "leading": "watch.rs_leading", "落后": "watch.rs_lagging", "lagging": "watch.rs_lagging", "同步": "watch.rs_inline", "持平": "watch.rs_inline", "相当": "watch.rs_inline", "inline": "watch.rs_inline" }); }
   function regimeWord(x) { return enumWord(x, { "positive": "watch.regime_pos", "偏多": "watch.regime_pos", "negative": "watch.regime_neg", "偏空": "watch.regime_neg", "neutral": "watch.regime_neutral", "中性": "watch.regime_neutral" }); }
 
   async function load() {

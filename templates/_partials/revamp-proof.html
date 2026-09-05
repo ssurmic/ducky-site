@@ -1,0 +1,24 @@
+<section class="section" id="examples"><div class="wrap">
+ <p class="eyebrow mono">{{ t('rev.proof_tag') }}</p><h2>{{ t('rev.proof_h') }}</h2><p class="lead">{{ t('rev.proof_b') }}</p>
+ <div class="proof-workspace">
+  <div class="proof-curve">
+   {% if track_stats.ok %}
+   <span class="badge badge-live">LIVE</span><h3>{{ t('rev.curve') }}</h3>
+   <figure class="track-mini"><svg viewBox="0 0 {{ track_stats.eq.w }} {{ track_stats.eq.h }}" role="img" aria-label="{{ t('hero.s2_label') }}"><polyline class="eq-spy" points="{{ track_stats.eq.spy }}"/><polyline class="eq-nav" points="{{ track_stats.eq.nav }}"/></svg>
+   <figcaption class="mono">{{ track_stats.eq.first }} → {{ track_stats.eq.last }}</figcaption></figure>
+   <div class="proof-values"><div><small>{{ t('hero.s2_nav') }}</small><b class="mono">{{ track_stats.eq.nav_last }}</b></div><div><small>SPY</small><b class="mono">{{ track_stats.eq.spy_last }}</b></div></div>
+   <p class="muted small">{{ t('rev.curve_note') }}</p>
+   {% else %}<p>{{ t('stats.notary') }}</p>{% endif %}
+   <a class="btn btn-ghost" href="{{ url('/track-record/') }}">{{ t('rev.all_records') }}</a>
+  </div>
+  <div class="proof-cases">
+   {% for c in track_stats.get('cases', []) %}
+   <article class="proof-case">
+    <div class="proof-case-head"><span class="badge {{ 'badge-live' if c.mode == 'LIVE' else 'badge-backtest' }}">{{ c.mode }}</span><b class="mono">${{ c.ticker }}</b><time class="mono">{{ c.date }}</time></div>
+    <h3>{{ t('rev.case_' ~ c.key) }}</h3>
+    <div class="case-result"><strong class="mono {{ 'pos' if c.value >= 0 else 'neg' }}">{{ c.display }}</strong><span>{{ t('rev.return20') if c.horizon == 'r20' else tf('rev.return_asof', d=c.asof) }}</span></div>
+    <details><summary>{{ t('rev.record_detail') }}</summary><p>{{ t('rev.record_note') }}</p><blockquote>{{ c.summary }}</blockquote><a href="/track-record.json">{{ t('rev.source_json') }}</a></details>
+   </article>{% endfor %}
+  </div>
+ </div>
+</div></section>

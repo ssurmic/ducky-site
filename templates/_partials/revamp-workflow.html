@@ -1,0 +1,7 @@
+<section class="section" id="how"><div class="wrap">
+ <h2>{{ t('rev.how_h') }}</h2><p class="lead">{{ t('rev.how_b') }}</p>
+ <div class="workflow-grid" id="boards">
+ {% for i in range(1,4) %}<article class="workflow-card"><span class="eyebrow mono">0{{ i }}</span><h3>{{ t('rev.step' ~ i) }}</h3><p>{{ t('rev.tool' ~ i) }}</p><a href="{{ url('/app/') }}{{ ['#/watchlist','#/calendar','#/alerts'][i-1] }}">{{ t('rev.open' ~ i) }} →</a></article>{% endfor %}
+ </div>
+ <div class="creator-explainer" id="creators"><div><p class="eyebrow">{{ t('rev.creator_tag') }}</p><h3>{{ t('rev.creator_h') }}</h3><p>{{ t('rev.creator_b') }}</p></div><a class="btn btn-ghost" href="{{ url('/app/') }}#/creators">{{ t('rev.creator_cta') }}</a></div>
+</div></section>

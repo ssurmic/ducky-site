@@ -135,10 +135,12 @@ export async function mount(root) {
         el("a.btn.btn-primary.btn-sm", { href: "#/billing" }, s("calendar.upgrade"))));
     }
 
+    if (doc?.partial) card.appendChild(el("p.data-notice", { role: "status" }, s("calendar.partial")));
+
     // filter chips + "my watchlist" toggle
     const bar = el("div.cal-bar");
     for (const f of FILTERS) {
-      const chip = el("button.cal-fchip" + (filter === f ? ".on" : ""), { type: "button" }, s("calendar.f_" + f));
+      const chip = el("button.cal-fchip" + (filter === f ? ".on" : ""), { type: "button", "aria-pressed": String(filter === f) }, s("calendar.f_" + f));
       chip.addEventListener("click", () => { filter = f; render(); });
       bar.appendChild(chip);
     }
@@ -151,7 +153,7 @@ export async function mount(root) {
     // view-mode toggle: 两周 (at-a-glance earnings) | 月
     const modeBar = el("div.cal-modebar");
     for (const m of ["biweekly", "month"]) {
-      const b = el("button.cal-mode" + (viewMode === m ? ".on" : ""), { type: "button" }, s("calendar.mode_" + m));
+      const b = el("button.cal-mode" + (viewMode === m ? ".on" : ""), { type: "button", "aria-pressed": String(viewMode === m) }, s("calendar.mode_" + m));
       b.addEventListener("click", () => { viewMode = m; render(); });
       modeBar.appendChild(b);
     }
@@ -202,8 +204,8 @@ export async function mount(root) {
 
     function navHead(title, onPrev, onNext) {
       const head = el("div.cal-mhead");
-      const prev = el("button.cal-mnav", { type: "button", "aria-label": "prev" }, "‹");
-      const next = el("button.cal-mnav", { type: "button", "aria-label": "next" }, "›");
+      const prev = el("button.cal-mnav", { type: "button", "aria-label": s("calendar.previous") }, "‹");
+      const next = el("button.cal-mnav", { type: "button", "aria-label": s("calendar.next") }, "›");
       prev.addEventListener("click", onPrev);
       next.addEventListener("click", onNext);
       const todayBtn = el("button.cal-today", { type: "button" }, s("calendar.jump_today"));
@@ -229,7 +231,7 @@ export async function mount(root) {
         const mine = isPro && evs.some(evHasMine);
         const wknd = dt.getDay() === 0 || dt.getDay() === 6;
         const cell = el("button.cal-cell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : ""),
-          { type: "button" });
+          { type: "button", "aria-label": iso + ", " + evs.length, "aria-pressed": String(iso === selected) });
         cell.appendChild(el("span.cal-dnum", String(day)));
         if (evs.length) cell.appendChild(miniBars(evs));
         cell.addEventListener("click", () => { selected = iso; render(); });
@@ -258,7 +260,7 @@ export async function mount(root) {
         const mine = isPro && evs.some(evHasMine);
         const wknd = d.getDay() === 0 || d.getDay() === 6;
         const cell = el("button.cal-bicell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : ""),
-          { type: "button" });
+          { type: "button", "aria-label": iso + ", " + evs.length, "aria-pressed": String(iso === selected) });
         cell.appendChild(el("span.cal-bidnum", String(d.getDate())));
         if (evs.length) cell.appendChild(pills(evs));
         cell.addEventListener("click", () => { selected = iso; render(); });
@@ -281,7 +283,7 @@ export async function mount(root) {
         else row.appendChild(el("span.cal-ico", { "aria-hidden": "true" }, ICON[e.type] || "•"));
         const main = el("div.cal-main");
         const title = el("div.cal-title", isZh ? (e.title || "") : (e.title_en || e.title || ""));
-        for (const t of (e.tickers || [])) title.appendChild(el("span.cal-tk.mono" + (watchSet.has(String(t).toUpperCase()) ? ".on" : ""), "$" + t));
+        for (const t of (e.tickers || [])) title.appendChild(el("a.cal-tk.mono" + (watchSet.has(String(t).toUpperCase()) ? ".on" : ""), { href: "#/chart/" + encodeURIComponent(t) }, "$" + t));
         if (isMine) title.appendChild(el("span.cal-mine-badge", s("calendar.mine_badge")));
         main.appendChild(title);
         const note = isZh ? (e.note || "") : (e.note_en || e.note || "");

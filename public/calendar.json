@@ -1,7 +1,7 @@
 {
  "schema": "calendar/1",
- "generated_at": "2026-09-03T22:24:52+00:00",
- "as_of": "2026-09-03T22:24:52+00:00",
+ "generated_at": "2026-09-05T21:12:54+00:00",
+ "as_of": "2026-09-05T21:12:54+00:00",
  "window_days": 90,
  "partial": true,
  "source": "static-fallback",
@@ -373,6 +373,24 @@
    "tickers": [],
    "note": "08:15 ET 公布上月 ADP 私营部门就业;大非农的前哨,常引导预期。",
    "note_en": "Prior month's ADP private-sector jobs at 08:15 ET — a lead-in to the big NFP."
+  },
+  {
+   "date": "2026-12-03",
+   "type": "macro",
+   "title": "初请失业金",
+   "title_en": "Initial jobless claims",
+   "tickers": [],
+   "note": "08:30 ET 每周初请失业金人数;劳动力市场的高频脉搏。",
+   "note_en": "Weekly initial jobless claims at 08:30 ET — the high-frequency labor pulse."
+  },
+  {
+   "date": "2026-12-04",
+   "type": "macro",
+   "title": "大非农 · 非农就业 (NFP)",
+   "title_en": "Nonfarm payrolls (NFP)",
+   "tickers": [],
+   "note": "08:30 ET 公布上月非农就业与失业率;月度最重磅数据之一。",
+   "note_en": "Prior month's payrolls & unemployment at 08:30 ET — one of the biggest monthly prints."
   }
  ]
 }

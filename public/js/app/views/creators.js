@@ -16,18 +16,30 @@ function pickSummary(x, isZh) {
   try { const o = JSON.parse(x); return isZh ? (o.zh || o.en || "") : (o.en || o.zh || ""); } catch (e) { return String(x); }
 }
 
+export function evidenceMeta(post) {
+  let data = post.summary;
+  if (typeof data === "string") { try { data = JSON.parse(data); } catch { data = {}; } }
+  return data && typeof data === "object" ? data : {};
+}
+export function hasGroundedCalls(post) {
+  const meta = evidenceMeta(post);
+  return meta.quality === "grounded" && meta.source?.kind === "transcript" && (post.calls || []).some(c => typeof c.evidence === "string" && c.evidence.length >= 12);
+}
+
 function callChips(calls, isZh) {
   // per-ticker gist Ducky dug out of the video: $SYM ▲/▼ + the target the CREATOR stated (attributed,
   // never our own) + their one-line point. Compact chips so a promo/title-only video still yields signal.
   const wrap = el("div.cr-calls");
   for (const c of calls.slice(0, 6)) {
     const st = (c.stance === "bull" || c.stance === "bear") ? c.stance : "neutral";
-    const chip = el("span.cr-call.cr-call-" + st);
+    if (!c.evidence) continue;
+    const chip = el("div.cr-call.cr-call-" + st);
     chip.appendChild(el("b.cr-call-sym.mono", "$" + String(c.sym || "").toUpperCase()));
-    chip.appendChild(el("span.cr-call-arrow", CALL_ARROW[st] || "•"));
+    chip.appendChild(el("span.cr-call-arrow", s("creators.take_" + st)));
     if (c.target) chip.appendChild(el("span.cr-call-tgt.mono", String(c.target)));
     const note = pickSummary(c.note, isZh);
     if (note) chip.appendChild(el("span.cr-call-note", note));
+    chip.appendChild(el("details.cr-evidence", el("summary", s("creators.evidence")), el("blockquote", c.evidence)));
     wrap.appendChild(chip);
   }
   return wrap;
@@ -50,6 +62,7 @@ export async function mount(root) {
   const following = new Set((subs && subs.subs) || []);
   const kols = (doc && doc.kols) || [];
   const posts = (doc && doc.posts) || [];
+  let archive = false;
   render();
 
   function render() {
@@ -77,17 +90,24 @@ export async function mount(root) {
     card.appendChild(grid);
 
     card.appendChild(el("h2.cr-sub", s("creators.feed_h")));
-    if (!posts.length) { card.appendChild(empty(s("creators.feed_empty"))); return; }
+    const archiveBtn = el("button.btn.btn-ghost.btn-sm", { type: "button", "aria-pressed": String(archive), onclick: () => { archive = !archive; render(); } }, s(archive ? "creators.only_grounded" : "creators.show_archive"));
+    card.appendChild(archiveBtn);
+    const visiblePosts = archive ? posts : posts.filter(hasGroundedCalls);
+    if (!visiblePosts.length) { card.appendChild(empty(s("creators.feed_empty"))); return; }
     const feed = el("div.cr-feed");
-    for (const p of posts.slice(0, 40)) {
+    for (const p of visiblePosts.slice(0, 40)) {
+      const grounded = hasGroundedCalls(p);
+      const stance = grounded && ["bull", "bear"].includes(p.take) ? p.take : "neutral";
       const art = el("article.cr-post");
       const head = el("div.cr-post-head",
         el("b.cr-who", "🎙️ " + (p.kol_name || p.kol_id || "")),
-        el("span.cr-take." + (TAKE_CLS[p.take || "neutral"] || "cr-neutral"), s("creators.take_" + (p.take || "neutral"))));
+        el("span.cr-take." + TAKE_CLS[stance], grounded ? s("creators.take_" + stance) : s("creators.unverified")));
       if (p.tickers && p.tickers.length) head.appendChild(el("span.cr-tks.mono", p.tickers.slice(0, 4).map((t) => "$" + t).join(" · ")));
       art.appendChild(head);
+      if (p.published_at) art.appendChild(el("time.muted.small", { datetime: p.published_at }, String(p.published_at).replace("T", " ").slice(0, 16) + " UTC"));
+      art.appendChild(el("p.cr-attribution.muted.small", s("creators.attribution", { name: p.kol_name || p.kol_id || "—" })));
       art.appendChild(el("p.cr-sum", pickSummary(p.summary, isZh)));
-      if (p.calls && p.calls.length) art.appendChild(callChips(p.calls, isZh));
+      if (grounded && p.calls && p.calls.length) art.appendChild(callChips(p.calls, isZh));
       if (p.url) art.appendChild(el("a.cr-orig", { href: p.url, target: "_blank", rel: "noopener" }, s("creators.orig") + " ↗"));
       feed.appendChild(art);
     }

@@ -28,11 +28,15 @@ export function stateOf(a) {
   return "done";
 }
 
-export async function mount(root) {
+export async function mount(root, params = {}) {
+  let alive = true;
+  const epoch = store.epoch();
   const unsubs = []; let refreshTimer = null, refreshes = 0;
   const head = el("div.view-head", el("h1", s("alerts.title")), el("span.count.mono", { id: "alerts-count" }));
   const tIn = el("input.input.mono.short", { type: "text", placeholder: s("alerts.ticker_ph"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "10", "aria-label": s("alerts.ticker_ph") });
   const cIn = el("input.input", { type: "text", placeholder: s("alerts.cond_ph"), autocomplete: "off", maxlength: "200", "aria-label": s("alerts.cond_ph") });
+  const prefill = (params.query?.get("ticker") || "").toUpperCase();
+  if (TICKER_RE.test(prefill)) tIn.value = prefill;
   const addBtn = el("button.btn.btn-primary", { type: "submit" }, s("alerts.add"));
   const form = el("form.add-row.alerts-form", { onsubmit: onAdd }, tIn, cIn, addBtn);
   const list = el("div.alist", { id: "alerts-list" });
@@ -90,18 +94,24 @@ export async function mount(root) {
 
   async function load() {
     try {
-      store.set("alerts", normalizeAlerts(await api.alerts.list()));
+      const response = await api.alerts.list();
+      if (!alive || store.epoch() !== epoch) return;
+      store.set("alerts", normalizeAlerts(response));
       if ((store.get("alerts") || []).some((a) => a.state === "pending")) scheduleRefresh();
-    } catch (err) { clear(list); list.appendChild(errorBox(err, load)); }
+    } catch (err) { if (alive && store.epoch() === epoch) { clear(list); list.appendChild(errorBox(err, load)); } }
   }
   function scheduleRefresh() {
-    if (refreshTimer || refreshes >= 4) return;
+    if (!alive || refreshTimer || refreshes >= 4) return;
     refreshTimer = setTimeout(() => { refreshTimer = null; refreshes++; load(); }, 20000);
   }
 
   unsubs.push(store.subscribe("alerts", render));
-  render();
-  if (!(store.get("alerts") || []).length) list.appendChild(spinner());
+  const resume = () => { if (alive && document.visibilityState !== "hidden") { refreshes = 0; load(); } };
+  window.addEventListener("online", resume);
+  document.addEventListener("visibilitychange", resume);
+  const dispose = () => { alive = false; unsubs.forEach((u) => u()); if (refreshTimer) clearTimeout(refreshTimer); window.removeEventListener("online", resume); document.removeEventListener("visibilitychange", resume); };
+  params.signal?.addEventListener("abort", dispose, { once: true });
+  if ((store.get("alerts") || []).length) render(); else list.appendChild(spinner());
   await load();
-  return () => { unsubs.forEach((u) => u()); if (refreshTimer) clearTimeout(refreshTimer); };
+  return dispose;
 }

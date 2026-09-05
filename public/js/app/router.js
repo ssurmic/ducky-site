@@ -2,7 +2,7 @@
 // Owns the Telegram MainButton (billing only) and BackButton (any non-root route).
 import * as store from "./store.js";
 import * as tg from "./tg.js";
-import { clear, errorBox } from "./ui.js";
+import { clear, errorBox, spinner } from "./ui.js";
 
 const ROUTES = {
   login: () => import("./views/login.js"),
@@ -16,7 +16,7 @@ const ROUTES = {
   boards: () => import("./views/boards.js"),
 };
 const PUBLIC = new Set(["login"]);
-let current = null, cleanup = null, seq = 0;
+let current = null, cleanup = null, seq = 0, controller = null;
 
 export function parse(hash) {
   // finding router.js:20 — strip the query string BEFORE matching, else '#/profile?next=billing' yields the
@@ -44,17 +44,33 @@ export async function render() {
   if (!authed && !PUBLIC.has(route.name)) { history.replaceState(null, "", "#/login"); route = { name: "login", params: {} }; }
   if (authed && route.name === "login") { history.replaceState(null, "", "#/watchlist"); route = { name: "watchlist", params: {} }; }
   const my = ++seq;
+  if (controller) controller.abort();
+  controller = new AbortController();
+  route.params.signal = controller.signal;
   if (cleanup) { try { cleanup(); } catch (e) { /* ignore */ } cleanup = null; }
   store.set("route", route);
   setActiveTab(route.name);
   document.body.setAttribute("data-route", route.name);
   clear(root);
-  root.scrollTop = 0;
+  const main = root.closest(".app-main");
+  if (main) main.scrollTop = 0;
+  tg.hideMain(); tg.hideBack();
+  // Each navigation owns its DOM: late responses cannot replace the next page.
+  const page = document.createElement("div");
+  page.className = "route-page";
+  root.appendChild(page);
+  page.appendChild(spinner());
   let mod;
-  try { mod = await ROUTES[route.name](); } catch (e) { console.error("view import failed", e); clear(root); root.appendChild(errorBox(e, () => location.reload())); return; }
+  try { mod = await ROUTES[route.name](); } catch (e) { if (my !== seq) return; clear(page); page.appendChild(errorBox(e, () => render())); return; }
   if (my !== seq) return;
   current = route;
-  const ret = await mod.mount(root, route.params);
+  clear(page);
+  let ret;
+  try { ret = await mod.mount(page, route.params); }
+  catch (e) {
+    if (my === seq) { clear(page); page.appendChild(errorBox(e, () => render())); }
+    return;
+  }
   if (my !== seq) { if (typeof ret === "function") ret(); return; }
   cleanup = typeof ret === "function" ? ret : null;
   // Telegram chrome

@@ -106,7 +106,7 @@ export async function mount(root) {
       },
     });
   }
-  startNonce();
+  // Start a nonce only when the Telegram method is selected.
 
   card.append(el("div.login-or.mono", s("login.or")));
 
@@ -151,6 +151,28 @@ export async function mount(root) {
   other.append(el("div.login-block", widgetBtn, widgetHost));
   card.appendChild(other);
 
+  card.querySelectorAll(".login-or").forEach(n => n.remove());
+  const methods = el("div.login-methods", { role: "group", "aria-label": s("login.method") });
+  const choices = [[pwForm, s("login.email_method")], [invForm, s("login.invite_method")], [qrBlock, s("login.telegram_method")]];
+  const buttons = choices.map(([panel, label], i) => {
+    const button = el("button.btn.btn-ghost", { type: "button", "aria-pressed": String(i === 0) }, label);
+    button.addEventListener("click", () => {
+      choices.forEach(([p], j) => { p.hidden = j !== i; buttons[j].setAttribute("aria-pressed", String(j === i)); });
+      if (nonceCtl) { nonceCtl.stop(); nonceCtl = null; }
+      other.hidden = i !== 2;
+      if (i === 2) startNonce();
+    });
+    panel.hidden = i !== 0;
+    methods.appendChild(button);
+    return button;
+  });
+  other.hidden = true;
+  card.insertBefore(methods, invForm);
+  for (const input of [invCode, invUser, email, pass]) {
+    const label = el("label.login-label", input.placeholder);
+    input.before(label); label.appendChild(input);
+  }
+  pwBtn.classList.replace("btn-ghost", "btn-primary");
   root.appendChild(card);
   return () => { if (nonceCtl) nonceCtl.stop(); };
 }
