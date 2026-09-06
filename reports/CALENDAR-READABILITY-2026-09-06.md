@@ -22,3 +22,17 @@ section. No strategy, data producer, model call or API entitlement was changed.
 
 Local QA fixtures were removed from the build before release checks. Production acceptance
 and the deployment receipt are appended below after deployment.
+
+
+## Production acceptance
+
+Frontend commit `a829ba9`, Cloudflare Pages `ad87a6a8`, published to duckybot.app. The final
+merge retains concurrent creator UI changes. Final gate: 184 frontend tests pass, build-asset
+suite 4 pass/1 skip (the old screenshot release is outside the bounded retained history),
+copy lint 1562 files and all 718 internal links pass. No local QA files entered the deployment.
+
+An existing production Pro session was reloaded and tested at 390px: two week groups and
+14 day cards, 22px date text, 14px event names, explicit 美股休市, no horizontal overflow.
+The live screenshot confirmed the release's actual mobile appearance. This is browser viewport
+verification; no claim is made of a new physical-iPhone test. The calendar data refresh timestamp
+produced by local builds was not committed, and backend runtime changes were unnecessary.
