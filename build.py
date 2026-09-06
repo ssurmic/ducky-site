@@ -426,6 +426,7 @@ def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, versi
 
     return {
         "lang": lang, "html_lang": HTML_LANG[lang], "other_lang": other, "is_zh": lang == "zh",
+        "app_strings": {k[4:]: v for k, v in tables[lang].items() if k.startswith("app.")},
         "page": page, "t": t, "t2": t2, "tf": tf, "tg": tg, "primary": primary, "url": url, "liq": liq,
         "track_n": track_n, "track_stats": track_stats or {"ok": False},
         "cfg": cfg, "prices": cfg["prices"], "channel_url": channel_url, "has_channel": bool(channel_url),
