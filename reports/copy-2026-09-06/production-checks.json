@@ -1,0 +1,32 @@
+[
+  {
+    "lang": "zh",
+    "page": "home",
+    "heading": "关注你的股票，跟进重要变化",
+    "video": "/media/ducky-walkthrough-2026-09-06-voice-v5.zh.mp4",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "page": "App sign-in gate and shipped translations",
+    "heading": "登录 Ducky",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "page": "home",
+    "heading": "Keep up with the stocks you follow",
+    "video": "/media/ducky-walkthrough-2026-09-06-voice-v5.en.mp4",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "page": "App sign-in gate and shipped translations",
+    "heading": "Sign in to Ducky",
+    "overflow": false,
+    "errors": []
+  }
+]
