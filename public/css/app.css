@@ -565,3 +565,35 @@ body:is([data-route="register"],[data-route="oauth"]) .app-nav { display:none; }
 .google-login-block p { text-align:center; margin-top:.7rem; }
 .login-signup { display:block; margin-top:1rem; }
 .profile .field { min-width:0; }
+
+/* Completed-month history stays separate from the dated event agenda. */
+.seasonality-view { margin-top:24px; min-width:0; }
+.seasonality-view h2 { font-size:23px; line-height:1.4; }
+.season-macro { padding:20px; background:var(--surface-2); border:1px solid var(--border); border-radius:12px; margin-bottom:28px; }
+.season-macro h3 { margin:0 0 10px; font-size:16px; }
+.season-macro summary { cursor:pointer; font-weight:600; font-size:14px; line-height:1.6; color:var(--accent); }
+.season-macro p { line-height:1.8; }.season-macro ul { list-style:none; padding:0; margin:16px 0; }
+.season-macro li { display:flex; flex-wrap:wrap; gap:8px 24px; font-size:13px; padding:10px 0; border-top:1px solid var(--border); }
+.season-macro li .mono { min-width:190px; }.season-macro a { color:var(--accent); }
+.season-month { display:block; margin-top:24px; font-size:22px; font-weight:650; }
+.seasonality-view .season-slider { display:block; width:100%; padding:0; min-height:44px; margin:8px 0 0; accent-color:var(--accent); cursor:ew-resize; }
+.season-scale { display:flex; justify-content:space-between; color:var(--muted); font-size:11px; }
+.season-controls { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin:24px 0 16px; }
+.season-controls label { font-size:12px; display:grid; gap:6px; min-width:0; }.season-controls select { width:auto; max-width:100%; min-height:44px; }
+.season-controls [aria-pressed="true"] { border-color:var(--accent); color:var(--accent); background:color-mix(in srgb,var(--accent) 8%,var(--surface)); }
+.season-metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin:20px 0; }
+.season-metrics article { padding:20px; border:1px solid var(--border); border-radius:12px; min-width:0; }
+.season-metrics b,.season-metrics strong,.season-metrics span { display:block; }.season-metrics strong { font-size:32px; margin:12px 0 4px; }.season-metrics p { margin:14px 0 0; line-height:1.7; }
+.season-legend { display:flex; gap:20px; align-items:center; font-size:12px; margin:18px 0 8px; }
+.season-spy { color:var(--accent); }.season-qqq { color:var(--blue,#4ea1ff); }
+[data-theme="light"] .season-spy { color:#945000; } [data-theme="light"] .season-qqq { color:#255ca4; }
+.season-chart-nav { display:flex; justify-content:space-between; gap:12px; margin-bottom:12px; }
+.season-bars { display:flex; width:100%; overflow-x:auto; overscroll-behavior-x:contain; gap:12px; padding:12px 8px 20px; border:1px solid var(--border); border-radius:12px; scrollbar-color:var(--muted) var(--surface); }
+.season-year { flex:0 0 64px; text-align:center; font-size:12px; }.season-year > span { display:block; font-size:11px; line-height:1.8; }
+.season-pair { display:flex; justify-content:center; gap:6px; height:144px; position:relative; margin-bottom:12px; }
+.season-pair::before { content:''; position:absolute; top:50%; inset-inline:0; border-top:1px solid var(--muted); }
+.season-track { width:18px; position:relative; }.season-bar { position:absolute; left:0; width:100%; border-radius:2px; background:var(--accent); }.season-bar.qqq { background:var(--blue,#4ea1ff); }
+.season-details { margin-top:20px; border-top:1px solid var(--border); }.season-details summary { cursor:pointer; color:var(--accent); min-height:44px; padding:16px 0; }.season-details p { line-height:1.8; }.season-details a { font-size:12px; }
+.season-table { width:100%; border-collapse:collapse; font-size:13px; }.season-table caption { text-align:left; color:var(--muted); padding:14px 0; }.season-table td,.season-table th { text-align:right; padding:12px 8px; border-bottom:1px solid var(--border); }.season-table th:first-child { text-align:left; }
+.season-bars:focus-visible,.season-slider:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+@media(max-width:480px) { .seasonality-view h2 { font-size:20px; }.season-metrics { gap:10px; }.season-metrics article { padding:12px; }.season-metrics strong { font-size:27px; }.season-metrics .small { font-size:11px; }.season-macro { padding:14px; }.season-controls { align-items:stretch; }.season-controls label { width:100%; } }

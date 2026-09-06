@@ -8,6 +8,7 @@ import * as api from "../api.js";
 import * as store from "../store.js";
 import * as router from "../router.js";
 import { el, clear, spinner, empty } from "../ui.js";
+import { mountSeasonality } from "../seasonality.js";
 
 const ICON = { macro: "liquidity", earnings: "chart", opex: "calendar", witching: "calendar", rebal: "digest" };
 const DOTC = { macro: "var(--accent)", earnings: "#4ea1ff", opex: "#c07cff", witching: "#c07cff", rebal: "#33c793" };
@@ -74,6 +75,9 @@ export async function mount(root) {
 
   const card = el("section.card.calendar-view");
   root.appendChild(card);
+  const historyCard = el("section.card.seasonality-view", {id:"seasonality-history",tabindex:-1});
+  root.appendChild(historyCard);
+  const disposeHistory = mountSeasonality(historyCard);
   card.append(el("h1", s("calendar.h1")), el("p.muted", s("calendar.sub")));
   card.appendChild(spinner());
 
@@ -84,7 +88,7 @@ export async function mount(root) {
     if (!watch.length) { try { const w = await api.watchlist.list(); watch = (w.items || []).map((x) => String(x.ticker || x).toUpperCase()); } catch (e) { /* ignore */ } }
   } catch (e) {
     clear(card); card.append(el("h1", s("calendar.h1")), el("p.err", s("calendar.load_error")));
-    return () => {};
+    return disposeHistory;
   }
   const watchSet = new Set(watch);
   const events = (doc && doc.events) || [];
@@ -125,6 +129,7 @@ export async function mount(root) {
   function render() {
     clear(card);
     card.append(el("h1", s("calendar.h1")), el("p.muted", s("calendar.sub")));
+    card.append(el("button.btn.btn-ghost.btn-sm", {type:"button", "aria-controls":"seasonality-history", onclick:()=>{historyCard.scrollIntoView({block:"start"});historyCard.focus({preventScroll:true});}}, s("season.title") + " ↓"));
     if (!isPro) {
       card.appendChild(el("div.cr-pro-banner",
         el("span.cr-pro-badge", s("calendar.pro_badge")),
@@ -313,5 +318,5 @@ export async function mount(root) {
     }
   }
 
-  return () => {};
+  return disposeHistory;
 }

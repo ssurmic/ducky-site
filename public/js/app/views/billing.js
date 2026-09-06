@@ -29,6 +29,13 @@ let onPayStars = null;
 /** Backend rail id for a button; the QR route wants the short name back (manual_alipay → alipay). */
 const CNY_RAILS = ["manual_alipay", "manual_wechat"];
 export function isCnyRail(rail) { return CNY_RAILS.includes(rail); }
+export function railForLanguage(rail, lang) { return lang === "zh" || !isCnyRail(rail); }
+export function localizedPrice(p, months, lang) {
+  if (!p) return "—";
+  if (lang === "zh" && months === 12 && p.annual_cny) return "¥" + num(p.annual_cny, 0) + s("billing.per_yr");
+  const value = months === 12 ? p.annual_usd : p.monthly_usd;
+  return value == null ? "—" : "$" + num(value, 0) + s(months === 12 ? "billing.per_yr" : "billing.per_mo");
+}
 export function qrName(rail) { return String(rail).replace(/^manual_/, ""); }
 /** Months an order on `rail` is created with: CNY rails only exist as 12-month plans. */
 export function orderMonths(rail, months) { return isCnyRail(rail) ? 12 : months; }
@@ -77,7 +84,7 @@ export function normalizePlans(resp) {
   const P = CFG.PRICES || {};
   const fill = (id, src) => { if (!src) return; const t = out[id] || (out[id] = blank(id)); for (const k of Object.keys(src)) if (t[k] === null && src[k] !== undefined && src[k] !== null) t[k] = Number(src[k]); };
   if (P.signal) fill("paid", { monthly_usd: P.signal.monthly_usd, annual_usd: P.signal.annual_usd, annual_cny: P.china && P.china.annual_cny });
-  if (P.pro) fill("pro", { monthly_usd: P.pro.monthly_usd, annual_usd: P.pro.annual_usd });
+  if (P.pro) fill("pro", { monthly_usd: P.pro.monthly_usd, annual_usd: P.pro.annual_usd, annual_cny: P.pro.annual_cny });
   return out;
 }
 
@@ -103,12 +110,7 @@ export async function mount(root) {
   root.append(head, picker, toggle, tiers, rails, panel, ordersBox, foot);
 
   function price(p) {
-    if (!p) return "—";
-    const annual = selected.months === 12;
-    const usd = annual ? p.annual_usd : p.monthly_usd;
-    let txt = usd !== null ? "$" + num(usd, 0) + (annual ? s("billing.per_yr") : s("billing.per_mo")) : "—";
-    if (annual && p.annual_cny && LANG === "zh") txt += " · ¥" + num(p.annual_cny, 0) + s("billing.per_yr");
-    return txt;
+    return localizedPrice(p, selected.months, LANG);
   }
   function renderTiers() {
     clear(tiers);
@@ -123,7 +125,7 @@ export async function mount(root) {
           on ? "✓ " + tierName(id) : s("billing.choose", { tier: tierName(id) }))));
     }
   }
-  function railEnabled(r) { return !plans || !plans.rails || plans.rails.includes(r); }
+  function railEnabled(r) { return railForLanguage(r, LANG) && (!plans || !plans.rails || plans.rails.includes(r)); }
   function renderRails() {
     clear(rails);
     rails.appendChild(el("h2", s("billing.rail_title")));

@@ -1,16 +1,5 @@
 <section class="section" id="examples"><div class="wrap">
  <p class="eyebrow mono">{{ t('rev.proof_tag') }}</p><h2>{{ t('rev.proof_h') }}</h2><p class="lead">{{ t('rev.proof_b') }}</p>
  {% include "_partials/oversold-research.html" %}
- <div class="proof-workspace proof-selected">
-  <div class="proof-cases">
-   {% for c in track_stats.get('cases', []) %}
-   <article class="proof-case">
-    <div class="proof-case-head"><span class="badge {{ 'badge-live' if c.mode == 'LIVE' else 'badge-backtest' }}">{{ c.mode }}</span><b class="mono">${{ c.ticker }}</b><time class="mono">{{ c.date }}</time></div>
-    <h3>{{ t('rev.case_' ~ c.key) }}</h3>
-    <div class="case-result"><strong class="mono {{ 'pos' if c.value >= 0 else 'neg' }}">{{ c.display }}</strong><span>{{ t('rev.return20') if c.horizon == 'r20' else tf('rev.return_asof', d=c.asof) }}</span></div>
-    <details><summary>{{ t('rev.record_detail') }}</summary><p>{{ t('rev.record_note') }}</p><blockquote>{{ c.summary }}</blockquote><a href="/track-record.json">{{ t('rev.source_json') }}</a></details>
-   </article>{% endfor %}
-  </div>
- </div>
 <p class="proof-archive"><a class="btn btn-ghost" href="{{ url('/track-record/') }}">{{ t('rev.archive_link') }}</a></p>
 </div></section>

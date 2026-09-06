@@ -1,0 +1,45 @@
+{% extends "_base.html" %}
+{% block title %}{{ t('records.title') }} · Ducky TradeBot{% endblock %}
+{% block description %}{{ t('records.intro') }}{% endblock %}
+{% block content %}
+<section class="section research-records no-glossary"><div class="wrap">
+ <a class="records-back" href="{{ url('/') }}#examples">← {{ t('records.back') }}</a>
+ <p class="eyebrow mono">BACKTEST · {{ t('os.research') }}</p>
+ <h1>{{ t('records.title') }}</h1><p class="lead">{{ t('records.intro') }}</p>
+ {% if oversold %}
+ <p class="records-context">{{ t('os.dip_reclaim5') }} · {{ t('records.asof') }} <time class="mono">{{ oversold.as_of }}</time></p>
+ <div class="records-summary">
+ {% for key, label in [('nav',t('os.strategy')),('spy','SPY'),('qqq','QQQ')] %}<div><span>{{ label }}</span><strong class="mono {{ 'pos' if oversold.evaluation.metrics[key].return_pct>=0 else 'neg' }}">{{ '%+.1f'|format(oversold.evaluation.metrics[key].return_pct) }}%</strong></div>{% endfor %}
+ </div>
+ <p class="small muted">{{ oversold.evaluation.start }} → {{ oversold.evaluation.end }} · {{ t('os.cost') }}</p>
+ <p class="os-risk"><b>{{ t('os.risk') }}</b> {{ tf('os.risk_body', nav='%+.1f'|format(oversold.validation.metrics.nav.return_pct), spy='%+.1f'|format(oversold.validation.metrics.spy.return_pct), qqq='%+.1f'|format(oversold.validation.metrics.qqq.return_pct), dd='%.1f'|format(-oversold.evaluation.metrics.nav.max_drawdown_pct)) }}</p>
+ <div id="positions" class="records-positions">
+  <h2>{{ t('records.positions') }}</h2><p class="muted">{{ t('records.return_note') }}</p>
+  {% for period in ['evaluation'] %}{% set run=oversold.evaluation %}
+  <details class="records-period" {% if period=='evaluation' %}open{% endif %}>
+   <summary><span>{{ t('records.' ~ period) }} <span class="mono">{{ run.start }} → {{ run.end }}</span></span><small>{{ tf('os.positions',closed=run.completed_positions,open=run.open_positions) }}</small></summary>
+   <div class="records-filter" data-records-filter hidden>
+    <label>{{ t('records.filter') }} <select data-records-ticker><option value="">{{ t('records.all_stocks') }}</option>{% for ticker in oversold.universe %}<option>{{ ticker }}</option>{% endfor %}</select></label>
+    <label>{{ t('records.status') }} <select data-records-status><option value="">{{ t('records.all_status') }}</option><option value="closed">{{ t('records.closed') }}</option><option value="open">{{ t('records.open') }}</option></select></label>
+    <span class="muted small" data-records-count role="status" data-label="{{ t('records.count') }}"></span>
+   </div>
+   <div class="records-table-wrap" tabindex="0" role="region" aria-label="{{ t('records.positions') }} · {{ run.start }}">
+   <table class="records-table"><caption>{{ t('records.' ~ period) }} · {{ t('records.table_note') }}</caption>
+    <thead><tr><th scope="col">{{ t('records.stock') }}</th><th scope="col">{{ t('records.signal') }}</th><th scope="col">{{ t('records.entry') }}</th><th scope="col">{{ t('records.entry_price') }}</th><th scope="col">{{ t('records.exit') }}</th><th scope="col">{{ t('records.return') }}</th><th scope="col">{{ t('records.status') }}</th></tr></thead>
+    <tbody>{% for status, trades in [('closed',run.trades),('open',run.open)] %}{% for trade in trades %}<tr data-records-row data-ticker="{{ trade.ticker }}" data-status="{{ status }}">
+     <th scope="row" class="mono">{{ trade.ticker }}</th><td><time>{{ trade.signal_date }}</time></td><td><time>{{ trade.entry_date }}</time></td><td class="mono">${{ '%.2f'|format(trade.entry_open) }}</td><td>{% if status=='closed' %}<time>{{ trade.exit_date }}</time>{% else %}{{ t('records.not_exited') }}{% endif %}</td>
+     <td class="mono {% if status=='closed' %}{{ 'pos' if trade.price_return_net_pct>=0 else 'neg' }}{% endif %}">{% if status=='closed' %}{{ '%+.1f'|format(trade.price_return_net_pct) }}%{% else %}—{% endif %}</td><td>{{ t('records.' ~ status) }}</td>
+    </tr>{% endfor %}{% endfor %}</tbody>
+   </table></div><p data-records-empty hidden class="data-notice">{{ t('records.empty') }}</p>
+  </details>{% endfor %}
+ </div>
+ <h2>{{ t('records.periods') }}</h2><p class="muted">{{ t('records.periods_note') }}</p>
+ <div class="records-table-wrap" tabindex="0" role="region" aria-label="{{ t('os.comparison_table') }}"><table class="records-table"><thead><tr><th scope="col">{{ t('os.rule') }}</th>{% for period in ['selection','validation','evaluation'] %}<th scope="col">{{ t('records.' ~ period) }}</th>{% endfor %}</tr></thead><tbody>
+ {% for rule,runs in oversold.comparisons.items() %}<tr><th scope="row">{{ t('os.' ~ rule) }}</th>{% for period in ['selection','validation','evaluation'] %}<td class="mono {{ 'pos' if runs[period].metrics.nav.return_pct>=0 else 'neg' }}">{{ '%+.1f'|format(runs[period].metrics.nav.return_pct) }}%</td>{% endfor %}</tr>{% endfor %}
+ </tbody></table></div>
+ <details class="records-method"><summary>{{ t('records.method') }}</summary><p>{{ t('os.method_body') }}</p><p>{{ t('os.rule_detail') }}</p><p>{{ t('os.scope') }}</p><p>{{ t('os.limitations') }}</p></details>
+ <details class="records-method"><summary>{{ t('records.source') }}</summary><p>{{ t('records.source_note') }}</p><p class="small mono">{{ oversold.version }} · {{ oversold.as_of }}</p><a href="/oversold-research.json" download>{{ t('records.download') }}</a></details>
+ {% endif %}
+</div></section>
+{% endblock %}
+{% block scripts %}<script src="/js/research-records.js" defer></script>{% endblock %}

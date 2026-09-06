@@ -1,0 +1,13 @@
+<section class="section video-example" id="video-example"><div class="wrap">
+ <p class="eyebrow mono">{{ t('video.example') }}</p><h2>{{ t('video.title') }}</h2><p class="lead">{{ t('video.intro') }}</p>
+ <article class="video-example-card">
+  <div class="video-example-meta"><span class="badge">YouTube · {{ video_example.duration }}</span><span>{{ video_example.kol_name }}</span><time class="mono" datetime="{{ video_example.published_at }}">{{ video_example.published }}</time></div>
+  <h3 lang="en">{{ video_example.title }}</h3>
+  <p class="video-takeaway">{{ video_example.sections[0][lang] }}</p>
+  <details class="video-source-points"><summary>{{ t('video.expand') }}</summary><ol>
+   {% for point in video_example.sections %}<li><a class="mono" href="{{ video_example.url }}&t={{ point.start_seconds }}s" target="_blank" rel="noopener">{{ point.time }} ↗</a><p>{{ point[lang] }}</p></li>{% endfor %}
+  </ol></details>
+  <p class="muted small">{{ t('video.source_note') }}</p>
+  <div class="cta-row"><a class="btn btn-ghost" href="{{ video_example.url }}" target="_blank" rel="noopener">{{ t('video.original') }} ↗</a><a class="btn btn-primary" href="{{ url('/app/') }}#/creators">{{ t('video.more') }} →</a></div>
+ </article>
+</div></section>

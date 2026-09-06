@@ -457,6 +457,22 @@ def write_manifests(tables):
         out.write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
 
 
+def load_video_example():
+    """One intentionally public, source-reviewed sample; never read a member report."""
+    sample = json.loads((PUBLIC / "examples" / "video-summary.json").read_text())
+    if not re.fullmatch(r"https://www\.youtube\.com/watch\?v=[A-Za-z0-9_-]{11}", sample["url"]):
+        fail("public video example must link to its original YouTube video")
+    sample["published"] = datetime.fromisoformat(sample["published_at"]).astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    duration = sample["source"]["duration_seconds"]
+    sample["duration"] = f"{duration//60}:{duration%60:02}"
+    for section in sample["sections"]:
+        seconds = section["start_seconds"]
+        if not isinstance(seconds, int) or not 0 <= seconds < duration:
+            fail("public video example has an invalid source timestamp")
+        section["time"] = f"{seconds//60:02}:{seconds%60:02}"
+    return sample
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--api-base", help="override api_base from site.config.json")
@@ -472,6 +488,7 @@ def main() -> None:
     cfg, tables, version = load_config(args.api_base), load_i18n(), git_sha()
     pages, env, liq, track_n = page_targets(), make_env(), load_liquidity(), load_track_n()
     track_stats = load_track_stats()   # §5.3.4/5 — graceful {'ok': False} when the notary JSON is absent
+    video_example = load_video_example()
 
     if DIST.exists():
         shutil.rmtree(DIST)
@@ -492,6 +509,7 @@ def main() -> None:
         for lang in LANGS:
             ctx = build_context(cfg, tables, lang, Path(tpl_name).stem, rel, version, liq, track_n, track_stats)
             ctx["oversold"] = load_oversold_research()
+            ctx["video_example"] = video_example
             html = version_assets(tpl.render(**ctx), version)
             out = DIST / lang_prefix(lang).strip("/") / rel
             out.parent.mkdir(parents=True, exist_ok=True)

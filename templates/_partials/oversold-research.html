@@ -26,13 +26,13 @@
  <figcaption class="muted small"><span class="mono"><time>{{ oversold.evaluation.start }}</time> → <time>{{ oversold.evaluation.end }}</time></span><span>{{ t('os.cost') }}</span></figcaption></figure>
  <p class="os-risk"><b>{{ t('os.risk') }}</b> {{ tf('os.risk_body', nav='%+.1f'|format(oversold.validation.metrics.nav.return_pct), spy='%+.1f'|format(oversold.validation.metrics.spy.return_pct), qqq='%+.1f'|format(oversold.validation.metrics.qqq.return_pct), dd='%.1f'|format(-oversold.evaluation.metrics.nav.max_drawdown_pct)) }}</p>
  <details><summary>{{ t('os.method') }}</summary>
- <p>{{ t('os.method_body') }}</p><p>{{ t('os.rule_detail') }}</p><p class="muted small">{{ oversold.universe|join(' · ') }}</p>
+ <p>{{ t('os.method_body') }}</p><p>{{ t('os.rule_detail') }}</p>
  <div class="os-table-wrap" tabindex="0" role="region" aria-label="{{ t('os.comparison_table') }}"><table><caption>{{ t('os.comparison_table') }}</caption><thead><tr><th scope="col">{{ t('os.rule') }}</th><th scope="col">2019–2021</th><th scope="col">2022</th><th scope="col">2023–2026</th></tr></thead><tbody>
  {% for rule,runs in oversold.comparisons.items() %}<tr><td>{{ t('os.' ~ rule) }}</td>{% for period in ['selection','validation','evaluation'] %}<td>{{ '%+.1f'|format(runs[period].metrics.nav.return_pct) }}%</td>{% endfor %}</tr>{% endfor %}
  <tr><td>SPY</td>{% for period in ['selection','validation','evaluation'] %}<td>{{ '%+.1f'|format(oversold.comparisons[oversold.selected_rule][period].metrics.spy.return_pct) }}%</td>{% endfor %}</tr>
  <tr><td>QQQ</td>{% for period in ['selection','validation','evaluation'] %}<td>{{ '%+.1f'|format(oversold.comparisons[oversold.selected_rule][period].metrics.qqq.return_pct) }}%</td>{% endfor %}</tr>
  </tbody></table></div>
- <p>{{ t('os.limitations') }}</p><a href="/oversold-research.json">{{ t('os.data') }} ↗</a>
+ <p>{{ t('os.limitations') }}</p><a href="{{ url('/research-records/') }}#positions">{{ t('os.data') }} →</a>
  </details>
 </article>
 <script src="/js/research-chart.js" defer></script>

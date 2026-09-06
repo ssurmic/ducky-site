@@ -1,0 +1,17 @@
+<section class="section member-preview" id="member-research"><div class="wrap">
+ <p class="eyebrow mono">{{ t('preview.eyebrow') }}</p><h2>{{ t('preview.title') }}</h2><p class="lead">{{ t('preview.intro') }}</p>
+ <div class="member-preview-grid">
+ {% for key, plan in [('events','Signal / Pro'),('options','Pro')] %}
+  <article class="member-preview-card">
+   <div class="member-preview-head"><h3>{{ t('preview.' ~ key) }}</h3><span class="badge">{{ plan }}</span></div>
+   <div class="member-preview-canvas">
+    <div class="preview-skeleton" aria-hidden="true"><span></span><span></span><div><i></i><i></i><i></i></div><span></span><span></span></div>
+    <div class="member-preview-lock"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><b>{{ t('preview.locked') }}</b><span>{{ t('preview.' ~ key ~ '_body') }}</span></div>
+   </div>
+   <a class="btn btn-ghost" href="#pricing">{{ t('preview.plans') }} →</a>
+  </article>
+ {% endfor %}
+ </div>
+ <div class="preview-actions"><a class="btn btn-primary" href="{{ url('/app/') }}#/register">{{ t('preview.register') }}</a><p class="muted small">{{ t('preview.access_note') }}</p></div>
+ <p class="muted small">{{ t('preview.demo_note') }}</p>
+</div></section>

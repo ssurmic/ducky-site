@@ -2,15 +2,17 @@
 {% block content %}
 {% include "_partials/revamp-hero.html" %}
 {% include "_partials/product-benefits.html" %}
+{% include "_partials/member-preview.html" %}
+{% include "_partials/video-example.html" %}
 {% include "_partials/revamp-proof.html" %}
 {% include "_partials/revamp-workflow.html" %}
 {% include "_partials/pricing.html" %}
 {% include "_partials/faq.html" %}
 {% include "_partials/disclaimer.html" %}
 
-{# Mobile sticky bar: free + subscribe $12 only. Never a ¥ price here (¥ lives inside #pricing only). #}
+{# Mobile entry points follow the page language. #}
 <div class="sticky-bar" id="sticky-bar" aria-hidden="true">
-  <a class="btn btn-ghost" href="{{ url('/app/') }}">{{ t('sticky.free') }}</a>
+  <a class="btn btn-ghost" href="{{ url('/app/') }}#/register">{{ t('sticky.free') }}</a>
   <a class="btn btn-primary" href="{{ url('/app/') ~ '#/billing' }}">{{ t('sticky.subscribe') }}</a>
 </div>
 {% endblock %}

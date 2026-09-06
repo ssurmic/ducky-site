@@ -3,7 +3,7 @@
   <div class="hero-copy">
    <p class="eyebrow mono">{{ t('rev.eyebrow') }}</p>
    <h1>{{ t('rev.h1') }}</h1><p class="sub">{{ t('rev.sub') }}</p>
-   <div class="cta-row"><a class="btn btn-primary btn-lg" href="{{ url('/app/') }}">{{ t('rev.start') }}</a><a class="btn btn-ghost btn-lg" href="#how">{{ t('rev.how') }}</a></div>
+   <div class="cta-row"><a class="btn btn-primary btn-lg" href="{{ url('/app/') }}#/register">{{ t('rev.start') }}</a><a class="btn btn-ghost btn-lg" href="#video-example">{{ t('rev.how') }}</a></div>
    <p class="cta-note">{{ t('rev.note') }}</p>
   </div>
   <div class="review-preview">
@@ -11,7 +11,7 @@
    <ol class="review-flow">
     {% for i in range(1,4) %}<li><span class="review-step mono">0{{ i }}</span><div><b>{{ t('rev.step' ~ i) }}</b><p>{{ t('rev.step' ~ i ~ '_b') }}</p></div></li>{% endfor %}
    </ol>
-   <a href="{{ url('/app/') }}">{{ t('rev.start') }} →</a>
+   <a href="{{ url('/track-record/') }}">{{ t('benefits.source_link') }} →</a>
   </div>
  </div>
 </section>

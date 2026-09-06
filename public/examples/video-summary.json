@@ -1,0 +1,42 @@
+{
+  "kol_id": "wall-street-millennial",
+  "kol_name": "Wall Street Millennial",
+  "title": "China Will Create A Historic Memory Glut",
+  "published_at": "2026-09-04T20:02:45+00:00",
+  "url": "https://www.youtube.com/watch?v=f8kUx5_1cWc",
+  "summary": {
+    "zh": "博主认为，AI需求推动了内存价格上涨；中国DRAM和NAND产能的扩张，可能使当前短缺逐渐转为供应过剩。\n博主解释了内存芯片如何通过冗余单元容纳部分制造缺陷，并认为中国内存厂商的追赶速度快于先进逻辑芯片厂商。\n博主称HP和Acer正在美国以外的市场使用CXMT内存，并区分了企业自主采购选择与出口管制。他认为，即使美国贸易壁垒持续，中国新增供给仍可能压低全球内存价格。",
+    "en": "The creator links AI demand to higher memory prices and argues that expanding Chinese DRAM and NAND capacity could turn today's shortage into a future glut.\nThe creator explains how redundant memory cells can compensate for some manufacturing defects. He argues that China's memory makers are catching up faster than its advanced logic-chip makers.\nThe creator says HP and Acer are using CXMT memory outside the US, distinguishing voluntary sourcing choices from export restrictions. He argues that additional Chinese supply could pressure global memory prices even if US trade barriers persist."
+  },
+  "sections": [
+    {
+      "start_seconds": 3,
+      "zh": "博主认为，AI需求推动了内存价格上涨；中国DRAM和NAND产能的扩张，可能使当前短缺逐渐转为供应过剩。",
+      "en": "The creator links AI demand to higher memory prices and argues that expanding Chinese DRAM and NAND capacity could turn today's shortage into a future glut."
+    },
+    {
+      "start_seconds": 349,
+      "zh": "博主解释了内存芯片如何通过冗余单元容纳部分制造缺陷，并认为中国内存厂商的追赶速度快于先进逻辑芯片厂商。",
+      "en": "The creator explains how redundant memory cells can compensate for some manufacturing defects. He argues that China's memory makers are catching up faster than its advanced logic-chip makers."
+    },
+    {
+      "start_seconds": 700,
+      "zh": "博主称HP和Acer正在美国以外的市场使用CXMT内存，并区分了企业自主采购选择与出口管制。他认为，即使美国贸易壁垒持续，中国新增供给仍可能压低全球内存价格。",
+      "en": "The creator says HP and Acer are using CXMT memory outside the US, distinguishing voluntary sourcing choices from export restrictions. He argues that additional Chinese supply could pressure global memory prices even if US trade barriers persist."
+    }
+  ],
+  "source": {
+    "kind": "transcript",
+    "status": "ready",
+    "source_hash": "f454d2164b8e19db944492fcfffa3dd7295264f057c25376cf5acda9e720904f",
+    "caption_language": "en",
+    "caption_generated": true,
+    "caption_coverage_pct": 99.4,
+    "caption_segments": 435,
+    "duration_seconds": 944,
+    "summary_reviewed": true,
+    "summary_version": "short-video-v2",
+    "metadata_validation": "caption_hash_matched"
+  },
+  "label": "PUBLIC EXAMPLE · Creator view · caption summary; no stock stance"
+}

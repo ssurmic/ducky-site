@@ -14,7 +14,8 @@
     },
     "pro": {
       "monthly_usd": 39,
-      "annual_usd": 351
+      "annual_usd": 351,
+      "annual_cny": 1899
     },
     "china": {
       "annual_cny": 749
