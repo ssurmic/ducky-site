@@ -2063,5 +2063,7 @@
   "app.radar.access_current": "Current radar records · Pro",
   "app.radar.access_delayed": "Free Radar is delayed by 5 days. “Last 7 days” ends at the delayed cutoff. Historical records and losing samples are retained.",
   "app.radar.access_upgrade": "See current Radar with Pro",
-  "app.radar.access_cutoff": "Records available through: {date}"
+  "app.radar.access_cutoff": "Records available through: {date}",
+  "app.nav.briefing": "Briefing",
+  "track.public_delay": "Individual public LIVE records are delayed by 5 days. Aggregate statistics still include every recorded sample and loss. BACKTEST records are unchanged."
 }

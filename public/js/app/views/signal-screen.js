@@ -46,9 +46,9 @@ export function mountScreen(root,{signal,query}={}){
   const presetsRow=el('div.screen-presets',...Object.keys(presets).map(key=>el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{fill(presets[key]());clearResults();}},s('screen.preset_'+key))));
   const fields={};
   const field=(name,node)=>{fields[name]=node;return el('label.screen-field',el('span',s('screen.'+name)),node);};
-  const select=(name,values)=>field(name,el('select.input',{name},...values.map(v=>el('option',{value:v},s('screen.'+name+'_'+v)))));
+  const select=(name,values)=>field(name,el('select.input',{name,'aria-label':s('screen.'+name)},...values.map(v=>el('option',{value:v},s('screen.'+name+'_'+v)))));
   const number=(name,max,step='any')=>field(name,el('input.input',{type:'number',name,min:0,max,step,placeholder:s('screen.optional')}));
-  const sector=field('sector',el('select.input',{name:'sector'},el('option',{value:''},s('radar.sector_all'))));
+  const sector=field('sector',el('select.input',{name:'sector','aria-label':s('screen.sector')},el('option',{value:''},s('radar.sector_all'))));
   const oversold=el('input',{type:'checkbox',name:'oversold'});fields.oversold=oversold;
   const eventBoxes={};
   const eventChoice=el('fieldset.screen-events',el('legend',s('screen.event_label')),...EVENTS.map(kind=>{

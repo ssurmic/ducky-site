@@ -2063,5 +2063,7 @@
   "app.radar.access_current": "当前雷达记录 · Pro",
   "app.radar.access_delayed": "免费雷达延迟 5 天展示。最近 7 天指截至延迟日期的 7 天；历史记录与亏损样本保留。",
   "app.radar.access_upgrade": "查看 Pro 当前雷达",
-  "app.radar.access_cutoff": "可见记录截至：{date}"
+  "app.radar.access_cutoff": "可见记录截至：{date}",
+  "app.nav.briefing": "摘要",
+  "track.public_delay": "公开的单条 LIVE 记录延迟 5 天；汇总统计仍包含全部已记录样本及亏损。BACKTEST 记录不受此延迟影响。"
 }

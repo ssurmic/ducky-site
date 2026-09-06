@@ -11,8 +11,21 @@ export function safeTarget(hash) {
   const path = hash.split("?")[0];
   if (path === '#/creators') return creatorTarget(creatorRoute(new URLSearchParams(hash.split('?')[1] || '')));
   if (path === '#/boards') {
-    const screen = new URLSearchParams(hash.split('?')[1] || '').get('screen');
-    return ['insider-oversold','institution-oversold'].includes(screen) ? '#/boards?screen=' + screen : '#/boards';
+    const q = new URLSearchParams(hash.split('?')[1] || ''), screen = q.get('screen');
+    if (['insider-oversold','institution-oversold'].includes(screen)) return '#/boards?screen=' + screen;
+    const ticker=(q.get('ticker')||'').toUpperCase();
+    if (!/^[A-Z][A-Z0-9.-]{0,11}$/.test(ticker)) return '#/boards';
+    const target=new URLSearchParams({mode:'archive',ticker});
+    for (const key of ['start','end']) { const date=q.get(key)||''; if (/^\d{4}-\d{2}-\d{2}$/.test(date) && Number.isFinite(Date.parse(date)) && new Date(date).toISOString().slice(0,10)===date) target.set(key,date); }
+    return '#/boards?'+target;
+  }
+  if (path === '#/briefing') {
+    const period=new URLSearchParams(hash.split('?')[1] || '').get('period');
+    return period==='weekly' ? '#/briefing?period=weekly' : '#/briefing';
+  }
+  if (path === '#/alerts' || path === '#/calendar') {
+    const ticker=(new URLSearchParams(hash.split('?')[1] || '').get('ticker')||'').toUpperCase();
+    return /^[A-Z][A-Z0-9.-]{0,11}$/.test(ticker) ? path+'?ticker='+ticker : path;
   }
   if (SIMPLE.has(path.slice(2)) && path.startsWith("#/")) return path;
   const match = /^#\/(chart|research)(?:\/([A-Za-z0-9][A-Za-z0-9.-]{0,14}))?$/.exec(path);

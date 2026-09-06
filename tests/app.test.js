@@ -147,8 +147,8 @@ test('radar preserves the delivered body, historical dates and incomplete archiv
 test('navigation retains all routes with named SVG links and a native mobile disclosure',()=>{
  const html=readFileSync('dist/app/index.html','utf8');const page=new JSDOM(html).window.document;
  const links=[...page.querySelectorAll('.app-nav a')];
- assert.equal(new Set(links.map(a=>a.dataset.route)).size,8);
- assert.equal(page.querySelectorAll('.nav-more-panel a').length,4);
+ assert.equal(new Set(links.map(a=>a.dataset.route)).size,9);
+ assert.equal(page.querySelectorAll('.nav-more-panel a').length,5);
  for(const a of links){assert.ok(a.textContent.trim());assert.ok(a.querySelector('svg[aria-hidden="true"] use'));}
  assert.ok(page.querySelector('.nav-more summary'));
 });

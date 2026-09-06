@@ -577,6 +577,8 @@ def main() -> None:
     if DIST.exists():
         shutil.rmtree(DIST)
     shutil.copytree(PUBLIC, DIST)          # public/ is copied whole (avatar-group.jpg, mascot.svg, receipts/ …)
+    from public_access import sanitize_public_payloads
+    sanitize_public_payloads(DIST)
     from creator_public_access import sanitize_creator_catalog
     sanitize_creator_catalog(DIST)
     app_version = publish_app_modules(retain_history=True)

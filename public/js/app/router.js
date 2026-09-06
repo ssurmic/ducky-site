@@ -14,6 +14,7 @@ const ROUTES = {
   forgot: () => import("./views/recovery.js"),
   reset: () => import("./views/recovery.js"),
   watchlist: () => import("./views/watchlist.js"),
+  briefing: () => import("./views/briefing.js"),
   alerts: () => import("./views/alerts.js"),
   chart: () => import("./views/chart.js"),
   billing: () => import("./views/billing.js"),
@@ -98,7 +99,7 @@ export async function render() {
     const mb = mod.mainButton();
     if (mb) tg.showMain(mb.text, mb.onClick); else tg.hideMain();
   } else tg.hideMain();
-  if (route.name === "research" || route.name === "chart" || route.name === "billing" || route.name === "alerts" || route.name === "profile" || route.name === "creators" || route.name === "calendar" || route.name === "boards") tg.showBack(() => go("#/watchlist"));
+  if (route.name === "briefing" || route.name === "research" || route.name === "chart" || route.name === "billing" || route.name === "alerts" || route.name === "profile" || route.name === "creators" || route.name === "calendar" || route.name === "boards") tg.showBack(() => go("#/watchlist"));
   else tg.hideBack();
 }
 
@@ -111,7 +112,7 @@ function setActiveTab(name) {
   const more = document.querySelector(".nav-more");
   if (more) {
     more.open = false;
-    more.classList.toggle("on", ["calendar", "creators", "profile", "billing"].includes(name));
+    more.classList.toggle("on", ["chart", "calendar", "creators", "profile", "billing"].includes(name));
   }
 }
 

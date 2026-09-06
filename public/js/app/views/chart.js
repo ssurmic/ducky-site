@@ -51,6 +51,10 @@ export async function mount(root, params) {
   const host = el("div.chart-host", { id: "chart-host" });
   const status = el("div", { id: "chart-status" });
   root.append(head, form, periodRow, legendRow, host, status);
+  if (ticker) form.after(el('div.chips',
+    el('a.chip',{href:'#/creators?ticker='+encodeURIComponent(ticker)},s('watch.creator_mentions')),
+    el('a.chip',{href:'#/boards?mode=archive&ticker='+encodeURIComponent(ticker)},s('watch.radar_records')),
+    el('a.chip',{href:'#/calendar?ticker='+encodeURIComponent(ticker)},s('nav.calendar'))));
 
   if (!ticker) {
     host.hidden = true; legendRow.hidden = true; periodRow.hidden = true;

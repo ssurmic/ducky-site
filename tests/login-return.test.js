@@ -17,6 +17,10 @@ const waitFor=async predicate=>{for(let i=0;i<200&&!predicate();i++)await new Pr
 test('only canonical internal routes survive login; credentials and external destinations do not',()=>{
   for(const value of ['https://evil.test','//evil.test','#//evil.test','#/reset?token=secret','#/oauth','#/login','#/research/../../profile','#/chart/%2F%2Fevil.test','#/creators/extra']) assert.equal(target.safeTarget(value),null,value);
   assert.equal(target.safeTarget('#/chart/brk-b?token=secret'),'#/chart/BRK-B');
+  assert.equal(target.safeTarget('#/boards?ticker=nvda&mode=archive&token=secret'),'#/boards?mode=archive&ticker=NVDA');
+  assert.equal(target.safeTarget('#/calendar?ticker=orcl&token=secret'),'#/calendar?ticker=ORCL');
+  assert.equal(target.safeTarget('#/alerts?ticker=mu&amount=999'),'#/alerts?ticker=MU');
+  assert.equal(target.safeTarget('#/briefing?period=weekly&token=secret'),'#/briefing?period=weekly');
   target.rememberTarget('#/creators?token=secret');
   assert.ok(!window.sessionStorage.getItem('ducky.login-target').includes('secret'));
   assert.equal(target.takeTarget(),'#/creators');

@@ -62,13 +62,13 @@
   <svg class="app-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/vendor/lucide/icons.svg#{{ name }}"></use></svg>
   {%- endmacro %}
   <nav class="app-nav" aria-label="{{ t('app.nav.label') }}">
-    {% for route in ['watchlist', 'chart', 'calendar', 'boards', 'alerts', 'creators', 'profile', 'billing'] %}
-    <a href="#/{{ route }}" data-route="{{ route }}"{% if route in ['calendar', 'creators', 'profile', 'billing'] %} class="nav-secondary"{% endif %}>{{ nav_icon(route) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
+    {% for route in ['watchlist', 'briefing', 'chart', 'calendar', 'boards', 'alerts', 'creators', 'profile', 'billing'] %}
+    <a href="#/{{ route }}" data-route="{{ route }}"{% if route in ['chart', 'calendar', 'creators', 'profile', 'billing'] %} class="nav-secondary"{% endif %}>{{ nav_icon(route) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
     {% endfor %}
     <details class="nav-more">
       <summary>{{ nav_icon('more') }}<span>{{ t('app.nav.more') }}</span></summary>
       <div class="nav-more-panel">
-        {% for route in ['calendar', 'creators', 'profile', 'billing'] %}
+        {% for route in ['chart', 'calendar', 'creators', 'profile', 'billing'] %}
         <a href="#/{{ route }}" data-route="{{ route }}">{{ nav_icon(route) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
         {% endfor %}
       </div>
