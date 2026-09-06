@@ -2545,5 +2545,6 @@
   "app.social.no_match": "没有匹配的记录",
   "app.social.no_match_note": "未进入本次前 100 名、尚无自选股或筛选无匹配，不代表热度为零。",
   "app.social.watchlist_error": "自选股加载失败，重试后可筛选自己的股票。",
-  "app.chart.snapshot_as_of": "指标快照生成于 {date} UTC"
+  "app.chart.snapshot_as_of": "指标快照生成于 {date} UTC",
+  "app.creatorclaim.source_wording": "展开原文表述"
 }

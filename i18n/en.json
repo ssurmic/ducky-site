@@ -2545,5 +2545,6 @@
   "app.social.no_match": "No matching observations",
   "app.social.no_match_note": "A symbol may be outside the sampled top 100, your watchlist may be empty, or no record matches the filter. Absence does not mean zero attention.",
   "app.social.watchlist_error": "Watchlist could not be loaded. Retry to filter your symbols.",
-  "app.chart.snapshot_as_of": "Indicator snapshot built {date} UTC"
+  "app.chart.snapshot_as_of": "Indicator snapshot built {date} UTC",
+  "app.creatorclaim.source_wording": "Read the source wording"
 }

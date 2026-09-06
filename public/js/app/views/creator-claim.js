@@ -19,15 +19,17 @@ const pick=value=>typeof value==='object'&&value?value[document.documentElement.
 export function claimDetails(call) {
   const facts=el('dl.creator-claim-facts');
   const stated=(key,value)=>facts.append(el('div',el('dt',s(key)),el('dd',value||s('creators.not_stated'))));
+  const sourceWording=value=>value&&(value.length>90||(document.documentElement.lang?.startsWith('en')&&/[\u3400-\u9fff]/.test(value)))
+    ?el('details',el('summary',s('creatorclaim.source_wording')),el('p.small',value)):value;
   if(call.extractor_version){
     stated('creatorclaim.action',s('creatorclaim.action_'+call.action));
     stated('creatorclaim.intent',s('creatorclaim.intent_'+call.intent));
   }
-  stated('creators.stated_horizon',call.horizon_text);
-  stated('creators.stated_condition',call.condition_text);
+  stated('creators.stated_horizon',sourceWording(call.horizon_text));
+  stated('creators.stated_condition',sourceWording(call.condition_text));
   stated('creatorclaim.reason',pick(call.reason));
   if(call.stated_price_text)stated('creatorclaim.stated_price',call.stated_price_text);
-  return facts;
+  return el('div.creator-claim-detail',pick(call.note)?el('p',pick(call.note)):null,facts);
 }
 
 export function priceContext(context) {

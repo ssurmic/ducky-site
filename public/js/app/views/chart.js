@@ -155,7 +155,8 @@ export async function mount(root, params) {
         clear(legendRow);
         if (snap && snap.ok) {
           if(snap.company_context) showCompany(snap.company_context,snap.rs);
-          if(snap.built_at)legendRow.append(el('span.small.muted.chart-snapshot-date',s('chart.snapshot_as_of',{date:String(snap.built_at).slice(0,16).replace('T',' ')})));
+          const built=new Date(snap.built_at||'');
+          if(Number.isFinite(built.getTime()))legendRow.append(el('span.small.muted.chart-snapshot-date',s('chart.snapshot_as_of',{date:built.toISOString().slice(0,16).replace('T',' ')})));
           ovl = overlays.apply(candles, snap, { call: up, put: down, flip: cssVar("--accent", "#f5c33b"), exp: cssVar("--blue", "#58a6ff"), band: text });
           levels = overlays.levels(snap); candles.applyOptions({});
           for (const it of overlays.legend(snap, { call: up, put: down, flip: cssVar("--accent", "#f5c33b"), exp: cssVar("--blue", "#58a6ff"), band: text })) {
