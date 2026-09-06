@@ -2573,5 +2573,6 @@
   "app.market.details": "来源与说明",
   "app.briefing.details": "时间与数据范围",
   "app.screen.matches": "匹配 {n} 只股票",
-  "app.screen.historical_note": "这是当前筛选，不代表这些条件曾在历史上同时出现。"
+  "app.screen.historical_note": "这是当前筛选，不代表这些条件曾在历史上同时出现。",
+  "walkthrough.caption": "录制于 2026-09-06 · 含历史内容与操作示例"
 }

@@ -2573,5 +2573,6 @@
   "app.market.details": "Sources and notes",
   "app.briefing.details": "Dates and data coverage",
   "app.screen.matches": "{n} matching stocks",
-  "app.screen.historical_note": "A current screen does not establish that these conditions coincided historically."
+  "app.screen.historical_note": "A current screen does not establish that these conditions coincided historically.",
+  "walkthrough.caption": "Recorded September 6, 2026 · Historical data and example setups"
 }
