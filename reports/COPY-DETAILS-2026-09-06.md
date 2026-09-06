@@ -56,5 +56,20 @@ were not rewritten. The previously released v5 media files are unchanged.
   [English phone](copy-details-2026-09-06/en-mobile.png) and
   [Chinese desktop](copy-details-2026-09-06/zh-desktop.png).
 
-Production verification is appended after deployment. No backend runtime,
-strategy, entitlement or notification delivery changes are included.
+## Production verification
+
+Released source **2a2caea3**, Cloudflare Pages **306f2f52**. Formal Chinese and
+English homepages and App shells return this build; the live content-versioned
+creator module is `68205299056339881f2f`. HTTP verification confirmed deleted
+voice wording is absent, six chapters/seven links remain, and the creator
+module preserves source dates without rendering hash/segment counts.
+
+The clean release build passed copy lint over **1,593 files** after the
+temporary test-dependency symlink was removed, plus **728 links**. CUA live
+Chinese 390px review confirmed no overflow or production-copy leakage, even
+with the guide open. The live chapter seek reached **12.92s**, ready and paused.
+See [live Chinese phone](copy-details-2026-09-06/live-zh-mobile.png).
+
+No backend runtime, strategy, entitlement or notification delivery changes
+are included. Long-term policy is recorded in the backend COPY-GUIDE.md and
+COPY-04 tracker. Existing untracked narration drafts were not published.
