@@ -28,6 +28,7 @@ export async function mount(root) {
   const form = el("form.add-row", { onsubmit: onAdd }, picker.wrap, addBtn);
   const list = el("div.cards", { id: "watch-cards" });
   root.append(head, el("p.view-intro.muted", s("watch.workflow")), form, list);
+  head.append(el('a.btn.btn-ghost.btn-sm',{href:'#/updates'},s('updates.entry_title')));
 
   async function onAdd(e) {
     e.preventDefault();
@@ -134,6 +135,7 @@ export async function mount(root) {
       c.appendChild(lock(pro));
     }
     c.appendChild(el("div.snap-actions",
+      el('a.btn.btn-ghost.btn-sm',{href:'#/updates?ticker='+encodeURIComponent(t)},s('updates.follow_content')),
       el("a.btn.btn-ghost.btn-sm", { href: "#/creators?ticker=" + encodeURIComponent(t) }, s("watch.creator_mentions")),
       el("a.btn.btn-ghost.btn-sm", { href: "#/boards?mode=archive&ticker=" + encodeURIComponent(t) }, s("watch.radar_records")),
       el("a.btn.btn-ghost.btn-sm", { href: "#/research/" + encodeURIComponent(t) }, s("research.title")),

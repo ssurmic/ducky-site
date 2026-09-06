@@ -36,6 +36,8 @@ export async function mount(root, params = {}) {
   const head = el("div.view-head", el("h1", s("alerts.title")), el("span.count.mono", { id: "alerts-count" }));
   const list = el("div.alist", { id: "alerts-list" });
   root.append(head);
+  root.append(el('section.card.updates-entry', el('div',el('h2',s('updates.entry_title')),el('p.muted',s('updates.entry_body'))),
+    el('a.btn.btn-ghost',{href:'#/updates'},s('updates.entry_open'))));
   const disposeDraft = mountDraft(root, { signal: params.signal, company: (params.query?.get("ticker") || "").toUpperCase(), onCreated: load });
   root.append(list);
   const disposeScreens=mountSavedScreens(root,{signal:params.signal});

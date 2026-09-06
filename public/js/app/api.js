@@ -191,10 +191,20 @@ export const calendar = {
   _raw: () => get("/public/calendar.json", { auth: false }),
 };
 export const push = {
-  config: () => get("/push/config", { auth: false }),   // {enabled, vapid_public} — public key isn't secret
-  subscribe: (subscription) => post("/push/subscribe", { subscription }),
+  config: (opts) => get("/push/config", { ...opts, auth: false }),   // {enabled, vapid_public} — public key isn't secret
+  subscribe: (subscription, opts) => post("/push/subscribe", { subscription }, opts),
   unsubscribe: (endpoint) => del("/push/subscribe", { body: { endpoint } }),
   test: () => post("/push/test", {}),
+};
+
+export const creatorNotifications = {
+  options: opts => get('/creator-notifications/options', {...opts, silent402:true}),
+  topics: opts => get('/creator-notifications/topics', {...opts, silent402:true}),
+  save: (topic, opts) => request('PUT', '/creator-notifications/topics', {...opts, silent402:true, body:topic}),
+  remove: (type, key, opts) => del('/creator-notifications/topics/'+encodeURIComponent(type)+'/'+encodeURIComponent(key), {...opts, silent402:true}),
+  inbox: (before, opts) => get('/creator-notifications/inbox?limit=30'+(before?'&before_id='+encodeURIComponent(before):''), {...opts, silent402:true}),
+  item: (id, opts) => get('/creator-notifications/inbox/'+encodeURIComponent(id), {...opts, silent402:true}),
+  read: (id, opts) => post('/creator-notifications/inbox/'+encodeURIComponent(id)+'/read', {}, {...opts, silent402:true}),
 };
 
 export const company = (t,o) => get("/public/company/" + encodeURIComponent(t),o);

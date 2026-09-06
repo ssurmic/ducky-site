@@ -9,6 +9,13 @@ const SIMPLE = new Set(["watchlist", "alerts", "billing", "profile", "creators",
 export function safeTarget(hash) {
   if (typeof hash !== "string" || hash.length > 2048) return null;
   const path = hash.split("?")[0];
+  if (path === '#/updates') {
+    const q = new URLSearchParams(hash.split('?')[1] || ''), target = new URLSearchParams();
+    const ticker = (q.get('ticker') || '').toUpperCase(), item = q.get('item') || '';
+    if (/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker)) target.set('ticker', ticker);
+    if (/^[1-9][0-9]{0,15}$/.test(item)) target.set('item', item);
+    return '#/updates' + (target.size ? '?' + target : '');
+  }
   if (path === '#/creators') return creatorTarget(creatorRoute(new URLSearchParams(hash.split('?')[1] || '')));
   if (path === '#/boards') {
     const q = new URLSearchParams(hash.split('?')[1] || ''), screen = q.get('screen');

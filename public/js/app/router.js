@@ -16,6 +16,7 @@ const ROUTES = {
   watchlist: () => import("./views/watchlist.js"),
   briefing: () => import("./views/briefing.js"),
   alerts: () => import("./views/alerts.js"),
+  updates: () => import("./views/updates.js"),
   chart: () => import("./views/chart.js"),
   billing: () => import("./views/billing.js"),
   profile: () => import("./views/profile.js"),
@@ -99,11 +100,13 @@ export async function render() {
     const mb = mod.mainButton();
     if (mb) tg.showMain(mb.text, mb.onClick); else tg.hideMain();
   } else tg.hideMain();
-  if (route.name === "briefing" || route.name === "research" || route.name === "chart" || route.name === "billing" || route.name === "alerts" || route.name === "profile" || route.name === "creators" || route.name === "calendar" || route.name === "boards") tg.showBack(() => go("#/watchlist"));
+  if (route.name === "updates") tg.showBack(() => go("#/alerts"));
+  else if (route.name === "briefing" || route.name === "research" || route.name === "chart" || route.name === "billing" || route.name === "alerts" || route.name === "profile" || route.name === "creators" || route.name === "calendar" || route.name === "boards") tg.showBack(() => go("#/watchlist"));
   else tg.hideBack();
 }
 
 function setActiveTab(name) {
+  if (name === 'updates') name = 'alerts';
   document.querySelectorAll(".app-nav a[data-route]").forEach((a) => {
     const on = a.getAttribute("data-route") === name;
     a.classList.toggle("on", on);
