@@ -54,8 +54,10 @@ export async function mount(root, params) {
   const host = el("div.chart-host", { id: "chart-host" });
   const status = el("div", { id: "chart-status" });
   const companyHost = el("div.company-host");
-  root.append(head, form, companyHost, periodRow, legendRow, host, status);
-  if (ticker) api.company(ticker).then(p=>{if(alive) companyHost.replaceChildren(companyContext(p));}).catch(()=>{if(alive) companyHost.replaceChildren(companyContext(null));});
+  const companyName=el('p.chart-company-name.muted.small');
+  root.append(head, companyName, form, periodRow, legendRow, host, status, companyHost);
+  const showCompany=(p,rs)=>{companyHost.replaceChildren(companyContext(p,rs));companyName.textContent=p?.company||'';};
+  if (ticker) api.company(ticker).then(p=>{if(alive) showCompany(p);}).catch(()=>{if(alive) showCompany(null);});
   if (ticker) form.after(el('div.chips',
     el('a.chip',{href:'#/creators?ticker='+encodeURIComponent(ticker)},s('watch.creator_mentions')),
     el('a.chip',{href:'#/boards?mode=archive&ticker='+encodeURIComponent(ticker)},s('watch.radar_records')),
@@ -95,8 +97,9 @@ export async function mount(root, params) {
     };
     if (api.isAccepted(payload)) { status.appendChild(el('p.muted', s('common.building'))); retry(); return; }
     if (!bars.length) { status.appendChild(el("p.muted", s("chart.no_bars"))); return; }
-    const spot = document.getElementById("chart-spot"); if (spot) spot.textContent = px(bars[bars.length - 1].close);
-    status.appendChild(el("p.muted.small", s("chart.last_bar", {date: String(bars[bars.length - 1].time)})));
+    const last=bars[bars.length-1];
+    const spot = document.getElementById("chart-spot");
+    if (spot) spot.replaceChildren(el('span',px(last.close)),el('time.small.muted',{datetime:String(last.time)},s('chart.last_bar',{date:String(last.time)})));
     if (payload?.stale) {
       status.appendChild(el('p.data-notice', s('chart.stale_bars', { date: payload.expected_last_d || '—' })));
       retry();
@@ -151,7 +154,8 @@ export async function mount(root, params) {
         if (my !== drawSeq || !alive || !chart) return;   // finding chart.js:63 — recheck before applying overlays
         clear(legendRow);
         if (snap && snap.ok) {
-          if(snap.company_context) companyHost.replaceChildren(companyContext(snap.company_context, snap.rs));
+          if(snap.company_context) showCompany(snap.company_context,snap.rs);
+          if(snap.built_at)legendRow.append(el('span.small.muted.chart-snapshot-date',s('chart.snapshot_as_of',{date:String(snap.built_at).slice(0,16).replace('T',' ')})));
           ovl = overlays.apply(candles, snap, { call: up, put: down, flip: cssVar("--accent", "#f5c33b"), exp: cssVar("--blue", "#58a6ff"), band: text });
           levels = overlays.levels(snap); candles.applyOptions({});
           for (const it of overlays.legend(snap, { call: up, put: down, flip: cssVar("--accent", "#f5c33b"), exp: cssVar("--blue", "#58a6ff"), band: text })) {
