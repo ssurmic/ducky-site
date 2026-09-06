@@ -270,14 +270,11 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
         const status = meta.source?.status;
         const statusKey = {too_long:'too_long',too_dense:'too_dense',processing:'review_pending',review_unavailable:'review_pending',model_unavailable:'review_pending',source_unavailable:'source_pending',asr_unavailable:'source_pending',asr_timeout:'source_pending'}[status] || 'archive_hint';
         art.appendChild(el("p.muted.small", s('creators.'+statusKey)));
-        if(status==='processing')art.append(el('p.small.muted',s('creatorclaim.progress',{done:source.reviewed_chunks||0,total:source.total_chunks||0})));
       }
       if (grounded && p.calls && p.calls.length) art.appendChild(callChips(p.calls, isZh, p.url,p.kol_id));
       const audit=el('details.creator-audit',el('summary',s('creators.source_details')),
         el('p.muted.small',s('creators.first_seen')+' '+dateTime(p.first_seen_at)),
         el('p.muted.small',s('creators.analysis_updated')+' '+dateTime(p.fetched_at)));
-      if(source.caption_segments) audit.append(el('p.muted.small',s('creators.caption_scope',{n:source.caption_segments})));
-      if(source.source_hash) audit.append(el('code',source.source_hash));
       audit.append(sourceFacts);art.append(audit);
       const actions=el('div.evidence-controls.creator-page-actions');
       if (safeSource(p.url)) actions.appendChild(el("a.cr-orig", { href: p.url, target: "_blank", rel: "noopener noreferrer" }, s("creators.orig") + " ↗"));

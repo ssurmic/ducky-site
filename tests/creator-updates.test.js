@@ -173,7 +173,7 @@ test('unsafe source content is rendered as text, missing dates stay missing and 
 });
 test('transcript provenance labels distinguish machine transcription, generated captions and unknown sources',async()=>{
  const f=setup({items:[{...item,transcript_source:{kind:'local_asr',language:'en'}},{...item,id:11,transcript_source:{kind:'youtube_captions',language:'zh',generated:true}},{...item,id:12}]});mockPush();await f.mount();
- assert.ok(f.root.querySelector('[data-update-id="10"]').textContent.includes('Machine transcription · en'));
+ assert.ok(f.root.querySelector('[data-update-id="10"]').textContent.includes('Automatic audio transcript · en'));
  assert.ok(f.root.querySelector('[data-update-id="11"]').textContent.includes('YouTube automatic captions · zh'));
  assert.ok(f.root.querySelector('[data-update-id="12"]').textContent.includes('Source not specified'));f.close();
 });

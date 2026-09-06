@@ -45,7 +45,8 @@ test('opening a creator renders its preloaded shared page without another fetch 
 test('expanded video history fetches that channel and continues beyond the global recent feed',async()=>{
   store.set('me',{tier:'pro'});const requests=[];
   const row=(id,title)=>({id,kol_id:'creator',kol_name:'Creator',title,published_at:'2026-04-01T12:00:00Z',calls:[],tickers:[],
-    summary:{quality:'no_call',en:'The creator discusses operating margins.',source:{kind:'transcript',status:'ready',version:'creator-video-v4',summary_reviewed:true}}});
+    first_seen_at:'2026-04-02T12:00:00Z',fetched_at:'2026-04-03T12:00:00Z',url:'https://www.youtube.com/watch?v=abcdefghijk',
+    summary:{quality:'no_call',en:'The creator discusses operating margins.',source:{kind:'transcript',status:'ready',version:'creator-video-v4',summary_reviewed:true,source_hash:'raw-internal-source-hash',caption_segments:424242,caption_source:'local_asr',caption_language:'en',caption_coverage_pct:100}}});
   globalThis.fetch=async(url,opts)=>{requests.push([url,opts.method]);return Response.json(url==='/kol/feed'?{
     kols:[{id:'creator',name:'Creator',profile:{}}],posts:[],pages:{creator:{kol_id:'creator',coverage:{indexed:2,reviewed:2}}}
   }:url==='/me/kols'?{subs:['creator'],analysis:{}}:url==='/kol/creator/history'?{items:[row(2,'First historical video')],next_cursor:2}:
@@ -60,5 +61,9 @@ test('expanded video history fetches that channel and continues beyond the globa
   await new Promise(r=>setImmediate(r));await new Promise(r=>setImmediate(r));
   assert.ok(root.textContent.includes('Older than the global feed'));
   assert.equal(root.querySelectorAll('.cr-post').length,2);
+  assert.ok(!root.textContent.includes('raw-internal-source-hash')&&!root.textContent.includes('424242'));
+  assert.ok(root.textContent.includes('Automatic audio transcript'));
+  assert.ok(root.querySelector('.creator-audit').textContent.includes('2026'));
+  assert.ok(root.querySelector('.cr-orig[href="https://www.youtube.com/watch?v=abcdefghijk"]'));
   assert.ok(requests.every(([,method])=>method==='GET'));dispose();
 });

@@ -1,6 +1,6 @@
 <section class="section product-demo" id="product-demo" aria-labelledby="product-demo-title">
  <div class="wrap">
-  <div class="product-demo-heading"><div><p class="eyebrow mono">{{ t('walkthrough.eyebrow') }}</p><h2 id="product-demo-title">{{ t('walkthrough.title') }}</h2></div><p class="muted small">{{ t('walkthrough.meta') }}</p></div>
+  <div class="product-demo-heading"><div><p class="eyebrow mono">{{ t('walkthrough.eyebrow') }}</p><h2 id="product-demo-title">{{ t('walkthrough.title') }}</h2></div></div>
   {% set video_version = '2026-09-06-voice-v5' %}
   {% set video_asset = '/media/ducky-walkthrough-' ~ video_version ~ '.' ~ lang %}
   <video id="product-demo-video" class="product-demo-player" controls playsinline preload="none" width="1920" height="1080" poster="{{ video_asset }}.jpg" aria-label="{{ t('walkthrough.title') }}" aria-describedby="product-demo-note">
@@ -36,7 +36,6 @@
    <p class="product-demo-guide-status small" role="status" aria-live="polite" aria-atomic="true" data-demo-status></p>
    <p class="small muted product-demo-guide-access">{{ t('walkthrough.guide.access') }}</p>
    <p class="small muted product-demo-guide-access">{{ t('walkthrough.note') }}</p>
-   <p class="small muted product-demo-guide-voice">{{ t('walkthrough.voice') }}</p>
   </details>
  </div>
 </section>

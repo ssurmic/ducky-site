@@ -1127,7 +1127,7 @@ details.product-demo-guide > summary { display:list-item; cursor:pointer; font-w
 .product-demo-guide-status { margin:0; padding:0 24px; color:var(--text); }
 .product-demo-guide-status:not(:empty) { padding-top:14px; }
 .product-demo-guide-access { margin:0; border-top:1px solid var(--border); padding:18px 24px 0; line-height:1.65; }
-.product-demo-guide-voice { margin:0; padding:8px 24px 18px; line-height:1.65; }
+.product-demo-guide > .product-demo-guide-access:last-child { padding-bottom:18px; }
 @media(max-width:950px) {
  .product-demo-guide-heading { display:block; }
  .product-demo-guide-heading p { margin-top:8px; }
@@ -1148,5 +1148,4 @@ details.product-demo-guide > summary { display:list-item; cursor:pointer; font-w
  .product-demo-guide-link { grid-column:1 / 3; grid-row:3; justify-content:flex-start; width:fit-content; }
  .product-demo-guide-status { padding-left:16px; padding-right:16px; }
  .product-demo-guide-access { padding:16px 16px 0; }
- .product-demo-guide-voice { padding:8px 16px 16px; }
 }

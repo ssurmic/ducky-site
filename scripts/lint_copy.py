@@ -73,6 +73,26 @@ REJECTED_SLOGANS = re.compile(
 )
 
 
+# Owner correction, 2026-09-06: product copy explains use, not how it was made.
+# Scan authored translations only; attributed research/source material is not rewritten.
+REJECTED_PRODUCT_DETAILS = re.compile(
+    r"配音|音色|(?:female|male|synthetic)\s+(?:voice(?:over)?|narration)|"
+    r"本地机器转录|local machine transcript|共享缓存|shared cache|"
+    r"后台批次|background batch|(?:分析|处理)队列|(?:analysis|processing) queue|queue (?:another analysis|this request)|source hash",
+    re.IGNORECASE,
+)
+
+
+def check_product_details() -> list[str]:
+    import json
+    errors = []
+    for lang in ("zh", "en"):
+        for key, value in json.loads((I18N / f"{lang}.json").read_text()).items():
+            if isinstance(value, str) and REJECTED_PRODUCT_DETAILS.search(value):
+                errors.append(f"i18n/{lang}.json: {key}: replace production detail with a user-facing action or state")
+    return errors
+
+
 def check_rejected_slogans() -> list[str]:
     import json
     errors = []
@@ -156,6 +176,7 @@ def main() -> int:
         return 1
     errors: list[str] = []
     errors += check_rejected_slogans()
+    errors += check_product_details()
     errors += check_i18n_en_cjk()
     errors += check_i18n_zh_english()
     errors += check_template_hardcoded_cjk()
