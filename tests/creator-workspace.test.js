@@ -122,7 +122,8 @@ test('follow feedback persists and analysis completion is read automatically',as
  const root=setupRoot();const {mount}=await import('../public/js/app/views/creators.js');
  let followed=false,ready=false;
  globalThis.fetch=async url=>{
-  if(url==='/public/kol-feed.json')return response({kols:[{...creator,id:'joseph'}],posts:[]});
+  if(url==='/kol/feed')return response({kols:[{...creator,id:'joseph'}],posts:[]});
+  if(url==='/watchlist')return response({items:[]});
   if(url==='/me/kols')return response({subs:followed?['joseph']:[],creators:[creator],analysis:followed?{joseph:{status:ready?'ready':'queued'}}:{}});
   if(url==='/kol/lookups')return response({items:[]});
   if(url==='/kol/joseph/sub'){followed=true;return response({subscribed:true,kol_id:'joseph',creator,analysis:{status:'queued'}});}
