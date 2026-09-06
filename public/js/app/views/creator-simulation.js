@@ -30,7 +30,7 @@ export function simulate(points,config,stance) {
 export function simulationRows(items,kolId='') {
   const first=new Map();
   for(const p of [...items].sort((a,b)=>a.revision_id-b.revision_id))if(p.calls?.length&&p.revision_id===p.first_verified_revision_id&&!first.has(p.id))first.set(p.id,p);
-  return [...first.values()].filter(p=>!kolId||p.kol_id===kolId).flatMap(post=>post.calls.filter(c=>['bull','bear'].includes(c.stance)).map(call=>({post,call})));
+  return [...first.values()].filter(p=>!kolId||p.kol_id===kolId).flatMap(post=>post.calls.filter(c=>['bull','bear'].includes(c.stance)&&c.comparison_eligible!==false).map(call=>({post,call})));
 }
 const DEMO=[0,-1,-2,-1,-3,-5,-4,-6,-7,-5,-4,-3,-5,-6,-4,-2,-1,0,1,2,3].map((stock,i)=>({d:'D'+String(i).padStart(2,'0'),stock,spy:i*.12}));
 const DEFAULT_CONFIG={capital:10000,cash:20,stock:40,dca:true,budget:40,cadence:5,reduce:true,trim:50,pause:true,accelerate:false,fee:10};

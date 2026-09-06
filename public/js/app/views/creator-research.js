@@ -2,6 +2,7 @@ import { s } from '../strings.js';
 import { el, clear, pct, px } from '../ui.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
+import {claimDetails,priceContext,sourceAt} from './creator-claim.js';
 
 export function researchRows(items, {kolId='', query='', history=false, allowedIds=null,tickers=null}={}) {
   const latest = new Map();
@@ -49,7 +50,7 @@ export async function mountResearch(root, selection) {
       const timeline=el('dl.evidence-timeline');
       for(const [key,value] of [['creators.first_seen',dateTime(post.first_seen_at)],['creators.version_recorded',dateTime(post.recorded_at)],['creators.base_close',window.base_d?window.base_d+' · '+px(window.base_px):'—'],['creators.end_close',out.end_d?out.end_d+' · '+px(out.end_px):'—']])
         timeline.append(el('div',el('dt',s(key)),el('dd',value)));
-      row.append(timeline);
+      row.append(claimDetails(call),priceContext(call.price_context),timeline);
       if(post.provenance==='legacy_import') row.append(el('p.muted.small',s('creators.legacy_import')));
       if(status==='ready') row.append(priceChart(out.path,call.sym),el('div.study-results',
         metric(s('creators.stock_return'),pct(out.ret),out.ret),metric('SPY',pct(out.spy_ret),out.spy_ret),
@@ -57,9 +58,10 @@ export async function mountResearch(root, selection) {
         el('p.muted.small',s('creators.close_range',{low:pct(out.min_close_return),high:pct(out.max_close_return)})));
       else row.append(el('p.study-status',s('creators.status_'+status)));
       const evidence=el('details.cr-evidence',el('summary',s('creators.evidence_version')),
-        el('blockquote',call.evidence),el('p.muted.small',s('creators.version_recorded')+' '+dateTime(post.recorded_at)),
+        call.evidence?el('blockquote',call.evidence):el('p.small.muted',s('creatorclaim.source_link')),
+        el('p.muted.small',s('creators.version_recorded')+' '+dateTime(post.recorded_at)),
         el('code',post.content_hash || '—'));
-      const source=safeSource(post.url);
+      const source=sourceAt(post.url,call.start_seconds)||safeSource(post.url);
       if(source) evidence.append(el('a',{href:source,target:'_blank',rel:'noopener noreferrer'},s('creators.orig')+' ↗'));
       row.append(evidence);list.append(row);
     }

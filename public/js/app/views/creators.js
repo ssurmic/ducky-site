@@ -12,6 +12,7 @@ import {mountSetup,confirmCreator,avatar} from './creator-setup.js';
 import {progressPoll} from './creator-progress.js';
 import {mountSimulation} from './creator-simulation.js';
 import {mountLeaderboard} from './creator-leaderboard.js';
+import {groundedClaim,claimDetails} from './creator-claim.js';
 import {renderCreatorPage} from './creator-page.js';
 import {creatorRoute,creatorTarget} from '../creator-route.js';
 import {matchesStocks,taggedTickers} from '../creator-match.js';
@@ -32,12 +33,12 @@ export function evidenceMeta(post) {
 }
 export function hasGroundedCalls(post) {
   const meta = evidenceMeta(post);
-  return meta.quality === "grounded" && meta.source?.kind === "transcript" && (post.calls || []).some(c => typeof c.evidence === "string" && c.evidence.length >= 12);
+  return meta.quality === "grounded" && meta.source?.kind === "transcript" && (post.calls || []).some(groundedClaim);
 }
 
 export function hasReviewedSummary(post) {
   const m = evidenceMeta(post);
-  return hasGroundedCalls(post) || (["short-video-v2","short-video-v3","creator-video-v4"].includes(m.source?.version) && m.source.status === "ready" && m.source.kind === "transcript" && ["grounded", "no_call"].includes(m.quality));
+  return hasGroundedCalls(post) || ((m.source?.summary_reviewed===true || ["short-video-v2","short-video-v3","creator-video-v4"].includes(m.source?.version)) && m.source.status === "ready" && m.source.kind === "transcript" && ["grounded", "no_call"].includes(m.quality));
 }
 function atTime(url, seconds) {
   try { const u = new URL(url); if (!["www.youtube.com", "youtube.com", "youtu.be"].includes(u.hostname) || !Number.isFinite(seconds) || seconds < 0 || seconds > 5400) return url;
@@ -56,23 +57,23 @@ export function videoDate(value, lang) {
     new Intl.DateTimeFormat(lang, {dateStyle:"medium", timeStyle:"short", timeZone:"UTC"}).format(d) + " UTC";
 }
 
-function callChips(calls, isZh, url) {
+function callChips(calls, isZh, url,kolId) {
   // per-ticker gist Ducky dug out of the video: $SYM ▲/▼ + the target the CREATOR stated (attributed,
   // never our own) + their one-line point. Compact chips so a promo/title-only video still yields signal.
   const wrap = el("div.cr-calls");
-  for (const c of calls.slice(0, 6)) {
+  for (const c of calls) {
     const st = (c.stance === "bull" || c.stance === "bear") ? c.stance : "neutral";
-    if (!c.evidence) continue;
+    if (!groundedClaim(c)) continue;
     const chip = el("div.cr-call.cr-call-" + st);
     chip.appendChild(el("b.cr-call-sym.mono", "$" + String(c.sym || "").toUpperCase()));
     chip.appendChild(el("span.cr-call-arrow", s("creators.take_" + st)));
     const note = pickSummary(c.note, isZh);
     if (note) chip.appendChild(el("span.cr-call-note", note));
-    chip.append(el('p.muted.small',s('creators.stated_horizon')+' '+(c.horizon_text || s('creators.not_stated'))));
-    if(c.condition_text) chip.append(el('p.muted.small',s('creators.stated_condition')+' '+c.condition_text));
-    chip.appendChild(el("details.cr-evidence", el("summary", s("creators.evidence")), el("blockquote", c.evidence)));
-    if (safeSource(url) && Number.isFinite(c.start_seconds)) chip.appendChild(el("a", {href:atTime(url,c.start_seconds),target:"_blank",rel:"noopener noreferrer"}, `${Math.floor(c.start_seconds/60)}:${String(c.start_seconds%60).padStart(2,"0")} ↗`));
+    chip.append(claimDetails(c));
+    chip.appendChild(el("details.cr-evidence", el("summary", s("creators.evidence")), c.evidence?el("blockquote", c.evidence):el('p.small.muted',s('creatorclaim.source_link'))));
+    if (safeSource(url) && Number.isFinite(c.start_seconds)) chip.appendChild(el("a", {href:atTime(url,c.start_seconds),target:"_blank",rel:"noopener noreferrer"}, `${Math.floor(c.start_seconds/60)}:${String(Math.floor(c.start_seconds)%60).padStart(2,"0")} ↗`));
     chip.append(el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+encodeURIComponent(c.sym)},s('creators.chart')));
+    chip.append(el('a.btn.btn-ghost.btn-sm',{href:creatorTarget({tab:'research',selected:kolId,ticker:c.sym,mine:false})},s('creatorclaim.price_title')));
     wrap.appendChild(chip);
   }
   return wrap;
@@ -251,7 +252,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       const source=meta.source || {};
       const sourceFacts=el('div.creator-source-facts');
       if(source.duration_seconds) sourceFacts.append(el('span',s('creators.duration')+' '+Math.floor(source.duration_seconds/60)+':'+String(source.duration_seconds%60).padStart(2,'0')));
-      if(source.caption_language) sourceFacts.append(el('span',source.caption_language+' · '+s(source.caption_generated?'creators.auto_captions':'creators.manual_captions')));
+      if(source.caption_language) sourceFacts.append(el('span',source.caption_language+' · '+s(source.caption_source==='local_asr'?'creatorclaim.local_asr':source.caption_generated?'creators.auto_captions':'creators.manual_captions')));
       if(Number.isFinite(source.caption_coverage_pct)) sourceFacts.append(el('span',s('creators.coverage',{n:source.caption_coverage_pct})));
 
       if (p.title) art.appendChild(el("h3.cr-video-title", p.title));
@@ -266,10 +267,11 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
         }
       } else {
         const status = meta.source?.status;
-        const statusKey = {too_long:'too_long',too_dense:'too_dense',review_unavailable:'review_pending',model_unavailable:'review_pending',source_unavailable:'source_pending'}[status] || 'archive_hint';
+        const statusKey = {too_long:'too_long',too_dense:'too_dense',processing:'review_pending',review_unavailable:'review_pending',model_unavailable:'review_pending',source_unavailable:'source_pending',asr_unavailable:'source_pending',asr_timeout:'source_pending'}[status] || 'archive_hint';
         art.appendChild(el("p.muted.small", s('creators.'+statusKey)));
+        if(status==='processing')art.append(el('p.small.muted',s('creatorclaim.progress',{done:source.reviewed_chunks||0,total:source.total_chunks||0})));
       }
-      if (grounded && p.calls && p.calls.length) art.appendChild(callChips(p.calls, isZh, p.url));
+      if (grounded && p.calls && p.calls.length) art.appendChild(callChips(p.calls, isZh, p.url,p.kol_id));
       const audit=el('details.creator-audit',el('summary',s('creators.source_details')),
         el('p.muted.small',s('creators.first_seen')+' '+dateTime(p.first_seen_at)),
         el('p.muted.small',s('creators.analysis_updated')+' '+dateTime(p.fetched_at)));
