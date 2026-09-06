@@ -809,3 +809,26 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 .macro-validation-table { width: 100%; border-collapse: collapse; white-space: nowrap; font-size: .8rem; }
 .macro-validation-table th,.macro-validation-table td { padding: .6rem .5rem; border-bottom: 1px solid var(--border); text-align: left; }
 @media(max-width:560px) { .macro-score { padding: .5rem; }.macro-score>span {font-size:.72rem;}.macro-controls { gap:.8rem; }.macro-tabs .btn { padding:.4rem .6rem; }.macro-readout { gap:.6rem; font-size:.85rem; } }
+.earnings-panel { border-block: 1px solid var(--line,#303238); padding: 1.25rem 0; margin-block: 1rem; }
+.earnings-heading h3 { margin: .3rem 0; }
+.earnings-columns { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; margin-block: 1rem; align-items: start; }
+.earnings-card { border: 1px solid var(--line,#303238); border-radius: 12px; padding: 1rem; min-width: 0; }
+.earnings-card h4 { margin: .5rem 0; }
+.earnings-metrics { display: grid; gap: .65rem; margin: 1rem 0; }
+.earnings-metrics > div { display: grid; grid-template-columns: 1fr auto; gap: .35rem .6rem; align-items: baseline; }
+.earnings-metrics dt { font-size: .85rem; }
+.earnings-metrics dd { font-size: 1.1rem; margin: 0; font-weight: 600; }
+.earnings-metrics .small { grid-column: 1/-1; }
+.earnings-panel p, .earnings-panel blockquote { overflow-wrap: anywhere; }
+.earnings-panel summary { cursor: pointer; color: var(--accent); padding-block: .6rem; }
+.earnings-panel blockquote { border-left: 2px solid var(--line,#303238); margin: .6rem 0; padding-left: .8rem; color: var(--muted); font-size: .85rem; }
+.earnings-context-groups { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,240px),1fr)); gap: 1rem; }
+.earnings-context-groups h4 { margin-bottom: .2rem; }
+.earnings-observation { margin-bottom: .8rem; }
+.earnings-observation p { margin-bottom: .25rem; }
+.earnings-citations summary { font-size: .8rem; padding-block: .15rem; }
+.earnings-reaction-chips { display: flex; gap: 1rem; flex-wrap: wrap; }
+.earnings-reaction-chips > div { display: grid; gap: .4rem; border: 1px solid var(--line,#303238); border-radius: 8px; padding: .7rem 1rem; min-width: 120px; }
+.earnings-reaction-chips .mono { font-size: 1.15rem; }
+.earnings-method { margin-block: 1rem; }
+@media(max-width:640px) { .earnings-columns { grid-template-columns: 1fr; } .earnings-card { padding: .85rem; } .earnings-reaction-chips { gap: .5rem; } }

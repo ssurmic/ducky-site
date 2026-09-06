@@ -5,6 +5,7 @@ import { s, LANG } from './strings.js';
 import * as api from './api.js';
 import * as store from './store.js';
 import { predictionPanel } from './calendar-prediction.js';
+import { earningsPanel } from './calendar-earnings.js';
 
 export function safeSource(url) { try { const u=new URL(url);return u.protocol==='https:'?u.href:null; }catch{return null;} }
 export function weekday(day){const d=new Date(day+'T12:00:00Z');return Number.isFinite(d.getTime())?new Intl.DateTimeFormat(LANG==='en'?'en-US':'zh-CN',{weekday:'short',timeZone:'America/New_York'}).format(d):'—';}
@@ -30,7 +31,15 @@ export function eventResearchSession(scopeTicker='') {
     const relevance=el('div.event-relevance',el('span.muted.small',s('event.matching')));
     const details=el('details.event-evidence',{open:kind==='ppi'},el('summary',s('event.history')));
     const prediction=el('div');
-    const content=el('div.event-evidence-body');details.append(content);box.append(relevance,prediction,details);
+    const content=el('div.event-evidence-body');details.append(content);box.append(relevance,prediction);
+    if(kind==='earnings'&&(e.tickers||[])[0]) {
+      const financial=el('div',el('p.small.muted',s('event.matching')));box.append(financial);
+      const query=new URLSearchParams({ticker:e.tickers[0],event_date:e.date});const key='earnings:'+query.toString();
+      if(!cache.has(key))cache.set(key,api.get('/earnings/context?'+query,{signal:controller.signal,silent402:true}));
+      cache.get(key).then(doc=>{if(valid()){clear(financial);financial.append(earningsPanel(doc));}})
+        .catch(()=>{if(valid()){clear(financial);financial.append(earningsPanel(null));}});
+    }
+    box.append(details);
     let current=null,horizon='5',chosen=scopeTicker,version=0,historyYear='all';
     function renderHistory(doc) {
       clear(content);const history=doc.history||{}, summary=history.summary||{};
