@@ -141,16 +141,26 @@ test('radar preserves the delivered body, historical dates and incomplete archiv
  root.querySelector('[data-mode="excerpts"]').click();
  assert.ok(root.textContent.includes('2026-08-26'));
  assert.ok(root.textContent.includes('Identity not verified'));
- assert.ok(root.querySelector('use[href="/vendor/lucide/icons.svg#insider"]'));
+ assert.ok(root.querySelector('use[href="#ducky-icon-insider"]'));
  const button=root.querySelector('.radar-record-toggle');assert.equal(button.getAttribute('aria-expanded'),'false');button.click();assert.equal(button.getAttribute('aria-expanded'),'true');cleanup();history.replaceState(null,'','#/boards');
 });
-test('navigation retains all routes with named SVG links and a native mobile disclosure',()=>{
- const html=readFileSync('dist/app/index.html','utf8');const page=new JSDOM(html).window.document;
- const links=[...page.querySelectorAll('.app-nav a')];
- assert.equal(new Set(links.map(a=>a.dataset.route)).size,9);
- assert.equal(page.querySelectorAll('.nav-more-panel a').length,5);
- for(const a of links){assert.ok(a.textContent.trim());assert.ok(a.querySelector('svg[aria-hidden="true"] use'));}
- assert.ok(page.querySelector('.nav-more summary'));
+test('both app shells carry every navigation icon locally, including briefing and More',()=>{
+ for(const lang of ['', 'en/']) {
+  const html=readFileSync(`dist/${lang}app/index.html`,'utf8');const page=new JSDOM(html).window.document;
+  const links=[...page.querySelectorAll('.app-nav a')];
+  assert.equal(new Set(links.map(a=>a.dataset.route)).size,9);
+  assert.equal(page.querySelectorAll('.nav-more-panel a').length,5);
+  for(const a of links){assert.ok(a.textContent.trim());assert.ok(a.querySelector('svg[aria-hidden="true"] use'));}
+  for(const use of page.querySelectorAll('.app-nav use')) {
+   const ref=use.getAttribute('href');
+   assert.ok(ref.startsWith('#ducky-icon-'),'navigation must not depend on an external sprite cache');
+   const target=page.getElementById(ref.slice(1));
+   assert.ok(target?.querySelector('path,rect,circle,line,polyline,polygon,ellipse'),ref);
+   assert.equal(page.querySelectorAll(`[id="${ref.slice(1)}"]`).length,1);
+  }
+  assert.ok(page.querySelector('.app-nav [data-route="briefing"] use[href="#ducky-icon-briefing"]'));
+  assert.ok(page.querySelector('.nav-more summary'));
+ }
 });
 
 test('snapshot browser cache preserves provenance and expires after one minute',async()=>{

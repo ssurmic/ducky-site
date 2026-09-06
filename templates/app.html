@@ -40,6 +40,7 @@
 <link rel="stylesheet" href="/css/radar.css">
 </head>
 <body class="lang-{{ lang }} page-{{ page }}">
+{{ app_icon_sprite }}
 <div class="app-shell" id="app">
   <header class="app-top">
     <a class="brand" href="{{ url('/') }}" title="{{ t('app.nav.home') }}"><img class="avatar-mark" src="/avatar-160.jpg" alt="" width="26" height="26" loading="eager" fetchpriority="high" decoding="sync"> {{ t('app.brand') }}</a>
@@ -59,7 +60,7 @@
   {# Order: daily-use analysis views first, then account (Me) + upgrade (订阅) at the far end —
      Billing is an account action, not a mid-bar daily tab. #}
   {% macro nav_icon(name) -%}
-  <svg class="app-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/vendor/lucide/icons.svg#{{ name }}"></use></svg>
+  <svg class="app-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ducky-icon-{{ name }}"></use></svg>
   {%- endmacro %}
   <nav class="app-nav" aria-label="{{ t('app.nav.label') }}">
     {% for route in ['watchlist', 'briefing', 'chart', 'calendar', 'boards', 'alerts', 'creators', 'profile', 'billing'] %}

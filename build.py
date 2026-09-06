@@ -30,10 +30,12 @@ import shutil
 import subprocess
 import sys
 import tarfile
+import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
+from markupsafe import Markup
 
 ROOT = Path(__file__).resolve().parent
 TEMPLATES, I18N, PUBLIC, DIST = ROOT / "templates", ROOT / "i18n", ROOT / "public", ROOT / "dist"
@@ -121,6 +123,23 @@ def page_url(lang: str, rel: str) -> str:
     """Public URL path of an output file, e.g. ('en', 'disclaimer/index.html') -> '/en/disclaimer/'."""
     path = rel[: -len("index.html")] if rel.endswith("index.html") else rel
     return f"{lang_prefix(lang)}/{path}"
+
+
+def app_icon_sprite() -> Markup:
+    """Ship the shared local symbols with the revalidated app shell, not a stale CDN URL."""
+    namespace = "http://www.w3.org/2000/svg"
+    ET.register_namespace("", namespace)
+    svg = ET.parse(PUBLIC / "vendor" / "lucide" / "icons.svg").getroot()
+    svg.attrib.update({"class": "app-icon-defs", "width": "0", "height": "0",
+                       "aria-hidden": "true", "focusable": "false"})
+    seen = set()
+    for symbol in svg:
+        name = symbol.get("id", "")
+        if symbol.tag != f"{{{namespace}}}symbol" or not re.fullmatch(r"[a-z][a-z0-9-]*", name) or name in seen:
+            fail("invalid or duplicate app icon symbol")
+        seen.add(name)
+        symbol.set("id", "ducky-icon-" + name)
+    return Markup(ET.tostring(svg, encoding="unicode"))
 
 
 def make_env() -> Environment:
@@ -481,6 +500,7 @@ def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, versi
 
     return {
         "app_strings": {k[4:]:v for k,v in table.items() if k.startswith("app.")},
+        "app_icon_sprite": app_icon_sprite() if page == "app" else "",
         "lang": lang, "html_lang": HTML_LANG[lang], "other_lang": other, "is_zh": lang == "zh",
         "page": page, "t": t, "t2": t2, "tf": tf, "tg": tg, "primary": primary, "url": url, "liq": liq,
         "track_n": track_n, "track_stats": track_stats or {"ok": False},
