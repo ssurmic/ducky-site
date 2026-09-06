@@ -38,9 +38,10 @@ export async function establish(resp) {
   if (!resp || !resp.token) throw new Error("no token");
   saveToken(resp.token);
   store.set("token", resp.token);
-  // The token is already valid here. A transient /me or /watchlist blip during hydrate must NOT strand
-  // the login (the nonce is consumed, the destination view re-fetches on mount) — so never throw on it.
-  try { await hydrate(); } catch (e) { /* non-fatal: token saved, view re-hydrates */ }
+  // Keep the issued token for recovery, but do not claim success without a profile:
+  // the router requires it and would otherwise silently return to the login screen.
+  try { await retryTransient(hydrate); }
+  catch (e) { console.warn("Session profile unavailable", Number(e?.status) || 0); throw e; }
   return true;
 }
 
@@ -52,6 +53,7 @@ async function hydrate() {
     api.me(),
     api.watchlist.list().catch(() => null),   // non-fatal: the watchlist view re-fetches on mount
   ]);
+  if (!me || typeof me !== 'object' || Array.isArray(me)) throw new api.ApiError(502,{error:'session_unavailable'});
   store.set("me", me);
   if (wl) {
     const tickers = normalizeWatch(wl);
