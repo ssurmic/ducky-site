@@ -24,8 +24,10 @@ Regenerate with the backend's yfinance-enabled venv: `python scripts/gen_seasona
 
 ## Verification
 
-38 frontend tests passed before the final chart navigation polish. New checks reconcile every monthly return to its underlying closes, verify compounded year-end windows, missing-month exclusion, complete midterm samples, filters, losses, no private preview payload, video timestamps and localized prices. Final isolated release gates and deployment evidence are recorded in the backend owner tracker.
+38 frontend tests passed in the isolated UI release; the combined release with safe post-login return passed 43 tests, the 20-page bilingual build, 91-file copy lint and 706-link check. New checks reconcile every monthly return to its underlying closes, verify compounded year-end windows, missing-month exclusion, complete midterm samples, filters, losses, no private preview payload, video timestamps and localized prices. Final isolated release gates and deployment evidence are recorded in the backend owner tracker.
 
 Native browser review covered Chinese dark mobile and English light desktop seasonality, midterm filtering and year-end selection; member previews and the 98-position table were inspected at phone widths. A 320px header overflow found during review was fixed. Prior chart date/touch/keyboard and light-theme checks remain covered by four dedicated tests.
 
-Boundary: sign-in currently lands at the watchlist rather than preserving a requested feature route. The video CTA explicitly says sign-in is required; member plan links first open the public pricing section. No auth or entitlement change is included in this release.
+The combined release `a60d0432` also preserves the requested internal destination after sign-in. This was implemented and tested independently by the authentication task, with a route allowlist and short-lived session storage. It supersedes the initial UI batch's sign-in limitation. Member plan links first open the public pricing section; entitlement checks remain server-side.
+
+Production homepage verified in a native browser at `a60d0432`: new English headline, two illustrative member cards, one public video sample and no CNY text in English pricing. Phone review confirmed 320px document width, the 3-of-98 open-position filter, and horizontal calendar navigation reaching the exact right-hand scroll boundary. The authenticated production calendar was not accessed through this task’s signed-out browser; its mounting and controls were verified in the test suite and local browser preview.
