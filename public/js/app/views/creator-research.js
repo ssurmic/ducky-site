@@ -3,12 +3,12 @@ import { el, clear, pct, px } from '../ui.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
 
-export function researchRows(items, {kolId='', query='', history=false, allowedIds=null}={}) {
+export function researchRows(items, {kolId='', query='', history=false, allowedIds=null,tickers=null}={}) {
   const latest = new Map();
   for (const p of items) if (!latest.has(p.id) || p.revision_id > latest.get(p.id)) latest.set(p.id,p.revision_id);
   return items.filter(p=>(!kolId || p.kol_id===kolId) && (!allowedIds || allowedIds.includes(p.kol_id)) && (history || latest.get(p.id)===p.revision_id))
     .flatMap(p=>(p.calls || []).map(c=>({post:p,call:c})))
-    .filter(({post,call})=>[post.kol_name,post.title,call.sym].join(' ').toLowerCase().includes(query.toLowerCase()));
+    .filter(({post,call})=>(tickers===null||tickers.includes(call.sym))&&[post.kol_name,post.title,call.sym].join(' ').toLowerCase().includes(query.toLowerCase()));
 }
 
 export async function mountResearch(root, selection) {

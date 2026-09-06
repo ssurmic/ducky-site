@@ -35,12 +35,12 @@ export function simulationRows(items,kolId='') {
 const DEMO=[0,-1,-2,-1,-3,-5,-4,-6,-7,-5,-4,-3,-5,-6,-4,-2,-1,0,1,2,3].map((stock,i)=>({d:'D'+String(i).padStart(2,'0'),stock,spy:i*.12}));
 const DEFAULT_CONFIG={capital:10000,cash:20,stock:40,dca:true,budget:40,cadence:5,reduce:true,trim:50,pause:true,accelerate:false,fee:10};
 
-export async function mountSimulation(root,{kolId='',allowedIds=null,state={},onStateChange=()=>{}}={}) {
+export async function mountSimulation(root,{kolId='',allowedIds=null,tickers=null,state={},onStateChange=()=>{}}={}) {
   const epoch=store.epoch();let rows=[],active=null,demo=state.demo===true,horizon=state.horizon || '20';
   let config=state.config || {...DEFAULT_CONFIG};
   root.append(el('p',{role:'status'},s('common.loading')));
   if(store.isPro()) {
-    try{const doc=await api.get('/kol/research');rows=simulationRows(doc.items || [],kolId).filter(r=>!allowedIds||allowedIds.includes(r.post.kol_id));}
+    try{const doc=await api.get('/kol/research');rows=simulationRows(doc.items || [],kolId).filter(r=>(!allowedIds||allowedIds.includes(r.post.kol_id))&&(tickers===null||tickers.includes(r.call.sym)));}
     catch{if(root.isConnected){clear(root);root.append(el('p.err',s('creators.research_error')));}return;}
   }
   if(epoch!==store.epoch()||!root.isConnected)return;

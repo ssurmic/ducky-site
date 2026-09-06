@@ -2048,5 +2048,16 @@
   "app.screen.position_increased": "报告股数增加，不等于已核实买入",
   "app.screen.position_decreased": "报告股数减少",
   "app.screen.position_held": "报告股数未变",
-  "app.screen.shares": "报告股数 {old} → {now}"
+  "app.screen.shares": "报告股数 {old} → {now}",
+  "app.creatorstocks.watchlist": "我的股票",
+  "app.creatorstocks.placeholder": "例如 MU",
+  "app.creatorstocks.label": "按股票代码找相关博主内容",
+  "app.creatorstocks.apply": "查看相关内容",
+  "app.creatorstocks.invalid": "请输入股票代码，例如 MU。",
+  "app.creatorstocks.coverage": "按已收录内容的股票标签匹配，未关注的博主也会出现。没有标签的内容暂无法匹配；提及不代表看多或看空。",
+  "app.creatorstocks.load_failed": "自选股暂时加载失败。请刷新页面，或直接输入股票代码。",
+  "app.creatorstocks.empty_watchlist": "先添加自选股，或在上方输入股票代码查找相关博主内容。",
+  "app.creatorstocks.open_watchlist": "打开自选股",
+  "app.creatorstocks.radar": "相关公司事件",
+  "app.creatorstocks.matched": "股票标签："
 }

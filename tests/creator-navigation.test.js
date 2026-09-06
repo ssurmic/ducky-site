@@ -11,6 +11,8 @@ const {creatorRoute,creatorTarget}=await import('../public/js/app/creator-route.
 const {safeTarget,rememberTarget,takeTarget}=await import('../public/js/app/login-target.js');
 const {mount}=await import('../public/js/app/views/creators.js');
 const store=await import('../public/js/app/store.js');
+const {filterPosts}=await import('../public/js/app/views/creators.js');
+const {researchRows}=await import('../public/js/app/views/creator-research.js');
 const tick=()=>new Promise(r=>setImmediate(r));
 
 test('creator feature links retain only safe public navigation choices through sign-in',()=>{
@@ -26,6 +28,22 @@ test('creator feature links retain only safe public navigation choices through s
     assert.equal(takeTarget(),'#/boards?screen='+screen);
   }
   assert.equal(safeTarget('#/boards?screen=https://evil.test'),'#/boards');
+  assert.equal(safeTarget('#/creators?ticker=mu&token=SECRET'),'#/creators?scope=discover&ticker=MU');
+  assert.equal(safeTarget('#/creators?scope=watchlist'),'#/creators?scope=watchlist');
+});
+
+test('stock matching spans creators but is exact, quality-aware and not a directional inference',()=>{
+  const ready={quality:'no_call',source:{version:'short-video-v3',kind:'transcript',status:'ready'}};
+  const posts=[{kol_id:'unfollowed',title:'Memory industry',tickers:['MU'],summary:ready},
+    {kol_id:'followed',title:'Musk interview',tickers:['TSLA'],summary:ready},
+    {kol_id:'unverified',title:'MU title only',tickers:['MU']}];
+  const selection={following:new Set(['followed']),mine:false,archive:false,tickers:['MU']};
+  assert.deepEqual(filterPosts(posts,selection).map(p=>p.kol_id),['unfollowed']);
+  assert.equal(filterPosts(posts,{...selection,tickers:[]}).length,0);
+  assert.equal(filterPosts(posts,{...selection,archive:true}).length,2);
+  assert.equal(posts[0].calls,undefined,'mention filtering must not manufacture a call');
+  const studies=[{id:1,revision_id:1,kol_id:'other',calls:[{sym:'MU'},{sym:'TSLA'}]}];
+  assert.deepEqual(researchRows(studies,{tickers:['MU']}).map(r=>r.call.sym),['MU']);
 });
 
 test('simulation deep links, tab navigation and ranking preserve settings without publishing holdings',async()=>{

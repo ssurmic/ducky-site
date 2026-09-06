@@ -13,6 +13,7 @@ import {progressPoll} from './creator-progress.js';
 import {mountSimulation} from './creator-simulation.js';
 import {mountLeaderboard} from './creator-leaderboard.js';
 import {creatorRoute,creatorTarget} from '../creator-route.js';
+import {matchesStocks,taggedTickers} from '../creator-match.js';
 
 const TAKE_CLS = { bull: "cr-bull", bear: "cr-bear", neutral: "cr-neutral" };
 const CALL_ARROW = { bull: "▲", bear: "▼", neutral: "•" };
@@ -42,9 +43,9 @@ function atTime(url, seconds) {
     u.searchParams.set("t", String(Math.floor(seconds))); return u.href;
   } catch { return url; }
 }
-export function filterPosts(posts, { following, mine, archive, query = "" }) {
+export function filterPosts(posts, { following, mine, archive, query = "", tickers=null }) {
   const needle = query.trim().toLocaleLowerCase();
-  return posts.filter(p => (!mine || following.has(p.kol_id)) && (archive || hasReviewedSummary(p)) &&
+  return posts.filter(p => (!mine || following.has(p.kol_id)) && matchesStocks(p,tickers) && (archive || hasReviewedSummary(p)) &&
     (!needle || [p.kol_name, p.title, ...(p.tickers || [])].join(" ").toLocaleLowerCase().includes(needle)));
 }
 export function videoDate(value, lang) {
@@ -84,9 +85,9 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
   card.append(el("h1", s("creators.h1")), el("p.muted", s("creators.sub")));
   card.appendChild(spinner());
 
-  let doc, subs;
+  let doc, subs, watches;
   try {
-    [doc, subs] = await Promise.all([api.kol.feed(), api.kol.mine()]);
+    [doc, subs, watches] = await Promise.all([api.kol.feed(), api.kol.mine(), api.watchlist.list().catch(()=>null)]);
   } catch (e) {
     clear(card); card.append(el("h1", s("creators.h1")), el("p.err", s("creators.load_error")));
     return () => {};
@@ -96,7 +97,9 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
   const kols = (doc && doc.kols) || [];
   for(const c of subs?.creators || [])if(!kols.some(k=>k.id===c.kol_id))kols.push({...c,id:c.kol_id});
   const initial=creatorRoute(routeQuery);
-  let analysis=subs?.analysis || {},setupCleanup=()=>{},showSetup=!following.size&&initial.tab==='feed',disposed=false,notice='',refreshing=false;
+  const watchRows=Array.isArray(watches)?watches:(watches?.items || watches?.tickers || watches?.watchlist || []);
+  const watchedTickers=watchRows.map(t=>typeof t==='string'?t:t?.ticker || t?.symbol).filter(t=>typeof t==='string').map(t=>t.toUpperCase());
+  let analysis=subs?.analysis || {},setupCleanup=()=>{},showSetup=!following.size&&initial.tab==='feed'&&!initial.ticker&&!initial.watched,disposed=false,notice='',refreshing=false;
   const setupState={};
   const pending=()=>Object.values(analysis).some(x=>['queued','running'].includes(x.status));
   const progress=progressPoll({active:()=>!disposed&&epoch===store.epoch()&&root.isConnected&&pending(),read:()=>api.kol.mine(),
@@ -110,7 +113,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     },onError:()=>{const node=card.querySelector('.creator-sync-note');if(node)node.textContent=s('creatorflow.reconnecting');}});
   const posts = (doc && doc.posts) || [];
   let archive = false;
-  let mine = initial.mine;
+  let mine = initial.ticker ? false : initial.mine, watched=initial.watched, stockTicker=initial.ticker;
   let query = "";
   let selected=kols.some(k=>k.id===initial.selected)?initial.selected:'', tab=initial.tab, shown=30;
   const labState={demo:initial.demo};
@@ -138,12 +141,15 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     }
 
     const controls = el("div.creators-controls");
-    for (const [value,key] of [[true,"creators.mine"],[false,"creators.discover"]]) {
-      controls.appendChild(el("button.btn.btn-ghost.btn-sm", {type:"button", "aria-pressed":String(mine===value), onclick:()=>{mine=value;selected='';shown=30;render();}},s(key)));
+    for (const [value,key] of [['following',"creators.mine"],['watchlist','creatorstocks.watchlist'],['discover',"creators.discover"]]) {
+      controls.appendChild(el("button.btn.btn-ghost.btn-sm", {type:"button", "aria-pressed":String(value==='watchlist'?watched:value==='following'?mine:!mine&&!watched), onclick:()=>{mine=value==='following';watched=value==='watchlist';if(watched)showSetup=false;stockTicker='';selected='';shown=30;render();}},s(key)));
     }
+    const stock=el('input.input.mono',{type:'search',value:stockTicker,maxlength:10,placeholder:s('creatorstocks.placeholder'),'aria-label':s('creatorstocks.label')});
+    const stockForm=el('form.creator-stock-filter',el('label',el('span.small',s('creatorstocks.label')),stock),el('button.btn.btn-ghost.btn-sm',{type:'submit'},s('creatorstocks.apply')));
+    stockForm.addEventListener('submit',e=>{e.preventDefault();const value=stock.value.trim().replace(/^\$/,'').toUpperCase();if(value&&!/^[A-Z][A-Z0-9.-]{0,9}$/.test(value)){toast(s('creatorstocks.invalid'),'err');return;}stockTicker=value;mine=false;watched=false;showSetup=false;selected='';shown=30;render();});
     const search=el("input.input", {type:"search",value:query,"aria-label":s("creators.search"),placeholder:s("creators.search")});
     search.addEventListener("input",()=>{query=search.value;shown=30;renderContent();});
-    controls.appendChild(search);card.appendChild(controls);
+    controls.append(search,stockForm);card.appendChild(controls);
     card.appendChild(el("div.creators-content"));
     renderContent();
   }
@@ -156,22 +162,30 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     outerControls.style.display=tab==='rank'?'none':'';
     outerControls.querySelector('input').style.display=tab==='lab'?'none':'';
     const isPro = store.isPro();
-    const available=kols.filter(k=>!mine || following.has(k.id));
+    const stockFilter=stockTicker?[stockTicker]:watched?watchedTickers:null;
+    const stockPosts=posts.filter(p=>matchesStocks(p,stockFilter));
+    const available=kols.filter(k=>(!mine || following.has(k.id))&&(!stockFilter||stockPosts.some(p=>p.kol_id===k.id)));
     const tabs=el('nav.creator-workspace-tabs',{'aria-label':s('creatorflow.workspace')});
     for(const [value,key] of [['feed','creators.feed_h'],['research','creators.research'],['lab','creatorlab.tab'],['rank','creatorrank.tab']])tabs.append(el('button',{type:'button','aria-pressed':String(tab===value),onclick:()=>{tab=value;renderContent();}},s(key)));
     content.append(tabs);
+    if(tab!=='rank'&&stockFilter){
+      content.append(el('p.muted.small',s('creatorstocks.coverage')));
+      if(watched&&watches===null)content.append(el('p.err',s('creatorstocks.load_failed')));
+      else if(watched&&!watchedTickers.length)content.append(el('p.empty',s('creatorstocks.empty_watchlist')),el('a.btn.btn-ghost.btn-sm',{href:'#/watchlist'},s('creatorstocks.open_watchlist')));
+      else if(stockTicker)content.append(el('p.creator-stock-context',el('b','$'+stockTicker+' '),el('a',{href:'#/chart/'+stockTicker},s('creators.chart')), ' · ', el('a',{href:'#/boards?ticker='+stockTicker},s('creatorstocks.radar'))));
+    }
     if(tab!=='feed'){
       if(tab!=='rank'){
         const selector=el('select.input',{'aria-label':s('creatorflow.creator')},el('option',{value:'',selected:!selected},s('creatorflow.all_creators')),...available.map(k=>el('option',{value:k.id,selected:selected===k.id},k.name)));
         selector.addEventListener('change',()=>{selected=selector.value;renderContent();});content.append(el('div.evidence-controls',selector));
       }
       const target=el('section.creator-workspace');content.append(target);
-      if(tab==='research')mountResearch(target,{kolId:selected,query,allowedIds:mine?[...following]:null});
-      if(tab==='lab')mountSimulation(target,{kolId:selected,allowedIds:mine?[...following]:null,state:labState,onStateChange:syncRoute});
-      if(tab==='rank')mountLeaderboard(target,{onSelect:id=>{selected=id;mine=false;tab='research';render();}});
+      if(tab==='research')mountResearch(target,{kolId:selected,query,tickers:stockFilter,allowedIds:mine?[...following]:null});
+      if(tab==='lab')mountSimulation(target,{kolId:selected,tickers:stockFilter,allowedIds:mine?[...following]:null,state:labState,onStateChange:syncRoute});
+      if(tab==='rank')mountLeaderboard(target,{onSelect:id=>{selected=id;mine=false;watched=false;stockTicker='';tab='research';render();}});
       return;
     }
-    const stats=posts.filter(p=>(!mine || following.has(p.kol_id)) && (!selected || p.kol_id===selected));
+    const stats=stockPosts.filter(p=>(!mine || following.has(p.kol_id)) && (!selected || p.kol_id===selected));
     content.append(el('div.evidence-metrics',metric(s('creators.sources'),available.length),
       metric(s('creators.records'),stats.length),metric(s('creators.summary_ready'),stats.filter(hasReviewedSummary).length),
       metric(s('creators.awaiting_source'),stats.filter(p=>!hasReviewedSummary(p)).length)));
@@ -204,7 +218,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     const archiveBtn = el("button.btn.btn-ghost.btn-sm", { type: "button", "aria-pressed": String(archive), onclick: () => { archive = !archive; render(); } }, s(archive ? "creators.only_grounded" : "creators.show_archive"));
     content.appendChild(archiveBtn);
     if (mine && !following.size) {content.appendChild(empty(s("creators.no_following")));content.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{mine=false;render();}},s('creators.discover')));return;}
-    const visiblePosts = filterPosts(posts, {following,mine,archive,query}).filter(p=>!selected || p.kol_id===selected);
+    const visiblePosts = filterPosts(posts, {following,mine,archive,query,tickers:stockFilter}).filter(p=>!selected || p.kol_id===selected);
     if (!visiblePosts.length) { content.appendChild(empty(s("creators.feed_empty"))); return; }
     const feed = el("div.cr-feed");
     for (const p of visiblePosts.slice(0, shown)) {
@@ -218,6 +232,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
         el("span.cr-take." + TAKE_CLS[stance], grounded ? s("creators.take_" + stance) : s(reviewed ? "creators.summary_ready" : "creators.unverified")));
       if (grounded && p.tickers && p.tickers.length) head.appendChild(el("span.cr-tks.mono", p.tickers.slice(0, 4).map((t) => "$" + t).join(" · ")));
       art.appendChild(head);
+      if(stockFilter){const matched=taggedTickers(p).filter(t=>stockFilter.includes(t));art.append(el('p.small',s('creatorstocks.matched')+' ',...matched.flatMap((t,i)=>[i?' · ':'',el('a.mono',{href:'#/chart/'+t},'$'+t)])));}
       art.appendChild(el("time.muted.small", { datetime: p.published_at || "" }, s("creators.published") + " " + videoDate(p.published_at,isZh ? "zh-CN" : "en-US")));
       const source=meta.source || {};
       const sourceFacts=el('div.creator-source-facts');
@@ -260,8 +275,9 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
 
   function syncRoute() {
     if(!disposed&&epoch===store.epoch()&&location.hash.split('?')[0]==='#/creators') {
-      const target=creatorTarget({tab,mine,selected,demo:labState.demo});
+      const target=creatorTarget({tab,mine,watched,ticker:stockTicker,selected,demo:labState.demo});
       if(location.hash!==target)history.replaceState(null,'',location.pathname+location.search+target);
+      document.querySelectorAll('[data-lang-toggle], [data-lang-toggle-footer]').forEach(link=>link.setAttribute('href',link.getAttribute('href').split('#')[0]+target));
     }
   }
 

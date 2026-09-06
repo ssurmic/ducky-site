@@ -2048,5 +2048,16 @@
   "app.screen.position_increased": "Reported shares increased; not proof of a purchase",
   "app.screen.position_decreased": "Reported shares decreased",
   "app.screen.position_held": "Reported shares unchanged",
-  "app.screen.shares": "Reported shares {old} → {now}"
+  "app.screen.shares": "Reported shares {old} → {now}",
+  "app.creatorstocks.watchlist": "My stocks",
+  "app.creatorstocks.placeholder": "For example MU",
+  "app.creatorstocks.label": "Find creator coverage by ticker",
+  "app.creatorstocks.apply": "Find mentions",
+  "app.creatorstocks.invalid": "Enter a stock ticker, such as MU.",
+  "app.creatorstocks.coverage": "Matches stock tags in the available content, including creators you do not follow. Untagged content cannot be matched yet. A mention is not a bullish or bearish call.",
+  "app.creatorstocks.load_failed": "Your watchlist could not load. Reload the page or enter a ticker.",
+  "app.creatorstocks.empty_watchlist": "Add a stock to your watchlist, or enter a ticker above to find related creator content.",
+  "app.creatorstocks.open_watchlist": "Open watchlist",
+  "app.creatorstocks.radar": "Related company events",
+  "app.creatorstocks.matched": "Stock tags:"
 }
