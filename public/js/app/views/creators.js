@@ -12,6 +12,7 @@ import {mountSetup,confirmCreator,avatar} from './creator-setup.js';
 import {progressPoll} from './creator-progress.js';
 import {mountSimulation} from './creator-simulation.js';
 import {mountLeaderboard} from './creator-leaderboard.js';
+import {creatorRoute,creatorTarget} from '../creator-route.js';
 
 const TAKE_CLS = { bull: "cr-bull", bear: "cr-bear", neutral: "cr-neutral" };
 const CALL_ARROW = { bull: "▲", bear: "▼", neutral: "•" };
@@ -75,7 +76,7 @@ function callChips(calls, isZh, url) {
   return wrap;
 }
 
-export async function mount(root) {
+export async function mount(root, {query:routeQuery=new URLSearchParams()} = {}) {
   const epoch = store.epoch();
   const isZh = (document.documentElement.lang || "zh").slice(0, 2) !== "en";
   const card = el("section.card.creators-view");
@@ -94,7 +95,8 @@ export async function mount(root) {
   if (epoch !== store.epoch()) return () => {};
   const kols = (doc && doc.kols) || [];
   for(const c of subs?.creators || [])if(!kols.some(k=>k.id===c.kol_id))kols.push({...c,id:c.kol_id});
-  let analysis=subs?.analysis || {},setupCleanup=()=>{},showSetup=!following.size,disposed=false,notice='',refreshing=false;
+  const initial=creatorRoute(routeQuery);
+  let analysis=subs?.analysis || {},setupCleanup=()=>{},showSetup=!following.size&&initial.tab==='feed',disposed=false,notice='',refreshing=false;
   const setupState={};
   const pending=()=>Object.values(analysis).some(x=>['queued','running'].includes(x.status));
   const progress=progressPoll({active:()=>!disposed&&epoch===store.epoch()&&root.isConnected&&pending(),read:()=>api.kol.mine(),
@@ -108,9 +110,10 @@ export async function mount(root) {
     },onError:()=>{const node=card.querySelector('.creator-sync-note');if(node)node.textContent=s('creatorflow.reconnecting');}});
   const posts = (doc && doc.posts) || [];
   let archive = false;
-  let mine = true;
+  let mine = initial.mine;
   let query = "";
-  let selected='', tab='feed', shown=30;
+  let selected=kols.some(k=>k.id===initial.selected)?initial.selected:'', tab=initial.tab, shown=30;
+  const labState={demo:initial.demo};
   render();progress.schedule();
 
   function render() {
@@ -146,6 +149,7 @@ export async function mount(root) {
   }
 
   function renderContent() {
+    syncRoute();
     const content = card.querySelector(".creators-content");
     clear(content);
     const outerControls=card.querySelector('.creators-controls');
@@ -163,7 +167,7 @@ export async function mount(root) {
       }
       const target=el('section.creator-workspace');content.append(target);
       if(tab==='research')mountResearch(target,{kolId:selected,query,allowedIds:mine?[...following]:null});
-      if(tab==='lab')mountSimulation(target,{kolId:selected,allowedIds:mine?[...following]:null});
+      if(tab==='lab')mountSimulation(target,{kolId:selected,allowedIds:mine?[...following]:null,state:labState,onStateChange:syncRoute});
       if(tab==='rank')mountLeaderboard(target,{onSelect:id=>{selected=id;mine=false;tab='research';render();}});
       return;
     }
@@ -252,6 +256,13 @@ export async function mount(root) {
     content.appendChild(feed);
     if(visiblePosts.length>shown) content.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{shown+=30;renderContent();}},s('creators.load_more')));
     content.append(el('p.muted.small',s('creators.feed_limit',{n:posts.length})));
+  }
+
+  function syncRoute() {
+    if(!disposed&&epoch===store.epoch()&&location.hash.split('?')[0]==='#/creators') {
+      const target=creatorTarget({tab,mine,selected,demo:labState.demo});
+      if(location.hash!==target)history.replaceState(null,'',location.pathname+location.search+target);
+    }
   }
 
   async function toggle(id, chip) {

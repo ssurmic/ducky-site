@@ -1845,5 +1845,7 @@
   "app.release.refresh": "Refresh this page",
   "app.release.updated": "Ducky has been updated. Refresh to open this page in the latest version.",
   "app.billing.legacy_preserved": "Existing orders and paid access stay valid. A new purchase adds a fixed period of Pro access without automatic renewal.",
-  "app.billing.catalog_unavailable": "Payment options are unavailable. Refresh this page to fetch the current plans."
+  "app.billing.catalog_unavailable": "Payment options are unavailable. Refresh this page to fetch the current plans.",
+  "app.creatorrank.progress": "Collection progress · {n} unranked creators",
+  "app.creatorrank.progress_hint": "Expand to inspect every creator, including missing prices, incomplete windows and opposite outcomes."
 }

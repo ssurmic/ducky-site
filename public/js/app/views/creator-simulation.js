@@ -33,10 +33,11 @@ export function simulationRows(items,kolId='') {
   return [...first.values()].filter(p=>!kolId||p.kol_id===kolId).flatMap(post=>post.calls.filter(c=>['bull','bear'].includes(c.stance)).map(call=>({post,call})));
 }
 const DEMO=[0,-1,-2,-1,-3,-5,-4,-6,-7,-5,-4,-3,-5,-6,-4,-2,-1,0,1,2,3].map((stock,i)=>({d:'D'+String(i).padStart(2,'0'),stock,spy:i*.12}));
+const DEFAULT_CONFIG={capital:10000,cash:20,stock:40,dca:true,budget:40,cadence:5,reduce:true,trim:50,pause:true,accelerate:false,fee:10};
 
-export async function mountSimulation(root,{kolId='',allowedIds=null}={}) {
-  const epoch=store.epoch();let rows=[],active=null,demo=false,horizon='20';
-  let config={capital:10000,cash:20,stock:40,dca:true,budget:40,cadence:5,reduce:true,trim:50,pause:true,accelerate:false,fee:10};
+export async function mountSimulation(root,{kolId='',allowedIds=null,state={},onStateChange=()=>{}}={}) {
+  const epoch=store.epoch();let rows=[],active=null,demo=state.demo===true,horizon=state.horizon || '20';
+  let config=state.config || {...DEFAULT_CONFIG};
   root.append(el('p',{role:'status'},s('common.loading')));
   if(store.isPro()) {
     try{const doc=await api.get('/kol/research');rows=simulationRows(doc.items || [],kolId).filter(r=>!allowedIds||allowedIds.includes(r.post.kol_id));}
@@ -45,6 +46,7 @@ export async function mountSimulation(root,{kolId='',allowedIds=null}={}) {
   if(epoch!==store.epoch()||!root.isConnected)return;
   active=rows[0] || null;render();
   function render() {
+    state.config=config;state.demo=demo;state.horizon=horizon;onStateChange();
     clear(root);
     root.append(el('div.creator-lab-intro',el('div',el('p.eyebrow','PLAY AROUND'),el('h2',s('creatorlab.title')),el('p.muted',s('creatorlab.intro'))),el('span.evidence-badge',demo?s('creatorlab.demo_badge'):'SIMULATION')));
     const chooser=el('div.evidence-controls');
@@ -63,7 +65,7 @@ export async function mountSimulation(root,{kolId='',allowedIds=null}={}) {
     function toggle(key,label){const n=el('input',{type:'checkbox',checked:config[key]});n.addEventListener('change',()=>{config[key]=n.checked;update();});return el('label.creator-toggle',n,el('span',s(label)));}
     form.append(el('h3',s('creatorlab.dca_title')),toggle('dca','creatorlab.dca_toggle'),input('budget','creatorlab.budget',0,100));
     const cadence=el('select.input',{'aria-label':s('creatorlab.cadence')},...[1,5,20].map(n=>el('option',{value:n,selected:config.cadence===n},s('creators.trading_days',{n}))));cadence.addEventListener('change',()=>{config.cadence=Number(cadence.value);update();});
-    form.append(el('label.creator-field',el('span',s('creatorlab.cadence')),cadence),el('p.muted.small',s('creatorlab.budget_hint')),el('h3',s('creatorlab.reaction_title')),toggle('reduce','creatorlab.reduce'),input('trim','creatorlab.trim',0,100),toggle('pause','creatorlab.pause'),toggle('accelerate','creatorlab.accelerate'),input('fee','creatorlab.fee',0,100),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{config={capital:10000,cash:20,stock:40,dca:true,budget:40,cadence:5,reduce:true,trim:50,pause:true,accelerate:false,fee:10};render();}},s('creatorlab.reset')));
+    form.append(el('label.creator-field',el('span',s('creatorlab.cadence')),cadence),el('p.muted.small',s('creatorlab.budget_hint')),el('h3',s('creatorlab.reaction_title')),toggle('reduce','creatorlab.reduce'),input('trim','creatorlab.trim',0,100),toggle('pause','creatorlab.pause'),toggle('accelerate','creatorlab.accelerate'),input('fee','creatorlab.fee',0,100),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{config={...DEFAULT_CONFIG};render();}},s('creatorlab.reset')));
     root.append(el('details.creator-lab-method',el('summary',s('creatorlab.method_title')),el('p.muted.small',s('creatorlab.method')),el('p.muted.small',s('creatorlab.privacy'))));
     function update(){
       clear(allocation);clear(output);

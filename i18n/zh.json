@@ -1845,5 +1845,7 @@
   "app.release.refresh": "刷新此页",
   "app.release.updated": "Ducky 已更新。刷新后可在新版中打开当前页面。",
   "app.billing.legacy_preserved": "已有订单和已付权益保留。新购买增加对应时长的 Pro 使用权，到期不自动扣款。",
-  "app.billing.catalog_unavailable": "暂时无法获取付款方式，请刷新页面读取当前方案。"
+  "app.billing.catalog_unavailable": "暂时无法获取付款方式，请刷新页面读取当前方案。",
+  "app.creatorrank.progress": "收录进度 · {n} 位博主暂未上榜",
+  "app.creatorrank.progress_hint": "展开查看每位博主的样本、缺失价格、未到期窗口和方向相反的记录。"
 }

@@ -1,5 +1,7 @@
 // Preserve the page requested before sign-in, including a round trip to Google.
-// Only a canonical app route is stored: never a URL, query, credential or user data.
+// Only a canonical app route and allowlisted public creator choices are stored.
+// Never store arbitrary queries, credentials or private draft data.
+import { creatorRoute, creatorTarget } from './creator-route.js';
 const KEY = "ducky.login-target";
 const MAX_AGE = 20 * 60 * 1000;
 const SIMPLE = new Set(["watchlist", "alerts", "billing", "profile", "creators", "calendar", "boards"]);
@@ -7,6 +9,11 @@ const SIMPLE = new Set(["watchlist", "alerts", "billing", "profile", "creators",
 export function safeTarget(hash) {
   if (typeof hash !== "string" || hash.length > 2048) return null;
   const path = hash.split("?")[0];
+  if (path === '#/creators') return creatorTarget(creatorRoute(new URLSearchParams(hash.split('?')[1] || '')));
+  if (path === '#/boards') {
+    const screen = new URLSearchParams(hash.split('?')[1] || '').get('screen');
+    return ['insider-oversold','institution-oversold'].includes(screen) ? '#/boards?screen=' + screen : '#/boards';
+  }
   if (SIMPLE.has(path.slice(2)) && path.startsWith("#/")) return path;
   const match = /^#\/(chart|research)(?:\/([A-Za-z0-9][A-Za-z0-9.-]{0,14}))?$/.exec(path);
   return match ? `#/${match[1]}${match[2] ? "/" + match[2].toUpperCase() : ""}` : null;
