@@ -1,3 +1,4 @@
+import { calendarEventKey } from './calendar-model.js';
 // api.js — fetch wrapper: CFG.API_BASE + bearer + JSON; 202 retry helper; 401 → logout hook;
 // 402 → upsell hook. Views never call fetch() directly.
 import { CFG, LANG } from "./strings.js";
@@ -178,13 +179,10 @@ export const calendar = {
     if (!apiEv.length && !staticEv.length) return { events: [], partial: true, source: "empty" };
     if (!staticEv.length) return apiDoc;
     if (!apiEv.length) return { events: staticEv, partial: true, source: "static-fallback" };
-    const STRUCT = new Set(["opex", "witching"]);
-    const out = apiEv.slice();
-    const seen = new Set(apiEv.map((e) => e.date + "|" + e.type + "|" + (e.title || "")));
-    const seenStruct = new Set(apiEv.filter((e) => STRUCT.has(e.type)).map((e) => e.date + "|" + e.type));
-    for (const e of staticEv) {
-      if (STRUCT.has(e.type)) { const k = e.date + "|" + e.type; if (!seenStruct.has(k)) { out.push(e); seenStruct.add(k); } }
-      else { const k = e.date + "|" + e.type + "|" + (e.title || ""); if (!seen.has(k)) { out.push(e); seen.add(k); } }
+    const out = [], seen = new Set();
+    for (const e of [...apiEv, ...staticEv]) {
+      const key = calendarEventKey(e);
+      if (!seen.has(key)) { out.push(e); seen.add(key); }
     }
     out.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
     return { events: out, as_of: (apiDoc && apiDoc.as_of) || undefined, source: "merged", partial: !!apiDoc?.partial };

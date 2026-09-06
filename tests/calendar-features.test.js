@@ -64,3 +64,10 @@ test('logout suppresses pending private research',async()=>{
  const session=eventResearchSession(),box=session.mount({type:'macro',title:'CPI',date:'2026-09-10'});
  store.bumpEpoch();store.set('me',null);done(response({relations:[{ticker:'SECRET',relation:'direct'}]}));await tick();assert.doesNotMatch(box.textContent,/SECRET/);session.dispose();
 });
+test('calendar merge identity preserves different events and deduplicates renamed releases',async()=>{
+ const {calendarEventKey:key}=await import('../public/js/app/calendar-model.js');
+ const day={date:'2026-09-30'};
+ assert.equal(key({...day,type:'macro',title:'PCE 物价指数',title_en:'PCE price index'}),key({...day,type:'macro',title:'PCE 物价',title_en:"PCE price index (Fed preferred)"}));
+ assert.notEqual(key({...day,type:'rebal',title_en:'Month-end rebalance'}),key({...day,type:'rebal',title_en:'MSCI review'}));
+ assert.notEqual(key({...day,type:'macro',title_en:'Nonfarm Payrolls'}),key({...day,type:'macro',title_en:'Nonfarm Productivity'}));
+});
