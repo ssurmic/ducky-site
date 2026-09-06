@@ -943,7 +943,7 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
  .season-reading h3 { font-size:18px; }
  .season-reading p { font-size:14px; }
  .season-table th,.season-table td { padding:12px 4px; font-size:12px; }
- .calendar-view .cal-note { font-size:12px; line-height:1.7; }
+ .calendar-view .cal-note { font-size:14px; line-height:1.7; }
 }
 .season-controls select,.season-year-tools select { background:var(--surface-2); color:var(--text); border:1px solid var(--border); border-radius:9px; padding:10px 12px; font:inherit; font-size:13px; }
 .cal-session-grid-label { display:none; }
@@ -960,3 +960,46 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 .creator-price-anchors h4{margin:0 0 .75rem}
 .study-list>.study-row:only-child{grid-column:1/-1}
 @media(max-width:600px){.creator-claim-facts>div,.creator-price-context>div{grid-template-columns:1fr;gap:.2rem}}
+
+
+/* Two-week overview: readable day cards on phones, horizontal weeks on desktop. */
+.cal-biweeks { display:grid; gap:10px; }
+.cal-biweek { min-width:0; }
+.cal-week-label, .cal-biweekday { display:none; }
+.cal-bidate { display:flex; align-items:center; gap:8px; width:100%; }
+.cal-bicell .cal-bidnum { font-size:20px; line-height:1.2; height:30px; min-width:30px; color:var(--text); }
+.cal-bicell.cal-weekend { opacity:1; background:var(--surface-2); }
+.cal-bicell:focus-visible { outline:3px solid var(--text); outline-offset:2px; }
+.cal-biquiet { font-size:13px; line-height:1.4; color:var(--muted); }
+.cal-bicell .cal-events { min-width:0; width:100%; }
+.cal-bicell .pill { padding:3px 0; border:0; border-radius:0; background:none; font-size:13px; color:var(--text); }
+.cal-bicell .pill-ic { display:none; }
+.cal-bicell .pill-txt { white-space:normal; overflow-wrap:anywhere; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+.cal-bicell .pill-tk { font-size:13px; }
+.cal-bicell .pill-holiday, .cal-bicell .pill-early_close { font-weight:650; }
+.cal-bicell .pill-more { font-size:13px; padding:0; color:var(--muted); }
+@media (max-width:560px) {
+  .calendar-view .cal-modebar { display:flex; margin:8px 0 12px; }
+  .calendar-view .cal-mode { flex:1; min-height:44px; padding:8px 6px; font-size:15px; }
+  .calendar-view .cal-grid-hint { font-size:14px; line-height:1.5; margin:0 0 14px; }
+  .calendar-view .cal-mhead { display:grid; grid-template-columns:44px minmax(0,1fr) 44px; gap:8px; }
+  .calendar-view .cal-mnav { width:44px; height:44px; }
+  .calendar-view .cal-mtitle { text-align:center; font-size:16px; line-height:1.4; letter-spacing:0; }
+  .calendar-view .cal-today { grid-column:1 / -1; justify-self:end; min-height:44px; font-size:14px; }
+  .cal-bibox > .cal-wdrow { display:none; }
+  .cal-biweeks { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+  .cal-biweek { display:grid; grid-template-rows:auto 1fr; }
+  .cal-week-label { display:block; margin:0 0 10px; font-size:14px; line-height:1.5; color:var(--text); }
+  .cal-biweek .cal-bigrid { grid-template-columns:minmax(0,1fr); grid-auto-rows:1fr; gap:8px; }
+  .cal-biweek .cal-bicell { min-height:92px; padding:10px; align-items:stretch; gap:6px; border-radius:12px; }
+  .cal-bicell .cal-bidnum { font-size:22px; padding:0; align-self:auto; }
+  .cal-biweekday { display:block; font-size:14px; color:var(--muted); }
+  .cal-bicell.cal-is-today .cal-biweekday { color:var(--text); }
+  .cal-bicell .cal-events { display:flex; gap:2px; }
+  .cal-bicell .pill, .cal-bicell .pill-tk, .cal-bicell .pill-more, .cal-biquiet { font-size:14px; line-height:1.4; }
+  .cal-bicell.cal-mine-cell::after { font-size:12px; top:3px; right:5px; }
+  .cal-bicell .pill { padding:0; }
+  .cal-bicell .pill-logo { width:16px; height:16px; }
+  .calendar-view .cal-title { font-size:16px; }
+  .calendar-view .cal-research-more > summary, .calendar-view .cal-session-impact > summary { font-size:14px; }
+}

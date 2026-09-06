@@ -33,6 +33,20 @@ test('desktop starts compact and retains an optional two-week grid',async()=>{
  assert.equal(button(root,copy['app.calendar.mode_list']).getAttribute('aria-pressed'),'true');
  button(root,copy['app.calendar.mode_biweekly']).click();
  assert.equal(root.querySelectorAll('.cal-bicell').length,14);
+ assert.deepEqual([...root.querySelectorAll('.cal-biweek')].map(w=>w.querySelectorAll('.cal-bicell').length),[7,7]);
+ const active=root.querySelector(`[data-date="${date}"]`);
+ assert.ok(active.querySelector('.cal-biweekday').textContent);
+ assert.equal(active.querySelectorAll('.pill').length,2);
+ assert.equal(active.querySelector('.pill-more').textContent,'+6 more');
+ active.click();
+ assert.equal(root.querySelectorAll('.cal-ev').length,8,'two previews still open every event');
+ const first=root.querySelector('.cal-bicell').dataset.date;
+ button(root,copy['app.calendar.jump_today']).click();
+ root.querySelector(`[aria-label="${copy['app.calendar.next']}"]`).click();
+ const next=root.querySelector('.cal-bicell').dataset.date;
+ assert.equal((new Date(next+'T12:00:00Z')-new Date(first+'T12:00:00Z'))/86400000,14);
+ root.querySelector(`[aria-label="${copy['app.calendar.previous']}"]`).click();
+ assert.equal(root.querySelector('.cal-bicell').dataset.date,first);
 });
 
 test('holiday survives category filters and never requests private event research',async()=>{
@@ -48,5 +62,9 @@ test('holiday survives category filters and never requests private event researc
  assert.match(root.querySelector('.cal-session-impact').textContent,/not a reliable measure/);
  assert.equal(researchCalls,0);
  button(root,copy['app.calendar.mode_month']).click();
- assert.ok(root.querySelector('.cal-closed'));root.remove();
+ assert.ok(root.querySelector('.cal-closed'));
+ button(root,copy['app.calendar.mode_biweekly']).click();
+ assert.match(root.querySelector('.cal-closed .pill').textContent,/Closed/);
+ assert.match(root.querySelector('.cal-closed').getAttribute('aria-label'),/US markets closed/);
+ root.remove();
 });

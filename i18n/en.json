@@ -2546,5 +2546,8 @@
   "app.social.no_match_note": "A symbol may be outside the sampled top 100, your watchlist may be empty, or no record matches the filter. Absence does not mean zero attention.",
   "app.social.watchlist_error": "Watchlist could not be loaded. Retry to filter your symbols.",
   "app.chart.snapshot_as_of": "Indicator snapshot built {date} UTC",
-  "app.creatorclaim.source_wording": "Read the source wording"
+  "app.creatorclaim.source_wording": "Read the source wording",
+  "app.calendar.biweekly_hint": "Select a day for all events and their impact.",
+  "app.calendar.no_events_short": "No events listed",
+  "app.calendar.more_events": "+{n} more"
 }

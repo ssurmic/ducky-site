@@ -172,7 +172,7 @@ export async function mount(root) {
       modeBar.appendChild(b);
     }
     card.appendChild(modeBar);
-    if (viewMode !== "list") card.appendChild(el("p.cal-grid-hint.muted.small", s("calendar.grid_hint")));
+    if (viewMode !== "list") card.appendChild(el("p.cal-grid-hint.muted.small", s(viewMode === "biweekly" ? "calendar.biweekly_hint" : "calendar.grid_hint")));
 
     if (viewMode === "month") card.appendChild(monthGrid());
     else if (viewMode === "biweekly") card.appendChild(biweekly());
@@ -183,11 +183,11 @@ export async function mount(root) {
         () => { biStart = addDays(biStart, 14); render(); }));
     }
 
-    function pills(evs) {
+    function pills(evs, limit = 3) {
       // biweekly: color-coded event pills — earnings show the company LOGO + $TICKER so you can SEE who
-      // reports at a glance; macro/opex/rebal show an icon + short label. Cap at 3, then "+N more".
+      // reports at a glance; other events use recognisable short labels. Extra events remain in the day detail.
       const box = el("div.cal-events");
-      for (const e of evs.slice(0, 3)) {
+      for (const e of evs.slice(0, limit)) {
         if (e.type === "earnings") {
           const sym = (e.tickers || [])[0] || "";
           const pill = el("span.pill.pill-earn" + (isPro && evHasMine(e) ? ".mine" : ""), { title: (sym + " " + (isZh ? (e.title || "") : (e.title_en || e.title || ""))).trim() });
@@ -202,7 +202,7 @@ export async function mount(root) {
           box.appendChild(pill);
         }
       }
-      if (evs.length > 3) box.appendChild(el("span.pill-more", "+" + (evs.length - 3) + (isZh ? " 更多" : " more")));
+      if (evs.length > limit) box.appendChild(el("span.pill-more", s("calendar.more_events", {n: evs.length - limit})));
       return box;
     }
 
@@ -275,23 +275,33 @@ export async function mount(root) {
         () => { biStart = addDays(biStart, -14); render(); },
         () => { biStart = addDays(biStart, 14); render(); }));
       box.appendChild(weekdayRow());
-      const grid = el("div.cal-bigrid");
-      for (let i = 0; i < 14; i++) {
-        const d = addDays(biStart, i);
-        const iso = ymd(d);
-        const evs = dayEvents(iso);
-        const mine = isPro && evs.some(evHasMine);
-        const wknd = d.getDay() === 0 || d.getDay() === 6;
-        const cell = el("button.cal-bicell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : "") + (evs.some(e=>e.type==="holiday") ? ".cal-closed" : "") + (evs.some(e=>e.type==="early_close") ? ".cal-early" : ""),
-          { type: "button", "aria-label": iso + ", " + s("calendar.event_count", {n: evs.length}) + (evs.some(e=>e.type==="holiday") ? ", " + s("calendar.closed_short") : ""), "aria-pressed": String(iso === selected) });
-        cell.appendChild(el("span.cal-bidnum", String(d.getDate())));
-        if (evs.length) { cell.appendChild(pills(evs)); cell.appendChild(el("span.cal-event-count", String(evs.length))); }
-        const session=evs.find(e=>["holiday","early_close"].includes(e.type));
-        if(session) cell.append(el("span.cal-session-grid-label",shortLabel(session,isZh)));
-        cell.addEventListener("click", () => { selected = iso; render(); card.querySelector(".cal-detail")?.scrollIntoView?.({block: "start", behavior: "auto"}); });
-        grid.appendChild(cell);
+      const weeks = el("div.cal-biweeks");
+      for (let week = 0; week < 2; week++) {
+        const first = addDays(biStart, week * 7), last = addDays(first, 6);
+        const label = isZh
+          ? `${first.getMonth()+1}月${first.getDate()}日 – ${last.getMonth()+1}月${last.getDate()}日`
+          : `${M[first.getMonth()]} ${first.getDate()} – ${M[last.getMonth()]} ${last.getDate()}`;
+        const group = el("section.cal-biweek", {"aria-label": label});
+        group.append(el("h3.cal-week-label", label));
+        const grid = el("div.cal-bigrid");
+        for (let i = 0; i < 7; i++) {
+          const d = addDays(first, i), iso = ymd(d), evs = dayEvents(iso);
+          const mine = isPro && evs.some(evHasMine);
+          const wknd = d.getDay() === 0 || d.getDay() === 6;
+          const session = evs.find(e => ["holiday", "early_close"].includes(e.type));
+          const weekday = new Intl.DateTimeFormat(isZh ? "zh-CN" : "en-US", {weekday:"short"}).format(d);
+          const cell = el("button.cal-bicell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : "") + (session?.type === "holiday" ? ".cal-closed" : "") + (session?.type === "early_close" ? ".cal-early" : ""),
+            {type:"button", "data-date":iso, "aria-label":[dateLabel(iso), s("calendar.event_count", {n:evs.length}), ...evs.map(e => isZh ? e.title : (e.title_en || e.title))].join(", "), "aria-pressed":String(iso === selected)});
+          const date = el("div.cal-bidate", el("span.cal-bidnum", String(d.getDate())), el("span.cal-biweekday", iso === todayIso ? s("calendar.today") : weekday));
+          cell.append(date);
+          if (evs.length) cell.append(pills(evs, 2));
+          else cell.append(el("span.cal-biquiet", s("calendar.no_events_short")));
+          cell.addEventListener("click", () => { selected = iso; render(); card.querySelector(".cal-detail")?.scrollIntoView?.({block:"start", behavior:"auto"}); });
+          grid.append(cell);
+        }
+        group.append(grid); weeks.append(group);
       }
-      box.appendChild(grid);
+      box.append(weeks);
       return box;
     }
 

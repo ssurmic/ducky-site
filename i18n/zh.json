@@ -2546,5 +2546,8 @@
   "app.social.no_match_note": "未进入本次前 100 名、尚无自选股或筛选无匹配，不代表热度为零。",
   "app.social.watchlist_error": "自选股加载失败，重试后可筛选自己的股票。",
   "app.chart.snapshot_as_of": "指标快照生成于 {date} UTC",
-  "app.creatorclaim.source_wording": "展开原文表述"
+  "app.creatorclaim.source_wording": "展开原文表述",
+  "app.calendar.biweekly_hint": "点选一天，查看完整事件和影响。",
+  "app.calendar.no_events_short": "暂无事件",
+  "app.calendar.more_events": "另 {n} 项"
 }
