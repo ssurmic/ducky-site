@@ -2255,5 +2255,6 @@
   "app.briefing.market_detail": "展开市场来源与不同观点",
   "app.briefing.macro_detail": "展开宏观因素与历史关系",
   "app.briefing.component_unavailable": "这个模块暂时未加载，请收起后重新展开重试。",
-  "app.briefing.date_only": "{date} · 发表时刻未知"
+  "app.briefing.date_only": "{date} · 发表时刻未知",
+  "app.earnings.price_asof": "复权价格截至"
 }

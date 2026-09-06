@@ -2255,5 +2255,6 @@
   "app.briefing.market_detail": "Expand market sources and competing views",
   "app.briefing.macro_detail": "Expand macro factors and historical relationships",
   "app.briefing.component_unavailable": "This section could not load. Close and reopen it to retry.",
-  "app.briefing.date_only": "{date} · publication time unavailable"
+  "app.briefing.date_only": "{date} · publication time unavailable",
+  "app.earnings.price_asof": "Adjusted prices through"
 }

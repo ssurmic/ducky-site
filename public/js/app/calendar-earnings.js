@@ -84,10 +84,12 @@ export function earningsPanel(doc) {
   }
   const reaction=doc.reaction||{},windows=reaction.sample?.windows||{};
   const move=el('div.earnings-reaction',el('h4',copy('reaction')),el('p.small.muted',copy('reaction_basis')));
+  if(reaction.price_as_of)move.append(el('p.small.muted',copy('price_asof')+' '+reaction.price_as_of+' · '+(reaction.source||'Yahoo Finance')));
   const chips=el('div.earnings-reaction-chips');
   for(const h of ['1','5','20']){const w=windows[h]||{};chips.append(el('div',el('strong',h+' '+copy(h==='1'?'session':'sessions')),
     el('span.mono',{class:w.return_pct<0?'neg':w.return_pct>0?'pos':''},w.status==='ok'?pct(w.return_pct):'—'),
-    el('span.small.muted',w.status==='ok'?'SPY '+pct(w.benchmark_pct):copy('reaction_missing'))));}
+    el('span.small.muted',w.status==='ok'?'SPY '+pct(w.benchmark_pct):copy('reaction_missing')),
+    ...(w.status==='ok'&&w.start&&w.end?[el('span.small.muted',w.start+' → '+w.end)]:[])));}
   move.append(chips);box.append(move);
   const method=el('details.earnings-method',el('summary',copy('coverage')),
     el('p.small',copy('coverage_note')),el('p.small.muted',copy('filing_time')+' '+(release.filed_at||'—')),
