@@ -50,3 +50,12 @@ test('free simulation has no private fetch and fictional returns require explici
  assert.ok(root.textContent.includes('fictional prices'));assert.ok(root.querySelector('.creator-sim-chart'));
  assert.ok(!root.textContent.includes('BACKTEST'));root.remove();
 });
+
+
+test('an accepted follow cannot be presented as cancelled while its request is pending',async()=>{
+ let finish;confirmCreator({name:'Channel'},()=>new Promise(resolve=>finish=resolve),()=>{});
+ document.querySelector('dialog .btn-primary').click();
+ const dialog=document.querySelector('dialog');assert.equal(dialog.querySelector('.btn-ghost').disabled,true);
+ dialog.dispatchEvent(new window.Event('cancel',{cancelable:true}));assert.ok(dialog.isConnected);
+ finish({kol_id:'channel'});await new Promise(r=>setTimeout(r,0));assert.equal(document.querySelector('dialog'),null);
+});

@@ -56,7 +56,7 @@ export function confirmCreator(creator,follow,onFollow,live=()=>true) {
   const dialog=el('dialog.creator-confirm',{'aria-labelledby':'creator-confirm-title'});
   const action=el('button.btn.btn-primary',{type:'button'},s('creatorflow.confirm'));
   const error=el('p.err',{role:'alert'});
-  const close=()=>{dialog.close();dialog.remove();if(opener?.isConnected)opener.focus();};
+  const close=()=>{if(action.disabled)return;dialog.close();dialog.remove();if(opener?.isConnected)opener.focus();};
   const description=creator.profile?.description || creator.description || creator.descr || s('creators.profile_pending');
   dialog.append(el('p.eyebrow',s('creatorflow.step2')),el('h2#creator-confirm-title',s('creatorflow.is_this')),
     el('div.creator-identity',avatar(creator),el('div',el('h3',creator.name),el('p.muted.small',creator.profile?.handle || creator.handle || creator.channel_id || 'YouTube'))),
@@ -70,9 +70,9 @@ export function confirmCreator(creator,follow,onFollow,live=()=>true) {
   dialog.append(el('p.creator-confirm-note',s('creatorflow.after_confirm')),error,
     el('div.evidence-controls',el('button.btn.btn-ghost',{type:'button',onclick:close},s('creatorflow.not_this')),action));
   action.addEventListener('click',async()=>{
-    if(!live()){close();return;}action.disabled=true;
-    try {const response=await follow();if(live())onFollow(response);close();}
-    catch {error.textContent=s('creatorflow.follow_error');action.disabled=false;}
+    if(!live()){close();return;}action.disabled=true;dialog.querySelector('button.btn-ghost').disabled=true;
+    try {const response=await follow();action.disabled=false;if(live())onFollow(response);close();}
+    catch {error.textContent=s('creatorflow.follow_error');action.disabled=false;dialog.querySelector('button.btn-ghost').disabled=false;}
   });
   dialog.addEventListener('cancel',e=>{e.preventDefault();close();});
   dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)close();}});
