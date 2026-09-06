@@ -43,6 +43,33 @@ function mockPush(permission='granted'){
  return {get requests(){return requests;},get registrations(){return registrations;},get subscriptions(){return subscriptions;}};
 }
 
+
+test('saved topics and device settings precede a collapsed watchlist without enabling push',async()=>{
+ const tickers=['INTC','NVDA','AMD','MU','TSM','AVGO','AMKR','ON'].map(ticker=>({ticker,name:ticker}));
+ const f=setup({topics:[topic,{...topic,topic_type:'sector',topic_key:'semiconductors'}],override:({path})=>path.endsWith('/options')?json({tickers,sectors:[{key:'semiconductors',label_en:'Semiconductors',label_zh:'半导体'}],push_enabled:true}):null});
+ const push=mockPush();await f.mount();
+ const settings=f.root.querySelector('.updates-settings'),saved=settings.querySelector('.updates-saved'),device=settings.querySelector('.updates-push'),picker=settings.querySelector('.updates-topic-picker');
+ assert.equal(settings.firstElementChild,saved);assert.equal(saved.nextElementSibling,device);assert.equal(device.nextElementSibling,picker);
+ assert.equal(saved.querySelectorAll('.updates-topic').length,2);assert.ok(saved.textContent.includes('2026-09-06 12:00 UTC'));
+ const choices=picker.querySelector('details.updates-watchlist');assert.equal(choices.open,false);assert.match(choices.querySelector('summary').textContent,/From my watchlist.*8/);
+ assert.equal(choices.querySelectorAll('[data-topic-choice]').length,8);
+ assert.equal(picker.querySelector('[name=updates-ticker]').closest('details'),null);assert.equal(picker.querySelector('[data-sector-choice]').closest('details'),null);
+ assert.equal(push.requests,0);assert.equal(f.calls.some(call=>call.method==='PUT'),false);f.close();
+});
+test('new users can add a topic directly and watchlist disclosure stays open through save and rollback',async()=>{
+ let fail=true;const f=setup({override:({method})=>method==='PUT'&&fail?json({error:'unavailable'},503):null});mockPush();await f.mount();
+ assert.ok(f.root.querySelector('.updates-settings').firstElementChild.matches('.updates-topic-picker'));
+ assert.equal(f.root.querySelector('.updates-watchlist').open,false);
+ f.root.querySelector('.updates-watchlist').open=true;
+ f.root.querySelector('[data-topic-choice="INTC"]').click();await flush();
+ assert.equal(f.root.querySelector('.updates-watchlist').open,true);assert.equal(f.root.querySelector('[data-topic-choice="INTC"]').checked,false);
+ fail=false;f.root.querySelector('[data-topic-choice="INTC"]').click();await flush();
+ assert.equal(f.root.querySelector('.updates-watchlist').open,true);assert.ok(f.root.querySelector('.updates-settings').firstElementChild.matches('.updates-saved'));
+ assert.deepEqual(f.calls.filter(call=>call.method==='PUT').at(-1).body,{topic_type:'ticker',topic_key:'INTC',enabled:true,web_push:false});
+ f.root.querySelector('.updates-watchlist').open=false;f.root.querySelector('[data-updates-unread]').click();
+ assert.equal(f.root.querySelector('.updates-watchlist').open,false);f.close();
+});
+
 test('a labeled notification test requires a separate click and targets only this browser',async()=>{
  const f=setup({override:({path})=>path.endsWith('/test-push')?json({accepted:true}):null});mockPush();await f.mount();
  assert.equal(f.root.querySelector('[data-update-preview]'),null);

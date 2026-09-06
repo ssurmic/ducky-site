@@ -30,7 +30,7 @@ export async function mount(root,route={}){
   let deviceEndpoint='',previewBusy=false;
   let options={tickers:[],sectors:[],push_enabled:false},topics=[],items=[],cursor=null,unread=0,onlyUnread=false;
   let status='',loadError='',itemMissing=false,lastLoaded=0,ready=false,queuedRefresh=false,refreshTimer=null;
-  let draftTicker=(query.get('ticker')||'').toUpperCase();
+  let draftTicker=(query.get('ticker')||'').toUpperCase(),watchlistOpen=false;
   const disposers=[];
   const shell=el('div.updates-page');root.append(shell);
   const sessionValid=()=>alive&&!ctl.signal.aborted&&epoch===store.epoch()&&token===store.get('token')&&owner===(store.get('me')?.user_id??store.get('me')?.id);
@@ -44,6 +44,7 @@ export async function mount(root,route={}){
   function render(){
     if(!sessionValid())return;
     const draft=shell.querySelector('[name=updates-ticker]');if(draft)draftTicker=draft.value;
+    const watchChoices=shell.querySelector('.updates-watchlist');if(watchChoices)watchlistOpen=watchChoices.open;
     picker?.dispose();picker=null;clear(shell);
     const refresh=el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:!!flight||mutation,'data-updates-refresh':'',onclick:()=>locked?loadManagement():load(false)},s('updates.refresh'));
     shell.append(el('div.view-head',el('div',el('a.small.muted',{href:'#/alerts'},s('updates.back')),el('h1',s('updates.title'))),refresh),
@@ -63,7 +64,8 @@ export async function mount(root,route={}){
     if(loadError)shell.append(el('div.errbox',el('p',loadError),el('button.btn.btn-ghost',{type:'button',disabled:!!flight,onclick:()=>load(false)},s('common.retry'))));
     if(!ready){if(flight)shell.append(spinner());return;}
     const layout=el('div.updates-layout'),settings=el('aside.updates-settings'),feed=el('section.updates-feed');layout.append(settings,feed);shell.append(layout);
-    renderTopics(settings);renderPush(settings);
+    if(topics.length){renderSavedTopics(settings);renderPush(settings);renderTopics(settings);}
+    else{renderTopics(settings);renderPush(settings);}
     const counts=el('span.count.mono',s('updates.unread_count',{n:unread}));
     const unreadToggle=el('input',{type:'checkbox',checked:onlyUnread,'data-updates-unread':''});
     unreadToggle.addEventListener('change',()=>{onlyUnread=unreadToggle.checked;render();});
@@ -78,7 +80,7 @@ export async function mount(root,route={}){
     if(flight)feed.append(el('p.small.muted',{role:'status'},s('common.loading')));
   }
   function renderTopics(target){
-    const box=el('section.card',el('h2',s('updates.topics')),el('p.small.muted',s('updates.topics_hint')));
+    const box=el('section.card.updates-topic-picker',el('h2',s('updates.topics')),el('p.small.muted',s('updates.topics_hint')));
     const input=el('input.input',{type:'text',name:'updates-ticker',value:draftTicker,maxlength:80,placeholder:s('updates.ticker_placeholder'),'aria-label':s('updates.ticker_label'),autocomplete:'off'});
     picker=symbolPicker(input,()=>activeTopics().filter(t=>t.topic_type==='ticker').map(t=>t.topic_key));
     const add=el('button.btn.btn-primary',{type:'submit',disabled:mutation||!!flight},s('updates.add'));
@@ -95,7 +97,8 @@ export async function mount(root,route={}){
       const check=el('input',{type:'checkbox',checked:!!current?.enabled,disabled:mutation||!!flight,'data-topic-choice':row.ticker});
       check.addEventListener('change',()=>changeTopic({topic_type:'ticker',topic_key:row.ticker,enabled:check.checked,web_push:current?.web_push===true}));
       choices.append(el('label.updates-choice',check,el('span',el('strong.mono',row.ticker),text(row.name)&&row.name!==row.ticker?el('small.muted',text(row.name)):null)));
-    }box.append(choices);
+    }
+    box.append(el('details.updates-watchlist',{open:watchlistOpen},el('summary',s('updates.from_watchlist'),' ',el('span.count.mono',available.length)),choices));
     if(options.sectors.length){const sectors=el('fieldset.updates-choices',el('legend',s('updates.sectors')));
       for(const sector of options.sectors){if(!/^[a-z][a-z0-9_-]{0,60}$/.test(sector.key))continue;
         const current=topics.find(t=>t.topic_type==='sector'&&t.topic_key===sector.key),check=el('input',{type:'checkbox',checked:!!current?.enabled,disabled:mutation||!!flight,'data-sector-choice':sector.key});
@@ -103,15 +106,18 @@ export async function mount(root,route={}){
         sectors.append(el('label.updates-choice',check,text(sector['label_'+LANG])||s('updates.sector_'+sector.key)));
       }box.append(sectors,el('p.small.muted',s('updates.sector_note')));
     }
-    if(topics.length){box.append(el('h3',s('updates.saved_topics')));
-      for(const topic of [...topics].sort((a,b)=>topicId(a).localeCompare(topicId(b)))){const push=el('input',{type:'checkbox','aria-label':s('updates.push_topic_for',{topic:topicLabel(topic)}),checked:topic.web_push===true,disabled:mutation||!!flight||(!topic.web_push&&(!deviceReady||!options.push_enabled||!topic.enabled))});
+    target.append(box);
+  }
+  function renderSavedTopics(target){
+    const box=el('section.card.updates-saved',el('h2',s('updates.saved_topics')));
+    for(const topic of [...topics].sort((a,b)=>topicId(a).localeCompare(topicId(b)))){const push=el('input',{type:'checkbox','aria-label':s('updates.push_topic_for',{topic:topicLabel(topic)}),checked:topic.web_push===true,disabled:mutation||!!flight||(!topic.web_push&&(!deviceReady||!options.push_enabled||!topic.enabled))});
         push.addEventListener('change',()=>changeTopic({...topic,web_push:push.checked}));
         box.append(el('div.updates-topic',el('div.updates-topic-head',el('strong',topicLabel(topic)),el('span.small.muted',s(topic.enabled?'updates.inapp_on':'updates.paused'))),
           el('p.small.muted',s('updates.notify_from',{date:updateDate(topic.notify_from)})),
           el('div.updates-topic-actions',el('label.updates-check',push,s('updates.push_topic')),
             el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:mutation||!!flight,'aria-label':s('updates.remove')+' '+topicLabel(topic),onclick:()=>removeTopic(topic)},s('updates.remove')))));
-      }
-    }target.append(box);
+    }
+    target.append(box);
   }
   function renderPush(target){
     const supported=typeof Notification!=='undefined'&&'serviceWorker' in navigator&&'PushManager' in window;
