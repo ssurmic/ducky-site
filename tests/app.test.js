@@ -134,11 +134,14 @@ test('radar preserves the delivered body, historical dates and incomplete archiv
   if(String(url).includes('week-ahead'))return response({});
   return response({items:[{kind:'volscan',ts:'2026-09-04T19:02:00Z',summary:'IV scan',extra:{message_text:'META\nHV252 39%'}},{kind:'insider',ts:'2026-09-04',summary:null}]});
  };
- const root=document.createElement('div');await boards.mount(root);
+ const root=document.createElement('div');const cleanup=await boards.mount(root,{query:new URLSearchParams()});
  assert.ok(root.textContent.includes('HV252 39%'));
+ assert.ok(!root.textContent.includes('2026-08-26'));
+ root.querySelector('[data-mode="excerpts"]').click();
  assert.ok(root.textContent.includes('2026-08-26'));
+ assert.ok(root.textContent.includes('Identity not verified'));
  assert.ok(root.querySelector('use[href="/vendor/lucide/icons.svg#insider"]'));
- const button=root.querySelector('.brd-item');assert.equal(button.getAttribute('aria-expanded'),'false');button.click();assert.equal(button.getAttribute('aria-expanded'),'true');
+ const button=root.querySelector('.radar-record-toggle');assert.equal(button.getAttribute('aria-expanded'),'false');button.click();assert.equal(button.getAttribute('aria-expanded'),'true');cleanup();history.replaceState(null,'','#/boards');
 });
 test('navigation retains all routes with named SVG links and a native mobile disclosure',()=>{
  const html=readFileSync('dist/app/index.html','utf8');const page=new JSDOM(html).window.document;

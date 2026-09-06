@@ -1,39 +1,47 @@
-// views/boards.js — 雷达 (Radar): the market-wide SHARED intel boards — the same feeds Ducky pushes to the
-// Telegram group topics (大盘水位/宏观, 财报, 内部人买入, 便宜期权 IV/HV…), surfaced in-app as a T-layout
-// dashboard. These are identical for EVERY user (unlike personalised alerts), so they live as a standard
-// section. Reads the public, compliance-scrubbed /public/signals/recent.json — a RECORD of filings/scans,
-// attributed and time-stamped, never our own advice. Excludes 鸭子的交易 (personal trades).
-import { s } from "../strings.js";
+// Radar reads the shared public ledger. Filters never fetch quotes or run research.
+import { s, LANG } from "../strings.js";
 import * as api from "../api.js";
 import * as store from "../store.js";
-import { el, clear, spinner } from "../ui.js";
+import { el, clear, spinner, pct, px } from "../ui.js";
 import { icon } from "../icons.js";
 import { dateTime, metric } from './creator-research.js';
-import { pct, px } from '../ui.js';
 
-// section → firehose kinds (mirrors the backend tg_topics TOPICS). `wide` = the "—" top bar of the T.
-const BOARDS = [
-  { key: "liquidity", icon: "🌊", kinds: "liquidity,kindex,macro", wide: true },
-  { key: "digest",    icon: "🧭", kinds: "digest,market,default" },
-  { key: "insider",   icon: "💰", kinds: "insider,cluster,political" },
-  { key: "partner",   icon: "🤝", kinds: "partner,stake,13f" },
-  { key: "earnings",  icon: "📊", kinds: "earnings" },
-  { key: "hiring",    icon: "🧑‍💻", kinds: "hiring" },
-  { key: "volscan",   icon: "📉", kinds: "volscan" },
+export const BOARDS = [
+  {key:'liquidity', kinds:'liquidity,kindex,macro'},
+  {key:'digest', kinds:'digest,market,default'},
+  {key:'insider', kinds:'insider,cluster'},
+  {key:'partner', kinds:'partner,stake,13f'},
+  {key:'political', kinds:'political', icon:'insider'},
+  {key:'earnings', kinds:'earnings'},
+  {key:'hiring', kinds:'hiring'},
+  {key:'volscan', kinds:'volscan'},
+  {key:'industry', kinds:'nvdev', icon:'partner'},
 ];
+const ALL_KINDS = BOARDS.map(b=>b.kinds).join(',');
+const boardOf = row => row.board || BOARDS.find(b=>b.kinds.split(',').includes(row.kind))?.key;
+const readable = row => Boolean(String(row.summary || '').trim() || String(row.extra?.message_text || '').trim());
+export function filterRecords(rows, state, now=Date.now()) {
+  const query=(state.q || '').trim().toLocaleLowerCase();
+  const ticker=(state.ticker || '').trim().replace(/^\$/,'').toUpperCase();
+  return rows.filter(row=> {
+    if(state.board && state.board!=='all' && boardOf(row)!==state.board)return false;
+    if(ticker && String(row.ticker || '').toUpperCase()!==ticker)return false;
+    if(query && ![row.ticker,row.summary,row.extra?.message_text,row.extra?.message_en,row.extra?.summary_en].join(' ').toLocaleLowerCase().includes(query))return false;
+    if(state.direction && String(row.direction)!==state.direction)return false;
+    if(state.content==='readable' && !readable(row))return false;
+    if(state.content==='missing' && readable(row))return false;
+    if(state.mode==='recent' && Date.parse(row.ts)<now-Number(state.days || 7)*86400000)return false;
+    const day=(row.ts || '').slice(0,10);
+    return !(state.start && day<state.start || state.end && day>state.end);
+  }).sort((a,b)=>Date.parse(b.ts)-Date.parse(a.ts) || Number(b.id || 0)-Number(a.id || 0));
+}
+export function archivePath(state, cursor) {
+  const params=new URLSearchParams({kind:BOARDS.find(b=>b.key===state.board)?.kinds || ALL_KINDS,limit:'40',content:state.content || 'all'});
+  for(const key of ['ticker','q','start','end','direction'])if(state[key])params.set(key,state[key]);
+  if(cursor)params.set('before',cursor);
+  return '/public/radar/archive.json?'+params;
+}
 
-// kind → short human label (fallback when a signal's scrubbed summary is empty)
-const KIND_LABEL = {
-  insider: ["内部人买入", "Insider buy"], cluster: ["集群买入", "Cluster buy"], political: ["议员交易", "Congress trade"],
-  partner: ["战略合作", "Partnership"], stake: ["大额持股", "Major holding"], "13f": ["机构持仓", "13F"], nvdev: ["行业动态", "Industry news"],
-  earnings: ["财报", "Earnings"], hiring: ["招聘信号", "Hiring"], volscan: ["期权波动", "Option volatility"],
-  liquidity: ["流动性", "Liquidity"], kindex: ["K 指数", "K-index"], macro: ["宏观", "Macro"],
-  digest: ["每日摘要", "Daily summary"], market: ["市场", "Market"], default: ["动态", "Update"],
-};
-
-// Week-Ahead macro cleanup: Nasdaq's feed is noisy (ISM sub-indices, IBD/TIPP, GDPNow) and English-only.
-// Map to a SHORT bilingual label, DROP low-signal noise, and collapse ISM sub-readings to one. Order matters
-// (specific before generic; the broad speaker rule is last).
 const WA_MACRO = [
   { re: /continuing jobless/i, zh: "续请失业金", en: "Continuing claims" },
   { re: /nonfarm productivity/i, zh: "非农生产率", en: "Nonfarm productivity" },
@@ -75,144 +83,202 @@ export function waMacroLabel(name, isZh) {
   return name;
 }
 
-function ago(iso, isZh) {
-  const t = Date.parse(iso); if (isNaN(t)) return "";
-  const m = Math.max(0, (Date.now() - t) / 60000);
-  if (m < 60) return isZh ? `${Math.round(m)}分钟前` : `${Math.round(m)}m`;
-  const h = m / 60; if (h < 24) return isZh ? `${Math.round(h)}小时前` : `${Math.round(h)}h`;
-  const d = Math.round(h / 24); return isZh ? `${d}天前` : `${d}d`;
-}
-function dirArrow(n) { return n > 0 ? ["▲", "bull"] : n < 0 ? ["▼", "bear"] : ["", ""]; }
 
-export async function mount(root) {
-  const epoch=store.epoch();
-  const isZh = (document.documentElement.lang || "zh").slice(0, 2) !== "en";
-  const card = el("section.boards-view");
-  root.appendChild(card);
-  card.append(el("h1", s("boards.h1")), el("p.muted", s("boards.sub")));
-  card.appendChild(spinner());
+export async function mount(root, route={}) {
+  const epoch=store.epoch(), params=route.query || new URLSearchParams(location.hash.split('?')[1]);
+  const state={mode:['archive','excerpts'].includes(params.get('mode'))?params.get('mode'):'recent',
+    board:BOARDS.some(b=>b.key===params.get('board'))?params.get('board'):'all',
+    q:params.get('q') || '',ticker:params.get('ticker') || '',
+    content:['all','missing'].includes(params.get('content'))?params.get('content'):'readable',
+    direction:['-1','0','1'].includes(params.get('direction'))?params.get('direction'):'',
+    days:['1','3','7'].includes(params.get('days'))?params.get('days'):'7',
+    start:params.get('start') || '',end:params.get('end') || ''};
+  let coverageDoc=null;
+  let recent=[], excerpts=[], archived=[], cursor=null, pending=false, failed=false, recentFailed=false, historyFailed=false;
+  let alive=true, requestId=0, archiveCtl=null, detailId=0, recentReady=false;
+  const staticCtl=new AbortController(), timer=setTimeout(()=>staticCtl.abort(),15000);
+  const card=el('section.boards-view.radar-workspace');root.append(card);
+  const header=el('header.radar-heading',el('div',el('h1',s('boards.h1')),el('p.muted',s('radar.subtitle'))),
+    el('a.btn.btn-ghost.btn-sm',{href:'#/calendar'},icon('calendar'),s('watch.events')));
+  const starters=el('div.radar-starters',...['liquidity','partner','volscan'].map(key=>el('button.radar-starter',
+    {type:'button',onclick:()=>selectBoard(key)},icon(BOARDS.find(b=>b.key===key).icon || key),
+    el('span',el('strong.starter-desktop',s('radar.start_'+key)),el('strong.starter-mobile',s('radar.short_'+key)),el('span.muted',s('radar.start_'+key+'_hint'))),el('span',{'aria-hidden':'true'},'↗'))));
+  const coverage=el('details.radar-coverage',{'aria-label':s('radar.coverage')});
+  const pelosiJump=el('button.btn.btn-ghost.btn-sm.radar-pelosi',{type:'button',onclick:showPelosi},s('radar.pelosi_history'));
+  const nav=el('nav.radar-categories',{'aria-label':s('radar.categories')});
+  const tabs=el('div.radar-tabs',{'aria-label':s('radar.record_scope')},...['recent','archive','excerpts'].map(mode=>el('button',
+    {type:'button','data-mode':mode,onclick:()=>{state.mode=mode;state.start='';state.end='';start.value='';end.value='';apply();}},s('radar.mode_'+mode))));
+  const input=(name,type,placeholder)=>el('input.input',{name,type,placeholder,'aria-label':s('radar.'+name),maxlength:name==='q'?100:12});
+  const query=input('q','search',s('radar.search_hint'));query.value=state.q;
+  const ticker=input('ticker','search','NVDA');ticker.value=state.ticker;
+  const content=el('select.input',{name:'content'},...['readable','all','missing'].map(v=>el('option',{value:v},s('radar.content_'+v))));content.value=state.content;
+  const direction=el('select.input',{name:'direction'},...['','1','-1','0'].map(v=>el('option',{value:v},s('radar.direction_'+(v===''?'all':v==='1'?'buy':v==='-1'?'sell':'other')))));direction.value=state.direction;
+  const days=el('select.input',{name:'days'},...['1','3','7'].map(n=>el('option',{value:n},s('radar.days',{n}))));days.value=state.days;
+  const start=el('input.input',{type:'date',name:'start','aria-label':s('radar.start')});start.value=state.start;
+  const end=el('input.input',{type:'date',name:'end','aria-label':s('radar.end')});end.value=state.end;
+  const field=(name,node)=>el('label.radar-field',el('span',s('radar.'+name)),node);
+  const dateFields=el('div.radar-dates',field('start',start),field('end',end));
+  const dayField=field('period',days);
+  const filterToggle=el('button.radar-filter-toggle',{type:'button','aria-expanded':'false',onclick:()=>{
+    const open=filter.classList.toggle('filters-expanded');filterToggle.setAttribute('aria-expanded',String(open));
+  }},s('radar.more_filters'));
+  const filter=el('form.radar-filters',field('q',query),filterToggle,el('div.radar-extra',field('ticker',ticker),field('direction',direction),dayField,field('content',content),dateFields),
+    el('div.radar-filter-actions',el('button.btn.btn-primary',{type:'submit'},s('radar.apply')),
+    el('button.btn.btn-ghost',{type:'button',onclick:reset},s('radar.reset'))));
+  const guide=el('div.radar-guide');
+  const summary=el('div.radar-result-summary',{role:'status','aria-live':'polite'});
+  const note=el('p.radar-scope-note.muted');
+  const rows=el('div.radar-records');
+  const more=el('button.btn.btn-ghost.radar-more',{type:'button',onclick:()=>loadArchive(false)},s('creators.load_more'));
+  const main=el('section.radar-main',tabs,guide,filter,summary,note,rows,more);
+  card.append(header,starters,coverage,pelosiJump,el('div.radar-layout',el('aside.radar-sidebar',el('h2',s('radar.categories')),nav),main));
+  filter.addEventListener('submit',e=>{e.preventDefault();apply();});
+  for(const node of [content,direction,days,start,end])node.addEventListener('change',apply);
+  for(const node of [query,ticker])node.addEventListener('input',()=>{if(state.mode!=='archive')apply();});
+  route.signal?.addEventListener('abort',cleanup,{once:true});
+  render();rows.append(spinner());
+  const recentStart=new Date(Date.now()-7*86400000).toISOString().slice(0,10);
+  const recentTask=api.get('/public/radar/archive.json?limit=200&content=all&start='+recentStart,{auth:false,signal:staticCtl.signal}).then(doc=>{
+    if(!Array.isArray(doc?.items))throw new Error('invalid_response');recent=doc.items;
+  }).catch(()=>{recentFailed=true;});
+  const historyTask=fetch('/radar-history.json',{signal:staticCtl.signal}).then(r=>{if(!r.ok)throw new Error('unavailable');return r.json();}).then(doc=>{
+    if(!Array.isArray(doc?.items))throw new Error('invalid_response');
+    excerpts=doc.items.map(r=>({...r,archived:true,summary:r.summary?.[LANG] || '',extra:{message_text:r.body?.[LANG] || ''}}));
+  }).catch(()=>{historyFailed=true;});
+  const coverageTask=api.get('/public/radar/coverage.json',{auth:false,signal:staticCtl.signal}).then(doc=>{coverageDoc=doc;}).catch(()=>{});
+  await Promise.all([recentTask,historyTask,coverageTask]);clearTimeout(timer);
+  if(!alive || epoch!==store.epoch())return cleanup;
+  recentReady=true;
+  if(state.mode==='archive')await loadArchive(true);else render();
+  return cleanup;
 
-  let results, history = [];
-  const staticCtl = new AbortController();
-  const staticTimer = setTimeout(() => staticCtl.abort(), 15000);
-  try {
-    const [sig] = await Promise.all([
-      Promise.all(BOARDS.map((b) =>
-        api.signals.board(b.kinds, { days: 7, limit: 12 }).then((r) => (r && r.items) || []).catch(() => null))),
-      fetch("/radar-history.json", { signal: staticCtl.signal }).then(r => r.ok ? r.json() : null)
-        .then(j => { history = j && Array.isArray(j.items) ? j.items : []; }).catch(() => {}),
-    ]);
-    clearTimeout(staticTimer);
-    results = sig;
-  } catch (e) {
-    clear(card); card.append(el("h1", s("boards.h1")), el("p.err", s("boards.load_error"))); return () => {};
+  function cleanup(){alive=false;requestId++;archiveCtl?.abort();staticCtl.abort();clearTimeout(timer);}
+  function persist(){const p=new URLSearchParams();for(const [k,v] of Object.entries(state))if(v)p.set(k,v);history.replaceState(null,'','#/boards?'+p);}
+  function readFilters(){state.q=query.value.trim();state.ticker=ticker.value.trim().toUpperCase().replace(/^\$/,'');state.content=content.value;state.direction=direction.value;state.days=days.value;state.start=start.value;state.end=end.value;}
+  function apply(){
+    readFilters();end.setCustomValidity(state.start && state.end && state.start>state.end?s('radar.date_error'):'');
+    if(!filter.reportValidity())return;persist();
+    if(state.mode==='archive')loadArchive(true);else{requestId++;archiveCtl?.abort();pending=false;failed=false;render();}
   }
-
-  if(epoch!==store.epoch()) return ()=>{};
-  clear(card);
-  card.append(el("h1", s("boards.h1")), el("p.muted", s("boards.sub")));
-  card.appendChild(el("p.muted.small", s("boards.updated_window")));
-  const grid = el("div.brd-grid");
-  const archiveHost=el('section.signal-archive');
-  let archiveEpoch=0;
-  BOARDS.forEach((b, i) => {
-    const items = (results[i] || []).filter((it) => it && (it.ticker || it.summary || it.extra?.message_text));
-    const sec = el("section.brd-card" + (b.wide ? ".brd-wide" : ""));
-    sec.appendChild(el("div.brd-head",
-      el("span.brd-ico", { "aria-hidden": "true" }, icon(b.key)),
-      el("div.brd-htext",
-        el("div.brd-title", s("boards.t_" + b.key)),
-        el("div.brd-desc.muted", s("boards.d_" + b.key)))));
-    if (results[i] === null) { sec.appendChild(el("p.brd-empty.muted", { role: "status" }, s("boards.load_error"))); }
-    else if (!items.length) { sec.appendChild(el("p.brd-empty.muted", s(results[i]?.length ? "boards.missing_body" : "boards.empty"))); }
-    else {
-      const list = el("div.brd-list");
-      for (const it of items.slice(0, 1)) list.appendChild(itemRow(it));
-      sec.appendChild(list);
-    }
-    for (const receipt of history.filter(r => r.board === b.key).slice(0, 1)) {
-      const lang = isZh ? "zh" : "en";
-      sec.appendChild(itemRow({ticker: receipt.ticker, ts: receipt.ts, kind: b.key,
-        summary: receipt.summary?.[lang] || "", archived: true, source_url: receipt.source_url,
-        extra: {message_text: receipt.body?.[lang] || ""}}));
-    }
-    sec.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>openArchive(b)},s('boards.browse_history')));
-    grid.appendChild(sec);
-  });
-  card.appendChild(el("a.btn.btn-ghost.btn-sm", {href:"#/calendar"}, s("watch.events")));
-  card.appendChild(grid);
-  card.appendChild(archiveHost);
-  return () => {archiveEpoch++;staticCtl.abort();clearTimeout(staticTimer);};
-
-  async function openArchive(board) {
-    let cursor=null, count=0, pending=false;
-    const token=++archiveEpoch;
-    clear(archiveHost);
-    const title=el('h2',{tabindex:'-1'},s('boards.t_'+board.key)+' · '+s('boards.archive_title'));
-    const ticker=el('input.input',{type:'search',placeholder:s('boards.ticker_filter'),'aria-label':s('boards.ticker_filter'),maxlength:12});
-    const filter=el('form.evidence-controls',ticker,el('button.btn.btn-ghost',{type:'submit'},s('boards.apply_filter')));
-    const rows=el('div.signal-history-list'),status=el('p.muted.small',{role:'status'}),more=el('button.btn.btn-ghost',{type:'button'},s('creators.load_more'));
-    archiveHost.append(title,el('p.muted',s('boards.archive_hint')),filter,rows,status,more);
-    let query='';
-    filter.addEventListener('submit',e=>{e.preventDefault();if(pending)return;query=ticker.value.trim().toUpperCase().replace(/^\$/,'');cursor=null;count=0;clear(rows);load();});
-    more.addEventListener('click',()=>load());
-    title.focus({preventScroll:true});archiveHost.scrollIntoView?.({behavior:'smooth',block:'start'});
-    await load();
-    async function load() {
-      if(pending)return;pending=true;more.disabled=true;status.textContent=s('common.loading');
-      try {
-        const doc=await api.get('/public/signals/archive.json?kind='+encodeURIComponent(board.kinds)+'&limit=30'+(cursor?'&before='+cursor:'')+(query?'&ticker='+encodeURIComponent(query):''),{auth:false});
-        if(token!==archiveEpoch || epoch!==store.epoch())return;
-        let day='';
-        for(const row of doc.items || []) {const next=(row.ts || '').slice(0,10);if(next!==day){day=next;rows.append(el('h3.signal-day',day+' UTC'));}rows.append(itemRow(row));count++;}
-        cursor=doc.next_cursor;more.hidden=!cursor;
-        status.textContent=s(cursor?'boards.archive_count':'boards.archive_end',{n:count});
-      } catch {if(token===archiveEpoch){status.textContent=s('boards.load_error');more.hidden=false;}}
-      finally {pending=false;more.disabled=false;}
-    }
+  function selectBoard(key){state.board=key;apply();}
+  function reset(){state.board='all';query.value='';ticker.value='';content.value='readable';direction.value='';days.value='7';start.value='';end.value='';apply();}
+  async function loadArchive(resetPage){
+    if(!resetPage && pending)return;
+    if(resetPage){archiveCtl?.abort();archived=[];cursor=null;}
+    const token=++requestId;archiveCtl=new AbortController();pending=true;failed=false;render();
+    try{
+      const doc=await api.get(archivePath(state,cursor),{auth:false,signal:archiveCtl.signal});
+      if(!alive || token!==requestId || epoch!==store.epoch())return;
+      if(!Array.isArray(doc?.items) || (doc.filter_version!==2 && (state.q || state.start || state.end || state.content!=='all')))throw new Error('invalid_response');
+      const seen=new Set(archived.map(r=>r.id));archived.push(...doc.items.filter(r=>!seen.has(r.id)));
+      cursor=doc.next_cursor || null;
+    }catch{if(token===requestId)failed=true;}
+    finally{if(alive && token===requestId && epoch===store.epoch()){pending=false;render();}}
   }
-
-  function itemRow(it) {
-    const kl = KIND_LABEL[it.kind] || [it.kind || "", it.kind || ""];
-    const sum = (it.summary && String(it.summary).trim()) ? String(it.summary).trim() : "";
-    const label = sum || (isZh ? kl[0] : kl[1]);
-    const tk = it.ticker ? String(it.ticker).toUpperCase() : "";
-
-    const wrap = el("div.brd-itemw");
-    const row = el("button.brd-item", { type: "button", "aria-expanded": "false" });
-    if (tk) row.appendChild(el("span.brd-tk.mono", "$" + tk));
-    row.appendChild(el("span.brd-txt", label));
-    row.appendChild(el("span.brd-time.muted", it.archived ? String(it.ts).slice(0,10) : ago(it.ts, isZh)));
-    row.appendChild(el("span.brd-caret", { "aria-hidden": "true" }, "⌄"));
-    const disclosure=el('span.brd-disclosure',s('boards.expand'));row.append(disclosure);
-
-    const detail = el("div.brd-detail");
-    if (it.archived) detail.appendChild(el("p.brd-receipt-note.muted.small", s("boards.history_note")));
-    detail.appendChild(el("div.brd-full", it.extra?.message_text || label));
-    if(!it.extra?.message_text && !it.summary) detail.append(el('p.muted.small',s('boards.missing_body')));
-    detail.append(el('p.muted.small',s('boards.recorded_at')+' '+dateTime(it.ts)),
-      el('p.muted.small',s('boards.timestamp_note')));
-    const origin=it.extra?.source_url || it.extra?.url || it.source_url;
-    try {const u=new URL(origin);if(u.protocol==='https:') detail.append(el('a',{href:u.href,target:'_blank',rel:'noopener noreferrer'},s('boards.source')+' ↗'));} catch {}
-    if(it.base_d) {
-      detail.append(el('p.muted.small',(it.outcome_label || '—')+' · '+s('creators.base_close')+' '+it.base_d+' · '+px(it.base_px)),
-        el('div.study-results',...[1,5,20].map(n=>metric(s('creators.trading_days',{n}),pct(it['ret_'+n+'d']),it['ret_'+n+'d']))),
-        el('p.muted.small',s('boards.outcome_method')));
+  function render(){
+    if(!alive)return;
+    const source=state.mode==='recent'?recent:state.mode==='excerpts'?excerpts:archived;
+    const shown=filterRecords(source,state), available=filterRecords(source,{...state,board:'all'});
+    const missingCount=filterRecords(source,{...state,content:'missing'}).length;
+    const hasError=state.mode==='recent'?recentFailed:state.mode==='excerpts'?historyFailed:failed;
+    const focusedBoard=nav.contains(document.activeElement)?document.activeElement.dataset.board:null;
+    clear(nav);
+    for(const board of [{key:'all'},...BOARDS]){
+      const count=board.key==='all'?available.length:available.filter(r=>boardOf(r)===board.key).length;
+      nav.append(el('button.radar-category',{type:'button','aria-pressed':String(board.key===state.board),'data-board':board.key,onclick:()=>selectBoard(board.key)},
+        icon(board.icon || (board.key==='all'?'boards':board.key)),el('span',s(board.key==='all'?'radar.all':'boards.t_'+board.key)),
+        // Archive counts cover the current server query only; don't imply other categories are empty.
+        state.mode==='archive'?null:el('span.radar-count',hasError?'—':String(count))));
     }
-    if (it.extra?.message_truncated) detail.appendChild(el("p.muted.small", s("boards.truncated")));
-    const meta = el("div.brd-meta");
-    meta.appendChild(el("span.brd-kind", isZh ? kl[0] : kl[1]));
-    if (it.ts) meta.appendChild(el("span.brd-when.muted", new Date(it.ts).toLocaleString(isZh ? "zh-CN" : "en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })));
-    if (tk) meta.appendChild(el("a.brd-chart", { href: "#/chart/" + tk }, (isZh ? "看 $" : "$") + tk + (isZh ? " 图表 →" : " chart →")));
-    if(tk) meta.append(el('a.brd-chart',{href:'#/alerts?ticker='+encodeURIComponent(tk)},s('boards.set_alert')));
-    detail.appendChild(meta);
-    if (it.archived && /^https:\/\/(www\.sec\.gov|job-boards\.greenhouse\.io)\//.test(it.source_url || "")) {
-      detail.appendChild(el("a", {href:it.source_url,target:"_blank",rel:"noopener noreferrer"},s("boards.source")));
+    if(focusedBoard)nav.querySelector('[data-board="'+focusedBoard+'"]')?.focus({preventScroll:true});
+    for(const tab of tabs.children)tab.setAttribute('aria-pressed',String(tab.dataset.mode===state.mode));
+    dayField.hidden=state.mode!=='recent';dateFields.hidden=state.mode==='recent';
+    guide.hidden=state.board==='all';
+    clear(guide);guide.append(el('strong',s(state.board==='all'?'radar.guide_title':'boards.t_'+state.board)),
+      el('p',s('radar.guide_'+state.board)));
+    const stocks=new Set(shown.filter(r=>r.kind!=='nvdev').map(r=>r.ticker).filter(Boolean)).size;
+    summary.textContent=pending?s('common.loading'):s('radar.result_count',{n:shown.length,stocks});
+    note.textContent=s(state.mode==='recent'?(recent.length>=200?'radar.recent_capped':'radar.recent_scope'):
+      state.mode==='excerpts'?'boards.history_note':cursor?'radar.archive_scope':'radar.archive_complete');
+    renderCoverage();
+    clear(rows);
+    if(hasError)rows.append(el('div.radar-empty',el('strong',s('boards.load_error')),
+      el('button.btn.btn-ghost',{type:'button',onclick:()=>state.mode==='archive'?loadArchive(!archived.length):location.reload()},s('common.retry'))));
+    if(!shown.length && !pending && recentReady && !hasError)rows.append(el('div.radar-empty',icon(BOARDS.find(b=>b.key===state.board)?.icon || (state.board==='all'?'boards':state.board)),
+      el('h3',s('radar.no_match')),el('p.muted',s(missingCount && state.content==='readable'?'radar.missing_count':'radar.no_match_hint',{n:missingCount})),
+      missingCount && state.content==='readable'?el('button.btn.btn-ghost',{type:'button',onclick:()=>{content.value='all';apply();}},s('radar.show_missing')):null,
+      el('button.btn.btn-ghost',{type:'button',onclick:()=>{if(state.mode==='recent'){state.mode='archive';start.value='';end.value='';apply();}else reset();}},s(state.mode==='recent'?'radar.mode_archive':'radar.reset')),
+      state.mode==='recent' && excerpts.some(r=>state.board==='all' || r.board===state.board)?el('button.btn.btn-ghost',{type:'button',onclick:()=>{state.mode='excerpts';apply();}},s('radar.mode_excerpts')):null));
+    function appendRecords(host,items){
+      let day='';for(const row of items){const next=(row.ts || '').slice(0,10);if(next!==day){day=next;host.append(el('h3.radar-day',day+' UTC'));}host.append(itemRow(row));}
     }
-
-    row.addEventListener("click", () => { const open = wrap.classList.toggle("open"); row.setAttribute("aria-expanded", open ? "true" : "false"); disclosure.textContent=s(open?'boards.collapse':'boards.expand'); });
-    if (it.archived) wrap.appendChild(el("span.brd-archive-tag", s("boards.history")));
-    wrap.append(row, detail);
-    return wrap;
+    const background=state.board==='all'?shown.filter(r=>r.kind==='nvdev'):[];
+    appendRecords(rows,background.length?shown.filter(r=>r.kind!=='nvdev'):shown);
+    if(background.length){
+      const group=el('details.radar-background',el('summary',s('radar.industry_group',{n:background.length})),el('p.muted',s('radar.industry_note')));
+      appendRecords(group,background);rows.append(group);
+    }
+    more.hidden=state.mode!=='archive' || (!cursor && !pending) || failed;more.disabled=pending;
+  }
+  function renderCoverage(){
+    clear(coverage);
+    if(!Array.isArray(coverageDoc?.sources))return;
+    coverage.append(el('summary.radar-coverage-title',el('strong',s('radar.coverage')),el('span.muted',s('radar.coverage_total',{n:coverageDoc.sources.reduce((n,r)=>n+r.records,0)}))));
+    const grid=el('div.radar-coverage-grid');
+    for(const src of coverageDoc.sources.filter(r=>r.source!=='insider-feed')){
+      const key=src.kind==='political'?'political':src.kind;
+      const latest=src.source==='insider-bulk'?coverageDoc.sources.find(r=>r.source==='insider-feed'):src;
+      const status=['ok','empty'].includes(latest?.status)?s('radar.sync_ok'):latest?.status==='not_started'?s('radar.sync_pending'):s('radar.sync_partial');
+      const button=el('button.radar-coverage-card',{type:'button',onclick:()=>{
+        state.mode='archive';state.board=key;query.value='';ticker.value='';direction.value='';start.value='';end.value='';apply();
+      }},el('strong',s('boards.t_'+key)),el('span.radar-coverage-number',s('radar.coverage_records',{n:src.records})),
+      el('span.muted',(src.first_date || '—').slice(0,10)+' → '+(src.last_date || '—').slice(0,10)),
+      el('span',status+(latest?.last_attempt?' · '+dateTime(latest.last_attempt):'')),
+      src.gap_count?el('small.muted',s(src.source==='insider-bulk'?'radar.sec_gap':src.source==='house'?'radar.house_gap':'radar.coverage_gaps',{n:src.gap_count})):null);
+      grid.append(button);
+    }
+    coverage.append(el('p.muted',s('radar.coverage_note')),grid);
+  }
+  function showPelosi(){state.mode='archive';state.board='political';query.value='Pelosi';ticker.value='';direction.value='';start.value='';end.value='';apply();}
+  function itemRow(it){
+    const board=boardOf(it), tk=String(it.ticker || '').toUpperCase();
+    const kind=it.archived?s('boards.t_'+board):s('radar.kind_'+it.kind);
+    const body=(LANG==='en'?it.extra?.message_en:null) || it.extra?.message_text || '';
+    const label=String((LANG==='en'?it.extra?.summary_en:null) || it.summary || body || s('radar.body_missing')).trim();
+    const wrap=el('article.radar-record',{'data-record-id':it.id || '',class:!readable(it)?'radar-record-missing':''});
+    const detail=el('div.radar-detail',{id:'radar-detail-'+(++detailId),hidden:true});
+    const disclosure=el('span.radar-disclosure',s('boards.expand'));
+    const title=el('button.radar-record-toggle',{type:'button','aria-expanded':'false','aria-controls':detail.id},
+      el('span.radar-record-meta',el('strong.radar-ticker',it.kind==='nvdev'?s('radar.industry_label'):tk?'$'+tk:s(['liquidity','digest'].includes(board)?'radar.market_wide':'radar.no_ticker')),
+        el('span.radar-kind',kind),el('time.muted',{datetime:it.ts},it.extra?.date_precision==='day'?String(it.ts || '').slice(0,10):String(it.ts || '').slice(11,16)+' UTC')),
+      el('span.radar-record-title',label),
+      el('span.radar-record-footer',el('span.radar-status',s(it.provenance?'radar.source_archive':it.kind==='nvdev'?'radar.mapping_unverified':it.archived?'boards.history':body?'radar.body_available':readable(it)?'radar.summary_only':'radar.body_missing')),disclosure));
+    title.addEventListener('click',()=>{const open=detail.hidden;detail.hidden=!open;title.setAttribute('aria-expanded',String(open));disclosure.textContent=s(open?'boards.collapse':'boards.expand');wrap.classList.toggle('open',open);});
+    if(it.kind==='nvdev')detail.append(el('p.radar-receipt-note',s('radar.mapping_note',{ticker:tk || '—'})));
+    if(it.archived)detail.append(el('p.radar-receipt-note',s('boards.history_note')));
+    detail.append(el('h4',s(it.provenance?'radar.source_summary':it.archived?'boards.history':body?'radar.original_message':'radar.saved_summary')),el('div.radar-message',body || label));
+    if(it.extra?.message_truncated)detail.append(el('p.muted',s('boards.truncated')));
+    if(!body && !it.archived)detail.append(el('p.muted',s('radar.body_note')));
+    detail.append(el('div.radar-detail-facts',el('span',s('boards.recorded_at')),el('strong',dateTime(it.observed_at || it.ts)),
+      el('span',s('radar.record_type')),el('strong',kind)),el('p.radar-time-note.muted',s(it.provenance?'radar.backfill_note':'boards.timestamp_note')));
+    if(it.provenance)detail.append(el('div.radar-detail-facts',el('span',s('radar.event_date')),el('strong',it.event_date || '—'),el('span',s('radar.published_date')),el('strong',String(it.ts || '').slice(0,10))));
+    if(!it.archived && !it.provenance){
+      detail.append(el('h4',s('radar.follow_up')));
+      if(it.base_d)detail.append(el('p.muted',s('creators.base_close')+' '+it.base_d+' · '+px(it.base_px)),
+        el('div.study-results',...[1,5,20].map(n=>metric(s('creators.trading_days',{n}),pct(it['ret_'+n+'d']),it['ret_'+n+'d']))),el('p.radar-time-note.muted',s('boards.outcome_method')));
+      else detail.append(el('p.muted',s(state.mode==='recent'?'radar.outcome_history':'radar.outcome_missing')));
+    }
+    const actions=el('div.radar-record-actions');
+    if(tk && it.kind!=='nvdev'){actions.append(el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+encodeURIComponent(tk)},s('radar.chart')),
+      el('a.btn.btn-ghost.btn-sm',{href:'#/alerts?ticker='+encodeURIComponent(tk)},s('boards.set_alert')));}
+    let source=false;
+    try{const url=new URL(it.extra?.source_url || it.extra?.url || it.source_url);if(url.protocol==='https:'){
+      source=true;actions.append(el('a.btn.btn-ghost.btn-sm',{href:url.href,target:'_blank',rel:'noopener noreferrer'},s(it.archived?'radar.reference_link':'boards.source')+' ↗'));}}
+    catch{}
+    if(!source)detail.append(el('p.radar-time-note.muted',s('radar.source_missing')));
+    if(state.mode==='recent')actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{
+      state.mode='archive';state.board=board || 'all';ticker.value=tk;query.value='';start.value='';end.value='';apply();
+    }},s('radar.related_history')));
+    detail.append(actions);wrap.append(title,detail);return wrap;
   }
 }
