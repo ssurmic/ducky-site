@@ -958,4 +958,5 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 .creator-claim-facts dd,.creator-price-context dd{margin:0;overflow-wrap:anywhere;line-height:1.55}
 .creator-price-anchors{padding:1rem;border:1px solid var(--border);border-radius:12px;margin:1rem 0}
 .creator-price-anchors h4{margin:0 0 .75rem}
+.study-list>.study-row:only-child{grid-column:1/-1}
 @media(max-width:600px){.creator-claim-facts>div,.creator-price-context>div{grid-template-columns:1fr;gap:.2rem}}
