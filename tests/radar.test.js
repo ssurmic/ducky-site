@@ -7,6 +7,7 @@ for(const key of ['window','document','Node','location','history'])globalThis[ke
 const copy=JSON.parse(readFileSync('i18n/en.json'));
 const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
 const {filterRecords,archivePath,mount}=await import('../public/js/app/views/boards.js');
+const store=await import('../public/js/app/store.js');store.set('me',{tier:'pro'});
 const now=Date.parse('2026-09-06T00:00:00Z');
 const sample=[
  {id:1,kind:'insider',open_market_value:200000,ticker:'TTMI',ts:'2026-09-05T00:00:00Z',summary:'Director purchase',extra:{message_text:'Filing evidence'},ret_5d:-8},

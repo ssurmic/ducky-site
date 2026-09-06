@@ -2059,5 +2059,9 @@
   "app.creatorstocks.empty_watchlist": "Add a stock to your watchlist, or enter a ticker above to find related creator content.",
   "app.creatorstocks.open_watchlist": "Open watchlist",
   "app.creatorstocks.radar": "Related company events",
-  "app.creatorstocks.matched": "Stock tags:"
+  "app.creatorstocks.matched": "Stock tags:",
+  "app.radar.access_current": "Current radar records · Pro",
+  "app.radar.access_delayed": "Free Radar is delayed by 5 days. “Last 7 days” ends at the delayed cutoff. Historical records and losing samples are retained.",
+  "app.radar.access_upgrade": "See current Radar with Pro",
+  "app.radar.access_cutoff": "Records available through: {date}"
 }

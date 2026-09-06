@@ -46,11 +46,11 @@ export function filterRecords(rows, state, now=Date.now()) {
     return !(state.start && day<state.start || state.end && day>state.end);
   }).sort((a,b)=>Date.parse(b.ts)-Date.parse(a.ts) || Number(b.id || 0)-Number(a.id || 0));
 }
-export function archivePath(state, cursor) {
+export function archivePath(state, cursor, current=false) {
   const params=new URLSearchParams({kind:BOARDS.find(b=>b.key===state.board)?.kinds || ALL_KINDS,limit:'40',content:state.content || 'all'});
   for(const key of ['ticker','q','start','end','direction','sector','cap','purchases'])if(state[key])params.set(key,state[key]);
   if(cursor)params.set('before',cursor);
-  return '/public/radar/archive.json?'+params;
+  return (current?'/radar/archive.json?':'/public/radar/archive.json?')+params;
 }
 
 const WA_MACRO = [
@@ -97,6 +97,9 @@ export function waMacroLabel(name, isZh) {
 
 export async function mount(root, route={}) {
   const epoch=store.epoch(), params=route.query || new URLSearchParams(location.hash.split('?')[1]);
+  const currentAccess=store.isPro();
+  const readingNow=()=>Date.now()-(currentAccess?0:5*86400000);
+  let accessInfo=null;
   const state={mode:['archive','excerpts'].includes(params.get('mode'))?params.get('mode'):'recent',
     board:BOARDS.some(b=>b.key===params.get('board'))?params.get('board'):'all',
     q:params.get('q') || '',ticker:params.get('ticker') || '',
@@ -113,6 +116,8 @@ export async function mount(root, route={}) {
   const card=el('section.boards-view.radar-workspace');root.append(card);
   const header=el('header.radar-heading',el('div',el('h1',s('boards.h1')),el('p.muted',s('radar.subtitle'))),
     el('a.btn.btn-ghost.btn-sm',{href:'#/calendar'},icon('calendar'),s('watch.events')));
+  const accessNote=el('div.radar-access-note',el('p',s(currentAccess?'radar.access_current':'radar.access_delayed')),
+    currentAccess?null:el('a.btn.btn-ghost.btn-sm',{href:'#/billing'},s('radar.access_upgrade')));
   const screenPanel=el('div.radar-screen-panel');
   const disposeScreen=mountScreen(screenPanel,{signal:route.signal,query:params});
   const marketPanel=el('div.radar-market-panel');
@@ -151,22 +156,22 @@ export async function mount(root, route={}) {
   const rows=el('div.radar-records');
   const more=el('button.btn.btn-ghost.radar-more',{type:'button',onclick:()=>loadArchive(false)},s('creators.load_more'));
   const main=el('section.radar-main',tabs,guide,filter,summary,note,rows,more);
-  card.append(header,marketPanel,screenPanel,starters,coverage,pelosiJump,el('div.radar-layout',el('aside.radar-sidebar',el('h2',s('radar.categories')),nav),main));
+  card.append(header,accessNote,marketPanel,screenPanel,starters,coverage,pelosiJump,el('div.radar-layout',el('aside.radar-sidebar',el('h2',s('radar.categories')),nav),main));
   filter.addEventListener('submit',e=>{e.preventDefault();apply();});
   for(const node of [content,direction,days,start,end,sector,cap,purchases])node.addEventListener('change',apply);
   for(const node of [query,ticker])node.addEventListener('input',()=>{if(state.mode!=='archive')apply();});
   route.signal?.addEventListener('abort',cleanup,{once:true});
   render();rows.append(spinner());
-  const recentStart=new Date(Date.now()-7*86400000).toISOString().slice(0,10);
-  const recentTask=api.get(archivePath({...state,start:recentStart,end:''}).replace('limit=40','limit=200'),{auth:false,signal:staticCtl.signal}).then(doc=>{
-    if(!Array.isArray(doc?.items))throw new Error('invalid_response');recent=doc.items;
+  const recentStart=new Date(readingNow()-7*86400000).toISOString().slice(0,10);
+  const recentTask=api.get(archivePath({...state,start:recentStart,end:''},null,currentAccess).replace('limit=40','limit=200'),{auth:currentAccess,signal:staticCtl.signal}).then(doc=>{
+    if(!Array.isArray(doc?.items))throw new Error('invalid_response');recent=doc.items;accessInfo=doc.access;
   }).catch(()=>{recentFailed=true;});
   const historyTask=fetch('/radar-history.json',{signal:staticCtl.signal}).then(r=>{if(!r.ok)throw new Error('unavailable');return r.json();}).then(doc=>{
     if(!Array.isArray(doc?.items))throw new Error('invalid_response');
     excerpts=doc.items.map(r=>({...r,archived:true,summary:r.summary?.[LANG] || '',extra:{message_text:r.body?.[LANG] || ''}}));
   }).catch(()=>{historyFailed=true;});
-  const coverageTask=api.get('/public/radar/coverage.json',{auth:false,signal:staticCtl.signal}).then(doc=>{coverageDoc=doc;}).catch(()=>{});
-  const facetsTask=api.get('/public/radar/facets.json',{auth:false,signal:staticCtl.signal}).then(doc=>{
+  const coverageTask=api.get((currentAccess?'':'/public')+'/radar/coverage.json',{auth:currentAccess,signal:staticCtl.signal}).then(doc=>{coverageDoc=doc;}).catch(()=>{});
+  const facetsTask=api.get((currentAccess?'':'/public')+'/radar/facets.json',{auth:currentAccess,signal:staticCtl.signal}).then(doc=>{
     for(const v of [...new Set([state.sector,...(doc.sectors||[])])].filter(Boolean))sector.append(el('option',{value:v},s('radar.sector_'+v)===('radar.sector_'+v)?v:s('radar.sector_'+v)));
     sector.value=state.sector;
   }).catch(()=>{if(state.sector){sector.append(el('option',{value:state.sector},state.sector));sector.value=state.sector;}});
@@ -189,12 +194,12 @@ export async function mount(root, route={}) {
   function reset(){state.board='all';query.value='';ticker.value='';content.value='readable';direction.value='';sector.value='';cap.value='';purchases.value='open_market';days.value='7';start.value='';end.value='';apply();}
   async function loadRecent(){
     const token=++requestId;archiveCtl?.abort();archiveCtl=new AbortController();
-    const options={...state,start:new Date(Date.now()-Number(state.days)*86400000).toISOString().slice(0,10),end:''};
-    const url=archivePath(options).replace('limit=40','limit=200');pending=true;render();
-    try{const doc=await api.get(url,{auth:false,signal:archiveCtl.signal});
+    const options={...state,start:new Date(readingNow()-Number(state.days)*86400000).toISOString().slice(0,10),end:''};
+    const url=archivePath(options,null,currentAccess).replace('limit=40','limit=200');pending=true;render();
+    try{const doc=await api.get(url,{auth:currentAccess,signal:archiveCtl.signal});
       if(!alive || token!==requestId || epoch!==store.epoch())return;
       if(!Array.isArray(doc.items)||doc.filter_version!==3)throw new Error('unsupported_filters');
-      recent=doc.items;recentFailed=false;
+      recent=doc.items;recentFailed=false;accessInfo=doc.access;
     }catch{if(token===requestId)recentFailed=true;}
     finally{if(alive&&token===requestId){pending=false;render();}}
   }
@@ -203,20 +208,21 @@ export async function mount(root, route={}) {
     if(resetPage){archiveCtl?.abort();archived=[];cursor=null;}
     const token=++requestId;archiveCtl=new AbortController();pending=true;failed=false;render();
     try{
-      const doc=await api.get(archivePath(state,cursor),{auth:false,signal:archiveCtl.signal});
+      const doc=await api.get(archivePath(state,cursor,currentAccess),{auth:currentAccess,signal:archiveCtl.signal});
       if(!alive || token!==requestId || epoch!==store.epoch())return;
       if(!Array.isArray(doc?.items) || (![2,3].includes(doc.filter_version) && (state.q || state.start || state.end || state.content!=='all')))throw new Error('invalid_response');
       if((state.cap || state.sector || state.purchases!=='all') && doc.filter_version!==3)throw new Error('unsupported_filters');
       const seen=new Set(archived.map(r=>r.id));archived.push(...doc.items.filter(r=>!seen.has(r.id)));
       cursor=doc.next_cursor || null;
+      accessInfo=doc.access;
     }catch{if(token===requestId)failed=true;}
     finally{if(alive && token===requestId && epoch===store.epoch()){pending=false;render();}}
   }
   function render(){
     if(!alive)return;
     const source=state.mode==='recent'?recent:state.mode==='excerpts'?excerpts:archived;
-    const shown=filterRecords(source,state), available=filterRecords(source,{...state,board:'all'});
-    const missingCount=filterRecords(source,{...state,content:'missing'}).length;
+    const shown=filterRecords(source,state,readingNow()), available=filterRecords(source,{...state,board:'all'},readingNow());
+    const missingCount=filterRecords(source,{...state,content:'missing'},readingNow()).length;
     const hasError=state.mode==='recent'?recentFailed:state.mode==='excerpts'?historyFailed:failed;
     const focusedBoard=nav.contains(document.activeElement)?document.activeElement.dataset.board:null;
     clear(nav);
@@ -237,6 +243,8 @@ export async function mount(root, route={}) {
     guide.hidden=state.board==='all' && state.purchases==='all';
     const stocks=new Set(shown.filter(r=>r.kind!=='nvdev').map(r=>r.ticker).filter(Boolean)).size;
     summary.textContent=pending?s('common.loading'):s('radar.result_count',{n:shown.length,stocks});
+    accessNote.querySelector('p').textContent=s(currentAccess?'radar.access_current':'radar.access_delayed')+
+      (!currentAccess && accessInfo?.available_before?' '+s('radar.access_cutoff',{date:dateTime(accessInfo.available_before)}):'');
     note.textContent=s(state.mode==='recent'?(recent.length>=200?'radar.recent_capped':'radar.recent_scope'):
       state.mode==='excerpts'?'boards.history_note':cursor?'radar.archive_scope':'radar.archive_complete');
     renderCoverage();

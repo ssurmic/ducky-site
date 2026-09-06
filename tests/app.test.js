@@ -129,6 +129,7 @@ test('creator following, quality and search filters compose independently',()=>{
 });
 
 test('radar preserves the delivered body, historical dates and incomplete archive state',async()=>{
+ store.set('me',{tier:'pro'});
  globalThis.fetch=async(url)=>{
   if(String(url).includes('radar-history'))return response({items:[{board:'insider',ticker:'TTMI',ts:'2026-08-26T07:42:00Z',summary:{zh:'Historical receipt',en:'Historical receipt'},body:{zh:'Identity not verified',en:'Identity not verified'}}]});
   if(String(url).includes('week-ahead'))return response({});

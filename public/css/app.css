@@ -777,3 +777,6 @@ body:is([data-route="register"],[data-route="oauth"]) .app-nav { display:none; }
 .creator-stock-filter label{display:grid;gap:.25rem;flex:1;min-width:0;max-width:360px}
 .creator-stock-filter input{width:100%;min-width:0}.creator-stock-context{display:flex;gap:.45rem;flex-wrap:wrap;align-items:center}
 @media(max-width:480px){.creator-stock-filter{align-items:stretch;flex-direction:column}.creator-stock-filter label{max-width:none}}
+.radar-access-note{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;padding:.8rem 1rem;border:1px solid var(--border,#343434);border-radius:12px;margin:.7rem 0 1rem;font-size:.86rem}
+.radar-access-note p{flex:1 1 280px;line-height:1.55;margin:0}
+.screen-coverage{grid-column:1/-1;line-height:1.65}
