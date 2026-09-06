@@ -20,7 +20,8 @@ function documentFixture(){return {ticker:'TEST',as_of:'2026-09-06T12:00:00Z',st
  {metric:'eps',value:1.7,unit:'USD/shares',basis:'non-GAAP'}]},
  next_event:{date:'2026-11-10',eps_estimate:null,revenue_estimate:2200000000,provider:'Finnhub',observed_at:'2026-09-06T12:00:00Z'},
  reaction:{sample:{windows:{'1':{status:'ok',return_pct:-5,benchmark_pct:1},'5':{status:'immature'},'20':{status:'missing_prices'}}}},
- evidence:[{id:'fact',kind:'primary_excerpt',text:'<img src=x onerror=alert(1)> Revenue guidance is conditional.',source_url:'javascript:alert(1)'}],
+ evidence:[{id:'fact',kind:'primary_excerpt',text:'<img src=x onerror=alert(1)> Revenue guidance is conditional.',source_url:'javascript:alert(1)'},
+ {id:'revenue-guide',kind:'primary_excerpt',text:'Total revenues are expected to grow in the stated range.',source_url:'https://www.sec.gov/'}],
  explanation:{overview:{en:'Check the conditional guidance.',fact_ids:['fact']},drivers:[],watchpoints:[],risks:[]}};}
 
 test('earnings renders fiscal period, separate bases, missing estimates and losses',()=>{
@@ -33,6 +34,7 @@ test('earnings renders fiscal period, separate bases, missing estimates and loss
  assert.equal(box.querySelector('img'),null);assert.equal(box.querySelector('a[href^="javascript"]'),null);
  assert.doesNotMatch(box.textContent,/\bnull\b|\bundefined\b/);
  assert.ok(box.querySelector('a[href="#/creators?ticker=TEST"]'));
+ assert.match(box.querySelector('.earnings-guidance').textContent,/Total revenues are expected/);
  assert.equal(earningsValue(NaN),'—');assert.equal(earningsValue(0,'USD/shares'),'$0.00');
 });
 

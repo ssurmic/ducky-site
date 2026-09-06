@@ -67,7 +67,7 @@ export function earningsPanel(doc) {
     for(const key of ['drivers','watchpoints','risks'])groups.append(el('section',el('h4',copy(key)),...(doc.explanation[key]||[]).map(b=>cited(b,doc))));
     explanation.append(groups);box.append(explanation);
   }else box.append(el('p.small.data-notice',copy('explanation_missing')));
-  const guidance=(doc.evidence||[]).filter(e=>e.kind==='primary_excerpt'&&/guidance|outlook|is expected|expects/i.test(e.text||'')).slice(0,6);
+  const guidance=(doc.evidence||[]).filter(e=>e.kind==='primary_excerpt'&&/guidance|outlook|expected|expects/i.test(e.text||'')).slice(0,6);
   if(guidance.length){const guide=el('details.earnings-guidance',el('summary',copy('guidance')),
       el('p.small.muted',copy('guidance_basis')));
     guidance.forEach(g=>guide.append(el('blockquote',{lang:'en'},g.text),link(g.source_url,copy('release_link'))));box.append(guide);
