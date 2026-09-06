@@ -5,13 +5,15 @@ import vm from 'node:vm';
 
 const script = readFileSync(new URL('../public/sw.js', import.meta.url), 'utf8');
 
-function worker(clients = []) {
+function worker(clients = [], lifecycle = {}) {
   const handlers = {}, shown = [], opened = [], messages = [];
   const self = {
     location: {origin: 'https://duckybot.app'},
     addEventListener: (type, fn) => {handlers[type] = fn;},
+    skipWaiting: lifecycle.skipWaiting || (async () => {}),
     registration: {showNotification: async (...args) => {shown.push(args);}},
-    clients: {matchAll: async () => clients.map(c => ({postMessage: msg => messages.push(msg), ...c})),
+    clients: {claim: lifecycle.claim || (async () => {}),
+      matchAll: async () => clients.map(c => ({postMessage: msg => messages.push(msg), ...c})),
       openWindow: async url => {opened.push(url);}},
   };
   vm.runInNewContext(script, {self, URL, Promise});
@@ -21,6 +23,18 @@ function worker(clients = []) {
     await done;
   }};
 }
+
+test('notification-only worker completes activation before taking over existing tabs', async () => {
+  const calls=[];
+  const w=worker([], {
+    skipWaiting: async () => {await Promise.resolve(); calls.push('installed');},
+    claim: async () => {await Promise.resolve(); calls.push('claimed');},
+  });
+  await w.dispatch('install', {});
+  assert.deepEqual(calls, ['installed']);
+  await w.dispatch('activate', {});
+  assert.deepEqual(calls, ['installed','claimed']);
+});
 
 test('push keeps a stable visible tag, exact owned-origin link and no cross-account payload broadcast', async () => {
   const w = worker([{url:'https://duckybot.app/app/'}]);
@@ -47,9 +61,19 @@ test('notification click focuses exact item or navigates an existing app to its 
     navigate:async url => {navigated=url; return {focus:()=>{focused++;}};}};
   const w = worker([client]);
   await w.dispatch('notificationclick', {notification:{close(){},data:{url:'/app/#/updates?item=42'}}});
-  assert.equal(navigated, 'https://duckybot.app/app/#/updates?item=42');
+  assert.equal(new URL(navigated).hash, '#/updates?item=42');
+  assert.ok(new URL(navigated).searchParams.get('notice'));
   assert.equal(focused, 1);
   assert.equal(w.opened.length, 0);
+});
+
+test('an exact creation URL cannot focus stale SPA content without navigating to the item', async () => {
+  let navigated, focused=0;
+  const w=worker([{url:'https://duckybot.app/app/#/updates?item=42',focus(){focused++;},
+    navigate:async url=>{navigated=url;return {focus(){focused++;}};}}]);
+  await w.dispatch('notificationclick',{notification:{close(){},data:{url:'/app/#/updates?item=42'}}});
+  assert.ok(new URL(navigated).searchParams.get('notice'));
+  assert.equal(new URL(navigated).hash,'#/updates?item=42');assert.equal(focused,1);
 });
 
 test('notification click never focuses a foreign URL containing our deep link', async () => {

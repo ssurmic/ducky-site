@@ -1,5 +1,8 @@
 // sw.js — Ducky service worker: show Web Push notifications and focus/open the app on click.
 // Payload shape (from webpush.py): {title, body, url, tag}. No caches or third-party scripts.
+// This worker owns notifications only. Its compatible update can take over open tabs.
+self.addEventListener("install", function (event) { event.waitUntil(self.skipWaiting()); });
+self.addEventListener("activate", function (event) { event.waitUntil(self.clients.claim()); });
 function appURL(value) {
   try {
     var url = new URL(typeof value === "string" ? value : "/app/", self.location.origin);
@@ -44,16 +47,17 @@ self.addEventListener("notificationclick", function (event) {
   var url = appURL(event.notification.data && event.notification.data.url);
   event.waitUntil(
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(function (list) {
-      for (var i = 0; i < list.length; i++) {
-        if (list[i].url === url && "focus" in list[i]) return list[i].focus();
-      }
       for (var j = 0; j < list.length; j++) {
         try {
           var existing = new URL(list[j].url);
           if (existing.origin === self.location.origin &&
               (existing.pathname === "/app/" || existing.pathname === "/en/app/") &&
               "navigate" in list[j]) {
-            return list[j].navigate(url).then(function (client) {
+            // Client.url can retain the URL from before a SPA hash navigation.
+            // Reload the app shell so a long-open old route graph can open new features.
+            var target = new URL(url);
+            target.searchParams.set("notice", Date.now().toString(36));
+            return list[j].navigate(target.href).then(function (client) {
               return client && "focus" in client ? client.focus() : self.clients.openWindow(url);
             }).catch(function () {
               // The tab may have closed between matchAll and navigation.
