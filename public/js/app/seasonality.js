@@ -44,7 +44,7 @@ export function renderSeasonality(root, data, initialMonth = new Date().getMonth
   }
   const label = el('label.season-month',{for:'season-month'});
   const slider = el('input.season-slider',{type:'range',id:'season-month',min:1,max:12,step:1,value:month});
-  const scale = el('div.season-scale',el('span',monthName(1)),el('span',monthName(6)),el('span',monthName(12)));
+  const scale = el('div.season-scale',el('span',monthName(1)),el('span',monthName(12)));
   const controls = el('div.season-controls');
   const cycle = el('button.btn.btn-ghost.btn-sm',{type:'button','aria-pressed':'false'},s('season.midterm'));
   const period = el('select',{'aria-label':s('season.window')},el('option',{value:'month'},s('season.month_only')),el('option',{value:'after'},s('season.after')));

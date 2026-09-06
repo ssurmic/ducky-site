@@ -46,7 +46,7 @@ test('month slider, cycle filter and return window update the same loss-inclusiv
  assert.equal(root.querySelectorAll('.season-year').length,6);
  assert.ok(root.querySelector('a[href^="https://www.fec.gov/"]'));
 });
-test('disposed history panel ignores delayed data and a failed load has no invented values',async()=>{
+test('disposed history panel ignores delayed data',async()=>{
  let resolve;globalThis.fetch=()=>new Promise(r=>resolve=r);
  const root=document.createElement('section'),cleanup=mountSeasonality(root);cleanup();
  resolve(new Response(JSON.stringify(data)));await new Promise(r=>setTimeout(r,0));
