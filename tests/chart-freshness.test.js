@@ -23,7 +23,7 @@ test('missing and non-finite OHLC values cannot become zero-price candles',()=>{
 });
 test('cold chart retries 202 and displays the completed result',async t=>{
   t.mock.timers.enable({apis:['setTimeout']});let calls=0;
-  globalThis.fetch=async()=>++calls===1?response({status:'building'},202):response({bars:[bar],stale:false});
+  globalThis.fetch=async url=>url.includes('/public/company/')?response({status:'pending'}):++calls===1?response({status:'building'},202):response({bars:[bar],stale:false});
   const r=root(),close=await mount(r,{ticker:'ALAB'});
   t.after(()=>{close();r.remove();});
   assert.match(r.textContent,/being prepared/);assert.doesNotMatch(r.textContent,/No bars/);
@@ -33,7 +33,7 @@ test('cold chart retries 202 and displays the completed result',async t=>{
 });
 test('stale bars disclose their lag and scheduled retries stop on disposal',async t=>{
   t.mock.timers.enable({apis:['setTimeout']});let calls=0;
-  globalThis.fetch=async()=>{calls++;return response({bars:[{...bar,t:'2026-09-01',c:279.91}],stale:true,expected_last_d:'2026-09-04'});};
+  globalThis.fetch=async url=>{if(url.includes('/public/company/'))return response({status:'pending'});calls++;return response({bars:[{...bar,t:'2026-09-01',c:279.91}],stale:true,expected_last_d:'2026-09-04'});};
   const r=root(),close=await mount(r,{ticker:'ALAB'});
   t.after(()=>{close();r.remove();});
   assert.match(r.textContent,/not caught up.*2026-09-04/);assert.ok(r.querySelector('#chart-status button'));

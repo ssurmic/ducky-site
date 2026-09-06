@@ -38,12 +38,12 @@ export function symbolPicker(input, watched = () => []) {
         rows.forEach((r,i)=>{
           const exists=watched().includes(r.ticker);
           const item=el('div.symbol-option',{id:id+'-'+i,role:'option','aria-selected':'false','aria-disabled':String(exists)},
-            el('strong.mono',r.ticker), el('span.symbol-name',r.name),
+            el('strong.mono',r.ticker), el('span.symbol-name',r.name, r.industry || r.sector ? el('small.muted',r.industry || r.sector) : null),
             el('span.symbol-exchange.muted.small',exists?s('watch.following'):r.exchange||r.kind||''));
           item.addEventListener('pointerdown',e=>e.preventDefault());
           item.addEventListener('click',()=>select(i)); list.append(item);
         });
-        status.textContent=rows.length?s('watch.search_count',{n:rows.length}):s('watch.search_empty');
+        status.textContent=rows.length?s('watch.search_count',{n:rows.length,total:doc.total_count ?? rows.length}):s('watch.search_empty');
         if(doc?.status==='limited') status.textContent+=' '+s('watch.search_limited');
         list.hidden=!rows.length; input.setAttribute('aria-expanded',String(!!rows.length));
       } catch(e) {

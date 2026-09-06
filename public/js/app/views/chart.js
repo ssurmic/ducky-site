@@ -1,3 +1,5 @@
+import { companyContext } from "../company-context.js";
+import { symbolPicker } from "../symbol-picker.js";
 // views/chart.js — Lightweight Charts 5 candlesticks from /bars + RSI(14) pane; Pro overlays via overlays.js.
 import { s } from "../strings.js";
 import * as api from "../api.js";
@@ -41,16 +43,19 @@ export async function mount(root, params) {
   // can re-apply their colors without a full refetch (finding tg.js:65).
   let period = allowed("6mo") ? "6mo" : maxPeriod, chart = null, ro = null, ovl = null, alive = true, drawSeq = 0, candles = null, rsiSeries = null, macdHist = null, macdLineS = null, macdSig = null;
 
-  const input = el("input.input.mono", { type: "text", value: ticker, placeholder: s("chart.pick"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "10", "aria-label": s("chart.pick") });
+  const input = el("input.input.mono", { type: "text", value: ticker, placeholder: s("chart.pick"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "80", "aria-label": s("chart.pick") });
+  const picker = symbolPicker(input);
   const form = el("form.add-row", { onsubmit: (e) => { e.preventDefault(); const t = input.value.trim().toUpperCase().replace(/^\$/, ""); if (TICKER_RE.test(t)) location.hash = "#/chart/" + t; } },
-    input, el("button.btn.btn-primary", { type: "submit" }, s("chart.go")));
+    picker.wrap, el("button.btn.btn-primary", { type: "submit" }, s("chart.go")));
   const periodRow = el("div.seg.mono", { role: "group", "aria-label": s("chart.period") },
     PERIODS.map((p) => { const lk = !allowed(p); return el("button", { type: "button", "data-period": p, disabled: lk ? "" : null, "data-locked": lk ? "" : null, "aria-disabled": lk ? "true" : null, title: lk ? s("chart.lock") : null, class: p === period ? "on" : "", onclick: lk ? null : () => { period = p; periodRow.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.period === p)); draw(); } }, s("chart.period_" + p) + (lk ? " 🔒" : "")); }));
   const head = el("div.view-head", el("h1.mono", ticker ? "$" + ticker : s("chart.title")), el("span.spot.mono", { id: "chart-spot" }));
   const legendRow = el("div.legend", { id: "chart-legend" });
   const host = el("div.chart-host", { id: "chart-host" });
   const status = el("div", { id: "chart-status" });
-  root.append(head, form, periodRow, legendRow, host, status);
+  const companyHost = el("div.company-host");
+  root.append(head, form, companyHost, periodRow, legendRow, host, status);
+  if (ticker) api.company(ticker).then(p=>{if(alive) companyHost.replaceChildren(companyContext(p));}).catch(()=>{if(alive) companyHost.replaceChildren(companyContext(null));});
   if (ticker) form.after(el('div.chips',
     el('a.chip',{href:'#/creators?ticker='+encodeURIComponent(ticker)},s('watch.creator_mentions')),
     el('a.chip',{href:'#/boards?mode=archive&ticker='+encodeURIComponent(ticker)},s('watch.radar_records')),
@@ -62,7 +67,7 @@ export async function mount(root, params) {
     const chips = el("div.chips", wl.map((t) => el("a.chip.mono", { href: "#/chart/" + t }, "$" + t)));
     status.append(el("p.muted", s("chart.pick_hint")), chips);
     if (!wl.length) { try { store.set("watchlist", normalizeList(await api.watchlist.list())); clear(chips); for (const t of store.get("watchlist")) chips.appendChild(el("a.chip.mono", { href: "#/chart/" + t }, "$" + t)); } catch (e) { /* ignore */ } }
-    return () => { alive = false; };
+    return () => { picker.dispose(); alive = false; };
   }
 
   let refreshTimer = null;
@@ -146,6 +151,7 @@ export async function mount(root, params) {
         if (my !== drawSeq || !alive || !chart) return;   // finding chart.js:63 — recheck before applying overlays
         clear(legendRow);
         if (snap && snap.ok) {
+          if(snap.company_context) companyHost.replaceChildren(companyContext(snap.company_context, snap.rs));
           ovl = overlays.apply(candles, snap, { call: up, put: down, flip: cssVar("--accent", "#f5c33b"), exp: cssVar("--blue", "#58a6ff"), band: text });
           levels = overlays.levels(snap); candles.applyOptions({});
           for (const it of overlays.legend(snap, { call: up, put: down, flip: cssVar("--accent", "#f5c33b"), exp: cssVar("--blue", "#58a6ff"), band: text })) {
@@ -178,5 +184,5 @@ export async function mount(root, params) {
   window.addEventListener("ducky:themechange", retheme);
 
   await draw();
-  return () => { alive = false; window.removeEventListener("ducky:themechange", retheme); destroy(); };
+  return () => { picker.dispose(); alive = false; window.removeEventListener("ducky:themechange", retheme); destroy(); };
 }

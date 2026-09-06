@@ -196,3 +196,5 @@ export const push = {
   unsubscribe: (endpoint) => del("/push/subscribe", { body: { endpoint } }),
   test: () => post("/push/test", {}),
 };
+
+export const company = (t,o) => get("/public/company/" + encodeURIComponent(t),o);

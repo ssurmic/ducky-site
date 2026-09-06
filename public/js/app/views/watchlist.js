@@ -1,5 +1,6 @@
 // views/watchlist.js — add ticker · list of 全景 mini-cards from /snapshot · remove.
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
+import { companyContext } from "../company-context.js";
 import { symbolPicker } from "../symbol-picker.js";
 import { s } from "../strings.js";
 import * as api from "../api.js";
@@ -104,6 +105,7 @@ export async function mount(root) {
     c.appendChild(el("div.snap-freshness", el("span.muted.small", s("watch.updated", {date:stampText})),
       el("button.btn.btn-ghost.btn-sm", {type:"button",onclick:()=>loadSnapshot(t,true)},s("watch.refresh"))));
 
+    c.appendChild(companyContext(snap.company_context, snap.rs));
     const te = snap.tech || {}, r20 = (snap.retrace || {}).d20, rs = snap.rs || {}, v = snap.vol || {};
     const rows = el("dl.kv-grid");
     const row = (k, val, cls) => rows.append(el("dt", k), el("dd.mono", { class: cls || "" }, val));
@@ -112,6 +114,7 @@ export async function mount(root) {
     row(s("watch.vs50"), pct(te.vs_50dma), signClass(te.vs_50dma));
     row(s("watch.vs200"), pct(te.vs_200dma), signClass(te.vs_200dma));
     if (r20) row(s("watch.retrace"), int(r20.pos * 100) + "% · " + posWord(r20.pos) + " [" + num(r20.lo, 2) + "–" + num(r20.hi, 2) + "]", r20.pos < 0.25 ? "neg" : r20.pos > 0.75 ? "pos" : "");
+    if (rs.status === "benchmark_changed") row(s("company.comparison_pending"), "—");
     if (rs.excess20 !== undefined && rs.excess20 !== null) row(s("watch.rs", { b: rs.benchmark || "—" }), pct(rs.excess20) + (rs.label ? " · " + rsWord(rs.label) : ""), signClass(rs.excess20));
     const pctOrDash = (x) => (x == null ? "—" : num(x, 1) + "%");   // avoid a broken "—%" when only one side is present
     if (v.iv || v.hv) row(s("watch.ivhv"), pctOrDash(v.iv) + " / " + pctOrDash(v.hv) + (v.ratio ? " → " + num(v.ratio, 2) + (v.label ? " (" + volWord(v.label) + ")" : "") : ""));

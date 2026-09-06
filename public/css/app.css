@@ -832,3 +832,8 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 .earnings-reaction-chips .mono { font-size: 1.15rem; }
 .earnings-method { margin-block: 1rem; }
 @media(max-width:640px) { .earnings-columns { grid-template-columns: 1fr; } .earnings-card { padding: .85rem; } .earnings-reaction-chips { gap: .5rem; } }
+
+/* Source-linked business context */
+.company-context{border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;min-width:0}.company-heading,.company-links{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.company-context p{line-height:1.6;overflow-wrap:anywhere}.company-links{margin:10px 0}.company-evidence summary{cursor:pointer;color:var(--accent)}.company-source{display:block;margin:8px 0;overflow-wrap:anywhere}.symbol-name small{display:block;white-space:normal}.company-context .chip{white-space:normal}
+
+.company-flow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}.company-flow>div{padding:12px;border-radius:8px;background:var(--bg);border:1px solid var(--border)}.company-flow p{margin:6px 0 0}@media(max-width:520px){.company-flow{grid-template-columns:1fr}}
