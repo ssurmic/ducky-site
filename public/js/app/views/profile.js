@@ -8,15 +8,30 @@ import * as router from "../router.js";
 import { el, clear, toast, spinner, errorBox, confirm } from "../ui.js";
 import { safeTarget } from "../login-target.js";
 
-export async function mount(root) {
+export async function mount(root, params = {}) {
+  const lifetime = new AbortController();
+  const owner = store.get('me')?.user_id ?? store.get('me')?.id;
+  const initialEpoch = store.epoch(), initialToken = store.get('token');
+  const cleanup = () => { lifetime.abort(); params.signal?.removeEventListener('abort', cleanup); };
+  params.signal?.addEventListener('abort', cleanup, {once:true});
+  if (params.signal?.aborted) { cleanup(); return cleanup; }
   const card = el("section.card.profile");
   root.appendChild(card);
   card.appendChild(spinner());
+  const mounted = () => !lifetime.signal.aborted && root.isConnected && root.contains(card) &&
+    owner === (store.get('me')?.user_id ?? store.get('me')?.id);
+  const initialSession = () => mounted() && store.epoch() === initialEpoch && store.get('token') === initialToken;
   let prof = null;
   let providers = {};
   try { providers = await api.auth.providers(); } catch (_) {}
-  try { prof = await api.profile.get(); } catch (e) { clear(card); card.appendChild(errorBox(e, () => { clear(root); mount(root); })); return; }
+  if (!initialSession()) return cleanup;
+  try { prof = await api.profile.get(); } catch (e) {
+    if (initialSession()) { clear(card); card.appendChild(errorBox(e, () => { cleanup(); clear(root); mount(root, params); })); }
+    return cleanup;
+  }
+  if (!initialSession()) return cleanup;
   render();
+  return cleanup;
 
   function render() {
     clear(card);
@@ -134,7 +149,9 @@ export async function mount(root) {
       const ps = el("section.pushsec");
       ps.append(el("h2", s("profile.push_title")), el("p.muted.small", s("profile.push_hint")));
       const pbtn = el("button.btn.btn-primary.btn-sm", { type: "button" }, s("profile.push_btn"));
-      pbtn.addEventListener("click", () => enableWebPush(pbtn));
+      pbtn.addEventListener("click", () => enableWebPush(pbtn, {
+        signal:lifetime.signal, mounted:() => mounted() && card.contains(pbtn),
+      }));
       ps.appendChild(el("div.cta-row", pbtn));
       card.appendChild(ps);
     }
@@ -164,23 +181,55 @@ function urlB64ToUint8(b64) {
   return arr;
 }
 
-// Enable Web Push: fetch the VAPID public key, ask permission, register the SW, subscribe, POST it. Fires a
-// test push on success. No-ops gracefully where push isn't configured on the backend yet (button stays usable).
-async function enableWebPush(btn) {
+// One explicit enable action belongs to the account, route and rendered button that started it.
+// Browser permission/subscription promises cannot be cancelled, so check ownership after every await.
+async function enableWebPush(btn, {signal, mounted}) {
+  const epoch = store.epoch(), token = store.get('token');
+  const owner = store.get('me')?.user_id ?? store.get('me')?.id;
+  const route = location.hash;
+  const ctl = new AbortController();
+  const sameSession = () => mounted() && !signal.aborted && location.hash === route &&
+    store.epoch() === epoch && store.get('token') === token &&
+    owner === (store.get('me')?.user_id ?? store.get('me')?.id);
+  const valid = () => !ctl.signal.aborted && sameSession();
+  if (btn.disabled || !valid()) return;
+  const unsubs = [];
+  const detach = () => {
+    unsubs.splice(0).forEach(unsubscribe => unsubscribe());
+    signal.removeEventListener('abort', abort);
+  };
+  const abort = () => { ctl.abort(); detach(); };
+  const onSession = () => { if (!sameSession()) abort(); };
+  unsubs.push(store.subscribe('token', onSession), store.subscribe('me', onSession));
+  signal.addEventListener('abort', abort, {once:true});
+  const opts = {signal:ctl.signal, silent402:true};
   btn.disabled = true;
   try {
-    const cfg = await api.push.config();
+    const cfg = await api.push.config(opts);
+    if (!valid()) return;
     if (!cfg || !cfg.enabled || !cfg.vapid_public) { toast(s("profile.push_soon")); return; }
     const perm = await Notification.requestPermission();
+    if (!valid()) return;
     if (perm !== "granted") { toast(s("profile.push_denied"), "err"); return; }
     const reg = await navigator.serviceWorker.register("/sw.js");
+    if (!valid()) return;
     await navigator.serviceWorker.ready;
+    if (!valid()) return;
     let sub = await reg.pushManager.getSubscription();
-    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlB64ToUint8(cfg.vapid_public) });
-    await api.push.subscribe(sub.toJSON());
+    if (!valid()) return;
+    if (!sub) {
+      sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlB64ToUint8(cfg.vapid_public) });
+      if (!valid()) return; // A late local subscription must never be registered under the next account.
+    }
+    // raw avoids a late 401/402 invoking account-global handlers before the ownership check.
+    const response = await api.push.subscribe(sub.toJSON(), {...opts, raw:true});
+    if (!valid()) return;
+    if (!response.ok || response.status === 202) throw new Error('push');
     toast(s("profile.push_on"), "ok");
-    try { await api.push.test(); } catch (e) { /* best-effort test ping */ }
   } catch (err) {
-    toast(s("common.error", { msg: (err && err.message) || "push" }), "err");
-  } finally { btn.disabled = false; }
+    if (valid()) toast(s("common.error", { msg: (err && err.message) || "push" }), "err");
+  } finally {
+    detach();
+    if (valid()) btn.disabled = false;
+  }
 }
