@@ -29,7 +29,7 @@ test('Pro radar uses authenticated private URLs and does not mix public cache mo
  globalThis.fetch=async(url,options)=>{calls.push({url:String(url),options});return response({filter_version:3,items:[],sectors:[]});};
  const root=document.createElement('section');const dispose=await mount(root,{query:new URLSearchParams('mode=archive')});
  const request=calls.find(c=>c.url.includes('/radar/archive.json')&&!c.url.includes('/public/'));assert.ok(request);assert.equal(request.options.headers.Authorization,'Bearer fixture-token');
- assert.ok(root.textContent.includes(copy['app.radar.access_current']));
+ assert.equal(root.querySelector('.radar-access-note'),null);
  assert.ok(archivePath({},null,true).startsWith('/radar/archive.json?'));assert.ok(archivePath({}).startsWith('/public/radar/archive.json?'));
  dispose();
 });
