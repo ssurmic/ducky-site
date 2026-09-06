@@ -551,7 +551,7 @@
   "app.tier.pro": "Pro",
   "app.tier.expires": "{date} 到期",
   "app.login.title": "登录 Ducky",
-  "app.login.sub": "已有账号可用用户名或已验证邮箱登录，也可以使用 Telegram。新用户可凭邀请码注册。",
+  "app.login.sub": "使用 Google 继续，或登录已有账号。新用户也可以用邮箱注册。",
   "app.login.widget": "用 Telegram 登录",
   "app.login.widget_loading": "正在加载 Telegram 登录组件…",
   "app.login.widget_blocked": "登录组件加载失败（国内网络常见）。用下面的方式。",
@@ -573,7 +573,7 @@
   "app.login.pw_pass": "密码",
   "app.login.pw_btn": "登录",
   "app.login.pw_bad": "用户名、邮箱或密码不正确。邮箱登录需要已验证的地址。",
-  "app.login.pw_hint": "邀请码注册后，请用用户名和密码登录。邮箱登录需先验证邮箱。",
+  "app.login.pw_hint": "请输入注册时设置的密码。通过 Google 注册的账号，可使用上方 Google 入口。",
   "app.login.other": "其它登录方式（Telegram 授权组件）",
   "app.profile.pw_title": "登录密码",
   "app.profile.pw_hint": "邀请码账号可用用户名和密码登录；邮箱登录需要先验证邮箱。修改密码后，其他设备需要重新登录。",
@@ -1303,7 +1303,7 @@
   "app.google.title": "Google 登录",
   "app.register.title": "注册 Ducky 账号",
   "app.register.link": "还没有账号？注册",
-  "app.register.sub": "请使用能正常收信的邮箱。注册后，我们会发送验证码。",
+  "app.register.sub": "使用 Google 注册，或填写邮箱和密码。",
   "app.register.submit": "注册账号",
   "app.register.taken": "这个邮箱已注册，请登录或找回密码。",
   "app.register.sent": "账号已创建。请填写邮件中的验证码，完成邮箱验证。",
@@ -1321,5 +1321,7 @@
   "privacy.providers": "Cloudflare 提供网站和 API 网络服务。Resend 处理收件邮箱及验证码、密码重置等服务邮件。Google 处理你主动发起的登录。支付服务商处理你选择的支付流程。Telegram 通道用于你使用的 Telegram 功能。",
   "privacy.delete_title": "删除账号",
   "privacy.delete": "在「我的」中选择删除账号，会清除资料、登录身份、密码、自选股和提醒，并使现有登录失效。支付和订阅记录为账务用途保留。公开市场记录不标识你的账号。隐私问题或数据请求可通过下方入口联系运营者。",
-  "privacy.contact": "隐私问题联系"
+  "privacy.contact": "隐私问题联系",
+  "app.register.email": "邮箱",
+  "app.register.verify_hint": "我们会向这个邮箱发送验证码。"
 }

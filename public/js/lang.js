@@ -8,6 +8,8 @@
   toggles.forEach(function (a, i) { bases[i] = a.getAttribute("href").split("#")[0]; });
   function sync() {
     var h = location.hash || "";
+    // Recovery credentials remain in the form closure, never in a persistent link.
+    if (/^#\/reset(?:\?|$)/.test(h)) h = "#/reset";
     toggles.forEach(function (a, i) { a.setAttribute("href", bases[i] + h); });
   }
   sync();

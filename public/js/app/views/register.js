@@ -17,9 +17,10 @@ export async function mount(root, { signal } = {}) {
   const confirm = el("input.input", { type: "password", name: "confirm", autocomplete: "new-password", required: "" });
   const button = el("button.btn.btn-primary", { type: "submit" }, s("register.submit"));
   const status = el("p", { role: "status" });
-  form.append(el("label.login-label", s("recovery.email"), email),
+  form.append(el("label.login-label", s("register.email"), email),
     el("label.login-label", s("recovery.new_password"), password),
     el("label.login-label", s("recovery.confirm"), confirm), button, status);
+  form.append(el("p.muted.small", s("register.verify_hint")));
   card.append(form, el("a", { href: "#/login" }, s("recovery.back"))); root.append(card);
   form.addEventListener("submit", async event => {
     event.preventDefault();

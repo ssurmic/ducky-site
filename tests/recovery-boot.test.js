@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 
 test('signed-out entry point mounts a password reset link and can request a new link', async () => {
   const secret = 'x'.repeat(43);
-  const dom = new JSDOM('<main class="app-main"><div id="view"></div></main>', {
+  const dom = new JSDOM('<a data-lang-toggle href="/app/#/reset?token='+secret+'">中文</a><main class="app-main"><div id="view"></div></main>', {
     url: 'https://ducky.test/app/#/reset?token=' + secret
   });
   for (const k of ['window','document','Node','MutationObserver','location','history']) globalThis[k] = dom.window[k];
@@ -24,6 +24,7 @@ test('signed-out entry point mounts a password reset link and can request a new 
   for (let i=0; i<100 && !document.body.classList.contains('ready'); i++) await new Promise(r=>setTimeout(r,5));
   assert.equal(document.body.dataset.route, 'reset');
   assert.equal(location.hash, '#/reset');
+  assert.equal(document.querySelector('[data-lang-toggle]').getAttribute('href'), '/app/#/reset');
   assert.equal(document.querySelector('h1').textContent, copy['app.recovery.reset_title']);
   document.querySelector('[name="password"]').value = 'new-password';
   document.querySelector('[name="confirm"]').value = 'new-password';

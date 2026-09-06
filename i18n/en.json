@@ -551,7 +551,7 @@
   "app.tier.pro": "Pro",
   "app.tier.expires": "expires {date}",
   "app.login.title": "Sign in to Ducky",
-  "app.login.sub": "Sign in with your username or verified email, or use Telegram. You can also create an account with an invite code.",
+  "app.login.sub": "Continue with Google or sign in to an existing account. You can also register with email.",
   "app.login.widget": "Log in with Telegram",
   "app.login.widget_loading": "Loading the Telegram login widget…",
   "app.login.widget_blocked": "The login widget failed to load (common on mainland networks). Use the option below.",
@@ -573,7 +573,7 @@
   "app.login.pw_pass": "Password",
   "app.login.pw_btn": "Sign in",
   "app.login.pw_bad": "The username, email or password is incorrect. Email sign-in requires a verified address.",
-  "app.login.pw_hint": "Signed up with an invite? Use your username and password. Email sign-in requires a verified address.",
+  "app.login.pw_hint": "Enter the password you set when registering. If you registered with Google, use the Google button above.",
   "app.login.other": "Other ways to sign in (Telegram widget)",
   "app.profile.pw_title": "Login password",
   "app.profile.pw_hint": "Invite accounts can sign in with a username and password. Email sign-in requires verification. Changing your password signs out your other devices.",
@@ -1303,7 +1303,7 @@
   "app.google.title": "Google sign-in",
   "app.register.title": "Create your Ducky account",
   "app.register.link": "New to Ducky? Create an account",
-  "app.register.sub": "Use an email you can receive messages at. We’ll send a code to verify it.",
+  "app.register.sub": "Register with Google, or enter your email and a password.",
   "app.register.submit": "Create account",
   "app.register.taken": "This email is already registered. Sign in or reset your password.",
   "app.register.sent": "Account created. Enter the code sent to your email to finish setup.",
@@ -1321,5 +1321,7 @@
   "privacy.providers": "Cloudflare serves the website and API traffic. Resend processes email addresses and transactional emails, including verification and password recovery. Google processes the sign-in you initiate. Payment providers process the checkout you choose. Telegram receives messages only through Telegram features you use.",
   "privacy.delete_title": "Deleting your account",
   "privacy.delete": "In Account, choose Delete account to clear your profile details, login identities, password, watchlist and alerts, and revoke existing sessions. Payment and subscription records remain for accounting. Public market records do not identify your account. For privacy questions or a data request, contact the operator below.",
-  "privacy.contact": "Privacy contact"
+  "privacy.contact": "Privacy contact",
+  "app.register.email": "Email",
+  "app.register.verify_hint": "We’ll email a verification code to this address."
 }

@@ -10,6 +10,16 @@ export async function mount(root, { query = new URLSearchParams() } = {}) {
   // The emailed credential is in the fragment, never a server request/referrer.
   // Remove it from this history entry as soon as it has been read.
   if (resetting && token) history.replaceState(null, "", "#/reset");
+  const languageLinks = resetting ? [...document.querySelectorAll("[data-lang-toggle], [data-lang-toggle-footer]")] : [];
+  const switchLanguage = event => {
+    event.preventDefault();
+    const base = event.currentTarget.getAttribute("href").split("#")[0];
+    location.assign(base + (token ? "#/reset?token=" + encodeURIComponent(token) : "#/forgot"));
+  };
+  for (const link of languageLinks) {
+    link.setAttribute("href", link.getAttribute("href").split("#")[0] + "#/reset");
+    link.addEventListener("click", switchLanguage);
+  }
   const card = el("section.card.login.recovery");
   const title = el("h1", s(resetting ? "recovery.reset_title" : "recovery.title"));
   const status = el("p.recovery-status", { role: "status", "aria-live": "polite" });
@@ -67,5 +77,5 @@ export async function mount(root, { query = new URLSearchParams() } = {}) {
       button.disabled = false;
     }
   });
-  return () => { stopped = true; token = ""; clear(form); };
+  return () => { stopped = true; token = ""; languageLinks.forEach(link => link.removeEventListener("click", switchLanguage)); clear(form); };
 }
