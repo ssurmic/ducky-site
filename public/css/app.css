@@ -714,3 +714,24 @@ body:is([data-route="register"],[data-route="oauth"]) .app-nav { display:none; }
 .event-past-card>div{display:flex;flex-direction:column;gap:.25rem}.event-past-card p{margin:.6rem 0}
 .event-year-label{display:flex;align-items:center;gap:.8rem;margin:1rem 0}.event-year-label select{max-width:160px}
 @media(max-width:680px){.event-recent-history{grid-template-columns:1fr}}
+/* Dated market context shares evidence and calendar navigation across the app. */
+.market-context { margin-block: 1rem; }
+.market-context-heading h2 { margin: .35rem 0; }
+.market-coverage { color: var(--accent); }
+.market-topics { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); gap: 1rem; margin-block: 1rem; }
+.market-topic { min-width: 0; padding: 1rem; border: 1px solid var(--line,#303238); border-radius: 14px; }
+.market-topic h3 { font-size: 1.05rem; margin-top: 0; }
+.market-topic h4 { font-size: .83rem; color: var(--muted); margin-bottom: .3rem; }
+.market-topic p, .market-evidence-item a { overflow-wrap: anywhere; }
+.market-evidence { margin-block: 1rem; }
+.market-evidence summary, .prediction-contract summary { cursor: pointer; color: var(--accent); padding-block: .45rem; }
+.market-evidence-item { padding-block: .8rem; border-top: 1px solid var(--line,#303238); }
+.prediction-panel { border-top: 1px solid var(--line,#303238); margin-top: 1rem; padding-top: .5rem; }
+.prediction-panel h4 { margin-bottom: .5rem; }
+.prediction-contract { padding: .8rem 0; border-bottom: 1px solid var(--line,#303238); }
+.prediction-contract h5 { font-size: .94rem; margin: 0 0 .5rem; overflow-wrap: anywhere; }
+.prediction-outcomes { display: flex; flex-wrap: wrap; gap: .5rem; }
+.prediction-outcome { display: flex; gap: .75rem; align-items: baseline; border: 1px solid var(--line,#303238); border-radius: 8px; padding: .35rem .6rem; }
+.prediction-outcome strong { color: var(--accent); }
+.prediction-rules { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 18rem; overflow: auto; }
+@media(max-width:560px) { .market-topics { grid-template-columns: 1fr; } .market-topic { padding: .85rem; } }

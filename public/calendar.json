@@ -1,7 +1,7 @@
 {
  "schema": "calendar/1",
- "generated_at": "2026-09-06T03:52:15+00:00",
- "as_of": "2026-09-06T03:52:15+00:00",
+ "generated_at": "2026-09-06T09:33:06+00:00",
+ "as_of": "2026-09-06T09:33:06+00:00",
  "window_days": 90,
  "partial": true,
  "source": "static-fallback",
@@ -66,8 +66,8 @@
    "title": "美联储 FOMC 利率决议",
    "title_en": "FOMC rate decision",
    "tickers": [],
-   "note": "14:00 ET 公布利率决议,14:30 ET 主席发布会 · 含点阵图/经济预测(SEP);市场隐含降息概率约 41%(记录于 2026-08-25)。",
-   "note_en": "Rate decision 14:00 ET, press conference 14:30 ET · with dot-plot / SEP; market-implied cut odds ~41% (recorded 2026-08-25)."
+   "note": "14:00 ET 公布利率决议,14:30 ET 主席发布会 · 含点阵图/经济预测(SEP)。",
+   "note_en": "Rate decision 14:00 ET, press conference 14:30 ET · with dot-plot / SEP."
   },
   {
    "date": "2026-09-16",

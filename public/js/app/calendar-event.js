@@ -4,6 +4,7 @@ import { el, clear, pct, num } from './ui.js';
 import { s, LANG } from './strings.js';
 import * as api from './api.js';
 import * as store from './store.js';
+import { predictionPanel } from './calendar-prediction.js';
 
 export function safeSource(url) { try { const u=new URL(url);return u.protocol==='https:'?u.href:null; }catch{return null;} }
 export function weekday(day){const d=new Date(day+'T12:00:00Z');return Number.isFinite(d.getTime())?new Intl.DateTimeFormat(LANG==='en'?'en-US':'zh-CN',{weekday:'short',timeZone:'America/New_York'}).format(d):'—';}
@@ -28,7 +29,8 @@ export function eventResearchSession(scopeTicker='') {
     if(!store.isPro()) { box.append(el('a.event-upgrade',{href:'#/billing'},s('event.pro')));return box; }
     const relevance=el('div.event-relevance',el('span.muted.small',s('event.matching')));
     const details=el('details.event-evidence',{open:kind==='ppi'},el('summary',s('event.history')));
-    const content=el('div.event-evidence-body');details.append(content);box.append(relevance,details);
+    const prediction=el('div');
+    const content=el('div.event-evidence-body');details.append(content);box.append(relevance,prediction,details);
     let current=null,horizon='5',chosen=scopeTicker,version=0,historyYear='all';
     function renderHistory(doc) {
       clear(content);const history=doc.history||{}, summary=history.summary||{};
@@ -130,6 +132,8 @@ export function eventResearchSession(scopeTicker='') {
         const doc=await load(e,chosen);
         if(!valid()||v!==version)return;
         current=doc;renderRelations(doc);renderHistory(doc);
+        clear(prediction);
+        if(['fomc','ppi','cpi','pce','nfp'].includes(kind))prediction.append(predictionPanel(doc.prediction_market));
       } catch(err) {
         if(!valid()||v!==version)return;
         clear(relevance);relevance.append(el('p.muted.small',s('event.context_unavailable')));

@@ -77,9 +77,6 @@ PCE_2026 = ["2026-09-30"]     # BEA-verified; the live API feed fills later mont
 PPI_2026 = ["2026-09-10"]     # BLS-verified (Aug PPI); PPI usually the day before CPI
 RETAIL_2026 = ["2026-09-16"]  # Census-verified (Aug advance retail sales)
 GDP_2026 = ["2026-09-30"]     # BEA-verified: 2026 comprehensive/annual GDP update begins
-# market-implied odds for the NEXT decision (CME FedWatch snapshot; the live API refreshes daily)
-NEXT_FOMC_ODDS = {"date": "2026-09-16", "cut_pct": 41, "as_of": "2026-08-25"}
-
 def _first_friday(y, m):
     d = date(y, m, 1)
     return d + timedelta(days=(4 - d.weekday()) % 7)
@@ -94,13 +91,9 @@ def macro_events(start, end):
         d = date.fromisoformat(ds)
         extra_zh = " · 含点阵图/经济预测(SEP)" if sep else ""
         extra_en = " · with dot-plot / SEP" if sep else ""
-        odds_zh = odds_en = ""
-        if NEXT_FOMC_ODDS and ds == NEXT_FOMC_ODDS["date"]:
-            odds_zh = f";市场隐含降息概率约 {NEXT_FOMC_ODDS['cut_pct']}%(记录于 {NEXT_FOMC_ODDS['as_of']})"
-            odds_en = f"; market-implied cut odds ~{NEXT_FOMC_ODDS['cut_pct']}% (recorded {NEXT_FOMC_ODDS['as_of']})"
         m(d, "美联储 FOMC 利率决议", "FOMC rate decision",
-          "14:00 ET 公布利率决议,14:30 ET 主席发布会" + extra_zh + odds_zh + "。",
-          "Rate decision 14:00 ET, press conference 14:30 ET" + extra_en + odds_en + ".")
+          "14:00 ET 公布利率决议,14:30 ET 主席发布会" + extra_zh + "。",
+          "Rate decision 14:00 ET, press conference 14:30 ET" + extra_en + ".")
     for ds in CPI_2026:
         m(date.fromisoformat(ds), "CPI 通胀数据", "CPI inflation",
           "08:30 ET 公布上月消费者物价指数。", "Prior-month Consumer Price Index at 08:30 ET.")
