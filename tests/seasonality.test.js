@@ -53,9 +53,9 @@ test('disposed history panel ignores delayed data',async()=>{
  assert.equal(root.querySelectorAll('.season-year').length,0);
 });
 test('billing prices follow locale while payment amounts keep their actual denomination',()=>{
- const p={annual_usd:135,monthly_usd:15,annual_cny:749};
- assert.ok(localizedPrice(p,12,'en').startsWith('$135'));
- assert.ok(localizedPrice(p,12,'zh').startsWith('¥749'));
+ const p={annual_usd:90,monthly_usd:9,annual_cny:499};
+ assert.ok(localizedPrice(p,12,'en').startsWith('$90'));
+ assert.ok(localizedPrice(p,12,'zh').startsWith('¥499'));
  assert.equal(railForLanguage('manual_alipay','en'),false);assert.equal(railForLanguage('manual_wechat','zh'),true);
  assert.equal(railForLanguage('stars','en'),true);assert.equal(railForLanguage('stripe','en'),true);
 });

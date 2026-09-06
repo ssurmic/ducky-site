@@ -138,7 +138,7 @@ export function upsell(info) {
   const tier = tierName(info.tier || store.tier());
   const body = el("div",
     el("p", info.cap !== undefined ? s("alerts.cap_body", { tier, cap: info.cap }) : s("upsell.body")),
-    el("p.muted", s("billing.pick_signal")), el("p.muted", s("billing.pick_pro")));
+    el("p.muted", s("billing.pick_pro")));
   modal(info.cap !== undefined ? s("alerts.cap_title") : s("upsell.title"), body,
     [{ label: s("alerts.cap_cta"), primary: true, href: "#/billing" }]);
 }

@@ -1,16 +1,16 @@
 {# Prices follow the selected language; amounts match the published billing plans. #}
-{% set sig = prices.signal %}{% set pro = prices.pro %}{% set cn = prices.china %}
+{% set pro = prices.pro %}
 <section class="section pricing" id="pricing">
   <div class="wrap">
     <h2>{{ t('pricing.h2') }}</h2>
     <p class="lead">{{ t('pricing.lead') }}</p>
 
     {% if not is_zh %}<div class="billing-toggle mono" role="group" aria-label="billing">
-      <button type="button" data-billing="monthly">{{ t('pricing.toggle_monthly') }}</button>
-      <button type="button" data-billing="annual" aria-pressed="true" class="on">{{ t('pricing.toggle_annual') }}</button>
+      <button type="button" data-billing="monthly" aria-pressed="true" class="on">{{ t('pricing.toggle_monthly') }}</button>
+      <button type="button" data-billing="annual" aria-pressed="false">{{ t('pricing.toggle_annual') }}</button>
     </div>
 
-    {% endif %}<div class="tiers" data-billing-mode="annual">
+    {% endif %}<div class="tiers tiers-unified" data-billing-mode="{{ 'annual' if is_zh else 'monthly' }}">
       <article class="tier tier-free">
         <h3>{{ t('pricing.free_name') }}</h3>
         <p class="price mono">{{ t('pricing.free_price') }}</p>
@@ -26,24 +26,6 @@
         {% if has_channel %}<a class="tier-alt mono" href="{{ url('/app/') }}#/register" rel="noopener">{{ t('pricing.free_cta_bot') }}</a>{% endif %}
       </article>
 
-      <article class="tier tier-signal">
-        <h3>{{ t('pricing.signal_name') }}</h3>
-        <p class="price mono">
-          {% if is_zh %}<span>¥{{ cn.annual_cny }}<small>{{ t('pricing.per_yr') }}</small></span>{% else %}
-          <span class="price-monthly">${{ sig.monthly_usd }}<small>{{ t('pricing.per_mo') }}</small></span>
-          <span class="price-annual">${{ sig.annual_usd }}<small>{{ t('pricing.per_yr') }}</small> <em class="save">{{ t('pricing.save') }} {{ sig.save_pct }}%</em></span>{% endif %}
-        </p>
-        <p class="tier-pos">{{ t('pricing.signal_position') }}</p>
-        <dl class="tier-rows">
-          <dt>{{ t('pricing.row_firehose') }}</dt><dd>{{ t('pricing.signal_firehose') }}</dd>
-          <dt>{{ t('pricing.row_dm') }}</dt><dd>{{ t('pricing.signal_dm') }}</dd>
-          <dt>{{ t('pricing.row_alerts') }}</dt><dd class="mono">{{ t('pricing.signal_alerts') }}</dd>
-          <dt>{{ t('pricing.row_cadence') }}</dt><dd>{{ t('pricing.signal_cadence') }}</dd>
-          <dt>{{ t('pricing.row_extras') }}</dt><dd>{{ t('pricing.signal_extras') }}</dd>
-        </dl>
-        <a class="btn btn-primary" href="{{ url('/app/') }}#/billing" rel="noopener">{{ t('pricing.signal_cta') }}</a>
-      </article>
-
       <article class="tier tier-pro">
         <h3>{{ t('pricing.pro_name') }}</h3>
         <p class="price mono">
@@ -54,12 +36,12 @@
         <p class="tier-pos">{{ t('pricing.pro_position') }}</p>
         <dl class="tier-rows">
           <dt>{{ t('pricing.row_firehose') }}</dt><dd>{{ t('pricing.pro_firehose') }}</dd>
-          <dt>{{ t('pricing.row_dm') }}</dt><dd>{{ t('pricing.pro_dm') }}<br><span class="roadmap-item">{{ t('pricing.pro_dm_roadmap') }} <span class="badge badge-roadmap">{{ t('label.roadmap') }}</span></span></dd>
+          <dt>{{ t('pricing.row_dm') }}</dt><dd>{{ t('pricing.pro_dm') }}</dd>
           <dt>{{ t('pricing.row_alerts') }}</dt><dd class="mono">{{ t('pricing.pro_alerts') }}</dd>
           <dt>{{ t('pricing.row_cadence') }}</dt><dd>{{ t('pricing.pro_cadence') }}</dd>
           <dt>{{ t('pricing.row_extras') }}</dt><dd>{{ t('pricing.pro_extras') }}</dd>
         </dl>
-        <a class="btn btn-ghost" href="{{ url('/app/') }}#/billing" rel="noopener">{{ t('pricing.pro_cta') }}</a>
+        <a class="btn btn-primary" href="{{ url('/app/') }}#/billing" rel="noopener">{{ t('pricing.pro_cta') }}</a>
       </article>
 
 

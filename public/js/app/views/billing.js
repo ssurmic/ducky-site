@@ -10,7 +10,7 @@ import * as tg from "../tg.js";
 import * as auth from "../auth.js";
 import { el, clear, toast, spinner, errorBox, tierName, date, num } from "../ui.js";
 
-let selected = { tier: "paid", months: 12 };
+let selected = { tier: "pro", months: LANG === "zh" ? 12 : 1 };
 // crypto orders carry a unique sub-cent / sat suffix (crypto_watch matches on it) — never round it away.
 // Prefer the server's authoritative amount string; else format at the rail's real precision, not 2dp.
 function amtStr(o) {
@@ -24,7 +24,7 @@ function amtStr(o) {
 // Give it a short TTL so a server-side rails/price change is reflected within a minute.
 let plansCache = null, plansCacheAt = 0;
 const PLANS_TTL_MS = 60000;
-let onPayStars = null;
+let onPayStars = null, starsReady = false;
 
 /** Backend rail id for a button; the QR route wants the short name back (manual_alipay → alipay). */
 const CNY_RAILS = ["manual_alipay", "manual_wechat"];
@@ -42,7 +42,7 @@ export function orderMonths(rail, months) { return isCnyRail(rail) ? 12 : months
 
 /** Router hook: MainButton config (Telegram only). */
 export function mainButton() {
-  if (!tg.inTG) return null;
+  if (!tg.inTG || !starsReady) return null;
   return { text: s("billing.stars_btn") + " · " + tierName(selected.tier), onClick: () => { if (onPayStars) onPayStars(); } };
 }
 
@@ -80,26 +80,25 @@ export function normalizePlans(resp) {
   }
   if (resp && Array.isArray(resp.rails)) out.rails = resp.rails.map((r) => String(r.id || r).toLowerCase());
   if (resp && resp.usdt) out.usdt = resp.usdt;
-  // CFG fallback fills any price the API did not provide (or everything when the API is unreachable)
+  // An authoritative empty/partial catalogue must not revive retired plans or rails.
+  // Static prices are an informational fallback only when the API is unreachable.
   const P = CFG.PRICES || {};
   const fill = (id, src) => { if (!src) return; const t = out[id] || (out[id] = blank(id)); for (const k of Object.keys(src)) if (t[k] === null && src[k] !== undefined && src[k] !== null) t[k] = Number(src[k]); };
-  if (P.signal) fill("paid", { monthly_usd: P.signal.monthly_usd, annual_usd: P.signal.annual_usd, annual_cny: P.china && P.china.annual_cny });
-  if (P.pro) fill("pro", { monthly_usd: P.pro.monthly_usd, annual_usd: P.pro.annual_usd, annual_cny: P.pro.annual_cny });
+  if (!resp && P.pro) fill("pro", { monthly_usd: P.pro.monthly_usd, annual_usd: P.pro.annual_usd, annual_cny: P.pro.annual_cny });
+  if (!resp) out.rails = [];
   return out;
 }
 
 export async function mount(root) {
   let plans = (Date.now() - plansCacheAt < PLANS_TTL_MS) ? plansCache : null, busy = false;   // finding billing.js:14
   const me = store.get("me") || {};
-  // preselect a plan that reflects the user's context, not a hardcoded "Signal": a Pro subscriber sees
-  // Pro selected (renewal/current), everyone else sees Signal (the entry tier).
-  selected.tier = me.tier === "pro" ? "pro" : "paid";
+  selected.tier = "pro";
   // finding billing.js:76 — GET /me nests expiry under subscription.expires_at (app.py), not me.expires_at,
   // so a paying subscriber never saw their plan end date.
   const sub = me.subscription || {};
   const head = el("div.view-head", el("h1", s("billing.title")),
     el("span.muted.small", s("billing.current", { tier: tierName(me.tier) }) + (sub.expires_at ? " · " + s("tier.expires", { date: date(sub.expires_at) }) : "")));
-  const picker = el("div.picker", el("b", s("billing.pick_title")), el("ul", el("li", s("billing.pick_signal")), el("li", s("billing.pick_pro"))));
+  const picker = el("div.picker", el("b", s("billing.pick_title")), el("p", s("billing.pick_pro")), el("p.muted.small", s("billing.legacy_preserved")));
   const toggle = el("div.seg.mono", { role: "group" },
     ["monthly", "annual"].map((m) => el("button", { type: "button", "data-m": m, class: (m === "annual") === (selected.months === 12) ? "on" : "", onclick: () => { selected.months = m === "annual" ? 12 : 1; toggle.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.m === m)); renderTiers(); renderRails(); } }, s("billing." + m))));
   const tiers = el("div.tier-cards");
@@ -114,7 +113,7 @@ export async function mount(root) {
   }
   function renderTiers() {
     clear(tiers);
-    for (const id of ["paid", "pro"]) {
+    for (const id of ["pro"]) {
       const p = plans && plans[id];
       const on = selected.tier === id;
       tiers.appendChild(el("article.card.tier-card", { class: on ? "on" : "", "data-tier": id },
@@ -125,25 +124,35 @@ export async function mount(root) {
           on ? "✓ " + tierName(id) : s("billing.choose", { tier: tierName(id) }))));
     }
   }
-  function railEnabled(r) { return railForLanguage(r, LANG) && (!plans || !plans.rails || plans.rails.includes(r)); }
+  function railQuote(r) {
+    const p = plans?.pro, annual = orderMonths(r, selected.months) === 12;
+    const amount = isCnyRail(r) ? p?.annual_cny : r === "stars" ? (annual ? p?.stars_annual : p?.stars_monthly) : (annual ? p?.annual_usd : p?.monthly_usd);
+    return { amount, unit: isCnyRail(r) ? "CNY" : r === "stars" ? "Stars" : "USD", annual };
+  }
+  function railEnabled(r) { const q = railQuote(r); return railForLanguage(r, LANG) && !!plans?.rails?.includes(r) && Number.isFinite(q.amount) && q.amount > 0; }
+  function railLabel(key, r) { const q = railQuote(r); return s(key) + " · " + num(q.amount, Number.isInteger(q.amount) ? 0 : 2) + " " + q.unit + " / " + s(q.annual ? "billing.annual" : "billing.monthly"); }
   function renderRails() {
     clear(rails);
+    starsReady = railEnabled("stars");
     rails.appendChild(el("h2", s("billing.rail_title")));
     const row = el("div.rail-row");
-    if (tg.inTG) row.appendChild(el("button.btn.btn-primary", { type: "button", onclick: payStars }, "⭐ " + s("billing.stars_btn")));
-    else row.appendChild(el("a.btn.btn-ghost", { href: "https://t.me/" + CFG.BOT + "/" + CFG.MINIAPP + "?startapp=billing", target: "_blank", rel: "noopener", title: s("billing.stars_only_tg") }, "⭐ " + s("billing.rail_stars")));
+    if (railEnabled("stars")) {
+      if (tg.inTG) row.appendChild(el("button.btn.btn-primary", { type: "button", onclick: payStars }, "⭐ " + railLabel("billing.stars_btn", "stars")));
+      else row.appendChild(el("a.btn.btn-ghost", { href: "https://t.me/" + CFG.BOT + "/" + CFG.MINIAPP + "?startapp=billing", target: "_blank", rel: "noopener", title: s("billing.stars_only_tg") }, "⭐ " + s("billing.rail_stars")));
+    }
     // canonical backend ids; /billing/plans lists only the rails the server can honour right now
     [["manual_alipay", "billing.rail_alipay"], ["manual_wechat", "billing.rail_wechat"], ["manual_usdt", "billing.rail_usdt"]]
-      .forEach(([r, key]) => { if (railEnabled(r)) row.appendChild(el("button.btn.btn-ghost", { type: "button", onclick: () => manual(r) }, s(key) + (isCnyRail(r) ? " · " + s("billing.annual") : ""))); });
-    ["usdc_erc20", "usdc_trc20", "btc"].forEach((r) => { if (railEnabled(r)) row.appendChild(el("button.btn.btn-ghost", { type: "button", onclick: () => crypto(r) }, s("billing.rail_" + r))); });
-    const stripeOk = !!(plans && plans.rails && plans.rails.includes("stripe"));
-    row.appendChild(el("button.btn.btn-ghost", { type: "button", disabled: !stripeOk, "data-soon": stripeOk ? null : "", onclick: stripe }, s("billing.rail_stripe") + (stripeOk ? "" : " · " + s("billing.soon"))));
+      .forEach(([r, key]) => { if (railEnabled(r)) row.appendChild(el("button.btn.btn-ghost", { type: "button", onclick: () => manual(r) }, railLabel(key, r))); });
+    ["usdc_erc20", "usdc_trc20", "btc"].forEach((r) => { if (railEnabled(r)) row.appendChild(el("button.btn.btn-ghost", { type: "button", onclick: () => crypto(r) }, railLabel("billing.rail_" + r, r))); });
+    const stripeOk = railEnabled("stripe");
+    row.appendChild(el("button.btn.btn-ghost", { type: "button", disabled: !stripeOk, "data-soon": stripeOk ? null : "", onclick: stripe }, stripeOk ? railLabel("billing.rail_stripe", "stripe") : s("billing.rail_stripe") + " · " + s("billing.soon")));
     rails.appendChild(row);
     if (!tg.inTG) rails.appendChild(el("p.muted.small", s("billing.stars_only_tg")));
   }
 
   async function order(rail) {
     if (busy) return null;
+    if (!railEnabled(rail)) { toast(s("billing.catalog_unavailable"), "err"); return null; }
     const me = store.get("me") || {};
     if (me.profile_complete === false) {
       toast(s("billing.need_profile"), "err");
@@ -261,8 +270,11 @@ export async function mount(root) {
 
   if (!plans) {
     try { plans = plansCache = normalizePlans(await api.billing.plans()); plansCacheAt = Date.now(); }   // finding billing.js:14
-    catch (err) { plans = normalizePlans(null); }
+    catch (err) {
+      plans = normalizePlans(null);
+      picker.appendChild(el("p.errbox", s("billing.catalog_unavailable")));
+    }
   }
   renderTiers(); renderRails(); loadOrders();
-  return () => { onPayStars = null; };
+  return () => { onPayStars = null; starsReady = false; };
 }

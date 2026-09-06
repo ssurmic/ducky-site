@@ -147,7 +147,7 @@ export const profile = {
   remove: () => post("/me/delete", {}),
 };
 export const billing = {
-  plans: () => get("/billing/plans", { auth: false }),
+  plans: () => get("/billing/plans?catalog=pro-20260906", { auth: false }),
   order: (tier, months, rail) => post("/billing/order", { tier, months, rail }),
   orders: () => get("/billing/orders"),
   qr: (rail) => getDataUri("/billing/qr/" + encodeURIComponent(rail)),

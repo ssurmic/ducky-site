@@ -36,9 +36,9 @@ test('homepage uses illustrative locked previews, one sourced video and readable
 });
 test('localized storefront prices match the configured currency without mixed annual cards',()=>{
  const prices=json('site.config.json').prices;
- for(const [prefix,currency,amounts] of [['en/','$',[prices.signal.annual_usd,prices.pro.annual_usd]],['','¥',[prices.china.annual_cny,prices.pro.annual_cny]]]) {
+ for(const [prefix,currency,amounts] of [['en/','$',[prices.pro.monthly_usd,prices.pro.annual_usd]],['','¥',[prices.pro.annual_cny]]]) {
   const d=new JSDOM(readFileSync(`dist/${prefix}index.html`,'utf8')).window.document, p=d.querySelector('#pricing');
-  assert.equal(p.querySelectorAll('.tier').length,3);
+  assert.equal(p.querySelectorAll('.tier').length,2);
   for(const amount of amounts)assert.ok(p.textContent.includes(currency+amount));
   if(prefix)assert.doesNotMatch(p.textContent,/¥|CNY|RMB|人民币|China/);
   else assert.doesNotMatch(p.textContent,/\$/);
