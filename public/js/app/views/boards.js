@@ -7,6 +7,7 @@ import { icon } from "../icons.js";
 import { dateTime, metric } from './creator-research.js';
 import { mountScreen } from './signal-screen.js';
 import { mountMarketContext } from './market-context.js';
+import { mountSocial } from './social-tracking.js';
 
 export const BOARDS = [
   {key:'liquidity', kinds:'liquidity,kindex,macro'},
@@ -18,8 +19,9 @@ export const BOARDS = [
   {key:'hiring', kinds:'hiring'},
   {key:'volscan', kinds:'volscan'},
   {key:'industry', kinds:'nvdev', icon:'partner'},
+  {key:'social', kinds:'social', icon:'boards'},
 ];
-const ALL_KINDS = BOARDS.map(b=>b.kinds).join(',');
+const ALL_KINDS = BOARDS.filter(b=>b.key!=='social').map(b=>b.kinds).join(',');
 export const CAP_BANDS={micro:[0,3e8],small:[3e8,2e9],mid:[2e9,1e10],large:[1e10,2e11],mega:[2e11,Infinity]};
 const sectorLabel=value=>{const label=s('radar.sector_'+value);return label==='radar.sector_'+value?value:label;};
 const boardOf = row => row.board || BOARDS.find(b=>b.kinds.split(',').includes(row.kind))?.key;
@@ -97,6 +99,7 @@ export function waMacroLabel(name, isZh) {
 
 export async function mount(root, route={}) {
   const epoch=store.epoch(), params=route.query || new URLSearchParams(location.hash.split('?')[1]);
+  if(params.get('board')==='social')return mountSocial(root,{...route,query:params});
   const currentAccess=store.isPro();
   const readingNow=()=>Date.now()-(currentAccess?0:5*86400000);
   let accessInfo=null;
@@ -190,7 +193,7 @@ export async function mount(root, route={}) {
     if(state.mode==='archive')loadArchive(true);else{requestId++;archiveCtl?.abort();pending=false;failed=false;render();
       clearTimeout(recentDebounce);if(state.mode==='recent' && recentReady)recentDebounce=setTimeout(loadRecent,180);}
   }
-  function selectBoard(key){state.board=key;apply();}
+  function selectBoard(key){if(key==='social'){location.hash='#/boards?board=social';return;}state.board=key;apply();}
   function reset(){state.board='all';query.value='';ticker.value='';content.value='readable';direction.value='';sector.value='';cap.value='';purchases.value='open_market';days.value='7';start.value='';end.value='';apply();}
   async function loadRecent(){
     const token=++requestId;archiveCtl?.abort();archiveCtl=new AbortController();

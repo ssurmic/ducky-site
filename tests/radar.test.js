@@ -30,10 +30,10 @@ test('full archive filters and pagination are sent to the server, not applied on
  assert.equal(url.searchParams.get('start'),'2026-08-01');assert.equal(url.searchParams.get('end'),'2026-09-05');
  assert.equal(url.searchParams.get('before'),'42');assert.equal(url.searchParams.get('content'),'missing');
 });
-test('nine categories, combined search, keyboard disclosures and explicit excerpt mode stay usable',async()=>{
+test('ten categories, combined search, keyboard disclosures and explicit excerpt mode stay usable',async()=>{
  globalThis.fetch=async url=>response(String(url).includes('radar-history')?{items:[{board:'insider',ticker:'TTMI',ts:'2026-08-26T12:00:00Z',summary:{en:'Historical receipt'},body:{en:'Identity unverified'}}]}:{items:sample});
  const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams()});
- assert.equal(root.querySelectorAll('.radar-category').length,10);
+ assert.equal(root.querySelectorAll('.radar-category').length,11);
  root.querySelector('[name="ticker"]').value='TTMI';root.querySelector('[name="ticker"]').dispatchEvent(new window.Event('input'));
  root.querySelector('[data-board="insider"]').click();assert.equal(root.querySelectorAll('.radar-record').length,1);
  const toggle=root.querySelector('.radar-record-toggle'),detail=root.querySelector('#'+toggle.getAttribute('aria-controls'));
