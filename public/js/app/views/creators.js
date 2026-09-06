@@ -57,7 +57,7 @@ export function videoDate(value, lang) {
     new Intl.DateTimeFormat(lang, {dateStyle:"medium", timeStyle:"short", timeZone:"UTC"}).format(d) + " UTC";
 }
 
-function callChips(calls, isZh, url) {
+function callChips(calls, isZh, url,kolId) {
   // per-ticker gist Ducky dug out of the video: $SYM ▲/▼ + the target the CREATOR stated (attributed,
   // never our own) + their one-line point. Compact chips so a promo/title-only video still yields signal.
   const wrap = el("div.cr-calls");
@@ -73,6 +73,7 @@ function callChips(calls, isZh, url) {
     chip.appendChild(el("details.cr-evidence", el("summary", s("creators.evidence")), c.evidence?el("blockquote", c.evidence):el('p.small.muted',s('creatorclaim.source_link'))));
     if (safeSource(url) && Number.isFinite(c.start_seconds)) chip.appendChild(el("a", {href:atTime(url,c.start_seconds),target:"_blank",rel:"noopener noreferrer"}, `${Math.floor(c.start_seconds/60)}:${String(Math.floor(c.start_seconds)%60).padStart(2,"0")} ↗`));
     chip.append(el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+encodeURIComponent(c.sym)},s('creators.chart')));
+    chip.append(el('a.btn.btn-ghost.btn-sm',{href:creatorTarget({tab:'research',selected:kolId,ticker:c.sym,mine:false})},s('creatorclaim.price_title')));
     wrap.appendChild(chip);
   }
   return wrap;
@@ -270,7 +271,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
         art.appendChild(el("p.muted.small", s('creators.'+statusKey)));
         if(status==='processing')art.append(el('p.small.muted',s('creatorclaim.progress',{done:source.reviewed_chunks||0,total:source.total_chunks||0})));
       }
-      if (grounded && p.calls && p.calls.length) art.appendChild(callChips(p.calls, isZh, p.url));
+      if (grounded && p.calls && p.calls.length) art.appendChild(callChips(p.calls, isZh, p.url,p.kol_id));
       const audit=el('details.creator-audit',el('summary',s('creators.source_details')),
         el('p.muted.small',s('creators.first_seen')+' '+dateTime(p.first_seen_at)),
         el('p.muted.small',s('creators.analysis_updated')+' '+dateTime(p.fetched_at)));
