@@ -3,6 +3,7 @@ import * as api from "../api.js";
 import * as auth from "../auth.js";
 import * as router from "../router.js";
 import { el, toast } from "../ui.js";
+import { verificationTarget } from "../login-target.js";
 
 export async function mount(root, { signal } = {}) {
   const card = el("section.card.login", el("h1", s("register.title")), el("p.muted", s("register.sub")));
@@ -33,7 +34,7 @@ export async function mount(root, { signal } = {}) {
       if (signal?.aborted) return;
       await auth.establish(response);
       toast(s(response.email_sent ? "register.sent" : "register.unsent"), response.email_sent ? "ok" : "err");
-      router.go("#/profile");
+      router.go(verificationTarget());
     } catch (error) {
       if (signal?.aborted) return;
       status.textContent = s(error.body?.error === "email_taken" ? "register.taken"

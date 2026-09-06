@@ -6,6 +6,7 @@ import * as auth from "../auth.js";
 import * as store from "../store.js";
 import * as router from "../router.js";
 import { el, clear, toast, spinner, errorBox, confirm } from "../ui.js";
+import { safeTarget } from "../login-target.js";
 
 export async function mount(root) {
   const card = el("section.card.profile");
@@ -83,8 +84,8 @@ export async function mount(root) {
     }
     card.appendChild(v);
 
-    const next = new URLSearchParams(location.hash.split("?")[1] || "").get("next");
-    if (next) card.appendChild(el("p", el("a.btn.btn-ghost.btn-sm", { href: "#/" + next }, s("profile.continue"))));
+    const next = safeTarget("#/" + new URLSearchParams(location.hash.split("?")[1] || "").get("next"));
+    if (next) card.appendChild(el("p", el("a.btn.btn-ghost.btn-sm", { href: next }, s("profile.continue"))));
 
     // §14.6 login password (web email+password sign-in)
     const pw = el("section.pwsec");

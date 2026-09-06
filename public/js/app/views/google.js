@@ -3,6 +3,7 @@ import * as api from "../api.js";
 import * as auth from "../auth.js";
 import * as router from "../router.js";
 import { el } from "../ui.js";
+import { takeTarget } from "../login-target.js";
 
 export async function mount(root, { query = new URLSearchParams(), signal } = {}) {
   const card = el("section.card.login", el("h1", s("google.title")));
@@ -20,6 +21,7 @@ export async function mount(root, { query = new URLSearchParams(), signal } = {}
     const response = await api.auth.googleSession();
     if (signal?.aborted) return;
     await auth.establish(response);
-    router.go(query.get("linked") === "1" ? "#/profile" : "#/watchlist");
+    const target = takeTarget();
+    router.go(query.get("linked") === "1" ? "#/profile" : target);
   } catch (error) { if (!signal?.aborted) fail(error.body?.error); }
 }

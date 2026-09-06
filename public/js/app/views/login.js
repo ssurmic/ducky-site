@@ -10,10 +10,11 @@ import * as auth from "../auth.js";
 import * as tg from "../tg.js";
 import * as router from "../router.js";
 import { el, clear, toast, spinner } from "../ui.js";
+import { takeTarget, verificationTarget } from "../login-target.js";
 
 export async function mount(root) {
   let nonceCtl = null;
-  const done = () => { toast(s("login.ok"), "ok"); router.go("#/watchlist"); };
+  const done = () => { toast(s("login.ok"), "ok"); router.go(takeTarget()); };
 
   const card = el("section.card.login");
   card.append(el("h1", s("login.title")), el("p.muted", s("login.sub")));
@@ -46,7 +47,7 @@ export async function mount(root) {
       invPass.value = "";
       await auth.establish(resp);
       toast(s("login.invite_ok"), "ok");
-      router.go("#/profile");
+      router.go(verificationTarget());
     } catch (err) {
       const code = err.body && err.body.error;
       const msg = code === "password_too_weak" ? s("recovery.weak")

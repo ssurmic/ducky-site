@@ -3,6 +3,7 @@
 import * as store from "./store.js";
 import * as tg from "./tg.js";
 import { clear, errorBox, spinner } from "./ui.js";
+import { rememberTarget, takeTarget } from "./login-target.js";
 
 const ROUTES = {
   research: () => import("./views/research.js"),
@@ -47,8 +48,13 @@ export async function render() {
   if (!root) return;
   let route = parse(location.hash);
   const authed = !!store.get("me");
-  if (!authed && !PUBLIC.has(route.name)) { history.replaceState(null, "", "#/login"); route = { name: "login", params: {} }; }
-  if (authed && route.name === "login") { history.replaceState(null, "", "#/watchlist"); route = { name: "watchlist", params: {} }; }
+  if (!authed && !PUBLIC.has(route.name)) {
+    rememberTarget(location.hash);
+    history.replaceState(null, "", "#/login"); route = { name: "login", params: {} };
+  }
+  if (authed && route.name === "login") {
+    const target = takeTarget(); history.replaceState(null, "", target); route = parse(target);
+  }
   const my = ++seq;
   if (controller) controller.abort();
   controller = new AbortController();
