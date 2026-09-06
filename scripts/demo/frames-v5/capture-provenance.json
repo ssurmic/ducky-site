@@ -1,0 +1,671 @@
+{
+  "status": "Final v5 capture set; 20 selected shots and retained source/alternate screenshots",
+  "recorded_on": "2026-09-06",
+  "method": "CUA browser screenshots; privacy crops and labeled local HTML compositions, then aspect-preserving 1920x1080 normalization. Edited walkthrough, not continuous recording or measured notification latency.",
+  "source_links": {
+    "ORCL": "https://www.sec.gov/Archives/edgar/data/1027796/000102779626000049/Form13F2q2026TABLE.xml",
+    "COE": "https://www.sec.gov/Archives/edgar/data/1659494/000110465926079099/0001104659-26-079099-index.html",
+    "AVGO": "https://www.youtube.com/watch?v=3E-HXC2HUvg&t=634",
+    "semiconductor_topic": "https://www.youtube.com/watch?v=B-gdlq-32Ec&t=71s"
+  },
+  "notification_boundary": "Provider acceptance and real inbox/source path independently tested. No verified native OS banner; no automatic new-event delivery is claimed by this historical demo. Native browser notification preferences restored OFF by the owner.",
+  "frames": [
+    {
+      "file": "en/01-chart.png",
+      "sha256": "b1141507f3c97b1f9271541f43339375d1b382d3db7e3ce16fe69f4086fe1486",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/en/app/#/chart/ORCL",
+      "dimensions": {
+        "width": 65536,
+        "height": 4292542531
+      },
+      "provenance": "Actual ORCL daily chart, 2026-09-04 close $158.78; indicator snapshot 2026-09-06 19 UTC. Chart hierarchy accepted in fff74a1.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": null,
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "en/01-stock.png",
+      "sha256": "a7f500f7ab6b31dc69eec31b0198384436f60359c57904ac0a44fe98da23ed1c",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/en/",
+      "dimensions": {
+        "width": 65536,
+        "height": 4292542531
+      },
+      "provenance": "Public ORCL delayed record: Oaktree 13F filed 2026-08-07; Ducky collected 2026-09-06 10:28 UTC. No stock or alert saved. The recorded English UI has an earlier singular/plural label; release copy corrects it.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": null,
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "en/02-evidence.png",
+      "sha256": "61fa48a639850c2ac9ea3ca6ff03faedcd511e0d486ce9f15329e6ce25989505",
+      "captured_on": "2026-09-06",
+      "url": "https://duckybot.app/en/app/#/boards?screen=insider-oversold",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": null,
+      "provenance": "Unsaved combined screening preset. Actual preview had zero simultaneous matches; no match, filter or alert is invented or saved. Entry accepted in 3611ac7.",
+      "accepted_feature_commit": "3611ac7",
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence.",
+      "used_in_final_video": true,
+      "dimensions": {
+        "width": 65536,
+        "height": 4292542531
+      },
+      "kind": "production browser screenshot"
+    },
+    {
+      "file": "en/02-filing.png",
+      "sha256": "9296547f8379c2f5ca6c22eaa42f6f755c8b433a7ed1e9c20cc260d085b49675",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": false,
+      "url": "https://duckybot.app/en/app/#/boards?mode=archive&ticker=COE",
+      "dimensions": {
+        "width": 65536,
+        "height": 4293001768
+      },
+      "provenance": "Separate COE filing dated 2026-06-30, trade 2026-06-23. Confirmed open-market $15,563,866; venue-unverified $960,891; total reported $16,524,757. This is not a match to the prior combined preset.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 444,
+        "y": 278,
+        "width": 910,
+        "height": 624
+      },
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "en/02-source.png",
+      "sha256": "2b943df7556973812c2db2df321a1d6eb97b00b0878248da0a17db36a26e42bd",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/en/app/#/boards?mode=archive&ticker=COE",
+      "dimensions": {
+        "width": 65536,
+        "height": 4293001768
+      },
+      "provenance": "Local composition of the unchanged 02-filing screenshot with an explicit independent historical example footer. No data values rewritten.",
+      "kind": "local composition",
+      "composition_source": "recording/short-stage.html",
+      "source_frames": [
+        "en/02-filing.png"
+      ],
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 810
+      }
+    },
+    {
+      "file": "en/03-creators.png",
+      "sha256": "aa4acfe399137c649154e309f80f09262da8a5414c00bad86febfa67ba12aa82",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/en/app/#/creators?tab=research&scope=discover&ticker=AVGO&creator=touzi-talk",
+      "dimensions": {
+        "width": 65536,
+        "height": 4292542531
+      },
+      "provenance": "Actual TALK post 127 / revision 227; source published 2026-09-03 03:29:14 UTC, source timestamp 10:34. Reviewed version recorded 2026-09-06 21:13 UTC; first collection unknown remains blank. Full-width single card accepted in 54b851d.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": null,
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "en/03-price.png",
+      "sha256": "0601c0477a552b2dd49d0c1c68868e4d13bf2033c01059d7f31103a6b59fdc17",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/en/app/#/creators?tab=research&scope=discover&ticker=AVGO&creator=touzi-talk",
+      "dimensions": {
+        "width": 65536,
+        "height": 4292542531
+      },
+      "provenance": "Actual +1 trading-day price study: 2026-09-03 $357.16 to 2026-09-04 $357.90; stock +0.2%, SPY -0.4%, excess +0.6%. Original excerpt and timestamp link retained. Historical price comparison, not creator fills or a contemporaneous trading return.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": null,
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "en/04-briefing.png",
+      "sha256": "53a3962c95a42e147de8f30c4b7f3a6840456bb98f91615ae7605e2ba06d91e0",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/en/app/#/briefing?period=daily",
+      "dimensions": {
+        "width": 65536,
+        "height": 4292542531
+      },
+      "provenance": "Actual shared market context, past 7 days, updated 2026-09-06 11:30 UTC. Source dates and lack of confirmed direct stock connection retained. Private watchlist count above the viewport excluded; does not claim new stock matches when the daily matched section was empty.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": null,
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "en/04-context.png",
+      "sha256": "f8f373f258c442a27a89714e22a443a9297e847f1dcfe0d870da2839a93dff7f",
+      "captured_on": "2026-09-06",
+      "url": "https://duckybot.app/en/app/#/calendar",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 394,
+        "y": 384,
+        "width": 760,
+        "height": 510
+      },
+      "provenance": "Actual 2026-09-06–19 calendar; Labor Day closure September 7, next open September 8 09:30 ET. Crop excludes private watchlist count and matched holdings. Calendar feature accepted in 57ea497; later mobile grid fix a829ba9 does not change this agenda shot.",
+      "accepted_feature_commit": "57ea497",
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence.",
+      "used_in_final_video": true,
+      "dimensions": {
+        "width": 65536,
+        "height": 4293001768
+      },
+      "kind": "production browser screenshot"
+    },
+    {
+      "file": "en/05-alerts.png",
+      "sha256": "4869cceb39fb240f5308bd42d5f481ba3bac6367d1a0b4676a854808cde74f30",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/en/app/#/updates?item=1",
+      "dimensions": {
+        "width": 65536,
+        "height": 4293001768
+      },
+      "provenance": "Local composition of unchanged 05-inbox-card and 05-reason captures with brand and explicit historical/sector-match footer. Source and explanation shown together; no market data rewritten.",
+      "kind": "local composition",
+      "composition_source": "recording/short-stage.html",
+      "source_frames": [
+        "en/05-inbox-card.png",
+        "en/05-reason.png"
+      ],
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 810
+      }
+    },
+    {
+      "file": "en/05-end.png",
+      "sha256": "5693a0483a7ac4b1d9ba5fff044e912b96f530d3695f01bb4be7a7aad21e3cda",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/en/",
+      "dimensions": {
+        "width": 65536,
+        "height": 4293001768
+      },
+      "provenance": "Local brand/CTA card using the existing duck asset. No invented product results or market figures.",
+      "kind": "local composition",
+      "composition_source": "recording/short-stage.html",
+      "source_frames": [],
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 810
+      }
+    },
+    {
+      "file": "en/05-inbox-card.png",
+      "sha256": "7600f955e92be156b223229e8afa4e0a85418fa2c6d2f93052b66ed5bc10e645",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": false,
+      "url": "https://duckybot.app/en/app/#/updates?item=1",
+      "dimensions": {
+        "width": 65536,
+        "height": 4293001768
+      },
+      "provenance": "Actual historical Demo card for TALK post 166 / revision 240. Source published September 5 04:59 UTC; first summary ready September 6 20:28 UTC; inbox September 6 21:55 UTC. The orange English focus outline is a real UI state.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 752,
+        "y": 337,
+        "width": 408,
+        "height": 470
+      },
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "en/05-inbox.png",
+      "sha256": "deacdf6626d130cc38300ca253f842ea599acbb20031533b3f8a058a9d1a72f6",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": false,
+      "url": "https://duckybot.app/en/app/#/updates?item=1",
+      "dimensions": {
+        "width": 65536,
+        "height": 4293001768
+      },
+      "provenance": "Historical manually seeded demo item, not an automatic new event. Public creator content only; private holdings excluded. This overview is unused in the final film.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 384,
+        "y": 130,
+        "width": 780,
+        "height": 770
+      },
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "en/05-reason.png",
+      "sha256": "3520ad9a82bfbbaa09cd0436447f478fad8f875e96ebe11ef210448b0512b25f",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": false,
+      "url": "https://duckybot.app/en/app/#/updates?item=1",
+      "dimensions": {
+        "width": 65536,
+        "height": 4293001768
+      },
+      "provenance": "Actual semiconductor-topic reason and original source at 1:11 (71.39 seconds). This video does not directly mention INTC. No native OS banner is shown or claimed.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 752,
+        "y": 395,
+        "width": 410,
+        "height": 414
+      },
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "zh/01-chart.png",
+      "sha256": "3a4bfff49f363feb48d5bb45da90de52dc349949a9fd39666a7bed4b0f6c13dc",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/app/#/chart/ORCL",
+      "dimensions": {
+        "width": 65536,
+        "height": 4292542531
+      },
+      "provenance": "Actual ORCL daily chart, 2026-09-04 close $158.78; indicator snapshot 2026-09-06 19 UTC. Chart hierarchy accepted in fff74a1.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": null,
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "zh/01-stock.png",
+      "sha256": "9d6b9e56fe1cea15ae6ed2dd1cee710fff058c86f4eac2f6bf7257f147306ec8",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/",
+      "dimensions": {
+        "width": 65536,
+        "height": 4292542531
+      },
+      "provenance": "Public ORCL delayed record: Oaktree 13F filed 2026-08-07; Ducky collected 2026-09-06 10:28 UTC. No stock or alert saved. The recorded English UI has an earlier singular/plural label; release copy corrects it.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": null,
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "zh/02-evidence.png",
+      "sha256": "c7473739754a40547cc0b8c3ce1042fb3673f6b36258b501c6571a2bcc66fcc8",
+      "captured_on": "2026-09-06",
+      "url": "https://duckybot.app/app/#/boards?screen=insider-oversold",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": null,
+      "provenance": "Unsaved combined screening preset. Actual preview had zero simultaneous matches; no match, filter or alert is invented or saved. Entry accepted in 3611ac7.",
+      "accepted_feature_commit": "3611ac7",
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence.",
+      "used_in_final_video": true,
+      "dimensions": {
+        "width": 65536,
+        "height": 4292542531
+      },
+      "kind": "production browser screenshot"
+    },
+    {
+      "file": "zh/02-filing.png",
+      "sha256": "f8e705549aab136185d81d398d1e99d9a8d9faabcca771232e88eb06a647a540",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": false,
+      "url": "https://duckybot.app/app/#/boards?mode=archive&ticker=COE",
+      "dimensions": {
+        "width": 65536,
+        "height": 4292542531
+      },
+      "provenance": "Separate COE filing dated 2026-06-30, trade 2026-06-23. Confirmed open-market $15,563,866; venue-unverified $960,891; total reported $16,524,757. This is not a match to the prior combined preset.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 454,
+        "y": 435,
+        "width": 890,
+        "height": 455
+      },
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "zh/02-source.png",
+      "sha256": "28c74fa3f3aebd33211b65a8f95f33c28192f4f25eda8cf749044c84fc6e88a1",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/app/#/boards?mode=archive&ticker=COE",
+      "dimensions": {
+        "width": 65536,
+        "height": 4293001768
+      },
+      "provenance": "Local composition of the unchanged 02-filing screenshot with an explicit independent historical example footer. No data values rewritten.",
+      "kind": "local composition",
+      "composition_source": "recording/short-stage.html",
+      "source_frames": [
+        "zh/02-filing.png"
+      ],
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 810
+      }
+    },
+    {
+      "file": "zh/03-creators.png",
+      "sha256": "41a4cdf8fb1d9b676725e7776061b420424e70e5f34947877bfad866ba6f8e45",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/app/#/creators?tab=research&scope=discover&ticker=AVGO&creator=touzi-talk",
+      "dimensions": {
+        "width": 65536,
+        "height": 4292542531
+      },
+      "provenance": "Actual TALK post 127 / revision 227; source published 2026-09-03 03:29:14 UTC, source timestamp 10:34. Reviewed version recorded 2026-09-06 21:13 UTC; first collection unknown remains blank. Full-width single card accepted in 54b851d.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": null,
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "zh/03-price.png",
+      "sha256": "c29194c05ab031251c82a311c66a1fad6ebf3f3c4e1fbac29bf3149a72f7537c",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/app/#/creators?tab=research&scope=discover&ticker=AVGO&creator=touzi-talk",
+      "dimensions": {
+        "width": 65536,
+        "height": 4292542531
+      },
+      "provenance": "Actual +1 trading-day price study: 2026-09-03 $357.16 to 2026-09-04 $357.90; stock +0.2%, SPY -0.4%, excess +0.6%. Original excerpt and timestamp link retained. Historical price comparison, not creator fills or a contemporaneous trading return.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": null,
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "zh/04-briefing.png",
+      "sha256": "539ce6a211aa50244c7526dfe296ea367eaa10e3ca7f68ab35208f9589f64d8f",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/app/#/briefing?period=daily",
+      "dimensions": {
+        "width": 65536,
+        "height": 4292542531
+      },
+      "provenance": "Actual shared market context, past 7 days, updated 2026-09-06 11:30 UTC. Source dates and lack of confirmed direct stock connection retained. Private watchlist count above the viewport excluded; does not claim new stock matches when the daily matched section was empty.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": null,
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "zh/04-calendar-expanded.png",
+      "sha256": "456ed6becdc6ac200bf29f42d95df1a4b1baf572362d53e904fd558e99f359a0",
+      "captured_on": "2026-09-06",
+      "url": "https://duckybot.app/app/#/calendar",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 394,
+        "y": 190,
+        "width": 760,
+        "height": 638
+      },
+      "provenance": "Unused alternate expanded holiday-impact capture, with private watchlist count and matched holdings excluded.",
+      "accepted_feature_commit": "57ea497",
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence.",
+      "used_in_final_video": false,
+      "dimensions": {
+        "width": 65536,
+        "height": 4293001768
+      },
+      "kind": "production browser screenshot"
+    },
+    {
+      "file": "zh/04-context.png",
+      "sha256": "bd2a3bbc819421b9791450843c530d521adecdac73a1c3e4d8500af0f60623ca",
+      "captured_on": "2026-09-06",
+      "url": "https://duckybot.app/app/#/calendar",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 394,
+        "y": 384,
+        "width": 760,
+        "height": 510
+      },
+      "provenance": "Actual 2026-09-06–19 calendar; Labor Day closure September 7, next open September 8 09:30 ET. Crop excludes private watchlist count and matched holdings. Calendar feature accepted in 57ea497; later mobile grid fix a829ba9 does not change this agenda shot.",
+      "accepted_feature_commit": "57ea497",
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence.",
+      "used_in_final_video": true,
+      "dimensions": {
+        "width": 65536,
+        "height": 4293001768
+      },
+      "kind": "production browser screenshot"
+    },
+    {
+      "file": "zh/05-alerts.png",
+      "sha256": "13e2ffb9a9e1937cb62e526c2f4923e6afee7b74204b587f27f87e786db0640d",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/app/#/updates?item=1",
+      "dimensions": {
+        "width": 65536,
+        "height": 4293001768
+      },
+      "provenance": "Local composition of unchanged 05-inbox-card and 05-reason captures with brand and explicit historical/sector-match footer. Source and explanation shown together; no market data rewritten.",
+      "kind": "local composition",
+      "composition_source": "recording/short-stage.html",
+      "source_frames": [
+        "zh/05-inbox-card.png",
+        "zh/05-reason.png"
+      ],
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 810
+      }
+    },
+    {
+      "file": "zh/05-end.png",
+      "sha256": "1867706ee8889c426a624b2fd41658c18a62b7c64a64cbf878144a7c4a0cd6be",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": true,
+      "url": "https://duckybot.app/",
+      "dimensions": {
+        "width": 65536,
+        "height": 4293001768
+      },
+      "provenance": "Local brand/CTA card using the existing duck asset. No invented product results or market figures.",
+      "kind": "local composition",
+      "composition_source": "recording/short-stage.html",
+      "source_frames": [],
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 810
+      }
+    },
+    {
+      "file": "zh/05-inbox-card.png",
+      "sha256": "5a49b572af081b5d9d3edc9c003b8ed35d0dd9d1e20c184728f2138ca244e052",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": false,
+      "url": "https://duckybot.app/app/#/updates?item=1",
+      "dimensions": {
+        "width": 65536,
+        "height": 4292542531
+      },
+      "provenance": "Actual historical Demo card for TALK post 166 / revision 240. Source published September 5 04:59 UTC; first summary ready September 6 20:28 UTC; inbox September 6 21:55 UTC. The orange English focus outline is a real UI state.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 752,
+        "y": 351,
+        "width": 408,
+        "height": 423
+      },
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "zh/05-inbox.png",
+      "sha256": "bff6baf0adca15b2e03d92c2660340669b6ce6e094e0076c837b701d2bde229f",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": false,
+      "url": "https://duckybot.app/app/#/updates?item=1",
+      "dimensions": {
+        "width": 65536,
+        "height": 4292542531
+      },
+      "provenance": "Historical manually seeded demo item, not an automatic new event. Public creator content only; private holdings excluded. This overview is unused in the final film.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 384,
+        "y": 130,
+        "width": 780,
+        "height": 695
+      },
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    },
+    {
+      "file": "zh/05-reason.png",
+      "sha256": "6c0de8bce48d96009017351845f64dd8d714b40eabf14b57afb8cf76f22f5028",
+      "captured_on": "2026-09-06",
+      "used_in_final_video": false,
+      "url": "https://duckybot.app/app/#/updates?item=1",
+      "dimensions": {
+        "width": 65536,
+        "height": 4293001768
+      },
+      "provenance": "Actual semiconductor-topic reason and original source at 1:11 (71.39 seconds). This video does not directly mention INTC. No native OS banner is shown or claimed.",
+      "kind": "production browser screenshot",
+      "viewport": {
+        "width": 1549,
+        "height": 902
+      },
+      "crop": {
+        "x": 752,
+        "y": 420,
+        "width": 410,
+        "height": 390
+      },
+      "client_revision_note": "Actual production UI inspected; exact already-loaded client revision was not recorded. Feature acceptance hashes are separate evidence."
+    }
+  ]
+}

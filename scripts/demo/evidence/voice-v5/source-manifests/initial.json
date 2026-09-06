@@ -1,0 +1,45 @@
+{
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
+  "revision": "0c0e3051f131929182e2c023b9537f8b1c68adfe",
+  "version": "2026-09-06-voice-v5",
+  "speakers": {
+    "zh": "Serena",
+    "en": "Serena"
+  },
+  "instructions": {
+    "zh": "以专业产品讲解的方式说普通话。声音温和、清晰、稳重，语速稍快，节奏紧凑，咬字完整，像认真地向客户说明工具。重点轻微强调，句间自然停顿，音调变化克制。保持亲切感，不要闲聊腔，不要新闻播报腔，不要甜腻撒娇，不要拖长尾音。",
+    "en": "Use a clear, warm, professional female voice. Speak natural conversational English at a moderately brisk pace, with short pauses. Calm, confident product walkthrough, without sales emphasis or sing-song intonation."
+  },
+  "delivery": {
+    "target_seconds": 35,
+    "maximum_seconds": 45,
+    "status": "narration draft; capture and publication wait for verified product changes"
+  },
+  "scenes": [
+    {
+      "name": "01-stock",
+      "zh": "关注一只股票，公司事件和博主观点，Ducky 帮你持续整理。",
+      "en": "Follow a stock. Ducky keeps its company events and creator views together, so you can keep up."
+    },
+    {
+      "name": "02-evidence",
+      "zh": "高管买入、超跌线索，按你的条件筛选。点开日期和原文，核对依据。",
+      "en": "Screen for insider buying and oversold stocks using your own filters. Check the dates and original filings."
+    },
+    {
+      "name": "03-creators",
+      "zh": "看博主摘要，直接跳到视频原话；结合价格图表，回看观点之后的涨跌。",
+      "en": "Read a creator summary and jump to the original video. Use the price chart to review what happened afterward."
+    },
+    {
+      "name": "04-context",
+      "zh": "财报、休市和重要数据提前看，每日摘要再汇总与你股票有关的变化。",
+      "en": "Check upcoming earnings, market holidays, and key releases. Your daily brief brings together updates related to your stocks."
+    },
+    {
+      "name": "05-alerts",
+      "zh": "设好提醒，条件满足时通知你。先免费加一只股票，开始体验。",
+      "en": "Set an alert and get notified when your conditions are met. Start free with one stock."
+    }
+  ]
+}

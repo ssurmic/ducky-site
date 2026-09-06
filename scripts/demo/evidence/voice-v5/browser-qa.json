@@ -1,0 +1,102 @@
+{
+  "recorded_on": "2026-09-06",
+  "local_preview": "http://127.0.0.1:8781/ (task-only Range-enabled static server)",
+  "browser": "Codex in-app browser, actual UI controls; read-only media state inspection",
+  "responsive": {
+    "width": 390,
+    "height": 844,
+    "document_scroll_width": 390,
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "viewport_reset": true
+  },
+  "chapters": {
+    "zh": [
+      0.2,
+      5.76,
+      12.92,
+      20.08,
+      22.8,
+      26.6
+    ],
+    "en": [
+      0.2,
+      7.04,
+      15.24,
+      23.12,
+      27.6,
+      32.08
+    ]
+  },
+  "chapter_outcome": "Every button sought to its exact target, stayed paused, and showed the matching Ready message. Both languages included a cold metadata test.",
+  "complete_playback_seconds": {
+    "zh": 33.421333,
+    "en": 38.981333
+  },
+  "complete_playback_ended": {
+    "zh": true,
+    "en": true
+  },
+  "caption_review": "Actual native caption screenshots: line70% above narrow controls; creator scene line5% leaves dates, +0.2/-0.4/+0.6 and curve unobscured. Full script checked in four VTT files.",
+  "guide": "Seven independent bilingual instructions and direct app routes; topic scope says stocks or the semiconductor topic.",
+  "frontend_gate": {
+    "tests": 195,
+    "failed": 0,
+    "pages": 20,
+    "copy_lint": "passed",
+    "links": 734
+  },
+  "screenshots": [
+    {
+      "file": "/tmp/ducky-demo-final-2026-09-06/v5-final-qa/en-desktop-price-caption.png",
+      "sha256": "5127076f2a05b587d97b00a71b9891327cbd072d0962c5749f08d3e693bbef2d"
+    },
+    {
+      "file": "/tmp/ducky-demo-final-2026-09-06/v5-final-qa/en-mobile-captions.png",
+      "sha256": "326e404c6fda3f8c1633d33ebbe40418fb3f1317fe9e3189f3fcd5ee01ec22bd"
+    },
+    {
+      "file": "/tmp/ducky-demo-final-2026-09-06/v5-final-qa/en-mobile-guide.png",
+      "sha256": "5bd378e629432120397b36d3d817dfea0de0812520672e186aa919d8162cb8b2"
+    },
+    {
+      "file": "/tmp/ducky-demo-final-2026-09-06/v5-final-qa/zh-desktop-price-caption.png",
+      "sha256": "81d48ba4c8d4e99ca85ce428b2da264ffd3cd4ec46226ba4ba2832085c050173"
+    },
+    {
+      "file": "/tmp/ducky-demo-final-2026-09-06/v5-final-qa/zh-mobile-captions.png",
+      "sha256": "0e975e6f04ffee234156ef7cb6a9d93d2c1ef27252d7ca078e7cd75d465da4d0"
+    },
+    {
+      "file": "/tmp/ducky-demo-final-2026-09-06/v5-final-qa/zh-mobile-guide.png",
+      "sha256": "2709605d9bd9f585dd712d48295d1341305a658b82474fa44feacd86faa9c99e"
+    }
+  ],
+  "production": {
+    "site": "https://duckybot.app/",
+    "frontend_commit": "db70290f0b943dc0cd2a548ad16f2f0e6a0af355",
+    "deployment": "https://356dd8c8.ducky-site.pages.dev",
+    "IAB_full_playback_ended": {
+      "zh": 33.421333,
+      "en": 38.981333
+    },
+    "IAB_cold_seeks": {
+      "zh": 26.6,
+      "en": 32.08
+    },
+    "independent_Chrome": "Notification owner task separately verified both cold seeks, paused Ready state, all 7 guide entries/6 chapters and actual inbox deep link. No notifications sent.",
+    "asset_integrity": "All 8 deployed MP4/JPG/VTT files byte-identical; both MP4 Range responses 206. See production-http.json."
+  },
+  "cleanup": {
+    "preview_servers_stopped": [
+      8778,
+      8780,
+      8781
+    ],
+    "heartbeat": "demo PAUSED",
+    "temporary_ASR_model_removed": "ducky-tts/models/whisper-small-v4",
+    "consumer_ASR_and_Qwen_TTS": "preserved"
+  }
+}

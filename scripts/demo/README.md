@@ -5,6 +5,13 @@ API, research workers, or alert delivery. Do not put model files or environments
 The September 6 voice-v3 recording uses the pinned Qwen 1.7B stock voices Dylan (Chinese)
 and Aiden (English). No reference voice or cloning is involved.
 
+The voice-v5 cut uses stock female speaker Serena in both languages, with five connected
+scenes and no artificial speed changes. The selected narration plans a 33.40-second Chinese
+cut and a 38.96-second English cut. `evidence/voice-v5/` retains all ten selected WAVs,
+their hashes, pinned source manifests, generation details and independent speech checks.
+The v4 quicklook remains an unpublished audition. Website guide descriptions explain
+controls and research uses independently of the narration. Player captions remain available.
+
 ## Isolated CPU runtime
 
 The operator's ARM64 DGX environment is `~/.local/share/ducky-tts/venv`, separate from
@@ -39,6 +46,16 @@ naturalness guarantee. No hosted-service purchase is part of this workflow.
 
 ## Record UI actions
 
+For v5, `frames-v5/` contains new production browser captures, with dates, URLs and crop
+bounds in `capture-provenance.json`. Capture only public research content and unsaved
+example conditions; exclude private watchlists and account details. Any historical inbox
+test must keep its Demo label and original source date. A manual device test does not
+prove automatic detection of a new market event. The final captures, composition inputs and render reports are retained for verification.
+`recording/short-stage.html` composes unchanged source screenshots with dated context
+for the historical filing, topic inbox and end card; it is not part of the public site.
+
+The earlier v3 read-only recording stage is retained for reproducibility:
+
 `python3 recording/serve.py` serves only on `127.0.0.1:8778`. It uses the current repo's
 native public components and saved public snapshots; all write methods return 405.
 Open `/?scene=newview`, `creator`, `simulation`, `screen`, `calendar`, `briefing`, or `end`.
@@ -62,15 +79,29 @@ python3 verify_media.py voiceover-2026-09-06.json /path/to/audio /path/to/new-me
   --ffprobe /path/to/ffprobe --json-out /path/to/new-verification.json
 ```
 
+For the v5 edit, use `voiceover-2026-09-06-v5.json`, `evidence/voice-v5/` as the audio
+directory, and `--frames-dir frames-v5` on both assembly and verification. All paths
+are relative to `scripts/demo/` in this example. Output to a new directory first. Differently sized captures are normalized to the same
+1920×1080 RGB canvas before concatenation, then encoded at a constant 25 fps.
+
 Bound the ASR job separately (2 CPU cores, 2 GiB, 10 minutes). ASR is an independent
 review aid for omissions, repeats, and endings. It is not a listening test or voice
 quality score. Review differences rather than rewriting the intended script to match
 an ASR homophone. Captions use the complete reviewed script with approximate phrase
 timing. Audio keeps its generated speed/pitch and is normalized in two passes to
--16 LUFS / -1.5 dBTP per scene.
+-16 LUFS / -2 dBTP per scene before AAC encoding, leaving codec peak headroom.
+Native captions use 70% vertical positioning above narrow-player controls; the creator
+scene uses 5% so its dated prices and benchmark results remain visible. The manifest
+can supply semantic caption chunks without changing the complete narration text.
 
 Copy only the two MP4s, posters and four VTTs into `public/media/`. Preserve the dated
 manifest, generation/verification evidence, and render report. Verify local and live
 bilingual playback, captions and narrow-screen layout before considering delivery done.
 Use a new versioned filename when replacing published video; keep earlier media for
 rollback. Stop transient jobs and remove discarded task-owned model weights afterwards.
+
+For a single-language revision, pass `--language zh` to synthesis, assembly and verification.
+The selected voice still requires both complete caption tracks. Use that version's manifest,
+scene count and independent ASR report; do not mix another voice's report into the new cut.
+Update website chapter start times from the final render report, then check seeking before
+and after metadata loads. No chapter click should start audio automatically.

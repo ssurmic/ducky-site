@@ -1,0 +1,102 @@
+[
+  {
+    "file": "01-stock.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 4.96,
+    "generation_seconds": 147.71,
+    "peak": 0.5031138062477112,
+    "rss_peak_kib": 11683500,
+    "source_manifest": "initial.json"
+  },
+  {
+    "file": "02-evidence.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 6.56,
+    "generation_seconds": 266.59,
+    "peak": 0.3809717297554016,
+    "rss_peak_kib": 11682444,
+    "source_manifest": "clarity.json"
+  },
+  {
+    "file": "03-creators.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 6.56,
+    "generation_seconds": 215.9,
+    "peak": 0.33067986369132996,
+    "rss_peak_kib": 11683672,
+    "source_manifest": "phrases.json"
+  },
+  {
+    "file": "04-context.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 5.92,
+    "generation_seconds": 269.74,
+    "peak": 0.4352933168411255,
+    "rss_peak_kib": 11682444,
+    "source_manifest": "clarity.json"
+  },
+  {
+    "file": "05-alerts.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 6.4,
+    "generation_seconds": 294.42,
+    "peak": 0.4440189003944397,
+    "rss_peak_kib": 11683672,
+    "source_manifest": "phrases.json"
+  },
+  {
+    "file": "01-stock.en.wav",
+    "language": "en",
+    "speaker": "Serena",
+    "seconds": 6.24,
+    "generation_seconds": 40.72,
+    "peak": 0.34868133068084717,
+    "rss_peak_kib": 11683500,
+    "source_manifest": "initial.json"
+  },
+  {
+    "file": "02-evidence.en.wav",
+    "language": "en",
+    "speaker": "Serena",
+    "seconds": 7.6,
+    "generation_seconds": 83.52,
+    "peak": 0.43396925926208496,
+    "rss_peak_kib": 11683500,
+    "source_manifest": "initial.json"
+  },
+  {
+    "file": "03-creators.en.wav",
+    "language": "en",
+    "speaker": "Serena",
+    "seconds": 7.28,
+    "generation_seconds": 107.03,
+    "peak": 0.3851180672645569,
+    "rss_peak_kib": 11683500,
+    "source_manifest": "initial.json"
+  },
+  {
+    "file": "04-context.en.wav",
+    "language": "en",
+    "speaker": "Serena",
+    "seconds": 8.32,
+    "generation_seconds": 123.05,
+    "peak": 0.4747735559940338,
+    "rss_peak_kib": 11683500,
+    "source_manifest": "initial.json"
+  },
+  {
+    "file": "05-alerts.en.wav",
+    "language": "en",
+    "speaker": "Serena",
+    "seconds": 6.48,
+    "generation_seconds": 104.72,
+    "peak": 0.3391872048377991,
+    "rss_peak_kib": 11683500,
+    "source_manifest": "initial.json"
+  }
+]

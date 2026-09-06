@@ -19,16 +19,22 @@ parser.add_argument('manifest', type=Path)
 parser.add_argument('audio_dir', type=Path)
 parser.add_argument('output_dir', type=Path)
 parser.add_argument('--ffmpeg', default='ffmpeg')
+parser.add_argument('--language', choices=['zh', 'en'], help='Render only this voice; keep both caption languages')
+parser.add_argument('--frames-dir', type=Path, help='Dated captures; preserve earlier reviewed frames')
 args = parser.parse_args()
 root = Path(__file__).resolve().parent
+frames = (args.frames_dir or root / 'frames').resolve()
 manifest = json.loads(args.manifest.read_text())
 args.output_dir.mkdir(parents=True, exist_ok=True)
 stem = 'ducky-walkthrough-' + manifest['version']
 asr = {row['file']: row for row in json.loads((args.audio_dir / 'speech-check.json').read_text())}
 
 def run(cmd):
-    return subprocess.run([args.ffmpeg, '-hide_banner', '-nostdin', *cmd],
-                          check=True, capture_output=True, text=True)
+    result = subprocess.run([args.ffmpeg, '-hide_banner', '-nostdin', *cmd],
+                            capture_output=True, text=True)
+    if result.returncode:
+        raise RuntimeError('FFmpeg failed: ' + result.stderr[-5000:])
+    return result
 
 def stamp(seconds):
     n = round(seconds * 1000)
@@ -46,15 +52,19 @@ def caption_chunks(text, language):
             break_long_words=False, break_on_hyphens=False)]
 
 report = {'version': manifest['version'], 'audio_processing':
-          'Two-pass EBU R128 -16 LUFS / -1.5 dBTP per scene; no speech speed changes', 'videos': {}}
+          'Two-pass EBU R128 -16 LUFS / -2 dBTP per scene, with AAC headroom; no speech speed changes',
+          'frame_processing': 'Normalize every capture to one 1920x1080 RGB canvas before concatenating; constant 25 fps',
+          'caption_presentation': 'Native WebVTT at line 70%; creator scene at line 5% to preserve price results; demonstration footer visible',
+          'videos': {}}
 with tempfile.TemporaryDirectory(prefix='ducky-demo-encode-') as directory:
     temporary = Path(directory)
-    for language in ['zh', 'en']:
+    normalized_frames = {}
+    for language in ([args.language] if args.language else ['zh', 'en']):
         segments, timeline, cues = [], [], {'zh': [], 'en': []}
         start = 0.0
         for row in manifest['scenes']:
             name = row['name']
-            image = root / 'frames' / language / f'{name}.png'
+            image = frames / language / f'{name}.png'
             audio = args.audio_dir / f'{name}.{language}.wav'
             assert image.is_file() and audio.is_file()
             with wave.open(str(audio)) as handle:
@@ -64,11 +74,11 @@ with tempfile.TemporaryDirectory(prefix='ducky-demo-encode-') as directory:
             duration = math.ceil((speech_seconds + lead + tail) * 25) / 25
             segment = temporary / f'{name}-{language}.mp4'
             measurement = run(['-i', str(audio), '-af',
-                               'loudnorm=I=-16:TP=-1.5:LRA=7:print_format=json',
+                               'loudnorm=I=-16:TP=-2:LRA=7:print_format=json',
                                '-f', 'null', '-']).stderr
             # FFmpeg can append muxer statistics after loudnorm's JSON block.
             measured, _ = json.JSONDecoder().raw_decode(measurement[measurement.rfind('{'):])
-            loudnorm = ('loudnorm=I=-16:TP=-1.5:LRA=7:'
+            loudnorm = ('loudnorm=I=-16:TP=-2:LRA=7:'
                         f"measured_I={measured['input_i']}:"
                         f"measured_TP={measured['input_tp']}:"
                         f"measured_LRA={measured['input_lra']}:"
@@ -89,15 +99,26 @@ with tempfile.TemporaryDirectory(prefix='ducky-demo-encode-') as directory:
             stills = temporary / f'{name}-{language}-frames.txt'
             lines = []
             for j, shot in enumerate(shots):
-                frame = root / 'frames' / language / shot['file']
-                assert frame.is_file() and frame.resolve().is_relative_to((root / 'frames').resolve())
+                frame = frames / language / shot['file']
+                assert frame.is_file() and frame.resolve().is_relative_to(frames.resolve())
+                # A size change within an image concat reinitializes fps and can drop
+                # frames. Normalize stills first so every scene keeps a continuous clock.
+                key = str(frame.resolve())
+                if key not in normalized_frames:
+                    normalized = temporary / ('frame-' + hashlib.sha256(key.encode()).hexdigest()[:16] + '.png')
+                    run(['-loglevel', 'error', '-i', str(frame), '-vf',
+                         'scale=1920:1080:force_original_aspect_ratio=decrease,'
+                         'pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=0x090d0a,setsar=1,format=rgb24',
+                         '-frames:v', '1', str(normalized)])
+                    normalized_frames[key] = normalized
+                frame = normalized_frames[key]
                 next_at = shots[j+1]['at'] if j+1 < len(shots) else 1
                 lines.extend([f"file '{frame.as_posix()}'", f"duration {(next_at-shot['at'])*duration:.6f}"])
             lines.append(f"file '{frame.as_posix()}'")
             stills.write_text('\n'.join(lines) + '\n')
             run(['-loglevel', 'error', '-y', '-f', 'concat', '-safe', '0',
                  '-i', str(stills), '-i', str(audio), '-t', str(duration),
-                 '-vf', vf, '-af', af, '-c:v', 'libx264', '-preset', 'veryfast',
+                 '-vf', vf, '-af', af, '-r', '25', '-fps_mode', 'cfr', '-c:v', 'libx264', '-preset', 'veryfast',
                  '-crf', '20', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '128k',
                  '-ar', '48000', '-movflags', '+faststart', str(segment)])
             segments.append(segment)
@@ -106,7 +127,10 @@ with tempfile.TemporaryDirectory(prefix='ducky-demo-encode-') as directory:
             speech_start = words[0]['start'] if words else 0
             speech_end = min(speech_seconds, words[-1]['end']) if words else speech_seconds
             for caption_language in cues:
-                chunks = caption_chunks(row[caption_language], caption_language)
+                chunks = row.get('caption_chunks', {}).get(caption_language) or caption_chunks(row[caption_language], caption_language)
+                assert ''.join(''.join(chunks).split()) == ''.join(row[caption_language].split())
+                caption_line = row.get('caption_line', 70)
+                assert 0 <= caption_line <= 90
                 total = sum(len(chunk) for chunk in chunks)
                 at = start + lead + speech_start
                 # Exact reviewed script, timed within independently recognized speech boundaries.
@@ -114,7 +138,7 @@ with tempfile.TemporaryDirectory(prefix='ducky-demo-encode-') as directory:
                     end = at + (speech_end - speech_start) * len(chunk) / total
                     display = '\n'.join(textwrap.wrap(chunk, width=38,
                               break_long_words=False, break_on_hyphens=False)) if caption_language == 'en' else chunk
-                    cues[caption_language].append(f'{stamp(at)} --> {stamp(end)}\n{display}')
+                    cues[caption_language].append(f'{stamp(at)} --> {stamp(end)} line:{caption_line}%\n{display}')
                     at = end
             timeline.append({'scene': name, 'start': round(start, 3), 'duration': duration,
                              'speech_seconds': speech_seconds,

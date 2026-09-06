@@ -1,0 +1,202 @@
+{
+  "version": "2026-09-06-voice-v5",
+  "audio_processing": "Two-pass EBU R128 -16 LUFS / -2 dBTP per scene, with AAC headroom; no speech speed changes",
+  "frame_processing": "Normalize every capture to one 1920x1080 RGB canvas before concatenating; constant 25 fps",
+  "videos": {
+    "zh": {
+      "file": "ducky-walkthrough-2026-09-06-voice-v5.zh.mp4",
+      "seconds": 33.4,
+      "bytes": 1398755,
+      "scenes": [
+        {
+          "scene": "01-stock",
+          "start": 0.0,
+          "duration": 5.56,
+          "speech_seconds": 4.96,
+          "audio_sha256": "14c645dc380d30e587dada1f8157d7aad94f511ff083cb39bae8e7e5bb48a179",
+          "frame_sha256": "9d6b9e56fe1cea15ae6ed2dd1cee710fff058c86f4eac2f6bf7257f147306ec8",
+          "shots": [
+            {
+              "file": "01-stock.png",
+              "at": 0
+            },
+            {
+              "file": "01-chart.png",
+              "at": 0.6
+            }
+          ]
+        },
+        {
+          "scene": "02-evidence",
+          "start": 5.56,
+          "duration": 7.16,
+          "speech_seconds": 6.56,
+          "audio_sha256": "258cc8da89b66ee7ca7f552570e9449450c2297184b4132583dcaf6f4b38cff3",
+          "frame_sha256": "c7473739754a40547cc0b8c3ce1042fb3673f6b36258b501c6571a2bcc66fcc8",
+          "shots": [
+            {
+              "file": "02-evidence.png",
+              "at": 0
+            },
+            {
+              "file": "02-source.png",
+              "at": 0.55
+            }
+          ]
+        },
+        {
+          "scene": "03-creators",
+          "start": 12.72,
+          "duration": 7.16,
+          "speech_seconds": 6.56,
+          "audio_sha256": "b613696f4522fb83ab67c055bcec86f4c362e53a827b7d977f447542a3d162b1",
+          "frame_sha256": "41a4cdf8fb1d9b676725e7776061b420424e70e5f34947877bfad866ba6f8e45",
+          "shots": [
+            {
+              "file": "03-creators.png",
+              "at": 0
+            },
+            {
+              "file": "03-price.png",
+              "at": 0.5
+            }
+          ]
+        },
+        {
+          "scene": "04-context",
+          "start": 19.88,
+          "duration": 6.52,
+          "speech_seconds": 5.92,
+          "audio_sha256": "910c4b43c5f0e4c4c53e67734312b7f9e882bcfe73c45c16ceb76010ef63597d",
+          "frame_sha256": "bd2a3bbc819421b9791450843c530d521adecdac73a1c3e4d8500af0f60623ca",
+          "shots": [
+            {
+              "file": "04-context.png",
+              "at": 0
+            },
+            {
+              "file": "04-briefing.png",
+              "at": 0.43558282208588955
+            }
+          ]
+        },
+        {
+          "scene": "05-alerts",
+          "start": 26.4,
+          "duration": 7.0,
+          "speech_seconds": 6.4,
+          "audio_sha256": "44a3a11f8da83e843fcab38836cd004a83ff0a960b11c3c0e02d5d5bf59f17b2",
+          "frame_sha256": "13e2ffb9a9e1937cb62e526c2f4923e6afee7b74204b587f27f87e786db0640d",
+          "shots": [
+            {
+              "file": "05-alerts.png",
+              "at": 0
+            },
+            {
+              "file": "05-end.png",
+              "at": 0.5599999999999999
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "file": "ducky-walkthrough-2026-09-06-voice-v5.en.mp4",
+      "seconds": 38.96,
+      "bytes": 1659811,
+      "scenes": [
+        {
+          "scene": "01-stock",
+          "start": 0.0,
+          "duration": 6.84,
+          "speech_seconds": 6.24,
+          "audio_sha256": "ff49d68d2d746cddfc5a208f17a8a1b7df34eb8141c18d368741cca26e5a742b",
+          "frame_sha256": "a7f500f7ab6b31dc69eec31b0198384436f60359c57904ac0a44fe98da23ed1c",
+          "shots": [
+            {
+              "file": "01-stock.png",
+              "at": 0
+            },
+            {
+              "file": "01-chart.png",
+              "at": 0.6
+            }
+          ]
+        },
+        {
+          "scene": "02-evidence",
+          "start": 6.84,
+          "duration": 8.2,
+          "speech_seconds": 7.6,
+          "audio_sha256": "6b745dd1b07dcf901818ea365f9919ca0221fdf63c0ef65e6b4e94c8761673e7",
+          "frame_sha256": "61fa48a639850c2ac9ea3ca6ff03faedcd511e0d486ce9f15329e6ce25989505",
+          "shots": [
+            {
+              "file": "02-evidence.png",
+              "at": 0
+            },
+            {
+              "file": "02-source.png",
+              "at": 0.55
+            }
+          ]
+        },
+        {
+          "scene": "03-creators",
+          "start": 15.04,
+          "duration": 7.88,
+          "speech_seconds": 7.28,
+          "audio_sha256": "7350e94d1e85738610017bef85d8e2db4344a3abe3ce166bd712a22da0ddeaf3",
+          "frame_sha256": "aa4acfe399137c649154e309f80f09262da8a5414c00bad86febfa67ba12aa82",
+          "shots": [
+            {
+              "file": "03-creators.png",
+              "at": 0
+            },
+            {
+              "file": "03-price.png",
+              "at": 0.5
+            }
+          ]
+        },
+        {
+          "scene": "04-context",
+          "start": 22.92,
+          "duration": 8.96,
+          "speech_seconds": 8.32,
+          "audio_sha256": "b3b65842624ce6cc119f7a6029c79b2ad175ef71624e48ba22577f800c73a973",
+          "frame_sha256": "f8f373f258c442a27a89714e22a443a9297e847f1dcfe0d870da2839a93dff7f",
+          "shots": [
+            {
+              "file": "04-context.png",
+              "at": 0
+            },
+            {
+              "file": "04-briefing.png",
+              "at": 0.5133928571428571
+            }
+          ]
+        },
+        {
+          "scene": "05-alerts",
+          "start": 31.88,
+          "duration": 7.08,
+          "speech_seconds": 6.48,
+          "audio_sha256": "8c80a41c4f44aa627612bebf13b3955b2806ffff09e1df67b42c662c0980cfb6",
+          "frame_sha256": "4869cceb39fb240f5308bd42d5f481ba3bac6367d1a0b4676a854808cde74f30",
+          "shots": [
+            {
+              "file": "05-alerts.png",
+              "at": 0
+            },
+            {
+              "file": "05-end.png",
+              "at": 0.6610169491525423
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "caption_presentation": "Native WebVTT at line 70%; creator scene at line 5% to preserve price results; demonstration footer visible"
+}

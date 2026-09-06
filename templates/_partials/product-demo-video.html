@@ -1,14 +1,41 @@
 <section class="section product-demo" id="product-demo" aria-labelledby="product-demo-title">
  <div class="wrap">
   <div class="product-demo-heading"><div><p class="eyebrow mono">{{ t('walkthrough.eyebrow') }}</p><h2 id="product-demo-title">{{ t('walkthrough.title') }}</h2></div><p class="muted small">{{ t('walkthrough.meta') }}</p></div>
-  {% set video_asset = '/media/ducky-walkthrough-2026-09-06-voice-v3.' ~ lang %}
-  <video class="product-demo-player" controls playsinline preload="none" width="1920" height="1080" poster="{{ video_asset }}.jpg" aria-label="{{ t('walkthrough.title') }}" aria-describedby="product-demo-note">
+  {% set video_version = '2026-09-06-voice-v5' %}
+  {% set video_asset = '/media/ducky-walkthrough-' ~ video_version ~ '.' ~ lang %}
+  <video id="product-demo-video" class="product-demo-player" controls playsinline preload="none" width="1920" height="1080" poster="{{ video_asset }}.jpg" aria-label="{{ t('walkthrough.title') }}" aria-describedby="product-demo-note">
    <source src="{{ video_asset }}.mp4" type="video/mp4">
    <track kind="captions" src="{{ video_asset }}.zh.vtt" srclang="zh" label="{{ t('walkthrough.captions_zh') }}"{% if lang == 'zh' %} default{% endif %}>
    <track kind="captions" src="{{ video_asset }}.en.vtt" srclang="en" label="{{ t('walkthrough.captions_en') }}"{% if lang == 'en' %} default{% endif %}>
    <a href="{{ video_asset }}.mp4">{{ t('walkthrough.download') }}</a>
   </video>
   <div class="product-demo-caption"><p id="product-demo-note" class="small muted">{{ t('walkthrough.note') }}</p><a href="{{ url('/app/') }}#/register">{{ t('walkthrough.start') }} →</a></div>
-  <details class="product-demo-transcript"><summary>{{ t('walkthrough.transcript') }}</summary><ol>{% for i in range(1,9) %}<li>{{ t('walkthrough.step' ~ i) }}</li>{% endfor %}</ol><p class="small muted">{{ t('walkthrough.voice') }}</p></details>
+  {# Reviewed render offsets: skip the 160ms scene fade; the briefing starts within scene 4. #}
+  {% set chapter_starts = [0.2, 5.76, 12.92, 20.08, 22.80, 26.60, none] if lang == 'zh' else [0.2, 7.04, 15.24, 23.12, 27.60, 32.08, none] %}
+  {% set chapter_routes = ['#/watchlist', '#/boards?screen=insider-oversold', '#/creators?scope=discover', '#/calendar', '#/briefing?period=daily', '#/updates', '#/creators?tab=lab&preview=fictional'] %}
+  <div class="product-demo-guide" aria-labelledby="product-demo-guide-title" data-demo-guide
+       data-loading="{{ t('walkthrough.guide.loading') }}" data-ready="{{ t('walkthrough.guide.ready') }}" data-error="{{ t('walkthrough.guide.error') }}">
+   <div class="product-demo-guide-heading"><h3 id="product-demo-guide-title">{{ t('walkthrough.guide.title') }}</h3><p class="small muted">{{ t('walkthrough.guide.hint') }}</p></div>
+   <ol class="product-demo-chapters">
+    {% for i in range(1,8) %}
+    {% set second = chapter_starts[i - 1] %}
+    <li class="product-demo-chapter">
+     {% if second is not none %}
+     {% set clock = '%d:%02d'|format((second / 60)|int, (second % 60)|int) %}
+     <button class="product-demo-seek mono" type="button" data-demo-seek="{{ second }}" data-demo-title="{{ t('walkthrough.guide.' ~ i ~ '.title') }}" data-demo-clock="{{ clock }}" aria-controls="product-demo-video" aria-label="{{ t('walkthrough.guide.seek') }} {{ clock }} · {{ t('walkthrough.guide.' ~ i ~ '.title') }}" disabled><span aria-hidden="true">↳</span> {{ clock }}</button>
+     {% else %}
+     <span class="product-demo-interactive mono">{{ t('walkthrough.guide.interactive') }}</span>
+     {% endif %}
+     <h4><span class="product-demo-chapter-number mono" aria-hidden="true">{{ '%02d'|format(i) }}</span>{{ t('walkthrough.guide.' ~ i ~ '.title') }}</h4>
+     <p>{{ t('walkthrough.guide.' ~ i ~ '.body') }}</p>
+     <a class="product-demo-guide-link" href="{{ url('/app/') }}{{ chapter_routes[i - 1] }}">{{ t('walkthrough.guide.' ~ i ~ '.link') }} <span aria-hidden="true">→</span></a>
+    </li>
+    {% endfor %}
+   </ol>
+   <p class="product-demo-guide-status small" role="status" aria-live="polite" aria-atomic="true" data-demo-status></p>
+   <p class="small muted product-demo-guide-access">{{ t('walkthrough.guide.access') }}</p>
+   <p class="small muted product-demo-guide-voice">{{ t('walkthrough.voice') }}</p>
+  </div>
  </div>
 </section>
+<script type="module" src="/js/product-demo.js"></script>

@@ -1,0 +1,289 @@
+{
+  "status": "PASS",
+  "checks": 935,
+  "failures": [],
+  "review_notes": [
+    "01-stock.zh.wav: ASR differs from script (similarity 0.769); review pronunciation/content, not an automatic rejection",
+    "02-evidence.zh.wav: ASR differs from script (similarity 0.962); review pronunciation/content, not an automatic rejection",
+    "04-context.zh.wav: ASR differs from script (similarity 0.607); review pronunciation/content, not an automatic rejection",
+    "05-alerts.zh.wav: ASR differs from script (similarity 0.958); review pronunciation/content, not an automatic rejection"
+  ],
+  "audio": {
+    "01-stock.zh.wav": {
+      "duration": 4.96,
+      "peak_pcm": 0.50311279296875,
+      "rms_pcm": 0.057017054498893445,
+      "asr_similarity": 0.7692,
+      "asr_words": 23
+    },
+    "01-stock.en.wav": {
+      "duration": 6.24,
+      "peak_pcm": 0.348663330078125,
+      "rms_pcm": 0.04869220306632586,
+      "asr_similarity": 1.0,
+      "asr_words": 17
+    },
+    "02-evidence.zh.wav": {
+      "duration": 6.56,
+      "peak_pcm": 0.380950927734375,
+      "rms_pcm": 0.04303592266938059,
+      "asr_similarity": 0.9615,
+      "asr_words": 25
+    },
+    "02-evidence.en.wav": {
+      "duration": 7.6,
+      "peak_pcm": 0.4339599609375,
+      "rms_pcm": 0.061871186334673034,
+      "asr_similarity": 1.0,
+      "asr_words": 17
+    },
+    "03-creators.zh.wav": {
+      "duration": 6.56,
+      "peak_pcm": 0.330657958984375,
+      "rms_pcm": 0.03265939541201463,
+      "asr_similarity": 1.0,
+      "asr_words": 26
+    },
+    "03-creators.en.wav": {
+      "duration": 7.28,
+      "peak_pcm": 0.385101318359375,
+      "rms_pcm": 0.058435061938795496,
+      "asr_similarity": 1.0,
+      "asr_words": 19
+    },
+    "04-context.zh.wav": {
+      "duration": 5.92,
+      "peak_pcm": 0.435272216796875,
+      "rms_pcm": 0.0584562292739302,
+      "asr_similarity": 0.6071,
+      "asr_words": 27
+    },
+    "04-context.en.wav": {
+      "duration": 8.32,
+      "peak_pcm": 0.47479248046875,
+      "rms_pcm": 0.06633093512641515,
+      "asr_similarity": 1.0,
+      "asr_words": 18
+    },
+    "05-alerts.zh.wav": {
+      "duration": 6.4,
+      "peak_pcm": 0.444000244140625,
+      "rms_pcm": 0.05088247978267703,
+      "asr_similarity": 0.9583,
+      "asr_words": 23
+    },
+    "05-alerts.en.wav": {
+      "duration": 6.48,
+      "peak_pcm": 0.339202880859375,
+      "rms_pcm": 0.04706256306226319,
+      "asr_similarity": 1.0,
+      "asr_words": 16
+    }
+  },
+  "assets": {
+    "scripts/demo/voiceover-2026-09-06-v5.json": {
+      "bytes": 4631,
+      "sha256": "b6ed054748fbeb2267200a874cc3534c0721841b84d1b3e4de4eab3bc33db3bd"
+    },
+    "scripts/demo/evidence/voice-v5/speech-check.json": {
+      "bytes": 36773,
+      "sha256": "46b0682f350c2b1d9e48fa6fc04f39e387929d83ba1723d48eac639b6566a660"
+    },
+    "scripts/demo/evidence/voice-v5/01-stock.zh.wav": {
+      "bytes": 238124,
+      "sha256": "14c645dc380d30e587dada1f8157d7aad94f511ff083cb39bae8e7e5bb48a179"
+    },
+    "scripts/demo/evidence/voice-v5/01-stock.en.wav": {
+      "bytes": 299564,
+      "sha256": "ff49d68d2d746cddfc5a208f17a8a1b7df34eb8141c18d368741cca26e5a742b"
+    },
+    "scripts/demo/evidence/voice-v5/02-evidence.zh.wav": {
+      "bytes": 314924,
+      "sha256": "258cc8da89b66ee7ca7f552570e9449450c2297184b4132583dcaf6f4b38cff3"
+    },
+    "scripts/demo/evidence/voice-v5/02-evidence.en.wav": {
+      "bytes": 364844,
+      "sha256": "6b745dd1b07dcf901818ea365f9919ca0221fdf63c0ef65e6b4e94c8761673e7"
+    },
+    "scripts/demo/evidence/voice-v5/03-creators.zh.wav": {
+      "bytes": 314924,
+      "sha256": "b613696f4522fb83ab67c055bcec86f4c362e53a827b7d977f447542a3d162b1"
+    },
+    "scripts/demo/evidence/voice-v5/03-creators.en.wav": {
+      "bytes": 349484,
+      "sha256": "7350e94d1e85738610017bef85d8e2db4344a3abe3ce166bd712a22da0ddeaf3"
+    },
+    "scripts/demo/evidence/voice-v5/04-context.zh.wav": {
+      "bytes": 284204,
+      "sha256": "910c4b43c5f0e4c4c53e67734312b7f9e882bcfe73c45c16ceb76010ef63597d"
+    },
+    "scripts/demo/evidence/voice-v5/04-context.en.wav": {
+      "bytes": 399404,
+      "sha256": "b3b65842624ce6cc119f7a6029c79b2ad175ef71624e48ba22577f800c73a973"
+    },
+    "scripts/demo/evidence/voice-v5/05-alerts.zh.wav": {
+      "bytes": 307244,
+      "sha256": "44a3a11f8da83e843fcab38836cd004a83ff0a960b11c3c0e02d5d5bf59f17b2"
+    },
+    "scripts/demo/evidence/voice-v5/05-alerts.en.wav": {
+      "bytes": 311084,
+      "sha256": "8c80a41c4f44aa627612bebf13b3955b2806ffff09e1df67b42c662c0980cfb6"
+    },
+    "/tmp/ducky-demo-final-2026-09-06/v5-delivery/render-report.json": {
+      "bytes": 6224,
+      "sha256": "474d1f8fa3225daa7d01c144c755db2bcd33847afb70db962d61d8b8a373e3de"
+    },
+    "/tmp/ducky-demo-final-2026-09-06/v5-delivery/ducky-walkthrough-2026-09-06-voice-v5.zh.mp4": {
+      "bytes": 1398755,
+      "sha256": "fdb3643f0d28a918176595eb1203903a7d7c6325659a0b3098b26d49e507d7ab"
+    },
+    "/tmp/ducky-demo-final-2026-09-06/v5-delivery/ducky-walkthrough-2026-09-06-voice-v5.zh.jpg": {
+      "bytes": 111992,
+      "sha256": "277e4d94e19e977fe25d9f2b780f9509f6fa54f0219874fae0e2b93f4d4fdb5c"
+    },
+    "scripts/demo/frames-v5/zh/01-stock.png": {
+      "bytes": 83165,
+      "sha256": "9d6b9e56fe1cea15ae6ed2dd1cee710fff058c86f4eac2f6bf7257f147306ec8"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/zh/01-stock.png": {
+      "bytes": 83165,
+      "sha256": "9d6b9e56fe1cea15ae6ed2dd1cee710fff058c86f4eac2f6bf7257f147306ec8"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/zh/01-chart.png": {
+      "bytes": 81631,
+      "sha256": "3a4bfff49f363feb48d5bb45da90de52dc349949a9fd39666a7bed4b0f6c13dc"
+    },
+    "scripts/demo/frames-v5/zh/02-evidence.png": {
+      "bytes": 97539,
+      "sha256": "c7473739754a40547cc0b8c3ce1042fb3673f6b36258b501c6571a2bcc66fcc8"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/zh/02-evidence.png": {
+      "bytes": 97539,
+      "sha256": "c7473739754a40547cc0b8c3ce1042fb3673f6b36258b501c6571a2bcc66fcc8"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/zh/02-source.png": {
+      "bytes": 63973,
+      "sha256": "28c74fa3f3aebd33211b65a8f95f33c28192f4f25eda8cf749044c84fc6e88a1"
+    },
+    "scripts/demo/frames-v5/zh/03-creators.png": {
+      "bytes": 71642,
+      "sha256": "41a4cdf8fb1d9b676725e7776061b420424e70e5f34947877bfad866ba6f8e45"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/zh/03-creators.png": {
+      "bytes": 71642,
+      "sha256": "41a4cdf8fb1d9b676725e7776061b420424e70e5f34947877bfad866ba6f8e45"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/zh/03-price.png": {
+      "bytes": 63446,
+      "sha256": "c29194c05ab031251c82a311c66a1fad6ebf3f3c4e1fbac29bf3149a72f7537c"
+    },
+    "scripts/demo/frames-v5/zh/04-context.png": {
+      "bytes": 30806,
+      "sha256": "bd2a3bbc819421b9791450843c530d521adecdac73a1c3e4d8500af0f60623ca"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/zh/04-context.png": {
+      "bytes": 30806,
+      "sha256": "bd2a3bbc819421b9791450843c530d521adecdac73a1c3e4d8500af0f60623ca"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/zh/04-briefing.png": {
+      "bytes": 92726,
+      "sha256": "539ce6a211aa50244c7526dfe296ea367eaa10e3ca7f68ab35208f9589f64d8f"
+    },
+    "scripts/demo/frames-v5/zh/05-alerts.png": {
+      "bytes": 88522,
+      "sha256": "13e2ffb9a9e1937cb62e526c2f4923e6afee7b74204b587f27f87e786db0640d"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/zh/05-alerts.png": {
+      "bytes": 88522,
+      "sha256": "13e2ffb9a9e1937cb62e526c2f4923e6afee7b74204b587f27f87e786db0640d"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/zh/05-end.png": {
+      "bytes": 40728,
+      "sha256": "1867706ee8889c426a624b2fd41658c18a62b7c64a64cbf878144a7c4a0cd6be"
+    },
+    "/tmp/ducky-demo-final-2026-09-06/v5-delivery/ducky-walkthrough-2026-09-06-voice-v5.zh.zh.vtt": {
+      "bytes": 815,
+      "sha256": "9697fdb3fa2509058d87aa2b49e7551354831b3dd48dbae14020688bdfccb204"
+    },
+    "/tmp/ducky-demo-final-2026-09-06/v5-delivery/ducky-walkthrough-2026-09-06-voice-v5.zh.en.vtt": {
+      "bytes": 970,
+      "sha256": "b75af3613768d5de7cff53a7f65046cc7e7f60fbe0171ef3d0aea88fd28dd0bb"
+    },
+    "/tmp/ducky-demo-final-2026-09-06/v5-delivery/ducky-walkthrough-2026-09-06-voice-v5.en.mp4": {
+      "bytes": 1659811,
+      "sha256": "944738d08e724e03669e5fba035d12f6fd1f340c2f5b114640f8aa9470b8604b"
+    },
+    "/tmp/ducky-demo-final-2026-09-06/v5-delivery/ducky-walkthrough-2026-09-06-voice-v5.en.jpg": {
+      "bytes": 130016,
+      "sha256": "cff10c77cfb888a404f0208a533af6f77d8a67d03915f2364eeb5594532fa070"
+    },
+    "scripts/demo/frames-v5/en/01-stock.png": {
+      "bytes": 96094,
+      "sha256": "a7f500f7ab6b31dc69eec31b0198384436f60359c57904ac0a44fe98da23ed1c"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/en/01-stock.png": {
+      "bytes": 96094,
+      "sha256": "a7f500f7ab6b31dc69eec31b0198384436f60359c57904ac0a44fe98da23ed1c"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/en/01-chart.png": {
+      "bytes": 85688,
+      "sha256": "b1141507f3c97b1f9271541f43339375d1b382d3db7e3ce16fe69f4086fe1486"
+    },
+    "scripts/demo/frames-v5/en/02-evidence.png": {
+      "bytes": 119326,
+      "sha256": "61fa48a639850c2ac9ea3ca6ff03faedcd511e0d486ce9f15329e6ce25989505"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/en/02-evidence.png": {
+      "bytes": 119326,
+      "sha256": "61fa48a639850c2ac9ea3ca6ff03faedcd511e0d486ce9f15329e6ce25989505"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/en/02-source.png": {
+      "bytes": 77399,
+      "sha256": "2b943df7556973812c2db2df321a1d6eb97b00b0878248da0a17db36a26e42bd"
+    },
+    "scripts/demo/frames-v5/en/03-creators.png": {
+      "bytes": 79167,
+      "sha256": "aa4acfe399137c649154e309f80f09262da8a5414c00bad86febfa67ba12aa82"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/en/03-creators.png": {
+      "bytes": 79167,
+      "sha256": "aa4acfe399137c649154e309f80f09262da8a5414c00bad86febfa67ba12aa82"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/en/03-price.png": {
+      "bytes": 71269,
+      "sha256": "0601c0477a552b2dd49d0c1c68868e4d13bf2033c01059d7f31103a6b59fdc17"
+    },
+    "scripts/demo/frames-v5/en/04-context.png": {
+      "bytes": 34031,
+      "sha256": "f8f373f258c442a27a89714e22a443a9297e847f1dcfe0d870da2839a93dff7f"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/en/04-context.png": {
+      "bytes": 34031,
+      "sha256": "f8f373f258c442a27a89714e22a443a9297e847f1dcfe0d870da2839a93dff7f"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/en/04-briefing.png": {
+      "bytes": 107133,
+      "sha256": "53a3962c95a42e147de8f30c4b7f3a6840456bb98f91615ae7605e2ba06d91e0"
+    },
+    "scripts/demo/frames-v5/en/05-alerts.png": {
+      "bytes": 93919,
+      "sha256": "4869cceb39fb240f5308bd42d5f481ba3bac6367d1a0b4676a854808cde74f30"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/en/05-alerts.png": {
+      "bytes": 93919,
+      "sha256": "4869cceb39fb240f5308bd42d5f481ba3bac6367d1a0b4676a854808cde74f30"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v5/en/05-end.png": {
+      "bytes": 40195,
+      "sha256": "5693a0483a7ac4b1d9ba5fff044e912b96f530d3695f01bb4be7a7aad21e3cda"
+    },
+    "/tmp/ducky-demo-final-2026-09-06/v5-delivery/ducky-walkthrough-2026-09-06-voice-v5.en.zh.vtt": {
+      "bytes": 815,
+      "sha256": "14d7eac67c8c48faae9eb6a7fc759c70b810bc75a57c6075f94995d7179fcdce"
+    },
+    "/tmp/ducky-demo-final-2026-09-06/v5-delivery/ducky-walkthrough-2026-09-06-voice-v5.en.en.vtt": {
+      "bytes": 970,
+      "sha256": "7a0ae68a90153c1cf96a518b4e13531a2e8b18e6b340c287d623f0ff2c95d4f7"
+    }
+  }
+}
