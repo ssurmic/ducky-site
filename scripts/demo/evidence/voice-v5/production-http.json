@@ -1,0 +1,70 @@
+[
+  {
+    "file": "ducky-walkthrough-2026-09-06-voice-v5.en.en.vtt",
+    "bytes": 970,
+    "sha256": "7a0ae68a90153c1cf96a518b4e13531a2e8b18e6b340c287d623f0ff2c95d4f7",
+    "identical": true
+  },
+  {
+    "file": "ducky-walkthrough-2026-09-06-voice-v5.en.jpg",
+    "bytes": 130016,
+    "sha256": "cff10c77cfb888a404f0208a533af6f77d8a67d03915f2364eeb5594532fa070",
+    "identical": true
+  },
+  {
+    "file": "ducky-walkthrough-2026-09-06-voice-v5.en.mp4",
+    "bytes": 1659811,
+    "sha256": "944738d08e724e03669e5fba035d12f6fd1f340c2f5b114640f8aa9470b8604b",
+    "identical": true,
+    "range_status": 206,
+    "content_range": "bytes 0-1023/1659811",
+    "range_identical": true
+  },
+  {
+    "file": "ducky-walkthrough-2026-09-06-voice-v5.en.zh.vtt",
+    "bytes": 815,
+    "sha256": "14d7eac67c8c48faae9eb6a7fc759c70b810bc75a57c6075f94995d7179fcdce",
+    "identical": true
+  },
+  {
+    "file": "ducky-walkthrough-2026-09-06-voice-v5.zh.en.vtt",
+    "bytes": 970,
+    "sha256": "b75af3613768d5de7cff53a7f65046cc7e7f60fbe0171ef3d0aea88fd28dd0bb",
+    "identical": true
+  },
+  {
+    "file": "ducky-walkthrough-2026-09-06-voice-v5.zh.jpg",
+    "bytes": 111992,
+    "sha256": "277e4d94e19e977fe25d9f2b780f9509f6fa54f0219874fae0e2b93f4d4fdb5c",
+    "identical": true
+  },
+  {
+    "file": "ducky-walkthrough-2026-09-06-voice-v5.zh.mp4",
+    "bytes": 1398755,
+    "sha256": "fdb3643f0d28a918176595eb1203903a7d7c6325659a0b3098b26d49e507d7ab",
+    "identical": true,
+    "range_status": 206,
+    "content_range": "bytes 0-1023/1398755",
+    "range_identical": true
+  },
+  {
+    "file": "ducky-walkthrough-2026-09-06-voice-v5.zh.zh.vtt",
+    "bytes": 815,
+    "sha256": "9697fdb3fa2509058d87aa2b49e7551354831b3dd48dbae14020688bdfccb204",
+    "identical": true
+  },
+  {
+    "page": "/",
+    "v5": true,
+    "build": true,
+    "guide": 7,
+    "chapters": 6
+  },
+  {
+    "page": "/en/",
+    "v5": true,
+    "build": true,
+    "guide": 7,
+    "chapters": 6
+  }
+]

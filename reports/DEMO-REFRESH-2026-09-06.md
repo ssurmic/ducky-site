@@ -1,8 +1,8 @@
 # Short product demo refresh · 2026-09-06
 
-## Final release candidate
+## Released and verified
 
-Final v5 is assembled and reviewed: **Chinese 33.421 seconds, English 38.981 seconds**, compared with the old 74.221-second Chinese film. Both use the selected Serena female voice. No speed or pitch stretching. All ten source WAVs, independent ASR results, hashes and render metadata are frozen in `scripts/demo/evidence/voice-v5/`.
+Final v5 is published at https://duckybot.app/#product-demo and https://duckybot.app/en/#product-demo. Frontend `db70290f0b943dc0cd2a548ad16f2f0e6a0af355`; Pages deployment https://356dd8c8.ducky-site.pages.dev. Duration: **Chinese 33.421 seconds, English 38.981 seconds**, compared with the old 74.221-second Chinese film. Both use the selected Serena female voice. No speed or pitch stretching. All ten source WAVs, independent ASR results, hashes and render metadata are frozen in `scripts/demo/evidence/voice-v5/`.
 
 - Product dependencies accepted and integrated through `ba24ec7`: screening entry, compact chart, full-width creator card, holiday calendar, long-video review and dated topic inbox. Original dirty development worktrees were not reset or deployed.
 - Twenty selected shots are drawn from real September 6 production captures or explicitly labeled local compositions. All 29 retained source/alternate captures have provenance and hashes in `scripts/demo/frames-v5/capture-provenance.json`.
@@ -12,8 +12,8 @@ Final v5 is assembled and reviewed: **Chinese 33.421 seconds, English 38.981 sec
 - Full final H.264/AAC decode passed. Final AAC loudness: ZH -16.31 LUFS / -1.56 dBTP; EN -16.36 LUFS / -1.94 dBTP. Media verification: **935 checks, zero failures, 4 documented ASR review notes, 10/10 clips checked**.
 - Real browser QA found a cold-load seeking race. The responsible task fixed it: user click enables media preloading, waits for the target seekable range and a real frame, and retries on progress. Default remains no preload/autoplay. Added three regression cases; the combined suite passed 195 tests before the final upstream icon merge.
 - IAB browser at 390×844: both languages have no horizontal overflow; all six chapter buttons locate the correct frame while paused, including cold metadata. Native captions are visible above controls at 70%; creator captions use 5% to preserve the chart values. English opener now keeps “so you can keep up” together. The guide remains independently readable and direct links work without playing the movie.
-- Full browser playback completed without error in both languages: Chinese 33.421 seconds and English 38.981 seconds. After the final upstream icon merge, 195/195 frontend tests, 20-page build and copy lint passed. Production publication and live verification remain.
-- Heartbeat `demo` remains active until production verification; pause it after delivery. Local temporary servers and the isolated task-owned ASR model can be cleaned up then; preserve the production ASR consumer and Qwen TTS runtime/model.
+- Full browser playback completed without error in both languages: Chinese 33.421 seconds and English 38.981 seconds. After the final upstream icon merge, 195/195 frontend tests, 20-page build and copy lint passed. The formal site serves all eight assets byte-for-byte identical to the final files, both MP4s support HTTP Range 206, and both homepage languages reference build db70290f with 7 guide entries and 6 chapters. Production IAB played both movies to their exact ends without error. Independent production Chrome verification passed cold seeks at 26.6/32.08 seconds while paused and opened the real inbox through its guide link. No notification was sent during this acceptance.
+- Cleanup: removed only the disposable `ducky-tts/models/whisper-small-v4` directory after verifying all six files have independent consumer hardlinks. The consumer `ducky-asr/models/whisper-small/model.bin` remains 483,546,902 bytes; Qwen TTS model/runtime retained. All three task-owned preview servers (8778/8780/8781) are stopped. Heartbeat `demo` is PAUSED after final production playback. Original development worktrees and obsolete audition drafts remain untouched.
 
 Owner task: 01a07862-6dac-7190-909b-40cfa2f21caa (优化官网 Demo 视频). Branch `codex/demo-female-voice`; owned worktree `/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06`.
 

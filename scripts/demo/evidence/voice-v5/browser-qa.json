@@ -73,5 +73,30 @@
       "file": "/tmp/ducky-demo-final-2026-09-06/v5-final-qa/zh-mobile-guide.png",
       "sha256": "2709605d9bd9f585dd712d48295d1341305a658b82474fa44feacd86faa9c99e"
     }
-  ]
+  ],
+  "production": {
+    "site": "https://duckybot.app/",
+    "frontend_commit": "db70290f0b943dc0cd2a548ad16f2f0e6a0af355",
+    "deployment": "https://356dd8c8.ducky-site.pages.dev",
+    "IAB_full_playback_ended": {
+      "zh": 33.421333,
+      "en": 38.981333
+    },
+    "IAB_cold_seeks": {
+      "zh": 26.6,
+      "en": 32.08
+    },
+    "independent_Chrome": "Notification owner task separately verified both cold seeks, paused Ready state, all 7 guide entries/6 chapters and actual inbox deep link. No notifications sent.",
+    "asset_integrity": "All 8 deployed MP4/JPG/VTT files byte-identical; both MP4 Range responses 206. See production-http.json."
+  },
+  "cleanup": {
+    "preview_servers_stopped": [
+      8778,
+      8780,
+      8781
+    ],
+    "heartbeat": "demo PAUSED",
+    "temporary_ASR_model_removed": "ducky-tts/models/whisper-small-v4",
+    "consumer_ASR_and_Qwen_TTS": "preserved"
+  }
 }
