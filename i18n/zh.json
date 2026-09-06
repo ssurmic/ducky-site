@@ -1838,5 +1838,10 @@
   "app.event.kind_month_end": "月末",
   "app.event.kind_index": "指数调整",
   "app.event.kind_other": "历史事件",
-  "app.radar.identity_pending": "发行人代码待核对"
+  "app.radar.identity_pending": "发行人代码待核对",
+  "app.release.title": "页面暂时无法打开",
+  "app.release.failed": "刷新后重试，会返回当前页面。",
+  "app.release.offline": "网络似乎已断开。连接网络后，再刷新此页。",
+  "app.release.refresh": "刷新此页",
+  "app.release.updated": "Ducky 已更新。刷新后可在新版中打开当前页面。"
 }

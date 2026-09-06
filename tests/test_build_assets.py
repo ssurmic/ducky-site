@@ -62,6 +62,32 @@ class AppReleaseTests(unittest.TestCase):
         self.assertIn('/config.js?v=testsha', shell)
         self.assertIn('/css/app.css?v=testsha', shell)
 
+    def test_clean_deploy_keeps_previous_lazy_route_and_its_original_store(self):
+        first = build.publish_app_modules()
+        old_files = {p.relative_to(self.dist / "app-assets" / first).as_posix(): p.read_bytes()
+                     for p in (self.dist / "app-assets" / first).rglob("*") if p.is_file()}
+        # Clean deployment has no previous dist to copy. Git history is the source.
+        shutil.rmtree(self.dist / "app-assets")
+        source = self.dist / "js" / "app" / "views" / "profile.js"
+        source.write_text(source.read_text() + "\n// changed profile\n")
+        with patch.object(build, "committed_app_graphs", return_value=[old_files, old_files]):
+            current = build.publish_app_modules(retain_history=True)
+        self.assertNotEqual(current, first)
+        self.assertEqual((self.dist / "app-assets" / first / "views" / "profile.js").read_bytes(), old_files["views/profile.js"])
+        self.assertEqual((self.dist / "app-assets" / first / "store.js").read_bytes(), old_files["store.js"])
+        import json
+        manifest = json.loads((self.dist / "app-release.json").read_text())
+        self.assertEqual(manifest, {"version": current, "retained": [current, first]})
+
+    def test_history_restores_screenshot_release_without_rewriting_its_bytes(self):
+        # This is the actual missing graph in the owner's 2026-09-06 screenshot.
+        graphs = build.committed_app_graphs()
+        matching = [graph for graph in graphs if build.app_graph_version(graph) == "77db404861dc58974d8a"]
+        if not matching:
+            self.skipTest("screenshot release has aged outside bounded git history")
+        build.publish_app_modules(retain_history=True)
+        self.assertEqual((self.dist / "app-assets/77db404861dc58974d8a/views/profile.js").read_bytes(), matching[0]["views/profile.js"])
+
 
 if __name__ == "__main__":
     unittest.main()

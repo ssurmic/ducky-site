@@ -21,6 +21,9 @@
 /app-assets/*
   Cache-Control: public, max-age=31536000, immutable
 
+/app-release.json
+  Cache-Control: no-store
+
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
 

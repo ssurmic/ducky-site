@@ -1838,5 +1838,10 @@
   "app.event.kind_month_end": "Month end",
   "app.event.kind_index": "Index changes",
   "app.event.kind_other": "Historical event",
-  "app.radar.identity_pending": "Issuer ticker under review"
+  "app.radar.identity_pending": "Issuer ticker under review",
+  "app.release.title": "This page could not open",
+  "app.release.failed": "Refresh the page to try again. You will return to this page.",
+  "app.release.offline": "You appear to be offline. Reconnect, then refresh this page.",
+  "app.release.refresh": "Refresh this page",
+  "app.release.updated": "Ducky has been updated. Refresh to open this page in the latest version."
 }

@@ -4,6 +4,7 @@ import * as store from "./store.js";
 import * as tg from "./tg.js";
 import { clear, errorBox, spinner } from "./ui.js";
 import { rememberTarget, takeTarget } from "./login-target.js";
+import { showModuleRecovery } from "./release-recovery.js";
 
 const ROUTES = {
   research: () => import("./views/research.js"),
@@ -73,7 +74,14 @@ export async function render() {
   root.appendChild(page);
   page.appendChild(spinner());
   let mod;
-  try { mod = await ROUTES[route.name](); } catch (e) { if (my !== seq) return; clear(page); page.appendChild(errorBox(e, () => render())); return; }
+  try { mod = await ROUTES[route.name](); } catch (e) {
+    if (my !== seq) return;
+    clear(page);
+    // A failed import may stay cached until a full refresh. Never repeat the same broken
+    // import indefinitely or show the internal asset URL as the product's error message.
+    showModuleRecovery(page, { signal: controller.signal });
+    return;
+  }
   if (my !== seq) return;
   current = route;
   clear(page);

@@ -22,12 +22,14 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import math
 import re
 import shutil
 import subprocess
 import sys
+import tarfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -48,6 +50,7 @@ HTML_LANG = {"zh": "zh-CN", "en": "en"}
 ASSET_RE = re.compile(r'((?:href|src)=")(/[^"?#]+\.(?:css|js|svg|woff2|webmanifest|png|webp|jpg|jpeg|json))(")')
 # relative ES-module specifiers: `from "./tg.js"`, `import("./views/login.js")`, `import("../api.js")`
 IMPORT_RE = re.compile(r'''((?:\bfrom\s+|\bimport\s*\(\s*)["'])(\.{1,2}/[^"'?#]+\.js)(["'])''')
+APP_RELEASE_HISTORY = 32  # bounded complete graphs, not individual files from mixed releases
 
 
 def fail(msg: str) -> None:
@@ -140,24 +143,69 @@ def version_assets(html: str, version: str, app_version: str) -> str:
     return ASSET_RE.sub(replace, html)
 
 
-def publish_app_modules() -> str:
+def app_graph_version(files: dict[str, bytes]) -> str:
+    digest = hashlib.sha256()
+    for name, data in sorted(files.items()):
+        digest.update(name.encode() + b"\0")
+        digest.update(len(data).to_bytes(8, "big") + data)
+    return digest.hexdigest()[:20]
+
+
+def committed_app_graphs() -> list[dict[str, bytes]]:
+    """Rebuild prior graphs from git so clean CI and local deployments retain the same URLs.
+
+    A Pages deployment replaces dist, including old content-hash directories. Existing
+    tabs still request those directories on their first visit to a lazy route. Reading
+    committed source also avoids carrying a stale/untrusted dist across deployments.
+    """
+    try:
+        revisions = subprocess.check_output(
+            ["git", "rev-list", f"--max-count={APP_RELEASE_HISTORY}", "HEAD", "--", "public/js/app"],
+            cwd=ROOT, timeout=10, stderr=subprocess.PIPE).decode().splitlines()
+        graphs = []
+        for revision in revisions:
+            raw = subprocess.check_output(["git", "archive", revision + ":public/js/app"],
+                                          cwd=ROOT, timeout=10, stderr=subprocess.PIPE)
+            with tarfile.open(fileobj=io.BytesIO(raw)) as archive:
+                files = {}
+                for member in archive.getmembers():
+                    if not member.isfile():
+                        continue
+                    path = Path(member.name)
+                    if path.is_absolute() or ".." in path.parts:
+                        fail("invalid historical app asset path")
+                    files[path.as_posix()] = archive.extractfile(member).read()
+                graphs.append(files)
+        return graphs
+    except (OSError, subprocess.SubprocessError, tarfile.TarError):
+        # Source archives without git can still build; hosted deployments require history.
+        print("build.py: note: app release history unavailable; refresh recovery remains available")
+        return []
+
+
+def publish_app_modules(*, retain_history: bool = False) -> str:
     """Snapshot the entire import graph so auth and routing share one store.
 
     Query-versioned paths served mixed generations in production after OAuth:
     auth.js imported the prior store while router.js imported the current store.
     Hash file names AND bytes, including uncommitted edits, before copying. Plain
     relative imports stay inside this snapshot; no dependency points at a mutable
-    legacy URL. Retain legacy files for pages already open during a deployment.
+    legacy URL. Retain complete committed graphs for pages already open during a deployment.
     """
     source = DIST / "js" / "app"
-    files = sorted(p for p in source.rglob("*") if p.is_file())
-    digest = hashlib.sha256()
-    for path in files:
-        data = path.read_bytes()
-        digest.update(path.relative_to(source).as_posix().encode() + b"\0")
-        digest.update(len(data).to_bytes(8, "big") + data)
-    version = digest.hexdigest()[:20]
-    shutil.copytree(source, DIST / "app-assets" / version)
+    files = {p.relative_to(source).as_posix(): p.read_bytes() for p in source.rglob("*") if p.is_file()}
+    version = app_graph_version(files)
+    retained = []
+    for graph in [files] + (committed_app_graphs() if retain_history else []):
+        graph_version = app_graph_version(graph)
+        if graph_version in retained:
+            continue
+        retained.append(graph_version)
+        for name, data in graph.items():
+            target = DIST / "app-assets" / graph_version / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+    (DIST / "app-release.json").write_text(json.dumps({"version": version, "retained": retained}) + "\n")
     return version
 
 
@@ -529,7 +577,7 @@ def main() -> None:
     if DIST.exists():
         shutil.rmtree(DIST)
     shutil.copytree(PUBLIC, DIST)          # public/ is copied whole (avatar-group.jpg, mascot.svg, receipts/ …)
-    app_version = publish_app_modules()
+    app_version = publish_app_modules(retain_history=True)
     for name in BRAND_ASSETS:
         if not (DIST / name).is_file():
             fail(f"brand asset public/{name} missing from dist/ (SYSTEMDESIGN §5.1 avatar rule)")
