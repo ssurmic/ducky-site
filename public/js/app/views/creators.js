@@ -8,6 +8,10 @@ import * as router from "../router.js";
 import { el, clear, toast, spinner, empty } from "../ui.js";
 import { mountResearch, safeSource, dateTime, metric } from './creator-research.js';
 
+import {mountSetup,confirmCreator,avatar} from './creator-setup.js';
+import {mountSimulation} from './creator-simulation.js';
+import {mountLeaderboard} from './creator-leaderboard.js';
+
 const TAKE_CLS = { bull: "cr-bull", bear: "cr-bear", neutral: "cr-neutral" };
 const CALL_ARROW = { bull: "▲", bear: "▼", neutral: "•" };
 
@@ -88,6 +92,8 @@ export async function mount(root) {
   const following = new Set((subs && subs.subs) || []);
   if (epoch !== store.epoch()) return () => {};
   const kols = (doc && doc.kols) || [];
+  for(const c of subs?.creators || [])if(!kols.some(k=>k.id===c.kol_id))kols.push({...c,id:c.kol_id});
+  let analysis=subs?.analysis || {},setupCleanup=()=>{},showSetup=!following.size,disposed=false;
   const posts = (doc && doc.posts) || [];
   let archive = false;
   let mine = true;
@@ -96,10 +102,15 @@ export async function mount(root) {
   render();
 
   function render() {
-    clear(card);
+    setupCleanup();clear(card);
     card.append(el('div.evidence-page-head',el('div',el("h1", s("creators.h1")), el("p.muted", s("creators.sub"))),
       el('p.muted.small',s('creators.feed_asof')+' '+dateTime(doc.as_of || doc.generated_at))));
 
+    card.append(el('ol.creator-journey',...['creatorflow.journey1','creatorflow.journey2','creatorflow.journey3'].map((key,i)=>el('li',el('span',String(i+1)),s(key)))));
+    const actions=el('div.evidence-controls',el('button.btn.btn-primary.btn-sm',{type:'button','aria-expanded':String(showSetup),onclick:()=>{showSetup=!showSetup;render();}},s('creatorflow.add')),
+      el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:refresh},s('creatorflow.refresh')));
+    card.append(actions);
+    if(showSetup){const setup=el('div');card.append(setup);setupCleanup=mountSetup(setup,{onFollow:followed});}
     const isPro = store.isPro();
     if (!isPro) {
       const banner = el("div.cr-pro-banner",
@@ -123,40 +134,58 @@ export async function mount(root) {
   function renderContent() {
     const content = card.querySelector(".creators-content");
     clear(content);
+    const outerControls=card.querySelector('.creators-controls');
+    outerControls.style.display=tab==='rank'?'none':'';
+    outerControls.querySelector('input').style.display=tab==='lab'?'none':'';
     const isPro = store.isPro();
     const available=kols.filter(k=>!mine || following.has(k.id));
+    const tabs=el('nav.creator-workspace-tabs',{'aria-label':s('creatorflow.workspace')});
+    for(const [value,key] of [['feed','creators.feed_h'],['research','creators.research'],['lab','creatorlab.tab'],['rank','creatorrank.tab']])tabs.append(el('button',{type:'button','aria-pressed':String(tab===value),onclick:()=>{tab=value;renderContent();}},s(key)));
+    content.append(tabs);
+    if(tab!=='feed'){
+      if(tab!=='rank'){
+        const selector=el('select.input',{'aria-label':s('creatorflow.creator')},el('option',{value:'',selected:!selected},s('creatorflow.all_creators')),...available.map(k=>el('option',{value:k.id,selected:selected===k.id},k.name)));
+        selector.addEventListener('change',()=>{selected=selector.value;renderContent();});content.append(el('div.evidence-controls',selector));
+      }
+      const target=el('section.creator-workspace');content.append(target);
+      if(tab==='research')mountResearch(target,{kolId:selected,query,allowedIds:mine?[...following]:null});
+      if(tab==='lab')mountSimulation(target,{kolId:selected,allowedIds:mine?[...following]:null});
+      if(tab==='rank')mountLeaderboard(target,{onSelect:id=>{selected=id;mine=false;tab='research';render();}});
+      return;
+    }
     const stats=posts.filter(p=>(!mine || following.has(p.kol_id)) && (!selected || p.kol_id===selected));
     content.append(el('div.evidence-metrics',metric(s('creators.sources'),available.length),
       metric(s('creators.records'),stats.length),metric(s('creators.summary_ready'),stats.filter(hasReviewedSummary).length),
       metric(s('creators.awaiting_source'),stats.filter(p=>!hasReviewedSummary(p)).length)));
     const grid = el("div.creator-directory");
-    for (const k of available) {
+    for (const k of available.filter(k=>!query || [k.name,k.handle,k.profile?.title].join(' ').toLowerCase().includes(query.toLowerCase()))) {
       const on = following.has(k.id);
       const profile=k.profile || {};
       const tile=el('article.creator-profile',{class:selected===k.id?'selected':''});
       const title=el('button.creator-name',{type:'button','aria-pressed':String(selected===k.id),onclick:()=>{selected=selected===k.id?'':k.id;shown=30;renderContent();}},k.name || k.id);
-      tile.append(el('div.creator-identity',el('span.creator-monogram',{'aria-hidden':'true'},(k.name || k.id).slice(0,1)),el('div',title,el('p.muted.small',(profile.handle || k.handle || '')+' · '+(k.platform==='youtube'?'YouTube':k.platform || '')+' · '+(k.lang || '—')))));
+      tile.append(el('div.creator-identity',avatar(k),el('div',title,el('p.muted.small',(profile.handle || k.handle || '')+' · '+(k.platform==='youtube'?'YouTube':k.platform || '')+' · '+(k.lang || '—')))));
       const details=el('details.creator-about',el('summary',s('creators.about')),el('p',profile.description || k.descr || s('creators.profile_pending')));
       if(profile.subscribers) details.append(el('p.muted.small',s('creators.subscriber_count',{n:Number(profile.subscribers).toLocaleString()})));
       if(profile.as_of) details.append(el('p.muted.small',s('creators.profile_asof')+' '+dateTime(profile.as_of)));
       if(safeSource(k.url)) details.append(el('a',{href:k.url,target:'_blank',rel:'noopener noreferrer'},s('creators.channel')+' ↗'));
       tile.append(details);
+      const creatorPosts=posts.filter(p=>p.kol_id===k.id);
+      tile.append(el('p.creator-card-coverage',s('creatorflow.card_coverage',{ready:creatorPosts.filter(hasReviewedSummary).length,total:creatorPosts.length})));
+      if(analysis[k.id])tile.append(el('p.creator-analysis-state',{role:'status'},s('creatorflow.analysis_'+analysis[k.id].status)));
+
+      if(on&&isPro&&['error','needs_review','needs_source','no_recent_content'].includes(analysis[k.id]?.status))tile.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:async e=>{e.target.disabled=true;try{const r=await api.post('/kol/'+encodeURIComponent(k.id)+'/analyze');if(epoch!==store.epoch()||disposed)return;analysis[k.id]=r.analysis;renderContent();}catch{toast(s('creatorflow.retry_later'),'err');}finally{e.target.disabled=false;}}},s('creatorflow.retry_analysis')));
       const label = isPro ? (on ? s("creators.following") : s("creators.follow")) : s("creators.follow");
       const chip = el("button.cr-chip" + (on && isPro ? ".on" : ""), { type: "button",'aria-label':label+' '+k.name }, label);
-      chip.addEventListener("click", () => { if (isPro) toggle(k.id, chip); else router.go("#/billing"); });
+      chip.addEventListener("click", () => { if (isPro) {if(on)toggle(k.id,chip);else confirmCreator({...k,recent:creatorPosts.slice(0,3)},()=>api.kol.sub(k.id),followed,()=>!disposed&&epoch===store.epoch());} else router.go("#/billing"); });
       tile.append(chip);grid.append(tile);
     }
     content.appendChild(grid);
 
     if(!mine) content.append(el('details.creator-x',el('summary',s('creators.x_title')),el('p.muted',s('creators.x_plan'))));
-    const tabs=el('div.evidence-controls');
-    for(const [value,key] of [['feed','creators.feed_h'],['research','creators.research']]) tabs.append(el('button.btn.btn-ghost',{type:'button','aria-pressed':String(tab===value),onclick:()=>{tab=value;renderContent();}},s(key)));
-    if(selected) tabs.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected='';renderContent();}},s('creators.clear_creator')));
-    content.append(tabs);
-    if(tab==='research') {const target=el('section.creator-studies');content.append(target);mountResearch(target,{kolId:selected,query,allowedIds:mine?[...following]:null});return;}
+    if(selected)content.append(el('p.creator-selected',s('creatorflow.viewing',{name:kols.find(k=>k.id===selected)?.name || selected}),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected='';renderContent();}},s('creators.clear_creator'))));
     const archiveBtn = el("button.btn.btn-ghost.btn-sm", { type: "button", "aria-pressed": String(archive), onclick: () => { archive = !archive; render(); } }, s(archive ? "creators.only_grounded" : "creators.show_archive"));
     content.appendChild(archiveBtn);
-    if (mine && !following.size) {content.appendChild(empty(s("creators.no_following")));return;}
+    if (mine && !following.size) {content.appendChild(empty(s("creators.no_following")));content.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{mine=false;render();}},s('creators.discover')));return;}
     const visiblePosts = filterPosts(posts, {following,mine,archive,query}).filter(p=>!selected || p.kol_id===selected);
     if (!visiblePosts.length) { content.appendChild(empty(s("creators.feed_empty"))); return; }
     const feed = el("div.cr-feed");
@@ -190,7 +219,8 @@ export async function mount(root) {
         }
       } else {
         const status = meta.source?.status;
-        art.appendChild(el("p.muted.small", s(status === "too_long" ? "creators.too_long" : status === "too_dense" ? "creators.too_dense" : "creators.archive_hint")));
+        const statusKey = {too_long:'too_long',too_dense:'too_dense',review_unavailable:'review_pending',model_unavailable:'review_pending',source_unavailable:'source_pending'}[status] || 'archive_hint';
+        art.appendChild(el("p.muted.small", s('creators.'+statusKey)));
       }
       if (grounded && p.calls && p.calls.length) art.appendChild(callChips(p.calls, isZh, p.url));
       const audit=el('details.creator-audit',el('summary',s('creators.source_details')),
@@ -201,7 +231,7 @@ export async function mount(root) {
       art.append(audit);
       const actions=el('div.evidence-controls');
       if (safeSource(p.url)) actions.appendChild(el("a.cr-orig", { href: p.url, target: "_blank", rel: "noopener noreferrer" }, s("creators.orig") + " ↗"));
-      if(grounded) actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected=p.kol_id;tab='research';renderContent();}},s('creators.research')));
+      if(grounded) actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected=p.kol_id;tab='research';renderContent();}},s('creators.research')),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected=p.kol_id;tab='lab';renderContent();}},s('creatorlab.tab')));
       art.append(actions);
       feed.appendChild(art);
     }
@@ -221,5 +251,19 @@ export async function mount(root) {
     finally { chip.disabled = false; }
   }
 
-  return () => {};
+  function followed(response){
+    following.add(response.kol_id);selected=response.kol_id;mine=true;showSetup=false;tab='feed';
+    if(response.creator&&!kols.some(k=>k.id===response.kol_id))kols.push({...response.creator,id:response.kol_id});
+    if(response.analysis)analysis[response.kol_id]=response.analysis;
+    render();
+  }
+  async function refresh(){
+    try{const [feed,mineDoc]=await Promise.all([api.kol.feed(),api.kol.mine()]);
+      if(disposed||epoch!==store.epoch())return;
+      doc=feed;posts.splice(0,posts.length,...(feed.posts||[]));kols.splice(0,kols.length,...(feed.kols||[]));
+      for(const c of mineDoc.creators||[])if(!kols.some(k=>k.id===c.kol_id))kols.push({...c,id:c.kol_id});
+      analysis=mineDoc.analysis||{};following.clear();for(const id of mineDoc.subs||[])following.add(id);render();
+    }catch{if(!disposed)toast(s('creators.load_error'),'err');}
+  }
+  return () => {disposed=true;setupCleanup();document.querySelector('dialog.creator-confirm')?.remove();};
 }
