@@ -23,10 +23,10 @@ const BOARDS = [
 // kind → short human label (fallback when a signal's scrubbed summary is empty)
 const KIND_LABEL = {
   insider: ["内部人买入", "Insider buy"], cluster: ["集群买入", "Cluster buy"], political: ["议员交易", "Congress trade"],
-  partner: ["战略合作", "Partnership"], stake: ["大额持股", "Big stake"], "13f": ["机构持仓", "13F"], nvdev: ["巨头动向", "Giant move"],
-  earnings: ["财报", "Earnings"], hiring: ["招聘信号", "Hiring"], volscan: ["期权错杀", "Cheap vol"],
+  partner: ["战略合作", "Partnership"], stake: ["大额持股", "Major holding"], "13f": ["机构持仓", "13F"], nvdev: ["行业动态", "Industry news"],
+  earnings: ["财报", "Earnings"], hiring: ["招聘信号", "Hiring"], volscan: ["期权波动", "Option volatility"],
   liquidity: ["流动性", "Liquidity"], kindex: ["K 指数", "K-index"], macro: ["宏观", "Macro"],
-  digest: ["划重点", "Highlight"], market: ["市场", "Market"], default: ["动态", "Update"],
+  digest: ["每日摘要", "Daily summary"], market: ["市场", "Market"], default: ["动态", "Update"],
 };
 
 // Week-Ahead macro cleanup: Nasdaq's feed is noisy (ISM sub-indices, IBD/TIPP, GDPNow) and English-only.

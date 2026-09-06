@@ -219,6 +219,14 @@
 
   function renderEquity() {
     var box = $("equity");
+    var method = box && box.closest("details");
+    if (method && !method.open) {
+      if (location.hash === "#legacy-simulation") method.open = true;
+      else {
+        method.addEventListener("toggle", function () { if (method.open) renderEquity(); }, { once: true });
+        return;
+      }
+    }
     if (!box) return;
     var eq = (data.equity || []).filter(function (p) { return p && p.d && isNum(p.v); });
     box.innerHTML = "";

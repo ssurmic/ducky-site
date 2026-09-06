@@ -35,7 +35,7 @@ export async function mount(root) {
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(body.email)) { toast(s("profile.email_invalid"), "err"); email.el.focus(); return; }
       try {
         prof = await api.profile.save(body);
-        toast(s("profile.saved"), "ok");
+        toast(s(prof.send_error || prof.dry_run ? "recovery.unavailable" : "profile.saved"), prof.send_error || prof.dry_run ? "err" : "ok");
         await auth.refreshMe();
         render();
       } catch (err) { toast(s("common.error", { msg: err.message }), "err"); }
@@ -55,10 +55,15 @@ export async function mount(root) {
           // the verify route returns the full profile view; re-fetch if an older backend only sent the flags
           prof = (res && res.email !== undefined) ? res : await api.profile.get();
           toast(s("profile.verified"), "ok"); await auth.refreshMe(); render();
-        } catch (err) { toast(s("common.error", { msg: err.message }), "err"); }
+        } catch (err) { toast(s("login.try_again"), "err"); }
       });
       resend.addEventListener("click", async () => {
-        try { await api.profile.resend(); toast(s("profile.resent"), "ok"); } catch (err) { toast(s("common.error", { msg: err.message }), "err"); }
+        try {
+          const response = await api.profile.resend();
+          const result = api.isAccepted(response) ? response.body : response;
+          toast(s(result?.sent && !result?.dry_run ? "profile.resent" : "recovery.unavailable"),
+            result?.sent && !result?.dry_run ? "ok" : "err");
+        } catch (err) { toast(s(err.body?.error === "send_failed" ? "recovery.unavailable" : "login.try_again"), "err"); }
       });
       v.append(el("div.cta-row", code, btn, resend));
     } else if (prof.email && prof.email_verified) {
@@ -80,7 +85,8 @@ export async function mount(root) {
       try {
         const body = { password: newPw.value };
         if (prof.has_password) body.old_password = oldPw.value;
-        await api.profile.setPassword(body);
+        const response = await api.profile.setPassword(body);
+        await auth.establish(response);
         toast(s("profile.pw_saved"), "ok");
         prof.has_password = true; newPw.value = ""; oldPw.value = "";
         render();
@@ -91,6 +97,7 @@ export async function mount(root) {
     if (prof.has_password) pwRow.appendChild(oldPw);
     pwRow.append(newPw, pwBtn);
     pw.appendChild(pwRow);
+    pw.appendChild(el("p.small", el("a", { href: "#/forgot" }, s("recovery.forgot"))));
     card.appendChild(pw);
 
     // §web-push — browser notifications without Telegram (progressive: hidden where unsupported).

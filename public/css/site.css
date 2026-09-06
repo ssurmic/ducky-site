@@ -924,6 +924,17 @@ button.cr-chip[disabled] { opacity: .55; cursor: default; }
  .tier .btn { white-space: normal; }
 }
 .proof-curve .btn { max-width: 100%; white-space: normal; }
+.proof-selected { display: block; }
+.benefit-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 28px; }
+.benefit-card { min-width: 0; padding: 24px 0; border-top: 1px solid var(--border); }
+.benefit-card .ui-icon { width: 28px; height: 28px; color: var(--accent); fill: none; stroke: currentColor; }
+.benefit-card h3 { font-size: 20px; margin: 14px 0 10px; }
+.benefit-card p { color: var(--muted); margin: 0; line-height: 1.7; }
+@media(max-width: 640px) { .benefit-grid { grid-template-columns: minmax(0,1fr); gap: 8px; } }
+.proof-selected .proof-cases { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; }
+.proof-archive { margin-top: 24px; }
+.legacy-method > summary { cursor: pointer; font-weight: 600; padding: 16px 0; }
+@media(max-width: 760px) { .proof-selected .proof-cases { grid-template-columns: minmax(0,1fr); } }
 .case-result .pos { color: var(--green); }
 .case-result .neg { color: var(--red); }
 

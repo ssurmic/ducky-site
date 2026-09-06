@@ -33,7 +33,56 @@ test('email sign-in neither starts nonce polling nor exposes three forms',async(
  assert.equal(requests,0); assert.equal(root.querySelector('.pw-form').hidden,false);
  assert.equal(root.querySelector('.invite-form').hidden,true); assert.equal(root.querySelector('.qr-block').hidden,true);
  assert.ok(root.querySelector('label input[type="password"]'));
+ assert.equal(root.querySelector('[name="email"]').type,'text');
+ assert.ok(root.querySelector('a[href="#/forgot"]'));
+ assert.ok(root.querySelector('.invite-form input[type="password"][required]'));
  cleanup();root.remove();
+});
+
+test('recovery preserves a reset link across stale sessions, removes its secret and clears old state',async()=>{
+ const recovery=await import('../public/js/app/views/recovery.js');
+ const auth=await import('../public/js/app/auth.js');
+ const secret='x'.repeat(43);
+ history.replaceState(null,'','#/reset?token='+secret);
+ auth.logout();assert.ok(location.hash.includes(secret));
+ let submitted;globalThis.fetch=async(url,opts)=>{submitted=JSON.parse(opts.body);return response({ok:true});};
+ const root=document.createElement('div');document.body.appendChild(root);
+ const cleanup=await recovery.mount(root,{query:new URLSearchParams('token='+secret)});
+ assert.equal(location.hash,'#/reset');assert.ok(!root.textContent.includes(secret));
+ store.set('watchlist',['PRIVATE']);store.set('snapshots',{PRIVATE:{spot:1}});
+ root.querySelector('[name="password"]').value='new-password';root.querySelector('[name="confirm"]').value='different';
+ root.querySelector('form').dispatchEvent(new window.Event('submit',{cancelable:true}));
+ assert.equal(submitted,undefined);
+ root.querySelector('[name="confirm"]').value='new-password';
+ root.querySelector('form').dispatchEvent(new window.Event('submit',{cancelable:true}));
+ for(let i=0;i<5;i++)await new Promise(r=>setTimeout(r,0));
+ assert.deepEqual(submitted,{token:secret,password:'new-password'});
+ assert.deepEqual(store.get('watchlist'),[]);assert.deepEqual(store.get('snapshots'),{});
+ assert.equal(root.querySelector('form').hidden,true);assert.ok(root.textContent.includes(copy['app.recovery.done']));
+ cleanup();root.remove();history.replaceState(null,'','#/login');
+});
+
+test('unavailable recovery does not claim an email was sent',async()=>{
+ const recovery=await import('../public/js/app/views/recovery.js');
+ history.replaceState(null,'','#/forgot');
+ globalThis.fetch=async()=>new Response(JSON.stringify({error:'recovery_unavailable'}),{status:503,headers:{'content-type':'application/json'}});
+ const root=document.createElement('div');const cleanup=await recovery.mount(root);
+ root.querySelector('input').value='test@example.test';
+ root.querySelector('form').dispatchEvent(new window.Event('submit',{cancelable:true}));
+ for(let i=0;i<5;i++)await new Promise(r=>setTimeout(r,0));
+ assert.ok(root.textContent.includes(copy['app.recovery.unavailable']));
+ assert.ok(!root.textContent.includes(copy['app.recovery.sent']));
+ assert.equal(root.querySelector('button').disabled,false);cleanup();
+});
+
+test('homepage separates oversold research from the complete legacy method archive',()=>{
+ const home=new JSDOM(readFileSync('dist/index.html','utf8')).window.document;
+ assert.ok(home.querySelector('#features'));
+ assert.equal(home.querySelectorAll('.proof-curve').length,0);
+ assert.ok(home.querySelector('.proof-archive a[href="/track-record/"]'));
+ const track=new JSDOM(readFileSync('dist/track-record/index.html','utf8')).window.document;
+ assert.ok(track.querySelector('details#legacy-simulation #equity'));
+ assert.ok(track.querySelector('#ledger'));
 });
 test('alert deep link prefills ticker and logout discards a late list',async()=>{
  store.set('me',{tier:'pro'});store.set('alerts',[]);

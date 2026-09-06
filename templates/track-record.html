@@ -124,11 +124,12 @@
       <p class="caption mono">{{ t('proof.liq_disclaimer') }}</p>
     </div>
 
-    <div class="subsection">
-      <h2 class="mono-h2">{{ t('track.equity_h2') }} <span class="badge badge-live badge-inline">{{ t('label.live') }}</span></h2>
+    <details class="subsection legacy-method" id="legacy-simulation">
+      <summary>{{ t('track.legacy_title') }} <span class="badge badge-backtest">PAPER · LIVE DATA</span></summary>
+      <p>{{ t('track.legacy_intro') }}</p>
       <div class="chart-box"><div class="chart" id="equity"></div></div>
       <p class="chart-cap">{{ t('track.equity_note') }}</p>
-    </div>
+    </details>
 
     <div class="subsection notes">
       <h2 class="mono-h2">{{ t('track.notes_h') }}</h2>

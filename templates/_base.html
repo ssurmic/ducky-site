@@ -60,21 +60,9 @@
 
 <footer class="footer" id="footer">
   <div class="wrap">
-    <div class="footer-disclaimer">
-      <div class="footer-lang" lang="{{ html_lang }}">
-        <p>{{ t('footer.p1') }}</p>
-        <p>{{ t('footer.p2') }}</p>
-        <p>{{ t('footer.p3') }}</p>
-        <p>{{ t('footer.p4') }}</p>
-        <p class="footer-lines"><span data-line="backtest">{{ t('footer.backtest_line') }}</span> <span data-line="affiliation">{{ t('footer.affiliation_line') }}</span></p>
-      </div>
-      <div class="footer-lang footer-other" lang="{{ 'en' if is_zh else 'zh-CN' }}">
-        <p>{{ t2('footer.p1') }}</p>
-        <p>{{ t2('footer.p2') }}</p>
-        <p>{{ t2('footer.p3') }}</p>
-        <p>{{ t2('footer.p4') }}</p>
-        <p class="footer-lines"><span data-line="backtest">{{ t2('footer.backtest_line') }}</span> <span data-line="affiliation">{{ t2('footer.affiliation_line') }}</span></p>
-      </div>
+    <div class="footer-disclaimer" lang="{{ html_lang }}">
+      <p>{{ t('footer.p1') }}</p>
+      <p class="footer-lines"><span data-line="backtest">{{ t('footer.backtest_line') }}</span> <span data-line="affiliation">{{ t('footer.affiliation_line') }}</span></p>
     </div>
     <div class="footer-row mono">
       <span>{{ t('footer.copyright') }}</span>

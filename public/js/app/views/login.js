@@ -35,19 +35,22 @@ export async function mount(root) {
   const invForm = el("form.login-block.invite-form");
   const invCode = el("input.input.mono", { type: "text", placeholder: s("login.invite_code_ph"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", required: "" });
   const invUser = el("input.input", { type: "text", placeholder: s("login.invite_user_ph"), autocomplete: "off", autocapitalize: "none", spellcheck: "false", maxlength: "20", required: "" });
+  const invPass = el("input.input", { type: "password", placeholder: s("login.invite_password"), autocomplete: "new-password", minlength: "8", maxlength: "1024", required: "" });
   const invBtn = el("button.btn.btn-primary.btn-lg", { type: "submit" }, s("login.invite_btn"));
-  invForm.append(el("h2.login-h2", s("login.invite_title")), el("p.muted.small", s("login.invite_hint")), invCode, invUser, invBtn);
+  invForm.append(el("h2.login-h2", s("login.invite_title")), el("p.muted.small", s("login.invite_hint")), invCode, invUser, invPass, invBtn);
   invForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     invBtn.disabled = true;
     try {
-      const resp = await auth.retryTransient(() => api.auth.redeem(invCode.value.trim(), invUser.value.trim()), 2);
+      const resp = await api.auth.redeem(invCode.value.trim(), invUser.value.trim(), invPass.value);
+      invPass.value = "";
       await auth.establish(resp);
       toast(s("login.invite_ok"), "ok");
-      done();
+      router.go("#/profile");
     } catch (err) {
       const code = err.body && err.body.error;
-      const msg = code === "username_taken" ? s("login.invite_taken")
+      const msg = code === "password_too_weak" ? s("recovery.weak")
+        : code === "username_taken" ? s("login.invite_taken")
         : code === "bad_username" ? s("login.invite_bad_user")
         : (code === "invite_invalid" || code === "invite_used") ? s("login.invite_bad_code")
         : err.status === 429 ? s("login.rate_limited")
@@ -112,10 +115,11 @@ export async function mount(root) {
 
   // ── ② email + password ──
   const pwForm = el("form.login-block.pw-form");
-  const email = el("input.input", { type: "email", name: "email", placeholder: s("login.pw_email"), autocomplete: "email", required: "" });
+  const email = el("input.input", { type: "text", name: "email", placeholder: s("login.pw_email"), autocomplete: "username", autocapitalize: "none", spellcheck: "false", required: "" });
   const pass = el("input.input", { type: "password", name: "password", placeholder: s("login.pw_pass"), autocomplete: "current-password", required: "" });
   const pwBtn = el("button.btn.btn-ghost.btn-lg", { type: "submit" }, s("login.pw_btn"));
   pwForm.append(el("h2.login-h2", s("login.pw_title")), email, pass, pwBtn, el("p.muted.small", s("login.pw_hint")));
+  pwForm.append(el("a.login-forgot", { href: "#/forgot" }, s("recovery.forgot")));
   pwForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     pwBtn.disabled = true;
@@ -168,7 +172,7 @@ export async function mount(root) {
   });
   other.hidden = true;
   card.insertBefore(methods, invForm);
-  for (const input of [invCode, invUser, email, pass]) {
+  for (const input of [invCode, invUser, invPass, email, pass]) {
     const label = el("label.login-label", input.placeholder);
     input.before(label); label.appendChild(input);
   }

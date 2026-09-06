@@ -96,7 +96,8 @@ export function logout() {
   store.set("watchlist", []);
   store.set("alerts", []);
   store.set("snapshots", {});
-  if (location.hash !== "#/login") location.hash = "#/login";
+  // An expired saved session must not discard the password-reset link being opened.
+  if (!/^#\/(?:forgot|reset)(?:\?|$)/.test(location.hash) && location.hash !== "#/login") location.hash = "#/login";
 }
 
 export async function refreshMe() {

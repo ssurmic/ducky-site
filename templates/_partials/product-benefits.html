@@ -1,0 +1,12 @@
+<section class="section product-benefits" id="features"><div class="wrap">
+ <h2>{{ t('benefits.title') }}</h2><p class="lead">{{ t('benefits.intro') }}</p>
+ <div class="benefit-grid">
+ {% for key, icon in [('stock','chart'), ('event','calendar'), ('alert','alerts'), ('source','creators')] %}
+  <article class="benefit-card">
+   <svg class="ui-icon" aria-hidden="true"><use href="/vendor/lucide/icons.svg#{{ icon }}"></use></svg>
+   <h3>{{ t('benefits.' ~ key ~ '_title') }}</h3>
+   <p>{{ t('benefits.' ~ key ~ '_body') }}</p>
+  </article>
+ {% endfor %}
+ </div>
+</div></section>

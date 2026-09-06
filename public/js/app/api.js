@@ -116,7 +116,9 @@ export const auth = {
   password: (email, password) => post("/auth/password", { email, password }, { auth: false }),
   poll: (nonce) => get("/auth/poll?nonce=" + encodeURIComponent(nonce), { auth: false }),
   register: (email, password) => post("/auth/register", { email, password, lang: LANG }, { auth: false }),
-  redeem: (code, username) => post("/auth/redeem", { code, username, lang: LANG }, { auth: false }),
+  redeem: (code, username, password) => post("/auth/redeem", { code, username, password, lang: LANG }, { auth: false }),
+  requestReset: (email) => post("/auth/password-reset/request", { email, lang: LANG }, { auth: false }),
+  confirmReset: (token, password) => post("/auth/password-reset/confirm", { token, password }, { auth: false }),
 };
 export const me = () => get("/me");
 export const watchlist = {

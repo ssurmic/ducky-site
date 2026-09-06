@@ -18,8 +18,8 @@ async function boot() {
 
   let ok = false;
   try { ok = await auth.boot(); } catch (e) { console.warn(e); }
-  if (!ok) history.replaceState(null, "", location.pathname + location.search + "#/login");
-  else if (!location.hash.startsWith("#/") || location.hash === "#/login") history.replaceState(null, "", location.pathname + location.search + "#/watchlist");
+  if (!ok && !router.isPublic(location.hash)) history.replaceState(null, "", location.pathname + location.search + "#/login");
+  else if (ok && (!location.hash.startsWith("#/") || location.hash === "#/login")) history.replaceState(null, "", location.pathname + location.search + "#/watchlist");
   // Account recovery is a visible reminder, never a redirect away from a deep link.
   const reminder = document.getElementById("profile-reminder");
   const renderReminder = me => { if (reminder) reminder.hidden = !me || me.profile_complete !== false; };

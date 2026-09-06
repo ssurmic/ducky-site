@@ -40,7 +40,7 @@ EXTERNAL_SCRIPT = re.compile(r"""<script[^>]+src=["']https?://""", re.IGNORECASE
 DISCLAIMER_LINES = {
     "en.backtest": "backtests are hypothetical",
     "en.affiliation": "Not affiliated with Telegram, the SEC, or any issuer named",
-    "zh.backtest": "回测为假设性结果",
+    "zh.backtest": "回测为模拟结果",
     "zh.affiliation": "与 Telegram、美国证监会（SEC）或文中提到的任何发行人均无关联",
 }
 MUST_HAVE_DISCLAIMER = ["index.html", "en/index.html"]
@@ -62,6 +62,25 @@ EN_CJK_ALLOW = {
     "label.copy_caption",    # "Copy caption (中文 / EN)" — copies the bilingual caption
     "data.log_not_call",     # "记录，不是荐股 / a log, not a call" — bilingual by design
 }
+
+
+# Owner-requested wording regression check. Review new copy with humanizer;
+# these are rejected product slogans, not a generic AI-text detector.
+REJECTED_SLOGANS = re.compile(
+    r"让条件来找你|看清下一步|始终早一步|秒达不漏|赚回\s*(?:100|1000)|"
+    r"a clearer next step|let (?:your )?conditions find you|earn it back 100",
+    re.IGNORECASE,
+)
+
+
+def check_rejected_slogans() -> list[str]:
+    import json
+    errors = []
+    for lang in ("zh", "en"):
+        for key, value in json.loads((I18N / f"{lang}.json").read_text()).items():
+            if isinstance(value, str) and REJECTED_SLOGANS.search(value):
+                errors.append(f"i18n/{lang}.json: {key}: replace rejected slogan with concrete product wording")
+    return errors
 
 
 def check_i18n_en_cjk() -> list[str]:
@@ -136,6 +155,7 @@ def main() -> int:
         print("lint_copy: dist/ missing — run build.py first")
         return 1
     errors: list[str] = []
+    errors += check_rejected_slogans()
     errors += check_i18n_en_cjk()
     errors += check_i18n_zh_english()
     errors += check_template_hardcoded_cjk()
@@ -174,7 +194,10 @@ def main() -> int:
             errors.append(f"{rel}: missing")
             continue
         text = p.read_text(encoding="utf-8")
+        locale = "en" if rel.startswith("en/") else "zh"
         for name, needle in DISCLAIMER_LINES.items():
+            if not name.startswith(locale + "."):
+                continue
             if needle.casefold() not in text.casefold():
                 errors.append(f"{rel}: disclaimer line missing ({name}): {needle!r}")
 
