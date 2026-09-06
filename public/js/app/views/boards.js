@@ -122,6 +122,7 @@ export async function mount(root, route={}) {
   const accessNote=el('div.radar-access-note',el('p',s(currentAccess?'radar.access_current':'radar.access_delayed')),
     currentAccess?null:el('a.btn.btn-ghost.btn-sm',{href:'#/billing'},s('radar.access_upgrade')));
   const screenPanel=el('div.radar-screen-panel');
+  const screenEntry=Boolean(params.get('screen') || params.get('screening'));
   const disposeScreen=mountScreen(screenPanel,{signal:route.signal,query:params});
   const marketPanel=el('div.radar-market-panel');
   const disposeMarket=mountMarketContext(marketPanel);
@@ -159,7 +160,14 @@ export async function mount(root, route={}) {
   const rows=el('div.radar-records');
   const more=el('button.btn.btn-ghost.radar-more',{type:'button',onclick:()=>loadArchive(false)},s('creators.load_more'));
   const main=el('section.radar-main',tabs,guide,filter,summary,note,rows,more);
-  card.append(header,accessNote,marketPanel,screenPanel,starters,coverage,pelosiJump,el('div.radar-layout',el('aside.radar-sidebar',el('h2',s('radar.categories')),nav),main));
+  // Explicit screening links lead with their destination. Market data arriving later
+  // stays below it, so it cannot push the focused form out of the viewport.
+  card.append(header,accessNote,...(screenEntry?[screenPanel,marketPanel]:[marketPanel,screenPanel]),starters,coverage,pelosiJump,el('div.radar-layout',el('aside.radar-sidebar',el('h2',s('radar.categories')),nav),main));
+  if(screenEntry && !route.signal?.aborted && root.isConnected && epoch===store.epoch()){
+    const target=screenPanel.querySelector('summary');
+    target.focus({preventScroll:true});
+    target.scrollIntoView?.({block:'start',behavior:'instant'});
+  }
   filter.addEventListener('submit',e=>{e.preventDefault();apply();});
   for(const node of [content,direction,days,start,end,sector,cap,purchases])node.addEventListener('change',apply);
   for(const node of [query,ticker])node.addEventListener('input',()=>{if(state.mode!=='archive')apply();});
