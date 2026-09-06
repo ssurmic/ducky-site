@@ -1,18 +1,18 @@
 // views/alerts.js — list with state chips (pending/done/error/fired) · add form → 202 toast · 402 upsell · delete.
 import { s } from "../strings.js";
+import { mountDraft } from "./alert-draft.js";
 import * as api from "../api.js";
 import * as store from "../store.js";
 import * as tg from "../tg.js";
 import { el, clear, toast, spinner, empty, errorBox, confirm, date } from "../ui.js";
 
-const TICKER_RE = /^[A-Z][A-Z0-9.\-]{0,9}$/;
 
 export function normalizeAlerts(resp) {
   const arr = Array.isArray(resp) ? resp : (resp && (resp.items || resp.alerts)) || [];
   return arr.map((a) => ({
     id: a.id ?? a.alert_id,
     ticker: String(a.ticker || a.symbol || "").toUpperCase(),
-    condition: a.condition || a.condition_nl || a.text || "",
+    condition: a.label || a.condition || a.condition_nl || a.text || "",
     state: stateOf(a),
     created_at: a.created_at || a.created || null,
     // finding alerts.js:14 — GET /alerts rows carry last_fired (db.list_alerts), not fired_at/triggered_at.
@@ -33,33 +33,10 @@ export async function mount(root, params = {}) {
   const epoch = store.epoch();
   const unsubs = []; let refreshTimer = null, refreshes = 0;
   const head = el("div.view-head", el("h1", s("alerts.title")), el("span.count.mono", { id: "alerts-count" }));
-  const tIn = el("input.input.mono.short", { type: "text", placeholder: s("alerts.ticker_ph"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "10", "aria-label": s("alerts.ticker_ph") });
-  const cIn = el("input.input", { type: "text", placeholder: s("alerts.cond_ph"), autocomplete: "off", maxlength: "200", "aria-label": s("alerts.cond_ph") });
-  const prefill = (params.query?.get("ticker") || "").toUpperCase();
-  if (TICKER_RE.test(prefill)) tIn.value = prefill;
-  const addBtn = el("button.btn.btn-primary", { type: "submit" }, s("alerts.add"));
-  const form = el("form.add-row.alerts-form", { onsubmit: onAdd }, tIn, cIn, addBtn);
   const list = el("div.alist", { id: "alerts-list" });
-  root.append(head, form, el("p.muted.small", s("alerts.help")), list);
-
-  async function onAdd(e) {
-    e.preventDefault();
-    const t = tIn.value.trim().toUpperCase().replace(/^\$/, ""), cond = cIn.value.trim();
-    if (!TICKER_RE.test(t)) { tIn.focus(); return; }
-    if (cond.length < 3) { cIn.focus(); return; }
-    addBtn.disabled = true;
-    try {
-      const r = await api.alerts.add(t, cond);
-      const body = api.isAccepted(r) ? r.body : r;
-      toast(s("alerts.queued"), "ok");
-      tg.haptic("success");
-      cIn.value = "";
-      store.set("alerts", [{ id: body && body.id, ticker: t, condition: cond, state: "pending", created_at: new Date().toISOString() }].concat(store.get("alerts") || []));
-      scheduleRefresh();
-    } catch (err) {
-      if (err.status !== 402) toast(s("common.error", { msg: err.message }), "err");
-    } finally { addBtn.disabled = false; }
-  }
+  root.append(head);
+  const disposeDraft = mountDraft(root, { signal: params.signal, company: (params.query?.get("ticker") || "").toUpperCase(), onCreated: load });
+  root.append(list);
 
   async function onDelete(a) {
     if (!(await confirm(s("alerts.confirm_delete")))) return;
@@ -110,7 +87,7 @@ export async function mount(root, params = {}) {
   const resume = () => { if (alive && document.visibilityState !== "hidden") { refreshes = 0; load(); } };
   window.addEventListener("online", resume);
   document.addEventListener("visibilitychange", resume);
-  const dispose = () => { alive = false; unsubs.forEach((u) => u()); if (refreshTimer) clearTimeout(refreshTimer); window.removeEventListener("online", resume); document.removeEventListener("visibilitychange", resume); };
+  const dispose = () => { disposeDraft(); alive = false; unsubs.forEach((u) => u()); if (refreshTimer) clearTimeout(refreshTimer); window.removeEventListener("online", resume); document.removeEventListener("visibilitychange", resume); };
   params.signal?.addEventListener("abort", dispose, { once: true });
   if ((store.get("alerts") || []).length) render(); else list.appendChild(spinner());
   await load();

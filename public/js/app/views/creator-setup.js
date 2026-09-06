@@ -18,19 +18,28 @@ export function avatar(creator) {
 }
 
 export function mountSetup(root,{onFollow,initial=''}) {
-  const epoch=store.epoch();let stopped=false,lookupId='',busy=false;
+  const epoch=store.epoch();let stopped=false,lookupId='',busy=false,revision=0;
   const wrap=el('section.creator-onboarding');root.append(wrap);
   const field=el('input.input',{type:'text',maxlength:240,value:initial,placeholder:s('creatorflow.placeholder'),'aria-label':s('creatorflow.input'),required:true});
   const submit=el('button.btn.btn-primary',{type:'submit'},s('creatorflow.find'));
   const results=el('div.creator-find-results',{'aria-live':'polite'});
   const form=el('form.creator-find-form',el('label',el('span',s('creatorflow.input')),field),submit);
-  wrap.append(el('div.creator-setup-heading',el('div',el('p.eyebrow',s('creatorflow.step1')),el('h2',s('creatorflow.add')),el('p.muted.small',s('creatorflow.find_hint')))),form,
-    el('button.creator-example',{type:'button',onclick:()=>{field.value='https://www.youtube.com/@TickerSymbolYOU';field.focus();}},s('creatorflow.example')+' youtube.com/@TickerSymbolYOU'),results);
-  function live(){return !stopped && epoch===store.epoch() && root.isConnected;}
+  const examples=[
+    ['Ticker Symbol: YOU','ai'], ['Joseph Carlson','portfolio'],
+    ['投资TALK君','macro'], ['小Lin说','basics'],
+  ];
+  const picks=el('div.creator-example-grid',...examples.map(([name,topic])=>el('button.creator-pick',{type:'button',onclick:()=>{
+    field.value=name;revision++;lookupId='';clear(results);field.focus();
+  }},el('strong',name),el('span',s('creatorflow.topic_'+topic)))));
+  wrap.append(el('div.creator-setup-heading',el('div',el('p.eyebrow',s('creatorflow.step1')),el('h2',s('creatorflow.add')),el('p.muted.small',s('creatorflow.find_hint')))),
+    el('h3',s('creatorflow.browse_title')),el('p.small.muted',s('creatorflow.browse_hint')),picks,form,
+    el('p.small.muted',s('creatorflow.input_hint')),results);
+  field.addEventListener('input',()=>{revision++;lookupId='';clear(results);});
+  function live(my=revision){return !stopped && epoch===store.epoch() && root.isConnected && my===revision;}
   function failure(err){clear(results);results.append(el('p.err',{role:'alert'},s('creatorflow.error_'+err.message)===('creatorflow.error_'+err.message)?s('creatorflow.error'):s('creatorflow.error_'+err.message)));}
   async function check() {
-    if(busy || !live())return;busy=true;
-    try {const doc=await api.get('/kol/resolve/'+lookupId);if(live())show(doc);}catch(e){if(live())failure(e);}finally{busy=false;}
+    if(busy || !live())return;busy=true;const my=revision;
+    try {const doc=await api.get('/kol/resolve/'+lookupId);if(live(my))show(doc);}catch(e){if(live(my))failure(e);}finally{busy=false;}
   }
   function show(doc) {
     clear(results);lookupId=doc.id;
@@ -44,8 +53,8 @@ export function mountSetup(root,{onFollow,initial=''}) {
   form.addEventListener('submit',async e=>{
     e.preventDefault();if(busy)return;
     if(!store.isPro()){clear(results);results.append(el('a.btn.btn-primary',{href:'#/billing'},s('creators.upgrade')));return;}
-    busy=true;submit.disabled=true;clear(results);results.append(el('p',{role:'status'},s('common.loading')));
-    try {const doc=await api.post('/kol/resolve',{input:field.value});if(live())show(doc);}catch(err){if(live())failure(err);}finally{busy=false;submit.disabled=false;}
+    busy=true;const my=++revision;submit.disabled=true;clear(results);results.append(el('p',{role:'status'},s('common.loading')));
+    try {const doc=await api.post('/kol/resolve',{input:field.value});if(live(my))show(doc);}catch(err){if(live(my))failure(err);}finally{busy=false;submit.disabled=false;}
   });
   const timer=setInterval(()=>{if(live() && lookupId && results.querySelector('button.btn'))check();},12000);
   return ()=>{stopped=true;clearInterval(timer);};
