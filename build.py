@@ -14,13 +14,14 @@ What it does (see SYSTEMDESIGN.md §5):
   * public/track-record.json (the nightly notary) supplies `track_n` = backtest.kindex.n — the numeric N printed
     beside every K-index win-rate on the landing (SYSTEMDESIGN §0.5: every win-rate carries its N=); the build
     fails when that number is missing rather than print a rate without it
-  * local asset URLs get ?v=<git sha8 | 'dev'> appended — in HTML href/src AND in the relative ES-module
-    specifiers under dist/js/app/ (static `from "./x.js"` and dynamic `import("./views/x.js")`), so the
-    immutable /js/* cache (_headers) can never pair a new main.js with a year-old tg.js/api.js
+  * app modules live together under /app-assets/<content hash>/ with relative imports. Their
+    bytes never change at a published URL, including when a browser ignores a query cache key.
+    Other local asset URLs and legacy app paths retain the ?v=<git sha8> convention.
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import re
@@ -122,8 +123,35 @@ def make_env() -> Environment:
     )
 
 
-def version_assets(html: str, version: str) -> str:
-    return ASSET_RE.sub(lambda m: f"{m.group(1)}{m.group(2)}?v={version}{m.group(3)}", html)
+def version_assets(html: str, version: str, app_version: str) -> str:
+    def replace(match):
+        path = match.group(2)
+        if path.startswith("/js/app/"):
+            path = path.replace("/js/app/", f"/app-assets/{app_version}/", 1)
+            return f"{match.group(1)}{path}{match.group(3)}"
+        return f"{match.group(1)}{path}?v={version}{match.group(3)}"
+    return ASSET_RE.sub(replace, html)
+
+
+def publish_app_modules() -> str:
+    """Snapshot the entire import graph so auth and routing share one store.
+
+    Query-versioned paths served mixed generations in production after OAuth:
+    auth.js imported the prior store while router.js imported the current store.
+    Hash file names AND bytes, including uncommitted edits, before copying. Plain
+    relative imports stay inside this snapshot; no dependency points at a mutable
+    legacy URL. Retain legacy files for pages already open during a deployment.
+    """
+    source = DIST / "js" / "app"
+    files = sorted(p for p in source.rglob("*") if p.is_file())
+    digest = hashlib.sha256()
+    for path in files:
+        data = path.read_bytes()
+        digest.update(path.relative_to(source).as_posix().encode() + b"\0")
+        digest.update(len(data).to_bytes(8, "big") + data)
+    version = digest.hexdigest()[:20]
+    shutil.copytree(source, DIST / "app-assets" / version)
+    return version
 
 
 def version_imports(js: str, version: str) -> str:
@@ -493,6 +521,7 @@ def main() -> None:
     if DIST.exists():
         shutil.rmtree(DIST)
     shutil.copytree(PUBLIC, DIST)          # public/ is copied whole (avatar-group.jpg, mascot.svg, receipts/ …)
+    app_version = publish_app_modules()
     for name in BRAND_ASSETS:
         if not (DIST / name).is_file():
             fail(f"brand asset public/{name} missing from dist/ (SYSTEMDESIGN §5.1 avatar rule)")
@@ -510,7 +539,7 @@ def main() -> None:
             ctx = build_context(cfg, tables, lang, Path(tpl_name).stem, rel, version, liq, track_n, track_stats)
             ctx["oversold"] = load_oversold_research()
             ctx["video_example"] = video_example
-            html = version_assets(tpl.render(**ctx), version)
+            html = version_assets(tpl.render(**ctx), version, app_version)
             out = DIST / lang_prefix(lang).strip("/") / rel
             out.parent.mkdir(parents=True, exist_ok=True)
             out.write_text(html, encoding="utf-8")
@@ -525,7 +554,7 @@ def main() -> None:
     write_sitemap(cfg, pages, datetime.now(timezone.utc).strftime("%Y-%m-%d"))
     print(f"build.py: rendered {count} pages ({len(pages)} templates × {len(LANGS)} langs) "
           f"→ {DIST.relative_to(ROOT)}/  version={version}  api_base={cfg['api_base']}  "
-          f"module imports versioned={n_imports}")
+          f"app modules={app_version}  legacy imports versioned={n_imports}")
 
 
 if __name__ == "__main__":

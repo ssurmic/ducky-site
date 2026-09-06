@@ -23,9 +23,11 @@ jobs:
         with:
           node-version: 24
       - run: npm ci
-      - run: npm test
+      - name: app module release isolation
+        run: python3 -m unittest discover -s tests -p 'test_build_assets.py'
       - name: build (zh + en, i18n key parity)
         run: python3 build.py
+      - run: npm test
       - name: lint copy (banned strings, data-winrate ⇔ data-n, disclaimer lines, no third-party scripts)
         run: python3 scripts/lint_copy.py
       - name: internal link check

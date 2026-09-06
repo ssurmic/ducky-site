@@ -18,7 +18,9 @@ scripts/serve.sh                      # http://localhost:8000/
 ```
 
 Copy lives in `i18n/zh.json` and `i18n/en.json` (flat keys, identical key sets — the build fails otherwise).
-Prices, bot handle, channel and API base live in `site.config.json`. Assets get `?v=<git sha8>`.
+Prices, bot handle, channel and API base live in `site.config.json`. App modules share a content-addressed
+directory `/app-assets/<hash>/`; all relative imports remain inside it so authentication and routing use
+the same session store. Other assets keep `?v=<git sha8>`.
 
 Font: `public/css/site.css` self-hosts `JetBrains Mono` from `public/fonts/JetBrainsMono-sub.woff2`; generate it
 once with `scripts/fonts.sh <JetBrainsMono.ttf>` (pyftsubset). Until then the system mono stack is used.

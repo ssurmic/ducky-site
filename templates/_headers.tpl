@@ -17,6 +17,10 @@
 /js/*
   Cache-Control: public, max-age=600, stale-while-revalidate=86400
 
+{# The content hash is in the path, shared by the entire app import graph. #}
+/app-assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
 

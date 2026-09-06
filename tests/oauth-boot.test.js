@@ -1,0 +1,26 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {JSDOM} from 'jsdom';
+import {readFileSync} from 'node:fs';
+const dom=new JSDOM('<main class="app-main"><div id="view"></div></main>',{url:'https://ducky.test/app/#/oauth'});
+for(const key of ['window','document','Node','MutationObserver','location','history'])globalThis[key]=dom.window[key];
+globalThis.requestAnimationFrame=fn=>setTimeout(fn,0);
+const strings=document.createElement('script');strings.id='ducky-strings';
+strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(JSON.parse(readFileSync('i18n/en.json'))).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
+const reply=body=>new Response(JSON.stringify(body),{headers:{'content-type':'application/json'}});
+test('built OAuth boot renders the authenticated destination with stale legacy modules present',async()=>{
+ const legacy=await import('../public/js/app/store.js');
+ legacy.set('me',null);
+ const shell=readFileSync('dist/app/index.html','utf8');
+ const entry=/src="(\/app-assets\/[a-f0-9]+\/main\.js)"/.exec(shell)?.[1];
+ assert.ok(entry,'the app entry must use a content-addressed path');
+ const calls=[];
+ globalThis.fetch=async(url,opts)=>{calls.push(url);if(url.endsWith('/auth/session'))return reply({token:'google-token'});if(url.endsWith('/me'))return reply({user_id:12,tier:'free'});return reply({items:[]});};
+ await import('../dist'+entry);
+ for(let i=0;i<200&&document.body.dataset.route!=='watchlist';i++)await new Promise(r=>setTimeout(r,5));
+ assert.equal(document.body.dataset.route,'watchlist',JSON.stringify(calls));
+ const active=await import('../dist'+entry.replace('main.js','store.js'));
+ assert.equal(active.get('me').user_id,12);
+ assert.equal(legacy.get('me'),null);
+ assert.equal(calls.filter(url=>url.endsWith('/auth/session')).length,1);
+});
