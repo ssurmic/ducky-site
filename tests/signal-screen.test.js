@@ -1,0 +1,83 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {JSDOM} from 'jsdom';
+const dom=new JSDOM('<html lang="en" data-lang="en"><body></body></html>',{url:'https://ducky.test/app/#/boards'});
+for(const k of ['window','document','Node','location','history'])globalThis[k]=dom.window[k];
+globalThis.requestAnimationFrame=fn=>fn();
+const copy=JSON.parse(readFileSync('i18n/en.json'));
+const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
+const store=await import('../public/js/app/store.js');
+const {mountScreen,mountSavedScreens,routePreset,defaults,configSummary}=await import('../public/js/app/views/signal-screen.js');
+const response=data=>new Response(JSON.stringify(data),{headers:{'content-type':'application/json'}});
+const flush=async()=>{for(let i=0;i<6;i++)await new Promise(r=>setTimeout(r,0));};
+const fixture=config=>({status:'ready',config,total:1,unknown_count:1,checked_tickers:3,coverage:{tickers:3},built_at:'2026-09-06T12:00:00Z',
+ items:[{ticker:'EX',company:'Example',sector:'Technology',market_cap:2e9,technical:{rsi_d:28,oversold:true,iv_hv:.8},technical_status:'fresh',
+   company_as_of:'2026-09-05',snapshot_at:'2026-09-04T20:05:00Z',events:[{kind:'insider',published_at:'2026-09-03',event_date:'2026-08-28',source_url:'https://www.sec.gov/Archives/a',value:400000}]}],
+ unknown:[{ticker:'MISSING',reasons:['technical_stale']}]});
+function root(){const r=document.createElement('div');document.body.append(r);return r;}
+function pro(){store.set('token','fixture');store.set('me',{tier:'pro'});}
+function submit(r,selector){r.querySelector(selector).dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));}
+test('homepage presets populate explicit same-stock rules without previewing or saving',async()=>{
+ pro();const calls=[];globalThis.fetch=async(url,opts)=>{calls.push([String(url),opts.method]);return response(String(url).includes('facets')?{sectors:['Technology']}:{items:[]});};
+ const r=root();const dispose=mountScreen(r,{query:new URLSearchParams('screen=insider-oversold')});await flush();
+ assert.equal(r.querySelector('details').open,true);assert.equal(r.querySelector('[name=oversold]').checked,true);
+ assert.equal(r.querySelector('[name=event_insider]').checked,true);assert.equal(r.querySelector('[name=days]').value,'30');
+ assert.equal(calls.some(([url])=>url.includes('/screens/preview')),false);assert.equal(calls.some(([,method])=>method==='POST'),false);
+ const institutional=routePreset('institution-oversold');assert.equal(institutional.event_op,'or');assert.equal(institutional.oversold,true);
+ assert.deepEqual(institutional.events,['stake','13f']);assert.equal(routePreset('malicious'),null);
+ dispose();r.remove();
+});
+test('preview carries exact conditions and saving is an independent opt-in with full evidence',async()=>{
+ pro();const calls=[];let saved=[];
+ globalThis.fetch=async(url,opts)=>{url=String(url);calls.push({url,opts});
+  if(url.includes('facets'))return response({sectors:['Technology']});
+  if(url.endsWith('/screens/preview'))return response(fixture(JSON.parse(opts.body).config));
+  if(url.endsWith('/screens')&&opts.method==='POST'){const body=JSON.parse(opts.body);saved=[{id:1,...body}];return response(saved[0]);}
+  return response({items:saved});
+ };
+ const r=root(),dispose=mountScreen(r,{});await flush();
+ r.querySelector('[name=scope]').value='watchlist';r.querySelector('[name=sector]').value='Technology';r.querySelector('[name=cap_min]').value='2';
+ r.querySelector('[name=oversold]').checked=true;r.querySelector('[name=event_insider]').checked=true;r.querySelector('[name=event_stake]').checked=true;
+ submit(r,'.screen-form');await flush();
+ const previewCall=calls.find(c=>c.url.endsWith('/screens/preview'));
+ const config=JSON.parse(previewCall.opts.body).config;
+ assert.equal(config.scope,'watchlist');assert.equal(config.cap_min,2e9);assert.equal(config.event_op,'and');assert.deepEqual(config.events,['insider','stake']);
+ assert.equal(r.querySelector('.screen-save').hidden,false);assert.equal(calls.some(c=>c.url.endsWith('/screens')&&c.opts.method==='POST'),false);
+ assert.ok(r.textContent.includes('MISSING'));assert.ok(r.textContent.includes('2026-08-28'));assert.ok(r.querySelector('a[href="https://www.sec.gov/Archives/a"]'));
+ r.querySelector('[name=screen_name]').value='My exact rule';assert.equal(r.querySelector('[name=screen_notify]').checked,false);
+ submit(r,'.screen-save');await flush();
+ assert.equal(saved.length,1);assert.equal(saved[0].notify,false);assert.deepEqual(saved[0].config,config);
+ dispose();r.remove();
+});
+test('editing while preview is pending drops late results and cannot save a stale rule',async()=>{
+ pro();let finish;globalThis.fetch=async(url,opts)=>String(url).endsWith('/screens/preview')?new Promise(resolve=>finish=()=>resolve(response(fixture(JSON.parse(opts.body).config)))):response({items:[],sectors:[]});
+ const r=root(),dispose=mountScreen(r,{});await flush();submit(r,'.screen-form');await flush();
+ r.querySelector('[name=rsi_max]').value='15';r.querySelector('[name=rsi_max]').dispatchEvent(new window.Event('input',{bubbles:true}));finish();await flush();
+ assert.equal(r.querySelector('.screen-save').hidden,true);assert.equal(r.querySelectorAll('.screen-match').length,0);
+ dispose();r.remove();
+});
+test('free user cannot fetch composite research or accidentally create notifications',async()=>{
+ store.set('me',{tier:'free'});store.set('token',null);const calls=[];
+ globalThis.fetch=async(url,opts)=>{calls.push(String(url));return response({sectors:[]});};
+ const r=root(),dispose=mountScreen(r,{});submit(r,'.screen-form');await flush();
+ assert.equal(calls.some(c=>c.includes('/screens')),false);assert.ok(r.querySelector('a[href="#/billing"]'));assert.equal(r.querySelector('.screen-save').hidden,true);
+ dispose();r.remove();
+});
+test('saved alerts show the actual delivery state and toggling uses explicit owner action',async()=>{
+ pro();const calls=[];let enabled=false;const c={...defaults(),oversold:true,events:['insider']};
+ globalThis.fetch=async(url,opts)=>{url=String(url);calls.push({url,opts});
+  if(url.endsWith('/screens/hits'))return response({items:[{ticker:'EX',name:'My rule',matched_at:'2026-09-06T12:00:00Z',delivery:'queued',evidence:fixture(c).items[0]}]});
+  if(opts.method==='POST'){enabled=JSON.parse(opts.body).notify;return response({notify:enabled});}
+  return response({items:[{id:4,name:'My rule',config:c,notify:enabled,last_checked:'2026-09-06T12:00:00Z'}],evaluation_enabled:true});
+ };
+ const r=root(),dispose=mountSavedScreens(r,{});await flush();
+ assert.ok(r.textContent.includes(copy['app.screen.delivery_queued']));assert.equal(calls.some(c=>c.opts.method==='POST'),false);
+ [...r.querySelectorAll('button')].find(b=>b.textContent===copy['app.screen.enable']).click();await flush();
+ assert.equal(enabled,true);assert.ok(r.textContent.includes(copy['app.screen.pause']));assert.ok(r.querySelector('a[href="#/boards?screen=4"]'));
+ dispose();r.remove();
+});
+test('scope and event time windows remain legible in the saved summary',()=>{
+ const c={...defaults(),scope:'watchlist',events:['insider','stake'],days:90,cap_min:2e9,oversold:true};
+ const summary=configSummary(c);assert.ok(summary.includes('My watchlist'));assert.ok(summary.includes('90'));assert.ok(summary.includes(' AND '));assert.ok(summary.includes('$2B'));
+});

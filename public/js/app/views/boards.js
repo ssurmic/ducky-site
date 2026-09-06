@@ -5,6 +5,8 @@ import * as store from "../store.js";
 import { el, clear, spinner, pct, px } from "../ui.js";
 import { icon } from "../icons.js";
 import { dateTime, metric } from './creator-research.js';
+import { mountScreen } from './signal-screen.js';
+import { mountMarketContext } from './market-context.js';
 
 export const BOARDS = [
   {key:'liquidity', kinds:'liquidity,kindex,macro'},
@@ -111,6 +113,10 @@ export async function mount(root, route={}) {
   const card=el('section.boards-view.radar-workspace');root.append(card);
   const header=el('header.radar-heading',el('div',el('h1',s('boards.h1')),el('p.muted',s('radar.subtitle'))),
     el('a.btn.btn-ghost.btn-sm',{href:'#/calendar'},icon('calendar'),s('watch.events')));
+  const screenPanel=el('div.radar-screen-panel');
+  const disposeScreen=mountScreen(screenPanel,{signal:route.signal,query:params});
+  const marketPanel=el('div.radar-market-panel');
+  const disposeMarket=mountMarketContext(marketPanel);
   const starters=el('div.radar-starters',...['liquidity','partner','volscan'].map(key=>el('button.radar-starter',
     {type:'button',onclick:()=>selectBoard(key)},icon(BOARDS.find(b=>b.key===key).icon || key),
     el('span',el('strong.starter-desktop',s('radar.start_'+key)),el('strong.starter-mobile',s('radar.short_'+key)),el('span.muted',s('radar.start_'+key+'_hint'))),el('span',{'aria-hidden':'true'},'↗'))));
@@ -145,7 +151,7 @@ export async function mount(root, route={}) {
   const rows=el('div.radar-records');
   const more=el('button.btn.btn-ghost.radar-more',{type:'button',onclick:()=>loadArchive(false)},s('creators.load_more'));
   const main=el('section.radar-main',tabs,guide,filter,summary,note,rows,more);
-  card.append(header,starters,coverage,pelosiJump,el('div.radar-layout',el('aside.radar-sidebar',el('h2',s('radar.categories')),nav),main));
+  card.append(header,marketPanel,screenPanel,starters,coverage,pelosiJump,el('div.radar-layout',el('aside.radar-sidebar',el('h2',s('radar.categories')),nav),main));
   filter.addEventListener('submit',e=>{e.preventDefault();apply();});
   for(const node of [content,direction,days,start,end,sector,cap,purchases])node.addEventListener('change',apply);
   for(const node of [query,ticker])node.addEventListener('input',()=>{if(state.mode!=='archive')apply();});
@@ -170,7 +176,7 @@ export async function mount(root, route={}) {
   if(state.mode==='archive')await loadArchive(true);else render();
   return cleanup;
 
-  function cleanup(){clearTimeout(recentDebounce);alive=false;requestId++;archiveCtl?.abort();staticCtl.abort();clearTimeout(timer);}
+  function cleanup(){disposeScreen();disposeMarket();clearTimeout(recentDebounce);alive=false;requestId++;archiveCtl?.abort();staticCtl.abort();clearTimeout(timer);}
   function persist(){const p=new URLSearchParams();for(const [k,v] of Object.entries(state))if(v)p.set(k,v);history.replaceState(null,'','#/boards?'+p);}
   function readFilters(){state.q=query.value.trim();state.ticker=ticker.value.trim().toUpperCase().replace(/^\$/,'');state.content=content.value;state.direction=direction.value;state.sector=sector.value;state.cap=cap.value;state.purchases=purchases.value;state.days=days.value;state.start=start.value;state.end=end.value;}
   function apply(){

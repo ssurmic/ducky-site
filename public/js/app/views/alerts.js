@@ -1,6 +1,7 @@
 // views/alerts.js — list with state chips (pending/done/error/fired) · add form → 202 toast · 402 upsell · delete.
 import { s } from "../strings.js";
 import { mountDraft } from "./alert-draft.js";
+import { mountSavedScreens } from './signal-screen.js';
 import * as api from "../api.js";
 import * as store from "../store.js";
 import * as tg from "../tg.js";
@@ -37,6 +38,7 @@ export async function mount(root, params = {}) {
   root.append(head);
   const disposeDraft = mountDraft(root, { signal: params.signal, company: (params.query?.get("ticker") || "").toUpperCase(), onCreated: load });
   root.append(list);
+  const disposeScreens=mountSavedScreens(root,{signal:params.signal});
 
   async function onDelete(a) {
     if (!(await confirm(s("alerts.confirm_delete")))) return;
@@ -87,7 +89,7 @@ export async function mount(root, params = {}) {
   const resume = () => { if (alive && document.visibilityState !== "hidden") { refreshes = 0; load(); } };
   window.addEventListener("online", resume);
   document.addEventListener("visibilitychange", resume);
-  const dispose = () => { disposeDraft(); alive = false; unsubs.forEach((u) => u()); if (refreshTimer) clearTimeout(refreshTimer); window.removeEventListener("online", resume); document.removeEventListener("visibilitychange", resume); };
+  const dispose = () => { disposeDraft(); disposeScreens(); alive = false; unsubs.forEach((u) => u()); if (refreshTimer) clearTimeout(refreshTimer); window.removeEventListener("online", resume); document.removeEventListener("visibilitychange", resume); };
   params.signal?.addEventListener("abort", dispose, { once: true });
   if ((store.get("alerts") || []).length) render(); else list.appendChild(spinner());
   await load();

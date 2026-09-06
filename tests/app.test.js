@@ -164,7 +164,7 @@ test('long-running alert setup keeps polling with bounded backoff until ready',a
  const oldTimer=globalThis.setTimeout;const oldClear=globalThis.clearTimeout;
  const pending=[];let calls=0, timerId=0;const cancelled=new Set();
  globalThis.setTimeout=(fn,ms)=>{const id=++timerId;pending.push({fn,ms,id});return id;};globalThis.clearTimeout=id=>cancelled.add(id);
- globalThis.fetch=async()=>response({items:[{id:42,ticker:'NVDA',condition_nl:'RSI below 10',compile_state:++calls>=7?'done':'pending'}]});
+ globalThis.fetch=async url=>String(url).endsWith('/alerts')?response({items:[{id:42,ticker:'NVDA',condition_nl:'RSI below 10',compile_state:++calls>=7?'done':'pending'}]}):response({items:[],evaluation_enabled:true});
  store.set('alerts',[]);store.set('me',{tier:'pro'});const root=document.createElement('div');
  let cleanup;
  try {

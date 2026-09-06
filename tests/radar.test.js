@@ -48,7 +48,7 @@ test('late archive requests cannot overwrite a newer filter and pagination prese
   return response({filter_version:3,items:[{...sample[0],id:requests.length,base_d:'2026-09-05',base_px:100,ret_1d:-3}],next_cursor:requests.length===2?2:null});};
  const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams()});
  root.querySelector('[data-mode="archive"]').click();await flush();
- root.querySelector('[name="ticker"]').value='TTMI';root.querySelector('form').dispatchEvent(new window.Event('submit',{cancelable:true}));await flush();
+ root.querySelector('[name="ticker"]').value='TTMI';root.querySelector('form.radar-filters').dispatchEvent(new window.Event('submit',{cancelable:true}));await flush();
  firstResolve(response({filter_version:3,items:[{id:99,kind:'insider',summary:'Stale response'}]}));await flush();
  assert.ok(!root.textContent.includes('Stale response'));assert.ok(root.textContent.includes('-3.0%'));
  root.querySelector('.radar-more').click();await flush();assert.equal(root.querySelectorAll('.radar-record').length,2);
