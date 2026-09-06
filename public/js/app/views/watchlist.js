@@ -1,5 +1,6 @@
 // views/watchlist.js — add ticker · list of 全景 mini-cards from /snapshot · remove.
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
+import { symbolPicker } from "../symbol-picker.js";
 import { s } from "../strings.js";
 import * as api from "../api.js";
 import * as store from "../store.js";
@@ -19,21 +20,24 @@ export async function mount(root) {
   const rendered = new Map();
   const inflight = new Map();   // finding watchlist.js:118 — ticker -> in-flight fetch promise (dedup)
   const head = el("div.view-head", el("h1", s("watch.title")), el("span.count.mono", { id: "watch-count" }));
-  const input = el("input.input.mono", { type: "text", placeholder: s("watch.placeholder"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "10", "aria-label": s("watch.placeholder") });
+  const input = el("input.input.mono", { type: "text", placeholder: s("watch.placeholder"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "80", "aria-label": s("watch.placeholder") });
   const addBtn = el("button.btn.btn-primary", { type: "submit" }, s("watch.add"));
-  const form = el("form.add-row", { onsubmit: onAdd }, input, addBtn);
+  const picker = symbolPicker(input, () => store.get("watchlist") || []);
+  unsubs.push(picker.dispose);
+  const form = el("form.add-row", { onsubmit: onAdd }, picker.wrap, addBtn);
   const list = el("div.cards", { id: "watch-cards" });
   root.append(head, el("p.view-intro.muted", s("watch.workflow")), form, list);
 
   async function onAdd(e) {
     e.preventDefault();
     const t = input.value.trim().toUpperCase().replace(/^\$/, "");
-    if (!TICKER_RE.test(t)) { input.focus(); return; }
+    if (!TICKER_RE.test(t)) { toast(s("watch.select_result")); input.focus(); return; }
+    if ((store.get("watchlist") || []).includes(t)) { toast(s("watch.following")); return; }
     addBtn.disabled = true;
     try {
-      await api.watchlist.add(t);
-      input.value = "";
-      toast(s("watch.added", { t }), "ok");
+      const result = await api.watchlist.add(t);
+      input.value = ""; picker.reset();
+      toast(result?.added === false ? s("watch.following") : s("watch.added", { t:result?.ticker || t }), "ok");
       tg.haptic("success");
       await load();
       // finding watchlist.js:118 — load() sets watchlist, which fires the subscriber below that already
@@ -129,7 +133,7 @@ export async function mount(root) {
     c.appendChild(el("div.snap-actions",
       el("a.btn.btn-ghost.btn-sm", { href: "#/research/" + encodeURIComponent(t) }, s("research.title")),
       el("a.btn.btn-primary.btn-sm", { href: "#/alerts?ticker=" + encodeURIComponent(t) }, s("watch.set_alert")),
-      el("a.btn.btn-ghost.btn-sm", { href: "#/calendar" }, s("watch.events"))));
+      el("a.btn.btn-ghost.btn-sm", { href: "#/calendar?ticker=" + encodeURIComponent(t) }, s("watch.events"))));
     return c;
   }
 

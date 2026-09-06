@@ -65,6 +65,13 @@ def git_sha() -> str:
         return "dev"
 
 
+def validate_app_strings(html: str, table: dict, lang: str) -> None:
+    match = re.search(r'<script type="application/json" id="ducky-strings">(.*?)</script>', html, re.S)
+    expected = {k[4:]:v for k,v in table.items() if k.startswith("app.")}
+    if not match or json.loads(match.group(1)) != expected:
+        fail(f"incomplete embedded app translations: {lang}")
+
+
 def load_config(api_base: str | None) -> dict:
     cfg = json.loads(CONFIG.read_text(encoding="utf-8"))
     if api_base:
@@ -425,8 +432,8 @@ def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, versi
         return f"{lang_prefix(for_lang or lang)}{rel_path}"
 
     return {
+        "app_strings": {k[4:]:v for k,v in table.items() if k.startswith("app.")},
         "lang": lang, "html_lang": HTML_LANG[lang], "other_lang": other, "is_zh": lang == "zh",
-        "app_strings": {k[4:]: v for k, v in tables[lang].items() if k.startswith("app.")},
         "page": page, "t": t, "t2": t2, "tf": tf, "tg": tg, "primary": primary, "url": url, "liq": liq,
         "track_n": track_n, "track_stats": track_stats or {"ok": False},
         "cfg": cfg, "prices": cfg["prices"], "channel_url": channel_url, "has_channel": bool(channel_url),
@@ -541,6 +548,8 @@ def main() -> None:
             ctx["oversold"] = load_oversold_research()
             ctx["video_example"] = video_example
             html = version_assets(tpl.render(**ctx), version, app_version)
+            if tpl_name == "app.html":
+                validate_app_strings(html, tables[lang], lang)
             out = DIST / lang_prefix(lang).strip("/") / rel
             out.parent.mkdir(parents=True, exist_ok=True)
             out.write_text(html, encoding="utf-8")

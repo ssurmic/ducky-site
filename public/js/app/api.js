@@ -124,6 +124,7 @@ export const auth = {
   confirmReset: (token, password) => post("/auth/password-reset/confirm", { token, password }, { auth: false }),
 };
 export const me = () => get("/me");
+export const symbols = (q, opts) => get("/public/symbols?q=" + encodeURIComponent(q), { ...opts, auth:false });
 export const watchlist = {
   list: () => get("/watchlist"),
   add: (t) => post("/watchlist", { ticker: t }),
@@ -162,6 +163,8 @@ export const signals = {
     + "&days=" + ((opts && opts.days) || 7) + "&limit=" + ((opts && opts.limit) || 12), { auth: false }),
 };
 export const calendar = {
+  links: () => get("/calendar/links", {timeout:3000, silent402:true}),
+  context: (params, opts) => get("/calendar/context?" + new URLSearchParams(params), {...opts, silent402:true}),
   // Live from the API (enriched with grounded history server-side); if the API is down
   // or hasn't shipped the route yet, fall back to the static file built into the site so the
   // calendar NEVER goes blank. Never throws — worst case an empty (but valid) doc.
@@ -175,7 +178,7 @@ export const calendar = {
     if (!apiEv.length && !staticEv.length) return { events: [], partial: true, source: "empty" };
     if (!staticEv.length) return apiDoc;
     if (!apiEv.length) return { events: staticEv, partial: true, source: "static-fallback" };
-    const STRUCT = new Set(["opex", "witching", "rebal"]);
+    const STRUCT = new Set(["opex", "witching"]);
     const out = apiEv.slice();
     const seen = new Set(apiEv.map((e) => e.date + "|" + e.type + "|" + (e.title || "")));
     const seenStruct = new Set(apiEv.filter((e) => STRUCT.has(e.type)).map((e) => e.date + "|" + e.type));
@@ -184,7 +187,7 @@ export const calendar = {
       else { const k = e.date + "|" + e.type + "|" + (e.title || ""); if (!seen.has(k)) { out.push(e); seen.add(k); } }
     }
     out.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
-    return { events: out, as_of: (apiDoc && apiDoc.as_of) || undefined, source: "merged" };
+    return { events: out, as_of: (apiDoc && apiDoc.as_of) || undefined, source: "merged", partial: !!apiDoc?.partial };
   },
   _raw: () => get("/public/calendar.json", { auth: false }),
 };

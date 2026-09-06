@@ -95,18 +95,18 @@ test('alert deep link prefills ticker and logout discards a late list',async()=>
  const cleanup=await pending;assert.deepEqual(store.get('alerts'),[]);cleanup();root.remove();
 });
 test('fast route changes keep late calendar results out of the active watchlist',async()=>{
- store.set('me',{tier:'pro'});store.set('watchlist',[]);let calendarResolve;
+ store.set('me',{tier:'pro'});store.set('watchlist',[]);let calendarResolve;const calendarPending=[];
  globalThis.fetch=async(url)=>{
-  if(String(url).includes('calendar'))return new Promise(r=>{calendarResolve=r;});
+  if(String(url).includes('calendar'))return new Promise(r=>{calendarResolve=r;calendarPending.push(r);});
   return response({items:[]});
  };
  history.replaceState(null,'','#/calendar');const first=router.render();
  for(let i=0;i<100&&!calendarResolve;i++)await new Promise(r=>setTimeout(r,1));
  assert.ok(calendarResolve);
  history.replaceState(null,'','#/watchlist');await router.render();
- calendarResolve(response({events:[]}));
+ calendarPending.splice(0).forEach(r=>r(response({events:[]})));
  // calendar may also request its static fallback; complete every bounded test request.
- for(let i=0;i<5;i++){await new Promise(r=>setTimeout(r,0));calendarResolve(response({events:[]}));}
+ for(let i=0;i<5;i++){await new Promise(r=>setTimeout(r,0));calendarPending.splice(0).forEach(r=>r(response({events:[]})));}
  await first;assert.equal(document.querySelector('#view h1').textContent,copy['app.watch.title']);
 });
 

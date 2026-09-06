@@ -1,3 +1,4 @@
+import { eventResearchSession } from "../calendar-event.js";
 import { icon } from "../icons.js";
 // views/calendar.js — 投资日历 (Pro): mobile agenda and selectable date grids for a
 // US-stock watchlist — Fed speakers (ET times), FOMC / rate decisions, CPI/PPI/PCE macro, earnings,
@@ -68,6 +69,9 @@ function addDays(d, n) { const x = new Date(d.getFullYear(), d.getMonth(), d.get
 export async function mount(root) {
   const isZh = (document.documentElement.lang || "zh").slice(0, 2) !== "en";
   const isPro = store.isPro();
+  const scopeTicker = new URLSearchParams((location.hash.split("?")[1] || "")).get("ticker") || "";
+  const research = eventResearchSession((store.get("watchlist") || []).includes(scopeTicker) ? scopeTicker : "");
+  let disposed = false;
   const WD = isZh ? ["日", "一", "二", "三", "四", "五", "六"] : ["S", "M", "T", "W", "T", "F", "S"];
   const MON = isZh
     ? (y, m) => `${y} 年 ${m + 1} 月`
@@ -81,18 +85,19 @@ export async function mount(root) {
   card.append(el("h1", s("calendar.h1")), el("p.muted", s("calendar.sub")));
   card.appendChild(spinner());
 
-  let doc, watch = [];
+  let doc, watch = [], links = {};
   try {
-    doc = await api.calendar.feed();
+    const loaded = await Promise.all([api.calendar.feed(), isPro ? api.calendar.links().catch(() => ({})) : Promise.resolve({})]);
+    doc=loaded[0]; links=loaded[1]?.issuers || {};
     watch = (store.get("watchlist") || []).map((t) => String(t).toUpperCase());
     if (!watch.length) { try { const w = await api.watchlist.list(); watch = (w.items || []).map((x) => String(x.ticker || x).toUpperCase()); } catch (e) { /* ignore */ } }
   } catch (e) {
     clear(card); card.append(el("h1", s("calendar.h1")), el("p.err", s("calendar.load_error")));
-    return disposeHistory;
+    return () => { disposed=true; research.dispose(); disposeHistory(); };
   }
   const watchSet = new Set(watch);
   const events = (doc && doc.events) || [];
-  const evHasMine = (e) => (e.tickers || []).some((t) => watchSet.has(String(t).toUpperCase()));
+  const evHasMine = (e) => (e.tickers || []).some((t) => watchSet.has(String(t).toUpperCase()) || (e.type === "earnings" && (links[String(t).toUpperCase()] || []).some(w => watchSet.has(w))));
 
   // index events by date for O(1) day lookup
   const byDate = new Map();
@@ -129,6 +134,7 @@ export async function mount(root) {
   function render() {
     clear(card);
     card.append(el("h1", s("calendar.h1")), el("p.muted", s("calendar.sub")));
+    if(isPro) card.appendChild(el("p.event-scope-note.muted.small",s("event.scope_note",{n:watch.length})));
     card.append(el("button.btn.btn-ghost.btn-sm", {type:"button", "aria-controls":"seasonality-history", onclick:()=>{historyCard.scrollIntoView({block:"start"});historyCard.focus({preventScroll:true});}}, s("season.title") + " ↓"));
     if (!isPro) {
       card.appendChild(el("div.cr-pro-banner",
@@ -302,13 +308,7 @@ export async function mount(root) {
         main.appendChild(title);
         const note = isZh ? (e.note || "") : (e.note_en || e.note || "");
         if (note) main.appendChild(el("div.cal-note.muted", note));
-        const impact = macroImpact(e, isZh);
-        if (impact) {
-          const box = el("div.cal-impact");
-          box.appendChild(el("span.cal-impact-tag", "🌐 " + (isZh ? "对市场的影响" : "Market impact")));
-          box.appendChild(el("span.cal-impact-txt", impact));
-          main.appendChild(box);
-        }
+        main.appendChild(research.mount(e));
         if (e.url) main.appendChild(el("a.cal-link.mono", { href: e.url, target: "_blank", rel: "noopener" }, isZh ? "详情 ↗" : "details ↗"));
         row.appendChild(main);
         detail.appendChild(row);
@@ -318,5 +318,5 @@ export async function mount(root) {
     }
   }
 
-  return disposeHistory;
+  return () => { disposed=true; research.dispose(); disposeHistory(); };
 }
