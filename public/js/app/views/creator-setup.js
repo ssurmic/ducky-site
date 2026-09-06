@@ -30,12 +30,12 @@ export function mountSetup(root,{onFollow,initial='',state={}}) {
   const hint=el('p.small.muted',s('creatorflow.directory_hint'));
   const results=el('div.creator-find-results',{'aria-live':'polite'});
   const form=el('form.creator-find-form',el('label',el('span',s('creatorflow.input')),field),submit);
-  const examples=[['Ticker Symbol: YOU','ai'],['Joseph Carlson','portfolio'],['投资TALK君','macro'],['小Lin说','basics']];
+  const examples=[['Ticker Symbol: YOU','ai'],['Joseph Carlson','portfolio'],['投资TALK君','macro'],['商浩金','macro']];
   const picks=el('div.creator-example-grid',...examples.map(([name,topic])=>el('button.creator-pick',{type:'button',onclick:()=>{
     field.value=name;field.dispatchEvent(new field.ownerDocument.defaultView.Event('input'));field.focus();
   }},el('strong',name),el('span',s('creatorflow.topic_'+topic)))));
-  wrap.append(el('div.creator-setup-heading',el('div',el('p.eyebrow',s('creatorflow.step1')),el('h2',s('creatorflow.add')),el('p.muted.small',s('creatorflow.find_hint')))),
-    el('h3',s('creatorflow.browse_title')),el('p.small.muted',s('creatorflow.browse_hint')),picks,form,suggestions,hint,results);
+  wrap.append(el('div.creator-setup-heading',el('div',el('h2',s('creatorflow.add')),el('p.muted.small',s('creatorflow.find_hint')))),
+    picks,form,suggestions,hint,results);
   function live(){return !stopped && epoch===store.epoch() && root.isConnected;}
   function failure(err){clear(results);results.append(el('p.err',{role:'alert'},s('creatorflow.error_'+err.message)===('creatorflow.error_'+err.message)?s('creatorflow.error'):s('creatorflow.error_'+err.message)));}
   const poll=progressPoll({active:()=>live()&&['queued','running'].includes(state.doc?.status),

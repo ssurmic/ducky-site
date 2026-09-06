@@ -883,3 +883,63 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 .updates-page button:focus-visible,.updates-page a:focus-visible,.updates-page summary:focus-visible,.updates-page input:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
 @media(max-width:900px) { .updates-layout { grid-template-columns:1fr; }.updates-entry { align-items:start; flex-direction:column; } }
 @media(max-width:480px) { .updates-dates { grid-template-columns:1fr; gap:4px; }.updates-dates dd { margin-bottom:9px; }.updates-layout { gap:12px; }.updates-item-actions .btn { min-height:44px; } }
+
+/* Creator overview: charts and takeaways first, source detail on demand. */
+.creators-view .creator-directory{max-height:340px;margin:12px 0 24px;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr))}
+.creators-view .creator-directory:empty{display:none}.creators-view .creator-profile{padding:16px;gap:8px}.creator-profile p{margin:0}.creator-card-gist{font-size:.82rem;line-height:1.6;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.creator-profile .creator-card-coverage{font:12px var(--font);color:var(--accent)}.creator-profile .cr-chip{margin-top:8px}.creator-page{max-width:860px;margin:22px auto}.creator-page-heading{margin-bottom:24px}.creator-page-heading h2{font-size:1.5rem;margin:0 0 5px}.creator-page-heading p{margin:0}.creator-page-heading .creator-avatar{width:54px;height:54px}.creator-page-visual{background:var(--surface2);border:1px solid var(--border);border-radius:18px;padding:22px}.creator-page-visual h3{font-size:1.05rem;margin:0 0 8px}.creator-visual-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.creator-visual-heading .evidence-badge{white-space:nowrap}.creator-chart{margin:14px 0 0}.creator-price-chart{width:100%;height:auto;display:block}.creator-chart-range{width:calc(100% - 70px);margin:0 20px 0 50px;accent-color:var(--accent);cursor:ew-resize}.creator-chart-readout{text-align:center;color:var(--muted);font-family:var(--mono);margin:10px 0}.creator-page-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;border-top:1px solid var(--border);margin-top:18px;padding-top:16px}.creator-page-metrics .evidence-metric{padding:0;background:transparent}.creator-page-metrics strong{font-size:1.25rem}.creator-page-method{margin-top:20px;font-size:.8rem}.creator-page-method blockquote{margin:12px 0;padding-left:12px;border-left:2px solid var(--accent)}.creator-activity{margin:24px 0 18px}.creator-activity-bars{display:flex;gap:12px;align-items:end;min-height:134px;justify-content:center}.creator-activity-column{display:flex;flex-direction:column;align-items:center;justify-content:end;gap:7px;flex:1;max-width:100px}.creator-activity-track{width:70%;background:var(--border);border-radius:5px 5px 0 0;display:flex;align-items:end;min-height:2px}.creator-activity-track>div{width:100%;background:var(--accent);border-radius:5px 5px 0 0}.creator-activity figcaption{text-align:center;margin-top:20px}.creator-highlights{margin:28px 0}.creator-highlights h3{font-size:1.1rem}.creator-highlights article{padding:16px 0;border-bottom:1px solid var(--border)}.creator-highlights article p{margin:8px 0 10px;line-height:1.8;font-size:.95rem;max-width:72ch}.creator-mentions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:20px 0}.creator-page-about{padding:18px 0;line-height:1.8}.creator-video-archive{margin:24px 0;border-top:1px solid var(--border);padding-top:22px}.creator-video-archive>summary{font-weight:600;margin-bottom:20px;cursor:pointer}.creator-page details>summary{cursor:pointer;color:var(--muted)}.creator-recent-feed>button{margin-bottom:18px}.creator-workspace .creator-lab-layout{display:flex;flex-direction:column;gap:22px}.creator-workspace .creator-lab-output{position:static;width:100%}.creator-sim-settings{width:100%;border:1px solid var(--border);border-radius:12px;padding:16px}.creator-sim-settings>summary{cursor:pointer;font-weight:600}.creator-sim-settings .creator-lab-config{border:0;margin-top:20px;max-width:600px}.creator-workspace .creator-sim-results{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:600px){.creator-page{margin-top:20px}.creator-page-heading h2{font-size:1.2rem}.creator-page-visual{padding:16px 12px}.creator-page-metrics{gap:8px}.creator-page-metrics strong{font-size:1.05rem}.creator-visual-heading{align-items:start;flex-direction:column;gap:4px}.creator-highlights article p{font-size:.9rem}.creator-workspace .creator-sim-results{grid-template-columns:1fr}.creators-view .creator-directory{max-height:360px}.creator-activity-column{gap:5px}.creator-activity-column .small{font-size:.65rem}.creator-chart-readout{font-size:.65rem}}
+.creators-view [hidden]{display:none!important}.creator-page-heading h1{font-size:1.5rem;margin:0 0 5px}.creator-page-coverage-mini{padding:18px;margin:24px 0}.creator-page-coverage-mini .creator-activity{max-width:420px;margin:12px 0}.creator-page-coverage-mini .creator-activity-bars{min-height:90px}.creator-page-coverage-mini .creator-activity-track{max-height:64px}.creator-page-coverage-mini .creator-activity figcaption{text-align:left;margin-top:10px}.creator-page-coverage-mini>p{margin:10px 0 0}@media(max-width:600px){.creator-page-heading h1{font-size:1.2rem}}
+.creators-view .creator-workspace-tabs{flex-wrap:nowrap}.creators-view .creator-workspace-tabs button{min-width:0;white-space:nowrap}@media(max-width:600px){.creators-view .creator-workspace-tabs button{font-size:.78rem;padding:13px 6px}}
+
+/* Calendar: a compact agenda, with exchange closures distinct from releases. */
+.calendar-view > h1 { margin-bottom:8px; }
+.calendar-view > p { margin-top:0; }
+.cal-filters { margin:16px 0 10px; border-bottom:1px solid var(--border); }
+.cal-filters > summary,.cal-research-more > summary,.cal-session-impact > summary { cursor:pointer; min-height:44px; padding:12px 0; font-size:13px; color:var(--accent); }
+.cal-filters .cal-bar { margin-top:0; }
+.cal-research-more { margin-top:6px; }
+.cal-research-more > summary { padding:8px 0; min-height:38px; }
+.cal-ev.cal-t-holiday,.cal-ev.cal-t-early_close { border:1px solid color-mix(in srgb,var(--accent) 45%,var(--border)); background:color-mix(in srgb,var(--accent) 6%,var(--surface)); border-radius:12px; }
+.cal-t-holiday .cal-title,.cal-t-early_close .cal-title { color:var(--accent); }
+.cal-holiday-brief { font-size:13px; line-height:1.75; margin:12px 0 0; }
+.cal-session-impact { border-top:1px solid var(--border); margin-top:12px; }
+.cal-session-impact > div { padding:12px 0; border-top:1px solid var(--border); }
+.cal-session-impact strong { font-size:13px; }
+.cal-session-impact p { line-height:1.8; margin:8px 0; }
+.cal-closed { background:color-mix(in srgb,var(--accent) 8%,var(--surface))!important; }
+.pill-holiday,.pill-early_close { color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 30%,transparent); }
+.cal-closed .mbar { color:var(--accent); }
+.seasonality-view .season-controls { align-items:end; gap:12px; margin:20px 0 12px; }
+.seasonality-view .season-controls label { flex:1 1 150px; }
+.seasonality-view .season-controls select { width:100%; }
+.season-reading { border-left:3px solid var(--accent); padding:4px 0 4px 18px; margin:24px 0 18px; max-width:850px; }
+.season-reading h3 { font-size:20px; margin:0 0 8px; }
+.season-reading p { font-size:15px; line-height:1.9; margin:0; }
+.season-metrics article { padding:18px; background:var(--surface-2); }
+.season-metrics article > b { font-size:14px; margin-bottom:14px; }
+.season-metrics strong { font-size:27px; margin:6px 0 18px; }
+.season-metrics article > .small { font-size:12px; }
+.season-distribution { display:flex; gap:3px; height:6px; overflow:hidden; border-radius:3px; }
+.season-distribution i { height:100%; }.season-up { background:var(--green,#33c793); }.season-down { background:var(--red,#f47067); }.season-flat { background:var(--muted); }
+.season-limit { line-height:1.7; }
+.season-year-tools { display:flex; gap:12px; margin-top:4px; flex-wrap:wrap; }
+.season-year-tools label { display:grid; gap:6px; flex:1 1 120px; font-size:12px; color:var(--muted); }
+.season-year-tools select { width:100%; min-height:44px; }
+.season-table .season-year { font-size:13px; }
+.season-table td { font-variant-numeric:tabular-nums; white-space:nowrap; }
+@media(max-width:560px) {
+ .season-metrics { grid-template-columns:1fr; gap:10px; }
+ .season-metrics article { padding:16px; }
+ .season-metrics strong { font-size:25px; }
+ .season-reading { padding-left:12px; }
+ .season-reading h3 { font-size:18px; }
+ .season-reading p { font-size:14px; }
+ .season-table th,.season-table td { padding:12px 4px; font-size:12px; }
+ .calendar-view .cal-note { font-size:12px; line-height:1.7; }
+}
+.season-controls select,.season-year-tools select { background:var(--surface-2); color:var(--text); border:1px solid var(--border); border-radius:9px; padding:10px 12px; font:inherit; font-size:13px; }
+.cal-session-grid-label { display:none; }
+@media(max-width:560px) {
+ .cal-session-grid-label { display:block; font-size:9px; line-height:1.4; white-space:normal; color:var(--accent); }
+ .cal-closed .cal-event-count,.cal-early .cal-event-count { display:none; }
+}

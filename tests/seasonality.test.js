@@ -33,18 +33,34 @@ test('year-end windows compound returns and require every remaining month',()=>{
  assert.equal(observations({...data,rows:data.rows.filter(r=>!(r.year===2022&&r.month===11))},9,true,true).length,5);
  assert.deepEqual(stats([-10,0,5,20]),{n:4,mean:3.75,median:2.5,positive:2,worst:-10,best:20});
 });
-test('month slider, cycle filter and return window update the same loss-inclusive chart',()=>{
+test('month and period controls retain every year and make early years directly selectable',()=>{
  const root=document.createElement('section');renderSeasonality(root,data,9);
- const slider=root.querySelector('input');assert.equal(slider.getAttribute('aria-valuetext'),'September');
+ const month=root.querySelector('.season-month-select');assert.equal(month.value,'9');
  assert.equal(root.querySelectorAll('.season-year').length,26);
+ assert.match(root.querySelector('.season-metrics').textContent,/Of 26 years: 14 up, 12 down/);
+ assert.equal(root.querySelector('.season-year th').textContent,'2025');
+ const years=root.querySelector('.season-year-select');years.value='2000';years.dispatchEvent(new window.Event('change'));
+ assert.equal(root.querySelectorAll('.season-year').length,10);
+ assert.match(root.querySelector('tbody').textContent,/2000/);assert.match(root.querySelector('tbody').textContent,/Down 20.9%/);
+ const order=root.querySelector('.season-order');order.value='old';order.dispatchEvent(new window.Event('change'));
+ assert.equal(root.querySelector('.season-year th').textContent,'2000');
  root.querySelector('.season-controls button').click();assert.equal(root.querySelectorAll('.season-year').length,6);
- const select=root.querySelector('select');select.value='after';select.dispatchEvent(new window.Event('change'));
- assert.equal(root.querySelectorAll('.season-year').length,6);
- slider.value='12';slider.dispatchEvent(new window.Event('input'));
+ const period=root.querySelector('.season-window');period.value='after';period.dispatchEvent(new window.Event('change'));
+ assert.match(root.querySelector('.season-reading h3').textContent,/October–December/);
+ month.value='12';month.dispatchEvent(new window.Event('change'));
  assert.equal(root.querySelectorAll('.season-year').length,0);assert.ok(root.querySelector('.data-notice'));
- slider.value='1';slider.dispatchEvent(new window.Event('input'));
+ month.value='1';month.dispatchEvent(new window.Event('change'));
  assert.equal(root.querySelectorAll('.season-year').length,6);
- assert.ok(root.querySelector('a[href^="https://www.fec.gov/"]'));
+ assert.equal(root.querySelector('details').open,false);
+});
+test('commentary is rejected when its exact cohort or schema changes',async()=>{
+ const {savedReading}=await import('../public/js/app/seasonality.js');
+ const rows=observations(data,9),signature=rows.map(r=>[r.year,r.SPY.toFixed(6),r.QQQ.toFixed(6)]);
+ const reading={version:'season-reading-v1',signature,summary:{en:'Frozen explanation'}};
+ const doc={...data,readings:{'9:0:0':reading}};
+ assert.equal(savedReading(doc,rows,9,false,false),reading);
+ assert.equal(savedReading(doc,rows.slice(1),9,false,false),null);
+ assert.equal(savedReading(doc,rows,9,true,false),null);
 });
 test('disposed history panel ignores delayed data',async()=>{
  let resolve;globalThis.fetch=()=>new Promise(r=>resolve=r);
@@ -58,4 +74,16 @@ test('billing prices follow locale while payment amounts keep their actual denom
  assert.ok(localizedPrice(p,12,'CNY').startsWith('¥499'));
  assert.equal(railForCurrency('manual_alipay','USD'),false);assert.equal(railForCurrency('manual_wechat','CNY'),true);
  assert.equal(railForCurrency('stars','USD'),true);assert.equal(railForCurrency('stripe','USD'),true);
+});
+
+test('all saved historical explanations match the exact shared observations',async()=>{
+ const {savedReading}=await import('../public/js/app/seasonality.js');
+ assert.equal(Object.keys(data.readings).length,46);
+ for(const [key,reading] of Object.entries(data.readings)){
+  const [month,midterm,after]=key.split(':').map(Number);
+  const rows=observations(data,month,!!midterm,!!after);
+  assert.equal(savedReading(data,rows,month,!!midterm,!!after),reading);
+  assert.ok(reading.summary.zh&&reading.summary.en);
+ }
+ assert.match(data.readings['9:0:0'].summary.zh,/SPY.*上涨的年份更多.*平均结果却是下跌/);
 });

@@ -12,6 +12,7 @@ import {mountSetup,confirmCreator,avatar} from './creator-setup.js';
 import {progressPoll} from './creator-progress.js';
 import {mountSimulation} from './creator-simulation.js';
 import {mountLeaderboard} from './creator-leaderboard.js';
+import {renderCreatorPage} from './creator-page.js';
 import {creatorRoute,creatorTarget} from '../creator-route.js';
 import {matchesStocks,taggedTickers} from '../creator-match.js';
 
@@ -36,10 +37,10 @@ export function hasGroundedCalls(post) {
 
 export function hasReviewedSummary(post) {
   const m = evidenceMeta(post);
-  return hasGroundedCalls(post) || (["short-video-v2","short-video-v3"].includes(m.source?.version) && m.source.status === "ready" && m.source.kind === "transcript" && ["grounded", "no_call"].includes(m.quality));
+  return hasGroundedCalls(post) || (["short-video-v2","short-video-v3","creator-video-v4"].includes(m.source?.version) && m.source.status === "ready" && m.source.kind === "transcript" && ["grounded", "no_call"].includes(m.quality));
 }
 function atTime(url, seconds) {
-  try { const u = new URL(url); if (!["www.youtube.com", "youtube.com", "youtu.be"].includes(u.hostname) || !Number.isFinite(seconds) || seconds < 0 || seconds > 1200) return url;
+  try { const u = new URL(url); if (!["www.youtube.com", "youtube.com", "youtu.be"].includes(u.hostname) || !Number.isFinite(seconds) || seconds < 0 || seconds > 5400) return url;
     u.searchParams.set("t", String(Math.floor(seconds))); return u.href;
   } catch { return url; }
 }
@@ -116,16 +117,19 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
   let mine = initial.ticker ? false : initial.mine, watched=initial.watched, stockTicker=initial.ticker;
   let query = "";
   let selected=kols.some(k=>k.id===initial.selected)?initial.selected:'', tab=initial.tab, shown=30;
-  const labState={demo:initial.demo};
+  const labState={demo:initial.demo}, histories={}, archiveOpen=new Set();
+  const pageProgress=progressPoll({interval:30000,active:()=>!disposed&&store.isPro()&&epoch===store.epoch()&&root.isConnected&&!!selected&&tab==='feed',
+    read:()=>api.get('/kol/'+encodeURIComponent(selected)+'/page'),
+    onValue:page=>{if(page.kol_id!==selected)return;const old=doc.pages?.[selected];if(page.content_hash===old?.content_hash&&page.status===old?.status)return;
+      doc.pages={...(doc.pages||{}),[selected]:page};renderContent();}});
   render();progress.schedule();
 
   function render() {
     setupCleanup();clear(card);
     card.append(el('div.evidence-page-head',el('div',el("h1", s("creators.h1")), el("p.muted", s("creators.sub"))),
-      el('p.muted.small',s('creators.feed_asof')+' '+dateTime(doc.as_of || doc.generated_at))));
+      el('span')));
 
-    card.append(el('ol.creator-journey',...['creatorflow.journey1','creatorflow.journey2','creatorflow.journey3'].map((key,i)=>el('li',el('span',String(i+1)),s(key)))));
-    const actions=el('div.evidence-controls',el('button.btn.btn-primary.btn-sm',{type:'button','aria-expanded':String(showSetup),onclick:()=>{showSetup=!showSetup;render();}},s('creatorflow.add')),
+    const actions=el('div.evidence-controls.creator-page-actions',el('button.btn.btn-primary.btn-sm',{type:'button','aria-expanded':String(showSetup),onclick:()=>{showSetup=!showSetup;render();}},s('creatorflow.add')),
       el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:refresh},s('creatorflow.refresh')));
     card.append(actions);
     if(notice)card.append(el('p.creator-follow-success',{role:'status'},notice));
@@ -155,12 +159,15 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
   }
 
   function renderContent() {
-    syncRoute();
+    if(selected&&!kols.some(k=>k.id===selected))selected='';
+    syncRoute();pageProgress.schedule();
     const content = card.querySelector(".creators-content");
     clear(content);
     const outerControls=card.querySelector('.creators-controls');
-    outerControls.style.display=tab==='rank'?'none':'';
+    outerControls.style.display=tab==='rank'||(selected&&tab==='feed')?'none':'';
     outerControls.querySelector('input').style.display=tab==='lab'?'none':'';
+    card.querySelector('.evidence-page-head').hidden=!!selected&&tab==='feed';
+    card.querySelector('.creator-page-actions').hidden=!!selected&&tab==='feed';
     const isPro = store.isPro();
     const stockFilter=stockTicker?[stockTicker]:watched?watchedTickers:null;
     const stockPosts=posts.filter(p=>matchesStocks(p,stockFilter));
@@ -186,26 +193,21 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       return;
     }
     const stats=stockPosts.filter(p=>(!mine || following.has(p.kol_id)) && (!selected || p.kol_id===selected));
-    content.append(el('div.evidence-metrics',metric(s('creators.sources'),available.length),
-      metric(s('creators.records'),stats.length),metric(s('creators.summary_ready'),stats.filter(hasReviewedSummary).length),
-      metric(s('creators.awaiting_source'),stats.filter(p=>!hasReviewedSummary(p)).length)));
+
     const grid = el("div.creator-directory");
-    for (const k of available.filter(k=>!query || [k.name,k.handle,k.profile?.title].join(' ').toLowerCase().includes(query.toLowerCase()))) {
+    for (const k of (selected?[]:available).filter(k=>!query || [k.name,k.handle,k.profile?.title].join(' ').toLowerCase().includes(query.toLowerCase()))) {
       const on = following.has(k.id);
       const profile=k.profile || {};
       const tile=el('article.creator-profile',{class:selected===k.id?'selected':''});
       const title=el('button.creator-name',{type:'button','aria-pressed':String(selected===k.id),onclick:()=>{selected=selected===k.id?'':k.id;shown=30;renderContent();}},k.name || k.id);
       tile.append(el('div.creator-identity',avatar(k),el('div',title,el('p.muted.small',(profile.handle || k.handle || '')+' · '+(k.platform==='youtube'?'YouTube':k.platform || '')+' · '+(k.lang || '—')))));
-      const details=el('details.creator-about',el('summary',s('creators.about')),el('p',profile.description || k.descr || s('creators.profile_pending')));
-      if(profile.subscribers) details.append(el('p.muted.small',s('creators.subscriber_count',{n:Number(profile.subscribers).toLocaleString()})));
-      if(profile.as_of) details.append(el('p.muted.small',s('creators.profile_asof')+' '+dateTime(profile.as_of)));
-      if(safeSource(k.url)) details.append(el('a',{href:k.url,target:'_blank',rel:'noopener noreferrer'},s('creators.channel')+' ↗'));
-      tile.append(details);
       const creatorPosts=posts.filter(p=>p.kol_id===k.id);
-      tile.append(el('p.creator-card-coverage',s('creatorflow.card_coverage',{ready:creatorPosts.filter(hasReviewedSummary).length,total:creatorPosts.length})));
-      if(analysis[k.id])tile.append(el('p.creator-analysis-state',{role:'status'},s('creatorflow.analysis_'+analysis[k.id].status)));
-
-      if(on&&isPro&&['error','needs_review','needs_source','no_recent_content'].includes(analysis[k.id]?.status))tile.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:async e=>{e.target.disabled=true;try{const r=await api.post('/kol/'+encodeURIComponent(k.id)+'/analyze');if(epoch!==store.epoch()||disposed)return;analysis[k.id]=r.analysis;renderContent();progress.schedule();}catch{toast(s('creatorflow.retry_later'),'err');}finally{e.target.disabled=false;}}},s('creatorflow.retry_analysis')));
+      const page=doc.pages?.[k.id];
+      const ready=page?.coverage?.reviewed ?? creatorPosts.filter(hasReviewedSummary).length;
+      tile.append(el('p.creator-card-coverage',s('creatorpage.card_ready',{n:ready})));
+      const highlight=page?.highlights?.[0];
+      if(highlight)tile.append(el('p.creator-card-gist',pickSummary(highlight.summary,isZh)));
+      else tile.append(el('p.small.muted',s(page?.backfill?'creatorpage.preparing':'creatorpage.no_summary')));
       const label = isPro ? (on ? s("creators.following") : s("creators.follow")) : s("creators.follow");
       const chip = el("button.cr-chip" + (on && isPro ? ".on" : ""), { type: "button",'aria-label':label+' '+k.name }, label);
       chip.addEventListener("click", () => { if (isPro) {if(on)toggle(k.id,chip);else confirmCreator({...k,recent:creatorPosts.slice(0,3)},()=>api.kol.sub(k.id),followed,()=>!disposed&&epoch===store.epoch());} else router.go("#/billing"); });
@@ -213,15 +215,27 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     }
     content.appendChild(grid);
 
-    if(!mine) content.append(el('details.creator-x',el('summary',s('creators.x_title')),el('p.muted',s('creators.x_plan'))));
-    if(selected)content.append(el('p.creator-selected',s('creatorflow.viewing',{name:kols.find(k=>k.id===selected)?.name || selected}),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected='';renderContent();}},s('creators.clear_creator'))));
+
+    if(selected){
+      const creator=kols.find(k=>k.id===selected);
+      content.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected='';renderContent();}},'← '+s('creatorpage.all')));
+      const overview=el('section.creator-page');content.append(overview);
+      renderCreatorPage(overview,{creator,page:doc.pages?.[selected]||{},tickers:stockFilter,onTab:value=>{tab=value;renderContent();}});
+    }
+    const feedContent=selected?el('details.creator-video-archive',{open:archiveOpen.has(selected)},el('summary',s('creatorpage.all_videos',{n:doc.pages?.[selected]?.coverage?.indexed ?? stats.length}))):el('section.creator-recent-feed');
+    if(selected){const kid=selected;feedContent.addEventListener('toggle',()=>{if(feedContent.open){archiveOpen.add(kid);if(!histories[kid])loadHistory(kid);}else archiveOpen.delete(kid);});}
+    content.append(feedContent);
     const archiveBtn = el("button.btn.btn-ghost.btn-sm", { type: "button", "aria-pressed": String(archive), onclick: () => { archive = !archive; render(); } }, s(archive ? "creators.only_grounded" : "creators.show_archive"));
-    content.appendChild(archiveBtn);
-    if (mine && !following.size) {content.appendChild(empty(s("creators.no_following")));content.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{mine=false;render();}},s('creators.discover')));return;}
-    const visiblePosts = filterPosts(posts, {following,mine,archive,query,tickers:stockFilter}).filter(p=>!selected || p.kol_id===selected);
-    if (!visiblePosts.length) { content.appendChild(empty(s("creators.feed_empty"))); return; }
+    feedContent.appendChild(archiveBtn);
+    if (mine && !following.size) {feedContent.appendChild(empty(s("creators.no_following")));feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{mine=false;render();}},s('creators.discover')));return;}
+    const history=selected?histories[selected]:null;
+    if(history?.loading)feedContent.append(el('p.small.muted',{role:'status'},s('common.loading')));
+    if(history?.error)feedContent.append(el('p.err',s('creators.load_error')));
+    if(history&&!history.loading&&(history.error||history.next_cursor))feedContent.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>loadHistory(selected)},s(history.error?'creatorflow.refresh':'creators.load_more')));
+    const visiblePosts = filterPosts(history?.items || posts, {following,mine,archive,query,tickers:stockFilter}).filter(p=>!selected || p.kol_id===selected);
+    if (!visiblePosts.length) { feedContent.appendChild(empty(s("creators.feed_empty"))); return; }
     const feed = el("div.cr-feed");
-    for (const p of visiblePosts.slice(0, shown)) {
+    for (const p of visiblePosts.slice(0, history?.items?visiblePosts.length:shown)) {
       const grounded = hasGroundedCalls(p);
       const reviewed = hasReviewedSummary(p);
       const meta = evidenceMeta(p);
@@ -239,7 +253,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       if(source.duration_seconds) sourceFacts.append(el('span',s('creators.duration')+' '+Math.floor(source.duration_seconds/60)+':'+String(source.duration_seconds%60).padStart(2,'0')));
       if(source.caption_language) sourceFacts.append(el('span',source.caption_language+' · '+s(source.caption_generated?'creators.auto_captions':'creators.manual_captions')));
       if(Number.isFinite(source.caption_coverage_pct)) sourceFacts.append(el('span',s('creators.coverage',{n:source.caption_coverage_pct})));
-      art.append(sourceFacts);
+
       if (p.title) art.appendChild(el("h3.cr-video-title", p.title));
       if (reviewed) {
         art.appendChild(el("p.cr-attribution.muted.small", s("creators.attribution", { name: p.kol_name || p.kol_id || "—" })));
@@ -261,16 +275,27 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
         el('p.muted.small',s('creators.analysis_updated')+' '+dateTime(p.fetched_at)));
       if(source.caption_segments) audit.append(el('p.muted.small',s('creators.caption_scope',{n:source.caption_segments})));
       if(source.source_hash) audit.append(el('code',source.source_hash));
-      art.append(audit);
-      const actions=el('div.evidence-controls');
+      audit.append(sourceFacts);art.append(audit);
+      const actions=el('div.evidence-controls.creator-page-actions');
       if (safeSource(p.url)) actions.appendChild(el("a.cr-orig", { href: p.url, target: "_blank", rel: "noopener noreferrer" }, s("creators.orig") + " ↗"));
       if(grounded) actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected=p.kol_id;tab='research';renderContent();}},s('creators.research')),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected=p.kol_id;tab='lab';renderContent();}},s('creatorlab.tab')));
       art.append(actions);
       feed.appendChild(art);
     }
-    content.appendChild(feed);
-    if(visiblePosts.length>shown) content.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{shown+=30;renderContent();}},s('creators.load_more')));
-    content.append(el('p.muted.small',s('creators.feed_limit',{n:posts.length})));
+    feedContent.appendChild(feed);
+    if(!history?.items&&visiblePosts.length>shown) feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{shown+=30;renderContent();}},s('creators.load_more')));
+    feedContent.append(el('p.muted.small',s('creators.feed_limit',{n:history?.items?.length ?? posts.length})));
+  }
+
+  async function loadHistory(kid){
+    const old=histories[kid]||{};if(old.loading)return;
+    histories[kid]={...old,loading:true,error:false};renderContent();
+    try{const data=await api.get('/kol/'+encodeURIComponent(kid)+'/history'+(old.next_cursor?'?before='+old.next_cursor:''));
+      if(disposed||epoch!==store.epoch())return;
+      const merged=new Map([...(old.items||[]),...(data.items||[])].map(p=>[p.id,p]));
+      histories[kid]={items:[...merged.values()],next_cursor:data.next_cursor,loading:false};
+    }catch{if(!disposed&&epoch===store.epoch())histories[kid]={...old,loading:false,error:true};}
+    if(!disposed&&selected===kid&&epoch===store.epoch())renderContent();
   }
 
   function syncRoute() {
@@ -310,5 +335,5 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       analysis=mineDoc.analysis||{};following.clear();for(const id of mineDoc.subs||[])following.add(id);render();progress.schedule();
     }catch{if(!disposed&&!automatic)toast(s('creators.load_error'),'err');}finally{refreshing=false;}
   }
-  return () => {disposed=true;progress.stop();setupCleanup();document.querySelector('dialog.creator-confirm')?.remove();};
+  return () => {disposed=true;progress.stop();pageProgress.stop();setupCleanup();document.querySelector('dialog.creator-confirm')?.remove();};
 }

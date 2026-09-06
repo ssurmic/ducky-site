@@ -1,0 +1,9 @@
+# Creator channel overview · 2026-09-06
+
+A creator name now opens its channel overview instead of only filtering an empty feed. The private feed preloads shared channel pages: opening a name performs zero additional requests and cannot enqueue analysis. The opening view shows a cached, dated price study when available; otherwise it leads with the actual latest summaries and a compact coverage chart. Missing prices never become a fictional return.
+
+The directory uses compact cards. Step banners, the four-stat wall and repeated analysis status blocks were removed; source details and full video history are collapsed. The existing simulator shows its chart before a collapsed settings panel; its numerical rules and recorded-window default are unchanged. Current Pro API gates remain authoritative.
+
+Validation: 128 frontend tests, including no-request channel navigation, negative price path/date inspection, missing-price behavior, source disclosures and explicit fictional-scenario selection. Native browser checks used actual production creator summaries exported to a read-only localhost fixture, not a synthetic production account. 390px Chinese and 320px English had no horizontal overflow; desktop hierarchy was inspected. TALK latest video is source-reviewed with NKE neutral evidence at 806 seconds. The actual holdings simulation still lacks a completed recorded window; no return chart was invented for this state.
+
+Backend de90fb8 has shared resumable history and page producers deployed. Targeted history starts 2026-03-07. At this acceptance stage, 200 TALK uploads and 82 Shanghao Jin uploads were discovered; discovery does not imply completed analysis or complete channel history. Shanghao Jin’s recent public videos have no captions, requiring the separate local-ASR integration now in progress.
