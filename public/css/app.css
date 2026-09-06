@@ -707,3 +707,10 @@ body:is([data-route="register"],[data-route="oauth"]) .app-nav { display:none; }
  .event-horizons { flex-wrap:wrap; }
  .event-stats strong { font-size:1rem; }
 }
+
+.event-recent-history{margin-top:1.5rem;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem}
+.event-recent-history h4{grid-column:1/-1;margin:0}
+.event-past-card{border:1px solid var(--border);border-radius:10px;padding:.9rem;min-width:0;overflow-wrap:anywhere}
+.event-past-card>div{display:flex;flex-direction:column;gap:.25rem}.event-past-card p{margin:.6rem 0}
+.event-year-label{display:flex;align-items:center;gap:.8rem;margin:1rem 0}.event-year-label select{max-width:160px}
+@media(max-width:680px){.event-recent-history{grid-template-columns:1fr}}

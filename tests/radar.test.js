@@ -9,7 +9,7 @@ const strings=document.createElement('script');strings.id='ducky-strings';string
 const {filterRecords,archivePath,mount}=await import('../public/js/app/views/boards.js');
 const now=Date.parse('2026-09-06T00:00:00Z');
 const sample=[
- {id:1,kind:'insider',ticker:'TTMI',ts:'2026-09-05T00:00:00Z',summary:'Director purchase',extra:{message_text:'Filing evidence'},ret_5d:-8},
+ {id:1,kind:'insider',open_market_value:200000,ticker:'TTMI',ts:'2026-09-05T00:00:00Z',summary:'Director purchase',extra:{message_text:'Filing evidence'},ret_5d:-8},
  {id:2,kind:'political',ticker:'TTMI',ts:'2026-09-04T12:00:00Z',summary:'Disclosure'},
  {id:3,kind:'insider',ticker:'NVDA',ts:'2026-09-04T12:00:00Z',summary:null},
  {id:4,kind:'insider',ticker:'TTMI',ts:'2026-08-20T12:00:00Z',summary:'Old purchase'}];
@@ -43,13 +43,13 @@ test('nine categories, combined search, keyboard disclosures and explicit excerp
 });
 test('late archive requests cannot overwrite a newer filter and pagination preserves losses',async()=>{
  let firstResolve,requests=[];
- globalThis.fetch=async url=>{url=String(url);if(!url.includes('archive.json') || url.includes('limit=200'))return response({filter_version:2,items:[]});requests.push(url);
+ globalThis.fetch=async url=>{url=String(url);if(!url.includes('archive.json') || url.includes('limit=200'))return response({filter_version:3,items:[]});requests.push(url);
   if(requests.length===1)return new Promise(r=>firstResolve=r);
-  return response({filter_version:2,items:[{...sample[0],id:requests.length,base_d:'2026-09-05',base_px:100,ret_1d:-3}],next_cursor:requests.length===2?2:null});};
+  return response({filter_version:3,items:[{...sample[0],id:requests.length,base_d:'2026-09-05',base_px:100,ret_1d:-3}],next_cursor:requests.length===2?2:null});};
  const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams()});
  root.querySelector('[data-mode="archive"]').click();await flush();
  root.querySelector('[name="ticker"]').value='TTMI';root.querySelector('form').dispatchEvent(new window.Event('submit',{cancelable:true}));await flush();
- firstResolve(response({filter_version:2,items:[{id:99,kind:'insider',summary:'Stale response'}]}));await flush();
+ firstResolve(response({filter_version:3,items:[{id:99,kind:'insider',summary:'Stale response'}]}));await flush();
  assert.ok(!root.textContent.includes('Stale response'));assert.ok(root.textContent.includes('-3.0%'));
  root.querySelector('.radar-more').click();await flush();assert.equal(root.querySelectorAll('.radar-record').length,2);
  assert.ok(requests[2].includes('before=2'));assert.ok(requests[2].includes('ticker=TTMI'));
@@ -58,9 +58,9 @@ test('late archive requests cannot overwrite a newer filter and pagination prese
 });
 test('archive failure retains loaded records and retries the same cursor',async()=>{
  let attempt=0;
- globalThis.fetch=async url=>{if(!String(url).includes('archive.json') || String(url).includes('limit=200'))return response({filter_version:2,items:[]});attempt++;
+ globalThis.fetch=async url=>{if(!String(url).includes('archive.json') || String(url).includes('limit=200'))return response({filter_version:3,items:[]});attempt++;
   if(attempt===2)throw new Error('offline');
-  return response({filter_version:2,items:[sample[0]],next_cursor:1});};
+  return response({filter_version:3,items:[sample[0]],next_cursor:1});};
  const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams('mode=archive')});
  root.querySelector('.radar-more').click();await flush();assert.equal(root.querySelectorAll('.radar-record').length,1);
  assert.ok(root.textContent.includes(copy['app.boards.load_error']));
@@ -71,4 +71,13 @@ test('an older archive service cannot silently pretend to support new filters',a
  globalThis.fetch=async()=>response({items:sample});
  const root=document.createElement('section');const cleanup=await mount(root,{query:new URLSearchParams('mode=archive&q=director')});
  assert.ok(root.textContent.includes(copy['app.boards.load_error']));assert.equal(root.querySelectorAll('.radar-record').length,0);cleanup();
+});
+
+test('company and venue filters compose with search and unknown caps stay explicit',()=>{
+ const rows=[{...sample[0],issuer_name:'ScanSource Inc',reporter_name:'Oaktree',sector:'Technology',market_cap:2e9},
+ {...sample[0],id:9,open_market_value:0,sector:'Technology',market_cap:null,extra:{facts:{purchase_values:{unverified:200000}}}}];
+ assert.deepEqual(filterRecords(rows,{mode:'archive',q:'ScanSource',sector:'Technology',cap:'mid',purchases:'open_market'}).map(r=>r.id),[1]);
+ assert.deepEqual(filterRecords(rows,{mode:'archive',cap:'unknown',purchases:'unverified'}).map(r=>r.id),[9]);
+ const url=new URL(archivePath({sector:'Technology',cap:'mid',purchases:'open_market'}),'https://example.test');
+ assert.equal(url.searchParams.get('sector'),'Technology');assert.equal(url.searchParams.get('cap'),'mid');assert.equal(url.searchParams.get('purchases'),'open_market');
 });

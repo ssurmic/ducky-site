@@ -90,3 +90,12 @@ body[data-route="boards"] .app-view{max-width:1160px}
 .radar-coverage{margin:20px 0 26px}.radar-coverage-title{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;margin-bottom:12px}.radar-coverage-title .muted{font-size:13px}.radar-coverage-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:10px}.radar-coverage-card{display:flex;flex-direction:column;gap:7px;text-align:left;padding:16px;border:1px solid var(--border);border-radius:14px;background:var(--surface);color:var(--text);font:inherit;cursor:pointer}.radar-coverage-card:hover{border-color:var(--accent)}.radar-coverage-card span:not(.radar-coverage-number),.radar-coverage-card small{font-size:12px}.radar-coverage-number{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}@media(max-width:640px){.radar-coverage-grid{grid-template-columns:1fr}.radar-coverage-card{display:grid;grid-template-columns:1fr auto;gap:7px 12px;padding:12px}.radar-coverage-number{font-size:17px}.radar-coverage-card span:not(.radar-coverage-number),.radar-coverage-card small{grid-column:1/-1}.radar-coverage-title{gap:6px}}
 
 .radar-coverage{padding:12px 16px;border:1px solid var(--border);border-radius:12px;margin:16px 0 10px}.radar-coverage-title{margin:0;cursor:pointer;list-style:revert}.radar-coverage[open] .radar-coverage-title{margin-bottom:12px}.radar-pelosi{margin-bottom:24px}
+
+.radar-company-name{display:block;font-size:1rem;font-weight:600;color:var(--fg);margin-top:.5rem}
+.radar-reporter,.radar-company-meta{display:block;font-size:.82rem;color:var(--muted);margin-top:.3rem}
+.radar-quick-links{display:flex;gap:1.2rem;flex-wrap:wrap;padding:0 1.25rem 1rem;font-size:.82rem}
+.radar-company-facts{display:grid;grid-template-columns:minmax(110px,.35fr) 1fr;gap:.6rem 1rem;margin:1.25rem 0}
+.radar-company-facts dt{color:var(--muted)}.radar-company-facts dd{margin:0;overflow-wrap:anywhere}
+.radar-purchase-rule{font-size:.82rem;line-height:1.65;color:var(--muted);border-left:2px solid var(--accent);padding-left:.8rem}
+.radar-venue-evidence{margin:1rem 0}.radar-venue-evidence p{overflow-wrap:anywhere}
+@media(max-width:480px){.radar-company-facts{grid-template-columns:1fr;gap:.25rem}.radar-company-facts dd{margin-bottom:.5rem}.radar-quick-links{padding-left:1rem}}

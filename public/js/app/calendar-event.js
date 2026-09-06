@@ -6,6 +6,7 @@ import * as api from './api.js';
 import * as store from './store.js';
 
 export function safeSource(url) { try { const u=new URL(url);return u.protocol==='https:'?u.href:null; }catch{return null;} }
+export function weekday(day){const d=new Date(day+'T12:00:00Z');return Number.isFinite(d.getTime())?new Intl.DateTimeFormat(LANG==='en'?'en-US':'zh-CN',{weekday:'short',timeZone:'America/New_York'}).format(d):'—';}
 const family=k=>['cpi','ppi','pce'].includes(k)?'inflation':['nfp','claims','adp'].includes(k)?'jobs':['retail','gdp','pmi'].includes(k)?'growth':['opex','witching'].includes(k)?'expiry':k;
 
 // Request dedup lives for a view only; no private data survives account changes.
@@ -26,9 +27,9 @@ export function eventResearchSession(scopeTicker='') {
     box.append(hint,el('p.event-schedule.muted.small',schedule));
     if(!store.isPro()) { box.append(el('a.event-upgrade',{href:'#/billing'},s('event.pro')));return box; }
     const relevance=el('div.event-relevance',el('span.muted.small',s('event.matching')));
-    const details=el('details.event-evidence',el('summary',s('event.history')));
+    const details=el('details.event-evidence',{open:kind==='ppi'},el('summary',s('event.history')));
     const content=el('div.event-evidence-body');details.append(content);box.append(relevance,details);
-    let current=null,horizon='5',chosen=scopeTicker,version=0;
+    let current=null,horizon='5',chosen=scopeTicker,version=0,historyYear='all';
     function renderHistory(doc) {
       clear(content);const history=doc.history||{}, summary=history.summary||{};
       content.append(el('p.event-evidence-caption',s('event.history_method')));
@@ -64,12 +65,28 @@ export function eventResearchSession(scopeTicker='') {
       }
       content.append(el('p.muted.small',s('event.excluded',{immature:skipped.immature||0,missing:skipped.missing_prices||0,unknown:(skipped.unknown_time||0)+(skipped.unverified_date||0)})),
         el('p.event-caveat.small',s('event.caveat')));
+      const recent=el('section.event-recent-history',el('h4',s('event.recent_events')));
+      for(const sample of history.samples.slice(-3).reverse()){
+        const w=sample.windows?.[horizon]||{},url=safeSource(sample.source);
+        recent.append(el('article.event-past-card',
+          el('div',el('strong',sample.date+' · '+weekday(sample.date)),el('span.small.muted',s('event.kind_'+kind))),
+          el('p.small',s('event.reaction_session',{date:sample.reaction_session || '—'})+(sample.release_time_et?' · '+sample.release_time_et+' ET':'')),
+          sample.reference_period?el('p.small.muted',s('event.reference_period',{period:sample.reference_period})):null,
+          el('p.small',w.status==='ok'?s('event.past_returns',{ticker:doc.selected,n:horizon,value:pct(w.return_pct),benchmark:pct(w.benchmark_pct)}):s('event.status_'+w.status)),
+          w.status==='ok'?el('p.mono.small.muted',w.start+' → '+w.end):null,
+          url?el('a.small',{href:url,target:'_blank',rel:'noopener noreferrer'},s('event.source')+' ↗'):null));
+      }
+      content.append(recent);
       const all=el('details.event-samples',el('summary',s('event.all_samples',{n:history.samples.length})));
+      const years=[...new Set(history.samples.map(r=>r.date.slice(0,4)))].sort().reverse();
+      const year=el('select.input',{'aria-label':s('event.history_year')},el('option',{value:'all'},s('event.years_all')),...years.map(y=>el('option',{value:y},y)));
+      if(!years.includes(historyYear))historyYear='all';year.value=historyYear;
+      year.addEventListener('change',()=>{historyYear=year.value;renderHistory(doc);content.querySelector('.event-samples').open=true;});all.append(el('label.event-year-label',s('event.history_year'),year));
       const table=el('table.event-sample-table',el('thead',el('tr',...['date','window','return','benchmark','source'].map(k=>el('th',s('event.col_'+k))))));
       const tbody=el('tbody');
-      for(const sample of history.samples.slice().reverse()) {
+      for(const sample of history.samples.filter(r=>historyYear==='all'||r.date.startsWith(historyYear)).slice().reverse()) {
         const w=sample.windows?.[horizon]||{};const url=safeSource(sample.source);
-        tbody.append(el('tr',el('td.mono',sample.date),el('td.small',w.status==='ok'?w.start+' → '+w.end:s('event.status_'+w.status)),
+        tbody.append(el('tr',el('td.mono',sample.date+' · '+weekday(sample.date),el('div.small.muted',s('event.reaction_session',{date:sample.reaction_session||'—'}))),el('td.small',w.status==='ok'?w.start+' → '+w.end:s('event.status_'+w.status)),
           el('td.mono',{class:w.return_pct<0?'neg':w.return_pct>0?'pos':''},w.status==='ok'?pct(w.return_pct):'—'),
           el('td.mono',w.status==='ok'?pct(w.benchmark_pct):'—'),
           el('td',url?el('a',{href:url,target:'_blank',rel:'noopener noreferrer'},s('event.source')):'—')));
