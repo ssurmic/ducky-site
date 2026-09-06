@@ -117,7 +117,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
   let mine = initial.ticker ? false : initial.mine, watched=initial.watched, stockTicker=initial.ticker;
   let query = "";
   let selected=kols.some(k=>k.id===initial.selected)?initial.selected:'', tab=initial.tab, shown=30;
-  const labState={demo:initial.demo};
+  const labState={demo:initial.demo}, histories={}, archiveOpen=new Set();
   const pageProgress=progressPoll({interval:30000,active:()=>!disposed&&store.isPro()&&epoch===store.epoch()&&root.isConnected&&!!selected&&tab==='feed',
     read:()=>api.get('/kol/'+encodeURIComponent(selected)+'/page'),
     onValue:page=>{if(page.kol_id!==selected)return;const old=doc.pages?.[selected];if(page.content_hash===old?.content_hash&&page.status===old?.status)return;
@@ -222,15 +222,20 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       const overview=el('section.creator-page');content.append(overview);
       renderCreatorPage(overview,{creator,page:doc.pages?.[selected]||{},tickers:stockFilter,onTab:value=>{tab=value;renderContent();}});
     }
-    const feedContent=selected?el('details.creator-video-archive',el('summary',s('creatorpage.all_videos',{n:stats.length}))):el('section.creator-recent-feed');
+    const feedContent=selected?el('details.creator-video-archive',{open:archiveOpen.has(selected)},el('summary',s('creatorpage.all_videos',{n:doc.pages?.[selected]?.coverage?.indexed ?? stats.length}))):el('section.creator-recent-feed');
+    if(selected){const kid=selected;feedContent.addEventListener('toggle',()=>{if(feedContent.open){archiveOpen.add(kid);if(!histories[kid])loadHistory(kid);}else archiveOpen.delete(kid);});}
     content.append(feedContent);
     const archiveBtn = el("button.btn.btn-ghost.btn-sm", { type: "button", "aria-pressed": String(archive), onclick: () => { archive = !archive; render(); } }, s(archive ? "creators.only_grounded" : "creators.show_archive"));
     feedContent.appendChild(archiveBtn);
     if (mine && !following.size) {feedContent.appendChild(empty(s("creators.no_following")));feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{mine=false;render();}},s('creators.discover')));return;}
-    const visiblePosts = filterPosts(posts, {following,mine,archive,query,tickers:stockFilter}).filter(p=>!selected || p.kol_id===selected);
+    const history=selected?histories[selected]:null;
+    if(history?.loading)feedContent.append(el('p.small.muted',{role:'status'},s('common.loading')));
+    if(history?.error)feedContent.append(el('p.err',s('creators.load_error')));
+    if(history&&!history.loading&&(history.error||history.next_cursor))feedContent.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>loadHistory(selected)},s(history.error?'creatorflow.refresh':'creators.load_more')));
+    const visiblePosts = filterPosts(history?.items || posts, {following,mine,archive,query,tickers:stockFilter}).filter(p=>!selected || p.kol_id===selected);
     if (!visiblePosts.length) { feedContent.appendChild(empty(s("creators.feed_empty"))); return; }
     const feed = el("div.cr-feed");
-    for (const p of visiblePosts.slice(0, shown)) {
+    for (const p of visiblePosts.slice(0, history?.items?visiblePosts.length:shown)) {
       const grounded = hasGroundedCalls(p);
       const reviewed = hasReviewedSummary(p);
       const meta = evidenceMeta(p);
@@ -278,8 +283,19 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       feed.appendChild(art);
     }
     feedContent.appendChild(feed);
-    if(visiblePosts.length>shown) feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{shown+=30;renderContent();}},s('creators.load_more')));
-    feedContent.append(el('p.muted.small',s('creators.feed_limit',{n:posts.length})));
+    if(!history?.items&&visiblePosts.length>shown) feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{shown+=30;renderContent();}},s('creators.load_more')));
+    feedContent.append(el('p.muted.small',s('creators.feed_limit',{n:history?.items?.length ?? posts.length})));
+  }
+
+  async function loadHistory(kid){
+    const old=histories[kid]||{};if(old.loading)return;
+    histories[kid]={...old,loading:true,error:false};renderContent();
+    try{const data=await api.get('/kol/'+encodeURIComponent(kid)+'/history'+(old.next_cursor?'?before='+old.next_cursor:''));
+      if(disposed||epoch!==store.epoch())return;
+      const merged=new Map([...(old.items||[]),...(data.items||[])].map(p=>[p.id,p]));
+      histories[kid]={items:[...merged.values()],next_cursor:data.next_cursor,loading:false};
+    }catch{if(!disposed&&epoch===store.epoch())histories[kid]={...old,loading:false,error:true};}
+    if(!disposed&&selected===kid&&epoch===store.epoch())renderContent();
   }
 
   function syncRoute() {

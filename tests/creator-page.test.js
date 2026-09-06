@@ -41,3 +41,24 @@ test('opening a creator renders its preloaded shared page without another fetch 
   assert.ok(requests.every(([,method])=>method==='GET'));
   assert.equal(location.hash,'#/creators?creator=creator');dispose();
 });
+
+test('expanded video history fetches that channel and continues beyond the global recent feed',async()=>{
+  store.set('me',{tier:'pro'});const requests=[];
+  const row=(id,title)=>({id,kol_id:'creator',kol_name:'Creator',title,published_at:'2026-04-01T12:00:00Z',calls:[],tickers:[],
+    summary:{quality:'no_call',en:'The creator discusses operating margins.',source:{kind:'transcript',status:'ready',version:'creator-video-v4',summary_reviewed:true}}});
+  globalThis.fetch=async(url,opts)=>{requests.push([url,opts.method]);return Response.json(url==='/kol/feed'?{
+    kols:[{id:'creator',name:'Creator',profile:{}}],posts:[],pages:{creator:{kol_id:'creator',coverage:{indexed:2,reviewed:2}}}
+  }:url==='/me/kols'?{subs:['creator'],analysis:{}}:url==='/kol/creator/history'?{items:[row(2,'First historical video')],next_cursor:2}:
+    url==='/kol/creator/history?before=2'?{items:[row(1,'Older than the global feed')],next_cursor:null}:{items:[]});};
+  const root=document.querySelector('main');root.textContent='';
+  const dispose=await mount(root,{query:new URLSearchParams('creator=creator')});
+  assert.ok(!requests.some(([url])=>url.includes('/history')));
+  const archive=root.querySelector('.creator-video-archive');archive.open=true;archive.dispatchEvent(new window.Event('toggle'));
+  await new Promise(r=>setImmediate(r));await new Promise(r=>setImmediate(r));
+  assert.ok(root.textContent.includes('First historical video'));
+  [...root.querySelectorAll('.creator-video-archive button')].find(b=>b.textContent===copy['app.creators.load_more']).click();
+  await new Promise(r=>setImmediate(r));await new Promise(r=>setImmediate(r));
+  assert.ok(root.textContent.includes('Older than the global feed'));
+  assert.equal(root.querySelectorAll('.cr-post').length,2);
+  assert.ok(requests.every(([,method])=>method==='GET'));dispose();
+});
