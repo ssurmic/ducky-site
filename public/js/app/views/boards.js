@@ -152,7 +152,7 @@ export async function mount(root, route={}) {
   route.signal?.addEventListener('abort',cleanup,{once:true});
   render();rows.append(spinner());
   const recentStart=new Date(Date.now()-7*86400000).toISOString().slice(0,10);
-  const recentTask=api.get('/public/radar/archive.json?limit=200&content=all&start='+recentStart,{auth:false,signal:staticCtl.signal}).then(doc=>{
+  const recentTask=api.get(archivePath({...state,start:recentStart,end:''}).replace('limit=40','limit=200'),{auth:false,signal:staticCtl.signal}).then(doc=>{
     if(!Array.isArray(doc?.items))throw new Error('invalid_response');recent=doc.items;
   }).catch(()=>{recentFailed=true;});
   const historyTask=fetch('/radar-history.json',{signal:staticCtl.signal}).then(r=>{if(!r.ok)throw new Error('unavailable');return r.json();}).then(doc=>{
@@ -219,7 +219,7 @@ export async function mount(root, route={}) {
       nav.append(el('button.radar-category',{type:'button','aria-pressed':String(board.key===state.board),'data-board':board.key,onclick:()=>selectBoard(board.key)},
         icon(board.icon || (board.key==='all'?'boards':board.key)),el('span',s(board.key==='all'?'radar.all':'boards.t_'+board.key)),
         // Archive counts cover the current server query only; don't imply other categories are empty.
-        state.mode==='archive'?null:el('span.radar-count',hasError?'—':String(count))));
+        state.mode!=='excerpts'?null:el('span.radar-count',hasError?'—':String(count))));
     }
     if(focusedBoard)nav.querySelector('[data-board="'+focusedBoard+'"]')?.focus({preventScroll:true});
     for(const tab of tabs.children)tab.setAttribute('aria-pressed',String(tab.dataset.mode===state.mode));
@@ -240,6 +240,7 @@ export async function mount(root, route={}) {
     if(!shown.length && !pending && recentReady && !hasError)rows.append(el('div.radar-empty',icon(BOARDS.find(b=>b.key===state.board)?.icon || (state.board==='all'?'boards':state.board)),
       el('h3',s('radar.no_match')),el('p.muted',s(missingCount && state.content==='readable'?'radar.missing_count':'radar.no_match_hint',{n:missingCount})),
       missingCount && state.content==='readable'?el('button.btn.btn-ghost',{type:'button',onclick:()=>{content.value='all';apply();}},s('radar.show_missing')):null,
+      ['all','insider'].includes(state.board) && state.purchases!=='all'?el('button.btn.btn-ghost',{type:'button',onclick:()=>{purchases.value='all';apply();}},s('radar.purchases_all')):null,
       el('button.btn.btn-ghost',{type:'button',onclick:()=>{if(state.mode==='recent'){state.mode='archive';start.value='';end.value='';apply();}else reset();}},s(state.mode==='recent'?'radar.mode_archive':'radar.reset')),
       state.mode==='recent' && excerpts.some(r=>state.board==='all' || r.board===state.board)?el('button.btn.btn-ghost',{type:'button',onclick:()=>{state.mode='excerpts';apply();}},s('radar.mode_excerpts')):null));
     function appendRecords(host,items){
