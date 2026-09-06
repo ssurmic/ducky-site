@@ -26,9 +26,18 @@ export function hasGroundedCalls(post) {
   return meta.quality === "grounded" && meta.source?.kind === "transcript" && (post.calls || []).some(c => typeof c.evidence === "string" && c.evidence.length >= 12);
 }
 
+export function hasReviewedSummary(post) {
+  const m = evidenceMeta(post);
+  return hasGroundedCalls(post) || (m.source?.version === "short-video-v2" && m.source.status === "ready" && m.source.kind === "transcript" && ["grounded", "no_call"].includes(m.quality));
+}
+function atTime(url, seconds) {
+  try { const u = new URL(url); if (!["www.youtube.com", "youtube.com", "youtu.be"].includes(u.hostname) || !Number.isFinite(seconds) || seconds < 0 || seconds > 1200) return url;
+    u.searchParams.set("t", String(Math.floor(seconds))); return u.href;
+  } catch { return url; }
+}
 export function filterPosts(posts, { following, mine, archive, query = "" }) {
   const needle = query.trim().toLocaleLowerCase();
-  return posts.filter(p => (!mine || following.has(p.kol_id)) && (archive || hasGroundedCalls(p)) &&
+  return posts.filter(p => (!mine || following.has(p.kol_id)) && (archive || hasReviewedSummary(p)) &&
     (!needle || [p.kol_name, p.title, ...(p.tickers || [])].join(" ").toLocaleLowerCase().includes(needle)));
 }
 export function videoDate(value, lang) {
@@ -38,7 +47,7 @@ export function videoDate(value, lang) {
     new Intl.DateTimeFormat(lang, {dateStyle:"medium", timeStyle:"short", timeZone:"UTC"}).format(d) + " UTC";
 }
 
-function callChips(calls, isZh) {
+function callChips(calls, isZh, url) {
   // per-ticker gist Ducky dug out of the video: $SYM ▲/▼ + the target the CREATOR stated (attributed,
   // never our own) + their one-line point. Compact chips so a promo/title-only video still yields signal.
   const wrap = el("div.cr-calls");
@@ -52,6 +61,7 @@ function callChips(calls, isZh) {
     const note = pickSummary(c.note, isZh);
     if (note) chip.appendChild(el("span.cr-call-note", note));
     chip.appendChild(el("details.cr-evidence", el("summary", s("creators.evidence")), el("blockquote", c.evidence)));
+    if (Number.isFinite(c.start_seconds)) chip.appendChild(el("a", {href:atTime(url,c.start_seconds),target:"_blank",rel:"noopener noreferrer"}, `${Math.floor(c.start_seconds/60)}:${String(c.start_seconds%60).padStart(2,"0")} ↗`));
     wrap.appendChild(chip);
   }
   return wrap;
@@ -129,20 +139,31 @@ export async function mount(root) {
     const feed = el("div.cr-feed");
     for (const p of visiblePosts.slice(0, 40)) {
       const grounded = hasGroundedCalls(p);
+      const reviewed = hasReviewedSummary(p);
+      const meta = evidenceMeta(p);
       const stance = grounded && ["bull", "bear"].includes(p.take) ? p.take : "neutral";
       const art = el("article.cr-post");
       const head = el("div.cr-post-head",
         el("b.cr-who", (p.kol_name || p.kol_id || "")),
-        el("span.cr-take." + TAKE_CLS[stance], grounded ? s("creators.take_" + stance) : s("creators.unverified")));
+        el("span.cr-take." + TAKE_CLS[stance], grounded ? s("creators.take_" + stance) : s(reviewed ? "creators.summary_ready" : "creators.unverified")));
       if (grounded && p.tickers && p.tickers.length) head.appendChild(el("span.cr-tks.mono", p.tickers.slice(0, 4).map((t) => "$" + t).join(" · ")));
       art.appendChild(head);
       art.appendChild(el("time.muted.small", { datetime: p.published_at || "" }, s("creators.published") + " " + videoDate(p.published_at,isZh ? "zh-CN" : "en-US")));
       if (p.title) art.appendChild(el("h3.cr-video-title", p.title));
-      if (grounded) {
+      if (reviewed) {
         art.appendChild(el("p.cr-attribution.muted.small", s("creators.attribution", { name: p.kol_name || p.kol_id || "—" })));
-        art.appendChild(el("p.cr-sum", pickSummary(p.summary, isZh)));
-      } else art.appendChild(el("p.muted.small", s("creators.archive_hint")));
-      if (grounded && p.calls && p.calls.length) art.appendChild(callChips(p.calls, isZh));
+        const sections = meta.source?.sections || [];
+        art.appendChild(el("p.cr-sum", pickSummary(sections[0] || p.summary, isZh)));
+        if (sections.length) {
+          const detail = el("details.cr-sections", el("summary", s("creators.sections")));
+          for (const section of sections) detail.appendChild(el("div", el("a", {href:atTime(p.url,section.start_seconds),target:"_blank",rel:"noopener noreferrer"}, `${Math.floor(section.start_seconds/60)}:${String(section.start_seconds%60).padStart(2,"0")} ↗`), el("p", pickSummary(section,isZh))));
+          art.appendChild(detail);
+        }
+      } else {
+        const status = meta.source?.status;
+        art.appendChild(el("p.muted.small", s(status === "too_long" ? "creators.too_long" : status === "too_dense" ? "creators.too_dense" : "creators.archive_hint")));
+      }
+      if (grounded && p.calls && p.calls.length) art.appendChild(callChips(p.calls, isZh, p.url));
       if (p.url) art.appendChild(el("a.cr-orig", { href: p.url, target: "_blank", rel: "noopener" }, s("creators.orig") + " ↗"));
       feed.appendChild(art);
     }

@@ -221,6 +221,28 @@ def load_track_n() -> int:
     return n
 
 
+def load_oversold_research():
+    path = PUBLIC / "oversold-research.json"
+    if not path.exists():
+        return None
+    data = json.loads(path.read_text())
+    run = data["evaluation"]
+    rows = run["curve"]
+    lo = min(1.0, min(r[k] for r in rows for k in ("nav", "spy", "qqq")))
+    hi = max(1.0, max(r[k] for r in rows for k in ("nav", "spy", "qqq")))
+    span = max(hi-lo, .01)
+    lo -= span*.06; hi += span*.06
+    width, height, left, pad = 720, 280, 95, 16
+    def y(value):
+        return round(pad+(height-2*pad)*(hi-value)/(hi-lo), 2)
+    def points(key):
+        return " ".join(f"{left+(width-left-pad)*i/(len(rows)-1):.2f},{y(r[key]):.2f}" for i,r in enumerate(rows))
+    data["plot"] = {"w":width,"h":height,"lines":{k:points(k) for k in ("nav","spy","qqq")},
+                    "ticks":[{"y":y(v),"label":f"{(v-1)*100:+.0f}%"} for v in (1.0,(hi+1)/2,hi)]}
+    data["validation"] = data["comparisons"][data["selected_rule"]]["validation"]
+    return data
+
+
 def load_track_stats() -> dict:
     """§5.3.4/5: the proof stats band + the hero slide-2 战绩卡, computed from the nightly notary at
     build time. Total signal count, the LIVE hit20 of the largest-N source (with its own denominator
@@ -443,6 +465,7 @@ def main() -> None:
         tpl = env.get_template(tpl_name)
         for lang in LANGS:
             ctx = build_context(cfg, tables, lang, Path(tpl_name).stem, rel, version, liq, track_n, track_stats)
+            ctx["oversold"] = load_oversold_research()
             html = version_assets(tpl.render(**ctx), version)
             out = DIST / lang_prefix(lang).strip("/") / rel
             out.parent.mkdir(parents=True, exist_ok=True)

@@ -134,3 +134,18 @@ test('creator search keeps the input mounted and archives never show unsupported
  const archive=[...root.querySelectorAll('button')].find(b=>b.textContent===copy['app.creators.show_archive']);archive.click();
  assert.ok(root.textContent.includes('Memory report'));assert.equal(root.textContent.includes('UNSUPPORTED CLAIM'),false);assert.equal(root.textContent.includes('$WRONG'),false);
 });
+
+test('short video summaries without stock calls are readable but never directional',()=>{
+ const post={kol_id:'x',summary:{quality:'no_call',source:{kind:'transcript',version:'short-video-v2',status:'ready'}},calls:[]};
+ assert.equal(creators.hasReviewedSummary(post),true);assert.equal(creators.hasGroundedCalls(post),false);
+ assert.equal(creators.filterPosts([post],{following:new Set(['x']),mine:true,archive:false}).length,1);
+});
+test('homepage research retains both benchmarks and the failed validation period',()=>{
+ const page=new JSDOM(readFileSync('dist/en/index.html','utf8')).window.document;
+ const study=page.querySelector('.oversold-study');assert.ok(study);
+ assert.equal(study.querySelectorAll('.os-line').length,3);
+ assert.ok(study.textContent.includes('-40.1%'));
+ assert.ok(study.textContent.includes('Historical IV/HV'));
+ const data=JSON.parse(readFileSync('public/oversold-research.json'));
+ assert.equal(data.mode,'BACKTEST');assert.equal(Object.keys(data.comparisons).length,3);
+});

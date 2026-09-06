@@ -929,3 +929,11 @@ button.cr-chip[disabled] { opacity: .55; cursor: default; }
 
 .eq-grid { stroke: var(--border); stroke-width: .7; stroke-dasharray: 3 4; }
 .eq-axis { fill: var(--muted); font: 9px ui-monospace, monospace; }
+
+/* Frozen-rule research: explicit benchmarks and risk, unchanged source observations. */
+.oversold-study{padding:clamp(20px,4vw,40px);margin:28px 0;border:1px solid var(--border,#292929);border-radius:24px;background:var(--card,#111)}
+.oversold-study h3{font-size:clamp(23px,3vw,34px);margin:16px 0 10px}.oversold-study figure{margin:20px 0}.oversold-study svg{width:100%;display:block;background:#0c0d0e;border-radius:16px}.os-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}.os-stats strong{display:block;font-size:clamp(22px,4vw,40px);line-height:1.4}.os-nav{color:#f3a33d}.os-spy{color:#a5aeb9}.os-qqq{color:#69afff}.os-line{fill:none;stroke-width:2;vector-effect:non-scaling-stroke}.os-line-nav{stroke:#f3a33d;stroke-width:2.5}.os-line-spy{stroke:#a5aeb9;stroke-dasharray:5 4}.os-line-qqq{stroke:#69afff;stroke-dasharray:2 3}.os-table-wrap{overflow-x:auto;margin:18px 0}.os-table-wrap table{width:100%;border-collapse:collapse;font-size:14px}.os-table-wrap td,.os-table-wrap th{padding:10px;text-align:right;border-bottom:1px solid #333;white-space:nowrap}.os-table-wrap td:first-child,.os-table-wrap th:first-child{text-align:left}.oversold-study details>summary{cursor:pointer;color:var(--accent,#f3a33d)}
+
+.oversold-study .eq-axis{font-size:14px}
+@media(max-width:600px){.oversold-study .eq-axis{font-size:23px}}
+@media(max-width:380px){.os-stats{grid-template-columns:1fr;gap:8px}.os-stats>div{display:flex;align-items:baseline;justify-content:space-between;gap:12px}.os-stats strong{font-size:25px}}

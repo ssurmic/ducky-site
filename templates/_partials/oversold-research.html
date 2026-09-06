@@ -1,0 +1,25 @@
+{% if oversold %}
+<article class="oversold-study no-glossary">
+ <div><span class="badge badge-backtest">BACKTEST · {{ t('os.research') }}</span><h3>{{ t('os.title') }}</h3><p class="muted">{{ t('os.intro') }}</p><p class="small">{{ t('os.scope') }}</p></div>
+ <div class="os-stats">
+ {% for key, label in [('nav',t('os.strategy')),('spy','SPY'),('qqq','QQQ')] %}
+ <div class="os-{{ key }}"><small>{{ label }}</small><strong class="mono">{{ '%+.1f'|format(oversold.evaluation.metrics[key].return_pct) }}%</strong></div>
+ {% endfor %}
+ </div>
+ <p class="muted small">{{ tf('os.positions', closed=oversold.evaluation.completed_positions, open=oversold.evaluation.open_positions) }}</p>
+ <figure><svg viewBox="0 0 {{ oversold.plot.w }} {{ oversold.plot.h }}" role="img" aria-label="{{ t('os.chart') }}">
+ {% for tick in oversold.plot.ticks %}<line class="eq-grid" x1="95" x2="704" y1="{{ tick.y }}" y2="{{ tick.y }}"/><text class="eq-axis" x="2" y="{{ tick.y+3 }}">{{ tick.label }}</text>{% endfor %}
+ {% for key in ['spy','qqq','nav'] %}<polyline class="os-line os-line-{{ key }}" points="{{ oversold.plot.lines[key] }}"/>{% endfor %}
+ </svg><figcaption class="muted mono small">{{ oversold.evaluation.start }} → {{ oversold.evaluation.end }} · {{ t('os.cost') }}</figcaption></figure>
+ <p><b>{{ t('os.risk') }}</b> {{ tf('os.risk_body', nav='%+.1f'|format(oversold.validation.metrics.nav.return_pct), spy='%+.1f'|format(oversold.validation.metrics.spy.return_pct), qqq='%+.1f'|format(oversold.validation.metrics.qqq.return_pct), dd='%.1f'|format(-oversold.evaluation.metrics.nav.max_drawdown_pct)) }}</p>
+ <details><summary>{{ t('os.method') }}</summary>
+ <p>{{ t('os.method_body') }}</p><p>{{ t('os.rule_detail') }}</p><p class="muted small">{{ oversold.universe|join(' · ') }}</p>
+ <div class="os-table-wrap"><table><thead><tr><th>{{ t('os.rule') }}</th><th>2019–2021</th><th>2022</th><th>2023–2026</th></tr></thead><tbody>
+ {% for rule,runs in oversold.comparisons.items() %}<tr><td>{{ t('os.' ~ rule) }}</td>{% for period in ['selection','validation','evaluation'] %}<td>{{ '%+.1f'|format(runs[period].metrics.nav.return_pct) }}%</td>{% endfor %}</tr>{% endfor %}
+ <tr><td>SPY</td>{% for period in ['selection','validation','evaluation'] %}<td>{{ '%+.1f'|format(oversold.comparisons[oversold.selected_rule][period].metrics.spy.return_pct) }}%</td>{% endfor %}</tr>
+ <tr><td>QQQ</td>{% for period in ['selection','validation','evaluation'] %}<td>{{ '%+.1f'|format(oversold.comparisons[oversold.selected_rule][period].metrics.qqq.return_pct) }}%</td>{% endfor %}</tr>
+ </tbody></table></div>
+ <p>{{ t('os.limitations') }}</p><a href="/oversold-research.json">{{ t('os.data') }} ↗</a>
+ </details>
+</article>
+{% endif %}

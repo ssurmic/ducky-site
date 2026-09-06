@@ -38,9 +38,9 @@ TAG_WITH_WINRATE = re.compile(r"<[^>]*\bdata-winrate\b[^>]*>")
 DATA_N_INT = re.compile(r"""\bdata-n=["'](\d+)["']""")
 EXTERNAL_SCRIPT = re.compile(r"""<script[^>]+src=["']https?://""", re.IGNORECASE)
 DISCLAIMER_LINES = {
-    "en.backtest": "backtests are hypothetical and exclude fees, slippage and taxes",
+    "en.backtest": "backtests are hypothetical",
     "en.affiliation": "Not affiliated with Telegram, the SEC, or any issuer named",
-    "zh.backtest": "回测为假设性结果，不含手续费、滑点与税费",
+    "zh.backtest": "回测为假设性结果",
     "zh.affiliation": "与 Telegram、美国证监会（SEC）或文中提到的任何发行人均无关联",
 }
 MUST_HAVE_DISCLAIMER = ["index.html", "en/index.html"]
