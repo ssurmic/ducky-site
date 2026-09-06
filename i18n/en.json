@@ -2275,5 +2275,8 @@
   "walkthrough.step7": "Start with changes related to your stocks. Explore funding and rates through simple liquidity lines. Scores are context, not forecasts.",
   "walkthrough.step8": "Start free with one stock. Choose Pro at $9 a month when you need full research.",
   "walkthrough.captions_zh": "Chinese",
-  "walkthrough.captions_en": "English"
+  "walkthrough.captions_en": "English",
+  "demo.ui.published_day": "Filed on",
+  "demo.ui.published": "Source published",
+  "demo.ui.collected": "Collected by Ducky"
 }

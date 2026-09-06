@@ -38,3 +38,12 @@ test('editing the stock cancels an in-flight context and market failures stay re
  assert.equal(button.disabled,false);assert.equal(button.isConnected,true);button.click();await tick();assert.equal(count,2);
  f.dispose();
 });
+test('historical filings retain day precision and distinguish collection from publication',async()=>{
+ const old=new Date(Date.now()-10*86400000).toISOString().slice(0,10);
+ const f=fixture(async()=>({ok:true,json:async()=>({items:[{ticker:'NVDA',ts:old+'T00:00:00Z',provenance:'INGESTED',observed_at:new Date().toISOString(),extra:{date_precision:'day'},summary:'Quarter-end holdings'}]})}));
+ f.submit();await tick();const card=f.root.querySelector('.demo-record');
+ assert.ok(card.textContent.includes('披露日期 '+old));
+ assert.ok(card.textContent.includes('Ducky 收录于'));
+ assert.ok(!card.textContent.includes(old+' 00:00'));
+ f.dispose();
+});

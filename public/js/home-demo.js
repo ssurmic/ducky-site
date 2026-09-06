@@ -19,7 +19,14 @@ export function mountStockDemo(root,fetcher=fetch) {
    const doc=await r.json();if(disposed||seq!==sequence)return;
    const rows=(doc.items||[]).filter(row=>String(row.ticker||'').toUpperCase()===ticker&&new Date(row.ts).getTime()<=Date.now()-5*86400000).slice(0,3);
    status.textContent=t('delay')+' '+(rows.length?t('shown').replace('{n}',rows.length):t('empty'));
-   for(const row of rows){const card=element('article',null,'demo-record');card.append(element('span',t('recorded')+' '+stamp(row.ts),'mono small muted'),element('h3',row.issuer_name||ticker),element('p',String(row.summary||'').slice(0,360)));const src=safeSource(row.source_url||row.extra?.source_url);if(src){const a=link(t('source')+' ↗',src);a.target='_blank';a.rel='noopener noreferrer';card.append(a);}else card.append(element('p',t('source_missing'),'small muted'));records.append(card);}
+   for(const row of rows){
+    const card=element('article',null,'demo-record'),ingested=row.provenance==='INGESTED',dayOnly=row.extra?.date_precision==='day';
+    const date=dayOnly?String(row.ts).slice(0,10):stamp(row.ts),label=ingested?(dayOnly?'published_day':'published'):'recorded';
+    const summary=root.dataset.lang==='en'?(row.extra?.summary_en||row.summary):row.summary;
+    card.append(element('span',t(label)+' '+date,'mono small muted'),element('h3',row.issuer_name||ticker),element('p',String(summary||'').slice(0,360)));
+    if(ingested&&row.observed_at)card.append(element('p',t('collected')+' '+stamp(row.observed_at),'small muted'));
+    const src=safeSource(row.source_url||row.extra?.source_url);if(src){const a=link(t('source')+' ↗',src);a.target='_blank';a.rel='noopener noreferrer';card.append(a);}else card.append(element('p',t('source_missing'),'small muted'));records.append(card);
+   }
    for(const [key,path] of [['records','#/boards?mode=archive&ticker='],['creators','#/creators?ticker='],['chart','#/chart/'],['alerts','#/alerts?ticker=']])links.append(link(t(key)+' →',app+path+encodeURIComponent(ticker)));
    links.hidden=false;
   }catch(error){if(disposed||seq!==sequence||error.name==='AbortError')return;status.textContent=t('unavailable');}
