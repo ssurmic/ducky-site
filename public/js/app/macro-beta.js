@@ -7,6 +7,7 @@ const NS='http://www.w3.org/2000/svg';
 const MODES=['beta','components','stocks','yields'];
 const OK=v=>typeof v==='number'&&Number.isFinite(v);
 const fmt=(v,d=1)=>OK(v)?v.toFixed(d):'—';
+const observed=value=>{const d=new Date(value);return Number.isFinite(d.getTime())?d.toISOString().slice(0,16).replace('T',' ')+' UTC':'—';};
 const url=value=>{try{const u=new URL(value);return u.protocol==='https:'?u.href:null;}catch{return null;}};
 function svg(tag,attrs={},text=''){const n=document.createElementNS(NS,tag);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,String(v));if(text)n.textContent=text;return n;}
 
@@ -29,7 +30,7 @@ export function renderMacroBeta(doc){
   const box=el('section.card.macro-beta',el('div.macro-heading',el('span.event-eyebrow',s('macro.eyebrow')),el('h2',s('macro.title'))),el('p.muted',s('macro.description')));
   if(!doc.history?.length){box.append(el('p.data-notice',s('macro.unavailable')));return box;}
   const latest=doc.latest||doc.history.at(-1);
-  box.append(el('p.small.muted',s('macro.as_of',{date:doc.as_of,time:doc.observed_at})),el('p.small.muted',s('macro.cutoffs')));
+  box.append(el('p.small.muted',s('macro.as_of',{date:doc.as_of,time:observed(doc.observed_at)})));
   if(doc.status==='stale')box.append(el('p.data-notice',{role:'status'},s('macro.stale')));
   const scores=el('div.macro-scores');
   for(const[key,label]of [['beta_score','beta'],['funding_score','funding'],['rates_score','rates']])scores.append(el('div.macro-score',el('span.small.muted',s('macro.'+label)),el('strong.mono',fmt(latest[key])),el('span.small.muted',s('macro.points'))));
@@ -65,7 +66,7 @@ export function renderMacroBeta(doc){
     chart.append(plot,el('label.macro-date-label',s('macro.select_date'),slider));select(selected);
   }
   render();
-  const evidence=el('details.macro-evidence',el('summary',s('macro.evidence')));
+  const evidence=el('details.macro-evidence',el('summary',s('macro.evidence')),el('p.small.muted',s('macro.cutoffs')));
   const metrics=el('div.macro-metrics');
   for(const[key,label,unit]of [['spread_bp','spread','bp'],['tail_bp','tail','bp'],['reserves_bn','reserves','bn'],['tga_bn','tga','bn'],['broad_usd_20d_change_pct','usd_change','%'],['rrp_bn','rrp','bn'],['srf_bn','srf','bn'],['net_liquidity_65d_change_bn','net_change','bn'],['nominal_10y','nominal','%'],['real_10y','real','%'],['nfci_credit','credit',''],['nfci_risk','risk','']])metrics.append(el('div',el('span.small.muted',s('macro.'+label)),el('strong.mono',fmt(latest.metrics?.[key],2)+' '+unit)));
   evidence.append(metrics,el('p.small.muted',s('macro.coverage',{complete:doc.coverage?.complete_scores||0,total:doc.coverage?.sessions||0})),el('h3',s('macro.contributions')));
