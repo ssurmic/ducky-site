@@ -136,3 +136,19 @@ test('follow feedback persists and analysis completion is read automatically',as
  assert.ok(root.querySelector('.creator-follow-success').textContent.includes('ready to read'));
  assert.ok(root.querySelector('.creator-analysis-state').textContent.includes('available'));cleanup();root.remove();
 });
+
+
+test('progress reads are single-flight, back off on failure and pause in hidden tabs',async t=>{
+ t.mock.timers.enable({apis:['setTimeout']});
+ const {progressPoll}=await import('../public/js/app/views/creator-progress.js');
+ let calls=0,finish,errors=0,values=0;
+ const poll=progressPoll({active:()=>true,read:()=>{calls++;return calls===1?new Promise(r=>finish=r):Promise.reject(new Error('offline'));},onValue:()=>values++,onError:()=>errors++});
+ poll.refresh();poll.refresh();assert.equal(calls,1);finish({});await tick();assert.equal(values,1);
+ t.mock.timers.tick(4000);await tick();assert.equal(calls,2);assert.equal(errors,1);
+ t.mock.timers.tick(4000);await tick();assert.equal(calls,2);
+ Object.defineProperty(document,'visibilityState',{configurable:true,value:'hidden'});
+ t.mock.timers.tick(4000);await tick();assert.equal(calls,2);
+ Object.defineProperty(document,'visibilityState',{configurable:true,value:'visible'});
+ document.dispatchEvent(new window.Event('visibilitychange'));await tick();assert.equal(calls,3);
+ poll.stop();t.mock.timers.tick(60000);await tick();assert.equal(calls,3);
+});

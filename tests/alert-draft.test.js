@@ -52,11 +52,11 @@ test('creator topic examples fill real directory names without auto-following',(
  let calls=0;globalThis.fetch=()=>{calls++;assert.fail('no request on example');};
  const root=document.createElement('section');document.body.append(root);const dispose=mountSetup(root,{});
  const picks=root.querySelectorAll('.creator-pick');assert.equal(picks.length,4);
- picks[2].click();assert.equal(root.querySelector('input').value,'投资TALK君');assert.equal(calls,0);assert.ok(root.textContent.includes('full channel name'));dispose();root.remove();
+ picks[2].click();assert.equal(root.querySelector('input').value,'投资TALK君');assert.equal(calls,0);assert.ok(root.querySelector('[role=combobox]'));assert.ok(root.textContent.includes('known creator'));dispose();root.remove();
 });
 
 test('changing the creator search drops a late lookup for the previous name',async()=>{
- store.set('me',{tier:'pro'});let finish;globalThis.fetch=()=>new Promise(r=>finish=r);
+ store.set('me',{tier:'pro'});let finish;globalThis.fetch=(url,opts)=>opts.method==='POST'?new Promise(r=>finish=r):Promise.resolve(response({items:[]}));
  const root=document.createElement('section');document.body.append(root);const dispose=mountSetup(root,{});
  root.querySelector('input').value='First';root.querySelector('form').dispatchEvent(new window.Event('submit',{cancelable:true}));
  root.querySelectorAll('.creator-pick')[2].click();finish(response({id:'old',status:'ready',candidates:[{name:'First old result',channel_id:'old'}]}));await tick();
