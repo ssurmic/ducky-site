@@ -7,6 +7,8 @@ import { clear, errorBox, spinner } from "./ui.js";
 const ROUTES = {
   research: () => import("./views/research.js"),
   login: () => import("./views/login.js"),
+  oauth: () => import("./views/google.js"),
+  register: () => import("./views/register.js"),
   forgot: () => import("./views/recovery.js"),
   reset: () => import("./views/recovery.js"),
   watchlist: () => import("./views/watchlist.js"),
@@ -18,7 +20,7 @@ const ROUTES = {
   calendar: () => import("./views/calendar.js"),
   boards: () => import("./views/boards.js"),
 };
-const PUBLIC = new Set(["login", "forgot", "reset"]);
+const PUBLIC = new Set(["login", "forgot", "reset", "register", "oauth"]);
 export function isPublic(hash) { return PUBLIC.has(parse(hash).name); }
 let current = null, cleanup = null, seq = 0, controller = null;
 

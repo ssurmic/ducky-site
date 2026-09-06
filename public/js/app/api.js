@@ -45,7 +45,7 @@ export async function request(method, path, opts) {
   }
   let res;
   try {
-    res = await fetch(base() + path, { method, headers, body, credentials: "omit", cache: "no-store", signal: ctl.signal });
+    res = await fetch(base() + path, { method, headers, body, credentials: opts.credentials || "omit", cache: "no-store", signal: ctl.signal });
   } catch (e) {
     throw new ApiError(0, { detail: "network" }, path);
   } finally {
@@ -110,6 +110,9 @@ export async function getDataUri(path) {
 
 // ---- typed endpoints (contract: SYSTEMDESIGN.md §4.2, backend pack M3) ------------------------
 export const auth = {
+  providers: () => get("/auth/providers", { auth: false }),
+  googleSession: () => post("/auth/session", {}, { auth: false, credentials: "include" }),
+  googleLink: () => post("/auth/google/link", { lang: LANG }, { credentials: "include" }),
   miniapp: (initData) => post("/auth/miniapp", { initData }, { auth: false }),
   widget: (user) => post("/auth/widget", user, { auth: false }),
   nonce: () => post("/auth/nonce", {}, { auth: false }),

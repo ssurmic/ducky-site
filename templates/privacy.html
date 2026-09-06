@@ -1,0 +1,12 @@
+{% extends "_base.html" %}
+{% block title %}{{ t('privacy.title') }} · Ducky{% endblock %}
+{% block content %}
+<section class="section page-disclaimer"><div class="wrap narrow">
+<h1>{{ t('privacy.title') }}</h1><p class="muted">{{ t('privacy.updated') }}</p>
+{% for key in ['account','google','service','providers','delete'] %}
+<h2>{{ t('privacy.' + key + '_title') }}</h2><p>{{ t('privacy.' + key) }}</p>
+{% endfor %}
+<p>{{ t('privacy.contact') }}: <a href="{{ tg('privacy') }}" rel="noopener">@{{ cfg.bot }}</a></p>
+<p><a href="{{ url('/') }}">{{ t('disc.back') }}</a></p>
+</div></section>
+{% endblock %}

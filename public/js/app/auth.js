@@ -97,7 +97,7 @@ export function logout() {
   store.set("alerts", []);
   store.set("snapshots", {});
   // An expired saved session must not discard the password-reset link being opened.
-  if (!/^#\/(?:forgot|reset)(?:\?|$)/.test(location.hash) && location.hash !== "#/login") location.hash = "#/login";
+  if (!/^#\/(?:forgot|reset|register|oauth)(?:\?|$)/.test(location.hash) && location.hash !== "#/login") location.hash = "#/login";
 }
 
 export async function refreshMe() {
@@ -109,6 +109,8 @@ export async function refreshMe() {
 /** Boot: resolves true when a session exists, false when the login view must be shown. */
 export async function boot() {
   api.setUnauthorizedHandler(logout);
+  // OAuth callback owns its cookie handoff; do not hydrate/revoke an old saved account first.
+  if (location.hash.startsWith("#/oauth")) return false;
   if (tg.inTG && tg.initData) {
     try {
       await establish(await api.auth.miniapp(tg.initData));

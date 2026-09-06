@@ -4,7 +4,7 @@
 //   ③ Telegram Login Widget behind a fold (redirect mode; auth.js consumes the return on boot;
 //      stays folded until BotFather /setdomain is done — the iframe errors before that)
 // In-Telegram: retry initData only.
-import { s, CFG } from "../strings.js";
+import { s, CFG, LANG } from "../strings.js";
 import * as api from "../api.js";
 import * as auth from "../auth.js";
 import * as tg from "../tg.js";
@@ -177,6 +177,14 @@ export async function mount(root) {
     input.before(label); label.appendChild(input);
   }
   pwBtn.classList.replace("btn-ghost", "btn-primary");
+  const google = el("a.btn.google-login", { href: api.base() + "/auth/google/start?lang=" + LANG }, s("google.continue"));
+  const googleBlock = el("div.google-login-block", google, el("p.muted.small", s("google.scope")));
+  googleBlock.hidden = true;
+  card.insertBefore(googleBlock, methods);
+  const signup = el("a.login-signup", { href: "#/register" }, s("register.link"));
+  pwForm.append(signup);
+  let stopped = false;
+  api.auth.providers().then(cfg => { if (!stopped) googleBlock.hidden = !cfg.google; }).catch(() => {});
   root.appendChild(card);
-  return () => { if (nonceCtl) nonceCtl.stop(); };
+  return () => { stopped = true; if (nonceCtl) nonceCtl.stop(); };
 }

@@ -12,6 +12,8 @@ export async function mount(root) {
   root.appendChild(card);
   card.appendChild(spinner());
   let prof = null;
+  let providers = {};
+  try { providers = await api.auth.providers(); } catch (_) {}
   try { prof = await api.profile.get(); } catch (e) { clear(card); card.appendChild(errorBox(e, () => { clear(root); mount(root); })); return; }
   render();
 
@@ -31,14 +33,18 @@ export async function mount(root) {
       el("div.cta-row", el("button.btn.btn-primary", { type: "submit" }, s("profile.save"))));
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      const save = form.querySelector("button[type=submit]");
+      if (save.disabled) return;
       const body = { email: email.el.value.trim(), display_name: name.el.value.trim(), lang: lang.value, country: country.el.value.trim(), marketing_opt_in: !!form.querySelector("[name=marketing_opt_in]").checked };
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(body.email)) { toast(s("profile.email_invalid"), "err"); email.el.focus(); return; }
+      save.disabled = true;
       try {
         prof = await api.profile.save(body);
         toast(s(prof.send_error || prof.dry_run ? "recovery.unavailable" : "profile.saved"), prof.send_error || prof.dry_run ? "err" : "ok");
         await auth.refreshMe();
         render();
       } catch (err) { toast(s("common.error", { msg: err.message }), "err"); }
+      finally { save.disabled = false; }
     });
     card.appendChild(form);
 
@@ -50,22 +56,28 @@ export async function mount(root) {
       const btn = el("button.btn.btn-primary.btn-sm", { type: "button" }, s("profile.verify_btn"));
       const resend = el("button.btn.btn-ghost.btn-sm", { type: "button" }, s("profile.resend"));
       btn.addEventListener("click", async () => {
+        if (btn.disabled) return;
+        btn.disabled = true;
         try {
           const res = await api.profile.verify(code.value.trim());
           // the verify route returns the full profile view; re-fetch if an older backend only sent the flags
           prof = (res && res.email !== undefined) ? res : await api.profile.get();
           toast(s("profile.verified"), "ok"); await auth.refreshMe(); render();
         } catch (err) { toast(s("login.try_again"), "err"); }
+        finally { btn.disabled = false; }
       });
       resend.addEventListener("click", async () => {
+        if (resend.disabled) return;
+        resend.disabled = true;
         try {
           const response = await api.profile.resend();
           const result = api.isAccepted(response) ? response.body : response;
           toast(s(result?.sent && !result?.dry_run ? "profile.resent" : "recovery.unavailable"),
             result?.sent && !result?.dry_run ? "ok" : "err");
         } catch (err) { toast(s(err.body?.error === "send_failed" ? "recovery.unavailable" : "login.try_again"), "err"); }
+        finally { resend.disabled = false; }
       });
-      v.append(el("div.cta-row", code, btn, resend));
+      v.append(el("div.cta-row", field(s("profile.code_label"), code), btn, resend));
     } else if (prof.email && prof.email_verified) {
       v.append(el("p.ok", "✅ " + s("profile.verified_badge", { email: prof.email })));
     }
@@ -94,11 +106,27 @@ export async function mount(root) {
       finally { pwBtn.disabled = false; }
     });
     const pwRow = el("div.cta-row");
-    if (prof.has_password) pwRow.appendChild(oldPw);
-    pwRow.append(newPw, pwBtn);
+    if (prof.has_password) pwRow.appendChild(field(s("profile.pw_old"), oldPw));
+    pwRow.append(field(s("profile.pw_new"), newPw), pwBtn);
     pw.appendChild(pwRow);
     pw.appendChild(el("p.small", el("a", { href: "#/forgot" }, s("recovery.forgot"))));
     card.appendChild(pw);
+
+    if (providers.google) {
+      const section = el("section.pwsec", el("h2", s("google.title")), el("p.muted.small", s("google.link_hint")));
+      if (prof.google_linked) section.append(el("p.ok", s("google.linked")));
+      else {
+        const link = el("button.btn.btn-ghost", { type: "button" }, s("google.link"));
+        link.addEventListener("click", async () => {
+          if (link.disabled) return;
+          link.disabled = true;
+          try { const result = await api.auth.googleLink(); window.location.assign(result.url); }
+          catch (_) { toast(s("google.failed"), "err"); link.disabled = false; }
+        });
+        section.append(link);
+      }
+      card.append(section);
+    }
 
     // §web-push — browser notifications without Telegram (progressive: hidden where unsupported).
     if ("serviceWorker" in navigator && "PushManager" in window && "Notification" in window) {

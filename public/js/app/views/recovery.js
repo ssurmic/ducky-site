@@ -1,4 +1,4 @@
-import { s } from "../strings.js";
+import { s, LANG } from "../strings.js";
 import * as api from "../api.js";
 import * as auth from "../auth.js";
 import * as store from "../store.js";
@@ -16,6 +16,12 @@ export async function mount(root, { query = new URLSearchParams() } = {}) {
   const back = el("a", { href: "#/login" }, s("recovery.back"));
   card.append(title, el("p.muted", s(resetting ? "recovery.reset_hint" : "recovery.hint")));
   root.appendChild(card);
+  if (["localhost", "127.0.0.1"].includes(location.hostname) && api.base() === "https://api.duckybot.app") {
+    card.append(el("p.errbox", s("recovery.preview")), el("a.btn.btn-primary", {
+      href: "https://duckybot.app/" + (LANG === "en" ? "en/" : "") + "app/#/forgot"
+    }, s("recovery.live")));
+    return;
+  }
   const form = el("form.login-block");
   const control = el("input.input", resetting
     ? { type: "password", name: "password", autocomplete: "new-password", minlength: "8", maxlength: "1024", required: "" }

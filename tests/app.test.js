@@ -28,9 +28,9 @@ test('legacy/title-only creator views cannot acquire a grounded badge',()=>{
  assert.equal(creators.hasGroundedCalls({summary:JSON.stringify({quality:'grounded',source:{kind:'transcript'}}),calls:[{evidence:'a long source excerpt'}]}),true);
 });
 test('email sign-in neither starts nonce polling nor exposes three forms',async()=>{
- let requests=0; globalThis.fetch=async()=>{requests++;return response({});};
+ const requests=[]; globalThis.fetch=async(url)=>{requests.push(String(url));return response({google:true});};
  const root=document.createElement('div');document.body.appendChild(root);const cleanup=await login.mount(root);
- assert.equal(requests,0); assert.equal(root.querySelector('.pw-form').hidden,false);
+ assert.deepEqual(requests,["/auth/providers"]); assert.equal(root.querySelector('.pw-form').hidden,false);
  assert.equal(root.querySelector('.invite-form').hidden,true); assert.equal(root.querySelector('.qr-block').hidden,true);
  assert.ok(root.querySelector('label input[type="password"]'));
  assert.equal(root.querySelector('[name="email"]').type,'text');
