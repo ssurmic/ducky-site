@@ -162,7 +162,7 @@ export async function mount(root, route={}) {
   const main=el('section.radar-main',tabs,guide,filter,summary,note,rows,more);
   // Explicit screening links lead with their destination. Market data arriving later
   // stays below it, so it cannot push the focused form out of the viewport.
-  card.append(header,accessNote,...(screenEntry?[screenPanel,marketPanel]:[marketPanel,screenPanel]),starters,coverage,pelosiJump,el('div.radar-layout',el('aside.radar-sidebar',el('h2',s('radar.categories')),nav),main));
+  card.append(header,...(currentAccess?[]:[accessNote]),...(screenEntry?[screenPanel,marketPanel]:[marketPanel,screenPanel]),starters,coverage,pelosiJump,el('div.radar-layout',el('aside.radar-sidebar',el('h2',s('radar.categories')),nav),main));
   if(screenEntry && !route.signal?.aborted && root.isConnected && epoch===store.epoch()){
     const target=screenPanel.querySelector('summary');
     target.focus({preventScroll:true});
@@ -250,7 +250,7 @@ export async function mount(root, route={}) {
     guide.hidden=state.board==='all';
     clear(guide);guide.append(el('strong',s(state.board==='all'?'radar.guide_title':'boards.t_'+state.board)),
       el('p',s('radar.guide_'+state.board)));
-    if(['all','insider'].includes(state.board))guide.append(el('p.radar-purchase-rule',s('radar.purchase_rule')));
+    if(['all','insider'].includes(state.board))guide.append(el('details.radar-purchase-rule',el('summary',s('market.details')),el('p',s('radar.purchase_rule'))));
     guide.hidden=state.board==='all' && state.purchases==='all';
     const stocks=new Set(shown.filter(r=>r.kind!=='nvdev').map(r=>r.ticker).filter(Boolean)).size;
     summary.textContent=pending?s('common.loading'):s('radar.result_count',{n:shown.length,stocks});

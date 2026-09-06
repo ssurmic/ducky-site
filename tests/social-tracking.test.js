@@ -25,7 +25,7 @@ test('evidence keeps missing post IDs, signed votes and unsafe provider text exp
  assert.match(card.textContent,/social:example:NVDA/);assert.match(card.textContent,/Post IDs and unique-author/);
  assert.match(card.textContent,/-6/);assert.ok(card.querySelector('meter'));
  const small=socialCard({...row,index:null,state:'insufficient',components:null});
- assert.equal(small.querySelector('meter'),null);assert.match(small.textContent,/No index is calculated/);
+ assert.equal(small.querySelector('meter'),null);assert.match(small.textContent,/No score/);
  const stale=socialCard(row,{stale:true});assert.equal(stale.dataset.state,'stale');assert.match(stale.textContent,/Saved observation/);
 });
 test('radar social category mounts its own section and free access never fetches private rows',async()=>{
@@ -54,7 +54,7 @@ test('unavailable and stale sources cannot look like fresh empty scans',async()=
  store.set('me',{tier:'pro'});globalThis.fetch=async()=>response({status:'unavailable',items:[]});
  const root=document.createElement('div');let clean=await mountSocial(root);assert.match(root.textContent,/No social data is available yet/);clean();root.replaceChildren();
  globalThis.fetch=async()=>response({...doc,status:'stale'});clean=await mountSocial(root);
- assert.match(root.textContent,/not current overheating alerts/);assert.equal(root.querySelectorAll('[data-state="overheated"]').length,0);clean();
+ assert.match(root.textContent,/Showing the last saved readings/);assert.equal(root.querySelectorAll('[data-state="overheated"]').length,0);clean();
 });
 test('navigation or logout discards an in-flight private snapshot',async()=>{
  store.set('me',{tier:'pro'});let finish;globalThis.fetch=()=>new Promise(r=>finish=r);

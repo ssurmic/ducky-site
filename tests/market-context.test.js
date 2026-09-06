@@ -22,9 +22,9 @@ function prediction(){return {status:'stale',observed_at:'2026-09-06T12:00:00Z',
 test('event probabilities preserve exact labels, timestamp, rules and thin/stale conditions',()=>{
  const box=predictionPanel(prediction());
  assert.match(box.textContent,/65.0%/);assert.match(box.textContent,/35.0%/);
- assert.match(box.textContent,/more than a day old/);assert.match(box.textContent,/Limited liquidity/);
+ assert.match(box.textContent,/More than a day old/);assert.match(box.textContent,/Limited liquidity/);
  assert.match(box.textContent,/September 2026 meeting/);assert.match(box.textContent,/Official FOMC statement/);
- assert.match(box.textContent,/2026-09-06T12/);assert.equal(box.querySelector('a').hostname,'polymarket.com');
+ assert.match(box.textContent,/2026-09-06 12:00 UTC/);assert.equal(box.querySelector('a').hostname,'polymarket.com');
 });
 test('PPI missing odds remain unavailable, invalid prices cannot render as probabilities',()=>{
  assert.match(predictionPanel({status:'no_match',markets:[]}).textContent,/another month or indicator are not a substitute/);
@@ -37,7 +37,7 @@ test('market context labels headline coverage and creator attribution without ra
  {id:'n',kind:'news_headline',title:'<img src=x onerror=alert(1)> Fed debate',publisher:'News',source_url:'javascript:alert(1)',published_at:'2026-09-05'},
  {id:'c',kind:'creator_view',title:'Rate outlook',publisher:'Creator',source_url:'https://youtube.com/watch?v=example',published_at:'2026-09-04',summary_en:'A creator view'}]};
  const box=renderMarketContext(doc);assert.equal(box.querySelector('img'),null);assert.equal(box.querySelector('a[href^="javascript"]'),null);
- assert.match(box.textContent,/full article not reviewed/);assert.match(box.textContent,/This is the creator/);
+ assert.match(box.textContent,/full article not reviewed/);assert.match(box.textContent,/The creator’s view/);
  assert.ok(box.querySelector('a[href="#/chart/SPY"]'));assert.match(box.textContent,/not consensus/);
 });
 test('free market preview makes only a public request and logout discards pending private data',async()=>{
@@ -48,4 +48,20 @@ test('free market preview makes only a public request and logout discards pendin
  const root=document.createElement('div');const clean=mountMarketContext(root);
  store.bumpEpoch();store.set('me',null);done(response({status:'ok',topics:[{label_en:'SECRET'}]}));await tick();
  assert.doesNotMatch(root.textContent,/SECRET/);clean();
+});
+
+test('market summaries lead while counts, uncertainty and sources remain available on expansion',()=>{
+ const box=renderMarketContext({status:'ok',observed_at:'2026-09-06T11:30:49+00:00',coverage:{headlines:0},
+   topics:[{label_en:'Rates',latest_at:'2026-09-05',source_count:1,fact_ids:['n'],
+     synthesis:{summary_en:'Rate decision ahead.',unknown_en:'Outcome unknown.',next_check_en:'Watch the statement.'}}],
+   evidence:[{id:'n',kind:'news_headline',publisher:'Source',title:'Original title',published_at:'2026-09-05',source_url:'https://example.com/'}]});
+ assert.match(box.textContent,/Updated 2026-09-06 11:30 UTC/);
+ assert.doesNotMatch(box.textContent,/T11:30:49|2026-09-05 00:00/);
+ const topic=box.querySelector('.market-topic'),details=topic.querySelector('details');
+ assert.equal(details.open,false);assert.ok(details.textContent.includes('Outcome unknown.'));
+ assert.ok(details.querySelector('a[href="https://example.com/"]'));
+ assert.ok([...topic.children].some(node=>node.tagName==='P'&&node.textContent==='Rate decision ahead.'));
+ const notes=box.querySelector('.market-notes');assert.equal(notes.open,false);
+ assert.ok(notes.contains(box.querySelector('.market-coverage')));
+ assert.match(notes.textContent,/0 headlines/);assert.match(notes.textContent,/— creator views/);
 });

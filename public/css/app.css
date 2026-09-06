@@ -720,7 +720,9 @@ body:is([data-route="register"],[data-route="oauth"]) .app-nav { display:none; }
 /* Dated market context shares evidence and calendar navigation across the app. */
 .market-context { margin-block: 1rem; }
 .market-context-heading h2 { margin: .35rem 0; }
-.market-coverage { color: var(--accent); }
+.market-coverage { color: var(--muted); }
+.market-notes, .briefing-notes, .screen-method, .screen-coverage { margin-block: .75rem; }
+.market-notes > summary, .briefing-notes > summary, .screen-method > summary, .screen-coverage > summary { cursor: pointer; min-height: 44px; align-content: center; font-size: .9rem; color: var(--muted); }
 .market-topics { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); gap: 1rem; margin-block: 1rem; }
 .market-topic { min-width: 0; padding: 1rem; border: 1px solid var(--line,#303238); border-radius: 14px; }
 .market-topic h3 { font-size: 1.05rem; margin-top: 0; }

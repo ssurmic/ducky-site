@@ -57,11 +57,11 @@ export function mountScreen(root,{signal,query}={}){
   }));
   const form=el('form.screen-form',
     el('div.screen-grid',select('scope',['covered','watchlist']),sector,number('cap_min',1000000),number('cap_max',1000000)),
-    el('p.muted.small',s('screen.cap_note')),
     el('div.screen-technical',el('label.screen-check',oversold,el('span',s('screen.oversold'))),
       el('div.screen-grid',number('rsi_max',100),number('iv_hv_max',10),number('drawdown_min',100))),
     eventChoice,el('div.screen-grid',select('event_op',['and','or']),select('days',[7,30,90]),number('insider_min',1000000),select('institutional_change',['all','increased','decreased'])),
-    el('p.muted.small',s('screen.event_note')));
+    el('details.screen-method',el('summary',s('market.details')),
+      el('p.muted.small',s('screen.cap_note')),el('p.muted.small',s('screen.event_note'))));
   const status=el('p.screen-status',{role:'status','aria-live':'polite'}),results=el('div.screen-results');
   const preview=el('button.btn.btn-primary',{type:'submit'},s('screen.preview'));
   const reset=el('button.btn.btn-ghost',{type:'button',onclick:()=>{fill(defaults());clearResults();}},s('radar.reset'));
@@ -145,12 +145,16 @@ export function mountScreen(root,{signal,query}={}){
       if(doc.status!=='ready'){status.textContent=s('screen.status_'+doc.status);return;}
       lastPreview=doc;saveForm.hidden=false;saveForm.querySelector('.screen-save-summary').textContent=configSummary(doc.config);
       if(!saveName.value)saveName.value=configSummary(doc.config).slice(0,60);
-      status.textContent=s('screen.result_count',{n:doc.total,unknown:doc.unknown_count,coverage:doc.coverage.tickers || 0,checked:doc.checked_tickers || 0})+' '+s('screen.as_of',{date:textDate(doc.built_at)});
+      status.textContent=s('screen.matches',{n:doc.total})+' · '+s('screen.as_of',{date:textDate(doc.built_at)});
       if(!doc.items?.length)results.append(el('div.screen-empty',el('p',s(doc.config.scope==='watchlist' && !doc.checked_tickers?'screen.watchlist_empty':'screen.empty')),
         doc.config.scope==='watchlist' && !doc.checked_tickers?link('#/watchlist',s('nav.watchlist')):null));
       else for(const item of doc.items)results.append(resultCard(item));
       if(doc.total>100)results.append(el('p.muted',s('screen.first_100')));
-      if(doc.coverage.event_stocks)results.append(el('p.muted.small.screen-coverage',s('screen.source_coverage')+' '+EVENTS.map(k=>s('screen.event_'+k)+': '+(doc.coverage.event_stocks[k] || 0)).join(' · ')));
+      const coverage=el('details.screen-coverage',el('summary',s('market.details')),
+        el('p.small.muted',s('screen.result_count',{n:doc.total,unknown:doc.unknown_count,coverage:doc.coverage.tickers??'—',checked:doc.checked_tickers??'—'})),
+        el('p.small.muted',s('screen.historical_note')));
+      if(doc.coverage.event_stocks)coverage.append(el('p.muted.small',s('screen.source_coverage')+' '+EVENTS.map(k=>s('screen.event_'+k)+': '+(doc.coverage.event_stocks[k]??'—')).join(' · ')));
+      results.append(coverage);
       if(doc.unknown_count){const unknown=el('details.screen-unknown',el('summary',s('screen.unknown_count',{n:doc.unknown_count})),el('p',s('screen.unknown_note')));
         for(const row of doc.unknown || [])unknown.append(el('p.small',row.ticker+' · '+row.reasons.map(r=>s('screen.unknown_'+r)).join(' · ')));
         results.append(unknown);

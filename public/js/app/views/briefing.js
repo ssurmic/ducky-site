@@ -48,16 +48,17 @@ export function renderBriefing(doc){
   const body=el('div.briefing-body');
   const window=doc.window||{},coverage=doc.coverage||{};
   body.append(el('p.radar-access-note',s(doc.access?.mode==='delayed'?'briefing.delayed':'briefing.current')),
-    el('p.mono.small',dateTime(window.start)+' → '+dateTime(window.end)),
-    el('p.small.muted',s('briefing.window_basis')));
+    el('p.mono.small',dateTime(window.start)+' → '+dateTime(window.end)));
   if(!doc.watchlist_count)body.append(el('section.card',el('h2',s('briefing.add_title')),
     el('p',s('briefing.add_hint')),el('a.btn.btn-primary',{href:'#/watchlist'},s('briefing.edit_watchlist'))));
   const stocks=doc.stock_changes||[];
-  const section=el('section',el('h2',s('briefing.changes')),el('p.muted',s('briefing.scope',{n:doc.watchlist_count||0})),
-    el('p.small.muted',s('briefing.covered',{n:coverage.covered_watchlist_count||0,total:doc.watchlist_count||0,date:dateTime(coverage.facts_as_of)})));
+  const section=el('section',el('h2',s('briefing.changes')));
   if(coverage.facts_status!=='ready')section.append(el('p.data-notice',s('briefing.facts_'+(coverage.facts_status==='stale'?'stale':'unavailable'))));
   if(coverage.events_truncated)section.append(el('p.data-notice',s('briefing.partial')));
-  if(coverage.missing_watchlist?.length)section.append(el('p.small.muted',s('briefing.missing',{tickers:coverage.missing_watchlist.join(', ')})));
+  const notes=el('details.briefing-notes',el('summary',s('briefing.details')),
+    el('p.small.muted',s('briefing.covered',{n:coverage.covered_watchlist_count??'—',total:doc.watchlist_count??'—',date:dateTime(coverage.facts_as_of)})),
+    el('p.small.muted',s('briefing.window_basis')));
+  if(coverage.missing_watchlist?.length)notes.append(el('p.small.muted',s('briefing.missing',{tickers:coverage.missing_watchlist.join(', ')})));
   if(!stocks.length)section.append(el('p.empty',s('briefing.no_changes')));
   section.append(el('div.cards',...stocks.slice(0,3).map(stockCard)));
   if(stocks.length>3){
@@ -65,7 +66,7 @@ export function renderBriefing(doc){
       el('div.cards',...stocks.slice(3).map(stockCard)));
     section.append(more);
   }
-  body.append(section);
+  section.append(notes);body.append(section);
   const creators=el('section.card',el('h2',s('briefing.creators')));
   if(doc.creator_access!=='available')creators.append(el('p',s('briefing.creator_locked')),
     el('a.btn.btn-ghost',{href:'#/billing'},s('briefing.membership')));

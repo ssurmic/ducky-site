@@ -3,7 +3,7 @@
     <h2>{{ t('faq.h2') }}</h2>
     <div class="faq-list">
       {% for i in range(1, 7) %}
-      <details class="faq-item"{% if i == 1 %} open{% endif %}>
+      <details class="faq-item">
         <summary>{{ t('faq.q' ~ i) }}</summary>
         <p>{{ t('faq.a' ~ i) }}</p>
       </details>

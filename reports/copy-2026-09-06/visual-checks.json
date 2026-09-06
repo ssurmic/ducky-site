@@ -1,0 +1,1082 @@
+[
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "dark",
+    "route": "",
+    "overflow": false,
+    "heading": "关注你的股票，跟进重要变化",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "dark",
+    "route": "app/#/boards",
+    "overflow": false,
+    "heading": "雷达",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "dark",
+    "route": "app/#/briefing",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "dark",
+    "route": "app/#/alerts",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "dark",
+    "route": "app/#/creators",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "dark",
+    "route": "app/#/boards?board=social",
+    "overflow": false,
+    "heading": "社媒热度指数",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "dark",
+    "route": "track-record/",
+    "overflow": false,
+    "heading": "战绩台账",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "dark",
+    "route": "trending/",
+    "overflow": false,
+    "heading": "大家在盯什么",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "dark",
+    "route": "ideas/",
+    "overflow": false,
+    "heading": "鸭子的交易板块",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "dark",
+    "route": "privacy/",
+    "overflow": false,
+    "heading": "隐私与账号数据",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "light",
+    "route": "",
+    "overflow": false,
+    "heading": "关注你的股票，跟进重要变化",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "light",
+    "route": "app/#/boards",
+    "overflow": false,
+    "heading": "雷达",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "light",
+    "route": "app/#/briefing",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "light",
+    "route": "app/#/alerts",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "light",
+    "route": "app/#/creators",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "light",
+    "route": "app/#/boards?board=social",
+    "overflow": false,
+    "heading": "社媒热度指数",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "light",
+    "route": "track-record/",
+    "overflow": false,
+    "heading": "战绩台账",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "light",
+    "route": "trending/",
+    "overflow": false,
+    "heading": "大家在盯什么",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "light",
+    "route": "ideas/",
+    "overflow": false,
+    "heading": "鸭子的交易板块",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 320,
+    "theme": "light",
+    "route": "privacy/",
+    "overflow": false,
+    "heading": "隐私与账号数据",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "dark",
+    "route": "",
+    "overflow": false,
+    "heading": "关注你的股票，跟进重要变化",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "dark",
+    "route": "app/#/boards",
+    "overflow": false,
+    "heading": "雷达",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "dark",
+    "route": "app/#/briefing",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "dark",
+    "route": "app/#/alerts",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "dark",
+    "route": "app/#/creators",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "dark",
+    "route": "app/#/boards?board=social",
+    "overflow": false,
+    "heading": "社媒热度指数",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "dark",
+    "route": "track-record/",
+    "overflow": false,
+    "heading": "战绩台账",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "dark",
+    "route": "trending/",
+    "overflow": false,
+    "heading": "大家在盯什么",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "dark",
+    "route": "ideas/",
+    "overflow": false,
+    "heading": "鸭子的交易板块",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "dark",
+    "route": "privacy/",
+    "overflow": false,
+    "heading": "隐私与账号数据",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "light",
+    "route": "",
+    "overflow": false,
+    "heading": "关注你的股票，跟进重要变化",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "light",
+    "route": "app/#/boards",
+    "overflow": false,
+    "heading": "雷达",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "light",
+    "route": "app/#/briefing",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "light",
+    "route": "app/#/alerts",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "light",
+    "route": "app/#/creators",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "light",
+    "route": "app/#/boards?board=social",
+    "overflow": false,
+    "heading": "社媒热度指数",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "light",
+    "route": "track-record/",
+    "overflow": false,
+    "heading": "战绩台账",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "light",
+    "route": "trending/",
+    "overflow": false,
+    "heading": "大家在盯什么",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "light",
+    "route": "ideas/",
+    "overflow": false,
+    "heading": "鸭子的交易板块",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 390,
+    "theme": "light",
+    "route": "privacy/",
+    "overflow": false,
+    "heading": "隐私与账号数据",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "dark",
+    "route": "",
+    "overflow": false,
+    "heading": "关注你的股票，跟进重要变化",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "dark",
+    "route": "app/#/boards",
+    "overflow": false,
+    "heading": "雷达",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "dark",
+    "route": "app/#/briefing",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "dark",
+    "route": "app/#/alerts",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "dark",
+    "route": "app/#/creators",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "dark",
+    "route": "app/#/boards?board=social",
+    "overflow": false,
+    "heading": "社媒热度指数",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "dark",
+    "route": "track-record/",
+    "overflow": false,
+    "heading": "战绩台账",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "dark",
+    "route": "trending/",
+    "overflow": false,
+    "heading": "大家在盯什么",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "dark",
+    "route": "ideas/",
+    "overflow": false,
+    "heading": "鸭子的交易板块",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "dark",
+    "route": "privacy/",
+    "overflow": false,
+    "heading": "隐私与账号数据",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "light",
+    "route": "",
+    "overflow": false,
+    "heading": "关注你的股票，跟进重要变化",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "light",
+    "route": "app/#/boards",
+    "overflow": false,
+    "heading": "雷达",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "light",
+    "route": "app/#/briefing",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "light",
+    "route": "app/#/alerts",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "light",
+    "route": "app/#/creators",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "light",
+    "route": "app/#/boards?board=social",
+    "overflow": false,
+    "heading": "社媒热度指数",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "light",
+    "route": "track-record/",
+    "overflow": false,
+    "heading": "战绩台账",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "light",
+    "route": "trending/",
+    "overflow": false,
+    "heading": "大家在盯什么",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "light",
+    "route": "ideas/",
+    "overflow": false,
+    "heading": "鸭子的交易板块",
+    "errors": []
+  },
+  {
+    "lang": "zh",
+    "width": 1280,
+    "theme": "light",
+    "route": "privacy/",
+    "overflow": false,
+    "heading": "隐私与账号数据",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "dark",
+    "route": "",
+    "overflow": false,
+    "heading": "Keep up with the stocks you follow",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "dark",
+    "route": "app/#/boards",
+    "overflow": false,
+    "heading": "Radar",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "dark",
+    "route": "app/#/briefing",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "dark",
+    "route": "app/#/alerts",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "dark",
+    "route": "app/#/creators",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "dark",
+    "route": "app/#/boards?board=social",
+    "overflow": false,
+    "heading": "Degen Index",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "dark",
+    "route": "track-record/",
+    "overflow": false,
+    "heading": "Track record",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "dark",
+    "route": "trending/",
+    "overflow": false,
+    "heading": "What people are watching",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "dark",
+    "route": "ideas/",
+    "overflow": false,
+    "heading": "Ducky's trades",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "dark",
+    "route": "privacy/",
+    "overflow": false,
+    "heading": "Privacy and your account",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "light",
+    "route": "",
+    "overflow": false,
+    "heading": "Keep up with the stocks you follow",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "light",
+    "route": "app/#/boards",
+    "overflow": false,
+    "heading": "Radar",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "light",
+    "route": "app/#/briefing",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "light",
+    "route": "app/#/alerts",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "light",
+    "route": "app/#/creators",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "light",
+    "route": "app/#/boards?board=social",
+    "overflow": false,
+    "heading": "Degen Index",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "light",
+    "route": "track-record/",
+    "overflow": false,
+    "heading": "Track record",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "light",
+    "route": "trending/",
+    "overflow": false,
+    "heading": "What people are watching",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "light",
+    "route": "ideas/",
+    "overflow": false,
+    "heading": "Ducky's trades",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 320,
+    "theme": "light",
+    "route": "privacy/",
+    "overflow": false,
+    "heading": "Privacy and your account",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "dark",
+    "route": "",
+    "overflow": false,
+    "heading": "Keep up with the stocks you follow",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "dark",
+    "route": "app/#/boards",
+    "overflow": false,
+    "heading": "Radar",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "dark",
+    "route": "app/#/briefing",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "dark",
+    "route": "app/#/alerts",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "dark",
+    "route": "app/#/creators",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "dark",
+    "route": "app/#/boards?board=social",
+    "overflow": false,
+    "heading": "Degen Index",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "dark",
+    "route": "track-record/",
+    "overflow": false,
+    "heading": "Track record",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "dark",
+    "route": "trending/",
+    "overflow": false,
+    "heading": "What people are watching",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "dark",
+    "route": "ideas/",
+    "overflow": false,
+    "heading": "Ducky's trades",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "dark",
+    "route": "privacy/",
+    "overflow": false,
+    "heading": "Privacy and your account",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "light",
+    "route": "",
+    "overflow": false,
+    "heading": "Keep up with the stocks you follow",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "light",
+    "route": "app/#/boards",
+    "overflow": false,
+    "heading": "Radar",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "light",
+    "route": "app/#/briefing",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "light",
+    "route": "app/#/alerts",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "light",
+    "route": "app/#/creators",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "light",
+    "route": "app/#/boards?board=social",
+    "overflow": false,
+    "heading": "Degen Index",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "light",
+    "route": "track-record/",
+    "overflow": false,
+    "heading": "Track record",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "light",
+    "route": "trending/",
+    "overflow": false,
+    "heading": "What people are watching",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "light",
+    "route": "ideas/",
+    "overflow": false,
+    "heading": "Ducky's trades",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "theme": "light",
+    "route": "privacy/",
+    "overflow": false,
+    "heading": "Privacy and your account",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "dark",
+    "route": "",
+    "overflow": false,
+    "heading": "Keep up with the stocks you follow",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "dark",
+    "route": "app/#/boards",
+    "overflow": false,
+    "heading": "Radar",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "dark",
+    "route": "app/#/briefing",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "dark",
+    "route": "app/#/alerts",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "dark",
+    "route": "app/#/creators",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "dark",
+    "route": "app/#/boards?board=social",
+    "overflow": false,
+    "heading": "Degen Index",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "dark",
+    "route": "track-record/",
+    "overflow": false,
+    "heading": "Track record",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "dark",
+    "route": "trending/",
+    "overflow": false,
+    "heading": "What people are watching",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "dark",
+    "route": "ideas/",
+    "overflow": false,
+    "heading": "Ducky's trades",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "dark",
+    "route": "privacy/",
+    "overflow": false,
+    "heading": "Privacy and your account",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "light",
+    "route": "",
+    "overflow": false,
+    "heading": "Keep up with the stocks you follow",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "light",
+    "route": "app/#/boards",
+    "overflow": false,
+    "heading": "Radar",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "light",
+    "route": "app/#/briefing",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "light",
+    "route": "app/#/alerts",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "light",
+    "route": "app/#/creators",
+    "overflow": false,
+    "heading": "",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "light",
+    "route": "app/#/boards?board=social",
+    "overflow": false,
+    "heading": "Degen Index",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "light",
+    "route": "track-record/",
+    "overflow": false,
+    "heading": "Track record",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "light",
+    "route": "trending/",
+    "overflow": false,
+    "heading": "What people are watching",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "light",
+    "route": "ideas/",
+    "overflow": false,
+    "heading": "Ducky's trades",
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 1280,
+    "theme": "light",
+    "route": "privacy/",
+    "overflow": false,
+    "heading": "Privacy and your account",
+    "errors": []
+  }
+]

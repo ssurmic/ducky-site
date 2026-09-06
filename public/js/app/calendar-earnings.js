@@ -1,5 +1,6 @@
 import { el, pct } from './ui.js';
 import { s, LANG } from './strings.js';
+import { readableDate } from './date-format.js';
 
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
 const copy=key=>s('earnings.'+key);
@@ -40,7 +41,7 @@ export function earningsPanel(doc) {
   const box=el('section.earnings-panel',el('div.earnings-heading',el('span.event-eyebrow',copy('eyebrow')),el('h3',copy('title'))));
   if(!doc?.previous_release){box.append(el('p.small.muted',copy(doc?.status==='not_recorded_before_event'?'not_then':'missing')));return box;}
   const release=doc.previous_release,next=doc.next_event||{};
-  box.append(el('p.small.muted',copy('observed')+' '+doc.as_of));
+  box.append(el('p.small.muted',copy('observed')+' '+readableDate(doc.as_of)));
   if(doc.stale)box.append(el('p.data-notice',{role:'status'},copy('stale')));
   if(doc.historical)box.append(el('p.small.data-notice',copy('historical')));
   const columns=el('div.earnings-columns');
@@ -63,7 +64,7 @@ export function earningsPanel(doc) {
   upcoming.append(estimates,el('p.small',copy('beat_rule')),
     el('details.earnings-estimate-basis',el('summary',copy('estimate_method')),
       el('p.small',copy('consensus_basis')),
-      el('p.small.muted',copy('consensus_time')+' '+(next.observed_at||'—')),
+      el('p.small.muted',copy('consensus_time')+' '+readableDate(next.observed_at)),
       el('p.small.muted',copy('provider_update_unknown'))),
     link(next.source_url,next.provider||copy('source')));
   if(!finite(next.eps_estimate)&&!finite(next.revenue_estimate))upcoming.append(el('p.data-notice.small',copy('consensus_missing')));

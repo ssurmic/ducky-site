@@ -140,7 +140,7 @@ test('read status changes after server success and repeated clicks share one mut
 });
 test('denied push permission leaves the inbox available and makes no subscription or test request',async()=>{
  const f=setup({topics:[topic]});const push=mockPush('denied');await f.mount();f.root.querySelector('[data-updates-enable-push]').click();await flush();
- assert.equal(push.requests,1);assert.equal(push.registrations,0);assert.ok(f.root.querySelector('.updates-item'));assert.ok(f.root.textContent.includes('not allowed'));
+ assert.equal(push.requests,1);assert.equal(push.registrations,0);assert.ok(f.root.querySelector('.updates-item'));assert.ok(f.root.textContent.includes('Notifications are blocked'));
  assert.equal(f.calls.some(call=>call.path.startsWith('/push/')),false);f.close();
 });
 test('explicit browser authorization registers this device but does not enable topic push or send a test',async()=>{

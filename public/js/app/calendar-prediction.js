@@ -1,5 +1,6 @@
 import { el } from './ui.js';
 import { s } from './strings.js';
+import { readableDate } from './date-format.js';
 
 export function predictionPanel(doc) {
   const box=el('section.prediction-panel',el('h4',s('market.probabilities')));
@@ -9,7 +10,7 @@ export function predictionPanel(doc) {
     return box;
   }
   box.append(el('p.small',s('market.probability_method')),
-    el('p.small.muted',s('market.observed',{date:doc.observed_at||'—'})+' · '+s('market.event_date',{date:doc.event_date||'—'})));
+    el('p.small.muted',s('market.observed',{date:readableDate(doc.observed_at)})+' · '+s('market.event_date',{date:doc.event_date||'—'})));
   if(doc.status==='stale')box.append(el('p.data-notice',{role:'status'},s('market.stale')));
   if(doc.historical)box.append(el('p.data-notice',s('market.historical_odds')));
   for(const market of rows) {
@@ -24,7 +25,7 @@ export function predictionPanel(doc) {
     card.append(outcomes);
     if(market.status!=='ok')card.append(el('p.small.data-notice',s('market.contract_'+market.status)));
     const details=el('details',el('summary',s('market.question_rules')));
-    details.append(el('p',market.question),el('p.small.muted',s('market.provider_updated',{date:market.provider_updated_at||'—'})),
+    details.append(el('p',market.question),el('p.small.muted',s('market.provider_updated',{date:readableDate(market.provider_updated_at)})),
       el('p.small',s('market.liquidity',{liquidity:money(market.liquidity_usd),volume:money(market.volume_24h_usd)})),
       el('p.small.muted',s('market.spread',{value:market.spread_pp??'—'})),
       el('p.small.prediction-rules',market.resolution_rules||s('market.rules_missing')));

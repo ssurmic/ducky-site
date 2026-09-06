@@ -29,7 +29,7 @@ test('earnings renders fiscal period, separate bases, missing estimates and loss
  assert.match(box.textContent,/FY 2026 · Q2/);assert.match(box.textContent,/GAAP/);assert.match(box.textContent,/non-GAAP/);
  assert.match(box.textContent,/\$1\.40/);assert.match(box.textContent,/\$1\.70/);
  assert.match(box.textContent,/−5|−5.0|-5.0/);assert.match(box.textContent,/SPY/);
- assert.match(box.textContent,/year-to-date/);assert.match(box.textContent,/more than a day and a half/);
+ assert.match(box.textContent,/year-to-date/);assert.match(box.textContent,/Over 36 hours old/);
  assert.match(box.textContent,/retrieval time is not revision time/);
  assert.equal(box.querySelector('img'),null);assert.equal(box.querySelector('a[href^="javascript"]'),null);
  assert.doesNotMatch(box.textContent,/\bnull\b|\bundefined\b/);
@@ -40,7 +40,7 @@ test('earnings renders fiscal period, separate bases, missing estimates and loss
 
 test('missing pre-event snapshot does not display today’s data as historical context',()=>{
  const box=earningsPanel({status:'not_recorded_before_event'});
- assert.match(box.textContent,/No pre-event snapshot/);assert.equal(box.querySelector('.earnings-card'),null);
+ assert.match(box.textContent,/No pre-event data was saved/);assert.equal(box.querySelector('.earnings-card'),null);
 });
 
 test('business interpretation stays separate from accounting facts and does not render old model comparison prose',()=>{

@@ -45,7 +45,7 @@ test('relative rule shows return difference and the exact benchmark, never a pri
 
 test('queued draft never activates an alert and closing stops further polling',async()=>{
  let calls=0;globalThis.fetch=async()=>{calls++;return response({id:ready.id,status:'queued'},202);};
- const {root,close}=fixture();submit(root);await tick();assert.ok(root.textContent.includes('No alert is active yet'));assert.equal(root.querySelector('.alert-translation .btn-primary'),null);close();assert.equal(calls,1);
+ const {root,close}=fixture();submit(root);await tick();assert.ok(root.textContent.includes('Draft only'));assert.equal(root.querySelector('.alert-translation .btn-primary'),null);close();assert.equal(calls,1);
 });
 
 test('creator topic examples fill real directory names without auto-following',()=>{

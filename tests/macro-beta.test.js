@@ -35,7 +35,7 @@ test('line chart supports ranges, separate yield units and exact keyboard date r
  [...box.querySelectorAll('button')].find(x=>x.textContent==='10-year yields').click();
  assert.match(box.querySelector('.macro-legend').textContent,/annual yield %/);
  assert.match(box.querySelector('.macro-readout').textContent,/%/);
- assert.match(box.textContent,/not the probability/);box.remove();
+ assert.match(box.textContent,/not a higher probability/);box.remove();
 });
 test('free macro card never requests private data; account change suppresses pending chart',async()=>{
  store.set('me',{tier:'free'});let calls=0;globalThis.fetch=async()=>{calls++;return response(fixture());};

@@ -5,7 +5,7 @@ import * as store from '../store.js';
 import {dateTime,metric} from './creator-research.js';
 
 export async function mountLeaderboard(root,{onSelect=()=>{}}={}) {
-  root.append(el('p.eyebrow','LEADERBOARD'),el('h2',s('creatorrank.title')),el('p.muted',s('creatorrank.intro')));
+  root.append(el('h2',s('creatorrank.title')),el('p.muted',s('creatorrank.intro')));
   if(!store.isPro()){root.append(el('p',s('creators.research_pro')),el('a.btn.btn-primary',{href:'#/billing'},s('creators.upgrade')));return;}
   const epoch=store.epoch(),target=el('div');root.append(target);target.append(el('p',{role:'status'},s('common.loading')));
   let doc;try{doc=await api.get('/kol/leaderboard');}catch{if(target.isConnected){clear(target);target.append(el('p.err',s('creators.research_error')));}return;}

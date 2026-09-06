@@ -38,7 +38,7 @@ export function priceChart(row) {
 
 export function renderCreatorPage(root,{creator,page={},onTab=()=>{},tickers=null}={}) {
   const coverage=page.coverage || {};
-  const identity=el('header.creator-page-heading',el('div.creator-identity',avatar(creator),el('div',el('h1',creator.name),el('p.small.muted',s('creatorpage.coverage',{ready:coverage.reviewed||0,total:coverage.indexed||0})))));
+  const identity=el('header.creator-page-heading',el('div.creator-identity',avatar(creator),el('h1',creator.name)));
   root.append(identity);
   const chart=page.chart&&(!tickers||tickers.includes(page.chart.ticker))?page.chart:null;
   const visual=el('section.creator-page-visual');
@@ -64,12 +64,13 @@ export function renderCreatorPage(root,{creator,page={},onTab=()=>{},tickers=nul
   }
   if(!highlights.length)highlightsNode.append(el('p.muted',s(page.backfill?'creatorpage.preparing':'creatorpage.no_summary')));
   root.append(highlightsNode);
-  if(!figure){visual.classList.add('creator-page-coverage-mini');root.append(visual);}
   if(page.mentions?.length)root.append(el('div.creator-mentions',el('span.small.muted',s('creatorpage.mentions')),
     ...page.mentions.map(m=>el('a.cr-chip',{href:'#/chart/'+encodeURIComponent(m.ticker)},'$'+m.ticker))));
   root.append(el('div.evidence-controls',el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>onTab('lab')},s('creatorlab.tab')),
     el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>onTab('research')},s('creators.research'))));
   const detail=el('details.creator-page-about',el('summary',s('creators.about')),el('p.small',creator.profile?.description||creator.descr||s('creators.profile_pending')));
+  detail.append(el('p.small.muted',s('creatorpage.coverage',{ready:coverage.reviewed??'—',total:coverage.indexed??'—'})));
+  if(!figure){visual.classList.add('creator-page-coverage-mini');detail.append(visual);}
   if(safeSource(creator.url))detail.append(el('a',{href:creator.url,target:'_blank',rel:'noopener noreferrer'},s('creators.channel')+' ↗'));
   if(page.as_of)detail.append(el('p.small.muted',s('creatorpage.updated')+' '+dateTime(page.as_of)));
   if(page.backfill){const b=page.backfill,c=b.counts||{};detail.append(el('p.small.muted',s('creatorpage.backfill',{date:b.since_day,ready:c.ready||0,pending:(c.queued||0)+(c.running||0)+(c.retry||0)+(c.processing||0),missing:(c.unavailable||0)+(c.too_long||0)+(c.too_dense||0)+(c.channel_mismatch||0)})));

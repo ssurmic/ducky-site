@@ -92,8 +92,9 @@ export async function mountSocial(root,route={}) {
         doc.last_attempt?el('p.small.muted',s('social.attempted',{date:dateTime(doc.last_attempt.attempted_at)})):null,
         el('button.btn.btn-ghost',{type:'button',onclick:load},s('common.retry'))));return;
     }
-    content.append(el('p.small.muted',s('social.collected',{date:dateTime(doc.collected_at)})),
-      el('p.small.muted',s('social.coverage',{n:doc.items.length,total:doc.coverage?.provider_count??'—'})));
+    method.querySelector('.social-coverage')?.remove();
+    method.append(el('p.small.muted.social-coverage',s('social.coverage',{n:doc.items.length,total:doc.coverage?.provider_count??'—'})));
+    content.append(el('p.small.muted',s('social.collected',{date:dateTime(doc.collected_at)})));
     if(stale)content.append(el('p.social-stale',{role:'status'},s('social.stale')));
     content.append(el('div.social-summary',el('strong',s(stale?'social.saved_count':'social.hot_count',{n:doc.items.filter(r=>r.overheated).length})),
         el('span.muted',s('social.window'))));
