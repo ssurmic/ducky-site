@@ -2160,7 +2160,7 @@
   "app.earnings.derived": "Quarter derived from reported year-to-date values; original observations retained.",
   "app.earnings.release_link": "Open the issuer release",
   "app.earnings.next_consensus": "Provider consensus snapshot, including provider estimates",
-  "app.earnings.consensus_basis": "EPS and revenue use the provider’s adjusted basis. Issuer GAAP results are shown separately.",
+  "app.earnings.consensus_basis": "Each estimate shows its reported accounting basis. An unspecified basis is not assumed to be GAAP or adjusted. Issuer GAAP results remain separate.",
   "app.earnings.consensus_time": "Consensus retrieved",
   "app.earnings.provider_update_unknown": "The provider does not supply per-estimate revision times; retrieval time is not revision time.",
   "app.earnings.beat_rule": "An EPS or revenue beat means exceeding the estimate on the same basis. Guidance and other information also matter for the stock reaction.",
@@ -2175,7 +2175,7 @@
   "app.earnings.guidance": "Issuer outlook and business metrics",
   "app.earnings.guidance_basis": "These are issuer disclosures, not analyst consensus. Annual, quarterly and currency distinctions remain in the source; guidance consensus is unavailable.",
   "app.earnings.past_compare": "Previous actuals versus estimates",
-  "app.earnings.comparison_basis": "Provider historical reconstruction on the same adjusted basis. Estimates downloaded today are not snapshots Ducky recorded before that release.",
+  "app.earnings.comparison_basis": "The provider’s actuals and estimates are compared within its historical records. EPS is adjusted; the revenue accounting basis is not specified. These downloaded estimates were not recorded by Ducky before the release.",
   "app.earnings.metric": "Metric",
   "app.earnings.actual": "Actual",
   "app.earnings.estimate": "Estimate",
@@ -2278,5 +2278,8 @@
   "walkthrough.captions_en": "English",
   "demo.ui.published_day": "Filed on",
   "demo.ui.published": "Source published",
-  "demo.ui.collected": "Collected by Ducky"
+  "demo.ui.collected": "Collected by Ducky",
+  "app.earnings.adjusted_basis": "non-GAAP / adjusted",
+  "app.earnings.basis_unspecified": "basis not specified",
+  "app.earnings.business_scope": "The cards above show disclosed figures and dated estimates. These source-linked observations cover business drivers and conditional risks."
 }

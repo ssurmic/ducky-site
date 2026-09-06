@@ -2160,7 +2160,7 @@
   "app.earnings.derived": "当季数：本期累计减去此前累计，原始数字可查。",
   "app.earnings.release_link": "打开公司财报原文",
   "app.earnings.next_consensus": "服务商共识快照，含服务商估计",
-  "app.earnings.consensus_basis": "EPS 与营收使用服务商标注的调整后口径。公司 GAAP 业绩另列，不直接混算。",
+  "app.earnings.consensus_basis": "各项预期旁列出服务商注明的口径。未注明的项目不假定为 GAAP 或调整后口径，公司 GAAP 业绩另列。",
   "app.earnings.consensus_time": "共识采集时间",
   "app.earnings.provider_update_unknown": "服务商未提供逐项修订时间；采集时间不等于修订时间。",
   "app.earnings.beat_rule": "高于相同口径的 EPS 或营收预期才算该项超预期。股价反应还需结合指引等信息观察。",
@@ -2175,7 +2175,7 @@
   "app.earnings.guidance": "展开公司指引与经营指标原文",
   "app.earnings.guidance_basis": "以下是公司披露，不是分析师共识。年度、季度和货币口径保留在原文中；未取得指引共识。",
   "app.earnings.past_compare": "上次业绩与当期预期比较",
-  "app.earnings.comparison_basis": "服务商历史重建，按同一调整后口径比较。此次下载的历史预期不是 Ducky 当时记录的预期快照。",
+  "app.earnings.comparison_basis": "比较服务商历史记录中的实际值和预期值。EPS 为调整后口径，营收会计口径未注明。这些下载的历史预期不是 Ducky 当时记录的快照。",
   "app.earnings.metric": "项目",
   "app.earnings.actual": "实际",
   "app.earnings.estimate": "预期",
@@ -2278,5 +2278,8 @@
   "walkthrough.captions_en": "英文字幕",
   "demo.ui.published_day": "披露日期",
   "demo.ui.published": "来源发布时间",
-  "demo.ui.collected": "Ducky 收录于"
+  "demo.ui.collected": "Ducky 收录于",
+  "app.earnings.adjusted_basis": "non-GAAP / 调整后",
+  "app.earnings.basis_unspecified": "口径未注明",
+  "app.earnings.business_scope": "上方列出已披露数据和有日期的预期。下方结合引用的披露，解释业务驱动和条件性风险。"
 }

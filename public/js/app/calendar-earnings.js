@@ -6,6 +6,12 @@ const copy=key=>s('earnings.'+key);
 const text=value=>value?.[LANG==='en'?'en':'zh']||value?.en||value?.zh||'';
 function source(value){try{const u=new URL(value);return u.protocol==='https:'?u.href:null;}catch{return null;}}
 function link(url,label){const safe=source(url);return safe?el('a.small',{href:safe,target:'_blank',rel:'noopener noreferrer'},label+' ↗'):document.createDocumentFragment();}
+export function earningsEstimateBasis(next,metric) {
+  const basis=next.basis_by_metric?.[metric]||(metric==='eps'?next.basis:null);
+  if(['provider_non_gaap','non-GAAP','non_gaap'].includes(basis))return copy('adjusted_basis');
+  if(['provider_gaap','GAAP','gaap'].includes(basis))return 'GAAP';
+  return copy('basis_unspecified');
+}
 export function earningsValue(value,unit='USD') {
   if(!finite(value))return '—';
   if(unit==='USD/shares')return '$'+value.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:4});
@@ -53,7 +59,7 @@ export function earningsPanel(doc) {
     el('h4',next.date||'—'),el('p.small.muted',copy('next_consensus')));
   if(next.fiscal_year&&next.fiscal_quarter)upcoming.append(el('p.small.mono','FY '+next.fiscal_year+' · Q'+next.fiscal_quarter));
   const estimates=el('dl.earnings-metrics');
-  for(const metric of ['eps','revenue'])estimates.append(el('div',el('dt',copy(metric)),el('dd.mono',earningsValue(next[metric+'_estimate'],metric==='eps'?'USD/shares':'USD'))));
+  for(const metric of ['eps','revenue'])estimates.append(el('div',el('dt',copy(metric)+' · '+earningsEstimateBasis(next,metric)),el('dd.mono',earningsValue(next[metric+'_estimate'],metric==='eps'?'USD/shares':'USD'))));
   upcoming.append(estimates,el('p.small',copy('beat_rule')),
     el('details.earnings-estimate-basis',el('summary',copy('estimate_method')),
       el('p.small',copy('consensus_basis')),
@@ -62,9 +68,15 @@ export function earningsPanel(doc) {
     link(next.source_url,next.provider||copy('source')));
   if(!finite(next.eps_estimate)&&!finite(next.revenue_estimate))upcoming.append(el('p.data-notice.small',copy('consensus_missing')));
   columns.append(previous,upcoming);box.append(columns);
-  if(doc.explanation){const explanation=el('div.earnings-explanation',el('span.event-eyebrow',copy('interpretation')),cited(doc.explanation.overview,doc));
+  if(doc.explanation){const business=doc.explanation.scope==='business_context';
+    const explanation=el('div.earnings-explanation',{'data-provenance':'ducky_inference'},el('span.event-eyebrow',copy('interpretation')));
+    if(business)explanation.append(el('p.small.muted',copy('business_scope')));
+    else if(doc.explanation.overview)explanation.append(cited(doc.explanation.overview,doc));
     const groups=el('div.earnings-context-groups');
-    for(const key of ['drivers','watchpoints','risks'])groups.append(el('section',el('h4',copy(key)),...(doc.explanation[key]||[]).map(b=>cited(b,doc))));
+    for(const key of business?['drivers','risks']:['drivers','watchpoints','risks']) {
+      const blocks=doc.explanation[key];
+      if(Array.isArray(blocks)&&blocks.length)groups.append(el('section',{'data-section':key},el('h4',copy(key)),...blocks.map(b=>cited(b,doc))));
+    }
     explanation.append(groups);box.append(explanation);
   }else box.append(el('p.small.data-notice',copy('explanation_missing')));
   const guidance=(doc.evidence||[]).filter(e=>e.kind==='primary_excerpt'&&/guidance|outlook|expected|expects/i.test(e.text||'')).slice(0,6);

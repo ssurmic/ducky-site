@@ -7,7 +7,7 @@ for(const key of ['window','document','Node','location'])globalThis[key]=dom.win
 const strings=document.createElement('script');strings.id='ducky-strings';
 strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(JSON.parse(readFileSync('i18n/en.json'))).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));
 document.body.append(strings);
-const {earningsPanel,earningsValue}=await import('../public/js/app/calendar-earnings.js');
+const {earningsPanel,earningsValue,earningsEstimateBasis}=await import('../public/js/app/calendar-earnings.js');
 const {eventResearchSession}=await import('../public/js/app/calendar-event.js');
 const store=await import('../public/js/app/store.js');
 const tick=()=>new Promise(r=>setTimeout(r,5));
@@ -41,6 +41,28 @@ test('earnings renders fiscal period, separate bases, missing estimates and loss
 test('missing pre-event snapshot does not display today’s data as historical context',()=>{
  const box=earningsPanel({status:'not_recorded_before_event'});
  assert.match(box.textContent,/No pre-event snapshot/);assert.equal(box.querySelector('.earnings-card'),null);
+});
+
+test('business interpretation stays separate from accounting facts and does not render old model comparison prose',()=>{
+ const doc=documentFixture();
+ doc.next_event.basis='provider_non_gaap';
+ doc.next_event.basis_by_metric={eps:'provider_non_gaap',revenue:'provider_unspecified'};
+ doc.explanation={kind:'ducky_inference',scope:'business_context',
+  overview:{en:'Unsupported model overview'},watchpoints:[{en:'Unsupported model comparison'}],
+  drivers:[{en:'The cited disclosure describes a business driver.',fact_ids:['fact']}],
+  risks:[{en:'The cited outlook remains conditional.',fact_ids:['revenue-guide']}]};
+ const box=earningsPanel(doc),interpretation=box.querySelector('.earnings-explanation');
+ assert.doesNotMatch(box.textContent,/Unsupported model/);
+ assert.match(box.querySelectorAll('.earnings-card')[1].textContent,/EPS · non-GAAP \/ adjusted/);
+ assert.match(box.querySelectorAll('.earnings-card')[1].textContent,/Revenue · basis not specified/);
+ assert.equal(interpretation.dataset.provenance,'ducky_inference');
+ assert.deepEqual([...interpretation.querySelectorAll('[data-section]')].map(n=>n.dataset.section),['drivers','risks']);
+ assert.equal(interpretation.querySelectorAll('.earnings-citations').length,2);
+ assert.match(box.querySelector('.earnings-guidance').textContent,/Total revenues are expected/);
+ assert.match(box.textContent,/\$1\.40/);assert.match(box.textContent,/\$1\.70/);
+ assert.equal(earningsEstimateBasis({basis:'provider_non_gaap'},'revenue'),'basis not specified');
+ assert.equal(earningsEstimateBasis({basis:'provider_non_gaap'},'eps'),'non-GAAP / adjusted');
+ assert.equal(earningsEstimateBasis({basis_by_metric:{eps:'GAAP'}},'eps'),'GAAP');
 });
 
 test('calendar earnings is Pro only, shares requests, and discards responses after logout',async()=>{
