@@ -2361,7 +2361,7 @@
   "app.updates.read_summary": "Read summary and matching evidence",
   "app.updates.summary_unavailable": "The summary is unavailable. Check the original source.",
   "app.updates.attributed": "This summarizes the original creator’s views. A stock mention is not necessarily a bullish or bearish call.",
-  "app.updates.first_ready": "Summary first ready",
+  "app.updates.first_ready": "First summary ready",
   "app.updates.recorded": "Added to your inbox",
   "app.updates.match_evidence": "Why this matched",
   "app.updates.evidence_unavailable": "A source excerpt is not available for this match.",

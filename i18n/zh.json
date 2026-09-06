@@ -2361,7 +2361,7 @@
   "app.updates.read_summary": "查看摘要与匹配依据",
   "app.updates.summary_unavailable": "摘要暂不可用，请核对原始来源。",
   "app.updates.attributed": "以上是原作者的观点摘要，提及股票不等于看多或看空。",
-  "app.updates.first_ready": "摘要首次就绪",
+  "app.updates.first_ready": "首次摘要就绪",
   "app.updates.recorded": "站内通知收录",
   "app.updates.match_evidence": "为什么与你相关",
   "app.updates.evidence_unavailable": "该匹配暂未提供可展示的原文摘录。",
