@@ -2450,5 +2450,6 @@
   "app.updates.test_sending": "Sending a labeled test notification…",
   "app.updates.test_accepted": "The push service accepted the test. Check this device; display depends on your browser and system settings.",
   "app.updates.test_failed": "The test was not accepted. Reconnect browser notifications and try again.",
-  "app.updates.test_cooldown": "Wait a minute before sending another test."
+  "app.updates.test_cooldown": "Wait a minute before sending another test.",
+  "app.updates.push_topic_for": "Browser notifications for {topic}"
 }

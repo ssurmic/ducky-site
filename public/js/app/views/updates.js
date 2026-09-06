@@ -94,7 +94,7 @@ export async function mount(root,route={}){
     for(const row of available){const current=topics.find(t=>t.topic_type==='ticker'&&t.topic_key===row.ticker);
       const check=el('input',{type:'checkbox',checked:!!current?.enabled,disabled:mutation||!!flight,'data-topic-choice':row.ticker});
       check.addEventListener('change',()=>changeTopic({topic_type:'ticker',topic_key:row.ticker,enabled:check.checked,web_push:current?.web_push===true}));
-      choices.append(el('label.updates-choice',check,el('span',el('strong.mono',row.ticker),text(row.name)?el('small.muted',text(row.name)):null)));
+      choices.append(el('label.updates-choice',check,el('span',el('strong.mono',row.ticker),text(row.name)&&row.name!==row.ticker?el('small.muted',text(row.name)):null)));
     }box.append(choices);
     if(options.sectors.length){const sectors=el('fieldset.updates-choices',el('legend',s('updates.sectors')));
       for(const sector of options.sectors){if(!/^[a-z][a-z0-9_-]{0,60}$/.test(sector.key))continue;
@@ -104,7 +104,7 @@ export async function mount(root,route={}){
       }box.append(sectors,el('p.small.muted',s('updates.sector_note')));
     }
     if(topics.length){box.append(el('h3',s('updates.saved_topics')));
-      for(const topic of topics){const push=el('input',{type:'checkbox',checked:topic.web_push===true,disabled:mutation||!!flight||(!topic.web_push&&(!deviceReady||!options.push_enabled||!topic.enabled))});
+      for(const topic of [...topics].sort((a,b)=>topicId(a).localeCompare(topicId(b)))){const push=el('input',{type:'checkbox','aria-label':s('updates.push_topic_for',{topic:topicLabel(topic)}),checked:topic.web_push===true,disabled:mutation||!!flight||(!topic.web_push&&(!deviceReady||!options.push_enabled||!topic.enabled))});
         push.addEventListener('change',()=>changeTopic({...topic,web_push:push.checked}));
         box.append(el('div.updates-topic',el('div.updates-topic-head',el('strong',topicLabel(topic)),el('span.small.muted',s(topic.enabled?'updates.inapp_on':'updates.paused'))),
           el('p.small.muted',s('updates.notify_from',{date:updateDate(topic.notify_from)})),

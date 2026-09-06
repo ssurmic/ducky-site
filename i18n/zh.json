@@ -2450,5 +2450,6 @@
   "app.updates.test_sending": "正在发送标有“演示”的测试通知…",
   "app.updates.test_accepted": "推送服务已受理测试。请查看本机通知；是否显示还取决于浏览器和系统设置。",
   "app.updates.test_failed": "测试未被受理。请重新开启浏览器提醒后再试。",
-  "app.updates.test_cooldown": "请等待一分钟后再发送测试。"
+  "app.updates.test_cooldown": "请等待一分钟后再发送测试。",
+  "app.updates.push_topic_for": "为 {topic} 开启浏览器通知"
 }
