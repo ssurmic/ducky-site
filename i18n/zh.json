@@ -2445,5 +2445,10 @@
   "app.calendar.timing_note": "休市安排始终显示，不受事件筛选影响。",
   "app.calendar.holiday_brief": "休市也会消耗期权剩余时间。短期 Call / Put 买方要留意时间价值减少，以及复市跳空。",
   "app.season.rose_small": "上涨 <0.1%",
-  "app.season.fell_small": "下跌 <0.1%"
+  "app.season.fell_small": "下跌 <0.1%",
+  "app.updates.test_push": "测试本机提醒",
+  "app.updates.test_sending": "正在发送标有“演示”的测试通知…",
+  "app.updates.test_accepted": "推送服务已受理测试。请查看本机通知；是否显示还取决于浏览器和系统设置。",
+  "app.updates.test_failed": "测试未被受理。请重新开启浏览器提醒后再试。",
+  "app.updates.test_cooldown": "请等待一分钟后再发送测试。"
 }

@@ -27,6 +27,7 @@ export async function mount(root,route={}){
   const query=route.query instanceof URLSearchParams?route.query:new URLSearchParams();
   const selectedId=idPattern.test(query.get('item')||'')?query.get('item'):'';
   let alive=true,locked=!store.isPro(),flight=null,mutation=false,deviceReady=false,pushBusy=false,picker=null;
+  let deviceEndpoint='',previewBusy=false;
   let options={tickers:[],sectors:[],push_enabled:false},topics=[],items=[],cursor=null,unread=0,onlyUnread=false;
   let status='',loadError='',itemMissing=false,lastLoaded=0,ready=false,queuedRefresh=false,refreshTimer=null;
   let draftTicker=(query.get('ticker')||'').toUpperCase();
@@ -150,6 +151,7 @@ export async function mount(root,route={}){
     if(source)actions.append(el('a.btn.btn-ghost.btn-sm',{href:source,target:'_blank',rel:'noopener noreferrer'},s('updates.original')));
     if(/^[A-Za-z0-9_-]{1,100}$/.test(row.creator_id||''))actions.append(link('#/creators?scope=discover&creator='+encodeURIComponent(row.creator_id),s('updates.creator_page')));
     actions.append(link('#/updates?item='+row.id,s('updates.permalink')));
+    if(deviceReady)actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:previewBusy||mutation||!!flight,'data-update-preview':row.id,onclick:()=>previewPush(row)},s('updates.test_push')));
     if(!row.read_at)actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:mutation||!!flight,'data-update-read':row.id,onclick:()=>markRead(row)},s('updates.mark_read')));
     card.append(actions);return card;
   }
@@ -223,9 +225,19 @@ export async function mount(root,route={}){
       if(!subscription)subscription=await bounded(registration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:decodeKey(config.vapid_public)}));
       if(!valid())return;
       const response=await api.push.subscribe(subscription.toJSON(),opts);if(!valid())return;
-      if(api.isAccepted(response))throw Error('pending');deviceReady=true;status=s('updates.push_ready');
+      if(api.isAccepted(response)||response?.subscribed!==true)throw Error('pending');
+      deviceEndpoint=subscription.toJSON().endpoint;deviceReady=true;status=s('updates.push_ready');
     }catch{if(valid())status=s('updates.push_error');}
     finally{pushBusy=false;if(sessionValid())render();}
+  }
+  async function previewPush(row){
+    if(!valid()||!deviceReady||!deviceEndpoint||previewBusy)return;
+    previewBusy=true;status=s('updates.test_sending');render();
+    try{
+      const response=await api.creatorNotifications.preview(row.id,deviceEndpoint,opts);if(!valid())return;
+      status=s(response?.accepted===true?'updates.test_accepted':'updates.test_failed');
+    }catch(error){if(valid())status=s(error?.status===429?'updates.test_cooldown':'updates.test_failed');}
+    finally{previewBusy=false;if(sessionValid())render();}
   }
   function pumpUpdates(){
     if(!queuedRefresh||!valid()||!visible()||flight||mutation||refreshTimer)return;

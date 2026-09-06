@@ -11,6 +11,7 @@ const strings=document.createElement('script');strings.id='ducky-strings';string
 const store=await import('../public/js/app/store.js');
 const {mount,sourceURL,updateDate}=await import('../public/js/app/views/updates.js');
 const {safeTarget}=await import('../public/js/app/login-target.js');
+const api=await import('../public/js/app/api.js');
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json'}});
 const flush=async()=>{for(let i=0;i<5;i++)await new Promise(resolve=>setImmediate(resolve));};
 const topic={topic_type:'ticker',topic_key:'INTC',enabled:true,web_push:false,notify_from:'2026-09-06T12:00:00Z'};
@@ -28,7 +29,7 @@ function setup({tier='pro',topics=[],items=[item],override}={}){
   if(path.endsWith('/inbox'))return json({items,next_cursor:null,unread_count:items.filter(row=>!row.read_at).length});
   if(/\/inbox\/\d+$/.test(path))return json({item:{...item,id:Number(path.split('/').at(-1)),mode:'demo'}});
   if(path==='/push/config')return json({enabled:true,vapid_public:'BAAA'});
-  if(path==='/push/subscribe')return json({ok:true});
+  if(path==='/push/subscribe')return json({subscribed:true});
   throw Error('Unexpected request: '+path);
  };
  const root=document.createElement('main');document.body.append(root);let dispose;
@@ -41,6 +42,38 @@ function mockPush(permission='granted'){
  Object.defineProperty(navigator,'serviceWorker',{configurable:true,value:Object.assign(new dom.window.EventTarget(),{register:async()=>{registrations++;return registration;},ready:Promise.resolve(registration)})});
  return {get requests(){return requests;},get registrations(){return registrations;},get subscriptions(){return subscriptions;}};
 }
+
+test('a labeled notification test requires a separate click and targets only this browser',async()=>{
+ const f=setup({override:({path})=>path.endsWith('/test-push')?json({accepted:true}):null});mockPush();await f.mount();
+ assert.equal(f.root.querySelector('[data-update-preview]'),null);
+ f.root.querySelector('[data-updates-enable-push]').click();await flush();
+ assert.equal(f.calls.filter(c=>c.path.endsWith('/test-push')).length,0);
+ f.root.querySelector('[data-update-preview]').click();await flush();
+ const calls=f.calls.filter(c=>c.path.endsWith('/test-push'));assert.equal(calls.length,1);
+ assert.equal(calls[0].path,'/creator-notifications/inbox/10/test-push');
+ assert.deepEqual(calls[0].body,{endpoint:'https://push.test/owned-endpoint'});
+ assert.ok(f.root.textContent.includes('push service accepted'));assert.ok(f.root.textContent.includes('system settings'));f.close();
+});
+
+test('missing server subscription acknowledgement cannot enable device delivery',async()=>{
+ const f=setup({override:({path})=>path==='/push/subscribe'?json({ok:true}):null});mockPush();await f.mount();
+ f.root.querySelector('[data-updates-enable-push]').click();await flush();
+ assert.equal(f.root.querySelector('[data-update-preview]'),null);
+ assert.equal(f.root.querySelector('[data-updates-enable-push]').disabled,false);f.close();
+});
+
+test('late authenticated responses cannot log out, upsell, or populate a replacement account',async()=>{
+ for(const code of [200,401,402]){
+  store.bumpEpoch();store.set('token','account-a');let release,unauthorized=0,upsell=0;
+  api.setUnauthorizedHandler(()=>unauthorized++);api.setPaymentRequiredHandler(()=>upsell++);
+  globalThis.fetch=()=>new Promise(resolve=>release=resolve);
+  const response=api.get('/creator-notifications/inbox');
+  store.set('token','account-b');release(json({private:'account-a'},code));
+  await assert.rejects(response,error=>error.body?.detail==='session_changed');
+  assert.equal(unauthorized,0);assert.equal(upsell,0);
+ }
+ api.setUnauthorizedHandler(null);api.setPaymentRequiredHandler(null);
+});
 test('free members only load their saved settings and can pause or remove without paying',async()=>{
  const f=setup({tier:'free',topics:[topic]});const push=mockPush();await f.mount();
  assert.deepEqual(f.calls.map(call=>call.path),['/creator-notifications/topics']);assert.equal(f.root.querySelector('.updates-item'),null);

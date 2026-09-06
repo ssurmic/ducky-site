@@ -30,6 +30,8 @@ export async function request(method, path, opts) {
   opts = opts || {};
   const headers = { Accept: "application/json" };
   const token = store.get("token");
+  const epoch = store.epoch();
+  const sessionChanged = () => opts.auth !== false && (token !== store.get("token") || epoch !== store.epoch());
   if (opts.auth !== false && token) headers.Authorization = "Bearer " + token;
   let body;
   if (opts.body !== undefined) { headers["Content-Type"] = "application/json"; body = JSON.stringify(opts.body); }
@@ -52,8 +54,10 @@ export async function request(method, path, opts) {
   } finally {
     clearTimeout(to);
   }
+  if (sessionChanged()) throw new ApiError(0, { detail: "session_changed" }, path);
   if (opts.raw) return res;
   const data = await parse(res);
+  if (sessionChanged()) throw new ApiError(0, { detail: "session_changed" }, path);
   if (res.status === 401 && opts.auth !== false) {
     if (onUnauthorized) onUnauthorized();
     throw new ApiError(401, data, path);
@@ -205,6 +209,7 @@ export const creatorNotifications = {
   inbox: (before, opts) => get('/creator-notifications/inbox?limit=30'+(before?'&before_id='+encodeURIComponent(before):''), {...opts, silent402:true}),
   item: (id, opts) => get('/creator-notifications/inbox/'+encodeURIComponent(id), {...opts, silent402:true}),
   read: (id, opts) => post('/creator-notifications/inbox/'+encodeURIComponent(id)+'/read', {}, {...opts, silent402:true}),
+  preview: (id, endpoint, opts) => post('/creator-notifications/inbox/'+encodeURIComponent(id)+'/test-push', {endpoint}, {...opts, silent402:true}),
 };
 
 export const company = (t,o) => get("/public/company/" + encodeURIComponent(t),o);
