@@ -295,29 +295,33 @@ def main():
     parser.add_argument('--ffprobe', default=shutil.which('ffprobe') or 'ffprobe')
     parser.add_argument('--report', type=Path, help='Override OUTPUT_DIR/render-report.json')
     parser.add_argument('--json-out', type=Path, help='Optional new verification artifact (never overwritten)')
+    parser.add_argument('--language', choices=LANGUAGES, help='Check only this voice; still require both caption languages')
     args = parser.parse_args()
+    languages = (args.language,) if args.language else LANGUAGES
+    expected_count = 0
     audit = Audit()
     frames = args.frames_dir or args.manifest.parent / 'frames'
     manifest = audit.guarded('manifest', lambda: json.loads(args.manifest.read_text()))
     audio, speech = {}, {}
     if manifest and audit.file(args.manifest):
         scenes = manifest.get('scenes', [])
-        audit.check(len(scenes) == 8, 'Expected eight manifest scenes / sixteen bilingual audio segments')
+        audit.check(1 <= len(scenes) <= 20, 'Expected one to twenty manifest scenes')
         names = [scene['name'] for scene in scenes]
         audit.check(len(set(names)) == len(names), 'Duplicate manifest scene names')
         audit.check(all(re.fullmatch(r'[a-zA-Z0-9_-]+', name) for name in names), 'Unsafe scene basename')
-        expected = {f'{name}.{lang}.wav' for name in names for lang in LANGUAGES}
+        expected = {f'{name}.{lang}.wav' for name in names for lang in languages}
+        expected_count = len(expected)
         asr_path = args.audio_dir / 'speech-check.json'
         if audit.file(asr_path):
             rows = audit.guarded('speech-check', lambda: json.loads(asr_path.read_text()))
             audit.check(isinstance(rows, list), 'speech-check must be a JSON array')
             if isinstance(rows, list):
                 filenames = [row.get('file') for row in rows]
-                audit.check(len(rows) == 16 and len(set(filenames)) == 16, 'speech-check must contain sixteen unique segments')
-                audit.check(set(filenames) == expected, 'speech-check segment names do not match bilingual manifest')
+                audit.check(len(rows) == expected_count and len(set(filenames)) == expected_count, 'speech-check must contain each selected segment exactly once')
+                audit.check(set(filenames) == expected, 'speech-check segment names do not match the selected manifest voices')
                 speech = {row['file']: row for row in rows}
         for scene in scenes:
-            for lang in LANGUAGES:
+            for lang in languages:
                 name = f"{scene['name']}.{lang}.wav"
                 path = args.audio_dir / name
                 exists = audit.file(path)
@@ -330,15 +334,19 @@ def main():
                     if result:
                         audio[name] = result
                         print(f"CHECK {name}: {result['duration']:.3f}s, ASR similarity {result['asr_similarity']:.3f}")
-        audit.check(len(audio) == 16, 'Sixteen complete ASR/WAV segments must be checked')
+        audit.check(len(audio) == expected_count, 'Every selected ASR/WAV segment must be checked')
         report_path = args.report or args.output_dir / 'render-report.json'
         if audit.file(report_path):
             report = audit.guarded('render-report', lambda: json.loads(report_path.read_text()))
             if report:
                 audit.check(report.get('version') == manifest.get('version'), 'Render report version differs from manifest')
-                audit.check(set(report.get('videos', {})) == set(LANGUAGES), 'Render report must cover zh and en videos')
-                for lang in LANGUAGES:
+                audit.check(set(report.get('videos', {})) == set(languages), 'Render report must cover exactly the selected voices')
+                for lang in languages:
                     if lang in report.get('videos', {}):
+                        maximum = manifest.get('delivery', {}).get('maximum_seconds')
+                        if maximum is not None:
+                            audit.check(finite(maximum) and 0 < maximum and report['videos'][lang].get('seconds', float('inf')) <= maximum,
+                                        f'{lang}: video exceeds the manifest duration limit')
                         audit.guarded(lang + ' media', lambda language=lang: verify_video(
                             audit, args.ffprobe, language, report['videos'][language], manifest,
                             frames, args.audio_dir, args.output_dir, audio))
@@ -349,7 +357,7 @@ def main():
     for failure in audit.failures:
         print('FAIL ' + failure)
     status = 'FAIL' if audit.failures else 'PASS'
-    print(f'{status}: {audit.checks} checks; {len(audit.failures)} failures; {len(audit.warnings)} review notes; {len(audio)}/16 ASR/WAV segments checked.')
+    print(f'{status}: {audit.checks} checks; {len(audit.failures)} failures; {len(audit.warnings)} review notes; {len(audio)}/{expected_count} ASR/WAV segments checked.')
     print('This gate checks technical/content integrity. It does not certify naturalness or replace listening.')
     if args.json_out:
         result = {'status': status, 'checks': audit.checks, 'failures': audit.failures,

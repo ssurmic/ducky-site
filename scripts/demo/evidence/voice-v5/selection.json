@@ -1,0 +1,121 @@
+{
+  "selected": [
+    {
+      "file": "01-stock.zh.wav",
+      "source": "initial",
+      "sha256": "14c645dc380d30e587dada1f8157d7aad94f511ff083cb39bae8e7e5bb48a179",
+      "seconds": 4.96
+    },
+    {
+      "file": "02-evidence.zh.wav",
+      "source": "clarity",
+      "sha256": "258cc8da89b66ee7ca7f552570e9449450c2297184b4132583dcaf6f4b38cff3",
+      "seconds": 6.56
+    },
+    {
+      "file": "03-creators.zh.wav",
+      "source": "phrases",
+      "sha256": "b613696f4522fb83ab67c055bcec86f4c362e53a827b7d977f447542a3d162b1",
+      "seconds": 6.56
+    },
+    {
+      "file": "04-context.zh.wav",
+      "source": "clarity",
+      "sha256": "910c4b43c5f0e4c4c53e67734312b7f9e882bcfe73c45c16ceb76010ef63597d",
+      "seconds": 5.92
+    },
+    {
+      "file": "05-alerts.zh.wav",
+      "source": "phrases",
+      "sha256": "44a3a11f8da83e843fcab38836cd004a83ff0a960b11c3c0e02d5d5bf59f17b2",
+      "seconds": 6.4
+    },
+    {
+      "file": "01-stock.en.wav",
+      "source": "initial",
+      "sha256": "ff49d68d2d746cddfc5a208f17a8a1b7df34eb8141c18d368741cca26e5a742b",
+      "seconds": 6.24
+    },
+    {
+      "file": "02-evidence.en.wav",
+      "source": "initial",
+      "sha256": "6b745dd1b07dcf901818ea365f9919ca0221fdf63c0ef65e6b4e94c8761673e7",
+      "seconds": 7.6
+    },
+    {
+      "file": "03-creators.en.wav",
+      "source": "initial",
+      "sha256": "7350e94d1e85738610017bef85d8e2db4344a3abe3ce166bd712a22da0ddeaf3",
+      "seconds": 7.28
+    },
+    {
+      "file": "04-context.en.wav",
+      "source": "initial",
+      "sha256": "b3b65842624ce6cc119f7a6029c79b2ad175ef71624e48ba22577f800c73a973",
+      "seconds": 8.32
+    },
+    {
+      "file": "05-alerts.en.wav",
+      "source": "initial",
+      "sha256": "8c80a41c4f44aa627612bebf13b3955b2806ffff09e1df67b42c662c0980cfb6",
+      "seconds": 6.48
+    }
+  ],
+  "planned_timeline": {
+    "zh": [
+      {
+        "scene": "01-stock",
+        "start": 0,
+        "duration": 5.56
+      },
+      {
+        "scene": "02-evidence",
+        "start": 5.56,
+        "duration": 7.16
+      },
+      {
+        "scene": "03-creators",
+        "start": 12.72,
+        "duration": 7.16
+      },
+      {
+        "scene": "04-context",
+        "start": 19.88,
+        "duration": 6.52
+      },
+      {
+        "scene": "05-alerts",
+        "start": 26.4,
+        "duration": 7.0
+      }
+    ],
+    "en": [
+      {
+        "scene": "01-stock",
+        "start": 0,
+        "duration": 6.84
+      },
+      {
+        "scene": "02-evidence",
+        "start": 6.84,
+        "duration": 8.2
+      },
+      {
+        "scene": "03-creators",
+        "start": 15.04,
+        "duration": 7.88
+      },
+      {
+        "scene": "04-context",
+        "start": 22.92,
+        "duration": 8.96
+      },
+      {
+        "scene": "05-alerts",
+        "start": 31.88,
+        "duration": 7.08
+      }
+    ]
+  },
+  "qa": "English every word matched after punctuation normalization; Chinese selected common-word phrases now match. Reviewed remaining exact homophones and script/traditional orthography. ASR is not a subjective listening grade."
+}

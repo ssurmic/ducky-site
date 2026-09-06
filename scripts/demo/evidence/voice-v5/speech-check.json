@@ -1,0 +1,1467 @@
+[
+  {
+    "file": "01-stock.zh.wav",
+    "language": "zh",
+    "duration": 4.96,
+    "text": "關注一支股票、公司事件和博主觀點Ducky幫你持續整理",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.1,
+        "text": "關注一支股票、公司事件和博主觀點",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.22,
+            "word": "關",
+            "probability": 0.6792140603065491
+          },
+          {
+            "start": 0.22,
+            "end": 0.44,
+            "word": "注",
+            "probability": 0.9771255254745483
+          },
+          {
+            "start": 0.44,
+            "end": 0.6,
+            "word": "一",
+            "probability": 0.9468467831611633
+          },
+          {
+            "start": 0.6,
+            "end": 0.72,
+            "word": "支",
+            "probability": 0.7997998595237732
+          },
+          {
+            "start": 0.72,
+            "end": 0.9,
+            "word": "股",
+            "probability": 0.9978753626346588
+          },
+          {
+            "start": 0.9,
+            "end": 1.2,
+            "word": "票、",
+            "probability": 0.9996898174285889
+          },
+          {
+            "start": 1.56,
+            "end": 1.72,
+            "word": "公",
+            "probability": 0.9711136817932129
+          },
+          {
+            "start": 1.72,
+            "end": 1.9,
+            "word": "司",
+            "probability": 0.9649868011474609
+          },
+          {
+            "start": 1.9,
+            "end": 2.08,
+            "word": "事",
+            "probability": 0.9760417342185974
+          },
+          {
+            "start": 2.08,
+            "end": 2.26,
+            "word": "件",
+            "probability": 0.9997995495796204
+          },
+          {
+            "start": 2.26,
+            "end": 2.38,
+            "word": "和",
+            "probability": 0.966974675655365
+          },
+          {
+            "start": 2.38,
+            "end": 2.54,
+            "word": "博",
+            "probability": 0.9934669137001038
+          },
+          {
+            "start": 2.54,
+            "end": 2.7,
+            "word": "主",
+            "probability": 0.9976410865783691
+          },
+          {
+            "start": 2.7,
+            "end": 2.88,
+            "word": "觀",
+            "probability": 0.9939115047454834
+          },
+          {
+            "start": 2.88,
+            "end": 3.1,
+            "word": "點",
+            "probability": 0.9992766976356506
+          }
+        ]
+      },
+      {
+        "start": 3.1,
+        "end": 4.88,
+        "text": "Ducky幫你持續整理",
+        "words": [
+          {
+            "start": 3.1,
+            "end": 3.62,
+            "word": "D",
+            "probability": 0.049919791519641876
+          },
+          {
+            "start": 3.62,
+            "end": 3.82,
+            "word": "ucky",
+            "probability": 0.7029364109039307
+          },
+          {
+            "start": 3.82,
+            "end": 4.02,
+            "word": "幫",
+            "probability": 0.7542496919631958
+          },
+          {
+            "start": 4.02,
+            "end": 4.16,
+            "word": "你",
+            "probability": 0.9695568680763245
+          },
+          {
+            "start": 4.16,
+            "end": 4.36,
+            "word": "持",
+            "probability": 0.9965124726295471
+          },
+          {
+            "start": 4.36,
+            "end": 4.5,
+            "word": "續",
+            "probability": 0.9959471821784973
+          },
+          {
+            "start": 4.5,
+            "end": 4.68,
+            "word": "整",
+            "probability": 0.9906309247016907
+          },
+          {
+            "start": 4.68,
+            "end": 4.88,
+            "word": "理",
+            "probability": 0.9994327425956726
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "02-evidence.zh.wav",
+    "language": "zh",
+    "duration": 6.56,
+    "text": "高管买入超跌线索,按你的条件筛选,点开日期和原文合对依据。",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 6.48,
+        "text": "高管买入超跌线索,按你的条件筛选,点开日期和原文合对依据。",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.24,
+            "word": "高",
+            "probability": 0.9578903913497925
+          },
+          {
+            "start": 0.24,
+            "end": 0.46,
+            "word": "管",
+            "probability": 0.9747216105461121
+          },
+          {
+            "start": 0.46,
+            "end": 0.66,
+            "word": "买",
+            "probability": 0.646722823381424
+          },
+          {
+            "start": 0.66,
+            "end": 0.86,
+            "word": "入",
+            "probability": 0.9990572333335876
+          },
+          {
+            "start": 0.86,
+            "end": 1.16,
+            "word": "超",
+            "probability": 0.8752840757369995
+          },
+          {
+            "start": 1.16,
+            "end": 1.36,
+            "word": "跌",
+            "probability": 0.8118127584457397
+          },
+          {
+            "start": 1.36,
+            "end": 1.58,
+            "word": "线",
+            "probability": 0.993998795747757
+          },
+          {
+            "start": 1.58,
+            "end": 1.92,
+            "word": "索,",
+            "probability": 0.9470970034599304
+          },
+          {
+            "start": 2.1,
+            "end": 2.18,
+            "word": "按",
+            "probability": 0.9745769500732422
+          },
+          {
+            "start": 2.18,
+            "end": 2.44,
+            "word": "你的",
+            "probability": 0.8522586226463318
+          },
+          {
+            "start": 2.44,
+            "end": 2.66,
+            "word": "条",
+            "probability": 0.9867703914642334
+          },
+          {
+            "start": 2.66,
+            "end": 2.9,
+            "word": "件",
+            "probability": 0.9989670515060425
+          },
+          {
+            "start": 2.9,
+            "end": 3.1,
+            "word": "筛",
+            "probability": 0.9148347973823547
+          },
+          {
+            "start": 3.1,
+            "end": 3.48,
+            "word": "选,",
+            "probability": 0.9994902014732361
+          },
+          {
+            "start": 3.94,
+            "end": 4.12,
+            "word": "点",
+            "probability": 0.9644024968147278
+          },
+          {
+            "start": 4.12,
+            "end": 4.36,
+            "word": "开",
+            "probability": 0.9891184568405151
+          },
+          {
+            "start": 4.36,
+            "end": 4.52,
+            "word": "日",
+            "probability": 0.9910128712654114
+          },
+          {
+            "start": 4.52,
+            "end": 4.74,
+            "word": "期",
+            "probability": 0.9984115362167358
+          },
+          {
+            "start": 4.74,
+            "end": 5.0,
+            "word": "和",
+            "probability": 0.9960107803344727
+          },
+          {
+            "start": 5.0,
+            "end": 5.2,
+            "word": "原",
+            "probability": 0.928070068359375
+          },
+          {
+            "start": 5.2,
+            "end": 5.5,
+            "word": "文",
+            "probability": 0.9977758526802063
+          },
+          {
+            "start": 5.5,
+            "end": 5.88,
+            "word": "合",
+            "probability": 0.2157829999923706
+          },
+          {
+            "start": 5.88,
+            "end": 6.06,
+            "word": "对",
+            "probability": 0.883194625377655
+          },
+          {
+            "start": 6.06,
+            "end": 6.24,
+            "word": "依",
+            "probability": 0.8753076493740082
+          },
+          {
+            "start": 6.24,
+            "end": 6.48,
+            "word": "据。",
+            "probability": 0.9944396018981934
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "03-creators.zh.wav",
+    "language": "zh",
+    "duration": 6.56,
+    "text": "查看博主解读,点开时间点听原话。再看价格图表,回看后来的涨跌。",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.2,
+        "text": "查看博主解读,点开时间点听原话。",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.24,
+            "word": "查",
+            "probability": 0.9519854187965393
+          },
+          {
+            "start": 0.24,
+            "end": 0.44,
+            "word": "看",
+            "probability": 0.9972805976867676
+          },
+          {
+            "start": 0.44,
+            "end": 0.62,
+            "word": "博",
+            "probability": 0.905264139175415
+          },
+          {
+            "start": 0.62,
+            "end": 0.8,
+            "word": "主",
+            "probability": 0.8577033281326294
+          },
+          {
+            "start": 0.8,
+            "end": 0.98,
+            "word": "解",
+            "probability": 0.9981903433799744
+          },
+          {
+            "start": 0.98,
+            "end": 1.28,
+            "word": "读,",
+            "probability": 0.8858694434165955
+          },
+          {
+            "start": 1.54,
+            "end": 1.68,
+            "word": "点",
+            "probability": 0.9707404375076294
+          },
+          {
+            "start": 1.68,
+            "end": 1.88,
+            "word": "开",
+            "probability": 0.9800781011581421
+          },
+          {
+            "start": 1.88,
+            "end": 2.16,
+            "word": "时间",
+            "probability": 0.9172999262809753
+          },
+          {
+            "start": 2.16,
+            "end": 2.48,
+            "word": "点",
+            "probability": 0.996612012386322
+          },
+          {
+            "start": 2.48,
+            "end": 2.72,
+            "word": "听",
+            "probability": 0.8284094333648682
+          },
+          {
+            "start": 2.72,
+            "end": 2.94,
+            "word": "原",
+            "probability": 0.8581809401512146
+          },
+          {
+            "start": 2.94,
+            "end": 3.2,
+            "word": "话。",
+            "probability": 0.9717093110084534
+          }
+        ]
+      },
+      {
+        "start": 3.66,
+        "end": 6.4,
+        "text": "再看价格图表,回看后来的涨跌。",
+        "words": [
+          {
+            "start": 3.66,
+            "end": 3.92,
+            "word": "再",
+            "probability": 0.9339117407798767
+          },
+          {
+            "start": 3.92,
+            "end": 4.08,
+            "word": "看",
+            "probability": 0.9970796704292297
+          },
+          {
+            "start": 4.08,
+            "end": 4.3,
+            "word": "价",
+            "probability": 0.9942976236343384
+          },
+          {
+            "start": 4.3,
+            "end": 4.46,
+            "word": "格",
+            "probability": 0.997042715549469
+          },
+          {
+            "start": 4.46,
+            "end": 4.62,
+            "word": "图",
+            "probability": 0.9780812561511993
+          },
+          {
+            "start": 4.62,
+            "end": 4.86,
+            "word": "表,",
+            "probability": 0.996729850769043
+          },
+          {
+            "start": 5.18,
+            "end": 5.34,
+            "word": "回",
+            "probability": 0.9714267253875732
+          },
+          {
+            "start": 5.34,
+            "end": 5.54,
+            "word": "看",
+            "probability": 0.9909471273422241
+          },
+          {
+            "start": 5.54,
+            "end": 5.74,
+            "word": "后",
+            "probability": 0.9963083863258362
+          },
+          {
+            "start": 5.74,
+            "end": 5.9,
+            "word": "来",
+            "probability": 0.9897010326385498
+          },
+          {
+            "start": 5.9,
+            "end": 6.0,
+            "word": "的",
+            "probability": 0.9989155530929565
+          },
+          {
+            "start": 6.0,
+            "end": 6.2,
+            "word": "涨",
+            "probability": 0.6980443596839905
+          },
+          {
+            "start": 6.2,
+            "end": 6.4,
+            "word": "跌。",
+            "probability": 0.9040818214416504
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "04-context.zh.wav",
+    "language": "zh",
+    "duration": 5.92,
+    "text": "財報、修飾和重要數據提前看每日摘要再會總與你股票有關的變化",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.62,
+        "text": "財報、修飾和重要數據提前看",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.28,
+            "word": "財",
+            "probability": 0.7526947557926178
+          },
+          {
+            "start": 0.28,
+            "end": 0.54,
+            "word": "報、",
+            "probability": 0.9747708439826965
+          },
+          {
+            "start": 0.8,
+            "end": 0.96,
+            "word": "修",
+            "probability": 0.9823777973651886
+          },
+          {
+            "start": 0.96,
+            "end": 1.24,
+            "word": "飾",
+            "probability": 0.9633094072341919
+          },
+          {
+            "start": 1.24,
+            "end": 1.38,
+            "word": "和",
+            "probability": 0.9633633494377136
+          },
+          {
+            "start": 1.38,
+            "end": 1.58,
+            "word": "重要",
+            "probability": 0.9594755172729492
+          },
+          {
+            "start": 1.58,
+            "end": 1.84,
+            "word": "數",
+            "probability": 0.9939437508583069
+          },
+          {
+            "start": 1.84,
+            "end": 2.02,
+            "word": "據",
+            "probability": 0.9923055768013
+          },
+          {
+            "start": 2.02,
+            "end": 2.18,
+            "word": "提",
+            "probability": 0.9870522618293762
+          },
+          {
+            "start": 2.18,
+            "end": 2.4,
+            "word": "前",
+            "probability": 0.9995720982551575
+          },
+          {
+            "start": 2.4,
+            "end": 2.62,
+            "word": "看",
+            "probability": 0.9970970153808594
+          }
+        ]
+      },
+      {
+        "start": 2.62,
+        "end": 5.8,
+        "text": "每日摘要再會總與你股票有關的變化",
+        "words": [
+          {
+            "start": 2.62,
+            "end": 3.26,
+            "word": "每",
+            "probability": 0.23852114379405975
+          },
+          {
+            "start": 3.26,
+            "end": 3.44,
+            "word": "日",
+            "probability": 0.9961240887641907
+          },
+          {
+            "start": 3.44,
+            "end": 3.6,
+            "word": "摘",
+            "probability": 0.7569275498390198
+          },
+          {
+            "start": 3.6,
+            "end": 3.78,
+            "word": "要",
+            "probability": 0.9392867088317871
+          },
+          {
+            "start": 3.78,
+            "end": 4.0,
+            "word": "再",
+            "probability": 0.5864518284797668
+          },
+          {
+            "start": 4.0,
+            "end": 4.2,
+            "word": "會",
+            "probability": 0.5312666296958923
+          },
+          {
+            "start": 4.2,
+            "end": 4.38,
+            "word": "總",
+            "probability": 0.9783747792243958
+          },
+          {
+            "start": 4.38,
+            "end": 4.54,
+            "word": "與",
+            "probability": 0.8653709292411804
+          },
+          {
+            "start": 4.54,
+            "end": 4.66,
+            "word": "你",
+            "probability": 0.9695382714271545
+          },
+          {
+            "start": 4.66,
+            "end": 4.82,
+            "word": "股",
+            "probability": 0.9980693757534027
+          },
+          {
+            "start": 4.82,
+            "end": 5.02,
+            "word": "票",
+            "probability": 0.9996933937072754
+          },
+          {
+            "start": 5.02,
+            "end": 5.18,
+            "word": "有",
+            "probability": 0.9975807666778564
+          },
+          {
+            "start": 5.18,
+            "end": 5.34,
+            "word": "關",
+            "probability": 0.9991672039031982
+          },
+          {
+            "start": 5.34,
+            "end": 5.44,
+            "word": "的",
+            "probability": 0.9877463579177856
+          },
+          {
+            "start": 5.44,
+            "end": 5.56,
+            "word": "變",
+            "probability": 0.9959126114845276
+          },
+          {
+            "start": 5.56,
+            "end": 5.8,
+            "word": "化",
+            "probability": 0.9974186420440674
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "05-alerts.zh.wav",
+    "language": "zh",
+    "duration": 6.4,
+    "text": "开启提醒,条件满足时通知你。先免费加一支股票,开始体验。",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.14,
+        "text": "开启提醒,条件满足时通知你。",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.28,
+            "word": "开",
+            "probability": 0.430916965007782
+          },
+          {
+            "start": 0.28,
+            "end": 0.56,
+            "word": "启",
+            "probability": 0.9632737040519714
+          },
+          {
+            "start": 0.56,
+            "end": 0.74,
+            "word": "提",
+            "probability": 0.956306517124176
+          },
+          {
+            "start": 0.74,
+            "end": 1.1,
+            "word": "醒,",
+            "probability": 0.9954057931900024
+          },
+          {
+            "start": 1.54,
+            "end": 1.76,
+            "word": "条",
+            "probability": 0.4533454179763794
+          },
+          {
+            "start": 1.76,
+            "end": 1.96,
+            "word": "件",
+            "probability": 0.9859479665756226
+          },
+          {
+            "start": 1.96,
+            "end": 2.18,
+            "word": "满",
+            "probability": 0.991889625787735
+          },
+          {
+            "start": 2.18,
+            "end": 2.36,
+            "word": "足",
+            "probability": 0.9972121119499207
+          },
+          {
+            "start": 2.36,
+            "end": 2.56,
+            "word": "时",
+            "probability": 0.911892831325531
+          },
+          {
+            "start": 2.56,
+            "end": 2.72,
+            "word": "通",
+            "probability": 0.9951322674751282
+          },
+          {
+            "start": 2.72,
+            "end": 2.9,
+            "word": "知",
+            "probability": 0.9986294507980347
+          },
+          {
+            "start": 2.9,
+            "end": 3.14,
+            "word": "你。",
+            "probability": 0.969417154788971
+          }
+        ]
+      },
+      {
+        "start": 3.68,
+        "end": 6.22,
+        "text": "先免费加一支股票,开始体验。",
+        "words": [
+          {
+            "start": 3.68,
+            "end": 4.08,
+            "word": "先",
+            "probability": 0.5757498741149902
+          },
+          {
+            "start": 4.08,
+            "end": 4.28,
+            "word": "免",
+            "probability": 0.9992139339447021
+          },
+          {
+            "start": 4.28,
+            "end": 4.5,
+            "word": "费",
+            "probability": 0.9996023178100586
+          },
+          {
+            "start": 4.5,
+            "end": 4.66,
+            "word": "加",
+            "probability": 0.9671063423156738
+          },
+          {
+            "start": 4.66,
+            "end": 4.82,
+            "word": "一",
+            "probability": 0.9713284373283386
+          },
+          {
+            "start": 4.82,
+            "end": 4.9,
+            "word": "支",
+            "probability": 0.6156867146492004
+          },
+          {
+            "start": 4.9,
+            "end": 5.02,
+            "word": "股",
+            "probability": 0.9925855398178101
+          },
+          {
+            "start": 5.02,
+            "end": 5.3,
+            "word": "票,",
+            "probability": 0.999347984790802
+          },
+          {
+            "start": 5.56,
+            "end": 5.72,
+            "word": "开始",
+            "probability": 0.9786061644554138
+          },
+          {
+            "start": 5.72,
+            "end": 6.02,
+            "word": "体",
+            "probability": 0.9829574227333069
+          },
+          {
+            "start": 6.02,
+            "end": 6.22,
+            "word": "验。",
+            "probability": 0.9996702969074249
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "01-stock.en.wav",
+    "language": "en",
+    "duration": 6.24,
+    "text": " Follow a stock. Ducky keeps its company events and creator views together so you can keep up.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 6.18,
+        "text": " Follow a stock. Ducky keeps its company events and creator views together so you can keep up.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.32,
+            "word": " Follow",
+            "probability": 0.8624172806739807
+          },
+          {
+            "start": 0.32,
+            "end": 0.54,
+            "word": " a",
+            "probability": 0.6441330909729004
+          },
+          {
+            "start": 0.54,
+            "end": 0.82,
+            "word": " stock.",
+            "probability": 0.475063681602478
+          },
+          {
+            "start": 1.5,
+            "end": 1.92,
+            "word": " Ducky",
+            "probability": 0.9336345195770264
+          },
+          {
+            "start": 1.92,
+            "end": 2.3,
+            "word": " keeps",
+            "probability": 0.9824572205543518
+          },
+          {
+            "start": 2.3,
+            "end": 2.48,
+            "word": " its",
+            "probability": 0.9831952452659607
+          },
+          {
+            "start": 2.48,
+            "end": 2.84,
+            "word": " company",
+            "probability": 0.9926498532295227
+          },
+          {
+            "start": 2.84,
+            "end": 3.38,
+            "word": " events",
+            "probability": 0.9762117266654968
+          },
+          {
+            "start": 3.38,
+            "end": 3.66,
+            "word": " and",
+            "probability": 0.9936277866363525
+          },
+          {
+            "start": 3.66,
+            "end": 3.98,
+            "word": " creator",
+            "probability": 0.886777937412262
+          },
+          {
+            "start": 3.98,
+            "end": 4.32,
+            "word": " views",
+            "probability": 0.959732711315155
+          },
+          {
+            "start": 4.32,
+            "end": 4.82,
+            "word": " together",
+            "probability": 0.9915781021118164
+          },
+          {
+            "start": 4.82,
+            "end": 5.44,
+            "word": " so",
+            "probability": 0.7327825427055359
+          },
+          {
+            "start": 5.44,
+            "end": 5.62,
+            "word": " you",
+            "probability": 0.9960438013076782
+          },
+          {
+            "start": 5.62,
+            "end": 5.78,
+            "word": " can",
+            "probability": 0.9963195323944092
+          },
+          {
+            "start": 5.78,
+            "end": 5.96,
+            "word": " keep",
+            "probability": 0.9947919249534607
+          },
+          {
+            "start": 5.96,
+            "end": 6.18,
+            "word": " up.",
+            "probability": 0.998576283454895
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "02-evidence.en.wav",
+    "language": "en",
+    "duration": 7.6,
+    "text": " Screen for insider buying and oversold stocks using your own filters. Check the dates and original filings.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 7.4,
+        "text": " Screen for insider buying and oversold stocks using your own filters. Check the dates and original filings.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.46,
+            "word": " Screen",
+            "probability": 0.655204176902771
+          },
+          {
+            "start": 0.46,
+            "end": 0.78,
+            "word": " for",
+            "probability": 0.8652048110961914
+          },
+          {
+            "start": 0.78,
+            "end": 1.14,
+            "word": " insider",
+            "probability": 0.4012320041656494
+          },
+          {
+            "start": 1.14,
+            "end": 1.58,
+            "word": " buying",
+            "probability": 0.9874216318130493
+          },
+          {
+            "start": 1.58,
+            "end": 1.92,
+            "word": " and",
+            "probability": 0.9497942924499512
+          },
+          {
+            "start": 1.92,
+            "end": 2.58,
+            "word": " oversold",
+            "probability": 0.9325470626354218
+          },
+          {
+            "start": 2.58,
+            "end": 3.14,
+            "word": " stocks",
+            "probability": 0.9926140308380127
+          },
+          {
+            "start": 3.14,
+            "end": 3.54,
+            "word": " using",
+            "probability": 0.9717658162117004
+          },
+          {
+            "start": 3.54,
+            "end": 3.84,
+            "word": " your",
+            "probability": 0.9823085069656372
+          },
+          {
+            "start": 3.84,
+            "end": 4.1,
+            "word": " own",
+            "probability": 0.995509147644043
+          },
+          {
+            "start": 4.1,
+            "end": 4.6,
+            "word": " filters.",
+            "probability": 0.9968720078468323
+          },
+          {
+            "start": 5.02,
+            "end": 5.52,
+            "word": " Check",
+            "probability": 0.9971750974655151
+          },
+          {
+            "start": 5.52,
+            "end": 5.7,
+            "word": " the",
+            "probability": 0.9934563040733337
+          },
+          {
+            "start": 5.7,
+            "end": 6.08,
+            "word": " dates",
+            "probability": 0.929245114326477
+          },
+          {
+            "start": 6.08,
+            "end": 6.32,
+            "word": " and",
+            "probability": 0.9954797029495239
+          },
+          {
+            "start": 6.32,
+            "end": 6.72,
+            "word": " original",
+            "probability": 0.9841977953910828
+          },
+          {
+            "start": 6.72,
+            "end": 7.4,
+            "word": " filings.",
+            "probability": 0.9923437833786011
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "03-creators.en.wav",
+    "language": "en",
+    "duration": 7.28,
+    "text": " Read a creator summary and jump to the original video. Use the price chart to review what happened afterward.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.12,
+        "text": " Read a creator summary and jump to the original video.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.3,
+            "word": " Read",
+            "probability": 0.9454839825630188
+          },
+          {
+            "start": 0.3,
+            "end": 0.44,
+            "word": " a",
+            "probability": 0.938538670539856
+          },
+          {
+            "start": 0.44,
+            "end": 0.82,
+            "word": " creator",
+            "probability": 0.6019907593727112
+          },
+          {
+            "start": 0.82,
+            "end": 1.26,
+            "word": " summary",
+            "probability": 0.821134090423584
+          },
+          {
+            "start": 1.26,
+            "end": 1.8,
+            "word": " and",
+            "probability": 0.9345812797546387
+          },
+          {
+            "start": 1.8,
+            "end": 2.08,
+            "word": " jump",
+            "probability": 0.9951906204223633
+          },
+          {
+            "start": 2.08,
+            "end": 2.28,
+            "word": " to",
+            "probability": 0.9955881834030151
+          },
+          {
+            "start": 2.28,
+            "end": 2.4,
+            "word": " the",
+            "probability": 0.9977307915687561
+          },
+          {
+            "start": 2.4,
+            "end": 2.7,
+            "word": " original",
+            "probability": 0.9980672001838684
+          },
+          {
+            "start": 2.7,
+            "end": 3.12,
+            "word": " video.",
+            "probability": 0.9986138343811035
+          }
+        ]
+      },
+      {
+        "start": 3.8,
+        "end": 6.96,
+        "text": " Use the price chart to review what happened afterward.",
+        "words": [
+          {
+            "start": 3.8,
+            "end": 4.24,
+            "word": " Use",
+            "probability": 0.9934165477752686
+          },
+          {
+            "start": 4.24,
+            "end": 4.44,
+            "word": " the",
+            "probability": 0.9948794841766357
+          },
+          {
+            "start": 4.44,
+            "end": 4.74,
+            "word": " price",
+            "probability": 0.9288772940635681
+          },
+          {
+            "start": 4.74,
+            "end": 5.12,
+            "word": " chart",
+            "probability": 0.9835436344146729
+          },
+          {
+            "start": 5.12,
+            "end": 5.42,
+            "word": " to",
+            "probability": 0.9982530474662781
+          },
+          {
+            "start": 5.42,
+            "end": 5.78,
+            "word": " review",
+            "probability": 0.9821593165397644
+          },
+          {
+            "start": 5.78,
+            "end": 6.04,
+            "word": " what",
+            "probability": 0.998598039150238
+          },
+          {
+            "start": 6.04,
+            "end": 6.48,
+            "word": " happened",
+            "probability": 0.9944620728492737
+          },
+          {
+            "start": 6.48,
+            "end": 6.96,
+            "word": " afterward.",
+            "probability": 0.8345619440078735
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "04-context.en.wav",
+    "language": "en",
+    "duration": 8.32,
+    "text": " Check upcoming earnings, market holidays and key releases. Your daily brief brings together updates related to your stocks.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.58,
+        "text": " Check upcoming earnings, market holidays and key releases.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.26,
+            "word": " Check",
+            "probability": 0.9280573129653931
+          },
+          {
+            "start": 0.26,
+            "end": 0.74,
+            "word": " upcoming",
+            "probability": 0.9623059034347534
+          },
+          {
+            "start": 0.74,
+            "end": 1.24,
+            "word": " earnings,",
+            "probability": 0.9977473616600037
+          },
+          {
+            "start": 1.58,
+            "end": 1.92,
+            "word": " market",
+            "probability": 0.9749101996421814
+          },
+          {
+            "start": 1.92,
+            "end": 2.5,
+            "word": " holidays",
+            "probability": 0.9965684413909912
+          },
+          {
+            "start": 2.5,
+            "end": 2.8,
+            "word": " and",
+            "probability": 0.6586636304855347
+          },
+          {
+            "start": 2.8,
+            "end": 3.04,
+            "word": " key",
+            "probability": 0.9949519634246826
+          },
+          {
+            "start": 3.04,
+            "end": 3.58,
+            "word": " releases.",
+            "probability": 0.9980168342590332
+          }
+        ]
+      },
+      {
+        "start": 4.38,
+        "end": 7.98,
+        "text": " Your daily brief brings together updates related to your stocks.",
+        "words": [
+          {
+            "start": 4.38,
+            "end": 4.54,
+            "word": " Your",
+            "probability": 0.9940940737724304
+          },
+          {
+            "start": 4.54,
+            "end": 4.86,
+            "word": " daily",
+            "probability": 0.788141667842865
+          },
+          {
+            "start": 4.86,
+            "end": 5.28,
+            "word": " brief",
+            "probability": 0.9782141447067261
+          },
+          {
+            "start": 5.28,
+            "end": 5.78,
+            "word": " brings",
+            "probability": 0.9959152340888977
+          },
+          {
+            "start": 5.78,
+            "end": 6.2,
+            "word": " together",
+            "probability": 0.9958874583244324
+          },
+          {
+            "start": 6.2,
+            "end": 6.82,
+            "word": " updates",
+            "probability": 0.9980823993682861
+          },
+          {
+            "start": 6.82,
+            "end": 7.2,
+            "word": " related",
+            "probability": 0.9959861636161804
+          },
+          {
+            "start": 7.2,
+            "end": 7.52,
+            "word": " to",
+            "probability": 0.9985824823379517
+          },
+          {
+            "start": 7.52,
+            "end": 7.68,
+            "word": " your",
+            "probability": 0.9971645474433899
+          },
+          {
+            "start": 7.68,
+            "end": 7.98,
+            "word": " stocks.",
+            "probability": 0.9942798614501953
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "05-alerts.en.wav",
+    "language": "en",
+    "duration": 6.48,
+    "text": " Set an alert and get notified when your conditions are met. Start free with one stock.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.86,
+        "text": " Set an alert and get notified when your conditions are met.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.4,
+            "word": " Set",
+            "probability": 0.8947747349739075
+          },
+          {
+            "start": 0.4,
+            "end": 0.6,
+            "word": " an",
+            "probability": 0.9779296517372131
+          },
+          {
+            "start": 0.6,
+            "end": 0.94,
+            "word": " alert",
+            "probability": 0.9890030026435852
+          },
+          {
+            "start": 0.94,
+            "end": 1.34,
+            "word": " and",
+            "probability": 0.9577886462211609
+          },
+          {
+            "start": 1.34,
+            "end": 1.58,
+            "word": " get",
+            "probability": 0.9973522424697876
+          },
+          {
+            "start": 1.58,
+            "end": 2.08,
+            "word": " notified",
+            "probability": 0.9986940026283264
+          },
+          {
+            "start": 2.08,
+            "end": 2.56,
+            "word": " when",
+            "probability": 0.9968202114105225
+          },
+          {
+            "start": 2.56,
+            "end": 2.7,
+            "word": " your",
+            "probability": 0.9963976740837097
+          },
+          {
+            "start": 2.7,
+            "end": 3.24,
+            "word": " conditions",
+            "probability": 0.9906871914863586
+          },
+          {
+            "start": 3.24,
+            "end": 3.5,
+            "word": " are",
+            "probability": 0.9989640712738037
+          },
+          {
+            "start": 3.5,
+            "end": 3.86,
+            "word": " met.",
+            "probability": 0.9981180429458618
+          }
+        ]
+      },
+      {
+        "start": 4.44,
+        "end": 6.28,
+        "text": " Start free with one stock.",
+        "words": [
+          {
+            "start": 4.44,
+            "end": 4.9,
+            "word": " Start",
+            "probability": 0.9905829429626465
+          },
+          {
+            "start": 4.9,
+            "end": 5.36,
+            "word": " free",
+            "probability": 0.9211933612823486
+          },
+          {
+            "start": 5.36,
+            "end": 5.7,
+            "word": " with",
+            "probability": 0.9961434602737427
+          },
+          {
+            "start": 5.7,
+            "end": 5.94,
+            "word": " one",
+            "probability": 0.8280664682388306
+          },
+          {
+            "start": 5.94,
+            "end": 6.28,
+            "word": " stock.",
+            "probability": 0.7522883415222168
+          }
+        ]
+      }
+    ]
+  }
+]

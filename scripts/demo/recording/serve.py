@@ -9,6 +9,8 @@ class Handler(SimpleHTTPRequestHandler):
  def translate_path(self,path):
   local=Path(super().translate_path(path))
   relative=local.relative_to(ROOT)
+  if relative.parts and relative.parts[0] == 'frames-v5':
+   return str(ROOT.parent / relative)
   if relative.parts and relative.parts[0] in {'css','js','fonts','vendor','avatar-160.jpg','mascot.svg'}:
    return str(PUBLIC/relative)
   return str(local)

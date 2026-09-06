@@ -1,0 +1,26 @@
+{
+  "zh": {
+    "input_i": "-16.31",
+    "input_tp": "-1.56",
+    "input_lra": "1.50",
+    "input_thresh": "-26.67",
+    "output_i": "-16.14",
+    "output_tp": "-1.50",
+    "output_lra": "1.50",
+    "output_thresh": "-26.50",
+    "normalization_type": "dynamic",
+    "target_offset": "0.14"
+  },
+  "en": {
+    "input_i": "-16.36",
+    "input_tp": "-1.94",
+    "input_lra": "2.20",
+    "input_thresh": "-26.77",
+    "output_i": "-16.17",
+    "output_tp": "-1.71",
+    "output_lra": "2.30",
+    "output_thresh": "-26.52",
+    "normalization_type": "dynamic",
+    "target_offset": "0.17"
+  }
+}
