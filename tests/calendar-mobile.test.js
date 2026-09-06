@@ -1,0 +1,35 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {JSDOM} from 'jsdom';
+import {readFileSync} from 'node:fs';
+const dom=new JSDOM('<main></main>',{url:'https://ducky.test/en/app/'});
+for(const k of ['window','document','Node','location','history'])globalThis[k]=dom.window[k];
+document.documentElement.lang='en';
+let narrow=true;window.matchMedia=()=>({matches:narrow});
+const copy=JSON.parse(readFileSync('i18n/en.json'));
+const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
+const store=await import('../public/js/app/store.js');
+const calendar=await import('../public/js/app/views/calendar.js');
+const now=new Date(),date=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+const events=Array.from({length:8},(_,i)=>({date,type:i%2?'earnings':'macro',title:'Event '+i,title_en:'Event '+i,tickers:i%2?[i===1?'NVDA':'MSFT']:[],note_en:'Complete event detail '+i}));
+globalThis.fetch=async url=>new Response(JSON.stringify({events:String(url).startsWith('/calendar.json')?[]:events}),{headers:{'content-type':'application/json'}});
+store.set('me',{tier:'pro'});store.set('watchlist',['NVDA']);
+const button=(root,label)=>[...root.querySelectorAll('button')].find(x=>x.textContent===label);
+test('mobile agenda preserves all events and filters while month selection reveals every event',async()=>{
+ const root=document.createElement('div');document.body.append(root);await calendar.mount(root);
+ assert.equal(button(root,copy['app.calendar.mode_list']).getAttribute('aria-pressed'),'true');
+ assert.equal(root.querySelectorAll('.cal-ev').length,8);
+ button(root,copy['app.calendar.mode_month']).click();
+ const day=root.querySelector(`button[aria-label^="${date},"]`);assert.ok(day);day.click();
+ assert.equal(root.querySelectorAll('.cal-ev').length,8);
+ assert.equal(day.querySelector('.cal-event-count').textContent,'8');
+ const mine=root.querySelector('.cal-mine');assert.ok(mine);mine.click();
+ assert.equal(root.querySelectorAll('.cal-ev').length,5,'macro remains; only untracked earnings removed');
+ button(root,copy['app.calendar.mode_list']).click();
+ assert.equal(root.querySelectorAll('.cal-ev').length,5);root.remove();
+});
+test('desktop retains the two-week overview',async()=>{
+ narrow=false;const root=document.createElement('div');await calendar.mount(root);
+ assert.equal(button(root,copy['app.calendar.mode_biweekly']).getAttribute('aria-pressed'),'true');
+ assert.equal(root.querySelectorAll('.cal-bicell').length,14);
+});

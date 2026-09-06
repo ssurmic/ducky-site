@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import shutil
 import subprocess
@@ -232,13 +233,27 @@ def load_oversold_research():
     hi = max(1.0, max(r[k] for r in rows for k in ("nav", "spy", "qqq")))
     span = max(hi-lo, .01)
     lo -= span*.06; hi += span*.06
-    width, height, left, pad = 720, 280, 95, 16
+    width, height, left, right, top, bottom = 720, 320, 64, 18, 24, 48
+    # Keep the same trading-session scale for lines, tick marks and the date inspector.
+    def x(i):
+        return round(left+(width-left-right)*i/max(1, len(rows)-1), 2)
     def y(value):
-        return round(pad+(height-2*pad)*(hi-value)/(hi-lo), 2)
+        return round(top+(height-top-bottom)*(hi-value)/(hi-lo), 2)
     def points(key):
-        return " ".join(f"{left+(width-left-pad)*i/(len(rows)-1):.2f},{y(r[key]):.2f}" for i,r in enumerate(rows))
-    data["plot"] = {"w":width,"h":height,"lines":{k:points(k) for k in ("nav","spy","qqq")},
-                    "ticks":[{"y":y(v),"label":f"{(v-1)*100:+.0f}%"} for v in (1.0,(hi+1)/2,hi)]}
+        return " ".join(f"{x(i)},{y(r[key])}" for i,r in enumerate(rows))
+    raw_step = (hi-lo)*100/5
+    magnitude = 10 ** math.floor(math.log10(raw_step))
+    step = next(s*magnitude for s in (1, 2, 2.5, 5, 10) if s*magnitude >= raw_step)
+    hi = math.ceil((hi-1)*100/step)*step/100+1
+    tick_values = [i*step for i in range(math.ceil((lo-1)*100/step), math.floor((hi-1)*100/step)+1)]
+    dates = [0] + [i for i in range(1, len(rows)) if rows[i]["d"][:4] != rows[i-1]["d"][:4]] + [len(rows)-1]
+    dates = list(dict.fromkeys(dates))
+    data["plot"] = {"w":width,"h":height,"left":left,"right":right,"top":top,"bottom":bottom,
+                    "lo":lo,"hi":hi,"lines":{k:points(k) for k in ("nav","spy","qqq")},
+                    "ticks":[{"value":v/100+1,"y":y(v/100+1),"label":f"{v:+g}%" if v else "0%"} for v in tick_values],
+                    "dates":[{"i":i,"x":x(i),"label":rows[i]["d"][:7],"d":rows[i]["d"],
+                              "anchor":"start" if i == 0 else "end" if i == len(rows)-1 else "middle"} for i in dates]}
+    data["chart_data"] = {"rows": rows, "plot": {k: v for k, v in data["plot"].items() if k != "lines"}}
     data["validation"] = data["comparisons"][data["selected_rule"]]["validation"]
     return data
 
@@ -431,6 +446,17 @@ def write_glossary(dist):
         (dist / "glossary.json").write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
 
 
+def write_manifests(tables):
+    """Use the page's language when installing; keep one identity and the same duck."""
+    base = json.loads((PUBLIC / "manifest.webmanifest").read_text(encoding="utf-8"))
+    for lang in LANGS:
+        manifest = dict(base, id="/", scope="/", lang=HTML_LANG[lang],
+                        start_url=page_url(lang, "index.html"), description=tables[lang]["meta.description"])
+        out = DIST / lang_prefix(lang).strip("/") / "manifest.webmanifest"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--api-base", help="override api_base from site.config.json")
@@ -474,6 +500,7 @@ def main() -> None:
 
     write_config_js(cfg, version)
     write_glossary(DIST)
+    write_manifests(tables)
     n_imports = version_module_imports(version)
     headers = env.get_template("_headers.tpl").render(cfg=cfg)
     (DIST / "_headers").write_text(headers.rstrip() + "\n", encoding="utf-8")

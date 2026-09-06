@@ -96,43 +96,43 @@ def macro_events(start, end):
         extra_en = " · with dot-plot / SEP" if sep else ""
         odds_zh = odds_en = ""
         if NEXT_FOMC_ODDS and ds == NEXT_FOMC_ODDS["date"]:
-            odds_zh = f";市场隐含降息概率约 {NEXT_FOMC_ODDS['cut_pct']}%(截至 {NEXT_FOMC_ODDS['as_of']},每日更新)"
-            odds_en = f"; market-implied cut odds ~{NEXT_FOMC_ODDS['cut_pct']}% (as of {NEXT_FOMC_ODDS['as_of']}, updated daily)"
+            odds_zh = f";市场隐含降息概率约 {NEXT_FOMC_ODDS['cut_pct']}%(记录于 {NEXT_FOMC_ODDS['as_of']})"
+            odds_en = f"; market-implied cut odds ~{NEXT_FOMC_ODDS['cut_pct']}% (recorded {NEXT_FOMC_ODDS['as_of']})"
         m(d, "美联储 FOMC 利率决议", "FOMC rate decision",
           "14:00 ET 公布利率决议,14:30 ET 主席发布会" + extra_zh + odds_zh + "。",
           "Rate decision 14:00 ET, press conference 14:30 ET" + extra_en + odds_en + ".")
     for ds in CPI_2026:
         m(date.fromisoformat(ds), "CPI 通胀数据", "CPI inflation",
-          "08:30 ET 公布上月 CPI;高影响,常放大波动。", "August CPI at 08:30 ET; high-impact, moves the tape.")
+          "08:30 ET 公布上月消费者物价指数。", "Prior-month Consumer Price Index at 08:30 ET.")
     for y, mm in _months(start, end):
         nf = _first_friday(y, mm)
         m(nf, "大非农 · 非农就业 (NFP)", "Nonfarm payrolls (NFP)",
-          "08:30 ET 公布上月非农就业与失业率;月度最重磅数据之一。",
-          "Prior month's payrolls & unemployment at 08:30 ET — one of the biggest monthly prints.")
+          "08:30 ET 公布上月非农就业与失业率。",
+          "Prior-month payrolls and unemployment at 08:30 ET.")
         # 小非农 ADP: the Wednesday 2 days before the NFP Friday, 08:15 ET (a preview of the big NFP)
         adp = nf - timedelta(days=2)
-        m(adp, "小非农 · ADP 私营就业", "ADP private payrolls (小非农)",
-          "08:15 ET 公布上月 ADP 私营部门就业;大非农的前哨,常引导预期。",
-          "Prior month's ADP private-sector jobs at 08:15 ET — a lead-in to the big NFP.")
+        m(adp, "小非农 · ADP 私营就业", "ADP private payrolls",
+          "08:15 ET 公布上月 ADP 私营部门就业数据。",
+          "Prior-month ADP private-sector employment at 08:15 ET.")
     # 初请失业金: every Thursday, 08:30 ET (weekly labor-market pulse)
     d = start + timedelta(days=(3 - start.weekday()) % 7)   # first Thursday on/after start
     while d <= end:
         m(d, "初请失业金", "Initial jobless claims",
-          "08:30 ET 每周初请失业金人数;劳动力市场的高频脉搏。",
-          "Weekly initial jobless claims at 08:30 ET — the high-frequency labor pulse.")
+          "08:30 ET 公布每周首次申请失业救济金人数。",
+          "Weekly initial jobless claims at 08:30 ET.")
         d += timedelta(days=7)
     for ds in PPI_2026:
         m(date.fromisoformat(ds), "PPI 生产者物价", "PPI (producer prices)",
-          "08:30 ET 公布上月 PPI;通胀的上游信号,常先于 CPI。", "Prior-month PPI at 08:30 ET; upstream inflation signal.")
+          "08:30 ET 公布上月生产者物价指数。", "Prior-month Producer Price Index at 08:30 ET.")
     for ds in RETAIL_2026:
         m(date.fromisoformat(ds), "零售销售", "Retail sales",
-          "08:30 ET 公布上月零售销售;消费需求的核心读数。", "Prior-month retail sales at 08:30 ET; core consumer-demand read.")
+          "08:30 ET 公布上月零售销售数据。", "Prior-month retail sales at 08:30 ET.")
     for ds in GDP_2026:
         m(date.fromisoformat(ds), "GDP 年度修订", "GDP annual update",
           "08:30 ET;GDP 与国民经济核算年度综合修订。", "08:30 ET; annual comprehensive update of GDP / national accounts.")
     for ds in PCE_2026:
-        m(date.fromisoformat(ds), "PCE 物价(美联储偏好通胀)", "PCE price index (Fed's preferred gauge)",
-          "08:30 ET 公布;美联储最看重的通胀指标。", "08:30 ET; the Fed's preferred inflation gauge.")
+        m(date.fromisoformat(ds), "PCE 物价指数", "PCE price index",
+          "08:30 ET 公布个人消费支出物价指数。", "Personal consumption expenditures price index at 08:30 ET.")
     return out
 
 
@@ -148,18 +148,18 @@ def build(days: int = 90, backfill: int = 5) -> list[dict]:
     for y, m in _months(start, end):
         opex = _prior_trading(_third_friday(y, m))   # roll a holiday 3rd Friday (e.g. Juneteenth) back
         add(opex, "opex", "月度期权交割 · OPEX", "Monthly OPEX", [],
-            "月度股票期权到期;gamma 墙常在此前后移动或减弱。",
-            "Monthly stock options expire; gamma walls often shift or weaken around it.")
+            "月度股票期权到期。可查看相关合约的到期日和持仓变化。",
+            "Monthly stock options expire. Review contract expirations and changes in open interest.")
         if m in (3, 6, 9, 12):
             add(opex, "witching", "四巫日 · 标普/纳指季度调仓", "Quad witching · S&P/Nasdaq rebalance",
                 ["SPY", "QQQ"],
-                "指数期货/期权 + 个股期货/期权同时到期,标普 & 纳斯达克季度成分调整同日生效,尾盘量常暴增。",
-                "Index + single-stock futures & options all expire; S&P & Nasdaq-100 quarterly rebalances take effect the same day — closing volume usually spikes.")
+                "季度衍生品到期与指数调整窗口。具体合约及指数变更以交易所和指数提供商公告为准。",
+                "Quarterly derivatives expiration and index adjustment window. Check exchange and index-provider notices for specific contracts and changes.")
         me = _last_trading_day(y, m)
         add(me, "rebal", "月末调仓 · 养老金/基金再平衡", "Month-end rebalance (pension/fund)",
             ["SPY"],
-            "月末指数与养老金/基金再平衡资金流,尾盘最后几分钟常有巨量买/卖盘。",
-            "Month-end index + pension/fund rebalancing flows; the last minutes of the session often see outsized buy/sell prints.")
+            "月末再平衡观察日期；各基金是否调仓及调整规模以其披露为准。",
+            "Month-end rebalancing reference date. Fund disclosures determine whether and how much each fund adjusts.")
         # MSCI reviews: quarterly (Feb/Aug) + semi-annual (May/Nov), effective the last business day
         if m in (2, 5, 8, 11):
             semi = m in (5, 11)
@@ -167,22 +167,22 @@ def build(days: int = 90, backfill: int = 5) -> list[dict]:
                 "MSCI " + ("半年度" if semi else "季度") + "指数审议生效",
                 "MSCI " + ("Semi-Annual" if semi else "Quarterly") + " Index Review effective",
                 ["ACWI", "EFA"],
-                ("MSCI " + ("半年度" if semi else "季度") + "成分调整生效;权重最大的纳入/剔除名单常在尾盘出现巨量买卖(名单由 MSCI 提前约 2 周公布)。"),
-                ("MSCI " + ("semi-annual" if semi else "quarterly") + " constituent changes take effect; the largest additions/deletions often see outsized closing prints (MSCI publishes the list ~2 weeks ahead)."))
+                ("MSCI " + ("半年度" if semi else "季度") + "成分调整参考日期；请核对 MSCI 公布的名单与生效时间。"),
+                ("MSCI " + ("semi-annual" if semi else "quarterly") + " constituent-change reference date. Check the published MSCI list and effective date."))
     # Russell reconstitution — effective after the close on the last Friday of June (biggest volume day of the year)
     for y in {today.year, end.year}:
         rr = _last_friday(y, 6)
         add(rr, "rebal", "Russell 指数年度重构生效", "Russell annual reconstitution",
             ["IWM", "IWB"],
-            "罗素指数年度重构收盘后生效——通常是全年成交量最大的一天;小盘股纳入/剔除资金流集中。",
-            "Russell indices reconstitute after this close — typically the highest-volume day of the year; small-cap add/delete flows concentrate here.")
+            "罗素指数成分调整参考日期；纳入、剔除名单和生效时间以 FTSE Russell 公告为准。",
+            "Russell constituent-change reference date. Check FTSE Russell notices for additions, deletions and the effective time.")
     # Nasdaq-100 annual reconstitution — effective before open on the 3rd Friday of December
     for y in {today.year, end.year}:
         nd = _third_friday(y, 12)
         add(nd, "rebal", "纳斯达克 100 年度重构生效", "Nasdaq-100 annual reconstitution",
             ["QQQ"],
-            "纳斯达克 100 年度成分调整生效(名单 12 月中旬公布);被剔除/纳入的科技股常有资金进出。",
-            "Nasdaq-100 annual constituent changes take effect (list published mid-December); tech names added/removed often see flow.")
+            "纳斯达克 100 年度成分调整参考日期；名单和生效时间以纳斯达克公告为准。",
+            "Nasdaq-100 annual constituent-change reference date. Check Nasdaq notices for the list and effective time.")
     out.extend(macro_events(start, end))
     out.sort(key=lambda e: (e["date"], {"macro": 0, "witching": 1, "opex": 2, "rebal": 3}.get(e["type"], 4)))
     return out

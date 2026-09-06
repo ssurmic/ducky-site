@@ -1,5 +1,5 @@
 import { icon } from "../icons.js";
-// views/calendar.js — 投资日历 (Pro): a real month GRID (not just a list) of the events that move a
+// views/calendar.js — 投资日历 (Pro): mobile agenda and selectable date grids for a
 // US-stock watchlist — Fed speakers (ET times), FOMC / rate decisions, CPI/PPI/PCE macro, earnings,
 // OPEX / quad witching, index & month-end rebalances. Click a day → that day's events. The user's own
 // tickers are highlighted; "my names only" + the grid personalisation is the Pro value.
@@ -101,7 +101,7 @@ export async function mount(root) {
   const anchor = new Date((selected || todayIso) + "T00:00:00");
   let viewY = anchor.getFullYear(), viewM = anchor.getMonth();  // month being shown
   let filter = "all", mineOnly = false;
-  let viewMode = "biweekly";                 // "biweekly" (default: at-a-glance earnings) | "month"
+  let viewMode = window.matchMedia?.("(max-width: 560px)").matches ? "list" : "biweekly"; // Mobile starts with complete event rows; desktop keeps the two-week overview.
   let biStart = weekSunday(new Date());      // Sunday on/before today; prev/next shift by 14d
   render();
 
@@ -149,15 +149,22 @@ export async function mount(root) {
 
     // view-mode toggle: 两周 (at-a-glance earnings) | 月
     const modeBar = el("div.cal-modebar");
-    for (const m of ["biweekly", "month"]) {
+    for (const m of ["list", "biweekly", "month"]) {
       const b = el("button.cal-mode" + (viewMode === m ? ".on" : ""), { type: "button", "aria-pressed": String(viewMode === m) }, s("calendar.mode_" + m));
       b.addEventListener("click", () => { viewMode = m; render(); });
       modeBar.appendChild(b);
     }
     card.appendChild(modeBar);
+    if (viewMode !== "list") card.appendChild(el("p.cal-grid-hint.muted.small", s("calendar.grid_hint")));
 
     if (viewMode === "month") card.appendChild(monthGrid());
-    else card.appendChild(biweekly());
+    else if (viewMode === "biweekly") card.appendChild(biweekly());
+    else {
+      const end = addDays(biStart, 13);
+      card.appendChild(navHead(isZh ? `${biStart.getMonth()+1}月${biStart.getDate()}日 / ${end.getMonth()+1}月${end.getDate()}日` : `${biStart.toLocaleDateString("en-US",{month:"short",day:"numeric"})} / ${end.toLocaleDateString("en-US",{month:"short",day:"numeric"})}`,
+        () => { biStart = addDays(biStart, -14); render(); },
+        () => { biStart = addDays(biStart, 14); render(); }));
+    }
 
     function pills(evs) {
       // biweekly: color-coded event pills — earnings show the company LOGO + $TICKER so you can SEE who
@@ -228,10 +235,10 @@ export async function mount(root) {
         const mine = isPro && evs.some(evHasMine);
         const wknd = dt.getDay() === 0 || dt.getDay() === 6;
         const cell = el("button.cal-cell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : ""),
-          { type: "button", "aria-label": iso + ", " + evs.length, "aria-pressed": String(iso === selected) });
+          { type: "button", "aria-label": iso + ", " + s("calendar.event_count", {n: evs.length}), "aria-pressed": String(iso === selected) });
         cell.appendChild(el("span.cal-dnum", String(day)));
-        if (evs.length) cell.appendChild(miniBars(evs));
-        cell.addEventListener("click", () => { selected = iso; render(); });
+        if (evs.length) { cell.appendChild(miniBars(evs)); cell.appendChild(el("span.cal-event-count", String(evs.length))); }
+        cell.addEventListener("click", () => { selected = iso; render(); card.querySelector(".cal-detail")?.scrollIntoView?.({block: "start", behavior: "auto"}); });
         grid.appendChild(cell);
       }
       box.appendChild(grid);
@@ -257,20 +264,25 @@ export async function mount(root) {
         const mine = isPro && evs.some(evHasMine);
         const wknd = d.getDay() === 0 || d.getDay() === 6;
         const cell = el("button.cal-bicell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : ""),
-          { type: "button", "aria-label": iso + ", " + evs.length, "aria-pressed": String(iso === selected) });
+          { type: "button", "aria-label": iso + ", " + s("calendar.event_count", {n: evs.length}), "aria-pressed": String(iso === selected) });
         cell.appendChild(el("span.cal-bidnum", String(d.getDate())));
-        if (evs.length) cell.appendChild(pills(evs));
-        cell.addEventListener("click", () => { selected = iso; render(); });
+        if (evs.length) { cell.appendChild(pills(evs)); cell.appendChild(el("span.cal-event-count", String(evs.length))); }
+        cell.addEventListener("click", () => { selected = iso; render(); card.querySelector(".cal-detail")?.scrollIntoView?.({block: "start", behavior: "auto"}); });
         grid.appendChild(cell);
       }
       box.appendChild(grid);
       return box;
     }
 
-    // selected-day detail
+    // The list shows every event in the selected period; grid selections use the same rows.
+    const visibleDates = viewMode === "list"
+      ? Array.from({length: 14}, (_, i) => ymd(addDays(biStart, i))).filter(iso => dayEvents(iso).length)
+      : [selected];
+    if (!visibleDates.length) card.appendChild(el("p.muted", s("calendar.empty")));
+    for (const detailDate of visibleDates) {
     const detail = el("div.cal-detail");
-    detail.appendChild(el("div.cal-day-h.mono", dateLabel(selected)));
-    const evs = dayEvents(selected);
+    detail.appendChild(el("div.cal-day-h.mono", dateLabel(detailDate)));
+    const evs = dayEvents(detailDate);
     if (!evs.length) { detail.appendChild(el("p.muted.cal-empty-day", s("calendar.day_empty"))); }
     else {
       for (const e of evs) {
@@ -298,6 +310,7 @@ export async function mount(root) {
       }
     }
     card.appendChild(detail);
+    }
   }
 
   return () => {};
