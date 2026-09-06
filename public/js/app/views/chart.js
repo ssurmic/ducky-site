@@ -24,7 +24,8 @@ export function normalizeBars(resp) {
     else if (typeof t === "string") t = /^\d{4}-\d{2}-\d{2}/.test(t) ? t.slice(0, 10) : Math.floor(Date.parse(t) / 1000);
     if (t === undefined || t === null || Number.isNaN(t)) continue;
     const o = Number(b.o ?? b.open), h = Number(b.h ?? b.high), l = Number(b.l ?? b.low), c = Number(b.c ?? b.close);
-    if ([o, h, l, c].some(Number.isNaN)) continue;
+    if ([b.o ?? b.open, b.h ?? b.high, b.l ?? b.low, b.c ?? b.close].some(v => v == null) ||
+        [o, h, l, c].some(v => !Number.isFinite(v) || v <= 0)) continue;
     out.push({ time: t, open: o, high: h, low: l, close: c, volume: Number(b.v ?? b.volume ?? 0) });
   }
   out.sort((a, b) => (a.time < b.time ? -1 : a.time > b.time ? 1 : 0));
@@ -60,9 +61,10 @@ export async function mount(root, params) {
     return () => { alive = false; };
   }
 
-  function destroy() { if (ovl) { ovl.remove(); ovl = null; } if (ro) { ro.disconnect(); ro = null; } if (chart) { try { chart.remove(); } catch (e) { /* ignore */ } chart = null; } clear(host); }
+  let refreshTimer = null;
+  function destroy() { clearTimeout(refreshTimer); refreshTimer = null; if (ovl) { ovl.remove(); ovl = null; } if (ro) { ro.disconnect(); ro = null; } if (chart) { try { chart.remove(); } catch (e) { /* ignore */ } chart = null; } clear(host); }
 
-  async function draw() {
+  async function draw(attempt = 0) {
     // finding chart.js:63 — take a per-draw token. Rapid period/ticker switches while /bars is slow used to
     // race: each draw passed the lone 'alive' check, each created a chart in the same host (stacked duplicates,
     // leaked ResizeObserver/canvas, and the slower response could win with the WRONG period). Every await below
@@ -73,14 +75,23 @@ export async function mount(root, params) {
     status.appendChild(spinner());
     const LWC = window.LightweightCharts;
     if (!LWC) { clear(status); status.appendChild(errorBox(new Error("charts lib missing"))); return; }
-    let bars;
-    try { bars = normalizeBars(await api.bars(ticker, period)); }
+    let bars, payload;
+    try { payload = await api.bars(ticker, period); bars = normalizeBars(payload); }
     catch (err) { if (my !== drawSeq || !alive) return; clear(status); status.appendChild(errorBox(err, draw)); return; }
     if (my !== drawSeq || !alive) return;
     clear(status);
+    const retry = () => {
+      status.appendChild(el('button.btn.btn-ghost.btn-sm', { type: 'button', onclick: () => draw() }, s('common.retry')));
+      if (attempt < 3) refreshTimer = setTimeout(() => { if (alive && my === drawSeq) draw(attempt + 1); }, 5000);
+    };
+    if (api.isAccepted(payload)) { status.appendChild(el('p.muted', s('common.building'))); retry(); return; }
     if (!bars.length) { status.appendChild(el("p.muted", s("chart.no_bars"))); return; }
     const spot = document.getElementById("chart-spot"); if (spot) spot.textContent = px(bars[bars.length - 1].close);
     status.appendChild(el("p.muted.small", s("chart.last_bar", {date: String(bars[bars.length - 1].time)})));
+    if (payload?.stale) {
+      status.appendChild(el('p.data-notice', s('chart.stale_bars', { date: payload.expected_last_d || '—' })));
+      retry();
+    }
 
     const text = cssVar("--muted", "#9aa7b4"), grid = cssVar("--border", "#223041"), up = cssVar("--green", "#3fb950"), down = cssVar("--red", "#f85149");
     chart = LWC.createChart(host, {

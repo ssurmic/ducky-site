@@ -34,6 +34,7 @@ export function eventResearchSession(scopeTicker='') {
       content.append(el('p.event-evidence-caption',s('event.history_method')));
       if(kind==='earnings') content.append(el('p.muted.small',s('event.earnings_source')));
       if(kind==='gdp') content.append(el('p.muted.small',s('event.gdp_cohort')));
+      else if(['cpi','ppi','pce','nfp','retail','claims'].includes(kind)) content.append(el('p.muted.small',s('event.release_cohort')));
       if(['opex','witching','month_end'].includes(kind)) content.append(el('p.muted.small',s('event.rule_cohort')));
       const toolbar=el('div.event-evidence-toolbar');
       const select=el('select.input.event-stock',{'aria-label':s('event.history_stock')});

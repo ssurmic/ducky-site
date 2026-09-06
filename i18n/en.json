@@ -1757,5 +1757,7 @@
   "app.event.earnings_source": "Earnings dates and release times are supplied by Yahoo Finance and have not each been checked against issuer announcements. Available records from 2023 onward are used.",
   "app.event.gdp_cohort": "This cohort includes advance GDP estimates, subsequent estimates and revisions; versions have not been separated.",
   "app.event.rule_cohort": "Dates are reconstructed from trading-session and expiration/month-end rules. They do not establish that a particular fund traded.",
-  "app.event.ai_channel": "For AI hardware and interconnect stocks, also review data-centre capital spending. Macro releases provide a demand and financing backdrop; company disclosures are needed to assess orders."
+  "app.event.ai_channel": "For AI hardware and interconnect stocks, also review data-centre capital spending. Macro releases provide a demand and financing backdrop; company disclosures are needed to assess orders.",
+  "app.chart.stale_bars": "Daily bars have not caught up to the last completed session, {date}. The page will retry briefly; you can also retry manually.",
+  "app.event.release_cohort": "Samples follow official series release dates, which may include revisions. Initial releases, seasonal adjustments and revisions have not been separated."
 }
