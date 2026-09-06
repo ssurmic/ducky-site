@@ -135,7 +135,7 @@ test('follow feedback persists and analysis completion is read automatically',as
  assert.ok(root.querySelector('.creator-follow-success').textContent.includes('Added Joseph Carlson'));
  ready=true;t.mock.timers.tick(4000);await tick();await tick();
  assert.ok(root.querySelector('.creator-follow-success').textContent.includes('ready to read'));
- assert.ok(root.querySelector('.creator-analysis-state').textContent.includes('available'));cleanup();root.remove();
+ assert.ok(root.querySelector('.creator-page-heading').textContent.includes('Joseph Carlson'));assert.equal(root.querySelector('.creator-video-archive').open,false);cleanup();root.remove();
 });
 
 

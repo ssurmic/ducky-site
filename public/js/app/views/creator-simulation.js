@@ -56,7 +56,7 @@ export async function mountSimulation(root,{kolId='',allowedIds=null,tickers=nul
     if(demo)root.append(el('p.creator-demo-notice',s('creatorlab.demo_notice')));
     else if(!active)root.append(el('p.creator-demo-notice',s(store.isPro()?'creatorlab.no_data':'creatorlab.pro_demo')));
     else {root.append(el('div.creator-lab-source',el('b',active.post.kol_name+' · $'+active.call.sym),el('blockquote',active.call.evidence),el('p.small',s('creatorlab.recorded')+' '+dateTime(active.post.recorded_at))));const url=safeSource(active.post.url);if(url)root.append(el('a',{href:url,target:'_blank',rel:'noopener noreferrer'},s('creators.orig')+' ↗'));}
-    const layout=el('div.creator-lab-layout'),form=el('form.creator-lab-config'),output=el('section.creator-lab-output',{'aria-live':'polite'});layout.append(form,output);root.append(layout);
+    const layout=el('div.creator-lab-layout'),form=el('form.creator-lab-config'),output=el('section.creator-lab-output',{'aria-live':'polite'});const settings=el('details.creator-sim-settings',el('summary',s('creatorpage.adjust')),form);layout.append(output,settings);root.append(layout);
     form.addEventListener('submit',e=>e.preventDefault());
     form.append(el('button.btn.btn-ghost.btn-sm.creator-result-jump',{type:'button',onclick:()=>output.scrollIntoView({behavior:'smooth',block:'start'})},s('creatorlab.jump')),el('h3',s('creatorlab.allocation')));
     const allocation=el('div.creator-allocation');
