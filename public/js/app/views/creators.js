@@ -263,7 +263,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
         art.appendChild(el("p.cr-sum", pickSummary(sections[0] || p.summary, isZh)));
         if (sections.length) {
           const detail = el("details.cr-sections", el("summary", s("creators.sections")));
-          for (const section of sections) detail.appendChild(el("div", safeSource(p.url)?el("a", {href:atTime(p.url,section.start_seconds),target:"_blank",rel:"noopener noreferrer"}, `${Math.floor(section.start_seconds/60)}:${String(section.start_seconds%60).padStart(2,"0")} ↗`):null, el("p", pickSummary(section,isZh))));
+          for (const section of sections) detail.appendChild(el("div", safeSource(p.url)?el("a", {href:atTime(p.url,section.start_seconds),target:"_blank",rel:"noopener noreferrer"}, `${Math.floor(section.start_seconds/60)}:${String(Math.floor(section.start_seconds)%60).padStart(2,"0")} ↗`):null, el("p", pickSummary(section,isZh))));
           art.appendChild(detail);
         }
       } else {
