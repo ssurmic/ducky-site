@@ -35,10 +35,10 @@ test('simulation selects earliest verified version, never a revised successful t
 
 test('identity dialog never subscribes before affirmative confirmation, including cancel',async()=>{
  let calls=0,followed=0;const creator={name:'Same Name',channel_id:'UCabc',url:'https://www.youtube.com/channel/UCabc',recent:[{title:'Finance example',published_at:'2025-01-01'}]};
- confirmCreator(creator,async()=>{calls++;return {kol_id:'test'};},()=>followed++);
+ confirmCreator(creator,async()=>{calls++;return {kol_id:'test',subscribed:true};},()=>followed++);
  assert.equal(calls,0);assert.ok(document.querySelector('dialog').textContent.includes('Finance example'));
  document.querySelector('dialog .btn-ghost').click();assert.equal(calls,0);assert.equal(document.querySelector('dialog'),null);
- confirmCreator(creator,async()=>{calls++;return {kol_id:'test'};},()=>followed++);
+ confirmCreator(creator,async()=>{calls++;return {kol_id:'test',subscribed:true};},()=>followed++);
  document.querySelector('dialog .btn-primary').click();await new Promise(r=>setTimeout(r,0));assert.equal(calls,1);assert.equal(followed,1);
 });
 
@@ -57,5 +57,82 @@ test('an accepted follow cannot be presented as cancelled while its request is p
  document.querySelector('dialog .btn-primary').click();
  const dialog=document.querySelector('dialog');assert.equal(dialog.querySelector('.btn-ghost').disabled,true);
  dialog.dispatchEvent(new window.Event('cancel',{cancelable:true}));assert.ok(dialog.isConnected);
- finish({kol_id:'channel'});await new Promise(r=>setTimeout(r,0));assert.equal(document.querySelector('dialog'),null);
+ finish({kol_id:'channel',subscribed:true});await new Promise(r=>setTimeout(r,0));assert.equal(document.querySelector('dialog'),null);
+});
+
+globalThis.requestAnimationFrame=fn=>fn();
+const tick=()=>new Promise(resolve=>setImmediate(resolve));
+const response=body=>new Response(JSON.stringify(body),{headers:{'content-type':'application/json'}});
+const creator={kol_id:'joseph',name:'Joseph Carlson',channel_id:'UCbta0n8i6Rljh0obO7HzG9A',profile:{},recent:[]};
+Object.defineProperty(document,'visibilityState',{configurable:true,value:'visible'});
+
+function setupRoot(){const root=document.createElement('section');document.body.append(root);store.set('me',{tier:'pro',user_id:1});return root;}
+
+test('autocomplete keyboard selection confirms a cached channel and waits for a saved follow',async()=>{
+ const root=setupRoot();let saved=0,finish;
+ globalThis.fetch=async(url,options)=>{
+  if(url==='/kol/lookups')return response({items:[]});
+  if(url.startsWith('/kol/suggest'))return response({items:[creator]});
+  if(url==='/kol/resolve'){assert.equal(JSON.parse(options.body).input,creator.channel_id);return response({id:'lookup',status:'ready',candidates:[creator]});}
+  if(url.endsWith('/confirm'))return new Promise(resolve=>finish=()=>resolve(response({subscribed:true,kol_id:'joseph'})));
+  assert.fail(url);
+ };
+ const cleanup=mountSetup(root,{onFollow:()=>saved++});await tick();
+ const field=root.querySelector('[role=combobox]');field.focus();await tick();
+ assert.equal(field.getAttribute('aria-expanded'),'true');
+ field.dispatchEvent(new window.KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true}));
+ field.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Enter',bubbles:true,cancelable:true}));await tick();
+ assert.ok(document.querySelector('dialog'));assert.equal(saved,0);
+ document.querySelector('dialog .btn-primary').click();await tick();assert.equal(saved,0);
+ finish();await tick();assert.equal(saved,1);cleanup();root.remove();
+});
+
+test('lookup resumes after returning, polls automatically, and ignores results after cleanup',async t=>{
+ t.mock.timers.enable({apis:['setTimeout']});
+ const root=setupRoot();let reads=0;
+ globalThis.fetch=async url=>{
+  if(url==='/kol/lookups')return response({items:[{id:'pending',input:'@creator',status:'queued'}]});
+  if(url==='/kol/resolve/pending'){reads++;return response({id:'pending',status:'ready',candidates:[creator]});}
+  assert.fail(url);
+ };
+ const cleanup=mountSetup(root,{onFollow:()=>{}});await tick();
+ assert.ok(root.textContent.includes('Results update automatically'));assert.equal(root.querySelector('input').value,'@creator');
+ t.mock.timers.tick(4000);await tick();assert.equal(reads,1);assert.ok(root.textContent.includes('Channel found'));
+ cleanup();t.mock.timers.tick(30000);await tick();assert.equal(reads,1);root.remove();
+});
+
+test('old autocomplete responses cannot replace a newer search',async()=>{
+ const root=setupRoot();let first;
+ globalThis.fetch=async url=>{
+  if(url==='/kol/lookups')return response({items:[]});
+  if(url.endsWith('q=old'))return new Promise(resolve=>first=resolve);
+  if(url.endsWith('q=new'))return response({items:[{...creator,name:'New Creator'}]});
+  assert.fail(url);
+ };
+ const cleanup=mountSetup(root,{onFollow:()=>{}});await tick();const field=root.querySelector('input');
+ field.value='old';field.dispatchEvent(new window.Event('focus'));await tick();
+ field.value='new';field.dispatchEvent(new window.Event('focus'));await tick();
+ first(response({items:[{...creator,name:'Old Creator'}]}));await tick();
+ assert.ok(root.querySelector('[role=listbox]').textContent.includes('New Creator'));
+ assert.ok(!root.querySelector('[role=listbox]').textContent.includes('Old Creator'));cleanup();root.remove();
+});
+
+test('follow feedback persists and analysis completion is read automatically',async t=>{
+ t.mock.timers.enable({apis:['setTimeout']});
+ const root=setupRoot();const {mount}=await import('../public/js/app/views/creators.js');
+ let followed=false,ready=false;
+ globalThis.fetch=async url=>{
+  if(url==='/public/kol-feed.json')return response({kols:[{...creator,id:'joseph'}],posts:[]});
+  if(url==='/me/kols')return response({subs:followed?['joseph']:[],creators:[creator],analysis:followed?{joseph:{status:ready?'ready':'queued'}}:{}});
+  if(url==='/kol/lookups')return response({items:[]});
+  if(url==='/kol/joseph/sub'){followed=true;return response({subscribed:true,kol_id:'joseph',creator,analysis:{status:'queued'}});}
+  assert.fail(url);
+ };
+ const cleanup=await mount(root);await tick();
+ [...root.querySelectorAll('button')].find(b=>b.textContent===copy['app.creators.discover']).click();
+ root.querySelector('.cr-chip').click();document.querySelector('dialog .btn-primary').click();await tick();
+ assert.ok(root.querySelector('.creator-follow-success').textContent.includes('Added Joseph Carlson'));
+ ready=true;t.mock.timers.tick(4000);await tick();await tick();
+ assert.ok(root.querySelector('.creator-follow-success').textContent.includes('ready to read'));
+ assert.ok(root.querySelector('.creator-analysis-state').textContent.includes('available'));cleanup();root.remove();
 });

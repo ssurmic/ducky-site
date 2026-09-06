@@ -9,6 +9,7 @@ import { el, clear, toast, spinner, empty } from "../ui.js";
 import { mountResearch, safeSource, dateTime, metric } from './creator-research.js';
 
 import {mountSetup,confirmCreator,avatar} from './creator-setup.js';
+import {progressPoll} from './creator-progress.js';
 import {mountSimulation} from './creator-simulation.js';
 import {mountLeaderboard} from './creator-leaderboard.js';
 
@@ -93,13 +94,24 @@ export async function mount(root) {
   if (epoch !== store.epoch()) return () => {};
   const kols = (doc && doc.kols) || [];
   for(const c of subs?.creators || [])if(!kols.some(k=>k.id===c.kol_id))kols.push({...c,id:c.kol_id});
-  let analysis=subs?.analysis || {},setupCleanup=()=>{},showSetup=!following.size,disposed=false;
+  let analysis=subs?.analysis || {},setupCleanup=()=>{},showSetup=!following.size,disposed=false,notice='',refreshing=false;
+  const setupState={};
+  const pending=()=>Object.values(analysis).some(x=>['queued','running'].includes(x.status));
+  const progress=progressPoll({active:()=>!disposed&&epoch===store.epoch()&&root.isConnected&&pending(),read:()=>api.kol.mine(),
+    onValue:next=>{
+      const changed=JSON.stringify(analysis)!==JSON.stringify(next.analysis||{});
+      const ready=Object.entries(next.analysis||{}).find(([id,x])=>x.status==='ready'&&analysis[id]?.status!=='ready');
+      const completed=Object.entries(analysis).some(([id,x])=>['queued','running'].includes(x.status)&&!['queued','running'].includes(next.analysis?.[id]?.status));
+      analysis=next.analysis||{};
+      if(ready){notice=s('creatorflow.analysis_complete',{name:kols.find(k=>k.id===ready[0])?.name||next.creators?.find(k=>k.kol_id===ready[0])?.name||''});}
+      if(completed)refresh({automatic:true});else if(changed)renderContent();
+    },onError:()=>{const node=card.querySelector('.creator-sync-note');if(node)node.textContent=s('creatorflow.reconnecting');}});
   const posts = (doc && doc.posts) || [];
   let archive = false;
   let mine = true;
   let query = "";
   let selected='', tab='feed', shown=30;
-  render();
+  render();progress.schedule();
 
   function render() {
     setupCleanup();clear(card);
@@ -110,7 +122,9 @@ export async function mount(root) {
     const actions=el('div.evidence-controls',el('button.btn.btn-primary.btn-sm',{type:'button','aria-expanded':String(showSetup),onclick:()=>{showSetup=!showSetup;render();}},s('creatorflow.add')),
       el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:refresh},s('creatorflow.refresh')));
     card.append(actions);
-    if(showSetup){const setup=el('div');card.append(setup);setupCleanup=mountSetup(setup,{onFollow:followed});}
+    if(notice)card.append(el('p.creator-follow-success',{role:'status'},notice));
+    if(pending())card.append(el('p.creator-sync-note.small.muted',{role:'status'},s('creatorflow.analysis_auto')));
+    if(showSetup){const setup=el('div');card.append(setup);setupCleanup=mountSetup(setup,{onFollow:followed,state:setupState});}
     const isPro = store.isPro();
     if (!isPro) {
       const banner = el("div.cr-pro-banner",
@@ -173,7 +187,7 @@ export async function mount(root) {
       tile.append(el('p.creator-card-coverage',s('creatorflow.card_coverage',{ready:creatorPosts.filter(hasReviewedSummary).length,total:creatorPosts.length})));
       if(analysis[k.id])tile.append(el('p.creator-analysis-state',{role:'status'},s('creatorflow.analysis_'+analysis[k.id].status)));
 
-      if(on&&isPro&&['error','needs_review','needs_source','no_recent_content'].includes(analysis[k.id]?.status))tile.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:async e=>{e.target.disabled=true;try{const r=await api.post('/kol/'+encodeURIComponent(k.id)+'/analyze');if(epoch!==store.epoch()||disposed)return;analysis[k.id]=r.analysis;renderContent();}catch{toast(s('creatorflow.retry_later'),'err');}finally{e.target.disabled=false;}}},s('creatorflow.retry_analysis')));
+      if(on&&isPro&&['error','needs_review','needs_source','no_recent_content'].includes(analysis[k.id]?.status))tile.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:async e=>{e.target.disabled=true;try{const r=await api.post('/kol/'+encodeURIComponent(k.id)+'/analyze');if(epoch!==store.epoch()||disposed)return;analysis[k.id]=r.analysis;renderContent();progress.schedule();}catch{toast(s('creatorflow.retry_later'),'err');}finally{e.target.disabled=false;}}},s('creatorflow.retry_analysis')));
       const label = isPro ? (on ? s("creators.following") : s("creators.follow")) : s("creators.follow");
       const chip = el("button.cr-chip" + (on && isPro ? ".on" : ""), { type: "button",'aria-label':label+' '+k.name }, label);
       chip.addEventListener("click", () => { if (isPro) {if(on)toggle(k.id,chip);else confirmCreator({...k,recent:creatorPosts.slice(0,3)},()=>api.kol.sub(k.id),followed,()=>!disposed&&epoch===store.epoch());} else router.go("#/billing"); });
@@ -252,18 +266,22 @@ export async function mount(root) {
   }
 
   function followed(response){
+    if(response?.subscribed!==true){toast(s('creatorflow.follow_error'),'err');return;}
+    const name=response.creator?.name||kols.find(k=>k.id===response.kol_id)?.name||'';
+    notice=s(response.already_following?'creatorflow.already_added':'creatorflow.added',{name});
     following.add(response.kol_id);selected=response.kol_id;mine=true;showSetup=false;tab='feed';
     if(response.creator&&!kols.some(k=>k.id===response.kol_id))kols.push({...response.creator,id:response.kol_id});
     if(response.analysis)analysis[response.kol_id]=response.analysis;
-    render();
+    render();progress.schedule();
   }
-  async function refresh(){
+  async function refresh({automatic=false}={}){
+    if(refreshing)return;refreshing=true;
     try{const [feed,mineDoc]=await Promise.all([api.kol.feed(),api.kol.mine()]);
       if(disposed||epoch!==store.epoch())return;
       doc=feed;posts.splice(0,posts.length,...(feed.posts||[]));kols.splice(0,kols.length,...(feed.kols||[]));
       for(const c of mineDoc.creators||[])if(!kols.some(k=>k.id===c.kol_id))kols.push({...c,id:c.kol_id});
-      analysis=mineDoc.analysis||{};following.clear();for(const id of mineDoc.subs||[])following.add(id);render();
-    }catch{if(!disposed)toast(s('creators.load_error'),'err');}
+      analysis=mineDoc.analysis||{};following.clear();for(const id of mineDoc.subs||[])following.add(id);render();progress.schedule();
+    }catch{if(!disposed&&!automatic)toast(s('creators.load_error'),'err');}finally{refreshing=false;}
   }
-  return () => {disposed=true;setupCleanup();document.querySelector('dialog.creator-confirm')?.remove();};
+  return () => {disposed=true;progress.stop();setupCleanup();document.querySelector('dialog.creator-confirm')?.remove();};
 }
