@@ -24,84 +24,79 @@ export function stats(values) {
 }
 const pct = value => (value > 0 ? '+' : '') + value.toFixed(1) + '%';
 
-export function renderSeasonality(root, data, initialMonth = new Date().getMonth()+1) {
+// A reading is valid only for the exact complete cohort being displayed.
+export function savedReading(data, rows, month, midterm, after) {
+  const reading=data.readings?.[`${month}:${Number(midterm)}:${Number(after)}`];
+  const signature=rows.map(r=>[r.year,...['SPY','QQQ'].map(t=>r[t].toFixed(6))]);
+  return reading?.version==='season-reading-v1' && JSON.stringify(reading.signature)===JSON.stringify(signature) ? reading : null;
+}
+
+export function renderSeasonality(root, data, initialMonth = Number(new Intl.DateTimeFormat("en-US",{month:"numeric",timeZone:"America/New_York"}).format(new Date()))) {
   clear(root);
-  let month = initialMonth, midterm = false, after = false;
-  const isZh = document.documentElement.lang.startsWith('zh');
-  const monthName = m => new Intl.DateTimeFormat(isZh?'zh-CN':'en-US',{month:'long',timeZone:'UTC'}).format(new Date(Date.UTC(2000,m-1,1)));
-  root.append(el('h2',s('season.title')),el('p.muted',s('season.intro')));
-  if (new Date().getFullYear() === 2026) {
-    const macro=el('details.season-macro',el('summary',s('season.macro_title')),el('p.small',s('season.macro_intro')));
-    const dates=el('ul');
-    for(const [date,key,href] of [
-      ['2026-09-15 → 09-16','fomc','https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm'],
-      ['2026-10-27 → 10-28','fomc','https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm'],
-      ['2026-11-03','election','https://www.fec.gov/help-candidates-and-committees/filing-reports/election-cycle-aggregation/'],
-      ['2026-12-08 → 12-09','fomc','https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm']]) {
-      dates.append(el('li',el('span.mono',date),el('a',{href,target:'_blank',rel:'noopener'},s('season.'+key)+' ↗')));
-    }
-    macro.append(dates,el('p.muted.small',s('season.macro_source')));root.append(macro);
-  }
-  const label = el('label.season-month',{for:'season-month'});
-  const slider = el('input.season-slider',{type:'range',id:'season-month',min:1,max:12,step:1,value:month});
-  const scale = el('div.season-scale',el('span',monthName(1)),el('span',monthName(12)));
-  const controls = el('div.season-controls');
-  const cycle = el('button.btn.btn-ghost.btn-sm',{type:'button','aria-pressed':'false'},s('season.midterm'));
-  const period = el('select',{'aria-label':s('season.window')},el('option',{value:'month'},s('season.month_only')),el('option',{value:'after'},s('season.after')));
-  controls.append(cycle,el('label',s('season.window')+' ',period));
-  const status = el('p.muted.small',{'role':'status'}), results=el('div');
-  root.append(label,slider,scale,controls,status,results);
+  let month=initialMonth, midterm=false, after=false;
+  const isZh=document.documentElement.lang.startsWith('zh');
+  const monthName=m=>isZh?`${m}月`:new Intl.DateTimeFormat('en-US',{month:'long',timeZone:'UTC'}).format(new Date(Date.UTC(2000,m-1,1)));
+  const move=v=>s(v!==0&&Math.abs(v)<0.05?(v>0?'season.rose_small':'season.fell_small'):(v>0?'season.rose':v<0?'season.fell':'season.flat'), {value:Math.abs(v).toFixed(1)});
+  root.append(el('h2',s('season.title')),el('p.muted.small',s('season.intro')));
+  const controls=el('div.season-controls');
+  const monthSelect=el('select.season-month-select',{id:'season-month','aria-label':s('season.choose_month')});
+  for(let m=1;m<=12;m++)monthSelect.append(el('option',{value:m},monthName(m)));
+  monthSelect.value=String(month);
+  const cycle=el('button.btn.btn-ghost.btn-sm',{type:'button','aria-pressed':'false'},s('season.midterm'));
+  const period=el('select.season-window',{'aria-label':s('season.window')},el('option',{value:'month'},s('season.month_only')),el('option',{value:'after'},s('season.after')));
+  controls.append(el('label',s('season.choose_month'),monthSelect),el('label',s('season.window'),period),cycle);
+  const status=el('p.muted.small',{'role':'status'}),results=el('div');
+  root.append(controls,status,results);
   function update() {
-    label.textContent = s('season.month',{month:monthName(month)});
-    slider.setAttribute('aria-valuetext',monthName(month));
     cycle.setAttribute('aria-pressed',String(midterm));
-    const rows = observations(data,month,midterm,after);
-    status.textContent = s('season.sample',{n:rows.length,from:rows[0]?.year||'—',to:rows.at(-1)?.year||'—'})+' · '+s('season.asof',{date:data.as_of});
+    const rows=observations(data,month,midterm,after);
+    const windowName=after?s('season.through_december',{month:monthName(month+1)}):monthName(month);
+    status.textContent=s('season.sample',{n:rows.length,from:rows[0]?.year||'—',to:rows.at(-1)?.year||'—'})+' · '+s('season.asof',{date:data.as_of});
     clear(results);
-    if (!rows.length) {results.append(el('p.data-notice',s('season.empty')));return;}
-    const metrics = el('div.season-metrics');
+    if(!rows.length){results.append(el('p.data-notice',s('season.empty')));return;}
+    const reading=savedReading(data,rows,month,midterm,after);
+    const summary=el('div.season-reading',el('h3',s('season.reading_title',{period:windowName})),
+      el('p',reading?.summary?.[isZh?'zh':'en']||s('season.reading_fallback')));
+    results.append(summary);
+    if(midterm)results.append(el('p.small.muted',s('season.midterm_note')));
+    const metrics=el('div.season-metrics');
     for(const ticker of ['SPY','QQQ']) {
-      const st=stats(rows.map(r=>r[ticker]));
-      metrics.append(el('article',el('b',ticker),el('strong.mono',pct(st.mean)),el('span.muted.small',s('season.mean')),
-        el('p.small',s('season.stats',{median:pct(st.median),up:st.positive,n:st.n})),
-        el('p.muted.small',s('season.range',{min:pct(st.worst),max:pct(st.best)}))));
+      const st=stats(rows.map(r=>r[ticker])),down=rows.filter(r=>r[ticker]<0).length,flat=st.n-st.positive-down;
+      const worst=rows.find(r=>r[ticker]===st.worst),best=rows.find(r=>r[ticker]===st.best);
+      const distribution=el('div.season-distribution',{'aria-hidden':'true'},
+        el('i.season-up',{style:{width:(100*st.positive/st.n)+'%'}}),el('i.season-down',{style:{width:(100*down/st.n)+'%'}}),
+        el('i.season-flat',{style:{width:(100*flat/st.n)+'%'}}));
+      metrics.append(el('article',el('b',s('season.name_'+ticker.toLowerCase())),el('span.muted.small',s('season.average_for',{period:windowName})),
+        el('strong',{class:st.mean<0?'neg':'pos'},move(st.mean)),distribution,
+        el('p.small',s('season.counts',{n:st.n,up:st.positive,down})+(flat?' · '+s('season.flat_count',{n:flat}):'')),
+        el('p.muted.small',s('season.extremes',{worstYear:worst.year,worst:move(st.worst),bestYear:best.year,best:move(st.best)}))));
     }
-    results.append(metrics,el('p.small.muted',s('season.chart_hint')));
-    const chart=el('div.season-bars',{tabindex:0,role:'region','aria-label':s('season.chart')});
-    chart.addEventListener('keydown',event=>{
-      if(event.key==='Home'||event.key==='End') {event.preventDefault();chart.scrollLeft=event.key==='Home'?0:chart.scrollWidth;}
-    });
-    const maximum=Math.max(1,...rows.flatMap(r=>[Math.abs(r.SPY),Math.abs(r.QQQ)]));
-    for(const row of rows) {
-      const column=el('div.season-year',{'aria-label':`${row.year} · SPY ${pct(row.SPY)} · QQQ ${pct(row.QQQ)}`});
-      const pair=el('div.season-pair',{'aria-hidden':'true'});
-      for(const ticker of ['SPY','QQQ']) {
-        const track=el('div.season-track');
-        const bar=el('i.season-bar.'+ticker.toLowerCase());
-        bar.style.height=(Math.abs(row[ticker])/maximum*64)+'px';
-        bar.style[row[ticker]<0?'top':'bottom']='50%';
-        track.append(bar);pair.append(track);
-      }
-      column.append(pair,el('b.mono',row.year),el('span.season-spy.mono',pct(row.SPY)),el('span.season-qqq.mono',pct(row.QQQ)));
-      chart.append(column);
-    }
-    const nav=el('div.season-chart-nav',
-      el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>chart.scrollBy({left:-chart.clientWidth*.8})},'← '+s('season.older')),
-      el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>chart.scrollBy({left:chart.clientWidth*.8})},s('season.newer')+' →'));
-    results.append(el('div.season-legend',el('span.season-spy','● SPY'),el('span.season-qqq','● QQQ'),el('span.muted','0% '+s('season.zero'))),nav,chart);
-    const table=el('table.season-table',el('caption',s('season.exact')),
+    results.append(metrics,el('p.season-limit.small.muted',s('season.limit_short')));
+    const detail=el('details.season-details',el('summary',s('season.table_count',{n:rows.length})));
+    const yearSelect=el('select.season-year-select',{'aria-label':s('season.years')},el('option',{value:'all'},s('season.all_years')));
+    const decades=[...new Set(rows.map(r=>Math.floor(r.year/10)*10))].sort((a,b)=>b-a);
+    for(const decade of decades)yearSelect.append(el('option',{value:decade},`${decade}–${Math.min(decade+9,rows.at(-1).year)}`));
+    const order=el('select.season-order',{'aria-label':s('season.order')},el('option',{value:'new'},s('season.new_first')),el('option',{value:'old'},s('season.old_first')));
+    detail.append(el('div.season-year-tools',el('label',s('season.years'),yearSelect),el('label',s('season.order'),order)));
+    const table=el('table.season-table',el('caption',s('season.table_period',{period:windowName})),
       el('thead',el('tr',el('th',{scope:'col'},s('season.year')),el('th',{scope:'col'},'SPY'),el('th',{scope:'col'},'QQQ'))));
-    const body=el('tbody');for(const row of rows)body.append(el('tr',el('th',{scope:'row'},row.year),el('td.mono',pct(row.SPY)),el('td.mono',pct(row.QQQ))));
-    table.append(body);results.append(el('details.season-details',el('summary',s('season.table')),table));
+    const body=el('tbody');table.append(body);detail.append(table);results.append(detail);
+    function drawYears(){
+      clear(body);
+      const visible=rows.filter(r=>yearSelect.value==='all'||Math.floor(r.year/10)*10===Number(yearSelect.value)).slice().sort((a,b)=>order.value==='new'?b.year-a.year:a.year-b.year);
+      for(const row of visible)body.append(el('tr.season-year',el('th',{scope:'row'},row.year),...['SPY','QQQ'].map(t=>el('td',{class:row[t]<0?'neg':'pos'},move(row[t])))));
+    }
+    yearSelect.addEventListener('change',drawYears);order.addEventListener('change',drawYears);drawYears();
+    const method=el('details.season-details',el('summary',s('season.method')),el('p.small.muted',s('season.method_body')));
+    for(const ticker of ['SPY','QQQ'])method.append(el('p.small.muted',s('season.median_plain',{ticker,period:windowName,value:move(stats(rows.map(r=>r[ticker])).median)})));
+    method.append(el('p.small.muted',s('season.limit')),el('a',{href:'/seasonality.json',target:'_blank',rel:'noopener'},s('season.download')),
+      el('span',' · '),el('a',{href:'https://finance.yahoo.com/quote/SPY/history/',target:'_blank',rel:'noopener'},'SPY · Yahoo Finance ↗'),
+      el('span',' · '),el('a',{href:'https://finance.yahoo.com/quote/QQQ/history/',target:'_blank',rel:'noopener'},'QQQ · Yahoo Finance ↗'));
+    results.append(method);
   }
-  slider.addEventListener('input',()=>{month=Number(slider.value);update();});
+  monthSelect.addEventListener('change',()=>{month=Number(monthSelect.value);update();});
   cycle.addEventListener('click',()=>{midterm=!midterm;update();});
   period.addEventListener('change',()=>{after=period.value==='after';update();});
-  const method=el('details.season-details',el('summary',s('season.method')),el('p.small.muted',s('season.method_body')),
-    el('p.small.muted',s('season.limit')),
-    el('a',{href:'https://finance.yahoo.com/quote/SPY/history/',target:'_blank',rel:'noopener'},'SPY · Yahoo Finance ↗'),
-    el('span',' · '),el('a',{href:'https://finance.yahoo.com/quote/QQQ/history/',target:'_blank',rel:'noopener'},'QQQ · Yahoo Finance ↗'));
-  root.append(method);
   update();
 }
 

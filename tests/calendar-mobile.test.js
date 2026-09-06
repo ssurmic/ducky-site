@@ -28,8 +28,25 @@ test('mobile agenda preserves all events and filters while month selection revea
  button(root,copy['app.calendar.mode_list']).click();
  assert.equal(root.querySelectorAll('.cal-ev').length,5);root.remove();
 });
-test('desktop retains the two-week overview',async()=>{
+test('desktop starts compact and retains an optional two-week grid',async()=>{
  narrow=false;const root=document.createElement('div');await calendar.mount(root);
- assert.equal(button(root,copy['app.calendar.mode_biweekly']).getAttribute('aria-pressed'),'true');
+ assert.equal(button(root,copy['app.calendar.mode_list']).getAttribute('aria-pressed'),'true');
+ button(root,copy['app.calendar.mode_biweekly']).click();
  assert.equal(root.querySelectorAll('.cal-bicell').length,14);
+});
+
+test('holiday survives category filters and never requests private event research',async()=>{
+ const sessionDoc=JSON.parse(readFileSync('public/market-sessions.json'));
+ const holiday={...sessionDoc.events.find(e=>e.date==='2026-09-07'),date};
+ let researchCalls=0;
+ globalThis.fetch=async url=>{if(String(url).includes('/calendar/context'))researchCalls++;return new Response(JSON.stringify({events:[holiday]}));};
+ const root=document.createElement('div');document.body.append(root);await calendar.mount(root);
+ assert.match(root.querySelector('.cal-t-holiday').textContent,/US markets closed/);
+ button(root,copy['app.calendar.f_earnings']).click();
+ assert.ok(root.querySelector('.cal-t-holiday'));
+ assert.match(root.querySelector('.cal-session-impact').textContent,/Theta/);
+ assert.match(root.querySelector('.cal-session-impact').textContent,/not a reliable measure/);
+ assert.equal(researchCalls,0);
+ button(root,copy['app.calendar.mode_month']).click();
+ assert.ok(root.querySelector('.cal-closed'));root.remove();
 });

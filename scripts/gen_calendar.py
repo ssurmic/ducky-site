@@ -16,6 +16,7 @@ this fallback carries the SCHEDULE + the affected index/ETF so the day is never 
 """
 from __future__ import annotations
 import json, os, sys
+from pathlib import Path
 from datetime import date, timedelta, datetime, timezone
 
 # US market holidays are ignored for the fallback's month-end nudge (good enough; the API is
@@ -176,8 +177,10 @@ def build(days: int = 90, backfill: int = 5) -> list[dict]:
             ["QQQ"],
             "纳斯达克 100 年度成分调整参考日期；名单和生效时间以纳斯达克公告为准。",
             "Nasdaq-100 annual constituent-change reference date. Check Nasdaq notices for the list and effective time.")
+    sessions = json.loads((Path(__file__).resolve().parents[1] / 'public/market-sessions.json').read_text())
+    out.extend(e for e in sessions['events'] if start.isoformat() <= e['date'] <= end.isoformat())
     out.extend(macro_events(start, end))
-    out.sort(key=lambda e: (e["date"], {"macro": 0, "witching": 1, "opex": 2, "rebal": 3}.get(e["type"], 4)))
+    out.sort(key=lambda e: (e["date"], {"holiday": -2, "early_close": -1, "macro": 0, "witching": 1, "opex": 2, "rebal": 3}.get(e["type"], 4)))
     return out
 
 def main() -> int:

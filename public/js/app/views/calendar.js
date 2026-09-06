@@ -55,6 +55,8 @@ const STRUCT_ABBR = [
 function _hay(e) { return String(e.title || "") + " " + String(e.title_en || ""); }
 function macroMeta(e) { const h = _hay(e); for (const m of MACRO_META) if (m.re.test(h)) return m; return null; }
 function shortLabel(e, isZh) {
+  if(e.type === "holiday") return s("calendar.closed_short");
+  if(e.type === "early_close") return s("calendar.early_short");
   const full = isZh ? (e.title || "") : (e.title_en || e.title || "");
   if (e.type === "macro") { const m = macroMeta(e); if (m) return isZh ? m.abbr[0] : m.abbr[1]; }
   else { const h = _hay(e); for (const st of STRUCT_ABBR) if (st.re.test(h)) return isZh ? st.abbr[0] : st.abbr[1]; }
@@ -96,25 +98,26 @@ export async function mount(root) {
     return () => { disposed=true; research.dispose(); disposeHistory(); };
   }
   const watchSet = new Set(watch);
-  const events = (doc && doc.events) || [];
+  const events = ((doc && doc.events) || []).slice().sort((a,b)=>a.date.localeCompare(b.date) || (Number(!["holiday","early_close"].includes(a.type))-Number(!["holiday","early_close"].includes(b.type))));
   const evHasMine = (e) => (e.tickers || []).some((t) => watchSet.has(String(t).toUpperCase()) || (e.type === "earnings" && (links[String(t).toUpperCase()] || []).some(w => watchSet.has(w))));
 
   // index events by date for O(1) day lookup
   const byDate = new Map();
   for (const e of events) { if (!byDate.has(e.date)) byDate.set(e.date, []); byDate.get(e.date).push(e); }
 
-  const todayIso = ymd(new Date());
+  const todayIso = new Intl.DateTimeFormat("en-CA", {timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+  const todayDate = new Date(todayIso + "T12:00:00");
   // default the selected day to today (even if it has no events), and open the grid on today's month —
   // NOT events[0], which is a backfilled prior-month event and would open last month on the 1st–5th.
   let selected = todayIso;
   const anchor = new Date((selected || todayIso) + "T00:00:00");
   let viewY = anchor.getFullYear(), viewM = anchor.getMonth();  // month being shown
   let filter = "all", mineOnly = false;
-  let viewMode = window.matchMedia?.("(max-width: 560px)").matches ? "list" : "biweekly"; // Mobile starts with complete event rows; desktop keeps the two-week overview.
-  let biStart = weekSunday(new Date());      // Sunday on/before today; prev/next shift by 14d
+  let viewMode = "list"; // Complete event rows by default; grids remain available.
+  let biStart = weekSunday(todayDate);      // Sunday on/before today; prev/next shift by 14d
   render();
 
-  function typeMatch(e) { const t = FILTER_TYPES[filter]; return !t || t.includes(e.type); }
+  function typeMatch(e) { if(["holiday", "early_close"].includes(e.type)) return true; const t = FILTER_TYPES[filter]; return !t || t.includes(e.type); }
   function dayEvents(iso) {
     let list = (byDate.get(iso) || []).filter(typeMatch);
     if (mineOnly && isPro) list = list.filter((e) => e.type !== "earnings" || evHasMine(e));
@@ -122,7 +125,7 @@ export async function mount(root) {
   }
 
   function dateLabel(iso) {
-    const today = todayIso, tmr = ymd(new Date(Date.now() + 86400000));
+    const today = todayIso, tmr = ymd(addDays(todayDate, 1));
     const d = new Date(iso + "T00:00:00");
     const wd = (isZh ? ["周日","周一","周二","周三","周四","周五","周六"] : ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"])[d.getDay()];
     const base = isZh ? `${d.getMonth() + 1}月${d.getDate()}日 · ${wd}` : `${wd} ${d.getMonth() + 1}/${d.getDate()}`;
@@ -132,6 +135,7 @@ export async function mount(root) {
   }
 
   function render() {
+    if(disposed) return;
     clear(card);
     card.append(el("h1", s("calendar.h1")), el("p.muted", s("calendar.sub")));
     if(isPro) card.appendChild(el("p.event-scope-note.muted.small",s("event.scope_note",{n:watch.length})));
@@ -156,7 +160,9 @@ export async function mount(root) {
       (mineOnly ? "★ " : "☆ ") + s("calendar.mine_only") + (isPro ? "" : " 🔒"));
     mineBtn.addEventListener("click", () => { if (!isPro) { router.go("#/billing"); return; } mineOnly = !mineOnly; render(); });
     bar.appendChild(mineBtn);
-    card.appendChild(bar);
+    const filters=el("details.cal-filters", el("summary", s("calendar.filters")), bar, el("p.small.muted",s("calendar.timing_note")));
+    filters.open=filter!=="all" || mineOnly;
+    card.appendChild(filters);
 
     // view-mode toggle: 两周 (at-a-glance earnings) | 月
     const modeBar = el("div.cal-modebar");
@@ -224,7 +230,7 @@ export async function mount(root) {
       prev.addEventListener("click", onPrev);
       next.addEventListener("click", onNext);
       const todayBtn = el("button.cal-today", { type: "button" }, s("calendar.jump_today"));
-      todayBtn.addEventListener("click", () => { const d = new Date(); viewY = d.getFullYear(); viewM = d.getMonth(); biStart = weekSunday(d); selected = todayIso; render(); });
+      todayBtn.addEventListener("click", () => { const d = todayDate; viewY = d.getFullYear(); viewM = d.getMonth(); biStart = weekSunday(d); selected = todayIso; render(); });
       head.append(prev, el("div.cal-mtitle", title), next, todayBtn);
       return head;
     }
@@ -245,10 +251,12 @@ export async function mount(root) {
         const evs = dayEvents(iso);
         const mine = isPro && evs.some(evHasMine);
         const wknd = dt.getDay() === 0 || dt.getDay() === 6;
-        const cell = el("button.cal-cell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : ""),
-          { type: "button", "aria-label": iso + ", " + s("calendar.event_count", {n: evs.length}), "aria-pressed": String(iso === selected) });
+        const cell = el("button.cal-cell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : "") + (evs.some(e=>e.type==="holiday") ? ".cal-closed" : "") + (evs.some(e=>e.type==="early_close") ? ".cal-early" : ""),
+          { type: "button", "aria-label": iso + ", " + s("calendar.event_count", {n: evs.length}) + (evs.some(e=>e.type==="holiday") ? ", " + s("calendar.closed_short") : ""), "aria-pressed": String(iso === selected) });
         cell.appendChild(el("span.cal-dnum", String(day)));
         if (evs.length) { cell.appendChild(miniBars(evs)); cell.appendChild(el("span.cal-event-count", String(evs.length))); }
+        const session=evs.find(e=>["holiday","early_close"].includes(e.type));
+        if(session) cell.append(el("span.cal-session-grid-label",shortLabel(session,isZh)));
         cell.addEventListener("click", () => { selected = iso; render(); card.querySelector(".cal-detail")?.scrollIntoView?.({block: "start", behavior: "auto"}); });
         grid.appendChild(cell);
       }
@@ -274,10 +282,12 @@ export async function mount(root) {
         const evs = dayEvents(iso);
         const mine = isPro && evs.some(evHasMine);
         const wknd = d.getDay() === 0 || d.getDay() === 6;
-        const cell = el("button.cal-bicell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : ""),
-          { type: "button", "aria-label": iso + ", " + s("calendar.event_count", {n: evs.length}), "aria-pressed": String(iso === selected) });
+        const cell = el("button.cal-bicell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : "") + (evs.some(e=>e.type==="holiday") ? ".cal-closed" : "") + (evs.some(e=>e.type==="early_close") ? ".cal-early" : ""),
+          { type: "button", "aria-label": iso + ", " + s("calendar.event_count", {n: evs.length}) + (evs.some(e=>e.type==="holiday") ? ", " + s("calendar.closed_short") : ""), "aria-pressed": String(iso === selected) });
         cell.appendChild(el("span.cal-bidnum", String(d.getDate())));
         if (evs.length) { cell.appendChild(pills(evs)); cell.appendChild(el("span.cal-event-count", String(evs.length))); }
+        const session=evs.find(e=>["holiday","early_close"].includes(e.type));
+        if(session) cell.append(el("span.cal-session-grid-label",shortLabel(session,isZh)));
         cell.addEventListener("click", () => { selected = iso; render(); card.querySelector(".cal-detail")?.scrollIntoView?.({block: "start", behavior: "auto"}); });
         grid.appendChild(cell);
       }
@@ -308,8 +318,22 @@ export async function mount(root) {
         main.appendChild(title);
         const note = isZh ? (e.note || "") : (e.note_en || e.note || "");
         if (note) main.appendChild(el("div.cal-note.muted", note));
-        main.appendChild(research.mount(e));
-        if (e.url) main.appendChild(el("a.cal-link.mono", { href: e.url, target: "_blank", rel: "noopener" }, isZh ? "详情 ↗" : "details ↗"));
+        if(["holiday","early_close"].includes(e.type)) {
+          if(e.type==="holiday") main.appendChild(el("p.cal-holiday-brief",s("calendar.holiday_brief")));
+          const impacts=el("details.cal-session-impact",el("summary",s(e.type==="holiday"?"calendar.impact":"calendar.early_impact")));
+          for(const impact of e.impacts || []) {
+            const section=el("div",el("strong",isZh?impact.title:impact.title_en),el("p.small",isZh?impact.body:impact.body_en));
+            if(impact.url) section.append(el("a.small",{href:impact.url,target:"_blank",rel:"noopener"},"OIC · Theta ↗"));
+            impacts.append(section);
+          }
+          main.append(impacts);
+        } else {
+          const more=el("details.cal-research-more",el("summary",s("calendar.research_more")));
+          let mounted=false;
+          more.addEventListener("toggle",()=>{if(more.open&&!mounted&&!disposed){mounted=true;more.append(research.mount(e));}});
+          main.append(more);
+        }
+        if (e.url) main.appendChild(el("a.cal-link.mono", { href: e.url, target: "_blank", rel: "noopener" }, s(["holiday","early_close"].includes(e.type)?"calendar.source":"event.source")+" ↗"));
         row.appendChild(main);
         detail.appendChild(row);
       }
