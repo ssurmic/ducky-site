@@ -577,6 +577,8 @@ def main() -> None:
     if DIST.exists():
         shutil.rmtree(DIST)
     shutil.copytree(PUBLIC, DIST)          # public/ is copied whole (avatar-group.jpg, mascot.svg, receipts/ …)
+    from creator_public_access import sanitize_creator_catalog
+    sanitize_creator_catalog(DIST)
     app_version = publish_app_modules(retain_history=True)
     for name in BRAND_ASSETS:
         if not (DIST / name).is_file():

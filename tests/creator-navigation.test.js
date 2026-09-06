@@ -15,6 +15,18 @@ const {filterPosts}=await import('../public/js/app/views/creators.js');
 const {researchRows}=await import('../public/js/app/views/creator-research.js');
 const tick=()=>new Promise(r=>setImmediate(r));
 
+test('creator research uses private endpoint and does not fall back when Pro expires',async()=>{
+  const api=await import('../public/js/app/api.js');const calls=[];
+  store.set('me',{tier:'pro'});
+  globalThis.fetch=async(url)=>{calls.push(url);return Response.json({error:'pro_required'},{status:402});};
+  await assert.rejects(api.kol.feed());
+  assert.deepEqual(calls,['/kol/feed']);
+  store.set('me',{tier:'free'});calls.length=0;
+  globalThis.fetch=async(url)=>{calls.push(url);return Response.json({posts:[],access:'catalog_only'});};
+  assert.equal((await api.kol.feed()).access,'catalog_only');
+  assert.deepEqual(calls,['/public/kol-feed.json']);
+});
+
 test('creator feature links retain only safe public navigation choices through sign-in',()=>{
   const input='#/creators?tab=lab&scope=discover&creator=channel-a&preview=fictional&cash=100&token=SECRET&q=private';
   const expected='#/creators?tab=lab&scope=discover&creator=channel-a&preview=fictional';
