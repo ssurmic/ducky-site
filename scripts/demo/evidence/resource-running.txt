@@ -1,0 +1,10 @@
+MemoryPeak=9570783232
+CPUQuotaPerSecUSec=4s
+MemoryMax=12884901888
+MemorySwapMax=0
+ActiveState=active
+active
+active
+active
+6.5G	/home/ssurmic/.local/share/ducky-tts/models
+1.5G	/home/ssurmic/.local/share/ducky-tts/venv

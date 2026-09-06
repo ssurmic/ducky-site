@@ -1,11 +1,12 @@
 <section class="section product-demo" id="product-demo" aria-labelledby="product-demo-title">
  <div class="wrap">
   <div class="product-demo-heading"><div><p class="eyebrow mono">{{ t('walkthrough.eyebrow') }}</p><h2 id="product-demo-title">{{ t('walkthrough.title') }}</h2></div><p class="muted small">{{ t('walkthrough.meta') }}</p></div>
-  <video class="product-demo-player" controls playsinline preload="none" width="1920" height="1080" poster="/media/ducky-walkthrough-2026-09.jpg" aria-label="{{ t('walkthrough.title') }}" aria-describedby="product-demo-note">
-   <source src="/media/ducky-walkthrough-2026-09.mp4" type="video/mp4">
-   <track kind="captions" src="/media/ducky-walkthrough-2026-09.zh.vtt" srclang="zh" label="{{ t('walkthrough.captions_zh') }}"{% if lang == 'zh' %} default{% endif %}>
-   <track kind="captions" src="/media/ducky-walkthrough-2026-09.en.vtt" srclang="en" label="{{ t('walkthrough.captions_en') }}"{% if lang == 'en' %} default{% endif %}>
-   <a href="/media/ducky-walkthrough-2026-09.mp4">{{ t('walkthrough.download') }}</a>
+  {% set video_asset = '/media/ducky-walkthrough-2026-09-06-voice-v3.' ~ lang %}
+  <video class="product-demo-player" controls playsinline preload="none" width="1920" height="1080" poster="{{ video_asset }}.jpg" aria-label="{{ t('walkthrough.title') }}" aria-describedby="product-demo-note">
+   <source src="{{ video_asset }}.mp4" type="video/mp4">
+   <track kind="captions" src="{{ video_asset }}.zh.vtt" srclang="zh" label="{{ t('walkthrough.captions_zh') }}"{% if lang == 'zh' %} default{% endif %}>
+   <track kind="captions" src="{{ video_asset }}.en.vtt" srclang="en" label="{{ t('walkthrough.captions_en') }}"{% if lang == 'en' %} default{% endif %}>
+   <a href="{{ video_asset }}.mp4">{{ t('walkthrough.download') }}</a>
   </video>
   <div class="product-demo-caption"><p id="product-demo-note" class="small muted">{{ t('walkthrough.note') }}</p><a href="{{ url('/app/') }}#/register">{{ t('walkthrough.start') }} →</a></div>
   <details class="product-demo-transcript"><summary>{{ t('walkthrough.transcript') }}</summary><ol>{% for i in range(1,9) %}<li>{{ t('walkthrough.step' ~ i) }}</li>{% endfor %}</ol><p class="small muted">{{ t('walkthrough.voice') }}</p></details>

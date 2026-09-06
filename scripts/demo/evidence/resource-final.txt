@@ -1,0 +1,9 @@
+5.7G	/home/ssurmic/.local/share/ducky-tts
+inactive
+inactive
+active
+active
+active
+               total        used        free      shared  buff/cache   available
+Mem:           121Gi        96Gi        10Gi       2.3Gi        13Gi        25Gi
+Swap:           15Gi        11Gi       4.8Gi

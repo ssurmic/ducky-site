@@ -1,0 +1,12 @@
+README.md 57846 verified
+config.json 4908 verified
+generation_config.json 245 verified
+merges.txt 1671839 verified
+model.safetensors 3833402552 verified
+preprocessor_config.json 127 verified
+speech_tokenizer/config.json 2336 verified
+speech_tokenizer/configuration.json 76 verified
+speech_tokenizer/preprocessor_config.json 234 verified
+tokenizer_config.json 7344 verified
+vocab.json 2776833 verified
+speech_tokenizer/model.safetensors 682293092 verified

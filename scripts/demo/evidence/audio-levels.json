@@ -1,0 +1,28 @@
+[
+  {
+    "file": "ducky-walkthrough-2026-09-06-voice-v3.en.mp4",
+    "input_i": "-16.41",
+    "input_tp": "-1.43",
+    "input_lra": "3.40",
+    "input_thresh": "-26.89",
+    "output_i": "-16.21",
+    "output_tp": "-1.50",
+    "output_lra": "3.40",
+    "output_thresh": "-26.71",
+    "normalization_type": "dynamic",
+    "target_offset": "0.21"
+  },
+  {
+    "file": "ducky-walkthrough-2026-09-06-voice-v3.zh.mp4",
+    "input_i": "-16.58",
+    "input_tp": "-1.31",
+    "input_lra": "2.40",
+    "input_thresh": "-27.22",
+    "output_i": "-16.29",
+    "output_tp": "-1.50",
+    "output_lra": "2.70",
+    "output_thresh": "-26.89",
+    "normalization_type": "dynamic",
+    "target_offset": "0.29"
+  }
+]

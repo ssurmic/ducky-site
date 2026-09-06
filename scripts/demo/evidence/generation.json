@@ -1,0 +1,146 @@
+[
+  {
+    "file": "01-intro.zh.wav",
+    "language": "zh",
+    "speaker": "Dylan",
+    "seconds": 7.2,
+    "generation_seconds": 146.2,
+    "peak": 0.44590631127357483,
+    "rss_peak_kib": 11694332
+  },
+  {
+    "file": "02-creator.zh.wav",
+    "language": "zh",
+    "speaker": "Dylan",
+    "seconds": 6.48,
+    "generation_seconds": 129.28,
+    "peak": 0.5158751010894775,
+    "rss_peak_kib": 11694332
+  },
+  {
+    "file": "03-simulation.zh.wav",
+    "language": "zh",
+    "speaker": "Dylan",
+    "seconds": 10.08,
+    "generation_seconds": 63.19,
+    "peak": 0.5084772706031799,
+    "rss_peak_kib": 11694332
+  },
+  {
+    "file": "04-simulation-adjust.zh.wav",
+    "language": "zh",
+    "speaker": "Dylan",
+    "seconds": 8.64,
+    "generation_seconds": 53.83,
+    "peak": 0.5253849625587463,
+    "rss_peak_kib": 11694332
+  },
+  {
+    "file": "05-screen.zh.wav",
+    "language": "zh",
+    "speaker": "Dylan",
+    "seconds": 10.08,
+    "generation_seconds": 64.29,
+    "peak": 0.5812689661979675,
+    "rss_peak_kib": 11694332
+  },
+  {
+    "file": "06-calendar.zh.wav",
+    "language": "zh",
+    "speaker": "Dylan",
+    "seconds": 9.44,
+    "generation_seconds": 64.61,
+    "peak": 0.41573676466941833,
+    "rss_peak_kib": 11694332
+  },
+  {
+    "file": "07-briefing.zh.wav",
+    "language": "zh",
+    "speaker": "Dylan",
+    "seconds": 10.88,
+    "generation_seconds": 102.4,
+    "peak": 0.48368096351623535,
+    "rss_peak_kib": 11694332
+  },
+  {
+    "file": "08-end.zh.wav",
+    "language": "zh",
+    "speaker": "Dylan",
+    "seconds": 6.4,
+    "generation_seconds": 40.27,
+    "peak": 0.5055358409881592,
+    "rss_peak_kib": 11694332
+  },
+  {
+    "file": "01-intro.en.wav",
+    "language": "en",
+    "speaker": "Aiden",
+    "seconds": 6.96,
+    "generation_seconds": 45.5,
+    "peak": 0.6693414449691772,
+    "rss_peak_kib": 11694332
+  },
+  {
+    "file": "02-creator.en.wav",
+    "language": "en",
+    "speaker": "Aiden",
+    "seconds": 6.08,
+    "generation_seconds": 41.43,
+    "peak": 0.8140612840652466,
+    "rss_peak_kib": 11694332
+  },
+  {
+    "file": "03-simulation.en.wav",
+    "language": "en",
+    "speaker": "Aiden",
+    "seconds": 9.12,
+    "generation_seconds": 58.05,
+    "peak": 0.8184316754341125,
+    "rss_peak_kib": 11694332
+  },
+  {
+    "file": "04-simulation-adjust.en.wav",
+    "language": "en",
+    "speaker": "Aiden",
+    "seconds": 7.04,
+    "generation_seconds": 46.24,
+    "peak": 0.6986594200134277,
+    "rss_peak_kib": 11694332
+  },
+  {
+    "file": "05-screen.en.wav",
+    "language": "en",
+    "speaker": "Aiden",
+    "seconds": 7.76,
+    "generation_seconds": 52.37,
+    "peak": 0.7809041738510132,
+    "rss_peak_kib": 11694332
+  },
+  {
+    "file": "06-calendar.en.wav",
+    "language": "en",
+    "speaker": "Aiden",
+    "seconds": 9.2,
+    "generation_seconds": 181.73,
+    "peak": 0.9537115693092346,
+    "rss_peak_kib": 11694332
+  },
+  {
+    "file": "07-briefing.en.wav",
+    "language": "en",
+    "speaker": "Aiden",
+    "seconds": 9.2,
+    "generation_seconds": 182.4,
+    "peak": 0.8012463450431824,
+    "rss_peak_kib": 11694332
+  },
+  {
+    "file": "08-end.en.wav",
+    "language": "en",
+    "speaker": "Aiden",
+    "seconds": 5.84,
+    "generation_seconds": 116.37,
+    "peak": 0.7601167559623718,
+    "rss_peak_kib": 11694332
+  }
+]

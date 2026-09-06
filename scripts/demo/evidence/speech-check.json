@@ -1,0 +1,2920 @@
+[
+  {
+    "file": "01-intro.en.wav",
+    "language": "en",
+    "duration": 6.96,
+    "text": " Let me show you around, pick a stock you follow, check the latest views, and see which events are coming up.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 6.88,
+        "text": " Let me show you around, pick a stock you follow, check the latest views, and see which events are coming up.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.24,
+            "word": " Let",
+            "probability": 0.8697365522384644
+          },
+          {
+            "start": 0.24,
+            "end": 0.38,
+            "word": " me",
+            "probability": 0.9994365572929382
+          },
+          {
+            "start": 0.38,
+            "end": 0.62,
+            "word": " show",
+            "probability": 0.9986795783042908
+          },
+          {
+            "start": 0.62,
+            "end": 0.82,
+            "word": " you",
+            "probability": 0.9983391761779785
+          },
+          {
+            "start": 0.82,
+            "end": 1.18,
+            "word": " around,",
+            "probability": 0.9882871508598328
+          },
+          {
+            "start": 1.82,
+            "end": 1.98,
+            "word": " pick",
+            "probability": 0.9621627330780029
+          },
+          {
+            "start": 1.98,
+            "end": 2.14,
+            "word": " a",
+            "probability": 0.9968733191490173
+          },
+          {
+            "start": 2.14,
+            "end": 2.36,
+            "word": " stock",
+            "probability": 0.9305409789085388
+          },
+          {
+            "start": 2.36,
+            "end": 2.56,
+            "word": " you",
+            "probability": 0.9962735176086426
+          },
+          {
+            "start": 2.56,
+            "end": 2.88,
+            "word": " follow,",
+            "probability": 0.9981468915939331
+          },
+          {
+            "start": 3.5,
+            "end": 3.72,
+            "word": " check",
+            "probability": 0.9910348057746887
+          },
+          {
+            "start": 3.72,
+            "end": 3.9,
+            "word": " the",
+            "probability": 0.9976609945297241
+          },
+          {
+            "start": 3.9,
+            "end": 4.12,
+            "word": " latest",
+            "probability": 0.9972789883613586
+          },
+          {
+            "start": 4.12,
+            "end": 4.58,
+            "word": " views,",
+            "probability": 0.9943140745162964
+          },
+          {
+            "start": 5.18,
+            "end": 5.4,
+            "word": " and",
+            "probability": 0.9932636022567749
+          },
+          {
+            "start": 5.4,
+            "end": 5.64,
+            "word": " see",
+            "probability": 0.9961391091346741
+          },
+          {
+            "start": 5.64,
+            "end": 5.86,
+            "word": " which",
+            "probability": 0.997364342212677
+          },
+          {
+            "start": 5.86,
+            "end": 6.16,
+            "word": " events",
+            "probability": 0.9966715574264526
+          },
+          {
+            "start": 6.16,
+            "end": 6.38,
+            "word": " are",
+            "probability": 0.9984022974967957
+          },
+          {
+            "start": 6.38,
+            "end": 6.64,
+            "word": " coming",
+            "probability": 0.9990812540054321
+          },
+          {
+            "start": 6.64,
+            "end": 6.88,
+            "word": " up.",
+            "probability": 0.9986390471458435
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "01-intro.zh.wav",
+    "language": "zh",
+    "duration": 7.2,
+    "text": "你看关注一支股票之后谁提到了他最近有什么新消息在这里就能接着查",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.1,
+        "text": "你看关注一支股票之后",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.34,
+            "word": "你看",
+            "probability": 0.873723030090332
+          },
+          {
+            "start": 0.34,
+            "end": 0.82,
+            "word": "关",
+            "probability": 0.28913962841033936
+          },
+          {
+            "start": 0.82,
+            "end": 1.0,
+            "word": "注",
+            "probability": 0.9362070560455322
+          },
+          {
+            "start": 1.0,
+            "end": 1.16,
+            "word": "一",
+            "probability": 0.9660139083862305
+          },
+          {
+            "start": 1.16,
+            "end": 1.3,
+            "word": "支",
+            "probability": 0.5172665119171143
+          },
+          {
+            "start": 1.3,
+            "end": 1.48,
+            "word": "股",
+            "probability": 0.9911971092224121
+          },
+          {
+            "start": 1.48,
+            "end": 1.74,
+            "word": "票",
+            "probability": 0.9998475313186646
+          },
+          {
+            "start": 1.74,
+            "end": 1.92,
+            "word": "之",
+            "probability": 0.9189863801002502
+          },
+          {
+            "start": 1.92,
+            "end": 2.1,
+            "word": "后",
+            "probability": 0.9999293088912964
+          }
+        ]
+      },
+      {
+        "start": 2.1,
+        "end": 3.34,
+        "text": "谁提到了他",
+        "words": [
+          {
+            "start": 2.1,
+            "end": 2.5,
+            "word": "谁",
+            "probability": 0.8580318093299866
+          },
+          {
+            "start": 2.5,
+            "end": 2.76,
+            "word": "提",
+            "probability": 0.993039071559906
+          },
+          {
+            "start": 2.76,
+            "end": 3.04,
+            "word": "到了",
+            "probability": 0.9881250858306885
+          },
+          {
+            "start": 3.04,
+            "end": 3.34,
+            "word": "他",
+            "probability": 0.47672176361083984
+          }
+        ]
+      },
+      {
+        "start": 3.34,
+        "end": 5.5,
+        "text": "最近有什么新消息",
+        "words": [
+          {
+            "start": 3.34,
+            "end": 4.1,
+            "word": "最近",
+            "probability": 0.8395586609840393
+          },
+          {
+            "start": 4.1,
+            "end": 4.4,
+            "word": "有",
+            "probability": 0.99681156873703
+          },
+          {
+            "start": 4.4,
+            "end": 4.58,
+            "word": "什么",
+            "probability": 0.9899926781654358
+          },
+          {
+            "start": 4.58,
+            "end": 4.86,
+            "word": "新",
+            "probability": 0.9974345564842224
+          },
+          {
+            "start": 4.86,
+            "end": 5.12,
+            "word": "消",
+            "probability": 0.994195818901062
+          },
+          {
+            "start": 5.12,
+            "end": 5.5,
+            "word": "息",
+            "probability": 0.998578667640686
+          }
+        ]
+      },
+      {
+        "start": 5.5,
+        "end": 7.06,
+        "text": "在这里就能接着查",
+        "words": [
+          {
+            "start": 5.5,
+            "end": 5.86,
+            "word": "在",
+            "probability": 0.9228537082672119
+          },
+          {
+            "start": 5.86,
+            "end": 6.2,
+            "word": "这里",
+            "probability": 0.9769506454467773
+          },
+          {
+            "start": 6.2,
+            "end": 6.36,
+            "word": "就",
+            "probability": 0.986835241317749
+          },
+          {
+            "start": 6.36,
+            "end": 6.48,
+            "word": "能",
+            "probability": 0.9980637431144714
+          },
+          {
+            "start": 6.48,
+            "end": 6.68,
+            "word": "接",
+            "probability": 0.9593575596809387
+          },
+          {
+            "start": 6.68,
+            "end": 6.8,
+            "word": "着",
+            "probability": 0.9973928928375244
+          },
+          {
+            "start": 6.8,
+            "end": 7.06,
+            "word": "查",
+            "probability": 0.9932098984718323
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "02-creator.en.wav",
+    "language": "en",
+    "duration": 6.08,
+    "text": " When a new view appears, check who said it and when, open the timestamp to check the original words.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 5.84,
+        "text": " When a new view appears, check who said it and when, open the timestamp to check the original words.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.2,
+            "word": " When",
+            "probability": 0.9391471743583679
+          },
+          {
+            "start": 0.2,
+            "end": 0.32,
+            "word": " a",
+            "probability": 0.9920864701271057
+          },
+          {
+            "start": 0.32,
+            "end": 0.56,
+            "word": " new",
+            "probability": 0.9794935584068298
+          },
+          {
+            "start": 0.56,
+            "end": 0.76,
+            "word": " view",
+            "probability": 0.9795272946357727
+          },
+          {
+            "start": 0.76,
+            "end": 1.32,
+            "word": " appears,",
+            "probability": 0.9982870221138
+          },
+          {
+            "start": 1.64,
+            "end": 1.86,
+            "word": " check",
+            "probability": 0.9938947558403015
+          },
+          {
+            "start": 1.86,
+            "end": 2.06,
+            "word": " who",
+            "probability": 0.9870906472206116
+          },
+          {
+            "start": 2.06,
+            "end": 2.34,
+            "word": " said",
+            "probability": 0.8933714628219604
+          },
+          {
+            "start": 2.34,
+            "end": 2.48,
+            "word": " it",
+            "probability": 0.9928452372550964
+          },
+          {
+            "start": 2.48,
+            "end": 2.64,
+            "word": " and",
+            "probability": 0.9713935852050781
+          },
+          {
+            "start": 2.64,
+            "end": 2.92,
+            "word": " when,",
+            "probability": 0.9986549615859985
+          },
+          {
+            "start": 3.3,
+            "end": 3.66,
+            "word": " open",
+            "probability": 0.9374270439147949
+          },
+          {
+            "start": 3.66,
+            "end": 3.84,
+            "word": " the",
+            "probability": 0.9963906407356262
+          },
+          {
+            "start": 3.84,
+            "end": 4.5,
+            "word": " timestamp",
+            "probability": 0.8453922867774963
+          },
+          {
+            "start": 4.5,
+            "end": 4.68,
+            "word": " to",
+            "probability": 0.9946990013122559
+          },
+          {
+            "start": 4.68,
+            "end": 4.92,
+            "word": " check",
+            "probability": 0.9985941052436829
+          },
+          {
+            "start": 4.92,
+            "end": 5.08,
+            "word": " the",
+            "probability": 0.9959779977798462
+          },
+          {
+            "start": 5.08,
+            "end": 5.42,
+            "word": " original",
+            "probability": 0.9981168508529663
+          },
+          {
+            "start": 5.42,
+            "end": 5.84,
+            "word": " words.",
+            "probability": 0.9975813627243042
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "02-creator.zh.wav",
+    "language": "zh",
+    "duration": 6.48,
+    "text": "有了新观点先看是谁说的什么时候说的点开时间点原话就在这里",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 0.96,
+        "text": "有了新观点",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.2,
+            "word": "有",
+            "probability": 0.9780935049057007
+          },
+          {
+            "start": 0.2,
+            "end": 0.32,
+            "word": "了",
+            "probability": 0.9976702332496643
+          },
+          {
+            "start": 0.32,
+            "end": 0.52,
+            "word": "新",
+            "probability": 0.9917639493942261
+          },
+          {
+            "start": 0.52,
+            "end": 0.74,
+            "word": "观",
+            "probability": 0.9338231682777405
+          },
+          {
+            "start": 0.74,
+            "end": 0.96,
+            "word": "点",
+            "probability": 0.9990605711936951
+          }
+        ]
+      },
+      {
+        "start": 0.96,
+        "end": 2.44,
+        "text": "先看是谁说的",
+        "words": [
+          {
+            "start": 0.96,
+            "end": 1.4,
+            "word": "先",
+            "probability": 0.5022354125976562
+          },
+          {
+            "start": 1.4,
+            "end": 1.62,
+            "word": "看",
+            "probability": 0.9829849600791931
+          },
+          {
+            "start": 1.62,
+            "end": 1.76,
+            "word": "是",
+            "probability": 0.9085522890090942
+          },
+          {
+            "start": 1.76,
+            "end": 1.96,
+            "word": "谁",
+            "probability": 0.9939489364624023
+          },
+          {
+            "start": 1.96,
+            "end": 2.22,
+            "word": "说",
+            "probability": 0.9979064464569092
+          },
+          {
+            "start": 2.22,
+            "end": 2.44,
+            "word": "的",
+            "probability": 0.9979380965232849
+          }
+        ]
+      },
+      {
+        "start": 2.44,
+        "end": 3.5,
+        "text": "什么时候说的",
+        "words": [
+          {
+            "start": 2.44,
+            "end": 2.76,
+            "word": "什么",
+            "probability": 0.8574219346046448
+          },
+          {
+            "start": 2.76,
+            "end": 3.04,
+            "word": "时候",
+            "probability": 0.9976803064346313
+          },
+          {
+            "start": 3.04,
+            "end": 3.3,
+            "word": "说",
+            "probability": 0.9982690811157227
+          },
+          {
+            "start": 3.3,
+            "end": 3.5,
+            "word": "的",
+            "probability": 0.994228720664978
+          }
+        ]
+      },
+      {
+        "start": 3.5,
+        "end": 4.88,
+        "text": "点开时间点",
+        "words": [
+          {
+            "start": 3.5,
+            "end": 4.02,
+            "word": "点",
+            "probability": 0.9421058893203735
+          },
+          {
+            "start": 4.02,
+            "end": 4.26,
+            "word": "开",
+            "probability": 0.9709528088569641
+          },
+          {
+            "start": 4.26,
+            "end": 4.5,
+            "word": "时间",
+            "probability": 0.9911914467811584
+          },
+          {
+            "start": 4.5,
+            "end": 4.88,
+            "word": "点",
+            "probability": 0.9992223978042603
+          }
+        ]
+      },
+      {
+        "start": 4.88,
+        "end": 6.34,
+        "text": "原话就在这里",
+        "words": [
+          {
+            "start": 4.88,
+            "end": 5.46,
+            "word": "原",
+            "probability": 0.42677581310272217
+          },
+          {
+            "start": 5.46,
+            "end": 5.76,
+            "word": "话",
+            "probability": 0.9883009791374207
+          },
+          {
+            "start": 5.76,
+            "end": 5.96,
+            "word": "就",
+            "probability": 0.9949131011962891
+          },
+          {
+            "start": 5.96,
+            "end": 6.1,
+            "word": "在",
+            "probability": 0.998457670211792
+          },
+          {
+            "start": 6.1,
+            "end": 6.34,
+            "word": "这里",
+            "probability": 0.9893999695777893
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "03-simulation.en.wav",
+    "language": "en",
+    "duration": 9.12,
+    "text": " Try a fictional scenario. 20% cash, 40% stocks. What changes if you hold? Keep investing or follow the view.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.4,
+        "text": " Try a fictional scenario.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.22,
+            "word": " Try",
+            "probability": 0.925838828086853
+          },
+          {
+            "start": 0.22,
+            "end": 0.38,
+            "word": " a",
+            "probability": 0.9986269474029541
+          },
+          {
+            "start": 0.38,
+            "end": 0.76,
+            "word": " fictional",
+            "probability": 0.991214394569397
+          },
+          {
+            "start": 0.76,
+            "end": 1.4,
+            "word": " scenario.",
+            "probability": 0.9991230368614197
+          }
+        ]
+      },
+      {
+        "start": 2.06,
+        "end": 4.32,
+        "text": " 20% cash, 40% stocks.",
+        "words": [
+          {
+            "start": 2.06,
+            "end": 2.3,
+            "word": " 20",
+            "probability": 0.8830320239067078
+          },
+          {
+            "start": 2.3,
+            "end": 2.58,
+            "word": "%",
+            "probability": 0.9297625422477722
+          },
+          {
+            "start": 2.58,
+            "end": 2.9,
+            "word": " cash,",
+            "probability": 0.9252122640609741
+          },
+          {
+            "start": 3.32,
+            "end": 3.6,
+            "word": " 40",
+            "probability": 0.9975435137748718
+          },
+          {
+            "start": 3.6,
+            "end": 3.94,
+            "word": "%",
+            "probability": 0.9936341047286987
+          },
+          {
+            "start": 3.94,
+            "end": 4.32,
+            "word": " stocks.",
+            "probability": 0.9954982995986938
+          }
+        ]
+      },
+      {
+        "start": 5.18,
+        "end": 6.52,
+        "text": " What changes if you hold?",
+        "words": [
+          {
+            "start": 5.18,
+            "end": 5.34,
+            "word": " What",
+            "probability": 0.990747332572937
+          },
+          {
+            "start": 5.34,
+            "end": 5.7,
+            "word": " changes",
+            "probability": 0.9987878203392029
+          },
+          {
+            "start": 5.7,
+            "end": 6.08,
+            "word": " if",
+            "probability": 0.9732580184936523
+          },
+          {
+            "start": 6.08,
+            "end": 6.2,
+            "word": " you",
+            "probability": 0.9993802309036255
+          },
+          {
+            "start": 6.2,
+            "end": 6.52,
+            "word": " hold?",
+            "probability": 0.9959349632263184
+          }
+        ]
+      },
+      {
+        "start": 7.08,
+        "end": 8.96,
+        "text": " Keep investing or follow the view.",
+        "words": [
+          {
+            "start": 7.08,
+            "end": 7.22,
+            "word": " Keep",
+            "probability": 0.9931714534759521
+          },
+          {
+            "start": 7.22,
+            "end": 7.66,
+            "word": " investing",
+            "probability": 0.9979038238525391
+          },
+          {
+            "start": 7.66,
+            "end": 8.14,
+            "word": " or",
+            "probability": 0.8969430923461914
+          },
+          {
+            "start": 8.14,
+            "end": 8.5,
+            "word": " follow",
+            "probability": 0.9948216676712036
+          },
+          {
+            "start": 8.5,
+            "end": 8.7,
+            "word": " the",
+            "probability": 0.9987607002258301
+          },
+          {
+            "start": 8.7,
+            "end": 8.96,
+            "word": " view.",
+            "probability": 0.9940741658210754
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "03-simulation.zh.wav",
+    "language": "zh",
+    "duration": 10.08,
+    "text": "也可以拿一个虚构情景试试二成现金四成股票持有不动继续定投结果会有什么不同",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.76,
+        "text": "也可以拿一个虚构情景试试",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.4,
+            "word": "也可以",
+            "probability": 0.9516366124153137
+          },
+          {
+            "start": 0.4,
+            "end": 0.7,
+            "word": "拿",
+            "probability": 0.9909191131591797
+          },
+          {
+            "start": 0.7,
+            "end": 0.9,
+            "word": "一个",
+            "probability": 0.9045175313949585
+          },
+          {
+            "start": 0.9,
+            "end": 1.14,
+            "word": "虚",
+            "probability": 0.9626490473747253
+          },
+          {
+            "start": 1.14,
+            "end": 1.34,
+            "word": "构",
+            "probability": 0.9912273287773132
+          },
+          {
+            "start": 1.34,
+            "end": 1.54,
+            "word": "情",
+            "probability": 0.36516836285591125
+          },
+          {
+            "start": 1.54,
+            "end": 1.76,
+            "word": "景",
+            "probability": 0.9072501063346863
+          },
+          {
+            "start": 1.76,
+            "end": 2.0,
+            "word": "试",
+            "probability": 0.9991582036018372
+          },
+          {
+            "start": 2.0,
+            "end": 2.76,
+            "word": "试",
+            "probability": 0.9602166414260864
+          }
+        ]
+      },
+      {
+        "start": 2.76,
+        "end": 4.98,
+        "text": "二成现金四成股票",
+        "words": [
+          {
+            "start": 2.76,
+            "end": 3.0,
+            "word": "二",
+            "probability": 0.8243511319160461
+          },
+          {
+            "start": 3.0,
+            "end": 3.22,
+            "word": "成",
+            "probability": 0.7761263251304626
+          },
+          {
+            "start": 3.22,
+            "end": 3.46,
+            "word": "现",
+            "probability": 0.9828144311904907
+          },
+          {
+            "start": 3.46,
+            "end": 3.76,
+            "word": "金",
+            "probability": 0.9981899857521057
+          },
+          {
+            "start": 3.76,
+            "end": 4.24,
+            "word": "四",
+            "probability": 0.5673367977142334
+          },
+          {
+            "start": 4.24,
+            "end": 4.46,
+            "word": "成",
+            "probability": 0.999229907989502
+          },
+          {
+            "start": 4.46,
+            "end": 4.66,
+            "word": "股",
+            "probability": 0.9909507036209106
+          },
+          {
+            "start": 4.66,
+            "end": 4.98,
+            "word": "票",
+            "probability": 0.9992623925209045
+          }
+        ]
+      },
+      {
+        "start": 5.5200000000000005,
+        "end": 7.54,
+        "text": "持有不动继续定投",
+        "words": [
+          {
+            "start": 5.52,
+            "end": 5.76,
+            "word": "持",
+            "probability": 0.9924865961074829
+          },
+          {
+            "start": 5.76,
+            "end": 5.94,
+            "word": "有",
+            "probability": 0.9965804219245911
+          },
+          {
+            "start": 5.94,
+            "end": 6.12,
+            "word": "不",
+            "probability": 0.9960915446281433
+          },
+          {
+            "start": 6.12,
+            "end": 6.32,
+            "word": "动",
+            "probability": 0.9938939213752747
+          },
+          {
+            "start": 6.32,
+            "end": 6.76,
+            "word": "继",
+            "probability": 0.943458616733551
+          },
+          {
+            "start": 6.76,
+            "end": 7.02,
+            "word": "续",
+            "probability": 0.9999521374702454
+          },
+          {
+            "start": 7.02,
+            "end": 7.18,
+            "word": "定",
+            "probability": 0.5364152193069458
+          },
+          {
+            "start": 7.18,
+            "end": 7.54,
+            "word": "投",
+            "probability": 0.9270526170730591
+          }
+        ]
+      },
+      {
+        "start": 8.219999999999999,
+        "end": 9.84,
+        "text": "结果会有什么不同",
+        "words": [
+          {
+            "start": 8.219999999999999,
+            "end": 8.7,
+            "word": "结",
+            "probability": 0.975368857383728
+          },
+          {
+            "start": 8.7,
+            "end": 9.02,
+            "word": "果",
+            "probability": 0.9993853569030762
+          },
+          {
+            "start": 9.02,
+            "end": 9.26,
+            "word": "会",
+            "probability": 0.9741339087486267
+          },
+          {
+            "start": 9.26,
+            "end": 9.38,
+            "word": "有",
+            "probability": 0.998802661895752
+          },
+          {
+            "start": 9.38,
+            "end": 9.56,
+            "word": "什么",
+            "probability": 0.9947800636291504
+          },
+          {
+            "start": 9.56,
+            "end": 9.84,
+            "word": "不同",
+            "probability": 0.9974996447563171
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "04-simulation-adjust.en.wav",
+    "language": "en",
+    "duration": 7.04,
+    "text": " Now try 40% cash. You might soften a loss or miss a rebound. Change the settings and compare for yourself.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.78,
+        "text": " Now try 40% cash.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.2,
+            "word": " Now",
+            "probability": 0.9569969177246094
+          },
+          {
+            "start": 0.2,
+            "end": 0.56,
+            "word": " try",
+            "probability": 0.8497886657714844
+          },
+          {
+            "start": 0.56,
+            "end": 0.96,
+            "word": " 40",
+            "probability": 0.9676176309585571
+          },
+          {
+            "start": 0.96,
+            "end": 1.34,
+            "word": "%",
+            "probability": 0.9107697010040283
+          },
+          {
+            "start": 1.34,
+            "end": 1.78,
+            "word": " cash.",
+            "probability": 0.771949291229248
+          }
+        ]
+      },
+      {
+        "start": 2.4,
+        "end": 4.38,
+        "text": " You might soften a loss or miss a rebound.",
+        "words": [
+          {
+            "start": 2.4,
+            "end": 2.5,
+            "word": " You",
+            "probability": 0.9958511590957642
+          },
+          {
+            "start": 2.5,
+            "end": 2.66,
+            "word": " might",
+            "probability": 0.9983018636703491
+          },
+          {
+            "start": 2.66,
+            "end": 2.98,
+            "word": " soften",
+            "probability": 0.9902642965316772
+          },
+          {
+            "start": 2.98,
+            "end": 3.16,
+            "word": " a",
+            "probability": 0.9881635308265686
+          },
+          {
+            "start": 3.16,
+            "end": 3.4,
+            "word": " loss",
+            "probability": 0.9964454770088196
+          },
+          {
+            "start": 3.4,
+            "end": 3.7,
+            "word": " or",
+            "probability": 0.9408072233200073
+          },
+          {
+            "start": 3.7,
+            "end": 3.94,
+            "word": " miss",
+            "probability": 0.7982271909713745
+          },
+          {
+            "start": 3.94,
+            "end": 4.1,
+            "word": " a",
+            "probability": 0.8222190737724304
+          },
+          {
+            "start": 4.1,
+            "end": 4.38,
+            "word": " rebound.",
+            "probability": 0.9549026489257812
+          }
+        ]
+      },
+      {
+        "start": 4.76,
+        "end": 6.84,
+        "text": " Change the settings and compare for yourself.",
+        "words": [
+          {
+            "start": 4.76,
+            "end": 5.14,
+            "word": " Change",
+            "probability": 0.9399604201316833
+          },
+          {
+            "start": 5.14,
+            "end": 5.38,
+            "word": " the",
+            "probability": 0.995654821395874
+          },
+          {
+            "start": 5.38,
+            "end": 5.72,
+            "word": " settings",
+            "probability": 0.9924483299255371
+          },
+          {
+            "start": 5.72,
+            "end": 5.98,
+            "word": " and",
+            "probability": 0.9703081250190735
+          },
+          {
+            "start": 5.98,
+            "end": 6.34,
+            "word": " compare",
+            "probability": 0.996528685092926
+          },
+          {
+            "start": 6.34,
+            "end": 6.58,
+            "word": " for",
+            "probability": 0.9893127083778381
+          },
+          {
+            "start": 6.58,
+            "end": 6.84,
+            "word": " yourself.",
+            "probability": 0.997227132320404
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "04-simulation-adjust.zh.wav",
+    "language": "zh",
+    "duration": 8.64,
+    "text": "再把现金调到四成少跌一点和错过反弹都有可能改改配置自己比较一下",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.74,
+        "text": "再把现金调到四成",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.2,
+            "word": "再",
+            "probability": 0.90625
+          },
+          {
+            "start": 0.2,
+            "end": 0.36,
+            "word": "把",
+            "probability": 0.9841418862342834
+          },
+          {
+            "start": 0.36,
+            "end": 0.54,
+            "word": "现",
+            "probability": 0.9707615971565247
+          },
+          {
+            "start": 0.54,
+            "end": 0.76,
+            "word": "金",
+            "probability": 0.9969889521598816
+          },
+          {
+            "start": 0.76,
+            "end": 1.08,
+            "word": "调",
+            "probability": 0.954147607088089
+          },
+          {
+            "start": 1.08,
+            "end": 1.2,
+            "word": "到",
+            "probability": 0.9753153324127197
+          },
+          {
+            "start": 1.2,
+            "end": 1.48,
+            "word": "四",
+            "probability": 0.4312707483768463
+          },
+          {
+            "start": 1.48,
+            "end": 1.74,
+            "word": "成",
+            "probability": 0.9800921678543091
+          }
+        ]
+      },
+      {
+        "start": 2.5,
+        "end": 5.62,
+        "text": "少跌一点和错过反弹都有可能",
+        "words": [
+          {
+            "start": 2.5,
+            "end": 3.0,
+            "word": "少",
+            "probability": 0.9235481023788452
+          },
+          {
+            "start": 3.0,
+            "end": 3.24,
+            "word": "跌",
+            "probability": 0.9643958806991577
+          },
+          {
+            "start": 3.24,
+            "end": 3.56,
+            "word": "一点",
+            "probability": 0.9923898577690125
+          },
+          {
+            "start": 3.56,
+            "end": 3.82,
+            "word": "和",
+            "probability": 0.982659101486206
+          },
+          {
+            "start": 3.82,
+            "end": 4.0,
+            "word": "错",
+            "probability": 0.9923531413078308
+          },
+          {
+            "start": 4.0,
+            "end": 4.18,
+            "word": "过",
+            "probability": 0.9949253797531128
+          },
+          {
+            "start": 4.18,
+            "end": 4.38,
+            "word": "反",
+            "probability": 0.9926815629005432
+          },
+          {
+            "start": 4.38,
+            "end": 4.68,
+            "word": "弹",
+            "probability": 0.9962697923183441
+          },
+          {
+            "start": 4.68,
+            "end": 5.1,
+            "word": "都有",
+            "probability": 0.9737511277198792
+          },
+          {
+            "start": 5.1,
+            "end": 5.62,
+            "word": "可能",
+            "probability": 0.9989443421363831
+          }
+        ]
+      },
+      {
+        "start": 6.14,
+        "end": 8.54,
+        "text": "改改配置自己比较一下",
+        "words": [
+          {
+            "start": 6.14,
+            "end": 6.64,
+            "word": "改",
+            "probability": 0.9958927631378174
+          },
+          {
+            "start": 6.64,
+            "end": 6.84,
+            "word": "改",
+            "probability": 0.9949684739112854
+          },
+          {
+            "start": 6.84,
+            "end": 7.02,
+            "word": "配",
+            "probability": 0.9930778741836548
+          },
+          {
+            "start": 7.02,
+            "end": 7.24,
+            "word": "置",
+            "probability": 0.9916324019432068
+          },
+          {
+            "start": 7.24,
+            "end": 7.72,
+            "word": "自己",
+            "probability": 0.8064237833023071
+          },
+          {
+            "start": 7.72,
+            "end": 8.04,
+            "word": "比",
+            "probability": 0.9442318677902222
+          },
+          {
+            "start": 8.04,
+            "end": 8.3,
+            "word": "较",
+            "probability": 0.972313642501831
+          },
+          {
+            "start": 8.3,
+            "end": 8.54,
+            "word": "一下",
+            "probability": 0.9930611252784729
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "05-screen.en.wav",
+    "language": "en",
+    "duration": 7.76,
+    "text": " Make the radar your own. Choose a sector and company size. Then combine oversold conditions with open market insider buying.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.08,
+        "text": " Make the radar your own.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.2,
+            "word": " Make",
+            "probability": 0.8725135326385498
+          },
+          {
+            "start": 0.2,
+            "end": 0.32,
+            "word": " the",
+            "probability": 0.9961791038513184
+          },
+          {
+            "start": 0.32,
+            "end": 0.58,
+            "word": " radar",
+            "probability": 0.9858182072639465
+          },
+          {
+            "start": 0.58,
+            "end": 0.78,
+            "word": " your",
+            "probability": 0.9954303503036499
+          },
+          {
+            "start": 0.78,
+            "end": 1.08,
+            "word": " own.",
+            "probability": 0.9988915324211121
+          }
+        ]
+      },
+      {
+        "start": 1.44,
+        "end": 3.34,
+        "text": " Choose a sector and company size.",
+        "words": [
+          {
+            "start": 1.44,
+            "end": 1.74,
+            "word": " Choose",
+            "probability": 0.9957081079483032
+          },
+          {
+            "start": 1.74,
+            "end": 1.9,
+            "word": " a",
+            "probability": 0.998573899269104
+          },
+          {
+            "start": 1.9,
+            "end": 2.24,
+            "word": " sector",
+            "probability": 0.9883934855461121
+          },
+          {
+            "start": 2.24,
+            "end": 2.54,
+            "word": " and",
+            "probability": 0.986906886100769
+          },
+          {
+            "start": 2.54,
+            "end": 2.9,
+            "word": " company",
+            "probability": 0.991814911365509
+          },
+          {
+            "start": 2.9,
+            "end": 3.34,
+            "word": " size.",
+            "probability": 0.9911695718765259
+          }
+        ]
+      },
+      {
+        "start": 3.86,
+        "end": 7.54,
+        "text": " Then combine oversold conditions with open market insider buying.",
+        "words": [
+          {
+            "start": 3.86,
+            "end": 4.04,
+            "word": " Then",
+            "probability": 0.9880890250205994
+          },
+          {
+            "start": 4.04,
+            "end": 4.38,
+            "word": " combine",
+            "probability": 0.9162480235099792
+          },
+          {
+            "start": 4.38,
+            "end": 5.04,
+            "word": " oversold",
+            "probability": 0.9777138829231262
+          },
+          {
+            "start": 5.04,
+            "end": 5.56,
+            "word": " conditions",
+            "probability": 0.9973554611206055
+          },
+          {
+            "start": 5.56,
+            "end": 5.94,
+            "word": " with",
+            "probability": 0.9969725608825684
+          },
+          {
+            "start": 5.94,
+            "end": 6.32,
+            "word": " open",
+            "probability": 0.6691059470176697
+          },
+          {
+            "start": 6.32,
+            "end": 6.74,
+            "word": " market",
+            "probability": 0.8573483824729919
+          },
+          {
+            "start": 6.74,
+            "end": 7.16,
+            "word": " insider",
+            "probability": 0.9584466814994812
+          },
+          {
+            "start": 7.16,
+            "end": 7.54,
+            "word": " buying.",
+            "probability": 0.9926518797874451
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "05-screen.zh.wav",
+    "language": "zh",
+    "duration": 10.08,
+    "text": "雷达也能按你的想法来选板块 选市值再加上超跌和高管公开市场买入组合自己的筛选条件",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.94,
+        "text": "雷达也能按你的想法来",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.24,
+            "word": "雷",
+            "probability": 0.9838950037956238
+          },
+          {
+            "start": 0.24,
+            "end": 0.5,
+            "word": "达",
+            "probability": 0.956502765417099
+          },
+          {
+            "start": 0.5,
+            "end": 0.7,
+            "word": "也",
+            "probability": 0.9892106056213379
+          },
+          {
+            "start": 0.7,
+            "end": 0.84,
+            "word": "能",
+            "probability": 0.9966955184936523
+          },
+          {
+            "start": 0.84,
+            "end": 1.02,
+            "word": "按",
+            "probability": 0.9947046637535095
+          },
+          {
+            "start": 1.02,
+            "end": 1.2,
+            "word": "你的",
+            "probability": 0.9268226623535156
+          },
+          {
+            "start": 1.2,
+            "end": 1.44,
+            "word": "想",
+            "probability": 0.9958615899085999
+          },
+          {
+            "start": 1.44,
+            "end": 1.7,
+            "word": "法",
+            "probability": 0.9999643564224243
+          },
+          {
+            "start": 1.7,
+            "end": 1.94,
+            "word": "来",
+            "probability": 0.8554313778877258
+          }
+        ]
+      },
+      {
+        "start": 1.94,
+        "end": 4.04,
+        "text": "选板块 选市值",
+        "words": [
+          {
+            "start": 1.94,
+            "end": 2.62,
+            "word": "选",
+            "probability": 0.9702171981334686
+          },
+          {
+            "start": 2.62,
+            "end": 2.84,
+            "word": "板",
+            "probability": 0.6406219005584717
+          },
+          {
+            "start": 2.84,
+            "end": 3.06,
+            "word": "块",
+            "probability": 0.9680445194244385
+          },
+          {
+            "start": 3.36,
+            "end": 3.5,
+            "word": " 选",
+            "probability": 0.999660313129425
+          },
+          {
+            "start": 3.5,
+            "end": 3.7,
+            "word": "市",
+            "probability": 0.7550337314605713
+          },
+          {
+            "start": 3.7,
+            "end": 4.04,
+            "word": "值",
+            "probability": 0.9719260334968567
+          }
+        ]
+      },
+      {
+        "start": 4.04,
+        "end": 7.8,
+        "text": "再加上超跌和高管公开市场买入",
+        "words": [
+          {
+            "start": 4.04,
+            "end": 4.74,
+            "word": "再",
+            "probability": 0.9727369546890259
+          },
+          {
+            "start": 4.74,
+            "end": 4.96,
+            "word": "加",
+            "probability": 0.9987708926200867
+          },
+          {
+            "start": 4.96,
+            "end": 5.12,
+            "word": "上",
+            "probability": 0.9982232451438904
+          },
+          {
+            "start": 5.12,
+            "end": 5.34,
+            "word": "超",
+            "probability": 0.9713535308837891
+          },
+          {
+            "start": 5.34,
+            "end": 5.72,
+            "word": "跌",
+            "probability": 0.7734953761100769
+          },
+          {
+            "start": 5.72,
+            "end": 6.06,
+            "word": "和",
+            "probability": 0.9637863039970398
+          },
+          {
+            "start": 6.06,
+            "end": 6.28,
+            "word": "高",
+            "probability": 0.9979730248451233
+          },
+          {
+            "start": 6.28,
+            "end": 6.52,
+            "word": "管",
+            "probability": 0.9928188920021057
+          },
+          {
+            "start": 6.52,
+            "end": 6.76,
+            "word": "公",
+            "probability": 0.9851689338684082
+          },
+          {
+            "start": 6.76,
+            "end": 6.98,
+            "word": "开",
+            "probability": 0.9931372404098511
+          },
+          {
+            "start": 6.98,
+            "end": 7.18,
+            "word": "市",
+            "probability": 0.9992103576660156
+          },
+          {
+            "start": 7.18,
+            "end": 7.34,
+            "word": "场",
+            "probability": 0.9996030926704407
+          },
+          {
+            "start": 7.34,
+            "end": 7.54,
+            "word": "买",
+            "probability": 0.9925404489040375
+          },
+          {
+            "start": 7.54,
+            "end": 7.8,
+            "word": "入",
+            "probability": 0.9989513158798218
+          }
+        ]
+      },
+      {
+        "start": 7.8,
+        "end": 9.98,
+        "text": "组合自己的筛选条件",
+        "words": [
+          {
+            "start": 7.8,
+            "end": 8.42,
+            "word": "组",
+            "probability": 0.9759065806865692
+          },
+          {
+            "start": 8.42,
+            "end": 8.64,
+            "word": "合",
+            "probability": 0.9971537590026855
+          },
+          {
+            "start": 8.64,
+            "end": 8.92,
+            "word": "自己",
+            "probability": 0.9940946698188782
+          },
+          {
+            "start": 8.92,
+            "end": 9.16,
+            "word": "的",
+            "probability": 0.9951890707015991
+          },
+          {
+            "start": 9.16,
+            "end": 9.3,
+            "word": "筛",
+            "probability": 0.9866211116313934
+          },
+          {
+            "start": 9.3,
+            "end": 9.48,
+            "word": "选",
+            "probability": 0.9991499185562134
+          },
+          {
+            "start": 9.48,
+            "end": 9.74,
+            "word": "条",
+            "probability": 0.9985871315002441
+          },
+          {
+            "start": 9.74,
+            "end": 9.98,
+            "word": "件",
+            "probability": 0.9998257756233215
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "06-calendar.en.wav",
+    "language": "en",
+    "duration": 9.2,
+    "text": " Then check the calendar. When are earnings, inflation data, or rate decisions do? Open past records to explore what happened around them.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.06,
+        "text": " Then check the calendar.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.26,
+            "word": " Then",
+            "probability": 0.8753432035446167
+          },
+          {
+            "start": 0.26,
+            "end": 0.5,
+            "word": " check",
+            "probability": 0.9174405932426453
+          },
+          {
+            "start": 0.5,
+            "end": 0.64,
+            "word": " the",
+            "probability": 0.9967219233512878
+          },
+          {
+            "start": 0.64,
+            "end": 1.06,
+            "word": " calendar.",
+            "probability": 0.9810118675231934
+          }
+        ]
+      },
+      {
+        "start": 1.72,
+        "end": 5.62,
+        "text": " When are earnings, inflation data, or rate decisions do?",
+        "words": [
+          {
+            "start": 1.72,
+            "end": 1.9,
+            "word": " When",
+            "probability": 0.43692171573638916
+          },
+          {
+            "start": 1.9,
+            "end": 2.06,
+            "word": " are",
+            "probability": 0.9238399267196655
+          },
+          {
+            "start": 2.06,
+            "end": 2.4,
+            "word": " earnings,",
+            "probability": 0.9850448966026306
+          },
+          {
+            "start": 2.94,
+            "end": 3.44,
+            "word": " inflation",
+            "probability": 0.994512677192688
+          },
+          {
+            "start": 3.44,
+            "end": 3.8,
+            "word": " data,",
+            "probability": 0.9937441945075989
+          },
+          {
+            "start": 4.22,
+            "end": 4.4,
+            "word": " or",
+            "probability": 0.9967267513275146
+          },
+          {
+            "start": 4.4,
+            "end": 4.84,
+            "word": " rate",
+            "probability": 0.9706145524978638
+          },
+          {
+            "start": 4.84,
+            "end": 5.3,
+            "word": " decisions",
+            "probability": 0.995191216468811
+          },
+          {
+            "start": 5.3,
+            "end": 5.62,
+            "word": " do?",
+            "probability": 0.4484233558177948
+          }
+        ]
+      },
+      {
+        "start": 6.1,
+        "end": 9.02,
+        "text": " Open past records to explore what happened around them.",
+        "words": [
+          {
+            "start": 6.1,
+            "end": 6.54,
+            "word": " Open",
+            "probability": 0.9951159954071045
+          },
+          {
+            "start": 6.54,
+            "end": 6.88,
+            "word": " past",
+            "probability": 0.7199594974517822
+          },
+          {
+            "start": 6.88,
+            "end": 7.32,
+            "word": " records",
+            "probability": 0.9966649413108826
+          },
+          {
+            "start": 7.32,
+            "end": 7.58,
+            "word": " to",
+            "probability": 0.9974121451377869
+          },
+          {
+            "start": 7.58,
+            "end": 8.02,
+            "word": " explore",
+            "probability": 0.9961557984352112
+          },
+          {
+            "start": 8.02,
+            "end": 8.24,
+            "word": " what",
+            "probability": 0.9988359808921814
+          },
+          {
+            "start": 8.24,
+            "end": 8.54,
+            "word": " happened",
+            "probability": 0.9952581524848938
+          },
+          {
+            "start": 8.54,
+            "end": 8.8,
+            "word": " around",
+            "probability": 0.9990598559379578
+          },
+          {
+            "start": 8.8,
+            "end": 9.02,
+            "word": " them.",
+            "probability": 0.9990059733390808
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "06-calendar.zh.wav",
+    "language": "zh",
+    "duration": 9.44,
+    "text": "再看日曆,財報通脹數據、利率會議哪一天發生,點開歷史記錄,回看事件前後的變化。",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 9.36,
+        "text": "再看日曆,財報通脹數據、利率會議哪一天發生,點開歷史記錄,回看事件前後的變化。",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.2,
+            "word": "再",
+            "probability": 0.8958104252815247
+          },
+          {
+            "start": 0.2,
+            "end": 0.38,
+            "word": "看",
+            "probability": 0.9976784586906433
+          },
+          {
+            "start": 0.38,
+            "end": 0.58,
+            "word": "日",
+            "probability": 0.9084275364875793
+          },
+          {
+            "start": 0.58,
+            "end": 0.76,
+            "word": "曆,",
+            "probability": 0.6849364638328552
+          },
+          {
+            "start": 1.28,
+            "end": 1.68,
+            "word": "財",
+            "probability": 0.6652831882238388
+          },
+          {
+            "start": 1.68,
+            "end": 1.92,
+            "word": "報",
+            "probability": 0.9474955201148987
+          },
+          {
+            "start": 1.92,
+            "end": 2.2,
+            "word": "通",
+            "probability": 0.8951300978660583
+          },
+          {
+            "start": 2.2,
+            "end": 2.38,
+            "word": "脹",
+            "probability": 0.7213692516088486
+          },
+          {
+            "start": 2.38,
+            "end": 2.58,
+            "word": "數",
+            "probability": 0.993911862373352
+          },
+          {
+            "start": 2.58,
+            "end": 2.88,
+            "word": "據、",
+            "probability": 0.9968493580818176
+          },
+          {
+            "start": 3.22,
+            "end": 3.34,
+            "word": "利",
+            "probability": 0.8262917995452881
+          },
+          {
+            "start": 3.34,
+            "end": 3.54,
+            "word": "率",
+            "probability": 0.9922502040863037
+          },
+          {
+            "start": 3.54,
+            "end": 3.76,
+            "word": "會",
+            "probability": 0.965803861618042
+          },
+          {
+            "start": 3.76,
+            "end": 4.06,
+            "word": "議",
+            "probability": 0.9948345422744751
+          },
+          {
+            "start": 4.06,
+            "end": 4.56,
+            "word": "哪",
+            "probability": 0.7878338098526001
+          },
+          {
+            "start": 4.56,
+            "end": 4.72,
+            "word": "一",
+            "probability": 0.9275869727134705
+          },
+          {
+            "start": 4.72,
+            "end": 4.88,
+            "word": "天",
+            "probability": 0.9992414712905884
+          },
+          {
+            "start": 4.88,
+            "end": 5.1,
+            "word": "發",
+            "probability": 0.9981884360313416
+          },
+          {
+            "start": 5.1,
+            "end": 5.34,
+            "word": "生,",
+            "probability": 0.9645507335662842
+          },
+          {
+            "start": 5.78,
+            "end": 5.98,
+            "word": "點",
+            "probability": 0.926145076751709
+          },
+          {
+            "start": 5.98,
+            "end": 6.22,
+            "word": "開",
+            "probability": 0.998508632183075
+          },
+          {
+            "start": 6.22,
+            "end": 6.36,
+            "word": "歷",
+            "probability": 0.96848925948143
+          },
+          {
+            "start": 6.36,
+            "end": 6.58,
+            "word": "史",
+            "probability": 0.9992444515228271
+          },
+          {
+            "start": 6.58,
+            "end": 6.76,
+            "word": "記",
+            "probability": 0.801059365272522
+          },
+          {
+            "start": 6.76,
+            "end": 7.44,
+            "word": "錄,",
+            "probability": 0.998769074678421
+          },
+          {
+            "start": 7.44,
+            "end": 7.72,
+            "word": "回",
+            "probability": 0.9472994804382324
+          },
+          {
+            "start": 7.72,
+            "end": 7.94,
+            "word": "看",
+            "probability": 0.9959093332290649
+          },
+          {
+            "start": 7.94,
+            "end": 8.18,
+            "word": "事",
+            "probability": 0.9946198463439941
+          },
+          {
+            "start": 8.18,
+            "end": 8.38,
+            "word": "件",
+            "probability": 0.9983832836151123
+          },
+          {
+            "start": 8.38,
+            "end": 8.58,
+            "word": "前",
+            "probability": 0.9971314668655396
+          },
+          {
+            "start": 8.58,
+            "end": 8.86,
+            "word": "後",
+            "probability": 0.9991831183433533
+          },
+          {
+            "start": 8.86,
+            "end": 8.96,
+            "word": "的",
+            "probability": 0.9975121021270752
+          },
+          {
+            "start": 8.96,
+            "end": 9.12,
+            "word": "變",
+            "probability": 0.9968966245651245
+          },
+          {
+            "start": 9.12,
+            "end": 9.36,
+            "word": "化。",
+            "probability": 0.9952048063278198
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "07-briefing.en.wav",
+    "language": "en",
+    "duration": 9.2,
+    "text": " Catch up daily or weekly on your stocks. Use simple charts to explore funding and rates. The score is context. The decision is yours.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.26,
+        "text": " Catch up daily or weekly on your stocks.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.22,
+            "word": " Catch",
+            "probability": 0.6573337912559509
+          },
+          {
+            "start": 0.22,
+            "end": 0.44,
+            "word": " up",
+            "probability": 0.9845415353775024
+          },
+          {
+            "start": 0.44,
+            "end": 0.74,
+            "word": " daily",
+            "probability": 0.9962970614433289
+          },
+          {
+            "start": 0.74,
+            "end": 1.06,
+            "word": " or",
+            "probability": 0.9658666849136353
+          },
+          {
+            "start": 1.06,
+            "end": 1.44,
+            "word": " weekly",
+            "probability": 0.9950770735740662
+          },
+          {
+            "start": 1.44,
+            "end": 1.74,
+            "word": " on",
+            "probability": 0.9971356391906738
+          },
+          {
+            "start": 1.74,
+            "end": 1.86,
+            "word": " your",
+            "probability": 0.997142493724823
+          },
+          {
+            "start": 1.86,
+            "end": 2.26,
+            "word": " stocks.",
+            "probability": 0.9980499744415283
+          }
+        ]
+      },
+      {
+        "start": 2.9,
+        "end": 5.46,
+        "text": " Use simple charts to explore funding and rates.",
+        "words": [
+          {
+            "start": 2.9,
+            "end": 3.0,
+            "word": " Use",
+            "probability": 0.9950551986694336
+          },
+          {
+            "start": 3.0,
+            "end": 3.36,
+            "word": " simple",
+            "probability": 0.9906180500984192
+          },
+          {
+            "start": 3.36,
+            "end": 3.76,
+            "word": " charts",
+            "probability": 0.997771680355072
+          },
+          {
+            "start": 3.76,
+            "end": 4.0,
+            "word": " to",
+            "probability": 0.9991982579231262
+          },
+          {
+            "start": 4.0,
+            "end": 4.44,
+            "word": " explore",
+            "probability": 0.9984713196754456
+          },
+          {
+            "start": 4.44,
+            "end": 4.84,
+            "word": " funding",
+            "probability": 0.9892925024032593
+          },
+          {
+            "start": 4.84,
+            "end": 5.1,
+            "word": " and",
+            "probability": 0.9959331154823303
+          },
+          {
+            "start": 5.1,
+            "end": 5.46,
+            "word": " rates.",
+            "probability": 0.9974682331085205
+          }
+        ]
+      },
+      {
+        "start": 6.02,
+        "end": 7.0,
+        "text": " The score is context.",
+        "words": [
+          {
+            "start": 6.02,
+            "end": 6.12,
+            "word": " The",
+            "probability": 0.9936843514442444
+          },
+          {
+            "start": 6.12,
+            "end": 6.36,
+            "word": " score",
+            "probability": 0.9945613741874695
+          },
+          {
+            "start": 6.36,
+            "end": 6.58,
+            "word": " is",
+            "probability": 0.9983691573143005
+          },
+          {
+            "start": 6.58,
+            "end": 7.0,
+            "word": " context.",
+            "probability": 0.5999295711517334
+          }
+        ]
+      },
+      {
+        "start": 7.72,
+        "end": 8.96,
+        "text": " The decision is yours.",
+        "words": [
+          {
+            "start": 7.72,
+            "end": 7.86,
+            "word": " The",
+            "probability": 0.9943742752075195
+          },
+          {
+            "start": 7.86,
+            "end": 8.24,
+            "word": " decision",
+            "probability": 0.9947001934051514
+          },
+          {
+            "start": 8.24,
+            "end": 8.68,
+            "word": " is",
+            "probability": 0.998217761516571
+          },
+          {
+            "start": 8.68,
+            "end": 8.96,
+            "word": " yours.",
+            "probability": 0.9965915679931641
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "07-briefing.zh.wav",
+    "language": "zh",
+    "duration": 10.88,
+    "text": "每天或每周,先看跟自己股票有关的事。再用折线看看资金和利率环境,分数是参考,判断还是你来做。",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.6,
+        "text": "每天或每周,先看跟自己股票有关的事。",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.24,
+            "word": "每",
+            "probability": 0.905215859413147
+          },
+          {
+            "start": 0.24,
+            "end": 0.52,
+            "word": "天",
+            "probability": 0.9898533225059509
+          },
+          {
+            "start": 0.52,
+            "end": 0.74,
+            "word": "或",
+            "probability": 0.9169098138809204
+          },
+          {
+            "start": 0.74,
+            "end": 0.92,
+            "word": "每",
+            "probability": 0.982509970664978
+          },
+          {
+            "start": 0.92,
+            "end": 1.22,
+            "word": "周,",
+            "probability": 0.9844873547554016
+          },
+          {
+            "start": 1.54,
+            "end": 1.66,
+            "word": "先",
+            "probability": 0.9126514792442322
+          },
+          {
+            "start": 1.66,
+            "end": 1.9,
+            "word": "看",
+            "probability": 0.9900683760643005
+          },
+          {
+            "start": 1.9,
+            "end": 2.06,
+            "word": "跟",
+            "probability": 0.8776722550392151
+          },
+          {
+            "start": 2.06,
+            "end": 2.3,
+            "word": "自己",
+            "probability": 0.9971352815628052
+          },
+          {
+            "start": 2.3,
+            "end": 2.6,
+            "word": "股",
+            "probability": 0.9962661266326904
+          },
+          {
+            "start": 2.6,
+            "end": 2.9,
+            "word": "票",
+            "probability": 0.9995669722557068
+          },
+          {
+            "start": 2.9,
+            "end": 3.06,
+            "word": "有",
+            "probability": 0.9939724802970886
+          },
+          {
+            "start": 3.06,
+            "end": 3.28,
+            "word": "关",
+            "probability": 0.9214860200881958
+          },
+          {
+            "start": 3.28,
+            "end": 3.44,
+            "word": "的",
+            "probability": 0.989909291267395
+          },
+          {
+            "start": 3.44,
+            "end": 3.6,
+            "word": "事。",
+            "probability": 0.9924728870391846
+          }
+        ]
+      },
+      {
+        "start": 4.02,
+        "end": 10.8,
+        "text": "再用折线看看资金和利率环境,分数是参考,判断还是你来做。",
+        "words": [
+          {
+            "start": 4.02,
+            "end": 4.46,
+            "word": "再",
+            "probability": 0.9077807664871216
+          },
+          {
+            "start": 4.46,
+            "end": 4.62,
+            "word": "用",
+            "probability": 0.9974603652954102
+          },
+          {
+            "start": 4.62,
+            "end": 4.84,
+            "word": "折",
+            "probability": 0.9479565918445587
+          },
+          {
+            "start": 4.84,
+            "end": 5.12,
+            "word": "线",
+            "probability": 0.809621661901474
+          },
+          {
+            "start": 5.12,
+            "end": 5.44,
+            "word": "看看",
+            "probability": 0.8284290432929993
+          },
+          {
+            "start": 5.44,
+            "end": 5.76,
+            "word": "资",
+            "probability": 0.993950754404068
+          },
+          {
+            "start": 5.76,
+            "end": 6.0,
+            "word": "金",
+            "probability": 0.999789297580719
+          },
+          {
+            "start": 6.0,
+            "end": 6.14,
+            "word": "和",
+            "probability": 0.9801419973373413
+          },
+          {
+            "start": 6.14,
+            "end": 6.28,
+            "word": "利",
+            "probability": 0.9891926646232605
+          },
+          {
+            "start": 6.28,
+            "end": 6.44,
+            "word": "率",
+            "probability": 0.9968516230583191
+          },
+          {
+            "start": 6.44,
+            "end": 6.68,
+            "word": "环",
+            "probability": 0.9909852147102356
+          },
+          {
+            "start": 6.68,
+            "end": 6.96,
+            "word": "境,",
+            "probability": 0.9992656111717224
+          },
+          {
+            "start": 7.38,
+            "end": 7.66,
+            "word": "分",
+            "probability": 0.9936177730560303
+          },
+          {
+            "start": 7.66,
+            "end": 7.94,
+            "word": "数",
+            "probability": 0.9389845132827759
+          },
+          {
+            "start": 7.94,
+            "end": 8.1,
+            "word": "是",
+            "probability": 0.9828454852104187
+          },
+          {
+            "start": 8.1,
+            "end": 8.34,
+            "word": "参",
+            "probability": 0.9897480010986328
+          },
+          {
+            "start": 8.34,
+            "end": 8.68,
+            "word": "考,",
+            "probability": 0.9990124702453613
+          },
+          {
+            "start": 9.18,
+            "end": 9.54,
+            "word": "判",
+            "probability": 0.9985650181770325
+          },
+          {
+            "start": 9.54,
+            "end": 9.78,
+            "word": "断",
+            "probability": 0.9995040595531464
+          },
+          {
+            "start": 9.78,
+            "end": 10.12,
+            "word": "还是",
+            "probability": 0.9674359560012817
+          },
+          {
+            "start": 10.12,
+            "end": 10.36,
+            "word": "你",
+            "probability": 0.9959867596626282
+          },
+          {
+            "start": 10.36,
+            "end": 10.58,
+            "word": "来",
+            "probability": 0.9905253648757935
+          },
+          {
+            "start": 10.58,
+            "end": 10.8,
+            "word": "做。",
+            "probability": 0.991134762763977
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "08-end.en.wav",
+    "language": "en",
+    "duration": 5.84,
+    "text": " Start free. Add one stock and give it a try. When you need the full research, Pro is $9 a month.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 5.72,
+        "text": " Start free. Add one stock and give it a try. When you need the full research, Pro is $9 a month.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.28,
+            "word": " Start",
+            "probability": 0.9243670701980591
+          },
+          {
+            "start": 0.28,
+            "end": 0.62,
+            "word": " free.",
+            "probability": 0.8805192112922668
+          },
+          {
+            "start": 1.18,
+            "end": 1.4,
+            "word": " Add",
+            "probability": 0.9776026606559753
+          },
+          {
+            "start": 1.4,
+            "end": 1.62,
+            "word": " one",
+            "probability": 0.9473860263824463
+          },
+          {
+            "start": 1.62,
+            "end": 1.9,
+            "word": " stock",
+            "probability": 0.9805226922035217
+          },
+          {
+            "start": 1.9,
+            "end": 2.12,
+            "word": " and",
+            "probability": 0.9047042727470398
+          },
+          {
+            "start": 2.12,
+            "end": 2.26,
+            "word": " give",
+            "probability": 0.9967834949493408
+          },
+          {
+            "start": 2.26,
+            "end": 2.34,
+            "word": " it",
+            "probability": 0.9976143836975098
+          },
+          {
+            "start": 2.34,
+            "end": 2.4,
+            "word": " a",
+            "probability": 0.9973709583282471
+          },
+          {
+            "start": 2.4,
+            "end": 2.7,
+            "word": " try.",
+            "probability": 0.9991208910942078
+          },
+          {
+            "start": 3.06,
+            "end": 3.22,
+            "word": " When",
+            "probability": 0.9907959699630737
+          },
+          {
+            "start": 3.22,
+            "end": 3.32,
+            "word": " you",
+            "probability": 0.9984350800514221
+          },
+          {
+            "start": 3.32,
+            "end": 3.46,
+            "word": " need",
+            "probability": 0.9989056587219238
+          },
+          {
+            "start": 3.46,
+            "end": 3.6,
+            "word": " the",
+            "probability": 0.990862250328064
+          },
+          {
+            "start": 3.6,
+            "end": 3.84,
+            "word": " full",
+            "probability": 0.9955601692199707
+          },
+          {
+            "start": 3.84,
+            "end": 4.26,
+            "word": " research,",
+            "probability": 0.9878397583961487
+          },
+          {
+            "start": 4.42,
+            "end": 4.56,
+            "word": " Pro",
+            "probability": 0.6677553057670593
+          },
+          {
+            "start": 4.56,
+            "end": 4.76,
+            "word": " is",
+            "probability": 0.9924238920211792
+          },
+          {
+            "start": 4.76,
+            "end": 5.12,
+            "word": " $9",
+            "probability": 0.870773434638977
+          },
+          {
+            "start": 5.12,
+            "end": 5.54,
+            "word": " a",
+            "probability": 0.8878710865974426
+          },
+          {
+            "start": 5.54,
+            "end": 5.72,
+            "word": " month.",
+            "probability": 0.9969037175178528
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "08-end.zh.wav",
+    "language": "zh",
+    "duration": 6.4,
+    "text": "先免费加一支股票试试看需要完整研究再选Pro每个月9美元",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.44,
+        "text": "先免费加一支股票",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.22,
+            "word": "先",
+            "probability": 0.7656955122947693
+          },
+          {
+            "start": 0.22,
+            "end": 0.42,
+            "word": "免",
+            "probability": 0.9992205202579498
+          },
+          {
+            "start": 0.42,
+            "end": 0.62,
+            "word": "费",
+            "probability": 0.9681796431541443
+          },
+          {
+            "start": 0.62,
+            "end": 0.8,
+            "word": "加",
+            "probability": 0.9843579530715942
+          },
+          {
+            "start": 0.8,
+            "end": 0.92,
+            "word": "一",
+            "probability": 0.9849836230278015
+          },
+          {
+            "start": 0.92,
+            "end": 1.02,
+            "word": "支",
+            "probability": 0.7930507063865662
+          },
+          {
+            "start": 1.02,
+            "end": 1.18,
+            "word": "股",
+            "probability": 0.9927453398704529
+          },
+          {
+            "start": 1.18,
+            "end": 1.44,
+            "word": "票",
+            "probability": 0.9996426105499268
+          }
+        ]
+      },
+      {
+        "start": 1.44,
+        "end": 2.3,
+        "text": "试试看",
+        "words": [
+          {
+            "start": 1.44,
+            "end": 1.9,
+            "word": "试",
+            "probability": 0.8176003992557526
+          },
+          {
+            "start": 1.9,
+            "end": 2.04,
+            "word": "试",
+            "probability": 0.9979899823665619
+          },
+          {
+            "start": 2.04,
+            "end": 2.3,
+            "word": "看",
+            "probability": 0.9996973276138306
+          }
+        ]
+      },
+      {
+        "start": 2.3,
+        "end": 3.82,
+        "text": "需要完整研究",
+        "words": [
+          {
+            "start": 2.3,
+            "end": 2.9,
+            "word": "需要",
+            "probability": 0.5287480354309082
+          },
+          {
+            "start": 2.9,
+            "end": 3.18,
+            "word": "完",
+            "probability": 0.9662024974822998
+          },
+          {
+            "start": 3.18,
+            "end": 3.36,
+            "word": "整",
+            "probability": 0.9998437166213989
+          },
+          {
+            "start": 3.36,
+            "end": 3.54,
+            "word": "研",
+            "probability": 0.9948574006557465
+          },
+          {
+            "start": 3.54,
+            "end": 3.82,
+            "word": "究",
+            "probability": 0.998958945274353
+          }
+        ]
+      },
+      {
+        "start": 3.82,
+        "end": 4.76,
+        "text": "再选Pro",
+        "words": [
+          {
+            "start": 3.82,
+            "end": 4.24,
+            "word": "再",
+            "probability": 0.47782719135284424
+          },
+          {
+            "start": 4.24,
+            "end": 4.42,
+            "word": "选",
+            "probability": 0.9982588887214661
+          },
+          {
+            "start": 4.42,
+            "end": 4.76,
+            "word": "Pro",
+            "probability": 0.40935295820236206
+          }
+        ]
+      },
+      {
+        "start": 4.76,
+        "end": 6.06,
+        "text": "每个月9美元",
+        "words": [
+          {
+            "start": 4.76,
+            "end": 5.26,
+            "word": "每",
+            "probability": 0.8399854302406311
+          },
+          {
+            "start": 5.26,
+            "end": 5.42,
+            "word": "个",
+            "probability": 0.9763009548187256
+          },
+          {
+            "start": 5.42,
+            "end": 5.56,
+            "word": "月",
+            "probability": 0.9988471269607544
+          },
+          {
+            "start": 5.56,
+            "end": 5.8,
+            "word": "9",
+            "probability": 0.8253989815711975
+          },
+          {
+            "start": 5.8,
+            "end": 6.06,
+            "word": "美元",
+            "probability": 0.9787052273750305
+          }
+        ]
+      }
+    ]
+  }
+]

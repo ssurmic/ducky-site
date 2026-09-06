@@ -1,5 +1,7 @@
 # Ducky product walkthrough · September 6, 2026
 
+The first release below has been superseded by the bilingual voice-v3 walkthrough. See [updated production and verification](DEMO-VOICE-2026-09-06.md). Earlier media remain available for rollback.
+
 The homepage now includes a 65-second narrated walkthrough before the interactive stock example. The hero's secondary link opens it. Native controls, no autoplay, preload none, a dated poster, Chinese and English WebVTT captions and an expandable transcript keep it usable on phones and without sound. No external video platform or tracker is required.
 
 ## What the film shows
