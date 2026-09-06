@@ -82,7 +82,7 @@ export async function mount(root) {
     const head = el("div.snap-head",
       el("a.ticker.mono", { href: "#/chart/" + t }, "$" + t),
       el("span.spot.mono", snap && snap.ok ? px(snap.spot) : ""),
-      snap && snap.ok ? el("span.chip", { class: snap.tech && snap.tech.oversold ? "chip-red" : "chip-dim" }, snap.tech && snap.tech.oversold ? s("watch.oversold") : s("watch.not_oversold")) : null,
+      snap && snap.ok && typeof snap.tech?.oversold === "boolean" ? el("span.chip", { class: snap.tech && snap.tech.oversold ? "chip-red" : "chip-dim" }, snap.tech && snap.tech.oversold ? s("watch.oversold") : s("watch.not_oversold")) : null,
       el("span.spacer"),
       el("a.btn.btn-ghost.btn-sm", { href: "#/chart/" + t }, s("watch.chart")),
       el("button.btn.btn-ghost.btn-sm.danger", { type: "button", "aria-label": s("watch.remove") + " " + t, onclick: () => onRemove(t) }, "✕"));
@@ -131,6 +131,8 @@ export async function mount(root) {
       c.appendChild(lock(pro));
     }
     c.appendChild(el("div.snap-actions",
+      el("a.btn.btn-ghost.btn-sm", { href: "#/creators?ticker=" + encodeURIComponent(t) }, s("watch.creator_mentions")),
+      el("a.btn.btn-ghost.btn-sm", { href: "#/boards?mode=archive&ticker=" + encodeURIComponent(t) }, s("watch.radar_records")),
       el("a.btn.btn-ghost.btn-sm", { href: "#/research/" + encodeURIComponent(t) }, s("research.title")),
       el("a.btn.btn-primary.btn-sm", { href: "#/alerts?ticker=" + encodeURIComponent(t) }, s("watch.set_alert")),
       el("a.btn.btn-ghost.btn-sm", { href: "#/calendar?ticker=" + encodeURIComponent(t) }, s("watch.events"))));

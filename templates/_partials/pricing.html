@@ -1,64 +1,12 @@
-{# Prices follow the selected language; amounts match the published billing plans. #}
+{# Currency is a payment preference, independent of interface language. #}
 {% set pro = prices.pro %}
-<section class="section pricing" id="pricing">
-  <div class="wrap">
-    <h2>{{ t('pricing.h2') }}</h2>
-    <p class="lead">{{ t('pricing.lead') }}</p>
-
-    {% if not is_zh %}<div class="billing-toggle mono" role="group" aria-label="billing">
-      <button type="button" data-billing="monthly" aria-pressed="true" class="on">{{ t('pricing.toggle_monthly') }}</button>
-      <button type="button" data-billing="annual" aria-pressed="false">{{ t('pricing.toggle_annual') }}</button>
-    </div>
-
-    {% endif %}<div class="tiers tiers-unified" data-billing-mode="{{ 'annual' if is_zh else 'monthly' }}">
-      <article class="tier tier-free">
-        <h3>{{ t('pricing.free_name') }}</h3>
-        <p class="price mono">{{ t('pricing.free_price') }}</p>
-        <p class="tier-pos">{{ t('pricing.free_position') }}</p>
-        <dl class="tier-rows">
-          <dt>{{ t('pricing.row_firehose') }}</dt><dd>{{ t('pricing.free_firehose') }}</dd>
-          <dt>{{ t('pricing.row_dm') }}</dt><dd>{{ t('pricing.free_dm') }}</dd>
-          <dt>{{ t('pricing.row_alerts') }}</dt><dd class="mono">{{ t('pricing.free_alerts') }}</dd>
-          <dt>{{ t('pricing.row_cadence') }}</dt><dd>{{ t('pricing.free_cadence') }}</dd>
-          <dt>{{ t('pricing.row_extras') }}</dt><dd>{{ t('pricing.free_extras') }}</dd>
-        </dl>
-        <a class="btn btn-ghost" href="{{ url('/app/') }}#/register" rel="noopener">{{ t('pricing.free_cta_channel') if has_channel else t('pricing.free_cta_bot') }}</a>
-        {% if has_channel %}<a class="tier-alt mono" href="{{ url('/app/') }}#/register" rel="noopener">{{ t('pricing.free_cta_bot') }}</a>{% endif %}
-      </article>
-
-      <article class="tier tier-pro">
-        <h3>{{ t('pricing.pro_name') }}</h3>
-        <p class="price mono">
-          {% if is_zh %}<span>¥{{ pro.annual_cny }}<small>{{ t('pricing.per_yr') }}</small></span>{% else %}
-          <span class="price-monthly">${{ pro.monthly_usd }}<small>{{ t('pricing.per_mo') }}</small></span>
-          <span class="price-annual">${{ pro.annual_usd }}<small>{{ t('pricing.per_yr') }}</small> <em class="save">{{ t('pricing.save') }} {{ pro.save_pct }}%</em></span>{% endif %}
-        </p>
-        <p class="tier-pos">{{ t('pricing.pro_position') }}</p>
-        <dl class="tier-rows">
-          <dt>{{ t('pricing.row_firehose') }}</dt><dd>{{ t('pricing.pro_firehose') }}</dd>
-          <dt>{{ t('pricing.row_dm') }}</dt><dd>{{ t('pricing.pro_dm') }}</dd>
-          <dt>{{ t('pricing.row_alerts') }}</dt><dd class="mono">{{ t('pricing.pro_alerts') }}</dd>
-          <dt>{{ t('pricing.row_cadence') }}</dt><dd>{{ t('pricing.pro_cadence') }}</dd>
-          <dt>{{ t('pricing.row_extras') }}</dt><dd>{{ t('pricing.pro_extras') }}</dd>
-        </dl>
-        <a class="btn btn-primary" href="{{ url('/app/') }}#/billing" rel="noopener">{{ t('pricing.pro_cta') }}</a>
-      </article>
-
-
-    </div>
-
-    <div class="picker">
-      <h3>{{ t('pricing.picker_title') }}</h3>
-      <ul>
-        <li>{{ t('pricing.picker_1') }}</li>
-        <li>{{ t('pricing.picker_2') }}</li>
-        {% if is_zh %}<li>{{ t('pricing.picker_3') }}</li>{% endif %}
-      </ul>
-      <p class="same-ledger">{{ t('pricing.same_ledger') }}</p>
-    </div>
-
-    <p class="under">{{ t('pricing.under') }}</p>
-    <p class="microfaq"><b>{{ t('pricing.microfaq_q') }}</b> {{ t('pricing.microfaq_a') }}</p>
-    <p class="strip mono">{{ t('pricing.strip') }}</p>
-  </div>
-</section>
+<section class="section pricing pricing-compact" id="pricing"><div class="wrap">
+ <div class="price-intro"><div><h2>{{ t('pricing.h2') }}</h2><p>{{ t('pricing.lead') }}</p></div><a class="btn btn-ghost" href="{{ url('/app/') }}#/register">{{ t('pricing.free_cta_bot') }}</a></div>
+ <details class="plan-details"><summary>{{ t('pricing.compare') }} <span class="mono">Pro ${{ pro.monthly_usd }}{{ t('pricing.per_mo') }}</span></summary>
+ <p class="muted small">{{ t('pricing.currency_note') }}</p>
+ <div class="tiers tiers-unified" data-billing-mode="monthly">
+  <article class="tier tier-free"><h3>{{ t('pricing.free_name') }}</h3><p class="price mono">$0</p><p>{{ t('pricing.free_firehose') }}</p><p>{{ t('pricing.free_extras') }}</p><p>{{ t('pricing.free_alerts') }} {{ t('pricing.row_alerts') }}</p></article>
+  <article class="tier tier-pro"><h3>Pro</h3><p class="price mono">${{ pro.monthly_usd }}<small>{{ t('pricing.per_mo') }}</small></p><p class="mono">${{ pro.annual_usd }}{{ t('pricing.per_yr') }} · ¥{{ pro.annual_cny }}{{ t('pricing.per_yr') }}</p><p>{{ t('pricing.pro_dm') }}</p><p>{{ t('pricing.pro_extras') }}</p><a class="btn btn-ghost" href="{{ url('/app/') }}#/billing">{{ t('pricing.pro_cta') }}</a></article>
+ </div><p class="under">{{ t('pricing.under') }}</p><p class="small">{{ t('pricing.microfaq_a') }}</p>
+ </details>
+</div></section>

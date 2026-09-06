@@ -735,3 +735,5 @@ body:is([data-route="register"],[data-route="oauth"]) .app-nav { display:none; }
 .prediction-outcome strong { color: var(--accent); }
 .prediction-rules { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 18rem; overflow: auto; }
 @media(max-width:560px) { .market-topics { grid-template-columns: 1fr; } .market-topic { padding: .85rem; } }
+
+.billing-currency{margin:20px 0}.billing-currency label{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.billing-currency select{padding:10px 12px;max-width:100%;border:1px solid var(--line,#343b44);border-radius:10px;background:var(--card,#12161b);color:inherit}

@@ -10,7 +10,7 @@ import * as tg from "../tg.js";
 import * as auth from "../auth.js";
 import { el, clear, toast, spinner, errorBox, tierName, date, num } from "../ui.js";
 
-let selected = { tier: "pro", months: LANG === "zh" ? 12 : 1 };
+let selected = { tier: "pro", months: 1, currency: "USD" };
 // crypto orders carry a unique sub-cent / sat suffix (crypto_watch matches on it) — never round it away.
 // Prefer the server's authoritative amount string; else format at the rail's real precision, not 2dp.
 function amtStr(o) {
@@ -29,10 +29,10 @@ let onPayStars = null, starsReady = false;
 /** Backend rail id for a button; the QR route wants the short name back (manual_alipay → alipay). */
 const CNY_RAILS = ["manual_alipay", "manual_wechat"];
 export function isCnyRail(rail) { return CNY_RAILS.includes(rail); }
-export function railForLanguage(rail, lang) { return lang === "zh" || !isCnyRail(rail); }
-export function localizedPrice(p, months, lang) {
+export function railForCurrency(rail, currency) { return currency === "CNY" ? isCnyRail(rail) : !isCnyRail(rail); }
+export function localizedPrice(p, months, currency) {
   if (!p) return "—";
-  if (lang === "zh" && months === 12 && p.annual_cny) return "¥" + num(p.annual_cny, 0) + s("billing.per_yr");
+  if (currency === "CNY" && p.annual_cny) return "¥" + num(p.annual_cny, 0) + s("billing.per_yr");
   const value = months === 12 ? p.annual_usd : p.monthly_usd;
   return value == null ? "—" : "$" + num(value, 0) + s(months === 12 ? "billing.per_yr" : "billing.per_mo");
 }
@@ -101,15 +101,24 @@ export async function mount(root) {
   const picker = el("div.picker", el("b", s("billing.pick_title")), el("p", s("billing.pick_pro")), el("p.muted.small", s("billing.legacy_preserved")));
   const toggle = el("div.seg.mono", { role: "group" },
     ["monthly", "annual"].map((m) => el("button", { type: "button", "data-m": m, class: (m === "annual") === (selected.months === 12) ? "on" : "", onclick: () => { selected.months = m === "annual" ? 12 : 1; toggle.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.m === m)); renderTiers(); renderRails(); } }, s("billing." + m))));
+  const currencySelect = el("select", {"aria-label":s("billing.currency"), onchange:()=>{
+    selected.currency=currencySelect.value;
+    if(selected.currency==="CNY")selected.months=12;
+    toggle.hidden=selected.currency==="CNY";
+    toggle.querySelectorAll("button").forEach(b=>b.classList.toggle("on", (b.dataset.m==="annual")===(selected.months===12)));
+    renderTiers();renderRails();
+  }}, ["USD","CNY"].map(value=>el("option",{value,selected:value===selected.currency},s("billing.currency_"+value))));
+  const currencyPicker=el("div.billing-currency",el("label",s("billing.currency"),currencySelect),el("p.muted.small",s("billing.currency_note")));
+  toggle.hidden=selected.currency==="CNY";
   const tiers = el("div.tier-cards");
   const rails = el("section.rails");
   const panel = el("section.pay-panel", { hidden: true });
   const ordersBox = el("section.orders", el("h2", s("billing.orders")), spinner());
   const foot = el("p.muted.small.billing-foot", s("billing.disclaimer") + " ", el("a", { href: (LANG === "zh" ? "" : "/en") + "/disclaimer/" }, s("billing.disclaimer_link")));
-  root.append(head, picker, toggle, tiers, rails, panel, ordersBox, foot);
+  root.append(head, picker, currencyPicker, toggle, tiers, rails, panel, ordersBox, foot);
 
   function price(p) {
-    return localizedPrice(p, selected.months, LANG);
+    return localizedPrice(p, selected.months, selected.currency);
   }
   function renderTiers() {
     clear(tiers);
@@ -129,7 +138,7 @@ export async function mount(root) {
     const amount = isCnyRail(r) ? p?.annual_cny : r === "stars" ? (annual ? p?.stars_annual : p?.stars_monthly) : (annual ? p?.annual_usd : p?.monthly_usd);
     return { amount, unit: isCnyRail(r) ? "CNY" : r === "stars" ? "Stars" : "USD", annual };
   }
-  function railEnabled(r) { const q = railQuote(r); return railForLanguage(r, LANG) && !!plans?.rails?.includes(r) && Number.isFinite(q.amount) && q.amount > 0; }
+  function railEnabled(r) { const q = railQuote(r); return railForCurrency(r, selected.currency) && !!plans?.rails?.includes(r) && Number.isFinite(q.amount) && q.amount > 0; }
   function railLabel(key, r) { const q = railQuote(r); return s(key) + " · " + num(q.amount, Number.isInteger(q.amount) ? 0 : 2) + " " + q.unit + " / " + s(q.annual ? "billing.annual" : "billing.monthly"); }
   function renderRails() {
     clear(rails);

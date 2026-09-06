@@ -1,0 +1,12 @@
+<section class="section home-stock-workspace" id="features" data-home-demo data-api="{{ cfg.api_base }}" data-app="{{ url('/app/') }}" data-lang="{{ lang }}">
+ <div class="wrap"><p class="eyebrow mono">{{ t('demo.eyebrow') }}</p><h2>{{ t('demo.title') }}</h2><p class="lead">{{ t('demo.intro') }}</p>
+ <div class="stock-demo-grid"><div class="stock-demo-main">
+  <form class="stock-demo-form"><label for="demo-ticker">{{ t('demo.ticker') }}</label><div class="stock-demo-input"><input id="demo-ticker" name="ticker" value="NVDA" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" pattern="[A-Za-z][A-Za-z0-9.\-]{0,11}" required><button class="btn btn-primary" type="submit">{{ t('demo.load') }}</button></div></form>
+  <div class="demo-stock-examples"><span>{{ t('demo.examples') }}</span>{% for ticker in ['NVDA','ORCL','GLW'] %}<button type="button" class="chip" data-demo-ticker="{{ ticker }}">{{ ticker }}</button>{% endfor %}</div>
+  <p class="small muted" data-demo-status role="status" aria-live="polite">{{ t('demo.ready') }}</p><div class="demo-records" data-demo-records></div>
+  <div class="demo-next" data-demo-links hidden></div>
+ </div><aside class="demo-background"><h3>{{ t('demo.market') }}</h3><p class="small muted">{{ t('demo.market_note') }}</p><button type="button" class="btn btn-ghost" data-demo-market-load>{{ t('demo.market_load') }}</button><div data-demo-market role="status" aria-live="polite"></div><a class="small" href="{{ url('/app/') }}#/boards">{{ t('demo.full_context') }} →</a></aside></div>
+ <div class="demo-paths"><article><span class="eyebrow mono">01</span><h3>{{ t('demo.path_stock') }}</h3><p>{{ t('demo.path_stock_body') }}</p><a href="{{ url('/app/') }}#/register">{{ t('demo.path_stock_cta') }} →</a></article><article><span class="eyebrow mono">02</span><h3>{{ t('demo.path_radar') }}</h3><p>{{ t('demo.path_radar_body') }}</p><a href="{{ url('/app/') }}#/boards?screen=insider-oversold">{{ t('demo.path_radar_cta') }} →</a></article><article><span class="eyebrow mono">03</span><h3>{{ t('demo.path_creator') }}</h3><p>{{ t('demo.path_creator_body') }}</p><a href="{{ url('/app/') }}#/creators?tab=lab&amp;preview=fictional">{{ t('demo.path_creator_cta') }} →</a></article></div>
+ <script type="application/json" data-demo-copy>{{ demo_copy|tojson }}</script>
+ </div>
+</section>

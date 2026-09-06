@@ -34,14 +34,15 @@ test('homepage uses illustrative locked previews, one sourced video and readable
   assert.deepEqual(links.map(a=>new URL(a.href).searchParams.get('t')),['3s','349s','700s']);
  }
 });
-test('localized storefront prices match the configured currency without mixed annual cards',()=>{
- const prices=json('site.config.json').prices;
- for(const [prefix,currency,amounts] of [['en/','$',[prices.pro.monthly_usd,prices.pro.annual_usd]],['','¥',[prices.pro.annual_cny]]]) {
-  const d=new JSDOM(readFileSync(`dist/${prefix}index.html`,'utf8')).window.document, p=d.querySelector('#pricing');
+test('storefront leads with a free journey and keeps all payment currencies inside a compact comparison',()=>{
+ const prices=json('site.config.json').prices.pro;
+ for(const prefix of ['', 'en/']) {
+  const d=new JSDOM(readFileSync(`dist/${prefix}index.html`,'utf8')).window.document,p=d.querySelector('#pricing');
   assert.equal(p.querySelectorAll('.tier').length,2);
-  for(const amount of amounts)assert.ok(p.textContent.includes(currency+amount));
-  if(prefix)assert.doesNotMatch(p.textContent,/¥|CNY|RMB|人民币|China/);
-  else assert.doesNotMatch(p.textContent,/\$/);
-  assert.ok(p.querySelector(`.tier-free a[href="/${prefix}app/#/register"]`));
+  assert.ok(p.querySelector('details:not([open])'));
+  assert.ok(p.textContent.includes('$'+prices.monthly_usd));
+  assert.ok(p.textContent.includes('$'+prices.annual_usd));
+  assert.ok(p.textContent.includes('¥'+prices.annual_cny));
+  assert.ok(p.querySelector(`a[href="/${prefix}app/#/register"]`));
  }
 });

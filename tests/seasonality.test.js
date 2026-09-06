@@ -6,7 +6,7 @@ const dom=new JSDOM('<html lang="en" data-lang="en"><body></body></html>');
 for(const k of ['window','document','Node'])globalThis[k]=dom.window[k];
 const copy=JSON.parse(readFileSync('i18n/en.json'));const text=document.createElement('script');text.id='ducky-strings';text.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(text);
 const {observations,stats,renderSeasonality,mountSeasonality}=await import('../public/js/app/seasonality.js');
-const {localizedPrice,railForLanguage}=await import('../public/js/app/views/billing.js');
+const {localizedPrice,railForCurrency}=await import('../public/js/app/views/billing.js');
 const data=JSON.parse(readFileSync('public/seasonality.json'));
 test('snapshot month returns reconcile to dated adjusted closes and omit unfinished months',()=>{
  assert.equal(data.rows.length,320);assert.equal(data.as_of,'2026-08-31');
@@ -54,8 +54,8 @@ test('disposed history panel ignores delayed data',async()=>{
 });
 test('billing prices follow locale while payment amounts keep their actual denomination',()=>{
  const p={annual_usd:90,monthly_usd:9,annual_cny:499};
- assert.ok(localizedPrice(p,12,'en').startsWith('$90'));
- assert.ok(localizedPrice(p,12,'zh').startsWith('¥499'));
- assert.equal(railForLanguage('manual_alipay','en'),false);assert.equal(railForLanguage('manual_wechat','zh'),true);
- assert.equal(railForLanguage('stars','en'),true);assert.equal(railForLanguage('stripe','en'),true);
+ assert.ok(localizedPrice(p,12,'USD').startsWith('$90'));
+ assert.ok(localizedPrice(p,12,'CNY').startsWith('¥499'));
+ assert.equal(railForCurrency('manual_alipay','USD'),false);assert.equal(railForCurrency('manual_wechat','CNY'),true);
+ assert.equal(railForCurrency('stars','USD'),true);assert.equal(railForCurrency('stripe','USD'),true);
 });

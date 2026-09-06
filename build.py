@@ -595,6 +595,7 @@ def main() -> None:
             ctx = build_context(cfg, tables, lang, Path(tpl_name).stem, rel, version, liq, track_n, track_stats)
             ctx["oversold"] = load_oversold_research()
             ctx["video_example"] = video_example
+            ctx["demo_copy"] = {k[8:]: v for k, v in tables[lang].items() if k.startswith("demo.ui.")}
             html = version_assets(tpl.render(**ctx), version, app_version)
             if tpl_name == "app.html":
                 validate_app_strings(html, tables[lang], lang)
