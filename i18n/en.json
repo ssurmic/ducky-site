@@ -2139,5 +2139,10 @@
   "app.macro.variant_macro_gate": "Filtered",
   "app.macro.association": "In this six-month sample, the correlation of 20-session yield changes with QQQ-minus-SPY returns was {nominal} for nominal yields and {real} for real yields (N={n}; overlapping observations). This is descriptive, not evidence of causation.",
   "app.macro.forward": "Supportive scores can still precede declines",
-  "app.macro.forward_sample": "Across {n} non-overlapping 20-session windows, QQQ lost money in {losses}; the worst return was {worst}%. These windows do not establish independent or prospective validation."
+  "app.macro.forward_sample": "Across {n} non-overlapping 20-session windows, QQQ lost money in {losses}; the worst return was {worst}%. These windows do not establish independent or prospective validation.",
+  "app.macro.tail": "SOFR p99 − IORB",
+  "app.macro.reserves": "Bank reserves",
+  "app.macro.tga": "Treasury General Account",
+  "app.macro.usd_change": "Broad dollar · 20-session change",
+  "app.macro.incomplete": "Incomplete funding inputs imply a possible range of {low}–{high}, not an observed score. Unavailable contributions remain marked below."
 }

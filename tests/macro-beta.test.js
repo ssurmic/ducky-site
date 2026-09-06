@@ -44,3 +44,9 @@ test('free macro card never requests private data; account change suppresses pen
  const root=document.createElement('div'),clean=mountMacroBeta(root);store.bumpEpoch();store.set('me',null);done(response(fixture()));await tick();
  assert.equal(root.querySelector('svg'),null);clean();
 });
+
+test('missing funding displays an uncertainty range without manufacturing a score',()=>{
+ const doc=fixture();doc.latest.funding_score=null;doc.latest.beta_score=null;doc.latest.funding_range=[12.5,42.5];
+ const box=renderMacroBeta(doc);assert.match(box.textContent,/12.5–42.5/);assert.match(box.textContent,/not an observed score/);
+ assert.equal(box.querySelector('.macro-score strong').textContent,'—');
+});

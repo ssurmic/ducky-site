@@ -2139,5 +2139,10 @@
   "app.macro.variant_macro_gate": "增加过滤",
   "app.macro.association": "这六个月里，20 个交易日的收益率变化与 QQQ 相对 SPY 收益的相关系数：名义利率 {nominal}、实际利率 {real}（N={n}，窗口重叠）。这只是样本描述，不能证明因果关系。",
   "app.macro.forward": "分数偏支持时，后续 20 个交易日也可能下跌",
-  "app.macro.forward_sample": "在 {n} 段不重叠的历史窗口中，QQQ 有 {losses} 段亏损，最差 {worst}%。这些窗口不等于独立或前瞻验证。"
+  "app.macro.forward_sample": "在 {n} 段不重叠的历史窗口中，QQQ 有 {losses} 段亏损，最差 {worst}%。这些窗口不等于独立或前瞻验证。",
+  "app.macro.tail": "SOFR 第 99 百分位 − IORB",
+  "app.macro.reserves": "银行准备金",
+  "app.macro.tga": "财政部一般账户",
+  "app.macro.usd_change": "广义美元 · 20 交易日变化",
+  "app.macro.incomplete": "资金面有缺失输入，可能范围为 {low}–{high}，这不是已观察到的分数。缺失贡献在下方保留为空。"
 }

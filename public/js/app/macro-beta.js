@@ -34,6 +34,7 @@ export function renderMacroBeta(doc){
   const scores=el('div.macro-scores');
   for(const[key,label]of [['beta_score','beta'],['funding_score','funding'],['rates_score','rates']])scores.append(el('div.macro-score',el('span.small.muted',s('macro.'+label)),el('strong.mono',fmt(latest[key])),el('span.small.muted',s('macro.points'))));
   box.append(scores,el('p.macro-annotation',s('macro.annotation_'+(latest.annotation||'unknown'))),el('p.small.muted',s('macro.not_probability')));
+  if(!OK(latest.funding_score)&&latest.funding_range?.every(OK))box.append(el('p.data-notice',s('macro.incomplete',{low:fmt(latest.funding_range[0]),high:fmt(latest.funding_range[1])})));
   let range='6',mode='beta',selectedDate=latest.date;
   const controls=el('div.macro-controls'),rangeButtons=el('div.macro-tabs',{'aria-label':s('macro.range')}),modeButtons=el('div.macro-tabs',{'aria-label':s('macro.view')});
   const chart=el('div.macro-chart'),readout=el('div.macro-readout',{'aria-live':'polite','aria-atomic':'true'}),legend=el('div.macro-legend');
@@ -66,7 +67,7 @@ export function renderMacroBeta(doc){
   render();
   const evidence=el('details.macro-evidence',el('summary',s('macro.evidence')));
   const metrics=el('div.macro-metrics');
-  for(const[key,label,unit]of [['spread_bp','spread','bp'],['rrp_bn','rrp','bn'],['srf_bn','srf','bn'],['net_liquidity_65d_change_bn','net_change','bn'],['nominal_10y','nominal','%'],['real_10y','real','%'],['nfci_credit','credit',''],['nfci_risk','risk','']])metrics.append(el('div',el('span.small.muted',s('macro.'+label)),el('strong.mono',fmt(latest.metrics?.[key],2)+' '+unit)));
+  for(const[key,label,unit]of [['spread_bp','spread','bp'],['tail_bp','tail','bp'],['reserves_bn','reserves','bn'],['tga_bn','tga','bn'],['broad_usd_20d_change_pct','usd_change','%'],['rrp_bn','rrp','bn'],['srf_bn','srf','bn'],['net_liquidity_65d_change_bn','net_change','bn'],['nominal_10y','nominal','%'],['real_10y','real','%'],['nfci_credit','credit',''],['nfci_risk','risk','']])metrics.append(el('div',el('span.small.muted',s('macro.'+label)),el('strong.mono',fmt(latest.metrics?.[key],2)+' '+unit)));
   evidence.append(metrics,el('p.small.muted',s('macro.coverage',{complete:doc.coverage?.complete_scores||0,total:doc.coverage?.sessions||0})),el('h3',s('macro.contributions')));
   const contributionList=el('dl.macro-contributions');
   for(const[key,value]of Object.entries(latest.contributions||{}))contributionList.append(el('dt',s('macro.factor_'+key)),el('dd.mono',fmt(value)));
