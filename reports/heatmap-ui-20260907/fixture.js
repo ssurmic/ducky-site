@@ -1,0 +1,23 @@
+const p=new URLSearchParams(location.search);
+document.documentElement.dataset.theme=p.get('theme')||'dark';
+window.DUCKY={API_BASE:'',BOT:'',MINIAPP:'app'};
+localStorage.clear();localStorage.setItem('ducky-watch-view','heatmap');
+const samples=[['AVGO','Broadcom Inc.',1750,.21],['ORCL','Oracle Corporation',890,3.08],['ALAB','Astera Labs, Inc.',48,9.75],['CBRS','Cerebras Systems Inc.',42,10.3],['CRWV','CoreWeave, Inc.',60,5.68],['COIN','Coinbase Global, Inc.',57,-4.18],['BMNR','BitMine Immersion Technologies',8,-5.60],['OKLO','Oklo Inc.',5,3.59],['SBET','SharpLink, Inc.',2,-3.34]];
+const names='BE NVDA INTC GLW MSFT AAPL GOOGL AMZN META TSLA AVGO ORCL AMD QCOM TXN MU AMAT LRCX KLAC ASML ADI ARM MRVL ALAB CRDO PLTR SNOW NET DDOG CRM NOW ADBE SHOP UBER ABNB BKNG ROKU NFLX SPOT PYPL COIN HOOD COST WMT TGT LOW DELL HPE SMCI AMKR'.split(' ');
+let items=(p.get('case')==='fifty'?names.map((n,i)=>[n,'QA Company '+i,10*(1-i/250),i===49?null:(i-25)/2]):samples).map(([ticker,company,cap,change])=>({ticker,company,market_cap:cap*1e9,market_cap_status:'ready',market_cap_currency:'USD',market_cap_as_of:'2026-09-07T00:00:00Z',price:100,change_pct:change,price_status:change===null?'missing':'ready',price_session:'2026-09-04',industry:'QA industry'}));
+if(p.get('case')==='missing')items=[{...items[0],change_pct:null,price:null,price_status:'missing'},{...items[1],change_pct:0},{...items[2],security_type:'ETF'}, {...items[3],market_cap_status:'stale'}];
+window.fixtureCalls=[];window.fixtureErrors=[];
+window.addEventListener('error',e=>window.fixtureErrors.push(e.message));
+window.addEventListener('unhandledrejection',e=>window.fixtureErrors.push(String(e.reason)));
+window.fetch=async(input,opts={})=>{
+ const url=new URL(String(input),location.origin),method=opts.method||'GET';
+ window.fixtureCalls.push({path:url.pathname,method});
+ if(method!=='GET'||url.origin!==location.origin)throw Error('QA rejects writes and remote requests');
+ const body=url.pathname==='/watchlist'?{items,overview:{items,session:'2026-09-04',previous_session:'2026-09-03'}}:url.pathname.startsWith('/snapshot')?{snapshot:{ok:false}}:{items:[]};
+ return new Response(JSON.stringify(body),{headers:{'content-type':'application/json'}});
+};
+const store=await import('/js/app/store.js');
+store.set('me',{id:900001,tier:'pro',watch_cap:50});store.set('watchlist',items.map(r=>r.ticker));store.set('snapshots',{});
+location.hash='#/watchlist';
+const {mount}=await import('/js/app/views/watchlist.js');
+await mount(document.getElementById('view'));window.fixtureReady=true;

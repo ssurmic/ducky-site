@@ -5,7 +5,7 @@ import {readFileSync} from 'node:fs';
 const dom=new JSDOM('<html lang="en"><body><main id="view"></main></body></html>',{url:'https://ducky.test/app/#/watchlist'});
 for(const k of ['window','document','Node','location','history','localStorage'])globalThis[k]=dom.window[k];
 const copy=JSON.parse(readFileSync('i18n/en.json'));const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
-const {treemap,weighted,changeClass,overviewView,layoutOverview}=await import('../public/js/app/watchlist-overview.js');
+const {treemap,weighted,changeClass,heatColor,overviewView,layoutOverview}=await import('../public/js/app/watchlist-overview.js');
 const store=await import('../public/js/app/store.js');
 const {mount}=await import('../public/js/app/views/watchlist.js');
 const row=(ticker,cap,change=0)=>({ticker,company:ticker+' Company',market_cap:cap,market_cap_status:'ready',market_cap_currency:'USD',market_cap_as_of:'2026-09-07T00:00:00Z',price:100,price_status:'ready',change_pct:change});
@@ -28,6 +28,44 @@ test('zero, missing, losses and unweighted stocks stay distinguishable and click
  view.querySelector('[data-open="ETF"]').click();assert.equal(selected,'ETF');
  assert.equal(changeClass(null),'unknown');assert.equal(changeClass(0),'flat');
  assert.equal(view.querySelectorAll('.watch-unweighted .watch-row').length,2);
+});
+
+test('map legend uses the same scale as tiles; breadth retains flat and missing counts',()=>{
+ const rows=[row('UP',30,5),row('DOWN',20,-5),row('FLAT',10,0),row('MISSING',5,null)];
+ const view=overviewView(rows,{view:'heatmap',onSelect:()=>{}});
+ const tile=view.querySelector('[data-open="UP"]');
+ assert.equal(tile.style.getPropertyValue('--tile-color'),heatColor(5));
+ assert.equal(view.querySelectorAll('.watch-color-scale span').length,5);
+ assert.match(view.querySelector('.watch-breadth-labels').textContent,/1 up1 down1 flat1 unavailable/);
+ assert.equal(heatColor(50),heatColor(5));assert.equal(heatColor(-50),heatColor(-5));
+ assert.notEqual(heatColor(null),heatColor(0));assert.notEqual(heatColor(.21),heatColor(5));
+});
+
+test('map inspector works with focus, Escape and hover without fetching or selecting',()=>{
+ let selected=false;const oldFetch=globalThis.fetch;globalThis.fetch=()=>assert.fail('hover never fetches');
+ const view=overviewView([row('ONE',10,0),row('TWO',20,null)],{view:'heatmap',onSelect:()=>selected=true,session:'2026-09-04'});
+ document.body.append(view);
+ try{
+  const tile=view.querySelector('[data-open="ONE"]'),tip=view.querySelector('[role="tooltip"]');
+  assert.equal(tile.hasAttribute('title'),false);assert.equal(tip.hidden,true);
+  tile.focus();assert.equal(tip.hidden,false);assert.equal(tile.getAttribute('aria-describedby'),tip.id);
+  assert.match(tip.textContent,/ONE.*0.00%/);assert.match(tip.textContent,/2026-09-04/);
+  tile.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));assert.equal(tip.hidden,true);
+  view.querySelector('[data-open="TWO"]').dispatchEvent(new window.Event('pointerenter'));
+  assert.equal(tip.hidden,false);assert.match(tip.textContent,/TWO—/);
+  assert.equal(selected,false);
+  view.querySelector('.watch-map-frame').dispatchEvent(new window.Event('pointerleave'));assert.equal(tip.hidden,true);
+ }finally{globalThis.fetch=oldFetch;view.remove();}
+});
+
+test('initial watchlist loading is not rendered as missing market data',async()=>{
+ let complete;const pending=new Promise(resolve=>complete=resolve);
+ globalThis.fetch=async()=>{await pending;return new Response(JSON.stringify({items:[row('ONE',10)],overview:{items:[row('ONE',10)],session:'2026-09-04'}}),{headers:{'content-type':'application/json'}});};
+ store.set('me',{tier:'pro',watch_cap:50});store.set('watchlist',['ONE']);store.set('snapshots',{});
+ const root=document.querySelector('main'),mounted=mount(root);
+ assert.ok(root.querySelector('.spinner-row'));assert.equal(root.querySelector('.watch-summary'),null);
+ complete();const dispose=await mounted;assert.ok(root.querySelector('.watch-summary'));
+ dispose();root.replaceChildren();
 });
 
 test('large watchlist fetches no details until selection and pending quote keeps research accessible',async()=>{

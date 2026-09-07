@@ -167,7 +167,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     }
     card.appendChild(controls);
     const search=el('div.creator-person-search');controls.append(search);
-    setupCleanup=mountSetup(search,{onFollow:followed,state:setupState,compact:true,onQuery:value=>{
+    setupCleanup=mountSetup(search,{onFollow:followed,state:setupState,compact:true,restore:!mine&&!selected&&tab==='feed',onQuery:value=>{
       query=value.trim();mine=false;selected='';stockTicker='';tab='feed';shown=30;renderContent();
     }});
     card.appendChild(el("div.creators-content"));

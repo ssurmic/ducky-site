@@ -8,6 +8,28 @@ export function capText(value) {
 }
 export function changeClass(value) { return !finite(value) ? 'unknown' : value > 0 ? 'up' : value < 0 ? 'down' : 'flat'; }
 
+// The map and its legend use exactly the same scale. Near-flat moves stay close
+// to neutral; saturation stops at ±5%, while labels retain the actual return.
+export function heatColor(value) {
+  if (!finite(value)) return '#35404d';
+  const anchors=[[-5,[151,51,72]],[-2,[103,47,63]],[0,[37,49,58]],[2,[34,79,68]],[5,[21,108,82]]];
+  const n=Math.max(-5,Math.min(5,value));
+  const right=anchors.findIndex(a=>a[0]>=n);
+  if(right===0)return 'rgb('+anchors[0][1].join(',')+')';
+  const [lo,a]=anchors[right-1],[hi,b]=anchors[right],fraction=(n-lo)/(hi-lo);
+  return 'rgb('+a.map((v,i)=>Math.round(v+(b[i]-v)*fraction)).join(',')+')';
+}
+
+function breadth(rows) {
+  const counts={up:0,down:0,flat:0,unknown:0};
+  for(const row of rows)counts[changeClass(row.change_pct)]++;
+  return el('div.watch-breadth',
+    el('div.watch-breadth-labels',...Object.entries(counts).filter(([,n])=>n).map(([kind,n])=>
+      el('span',{class:'watch-'+kind},el('i',{'aria-hidden':'true'}),s('watch.breadth_'+kind,{n})))),
+    el('div.watch-breadth-bar',{'aria-hidden':'true'},...Object.entries(counts).filter(([,n])=>n).map(([kind,n])=>
+      el('span',{class:'watch-'+kind,style:{flex:String(n)}}))));
+}
+
 // Squarify at the actual container aspect ratio. Exact area ratios; no minimum
 // cell area or investment weighting change is used to make names fit.
 export function treemap(rows, width=1000, height=600) {
@@ -27,19 +49,47 @@ export function treemap(rows, width=1000, height=600) {
   return out;
 }
 
-const mapRows=new WeakMap(),mapSizes=new WeakMap();
-export function layoutOverview(root) {
+const mapRows=new WeakMap(),mapSizes=new WeakMap(),mapInspectors=new WeakMap();
+export function layoutOverview(root, force=false) {
   const map=root.querySelector('.watch-treemap');if(!map)return;
   const {width,height}=map.getBoundingClientRect();if(!width||!height)return;
-  if(mapSizes.get(map)===width+':'+height)return;
+  if(!force&&mapSizes.get(map)===width+':'+height)return;
   mapSizes.set(map,width+':'+height);
   const tiles=treemap(mapRows.get(map)||[],width,height),nodes=new Map([...map.children].map(node=>[node.dataset.open,node]));
   // Batch writes, then measure natural labels once. Resize never fetches data or
   // replaces focused controls, and a same-size observation is a no-op.
-  for(const r of tiles){const node=nodes.get(r.ticker);Object.assign(node.style,{left:r.x/width*100+'%',top:r.y/height*100+'%',width:r.w/width*100+'%',height:r.h/height*100+'%'});node.classList.toggle('compact',r.w<90||r.h<62);}
+  for(const r of tiles){const node=nodes.get(r.ticker);Object.assign(node.style,{left:r.x/width*100+'%',top:r.y/height*100+'%',width:r.w/width*100+'%',height:r.h/height*100+'%'});node.classList.toggle('compact',r.w<94||r.h<78);node.classList.toggle('roomy',r.w>=230&&r.h>=175);node.style.setProperty('--tile-type',Math.min(34,Math.max(12,Math.min(r.w/6,r.h/5)))+'px');}
   const tiny=tiles.map(r=>{const node=nodes.get(r.ticker),label=node.querySelector('strong'),style=getComputedStyle(node);return [node,label.scrollWidth>node.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight)||label.scrollHeight>node.clientHeight-parseFloat(style.paddingTop)-parseFloat(style.paddingBottom)];});
   for(const [node,hidden] of tiny)node.classList.toggle('tiny',hidden);
-  const small=root.querySelector('.watch-small-tiles');if(small){let count=0;for(const button of small.querySelectorAll('button')){const node=nodes.get(button.dataset.open);button.hidden=!(node.classList.contains('tiny')||node.classList.contains('compact'));if(!button.hidden)count++;}small.hidden=!count;}
+  mapInspectors.get(map)?.resize();
+  const small=root.querySelector('.watch-small-tiles');if(small){let count=0;for(const button of small.querySelectorAll('button')){const node=nodes.get(button.dataset.open);button.hidden=!(node.classList.contains('tiny')||node.classList.contains('compact'));if(!button.hidden)count++;}small.hidden=!count;small.querySelector('.watch-small-count').textContent=String(count);}
+}
+
+let tooltipSequence=0;
+function mapInspector(frame, label, session) {
+  const tip=el('div.watch-map-tooltip',{id:'watch-map-tip-'+(++tooltipSequence),role:'tooltip',hidden:true});
+  let active=null,activeRow=null,dismissed=null;
+  function hide(){tip.hidden=true;active?.removeAttribute('aria-describedby');active=null;}
+  function show(row,node,event) {
+    if(event?.pointerType==='touch'||dismissed===node)return;
+    hide();active=node;activeRow=row;
+    tip.replaceChildren(
+      el('div.watch-tip-heading',el('strong',row.ticker),el('span.mono',{class:'watch-'+changeClass(row.change_pct)},pct(row.change_pct,2))),
+      el('div.watch-tip-company',row.company || row.ticker),
+      el('div.muted.small',label(row)),
+      el('dl.watch-tip-facts',el('dt',s('watch.close')),el('dd.mono',px(row.price)),el('dt',s('watch.cap')),el('dd.mono',capText(row.market_cap)+' '+(row.market_cap_currency || ''))),
+      el('div.watch-tip-date',row.price_session || session || s('watch.summary_pending')));
+    tip.hidden=false;node.setAttribute('aria-describedby',tip.id);
+    const box=frame.getBoundingClientRect(),cell=node.getBoundingClientRect(),rect=tip.getBoundingClientRect();
+    const x=event?.clientX ?? cell.left+cell.width/2,y=event?.clientY ?? cell.top+cell.height/2;
+    const left=Math.max(8,Math.min(box.width-rect.width-8,x-box.left+16));
+    let top=y-box.top+18;
+    if(top+rect.height>box.height-8)top=y-box.top-rect.height-18;
+    tip.style.left=left+'px';tip.style.top=Math.max(8,Math.min(box.height-rect.height-8,top))+'px';
+  }
+  frame.addEventListener('pointerleave',()=>{dismissed=null;hide();});
+  frame.addEventListener('keydown',event=>{if(event.key==='Escape'){dismissed=active;hide();}});
+  return {tip,show,resize(){if(active)show(activeRow,active);},blur(){dismissed=null;hide();}};
 }
 
 export function overviewView(rows, options) {
@@ -49,40 +99,52 @@ export function overviewView(rows, options) {
   const label=r=>(LANG==='zh'?r.label_zh:r.label_en) || r.industry || (LANG==='zh'?r.sector_zh:r.sector) || s('company.unknown');
   const title=r=>`${r.ticker} · ${r.company || ''} · ${label(r)} · ${pct(r.change_pct,2)} · ${r.price_session || session || '—'} · ${s('watch.cap')}: ${capText(r.market_cap)} ${r.market_cap_currency || ''}`;
   const button=(r,compact=false)=>el('button.watch-row', {type:'button','data-open':r.ticker,
-    'aria-pressed':String(selected===r.ticker),title:title(r),onclick:()=>onSelect(r.ticker)},
-    el('span.watch-identity',el('strong.mono',r.ticker),el('span.muted.small',r.company || r.ticker),compact?null:el('span.muted.small',label(r))),
+    'aria-pressed':String(selected===r.ticker),'aria-label':title(r),onclick:()=>onSelect(r.ticker)},
+    el('span.watch-identity',el('span.watch-identity-title',el('strong',r.ticker),compact?null:el('span.watch-industry',label(r))),el('span.watch-company',r.company || r.ticker)),
     el('span.mono.watch-row-price',px(r.price)),
     el('span.mono.watch-change',{class:'watch-'+changeClass(r.change_pct)},pct(r.change_pct,2)),
     el('span.mono.watch-row-cap',r.security_type==='ETF'?'ETF':capText(r.market_cap)));
-  root.append(el('p.muted.small.watch-session',session?s('watch.close_session',{date:session}):s('watch.summary_pending')));
+  if(view!=='heatmap')root.append(el('p.muted.small.watch-session',session?s('watch.close_session',{date:session}):s('watch.summary_pending')));
   if(!filtered.length) {root.append(el('p.empty',s('watch.no_match')));return root;}
   if(view==='heatmap') {
+    const panel=el('section.watch-map-panel'),frame=el('div.watch-map-frame');
+    panel.append(el('div.watch-map-heading',el('div',el('h2',s('watch.map_title')),
+      el('p.muted.small.watch-session',session?s('watch.map_session',{date:session}):s('watch.summary_pending'))),breadth(filtered)));
     const map=el('div.watch-treemap',{'aria-label':s('watch.view_heatmap')});
+    const inspector=mapInspector(frame,label,session);
+    mapInspectors.set(map,inspector);
     mapRows.set(map,filtered);
     const tiles=treemap(filtered);
     for(const r of tiles) {
       const tile=el('button.watch-tile',{type:'button','data-open':r.ticker, 'aria-label':title(r),
-        'aria-pressed':String(selected===r.ticker),title:title(r),class:'watch-'+changeClass(r.change_pct),
-        style:{left:r.x/10+'%',top:r.y/6+'%',width:r.w/10+'%',height:r.h/6+'%'},onclick:()=>onSelect(r.ticker)},
-        el('strong.mono',r.ticker),
-        el('span.mono',pct(r.change_pct,2)),el('span.watch-tile-company',r.company || ''));
-      tile.style.setProperty('--strength',String(finite(r.change_pct)?Math.min(1,Math.abs(r.change_pct)/5):0));
+        'aria-pressed':String(selected===r.ticker),class:'watch-'+changeClass(r.change_pct),
+        style:{left:r.x/10+'%',top:r.y/6+'%',width:r.w/10+'%',height:r.h/6+'%'},onclick:()=>onSelect(r.ticker),
+        onpointerenter:event=>inspector.show(r,tile,event),onfocus:()=>inspector.show(r,tile),onblur:inspector.blur},
+        el('span.watch-tile-sector',label(r)),el('strong',r.ticker),
+        el('span.mono.watch-tile-change',pct(r.change_pct,2)),el('span.watch-tile-company',r.company || ''),
+        el('span.watch-tile-cap',s('watch.cap')+' '+capText(r.market_cap)));
+      tile.style.setProperty('--tile-color',heatColor(r.change_pct));
       map.append(tile);
     }
-    if(tiles.length) root.append(map);
-    root.append(el('div.watch-legend',el('span.small',s('watch.map_legend')),
-      ...[-5,-2,0,2,5].map(n=>el('span.mono',{class:'watch-'+changeClass(n)},`${n>0?'+':''}${n}%`)),el('span.small.watch-unknown',s('watch.missing_price'))));
+    if(tiles.length){frame.append(map,inspector.tip);panel.append(frame);}
+    panel.append(el('div.watch-legend',el('span.small',s('watch.map_legend')),
+      el('div.watch-color-scale',...[-5,-2,0,2,5].map(n=>el('span.mono',{style:{background:heatColor(n)}},`${n>0?'+':''}${n}%`))),
+      filtered.some(r=>!finite(r.change_pct))?el('span.small.watch-legend-missing',s('watch.missing_price')):null));
     // Every small cell also has an accessible, minimum-size text target.
-    if(tiles.length) root.append(el('div.watch-small-tiles',el('span.muted.small',s('watch.small_tiles')),
-      ...tiles.map(r=>el('button.btn.btn-ghost.btn-sm.mono',{type:'button','data-open':r.ticker,onclick:()=>onSelect(r.ticker)},r.ticker+' '+pct(r.change_pct,2)))));
+    if(tiles.length) panel.append(el('details.watch-small-tiles',{open:tiles.length<=12},el('summary',s('watch.small_tiles'),' ',el('span.watch-small-count.mono')),
+      el('div.watch-small-list',...tiles.map(r=>el('button.watch-small-stock',{type:'button','data-open':r.ticker,
+        'aria-pressed':String(selected===r.ticker),'aria-label':title(r),onclick:()=>onSelect(r.ticker)},
+        el('span.watch-small-dot',{'aria-hidden':'true',style:{background:heatColor(r.change_pct)}}),
+        el('strong',r.ticker),el('span.mono',{class:'watch-'+changeClass(r.change_pct)},pct(r.change_pct,2)))))));
+    root.append(panel);
     const omitted=filtered.filter(r=>!weighted(r));
     if(omitted.length) root.append(el('section.watch-unweighted',el('h2',s('watch.unweighted')),
       el('p.muted.small',s('watch.unweighted_note')),...omitted.map(r=>button(r,true))));
   } else {
     filtered.sort((a,b)=>sort==='ticker'?a.ticker.localeCompare(b.ticker):
       (finite(b[sort])?b[sort]:-Infinity)-(finite(a[sort])?a[sort]:-Infinity) || a.ticker.localeCompare(b.ticker));
-    root.append(el('div.watch-row.watch-columns',el('span',s('watch.stock')),el('span',s('watch.close')),
-      el('span',s('watch.day_change')),el('span',s('watch.cap'))),...filtered.map(r=>button(r)));
+    root.append(el('div.watch-table',el('div.watch-row.watch-columns',el('span',s('watch.stock')),el('span',s('watch.close')),
+      el('span',s('watch.day_change')),el('span',s('watch.cap'))),...filtered.map(r=>button(r))));
   }
   const methods=el('details.watch-method',el('summary',s('watch.method')),
     el('p.muted.small',s('watch.method_body',{start:previous || '—',end:session || '—'})));

@@ -2629,7 +2629,7 @@
   "app.watch.no_match": "没有匹配的自选股",
   "app.watch.map_legend": "面积＝市值 · 颜色＝日涨跌",
   "app.watch.missing_price": "缺行情",
-  "app.watch.small_tiles": "小色块快捷入口",
+  "app.watch.small_tiles": "更多股票",
   "app.watch.unweighted": "未按市值绘制",
   "app.watch.unweighted_note": "ETF、市值缺失、币种未核实或资料过期的股票另列。",
   "app.watch.method": "数据日期与计算方法",
@@ -2733,5 +2733,11 @@
   "app.updates.signal_failed": "投递失败",
   "app.updates.signal_radar": "查看该股票事件",
   "app.radar.revision_note": "来源已修订；这是修订内容的收录时间，不代表原始发布时间或通知送达。",
-  "app.radar.corroboration_note": "这是同一事件的补充来源记录，不代表新的事件或再次送达。"
+  "app.radar.corroboration_note": "这是同一事件的补充来源记录，不代表新的事件或再次送达。",
+  "app.watch.map_title": "涨跌概览",
+  "app.watch.map_session": "{date} 收盘 · 点选股票查看详情",
+  "app.watch.breadth_up": "{n} 上涨",
+  "app.watch.breadth_down": "{n} 下跌",
+  "app.watch.breadth_flat": "{n} 持平",
+  "app.watch.breadth_unknown": "{n} 缺行情"
 }

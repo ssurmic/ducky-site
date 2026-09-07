@@ -18,7 +18,7 @@ export function avatar(creator) {
   return fallback;
 }
 
-export function mountSetup(root,{onFollow,initial='',state={},compact=false,onQuery=()=>{}}) {
+export function mountSetup(root,{onFollow,initial='',state={},compact=false,restore=true,onQuery=()=>{}}) {
   const epoch=store.epoch();let stopped=false,busy=false,generation=0,suggestVersion=0,debounce=null,activeIndex=-1,choices=[];
   const ctl=new AbortController();
   const wrap=el('section.creator-onboarding');root.append(wrap);
@@ -93,9 +93,9 @@ export function mountSetup(root,{onFollow,initial='',state={},compact=false,onQu
   }
   form.addEventListener('submit',e=>{e.preventDefault();begin(field.value);});
   if(state.doc)show(state.doc);
-  else if(!state.initialized&&store.isPro()){
+  else if(restore&&!state.initialized&&store.isPro()){
     state.initialized=true;const version=generation;
-    api.get('/kol/lookups',{signal:ctl.signal}).then(({items=[]})=>{if(live()&&version===generation&&items.length){field.value=state.input=items[0].input||'';show(items[0]);}}).catch(()=>{});
+    api.get('/kol/lookups',{signal:ctl.signal}).then(({items=[]})=>{if(live()&&version===generation&&items.length){field.value=state.input=items[0].input||'';onQuery(field.value);show(items[0]);}}).catch(()=>{});
   }
   return ()=>{stopped=true;ctl.abort();poll.stop();clearTimeout(debounce);};
 }

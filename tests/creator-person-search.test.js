@@ -59,3 +59,20 @@ test('creator feed retains unrelated posts and marks watched stocks only on revi
   assert.ok(root.querySelector('.creator-directory').textContent.includes('Other Creator'));
   dispose();root.remove();
 });
+
+test('restored lookup keeps the visible name and discovery results in sync without replacing Following',async()=>{
+ store.set('me',{tier:'pro',user_id:1});const calls=[];
+ globalThis.fetch=async url=>{calls.push(url);return Response.json(url==='/kol/feed'?{kols:[{id:'known',name:'Other Creator',profile:{}}],posts:[post(1,'NVDA')]}:
+  url==='/me/kols'?{subs:['known'],analysis:{}}:url==='/watchlist'?{items:[]}:
+  url==='/kol/lookups'?{items:[{id:'old',input:candidate.name,status:'ready',candidates:[candidate]}]}:{items:[]});};
+ const root=document.createElement('main');document.body.append(root);
+ const dispose=await mount(root,{query:new URLSearchParams('scope=following')});await tick();
+ assert.equal(root.querySelector('[role=combobox]').value,'');assert.equal(root.querySelectorAll('.cr-post').length,1);
+ assert.ok(!calls.includes('/kol/lookups'));
+ root.querySelector('[data-creator-scope="discover"]').click();await tick();
+ assert.equal(root.querySelector('[role=combobox]').value,candidate.name);
+ assert.equal(root.querySelector('[data-creator-scope="discover"]').getAttribute('aria-pressed'),'true');
+ assert.equal(root.querySelector('.creator-recent-feed'),null);
+ assert.ok(root.querySelector('.creator-find-results').textContent.includes(candidate.name));
+ dispose();root.remove();
+});

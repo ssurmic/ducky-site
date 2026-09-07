@@ -2629,7 +2629,7 @@
   "app.watch.no_match": "No matching stocks",
   "app.watch.map_legend": "Area = market cap · Colour = daily change",
   "app.watch.missing_price": "No price data",
-  "app.watch.small_tiles": "Small-cell shortcuts",
+  "app.watch.small_tiles": "More stocks",
   "app.watch.unweighted": "Outside the market-cap map",
   "app.watch.unweighted_note": "ETFs and stocks with missing, unverified-currency or stale market caps appear here.",
   "app.watch.method": "Dates and calculation",
@@ -2733,5 +2733,11 @@
   "app.updates.signal_failed": "Delivery failed",
   "app.updates.signal_radar": "View stock events",
   "app.radar.revision_note": "The source was revised. This is the revision record time, not the original publication time or proof of delivery.",
-  "app.radar.corroboration_note": "This is an additional source for the same event, not a new event or proof of another delivery."
+  "app.radar.corroboration_note": "This is an additional source for the same event, not a new event or proof of another delivery.",
+  "app.watch.map_title": "Watchlist performance",
+  "app.watch.map_session": "At the {date} close · Select a stock for details",
+  "app.watch.breadth_up": "{n} up",
+  "app.watch.breadth_down": "{n} down",
+  "app.watch.breadth_flat": "{n} flat",
+  "app.watch.breadth_unknown": "{n} unavailable"
 }

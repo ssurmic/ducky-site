@@ -20,7 +20,7 @@ export function normalizeList(resp) {
 export async function mount(root) {
   const unsubs = [];
   root.classList.add("watchlist-view");
-  let overview = null, selected = null, disposed = false;
+  let overview = null, selected = null, disposed = false, loading = true;
   let view = "list", query = "", sort = "market_cap";
   try { view = localStorage.getItem("ducky-watch-view") === "heatmap" ? "heatmap" : "list"; } catch {}
   const inflight = new Map();   // finding watchlist.js:118 — ticker -> in-flight fetch promise (dedup)
@@ -32,6 +32,7 @@ export async function mount(root) {
   const form = el("form.add-row", { onsubmit: onAdd }, picker.wrap, addBtn);
   const list = el("div.watch-overview", { id: "watch-cards" });
   const resize=()=>layoutOverview(list);
+  if(document.fonts)document.fonts.ready.then(()=>{if(!disposed)layoutOverview(list,true);});
   if(typeof ResizeObserver!=='undefined'){const observer=new ResizeObserver(resize);observer.observe(list);unsubs.push(()=>observer.disconnect());}
   else{window.addEventListener('resize',resize);unsubs.push(()=>window.removeEventListener('resize',resize));}
   const detail = el('section.watch-detail', {hidden:true, 'aria-label':s('watch.details')});
@@ -102,6 +103,7 @@ export async function mount(root) {
     modes.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.mode===view)));
     sorting.hidden=view==='heatmap';
     clear(list);
+    if(loading && !overview){list.append(spinner());return;}
     if (!items.length) {list.append(empty(s('watch.empty')));return;}
     const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
     list.append(overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
@@ -190,9 +192,11 @@ export async function mount(root) {
       const items = normalizeList(response);
       if (disposed || store.epoch() !== epoch) return;
       overview = response?.overview || null;
+      loading = false;
       store.set("watchlist", items);
     } catch (err) {
       if (disposed || store.epoch() !== epoch) return;
+      loading = false;
       clear(list); list.appendChild(errorBox(err, load));
     }
   }
