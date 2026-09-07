@@ -35,3 +35,17 @@ names include the same selected events; category filters still apply. No network
   or event count. Browser fixtures are not physical Safari/iOS checks or live market records.
 
 Deployment and final desktop / production checks appended after publication.
+
+## Published acceptance
+
+- Released commit `ee98f6d` to production Pages `f470cc10.ducky-site.pages.dev` / duckybot.app.
+- Chinese and English app shells, workspace CSS, calendar model and calendar view all HTTP200
+  and byte-identical to the exact release build.
+- Fresh signed-in production account (13 watched stocks), 9/10: visible cell reads **ORCL 财报**, PPI,
+  初请; no anonymous extra-item count on this three-event day. Verified actual screenshot as well
+  as accessibility text, and retained the production calendar tab for the owner.
+- 1024px desktop fixture: all three previews visible, zero horizontal overflow. Final 320px
+  English crowded month uses 12px ticker text with slight negative tracking; all four symbols
+  ORCL/ADBE/NVDA/AVGO occupy one line each, no truncation or overflow. Added rules are calendar-scoped.
+- This release changes presentation only. The original source-derived note says after market
+  close; no new dates, estimates, prices, alerts or user watchlist changes were written.
