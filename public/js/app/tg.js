@@ -10,6 +10,16 @@ export const initData = inTG ? WA.initData : "";
 export const startParam = inTG ? ((WA.initDataUnsafe && WA.initDataUnsafe.start_param) || "") : "";
 export const platform = WA ? WA.platform : "web";
 
+/** Existing redirect widget; callback mode needs unsafe-eval and is intentionally not used. */
+export function injectLoginWidget(container, {bot, returnUrl}) {
+  const script = document.createElement('script');
+  script.async = true; script.src = 'https://telegram.org/js/telegram-widget.js?22';
+  script.setAttribute('data-telegram-login', bot);
+  script.setAttribute('data-size', 'large'); script.setAttribute('data-radius', '10');
+  script.setAttribute('data-request-access', 'write'); script.setAttribute('data-auth-url', returnUrl);
+  container.append(script); return script;
+}
+
 function ver(v) { try { return !!(WA && WA.isVersionAtLeast && WA.isVersionAtLeast(v)); } catch (e) { return false; } }
 
 function applyTheme() {

@@ -2963,5 +2963,15 @@
   "desk.price_free_alerts": "3 条自定义提醒",
   "app.opportunities.search": "搜索股票或公司",
   "app.opportunities.results": "{n} 只股票",
-  "app.opportunities.coverage_title": "筛选覆盖范围"
+  "app.opportunities.coverage_title": "筛选覆盖范围",
+  "app.notify.link_telegram": "关联 Telegram",
+  "app.notify.link_hint": "自选股和订阅保留在当前账号。",
+  "app.notify.link_widget_hint": "点击下方按钮，确认要关联的 Telegram 账号。",
+  "app.notify.link_result.linked": "Telegram 已关联到当前账号，请检查下方接收方式。",
+  "app.notify.link_result.elsewhere": "这个 Telegram 已关联其他 Ducky 账号，请登录那个账号使用。",
+  "app.notify.link_result.failed": "暂时无法关联 Telegram，请重试。",
+  "app.notify.link_result.session": "关联请求已过期或账号已切换，请从当前账号重新发起。",
+  "app.notify.open_bot": "在 Telegram 中打开 Ducky",
+  "app.notify.refresh_channels": "刷新连接状态",
+  "app.notify.cancel_link": "取消关联"
 }

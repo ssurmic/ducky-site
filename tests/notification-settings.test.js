@@ -5,6 +5,7 @@ import {JSDOM} from 'jsdom';
 
 const dom = new JSDOM('<html><body></body></html>', {url:'https://ducky.test/app/#/profile'});
 for (const key of ['window','document','Node','location','history']) globalThis[key] = dom.window[key];
+window.DUCKY = {BOT:'ExampleBot'};
 const copy = JSON.parse(readFileSync('i18n/en.json'));
 const strings = document.createElement('script'); strings.id = 'ducky-strings';
 strings.textContent = JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));
@@ -80,6 +81,20 @@ test('a linked but unreachable Telegram account cannot be enabled until the bot 
   const f=fixture({initial:{...ready,telegram_enabled:false,telegram_available:true,telegram_status:'unreachable'}});
   try {await flush();assert.equal(f.root.querySelector('[name=telegram_enabled]').disabled,true);
     assert.ok(f.root.textContent.includes(copy['app.notify.state.unreachable']));
+  } finally {f.close();}
+});
+
+test('connecting Telegram loads the existing redirect widget only on request and cancellation clears the intent',async()=>{
+  const f=fixture({initial:{...ready,telegram_enabled:false,telegram_available:false,telegram_status:'unlinked'}});
+  try {
+    await flush();assert.equal(f.root.querySelector('script'),null);
+    f.button('notify.link_telegram').click();await flush();
+    const script=f.root.querySelector('script'),url=new URL(script.getAttribute('data-auth-url'));
+    assert.equal(url.searchParams.get('tglink'),'1');assert.equal(script.hasAttribute('data-onauth'),false);
+    assert.ok(window.sessionStorage.getItem('ducky.telegram-link'));assert.equal(f.calls.some(row=>row.method!=='GET'),false);
+    f.button('notify.cancel_link').click();assert.equal(window.sessionStorage.getItem('ducky.telegram-link'),null);assert.ok(f.button('notify.link_telegram'));
+    f.button('notify.link_telegram').click();await flush();f.root.querySelector('script').dispatchEvent(new window.Event('error'));
+    assert.equal(window.sessionStorage.getItem('ducky.telegram-link'),null);assert.ok(f.button('notify.link_telegram'));
   } finally {f.close();}
 });
 

@@ -60,7 +60,7 @@ export async function request(method, path, opts) {
   const data = await parse(res);
   if (sessionChanged()) throw new ApiError(0, { detail: "session_changed" }, path);
   if (res.status === 401 && opts.auth !== false) {
-    if (onUnauthorized) onUnauthorized();
+    if (onUnauthorized && !(opts.preserveBadTelegram && data?.error === 'bad_telegram')) onUnauthorized();
     throw new ApiError(401, data, path);
   }
   if (res.status === 402) {
@@ -121,6 +121,7 @@ export const auth = {
   googleLink: () => post("/auth/google/link", { lang: LANG }, { credentials: "include" }),
   miniapp: (initData) => post("/auth/miniapp", { initData }, { auth: false }),
   widget: (user) => post("/auth/widget", user, { auth: false }),
+  linkTelegram: (user, opts) => post('/auth/link/telegram', user, {...opts, preserveBadTelegram:true}),
   nonce: () => post("/auth/nonce", {}, { auth: false }),
   password: (email, password) => post("/auth/password", { email, password }, { auth: false }),
   poll: (nonce) => get("/auth/poll?nonce=" + encodeURIComponent(nonce), { auth: false }),

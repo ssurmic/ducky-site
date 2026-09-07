@@ -6,6 +6,7 @@ import * as api from "./api.js";
 import * as store from "./store.js";
 import * as tg from "./tg.js";
 import { CFG } from "./strings.js";
+import {readTelegramLinkReturn, finishTelegramLink, failTelegramLink} from './telegram-link.js';
 
 const KEY = "ducky.token";
 let freshBootstrapLogin = false;
@@ -114,6 +115,14 @@ export async function refreshMe(opts) {
 export async function boot() {
   freshBootstrapLogin = false;
   api.setUnauthorizedHandler(logout);
+  const linking = readTelegramLinkReturn();
+  if (linking) {
+    const token = loadToken();
+    if (!token) { failTelegramLink(); return false; }
+    store.set('token', token);
+    try { await hydrate(); await finishTelegramLink(linking); return !!store.get('me'); }
+    catch (_) { failTelegramLink(); return false; }
+  }
   // OAuth callback owns its cookie handoff; do not hydrate/revoke an old saved account first.
   if (location.hash.startsWith("#/oauth")) return false;
   if (tg.inTG && tg.initData) {
@@ -149,6 +158,7 @@ export function widgetReturnUrl() {
 export async function consumeWidgetRedirect() {
   let params;
   try { params = new URLSearchParams(location.search); } catch (e) { return false; }
+  if (params.has('tglink')) return false;
   if (!params.get("id") || !params.get("auth_date") || !params.get("hash")) return false;
   const user = {};
   WIDGET_FIELDS.forEach((k) => { const v = params.get(k); if (v != null && v !== "") user[k] = v; });   // exactly what Telegram signed
@@ -161,16 +171,7 @@ export async function consumeWidgetRedirect() {
 
 /** Lazy-inject https://telegram.org/js/telegram-widget.js?22 (the only whitelisted third-party script), redirect mode. */
 export function injectWidget(container) {
-  const sc = document.createElement("script");
-  sc.async = true;
-  sc.src = "https://telegram.org/js/telegram-widget.js?22";
-  sc.setAttribute("data-telegram-login", CFG.BOT);
-  sc.setAttribute("data-size", "large");
-  sc.setAttribute("data-radius", "10");
-  sc.setAttribute("data-request-access", "write");
-  sc.setAttribute("data-auth-url", widgetReturnUrl());   // never data-onauth: CSP script-src has no 'unsafe-eval'
-  container.appendChild(sc);
-  return sc;
+  return tg.injectLoginWidget(container, {bot:CFG.BOT, returnUrl:widgetReturnUrl()});
 }
 
 /** Nonce login: POST /auth/nonce → user opens t.me/<BOT>?start=login_<nonce>; the bot shows the same 4-char

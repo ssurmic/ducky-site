@@ -2963,5 +2963,15 @@
   "desk.price_free_alerts": "3 custom alerts",
   "app.opportunities.search": "Search stocks or companies",
   "app.opportunities.results": "Stocks: {n}",
-  "app.opportunities.coverage_title": "Screen coverage"
+  "app.opportunities.coverage_title": "Screen coverage",
+  "app.notify.link_telegram": "Connect Telegram",
+  "app.notify.link_hint": "Keep your watchlist and subscription on this account.",
+  "app.notify.link_widget_hint": "Confirm your Telegram account using the button below.",
+  "app.notify.link_result.linked": "Telegram connected to this account. Review your delivery preferences below.",
+  "app.notify.link_result.elsewhere": "This Telegram account belongs to another Ducky account. Sign in to that account to use it.",
+  "app.notify.link_result.failed": "Telegram could not be connected. Please try again.",
+  "app.notify.link_result.session": "This connection request expired or the account changed. Start again from this account.",
+  "app.notify.open_bot": "Open Ducky in Telegram",
+  "app.notify.refresh_channels": "Refresh connection status",
+  "app.notify.cancel_link": "Cancel connection"
 }

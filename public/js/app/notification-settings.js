@@ -1,7 +1,9 @@
-import {s} from './strings.js';
+import {s,CFG} from './strings.js';
 import * as api from './api.js';
 import * as store from './store.js';
+import * as tg from './tg.js';
 import {el, clear} from './ui.js';
+import {createTelegramLink,clearTelegramLink,takeTelegramLinkResult} from './telegram-link.js';
 
 const CHANNELS = ['email', 'telegram'];
 const STATES = {email:new Set(['ready','disabled','unverified','binding_changed']),
@@ -24,6 +26,8 @@ export function mountNotificationSettings(root, {signal} = {}) {
   root.append(card);
   let timer, disposed = false, current = null, messageId = null, receipt = null, busy = false, polling = false, checking = false, requestedChannels = [];
   let submission = null;
+  let linkIntent = null;
+  const linkResult = takeTelegramLinkResult();
   const unresolved = () => !!submission || !!messageId && (!receipt || !receipt.completed || receipt.channels.some(row => row.status === 'unknown'));
   const session = () => store.epoch() === epoch && store.get('token') === token &&
     (store.get('me')?.user_id ?? store.get('me')?.id) === owner;
@@ -34,6 +38,7 @@ export function mountNotificationSettings(root, {signal} = {}) {
   function cleanup() {
     if (disposed) return;
     disposed = true; clearTimeout(timer); ctl.abort();
+    if (linkIntent) clearTelegramLink(linkIntent.nonce);
     signal?.removeEventListener('abort', cleanup);
     unsubs.splice(0).forEach(fn => fn());
   }
@@ -65,6 +70,7 @@ export function mountNotificationSettings(root, {signal} = {}) {
     if (!valid()) return;
     clear(card);
     card.append(el('h2', s('notify.title')), el('p.muted.small', s('notify.description')));
+    if (linkResult) card.append(el('p', {role:'status',class:linkResult==='linked'?'ok':'err'}, s('notify.link_result.'+linkResult)));
     if (!current) {
       card.append(el('p', {role:'status'}, busy ? s('common.loading') : error || s('notify.unavailable')));
       if (!busy) card.append(el('button.btn.btn-ghost.btn-sm', {type:'button', onclick:load}, s('common.retry')));
@@ -98,6 +104,32 @@ export function mountNotificationSettings(root, {signal} = {}) {
       } catch (error) { if (valid()) { busy = false; render(errorText(error)); } }
     });
     card.append(form);
+    if (current.telegram_status === 'unlinked' && CFG.BOT && !tg.inTG) {
+      const linkHost = el('div.notification-link');
+      if (linkIntent) {
+        const hint = el('p.muted.small', s('notify.link_widget_hint'));
+        linkHost.append(hint);
+        const script = tg.injectLoginWidget(linkHost, {bot:CFG.BOT,returnUrl:linkIntent.url});
+        script.addEventListener('error', () => {if(valid() && card.contains(linkHost)) {
+          clearTelegramLink(linkIntent?.nonce);linkIntent=null;render(s('notify.link_result.failed'));
+        }});
+        linkHost.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{
+          if (!valid()) return;clearTelegramLink(linkIntent?.nonce);linkIntent=null;render();
+        }},s('notify.cancel_link')));
+      } else linkHost.append(el('button.btn.btn-ghost.btn-sm', {type:'button',disabled:busy,onclick:async()=>{
+        if (!valid() || busy) return;
+        busy=true;render();
+        try {
+          const intent = await createTelegramLink();
+          if (!valid()) { clearTelegramLink(intent.nonce); return; }
+          linkIntent=intent;busy=false;render();
+        } catch (_) {if(valid()){busy=false;render(s('notify.link_result.failed'));}}
+      }}, s('notify.link_telegram')),el('p.muted.small',s('notify.link_hint')));
+      card.append(linkHost);
+    }
+    if (current.telegram_status === 'unreachable' && CFG.BOT) card.append(el('p',
+      el('a', {href:'https://t.me/'+encodeURIComponent(CFG.BOT),target:'_blank',rel:'noopener'},s('notify.open_bot'))),
+      el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:busy,onclick:load},s('notify.refresh_channels')));
     if (error || saved) card.append(el('p', {role:'status', class:error?'err':'ok'}, error || s('notify.saved')));
     const enabled = CHANNELS.filter(c => current[c+'_enabled'] && current[c+'_available']);
     const uncertain = unresolved();
