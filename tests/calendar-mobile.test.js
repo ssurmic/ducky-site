@@ -10,14 +10,14 @@ const copy=JSON.parse(readFileSync('i18n/en.json'));
 const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
 const store=await import('../public/js/app/store.js');
 const calendar=await import('../public/js/app/views/calendar.js');
-const now=new Date(),date=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+const date=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const events=Array.from({length:8},(_,i)=>({date,type:i%2?'earnings':'macro',title:'Event '+i,title_en:'Event '+i,tickers:i%2?[i===1?'NVDA':'MSFT']:[],note_en:'Complete event detail '+i}));
 globalThis.fetch=async url=>new Response(JSON.stringify({events:String(url).startsWith('/calendar.json')?[]:events}),{headers:{'content-type':'application/json'}});
 store.set('me',{tier:'pro'});store.set('watchlist',['NVDA']);
 const button=(root,label)=>[...root.querySelectorAll('button')].find(x=>x.textContent===label);
-test('mobile agenda preserves all events and filters while month selection reveals every event',async()=>{
+test('mobile starts with two weeks and preserves all events through list, month and filters',async()=>{
  const root=document.createElement('div');document.body.append(root);await calendar.mount(root);
- assert.equal(button(root,copy['app.calendar.mode_list']).getAttribute('aria-pressed'),'true');
+ assert.equal(button(root,copy['app.calendar.mode_biweekly']).getAttribute('aria-pressed'),'true');
  assert.equal(root.querySelectorAll('.cal-ev').length,8);
  button(root,copy['app.calendar.mode_month']).click();
  const day=root.querySelector(`button[aria-label^="${date},"]`);assert.ok(day);day.click();
@@ -28,9 +28,9 @@ test('mobile agenda preserves all events and filters while month selection revea
  button(root,copy['app.calendar.mode_list']).click();
  assert.equal(root.querySelectorAll('.cal-ev').length,5);root.remove();
 });
-test('desktop starts compact and retains an optional two-week grid',async()=>{
+test('desktop defaults to two weeks, pages fourteen days and keeps detail inside the period',async()=>{
  narrow=false;const root=document.createElement('div');await calendar.mount(root);
- assert.equal(button(root,copy['app.calendar.mode_list']).getAttribute('aria-pressed'),'true');
+ assert.equal(button(root,copy['app.calendar.mode_biweekly']).getAttribute('aria-pressed'),'true');
  button(root,copy['app.calendar.mode_biweekly']).click();
  assert.equal(root.querySelectorAll('.cal-bicell').length,14);
  assert.deepEqual([...root.querySelectorAll('.cal-biweek')].map(w=>w.querySelectorAll('.cal-bicell').length),[7,7]);
@@ -40,13 +40,22 @@ test('desktop starts compact and retains an optional two-week grid',async()=>{
  assert.equal(active.querySelector('.pill-more').textContent,'+6 more');
  active.click();
  assert.equal(root.querySelectorAll('.cal-ev').length,8,'two previews still open every event');
+ assert.equal(active.querySelector('.pill-kind').textContent,'Macro');
+ assert.equal(root.querySelector('.cal-t-macro .cal-event-brief').textContent,copy['app.event.hint_other']);
  const first=root.querySelector('.cal-bicell').dataset.date;
  button(root,copy['app.calendar.jump_today']).click();
  root.querySelector(`[aria-label="${copy['app.calendar.next']}"]`).click();
  const next=root.querySelector('.cal-bicell').dataset.date;
  assert.equal((new Date(next+'T12:00:00Z')-new Date(first+'T12:00:00Z'))/86400000,14);
+ assert.equal(root.querySelector('.cal-bicell[aria-pressed="true"]').dataset.date,next);
+ assert.equal(root.querySelectorAll('.cal-ev').length,0,'previous-period detail is removed');
  root.querySelector(`[aria-label="${copy['app.calendar.previous']}"]`).click();
  assert.equal(root.querySelector('.cal-bicell').dataset.date,first);
+ button(root,copy['app.calendar.mode_list']).click();
+ assert.equal(root.querySelectorAll('.cal-ev').length,8);
+ root.replaceChildren();
+ await calendar.mount(root);
+ assert.equal(button(root,copy['app.calendar.mode_biweekly']).getAttribute('aria-pressed'),'true','a fresh mount resets a previous list selection');
 });
 
 test('holiday survives category filters and never requests private event research',async()=>{
@@ -67,4 +76,15 @@ test('holiday survives category filters and never requests private event researc
  assert.match(root.querySelector('.cal-closed .pill').textContent,/Closed/);
  assert.match(root.querySelector('.cal-closed').getAttribute('aria-label'),/US markets closed/);
  root.remove();
+});
+
+test('month navigation and view changes keep the selected detail in the visible range',async()=>{
+ const root=document.createElement('div');await calendar.mount(root);
+ button(root,copy['app.calendar.mode_month']).click();
+ root.querySelector(`[aria-label="${copy['app.calendar.next']}"]`).click();
+ const selected=root.querySelector('.cal-cell[aria-pressed="true"]');
+ assert.ok(selected);assert.equal(selected.querySelector('.cal-dnum').textContent,'1');
+ const selectedDate=selected.getAttribute('aria-label').split(',')[0];
+ button(root,copy['app.calendar.mode_biweekly']).click();
+ assert.equal(root.querySelector('.cal-bicell[aria-pressed="true"]').dataset.date,selectedDate);
 });

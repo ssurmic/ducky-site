@@ -1,4 +1,4 @@
-import { eventResearchSession } from "../calendar-event.js";
+import { eventResearchSession, eventHint } from "../calendar-event.js";
 import { icon } from "../icons.js";
 // views/calendar.js — 投资日历 (Pro): mobile agenda and selectable date grids for a
 // US-stock watchlist — Fed speakers (ET times), FOMC / rate decisions, CPI/PPI/PCE macro, earnings,
@@ -15,6 +15,9 @@ const ICON = { macro: "liquidity", earnings: "chart", opex: "calendar", witching
 const DOTC = { macro: "var(--accent)", earnings: "#4ea1ff", opex: "#c07cff", witching: "#c07cff", rebal: "#33c793" };
 const FILTERS = ["all", "macro", "earnings", "opex", "rebal"];
 const FILTER_TYPES = { all: null, macro: ["macro"], earnings: ["earnings"], opex: ["opex", "witching"], rebal: ["rebal"] };
+const CATEGORY = {earnings:"earnings", macro:"macro", opex:"expiry", witching:"expiry", rebal:"rebal", holiday:"session", early_close:"session"};
+const category = e => CATEGORY[e.type] || "other";
+const categoryLabel = e => s("calendar.kind_" + category(e));
 
 // Compact, RECOGNISABLE labels for the narrow grid cells (never truncate a macro name to gibberish like
 // "初请失…"), plus a one-line economic-impact note shown in the day detail. Matched on the event title
@@ -113,7 +116,7 @@ export async function mount(root) {
   const anchor = new Date((selected || todayIso) + "T00:00:00");
   let viewY = anchor.getFullYear(), viewM = anchor.getMonth();  // month being shown
   let filter = "all", mineOnly = false;
-  let viewMode = "list"; // Complete event rows by default; grids remain available.
+  let viewMode = "biweekly"; // Every new visit starts with the current two weeks, on phones and desktop.
   let biStart = weekSunday(todayDate);      // Sunday on/before today; prev/next shift by 14d
   render();
 
@@ -132,6 +135,20 @@ export async function mount(root) {
     if (iso === today) return s("calendar.today") + " · " + base;
     if (iso === tmr) return s("calendar.tomorrow") + " · " + base;
     return base;
+  }
+
+  function shiftPeriod(days) {
+    biStart = addDays(biStart, days);
+    // Keep the detail inside the visible period after paging away from today.
+    selected = ymd(biStart);
+    render();
+  }
+
+  function shiftMonth(amount) {
+    const first = new Date(viewY, viewM + amount, 1);
+    viewY = first.getFullYear(); viewM = first.getMonth();
+    selected = ymd(first);
+    render();
   }
 
   function render() {
@@ -168,7 +185,13 @@ export async function mount(root) {
     const modeBar = el("div.cal-modebar");
     for (const m of ["list", "biweekly", "month"]) {
       const b = el("button.cal-mode" + (viewMode === m ? ".on" : ""), { type: "button", "aria-pressed": String(viewMode === m) }, s("calendar.mode_" + m));
-      b.addEventListener("click", () => { viewMode = m; render(); });
+      b.addEventListener("click", () => {
+        viewMode = m;
+        const day = new Date(selected + "T12:00:00");
+        if(m === "month") { viewY = day.getFullYear(); viewM = day.getMonth(); }
+        else if(selected < ymd(biStart) || selected > ymd(addDays(biStart,13))) biStart = weekSunday(day);
+        render();
+      });
       modeBar.appendChild(b);
     }
     card.appendChild(modeBar);
@@ -179,8 +202,8 @@ export async function mount(root) {
     else {
       const end = addDays(biStart, 13);
       card.appendChild(navHead(isZh ? `${biStart.getMonth()+1}月${biStart.getDate()}日 / ${end.getMonth()+1}月${end.getDate()}日` : `${biStart.toLocaleDateString("en-US",{month:"short",day:"numeric"})} / ${end.toLocaleDateString("en-US",{month:"short",day:"numeric"})}`,
-        () => { biStart = addDays(biStart, -14); render(); },
-        () => { biStart = addDays(biStart, 14); render(); }));
+        () => shiftPeriod(-14),
+        () => shiftPeriod(14)));
     }
 
     function pills(evs, limit = 3) {
@@ -190,13 +213,15 @@ export async function mount(root) {
       for (const e of evs.slice(0, limit)) {
         if (e.type === "earnings") {
           const sym = (e.tickers || [])[0] || "";
-          const pill = el("span.pill.pill-earn" + (isPro && evHasMine(e) ? ".mine" : ""), { title: (sym + " " + (isZh ? (e.title || "") : (e.title_en || e.title || ""))).trim() });
+          const pill = el("span.pill.pill-earn.cal-kind-earnings" + (isPro && evHasMine(e) ? ".mine" : ""), { title: (sym + " " + (isZh ? (e.title || "") : (e.title_en || e.title || ""))).trim() });
+          pill.appendChild(el("span.pill-kind", categoryLabel(e)));
           if (e.logo) pill.appendChild(el("img.pill-logo", { src: e.logo, alt: sym, loading: "lazy" }));
           pill.appendChild(el("span.pill-tk", sym || "ER"));
           box.appendChild(pill);
         } else {
           const full = isZh ? (e.title || "") : (e.title_en || e.title || "");
-          const pill = el("span.pill.pill-" + e.type, { title: full });
+          const pill = el("span.pill.pill-" + e.type + ".cal-kind-" + category(e), { title: full });
+          pill.appendChild(el("span.pill-kind", categoryLabel(e)));
           pill.appendChild(el("span.pill-ic", { "aria-hidden": "true" }, icon(ICON[e.type] || "calendar")));
           pill.appendChild(el("span.pill-txt", shortLabel(e, isZh)));
           box.appendChild(pill);
@@ -238,8 +263,8 @@ export async function mount(root) {
     function monthGrid() {
       const box = el("div.cal-monthbox");
       box.appendChild(navHead(MON(viewY, viewM),
-        () => { viewM--; if (viewM < 0) { viewM = 11; viewY--; } render(); },
-        () => { viewM++; if (viewM > 11) { viewM = 0; viewY++; } render(); }));
+        () => shiftMonth(-1),
+        () => shiftMonth(1)));
       box.appendChild(weekdayRow());
       const grid = el("div.cal-grid");
       const firstDow = new Date(viewY, viewM, 1).getDay();
@@ -272,8 +297,8 @@ export async function mount(root) {
         ? `${biStart.getMonth() + 1}月${biStart.getDate()}日 – ${end.getMonth() + 1}月${end.getDate()}日`
         : `${M[biStart.getMonth()]} ${biStart.getDate()} – ${M[end.getMonth()]} ${end.getDate()}`;
       box.appendChild(navHead(span,
-        () => { biStart = addDays(biStart, -14); render(); },
-        () => { biStart = addDays(biStart, 14); render(); }));
+        () => shiftPeriod(-14),
+        () => shiftPeriod(14)));
       box.appendChild(weekdayRow());
       const weeks = el("div.cal-biweeks");
       for (let week = 0; week < 2; week++) {
@@ -318,10 +343,11 @@ export async function mount(root) {
     else {
       for (const e of evs) {
         const isMine = isPro && evHasMine(e);
-        const row = el("div.cal-ev" + (isMine ? ".cal-mine-ev" : "") + ".cal-t-" + e.type);
+        const row = el("div.cal-ev" + (isMine ? ".cal-mine-ev" : "") + ".cal-t-" + e.type + ".cal-kind-" + category(e));
         if (e.type === "earnings" && e.logo) row.appendChild(el("img.cal-ev-logo", { src: e.logo, alt: (e.tickers || [])[0] || "", loading: "lazy" }));
         else row.appendChild(el("span.cal-ico", { "aria-hidden": "true" }, icon(ICON[e.type] || "calendar")));
         const main = el("div.cal-main");
+        main.appendChild(el("span.cal-kind-label", categoryLabel(e)));
         const title = el("div.cal-title", isZh ? (e.title || "") : (e.title_en || e.title || ""));
         for (const t of (e.tickers || [])) title.appendChild(el("a.cal-tk.mono" + (watchSet.has(String(t).toUpperCase()) ? ".on" : ""), { href: "#/chart/" + encodeURIComponent(t) }, "$" + t));
         if (isMine) title.appendChild(el("span.cal-mine-badge", s("calendar.mine_badge")));
@@ -338,9 +364,11 @@ export async function mount(root) {
           }
           main.append(impacts);
         } else {
+          // Reuse the same event-type explanation as expanded research; no per-viewer calculation.
+          main.appendChild(el("p.cal-event-brief", eventHint(e)));
           const more=el("details.cal-research-more",el("summary",s("calendar.research_more")));
           let mounted=false;
-          more.addEventListener("toggle",()=>{if(more.open&&!mounted&&!disposed){mounted=true;more.append(research.mount(e));}});
+          more.addEventListener("toggle",()=>{if(more.open&&!mounted&&!disposed){mounted=true;more.append(research.mount(e,{showHint:false}));}});
           main.append(more);
         }
         if (e.url) main.appendChild(el("a.cal-link.mono", { href: e.url, target: "_blank", rel: "noopener" }, s(["holiday","early_close"].includes(e.type)?"calendar.source":"event.source")+" ↗"));

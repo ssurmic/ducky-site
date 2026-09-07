@@ -10,6 +10,7 @@ import { earningsPanel } from './calendar-earnings.js';
 export function safeSource(url) { try { const u=new URL(url);return u.protocol==='https:'?u.href:null; }catch{return null;} }
 export function weekday(day){const d=new Date(day+'T12:00:00Z');return Number.isFinite(d.getTime())?new Intl.DateTimeFormat(LANG==='en'?'en-US':'zh-CN',{weekday:'short',timeZone:'America/New_York'}).format(d):'—';}
 const family=k=>['cpi','ppi','pce'].includes(k)?'inflation':['nfp','claims','adp'].includes(k)?'jobs':['retail','gdp','pmi'].includes(k)?'growth':['opex','witching'].includes(k)?'expiry':k;
+export const eventHint = e => s('event.hint_'+family(eventKind(e)));
 
 // Request dedup lives for a view only; no private data survives account changes.
 export function eventResearchSession(scopeTicker='') {
@@ -22,11 +23,12 @@ export function eventResearchSession(scopeTicker='') {
     if(!cache.has(key)) cache.set(key,api.calendar.context(params,{signal:controller.signal}));
     return cache.get(key);
   }
-  function mount(e) {
+  function mount(e, {showHint=true}={}) {
     const kind=eventKind(e), box=el('section.event-insight');
-    const hint=el('div.event-hint',el('span.event-eyebrow',s('event.watch_for')),el('p',s('event.hint_'+family(kind))));
+    const hint=showHint?el('div.event-hint',el('span.event-eyebrow',s('event.watch_for')),el('p',eventHint(e))):null;
     const schedule=e.schedule_status==='source_scheduled'?s('event.schedule_source'):s('event.schedule_check');
-    box.append(hint,el('p.event-schedule.muted.small',schedule));
+    if(hint) box.append(hint);
+    box.append(el('p.event-schedule.muted.small',schedule));
     if(!store.isPro()) { box.append(el('a.event-upgrade',{href:'#/billing'},s('event.pro')));return box; }
     const relevance=el('div.event-relevance',el('span.muted.small',s('event.matching')));
     const details=el('details.event-evidence',{open:kind==='ppi'},el('summary',s('event.history')));

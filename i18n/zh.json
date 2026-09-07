@@ -2593,5 +2593,11 @@
   "walkthrough.cases.creator": "博主原话：商浩金视频发布于 2026 年 5 月 5 日，22:46 附近自述持有诺基亚，暂不调整。",
   "walkthrough.cases.prices": "查看完整价格路径与计算口径",
   "walkthrough.scene.7": "收件箱与每日总结",
-  "walkthrough.scene.8": "免费添加自选"
+  "walkthrough.scene.8": "免费添加自选",
+  "app.calendar.kind_earnings": "财报",
+  "app.calendar.kind_macro": "宏观",
+  "app.calendar.kind_expiry": "到期交割",
+  "app.calendar.kind_rebal": "调仓",
+  "app.calendar.kind_session": "交易安排",
+  "app.calendar.kind_other": "其他事件"
 }

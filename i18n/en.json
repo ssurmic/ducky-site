@@ -2593,5 +2593,11 @@
   "walkthrough.cases.creator": "Creator source: in a video published May 5, 2026, Shanghao Jin says he holds Nokia with no change planned, around 22:46.",
   "walkthrough.cases.prices": "Full price paths and calculation basis",
   "walkthrough.scene.7": "Inbox and daily summary",
-  "walkthrough.scene.8": "Start your watchlist free"
+  "walkthrough.scene.8": "Start your watchlist free",
+  "app.calendar.kind_earnings": "Earnings",
+  "app.calendar.kind_macro": "Macro",
+  "app.calendar.kind_expiry": "Expiry",
+  "app.calendar.kind_rebal": "Rebalance",
+  "app.calendar.kind_session": "Session",
+  "app.calendar.kind_other": "Other event"
 }
