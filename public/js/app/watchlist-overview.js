@@ -44,7 +44,7 @@ export function overviewView(rows, options) {
     const tiles=treemap(filtered);
     for(const r of tiles) {
       const tile=el('button.watch-tile',{type:'button','data-open':r.ticker, 'aria-label':title(r),
-        'aria-pressed':String(selected===r.ticker),title:title(r),class:'watch-'+changeClass(r.change_pct)+(r.w<85||r.h<58?' tiny':''),
+        'aria-pressed':String(selected===r.ticker),title:title(r),class:'watch-'+changeClass(r.change_pct),
         style:{left:r.x/10+'%',top:r.y/6+'%',width:r.w/10+'%',height:r.h/6+'%'},onclick:()=>onSelect(r.ticker)},
         el('strong.mono',r.ticker),el('span.mono',pct(r.change_pct,2)),el('span.watch-tile-company',r.company || ''));
       tile.style.setProperty('--strength',String(finite(r.change_pct)?Math.min(1,Math.abs(r.change_pct)/5):0));
@@ -54,7 +54,7 @@ export function overviewView(rows, options) {
     root.append(el('div.watch-legend',el('span.small',s('watch.map_legend')),
       ...[-5,-2,0,2,5].map(n=>el('span.mono',{class:'watch-'+changeClass(n)},`${n>0?'+':''}${n}%`)),el('span.small.watch-unknown',s('watch.missing_price'))));
     // Every small cell also has an accessible, minimum-size text target.
-    const small=tiles.filter(r=>r.w<85||r.h<58);
+    const small=tiles.filter(r=>r.w*r.h<30000||r.w<180||r.h<110);
     if(small.length) root.append(el('div.watch-small-tiles',el('span.muted.small',s('watch.small_tiles')),
       ...small.map(r=>el('button.btn.btn-ghost.btn-sm.mono',{type:'button','data-open':r.ticker,onclick:()=>onSelect(r.ticker)},r.ticker+' '+pct(r.change_pct,2)))));
     const omitted=filtered.filter(r=>!weighted(r));

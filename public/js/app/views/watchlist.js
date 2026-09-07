@@ -19,6 +19,7 @@ export function normalizeList(resp) {
 
 export async function mount(root) {
   const unsubs = [];
+  root.classList.add("watchlist-view");
   let overview = null, selected = null, disposed = false;
   let view = "list", query = "", sort = "market_cap";
   try { view = localStorage.getItem("ducky-watch-view") === "heatmap" ? "heatmap" : "list"; } catch {}
@@ -222,5 +223,5 @@ export async function mount(root) {
   unsubs.push(store.subscribe("me", () => {render();renderDetail();}));
   render();
   await load();
-  return () => {disposed=true;unsubs.forEach((u) => u());};
+  return () => {disposed=true;root.classList.remove("watchlist-view");unsubs.forEach((u) => u());};
 }
