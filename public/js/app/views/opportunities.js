@@ -14,10 +14,10 @@ export function selectCandidates(items,scope,watches,query='') {
 const link=(href,key)=>el('a.btn.btn-ghost.btn-sm',{href},s(key));
 export function candidateCard(row,watches=[]) {
   const tech=row.technical||{},rel=row.relative||{};
-  const watched=watches.some(x=>(x.ticker||x)===row.ticker),tk=encodeURIComponent(row.ticker);
+  const watched=Array.isArray(watches)?watches.some(x=>(x.ticker||x)===row.ticker):null,tk=encodeURIComponent(row.ticker);
   const card=el('article.card.opportunity-card',el('div.opportunity-heading',
     el('div',el('a.ticker',{href:'#/chart/'+tk},'$'+row.ticker),el('p.muted',row.company||'')),
-    el('span.chip',s(watched?'opportunities.watched':'opportunities.discovered'))));
+    watched===null?null:el('span.chip',s(watched?'opportunities.watched':'opportunities.discovered'))));
   const gap=rel.status==='ready'&&Number.isFinite(rel.excess20)?rel.excess20:null;
   const metric=(key,value)=>el('div',el('dt',s('opportunities.'+key)),el('dd.mono',value));
   card.append(el('dl.opportunity-metrics',metric('rsi',num(tech.rsi_d,1)),
@@ -68,7 +68,7 @@ export async function mount(root,route={}) {
     const results=el('div.opportunity-grid'),count=el('p.small.muted',{role:'status'});
     function update(){scope=choose.value;query=search.value;clear(results);
       const rows=selectCandidates(doc.items,scope,watches,query);count.textContent=s('opportunities.results',{n:rows.length});
-      for(const row of rows)results.append(candidateCard(row,watches));
+      for(const row of rows)results.append(candidateCard(row,watchReady?watches:null));
       if(!rows.length)results.append(el('div.card',el('h2',s('opportunities.empty')),el('p.muted',s('opportunities.empty_note'))));
     }
     choose.addEventListener('change',update);search.addEventListener('input',update);

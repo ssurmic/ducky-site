@@ -38,6 +38,8 @@ test('discovery shows stocks outside the watchlist, preserving zero and unknown 
  const card=opportunities.candidateCard({ticker:'NEW',technical:{rsi_d:0,dd_pct:0,iv_hv:null},relative:{status:'unavailable',excess20:null}});
  assert.ok(card.textContent.includes('0.0'));assert.ok(card.textContent.includes(copy['app.opportunities.peer_missing']));
  assert.ok(!card.textContent.includes('0.0 pp'));
+ assert.equal(opportunities.candidateCard({ticker:'NEW'},null).querySelector('.chip'),null,
+  'an unavailable watchlist cannot label a stock as outside it');
 });
 test('free visitors do not fetch current candidates and stale results are not promoted',async()=>{
  store.set('me',{tier:'free'});let calls=[];globalThis.fetch=async url=>{calls.push(String(url));return response({});};
