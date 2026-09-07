@@ -35,4 +35,10 @@ The chart shows all daily points and pullbacks, reaching the final result before
 
 Reproduce using `scripts/demo/assemble.py`, `align_caption_tracks.py`, `verify_media.py`, and `verify_watchlist_case.py`. Frozen assets, source facts, generation hashes, word timing and browser evidence are under `scripts/demo/evidence/voice-v9/`; source captures are `scripts/demo/frames-v9/`. Public expanded sources and full price paths are linked below the movie. Narration provider and production details stay out of customer copy.
 
-Deployment evidence will be appended after the release is verified live.
+## Published release
+
+Live code `00a96c3bc0eadea2808a1fbfe74c7f4b78ad8add`, Cloudflare Pages `18dd06aa` (initial v9 release `92937567` / `69aa8ba9`). [CI run 34084052405](https://github.com/ssurmic/ducky-site/actions/runs/34084052405) succeeded. The final small follow-up replaces an inaccurate prior-version metadata label and simplifies the public RSI evidence to its actual date, Wilder method, period, value and retrospective basis; the movie, narration and captions are byte-identical to the browser-reviewed initial release.
+
+Both production homepages select the correct language’s v9 movie. Eight movie/poster/caption assets match local bytes; both MP4s serve HTTP Range 206. The public case data, caption CSS and responsive player JavaScript match the release. Chinese at 390 px and English at 1440 px played to 36.101333 and 33.421333 seconds with no media error. A cold production chapter jump reached the Chinese closing card at 33.68 seconds and stayed paused. Full live and local evidence is retained alongside the media verification.
+
+Previous v8 assets are retained for rollback. No production background process was restarted and no real alert, watchlist or notification was created. The existing demo heartbeat remains paused.

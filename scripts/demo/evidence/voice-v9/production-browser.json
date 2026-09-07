@@ -1,0 +1,28 @@
+[
+  {
+    "error": null,
+    "page": "https://duckybot.app/?review=watchlist-v9#product-demo",
+    "status": "已定位 0:33 · 免费添加自选。按播放器的播放键观看。",
+    "time": 33.68
+  },
+  {
+    "currentSrc": "https://duckybot.app/media/ducky-walkthrough-2026-09-07-watchlist-v9.zh.mp4",
+    "currentTime": 36.101333,
+    "duration": 36.101333,
+    "ended": true,
+    "error": null,
+    "page": "https://duckybot.app/?review=watchlist-v9#product-demo",
+    "scrollWidth": 390,
+    "viewport": 390
+  },
+  {
+    "currentSrc": "https://duckybot.app/media/ducky-walkthrough-2026-09-07-watchlist-v9.en.mp4",
+    "currentTime": 33.421333,
+    "duration": 33.421333,
+    "ended": true,
+    "error": null,
+    "page": "https://duckybot.app/en/?review=watchlist-v9#product-demo",
+    "scrollWidth": 1440,
+    "viewport": 1440
+  }
+]

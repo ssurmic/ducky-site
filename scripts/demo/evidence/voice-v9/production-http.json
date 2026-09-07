@@ -1,0 +1,176 @@
+{
+  "native_caption_layout_js": {
+    "status": 200,
+    "matches": true
+  },
+  "case_price_data": {
+    "asset": "ducky-demo-cases-2026-09-07.json",
+    "status": 200,
+    "bytes": 135045,
+    "sha256": "7ac178a34728f19386421254cd11d500a22cd5d0ef67adc1d4965779bd75acb2",
+    "matches": true,
+    "headers": {
+      "Content-Type": "application/json",
+      "Content-Length": "135045",
+      "Content-Range": null,
+      "Accept-Ranges": null,
+      "ETag": "\"e0ca21b9fa714f724bc1392040742bdc\""
+    }
+  },
+  "checked_at": "2026-09-07T04:38:48.022453+00:00",
+  "source_commit": "92937567",
+  "pages": [
+    {
+      "page": "/",
+      "status": 200,
+      "version": "92937567",
+      "selected_video": "2026-09-07-watchlist-v9"
+    },
+    {
+      "page": "/en/",
+      "status": 200,
+      "version": "92937567",
+      "selected_video": "2026-09-07-watchlist-v9"
+    }
+  ],
+  "assets": [
+    {
+      "asset": "ducky-walkthrough-2026-09-07-watchlist-v9.en.en.vtt",
+      "status": 200,
+      "bytes": 1170,
+      "sha256": "b7b198a65d1d0e41c0dbcae612a7c0a986d3adf5b66406a5daeb32b1d1c5e54c",
+      "matches": true,
+      "headers": {
+        "Content-Type": "text/vtt; charset=utf-8",
+        "Content-Length": "1170",
+        "Content-Range": null,
+        "Accept-Ranges": null,
+        "ETag": "\"f33fed29e88e39b75093991ffd803fb1\""
+      }
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-07-watchlist-v9.en.jpg",
+      "status": 200,
+      "bytes": 88427,
+      "sha256": "22f82f855c8fc381a61bd89a9a112d85099af48caad93bcd77022bdd3d4eacde",
+      "matches": true,
+      "headers": {
+        "Content-Type": "image/jpeg",
+        "Content-Length": "88427",
+        "Content-Range": null,
+        "Accept-Ranges": "bytes",
+        "ETag": "\"857333e1e5252f4d49bca6366389ce68\""
+      }
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-07-watchlist-v9.en.mp4",
+      "status": 200,
+      "bytes": 1433084,
+      "sha256": "28cca37fe0f66d0ebd211bfb6d11c5ff0e589b188368b131b670144e0c425d00",
+      "matches": true,
+      "headers": {
+        "Content-Type": "video/mp4",
+        "Content-Length": "1433084",
+        "Content-Range": null,
+        "Accept-Ranges": "bytes",
+        "ETag": "\"4234fca6a03ebde55064b6d74db43152\""
+      },
+      "range": {
+        "status": 206,
+        "bytes": 1024,
+        "headers": {
+          "Content-Type": "video/mp4",
+          "Content-Length": "1024",
+          "Content-Range": "bytes 0-1023/1433084",
+          "Accept-Ranges": null,
+          "ETag": "\"4234fca6a03ebde55064b6d74db43152\""
+        }
+      }
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-07-watchlist-v9.en.zh.vtt",
+      "status": 200,
+      "bytes": 1177,
+      "sha256": "08a355456aa5ea08f2827128516a7566c46ad9df2ad24a11f2d4dec7f928fe03",
+      "matches": true,
+      "headers": {
+        "Content-Type": "text/vtt; charset=utf-8",
+        "Content-Length": "1177",
+        "Content-Range": null,
+        "Accept-Ranges": null,
+        "ETag": "\"7bc0aedb6714e46d8ca39d042432a6dc\""
+      }
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-07-watchlist-v9.zh.en.vtt",
+      "status": 200,
+      "bytes": 1170,
+      "sha256": "14b9d97715a2884ab4bd1d406251ca850e426c624e33906bffa2512260ed7506",
+      "matches": true,
+      "headers": {
+        "Content-Type": "text/vtt; charset=utf-8",
+        "Content-Length": "1170",
+        "Content-Range": null,
+        "Accept-Ranges": null,
+        "ETag": "\"452a166320c024e2497b794de8db6e85\""
+      }
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-07-watchlist-v9.zh.jpg",
+      "status": 200,
+      "bytes": 85916,
+      "sha256": "60013a59615dbc4ab80c1a6144c9d78020a9a339353a51be1780f34008bb0c73",
+      "matches": true,
+      "headers": {
+        "Content-Type": "image/jpeg",
+        "Content-Length": "85916",
+        "Content-Range": null,
+        "Accept-Ranges": "bytes",
+        "ETag": "\"61ec090dc78ec55d818501a96f0f71de\""
+      }
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-07-watchlist-v9.zh.mp4",
+      "status": 200,
+      "bytes": 1445736,
+      "sha256": "a57019e2c8a23a31f065a1442c3fdcb68fdf4e92f5c7186e9870a55a39580099",
+      "matches": true,
+      "headers": {
+        "Content-Type": "video/mp4",
+        "Content-Length": "1445736",
+        "Content-Range": null,
+        "Accept-Ranges": "bytes",
+        "ETag": "\"be822f4c2e411d2423dd403723c5c238\""
+      },
+      "range": {
+        "status": 206,
+        "bytes": 1024,
+        "headers": {
+          "Content-Type": "video/mp4",
+          "Content-Length": "1024",
+          "Content-Range": "bytes 0-1023/1445736",
+          "Accept-Ranges": null,
+          "ETag": "\"be822f4c2e411d2423dd403723c5c238\""
+        }
+      }
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-07-watchlist-v9.zh.zh.vtt",
+      "status": 200,
+      "bytes": 1177,
+      "sha256": "9c8f2ffd73418f59aee90ec3997656bf2011e5a608fce803f55c8a8f34cd8a54",
+      "matches": true,
+      "headers": {
+        "Content-Type": "text/vtt; charset=utf-8",
+        "Content-Length": "1177",
+        "Content-Range": null,
+        "Accept-Ranges": null,
+        "ETag": "\"fe8126b89647d4bca415bfba2374beaa\""
+      }
+    }
+  ],
+  "caption_css": {
+    "status": 200,
+    "matches": true
+  }
+}
