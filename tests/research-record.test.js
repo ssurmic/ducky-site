@@ -24,6 +24,14 @@ test('correction status never displays withdrawn title or facts',()=>{
  assert.match(card.textContent,/corrected/);assert.doesNotMatch(card.textContent,/obsolete|99/);
  assert.match(card.textContent,/research:1/);assert.match(card.textContent,/2026-09-07/);
 });
+test('official publication precision is separate from effective date and uses available English copy',()=>{
+ const event={...row,stream:'calendar',source_at:'2026-09-04T23:15:00Z',payload:{title:'BE 纳入',title_en:'BE joins S&P 500',
+   date:'2026-09-21',date_precision:'day',publication_precision:'second',time:'盘前',time_en:'Before market open'}};
+ const card=recordCard(event);
+ assert.match(card.textContent,/BE joins S&P 500/);assert.match(card.textContent,/23:15 UTC/);
+ assert.match(card.textContent,/Before market open/);assert.doesNotMatch(card.textContent,/time not provided|BE 纳入/i);
+ assert.match(recordCard({...event,payload:{date_precision:'day'}}).textContent,/time not provided/i);
+});
 test('heat timeline has gaps for missing scores and absent collection, preserving a real zero',()=>{
  const samples=[0,null,80,90].map((score,i)=>({id:String(i),collected_at:`2026-09-07T0${i}:00:00Z`,index:score}));
  const chart=socialHistoryChart(samples);assert.equal(chart.querySelectorAll('circle').length,3);

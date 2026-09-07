@@ -1,4 +1,4 @@
-import {s} from '../strings.js';
+import {s, LANG} from '../strings.js';
 import {el, clear, num, px, errorBox} from '../ui.js';
 import * as api from '../api.js';
 import {dateTime} from './creator-research.js';
@@ -19,7 +19,7 @@ export function recordCard(item) {
   if(p.content_status) return el('article.research-evidence',el('p.data-notice',tr('corrected')),
     el('p.small.muted',tr('observed')+' '+dateTime(item.observed_at)),
     el('details',el('summary',tr('evidence')),el('code.social-record-id',item.id)));
-  let title=p.title||p.summary||p.creator_name||'';
+  let title=(LANG==='en'&&(p.title_en||p.summary_en))||p.title||p.summary||p.creator_name||'';
   if(typeof title!=='string') title='';
   if(title)card.append(el('p',title));
   let fields=[];
@@ -27,11 +27,12 @@ export function recordCard(item) {
   if(item.stream==='technical')fields=[['rsi',num(p.rsi_d,1)],['drawdown',p.dd_pct==null?'—':num(p.dd_pct,1)+'%']];
   if(item.stream==='options')fields=[['iv',p.iv==null?'—':num(p.iv,1)+'%'],['hv',p.hv==null?'—':num(p.hv,1)+'%'],['call_wall',px(p.call_wall)],['put_wall',px(p.put_wall)]];
   if(item.stream==='vibe')fields=[['mentions',num(p.mentions,0)],['heat',p.index==null?'—':num(p.index,1)+' / 100']];
-  if(item.stream==='calendar')fields=[['event_date',value(p.date)],['event_time',value(p.time_et)]];
+  if(item.stream==='calendar')fields=[['event_date',value(p.date)],['event_time',value((LANG==='en'&&p.time_en)||p.time_et||p.time)]];
   if(p.effective_at)fields.push(['effective_at',value(p.effective_at)]);
   if(fields.length)card.append(el('dl.research-facts',...fields.map(([k,v])=>el('div',el('dt',tr(k)),el('dd.mono',v)))));
   if(item.stream==='vibe')card.append(el('p.small.muted',tr('vibe_limit')));
-  const published=item.source_at ? (p.date_precision==='day'||item.source_at.length===10 ? item.source_at.slice(0,10)+' · '+tr('unknown_time') : dateTime(item.source_at)) : tr('unknown');
+  const precision=p.publication_precision??p.date_precision;
+  const published=item.source_at ? (precision==='day'||item.source_at.length===10 ? item.source_at.slice(0,10)+' · '+tr('unknown_time') : dateTime(item.source_at)) : tr('unknown');
   if(item.source_at)card.append(el('p.small.muted',tr('published')+' '+published));
   card.append(el('p.small.muted',tr(item.freshness==='stale'?'stale':'observed')+' '+dateTime(item.observed_at)));
   const details=el('details',el('summary',tr('evidence')),
