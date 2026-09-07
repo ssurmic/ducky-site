@@ -95,22 +95,35 @@ test('month navigation and view changes keep the selected detail in the visible 
  assert.equal(root.querySelector('.cal-bicell[aria-pressed="true"]').dataset.date,selectedDate);
 });
 
-test('official index deep links select the effective date and survive rebalance filtering without private access',async()=>{
+test('official index deep links lead 42 same-day events through preview, dialog, month and list without private access',async()=>{
  const day='2026-09-21',calls=[];
  const official={id:'index:BE:add',event_id:'index:BE:add',type:'index_change',date:day,title:'BE 纳入 S&P 500',title_en:'BE joins S&P 500',tickers:['BE'],action:'add',index_name:'S&P 500',time:'盘前',time_en:'Before market open',effective_at:day,time_zone:'America/New_York',source_url:'https://example.test/official'};
- globalThis.fetch=async url=>{calls.push(String(url));return new Response(JSON.stringify({events:String(url).startsWith('/calendar.json')?[]:[official]}),{headers:{'content-type':'application/json'}});};
- store.set('me',{tier:'free'});location.hash='#/calendar?ticker=BE&date='+day;
+ const others=['AGNC','AMSF','BKE',...Array.from({length:38},(_,i)=>'F'+i)].map(ticker=>({...official,id:'index:'+ticker,event_id:'index:'+ticker,tickers:[ticker],title:ticker+' 纳入 S&P 500',title_en:ticker+' joins S&P 500'}));
+ const input=[...others,official],priorWatch=store.get('watchlist');
+ globalThis.fetch=async url=>{calls.push(String(url));return new Response(JSON.stringify({events:String(url).startsWith('/calendar.json')?[]:input}),{headers:{'content-type':'application/json'}});};
+ store.set('me',{tier:'free'});store.set('watchlist',['AMSF']);location.hash='#/calendar?ticker=be&date='+day;
  const root=document.createElement('div');document.body.append(root);const cleanup=await calendar.mount(root);
  try{
   assert.equal(root.querySelector('.cal-bicell[aria-pressed="true"]').dataset.date,day);
+  const preview=root.querySelector(`[data-date="${day}"]`);
+  assert.deepEqual([...preview.querySelectorAll('.pill-txt')].map(n=>n.textContent),['BE','AMSF']);
+  assert.equal(preview.querySelector('.pill-more').textContent,'+40 more');
+  assert.match(preview.getAttribute('aria-label'),/42 events/);assert.match(preview.getAttribute('aria-label'),/BE joins/);
+  assert.ok(preview.getAttribute('aria-label').length<240);assert.doesNotMatch(preview.getAttribute('aria-label'),/F37/);
+  assert.equal(root.querySelector('.cal-mine').getAttribute('aria-pressed'),'false');
   button(root,copy['app.calendar.f_rebal']).click();
   root.querySelector(`button[data-date="${day}"]`).click();
   const row=document.querySelector('#modal .cal-t-rebal');assert.ok(row);assert.match(row.textContent,/Added to S&P 500/);assert.match(row.textContent,/Before market open · ET/);
+  assert.equal(document.querySelectorAll('#modal .cal-ev').length,42);
+  assert.equal(row.querySelector('.cal-tk').textContent,'$BE');assert.equal(document.querySelectorAll('#modal .cal-tk')[1].textContent,'$AMSF');
   assert.ok(row.querySelector('a[href="https://example.test/official"]'));
   const more=row.querySelector('.cal-research-more');more.open=true;more.dispatchEvent(new window.Event('toggle'));
   assert.equal(calls.some(url=>url.includes('/calendar/context')||url.includes('/calendar/links')),false);
   assert.ok(more.querySelector('a[href="#/billing"]'));
   closeModal();
-  button(root,copy['app.calendar.mode_month']).click();assert.ok(root.querySelector('.cal-sel .mbar'));
- }finally{cleanup();root.remove();location.hash='';store.set('me',{tier:'pro'});}
+  button(root,copy['app.calendar.mode_month']).click();assert.equal(root.querySelector('.cal-sel .mbar .pill-txt').textContent,'BE');
+  assert.equal(root.querySelector('.cal-sel .cal-event-count').textContent,'42');
+  button(root,copy['app.calendar.mode_list']).click();assert.equal(root.querySelectorAll('.cal-ev').length,42);assert.equal(root.querySelector('.cal-tk').textContent,'$BE');
+  assert.equal(calls.some(url=>url.includes('/calendar/context')||url.includes('/calendar/links')),false);
+ }finally{cleanup();root.remove();location.hash='';store.set('me',{tier:'pro'});store.set('watchlist',priorWatch);}
 });

@@ -1,5 +1,6 @@
 import { eventResearchSession, eventHint, safeSource } from "../calendar-event.js";
 import {sourceDay, effectiveTiming} from '../source-event.js';
+import {calendarTicker, calendarEventTicker, orderCalendarEvents} from '../calendar-model.js';
 import { icon } from "../icons.js";
 // views/calendar.js — 投资日历 (Pro): mobile agenda and selectable date grids for a
 // US-stock watchlist — Fed speakers (ET times), FOMC / rate decisions, CPI/PPI/PCE macro, earnings,
@@ -59,9 +60,10 @@ const STRUCT_ABBR = [
 ];
 function _hay(e) { return String(e.title || "") + " " + String(e.title_en || ""); }
 function macroMeta(e) { const h = _hay(e); for (const m of MACRO_META) if (m.re.test(h)) return m; return null; }
-function shortLabel(e, isZh) {
+function shortLabel(e, isZh, scopeTicker='') {
   if(e.type === "holiday") return s("calendar.closed_short");
   if(e.type === "early_close") return s("calendar.early_short");
+  if(e.type === "index_change") { const ticker=calendarEventTicker(e,scopeTicker); if(ticker)return ticker; }
   const full = isZh ? (e.title || "") : (e.title_en || e.title || "");
   if (e.type === "macro") { const m = macroMeta(e); if (m) return isZh ? m.abbr[0] : m.abbr[1]; }
   else { const h = _hay(e); for (const st of STRUCT_ABBR) if (st.re.test(h)) return isZh ? st.abbr[0] : st.abbr[1]; }
@@ -77,7 +79,7 @@ export async function mount(root) {
   const isZh = (document.documentElement.lang || "zh").slice(0, 2) !== "en";
   const isPro = store.isPro();
   const query = new URLSearchParams((location.hash.split("?")[1] || ""));
-  const scopeTicker = query.get("ticker") || "";
+  const scopeTicker = calendarTicker(query.get("ticker"));
   const research = eventResearchSession((store.get("watchlist") || []).includes(scopeTicker) ? scopeTicker : "");
   let disposed = false;
   const WD = isZh ? ["日", "一", "二", "三", "四", "五", "六"] : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -104,8 +106,8 @@ export async function mount(root) {
     return () => { disposed=true; closeModal(); research.dispose(); disposeHistory(); };
   }
   const watchSet = new Set(watch);
-  const events = ((doc && doc.events) || []).slice().sort((a,b)=>a.date.localeCompare(b.date) || (Number(!["holiday","early_close"].includes(a.type))-Number(!["holiday","early_close"].includes(b.type))));
   const evHasMine = (e) => (e.tickers || []).some((t) => watchSet.has(String(t).toUpperCase()) || (e.type === "earnings" && (links[String(t).toUpperCase()] || []).some(w => watchSet.has(w))));
+  const events = orderCalendarEvents((doc && doc.events) || [], {scopeTicker,isWatched:evHasMine});
 
   // index events by date for O(1) day lookup
   const byDate = new Map();
@@ -225,7 +227,7 @@ export async function mount(root) {
           const pill = el("span.pill.pill-" + visualType(e) + ".cal-kind-" + category(e), { title: full });
           pill.appendChild(el("span.pill-kind", categoryLabel(e)));
           pill.appendChild(el("span.pill-ic", { "aria-hidden": "true" }, icon(ICON[visualType(e)] || "calendar")));
-          pill.appendChild(el("span.pill-txt", shortLabel(e, isZh)));
+          pill.appendChild(el("span.pill-txt", shortLabel(e, isZh, scopeTicker)));
           box.appendChild(pill);
         }
       }
@@ -239,7 +241,7 @@ export async function mount(root) {
       for (const e of evs.slice(0, 3)) {
         const b = el("div.mbar");
         const dot = el("i.bardot"); dot.style.background = DOTC[visualType(e)] || "var(--muted)"; b.appendChild(dot);
-        const label = e.type === "earnings" ? ((e.tickers || [])[0] || (isZh ? "财报" : "ER")) : shortLabel(e, isZh);
+        const label = e.type === "earnings" ? ((e.tickers || [])[0] || (isZh ? "财报" : "ER")) : shortLabel(e, isZh, scopeTicker);
         b.setAttribute("title", isZh ? (e.title || "") : (e.title_en || e.title || ""));
         b.appendChild(el("span.pill-txt" + (e.type === "earnings" && isPro && evHasMine(e) ? ".mine" : ""), label));
         box.appendChild(b);
@@ -318,7 +320,7 @@ export async function mount(root) {
           const session = evs.find(e => ["holiday", "early_close"].includes(e.type));
           const weekday = new Intl.DateTimeFormat(isZh ? "zh-CN" : "en-US", {weekday:"short"}).format(d);
           const cell = el("button.cal-bicell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : "") + (session?.type === "holiday" ? ".cal-closed" : "") + (session?.type === "early_close" ? ".cal-early" : ""),
-            {type:"button", "data-date":iso, "aria-label":[dateLabel(iso), s("calendar.event_count", {n:evs.length}), ...evs.map(e => isZh ? e.title : (e.title_en || e.title))].join(", "), "aria-pressed":String(iso === selected), "aria-haspopup":"dialog"});
+            {type:"button", "data-date":iso, "aria-label":[dateLabel(iso), s("calendar.event_count", {n:evs.length}), ...evs.slice(0,3).map(e => String(isZh ? e.title : (e.title_en || e.title)).slice(0,80)), ...(evs.length>3?[s("calendar.more_events",{n:evs.length-3})]:[])].join(", "), "aria-pressed":String(iso === selected), "aria-haspopup":"dialog"});
           const date = el("div.cal-bidate", el("span.cal-bidnum", String(d.getDate())), el("span.cal-biweekday", iso === todayIso ? s("calendar.today") : weekday));
           cell.append(date);
           if (evs.length) cell.append(pills(evs, 2));

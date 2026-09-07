@@ -20,3 +20,22 @@ export function calendarEventKey(e) {
   const issuers=kind==='earnings'?(e.tickers||[]).slice().sort().join(','):'';
   return [e.date,e.type,precise,issuers].join('|');
 }
+
+export function calendarTicker(value) {
+  const ticker=String(value || '').trim().toUpperCase();
+  return /^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker)?ticker:'';
+}
+export function calendarEventTicker(event, preferred='') {
+  const tickers=(event.tickers || []).map(calendarTicker).filter(Boolean),scope=calendarTicker(preferred);
+  return scope && tickers.includes(scope)?scope:(tickers[0] || '');
+}
+// One order for grid previews, agenda and day dialogs. Market session changes
+// stay first; a source link's company remains visible without filtering the day.
+export function orderCalendarEvents(events,{scopeTicker='',isWatched=()=>false}={}) {
+  const scope=calendarTicker(scopeTicker);
+  const priority=e=>['holiday','early_close'].includes(e.type)?0:
+    scope && calendarEventTicker(e,scope)===scope?1:e.type==='macro'?2:isWatched(e)?3:4;
+  return events.map((event,index)=>({event,index,priority:priority(event)}))
+    .sort((a,b)=>a.event.date.localeCompare(b.event.date)||a.priority-b.priority||a.index-b.index)
+    .map(row=>row.event);
+}
