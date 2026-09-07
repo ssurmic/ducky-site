@@ -1,7 +1,7 @@
 <section class="section product-demo" id="product-demo" aria-labelledby="product-demo-title">
  <div class="wrap">
   <div class="product-demo-heading"><div><p class="eyebrow mono">{{ t('walkthrough.eyebrow') }}</p><h2 id="product-demo-title">{{ t('walkthrough.title') }}</h2></div></div>
-  {% set video_version = '2026-09-06-alerts-v7' %}
+  {% set video_version = '2026-09-07-english-v8' %}
   {% set video_asset = '/media/ducky-walkthrough-' ~ video_version ~ '.' ~ lang %}
   <video id="product-demo-video" class="product-demo-player" controls playsinline preload="none" width="1920" height="1080" poster="{{ video_asset }}.jpg" aria-label="{{ t('walkthrough.title') }}" aria-describedby="product-demo-note">
    <source src="{{ video_asset }}.mp4" type="video/mp4">
@@ -11,7 +11,7 @@
   </video>
   <div class="product-demo-caption"><p id="product-demo-note" class="small muted">{{ t('walkthrough.caption') }}</p><a href="{{ url('/app/') }}#/register">{{ t('walkthrough.start') }} →</a></div>
   {# Actual render offsets, after the opening fade of each scene. #}
-  {% set video_starts = [0.16, 4.08, 6.52, 10.04, 12.04, 19.08] if lang == 'zh' else [0.16, 3.16, 5.4, 9.16, 11.96, 17.28] %}
+  {% set video_starts = [0.16, 4.08, 6.52, 10.04, 12.04, 19.08] if lang == 'zh' else [0.16, 4.28, 8.68, 11.68, 14.68, 21.68] %}
   {% set chapter_routes = ['#/watchlist', '#/boards?screen=insider-oversold', '#/creators?scope=discover', '#/calendar', '#/briefing?period=daily', '#/updates', '#/creators?tab=lab&preview=fictional'] %}
   <details class="product-demo-guide" aria-labelledby="product-demo-guide-title" data-demo-guide
        data-loading="{{ t('walkthrough.guide.loading') }}" data-ready="{{ t('walkthrough.guide.ready') }}" data-error="{{ t('walkthrough.guide.error') }}">

@@ -1,0 +1,11 @@
+{"type": "WordBoundary", "offset": 1000000, "duration": 2625000, "text": "Set"}
+{"type": "WordBoundary", "offset": 3750000, "duration": 625000, "text": "a"}
+{"type": "WordBoundary", "offset": 4500000, "duration": 2875000, "text": "price"}
+{"type": "WordBoundary", "offset": 7500000, "duration": 5000000, "text": "alert"}
+{"type": "WordBoundary", "offset": 21125000, "duration": 2000000, "text": "Get"}
+{"type": "WordBoundary", "offset": 23250000, "duration": 5750000, "text": "notified"}
+{"type": "WordBoundary", "offset": 29125000, "duration": 1250000, "text": "when"}
+{"type": "WordBoundary", "offset": 30500000, "duration": 1000000, "text": "it"}
+{"type": "WordBoundary", "offset": 31625000, "duration": 2375000, "text": "hits"}
+{"type": "WordBoundary", "offset": 34125000, "duration": 1375000, "text": "your"}
+{"type": "WordBoundary", "offset": 35625000, "duration": 4875000, "text": "level"}

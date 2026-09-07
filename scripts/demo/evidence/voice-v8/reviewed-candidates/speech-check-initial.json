@@ -1,0 +1,485 @@
+[
+  {
+    "file": "01-event.en.wav",
+    "language": "en",
+    "duration": 3.93,
+    "text": " and video partners with Corning. What happens next?",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.5,
+        "text": " and video partners with Corning. What happens next?",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.3,
+            "word": " and",
+            "probability": 0.5264186859130859
+          },
+          {
+            "start": 0.3,
+            "end": 0.52,
+            "word": " video",
+            "probability": 0.8206734657287598
+          },
+          {
+            "start": 0.52,
+            "end": 0.92,
+            "word": " partners",
+            "probability": 0.9968492388725281
+          },
+          {
+            "start": 0.92,
+            "end": 1.2,
+            "word": " with",
+            "probability": 0.997988224029541
+          },
+          {
+            "start": 1.2,
+            "end": 1.58,
+            "word": " Corning.",
+            "probability": 0.9479646682739258
+          },
+          {
+            "start": 2.58,
+            "end": 2.8,
+            "word": " What",
+            "probability": 0.9767022132873535
+          },
+          {
+            "start": 2.8,
+            "end": 3.16,
+            "word": " happens",
+            "probability": 0.9858570098876953
+          },
+          {
+            "start": 3.16,
+            "end": 3.5,
+            "word": " next?",
+            "probability": 0.9914743900299072
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "02-price.en.wav",
+    "language": "en",
+    "duration": 4.2,
+    "text": " Set a price alert. Get notified when it hits your level.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.08,
+        "text": " Set a price alert.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.38,
+            "word": " Set",
+            "probability": 0.861429750919342
+          },
+          {
+            "start": 0.38,
+            "end": 0.52,
+            "word": " a",
+            "probability": 0.9855660796165466
+          },
+          {
+            "start": 0.52,
+            "end": 0.72,
+            "word": " price",
+            "probability": 0.8053128123283386
+          },
+          {
+            "start": 0.72,
+            "end": 1.08,
+            "word": " alert.",
+            "probability": 0.9896407723426819
+          }
+        ]
+      },
+      {
+        "start": 1.92,
+        "end": 3.86,
+        "text": " Get notified when it hits your level.",
+        "words": [
+          {
+            "start": 1.92,
+            "end": 2.32,
+            "word": " Get",
+            "probability": 0.9821020364761353
+          },
+          {
+            "start": 2.32,
+            "end": 2.64,
+            "word": " notified",
+            "probability": 0.9848693609237671
+          },
+          {
+            "start": 2.64,
+            "end": 3.06,
+            "word": " when",
+            "probability": 0.9970177412033081
+          },
+          {
+            "start": 3.06,
+            "end": 3.22,
+            "word": " it",
+            "probability": 0.9967131614685059
+          },
+          {
+            "start": 3.22,
+            "end": 3.4,
+            "word": " hits",
+            "probability": 0.9848049283027649
+          },
+          {
+            "start": 3.4,
+            "end": 3.58,
+            "word": " your",
+            "probability": 0.9984392523765564
+          },
+          {
+            "start": 3.58,
+            "end": 3.86,
+            "word": " level.",
+            "probability": 0.9933978319168091
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "03-check.en.wav",
+    "language": "en",
+    "duration": 2.8375,
+    "text": " But a price drop doesn't always mean it's oversold.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.48,
+        "text": " But a price drop doesn't always mean it's oversold.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.28,
+            "word": " But",
+            "probability": 0.5013588070869446
+          },
+          {
+            "start": 0.28,
+            "end": 0.38,
+            "word": " a",
+            "probability": 0.9853441119194031
+          },
+          {
+            "start": 0.38,
+            "end": 0.64,
+            "word": " price",
+            "probability": 0.9873168468475342
+          },
+          {
+            "start": 0.64,
+            "end": 0.92,
+            "word": " drop",
+            "probability": 0.9958990216255188
+          },
+          {
+            "start": 0.92,
+            "end": 1.34,
+            "word": " doesn't",
+            "probability": 0.9953366816043854
+          },
+          {
+            "start": 1.34,
+            "end": 1.54,
+            "word": " always",
+            "probability": 0.9991241097450256
+          },
+          {
+            "start": 1.54,
+            "end": 1.82,
+            "word": " mean",
+            "probability": 0.9991490840911865
+          },
+          {
+            "start": 1.82,
+            "end": 2.06,
+            "word": " it's",
+            "probability": 0.9914785921573639
+          },
+          {
+            "start": 2.06,
+            "end": 2.48,
+            "word": " oversold.",
+            "probability": 0.9899176359176636
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "04-trigger.en.wav",
+    "language": "en",
+    "duration": 2.81,
+    "text": " Now the daily RSI is below 35.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.26,
+        "text": " Now the daily RSI is below 35.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.34,
+            "word": " Now",
+            "probability": 0.9093008041381836
+          },
+          {
+            "start": 0.34,
+            "end": 0.5,
+            "word": " the",
+            "probability": 0.953002393245697
+          },
+          {
+            "start": 0.5,
+            "end": 0.74,
+            "word": " daily",
+            "probability": 0.9816228151321411
+          },
+          {
+            "start": 0.74,
+            "end": 1.28,
+            "word": " RSI",
+            "probability": 0.7773169875144958
+          },
+          {
+            "start": 1.28,
+            "end": 1.52,
+            "word": " is",
+            "probability": 0.9967523813247681
+          },
+          {
+            "start": 1.52,
+            "end": 1.7,
+            "word": " below",
+            "probability": 0.9962896108627319
+          },
+          {
+            "start": 1.7,
+            "end": 2.26,
+            "word": " 35.",
+            "probability": 0.9706689119338989
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "05-outcome.en.wav",
+    "language": "en",
+    "duration": 6.84,
+    "text": " 20 trading days later, the stock is up almost 17%. You can see the pullbacks, too.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.62,
+        "text": " 20 trading days later, the stock is up almost 17%.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.42,
+            "word": " 20",
+            "probability": 0.9418293237686157
+          },
+          {
+            "start": 0.42,
+            "end": 0.72,
+            "word": " trading",
+            "probability": 0.9886177182197571
+          },
+          {
+            "start": 0.72,
+            "end": 0.98,
+            "word": " days",
+            "probability": 0.9968384504318237
+          },
+          {
+            "start": 0.98,
+            "end": 1.36,
+            "word": " later,",
+            "probability": 0.996547281742096
+          },
+          {
+            "start": 1.7,
+            "end": 1.82,
+            "word": " the",
+            "probability": 0.9921191930770874
+          },
+          {
+            "start": 1.82,
+            "end": 2.08,
+            "word": " stock",
+            "probability": 0.9979082345962524
+          },
+          {
+            "start": 2.08,
+            "end": 2.26,
+            "word": " is",
+            "probability": 0.9968202114105225
+          },
+          {
+            "start": 2.26,
+            "end": 2.42,
+            "word": " up",
+            "probability": 0.9909818768501282
+          },
+          {
+            "start": 2.42,
+            "end": 2.72,
+            "word": " almost",
+            "probability": 0.9967769980430603
+          },
+          {
+            "start": 2.72,
+            "end": 3.62,
+            "word": " 17%.",
+            "probability": 0.8700295388698578
+          }
+        ]
+      },
+      {
+        "start": 4.380000000000001,
+        "end": 6.48,
+        "text": " You can see the pullbacks, too.",
+        "words": [
+          {
+            "start": 4.380000000000001,
+            "end": 4.98,
+            "word": " You",
+            "probability": 0.9824313521385193
+          },
+          {
+            "start": 4.98,
+            "end": 5.16,
+            "word": " can",
+            "probability": 0.998084545135498
+          },
+          {
+            "start": 5.16,
+            "end": 5.32,
+            "word": " see",
+            "probability": 0.9988245368003845
+          },
+          {
+            "start": 5.32,
+            "end": 5.46,
+            "word": " the",
+            "probability": 0.9989172220230103
+          },
+          {
+            "start": 5.46,
+            "end": 5.94,
+            "word": " pullbacks,",
+            "probability": 0.9065685868263245
+          },
+          {
+            "start": 6.28,
+            "end": 6.48,
+            "word": " too.",
+            "probability": 0.9962931275367737
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "06-start.en.wav",
+    "language": "en",
+    "duration": 4.6,
+    "text": " Set your alerts, and let Ducky keep track. Try it free.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.5,
+        "text": " Set your alerts, and let Ducky keep track.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.36,
+            "word": " Set",
+            "probability": 0.9067279100418091
+          },
+          {
+            "start": 0.36,
+            "end": 0.56,
+            "word": " your",
+            "probability": 0.9833821654319763
+          },
+          {
+            "start": 0.56,
+            "end": 0.94,
+            "word": " alerts,",
+            "probability": 0.953495442867279
+          },
+          {
+            "start": 1.3,
+            "end": 1.42,
+            "word": " and",
+            "probability": 0.9911991953849792
+          },
+          {
+            "start": 1.42,
+            "end": 1.6,
+            "word": " let",
+            "probability": 0.993648111820221
+          },
+          {
+            "start": 1.6,
+            "end": 1.88,
+            "word": " Ducky",
+            "probability": 0.7696619629859924
+          },
+          {
+            "start": 1.88,
+            "end": 2.16,
+            "word": " keep",
+            "probability": 0.9706821441650391
+          },
+          {
+            "start": 2.16,
+            "end": 2.5,
+            "word": " track.",
+            "probability": 0.9970744848251343
+          }
+        ]
+      },
+      {
+        "start": 3.24,
+        "end": 4.26,
+        "text": " Try it free.",
+        "words": [
+          {
+            "start": 3.24,
+            "end": 3.82,
+            "word": " Try",
+            "probability": 0.978211522102356
+          },
+          {
+            "start": 3.82,
+            "end": 4.0,
+            "word": " it",
+            "probability": 0.9954010248184204
+          },
+          {
+            "start": 4.0,
+            "end": 4.26,
+            "word": " free.",
+            "probability": 0.886775016784668
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,173 @@
+[
+  {
+    "file": "emma-case.en.wav",
+    "language": "en",
+    "duration": 3.792,
+    "text": " NVIDIA partners with Corning. What happens next?",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.18,
+        "text": " NVIDIA partners with Corning. What happens next?",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.58,
+            "word": " NVIDIA",
+            "probability": 0.8642098307609558
+          },
+          {
+            "start": 0.58,
+            "end": 0.92,
+            "word": " partners",
+            "probability": 0.8715393543243408
+          },
+          {
+            "start": 0.92,
+            "end": 1.28,
+            "word": " with",
+            "probability": 0.998306155204773
+          },
+          {
+            "start": 1.28,
+            "end": 1.76,
+            "word": " Corning.",
+            "probability": 0.9397993087768555
+          },
+          {
+            "start": 2.22,
+            "end": 2.38,
+            "word": " What",
+            "probability": 0.9925100803375244
+          },
+          {
+            "start": 2.38,
+            "end": 2.74,
+            "word": " happens",
+            "probability": 0.9968909621238708
+          },
+          {
+            "start": 2.74,
+            "end": 3.18,
+            "word": " next?",
+            "probability": 0.996541440486908
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "jenny-case.en.wav",
+    "language": "en",
+    "duration": 4.656,
+    "text": " NVIDIA partners with Corning. What happens next?",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.6,
+        "text": " NVIDIA partners with Corning. What happens next?",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.58,
+            "word": " NVIDIA",
+            "probability": 0.7662620147069296
+          },
+          {
+            "start": 0.58,
+            "end": 0.9,
+            "word": " partners",
+            "probability": 0.8771416544914246
+          },
+          {
+            "start": 0.9,
+            "end": 1.2,
+            "word": " with",
+            "probability": 0.9981142282485962
+          },
+          {
+            "start": 1.2,
+            "end": 1.6,
+            "word": " Corning.",
+            "probability": 0.9373151361942291
+          },
+          {
+            "start": 2.6,
+            "end": 2.82,
+            "word": " What",
+            "probability": 0.987550675868988
+          },
+          {
+            "start": 2.82,
+            "end": 3.18,
+            "word": " happens",
+            "probability": 0.9945194125175476
+          },
+          {
+            "start": 3.18,
+            "end": 3.6,
+            "word": " next?",
+            "probability": 0.9964147806167603
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "jenny-sound.en.wav",
+    "language": "en",
+    "duration": 4.632,
+    "text": " NVIDIA partners with Corning. What happens next?",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.5,
+        "text": " NVIDIA partners with Corning. What happens next?",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.56,
+            "word": " NVIDIA",
+            "probability": 0.7865068515141805
+          },
+          {
+            "start": 0.56,
+            "end": 0.88,
+            "word": " partners",
+            "probability": 0.8354246020317078
+          },
+          {
+            "start": 0.88,
+            "end": 1.18,
+            "word": " with",
+            "probability": 0.9974440336227417
+          },
+          {
+            "start": 1.18,
+            "end": 1.56,
+            "word": " Corning.",
+            "probability": 0.944676548242569
+          },
+          {
+            "start": 2.52,
+            "end": 2.78,
+            "word": " What",
+            "probability": 0.9837943911552429
+          },
+          {
+            "start": 2.78,
+            "end": 3.16,
+            "word": " happens",
+            "probability": 0.9899112582206726
+          },
+          {
+            "start": 3.16,
+            "end": 3.5,
+            "word": " next?",
+            "probability": 0.9929881691932678
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,118 @@
+{
+  "source_video": "ducky-walkthrough-2026-09-06-alerts-v7.zh.mp4",
+  "source_sha256": "beb4a48524eb170c278a2bb4bfa976b2c6ba7f07ba76475d226f8243a8e9a5fe",
+  "method": "English translation aligned to reviewed Mandarin ASR phrase boundaries; all original words covered in order. Chinese voice WAVs unchanged from v7. Video re-encoded with chart completed before result narration.",
+  "cues": [
+    {
+      "scene": "01-event",
+      "start": 0.08,
+      "end": 1.94,
+      "text": "NVIDIA partners with Corning.",
+      "asr_word_range": [
+        0,
+        7
+      ]
+    },
+    {
+      "scene": "01-event",
+      "start": 1.96,
+      "end": 3.86,
+      "text": "What's next?",
+      "asr_word_range": [
+        8,
+        13
+      ]
+    },
+    {
+      "scene": "02-price",
+      "start": 4.0,
+      "end": 6.3,
+      "text": "Get an alert at your chosen price.",
+      "asr_word_range": [
+        0,
+        8
+      ]
+    },
+    {
+      "scene": "03-check",
+      "start": 6.44,
+      "end": 8.48,
+      "text": "Does a drop mean it's oversold?",
+      "asr_word_range": [
+        0,
+        7
+      ]
+    },
+    {
+      "scene": "03-check",
+      "start": 8.5,
+      "end": 9.82,
+      "text": "Check the daily indicator.",
+      "asr_word_range": [
+        8,
+        13
+      ]
+    },
+    {
+      "scene": "04-trigger",
+      "start": 9.96,
+      "end": 11.82,
+      "text": "Below 35. The condition is met.",
+      "asr_word_range": [
+        0,
+        6
+      ]
+    },
+    {
+      "scene": "05-outcome",
+      "start": 11.96,
+      "end": 14.04,
+      "text": "Here, 20 trading days later,",
+      "asr_word_range": [
+        0,
+        7
+      ]
+    },
+    {
+      "scene": "05-outcome",
+      "start": 14.06,
+      "end": 16.3,
+      "text": "the stock is up almost 17%.",
+      "asr_word_range": [
+        8,
+        14
+      ]
+    },
+    {
+      "scene": "05-outcome",
+      "start": 16.32,
+      "end": 18.86,
+      "text": "You can see the pullbacks, too.",
+      "asr_word_range": [
+        15,
+        23
+      ]
+    },
+    {
+      "scene": "06-start",
+      "start": 19.0,
+      "end": 21.56,
+      "text": "Set your alerts. Ducky keeps track.",
+      "asr_word_range": [
+        0,
+        8
+      ]
+    },
+    {
+      "scene": "06-start",
+      "start": 21.58,
+      "end": 22.78,
+      "text": "Try it free.",
+      "asr_word_range": [
+        9,
+        13
+      ]
+    }
+  ],
+  "timings": "Final cue boundaries live in voiceover-2026-09-07-v8-zh.json and public VTT; this file records the initial translation review."
+}

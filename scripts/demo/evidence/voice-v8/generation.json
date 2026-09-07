@@ -1,0 +1,71 @@
+{
+  "provider": {
+    "provider": "Microsoft online speech service",
+    "client": "edge-tts",
+    "client_version": "7.2.8",
+    "voice": "en-US-JennyNeural",
+    "locale": "en-US",
+    "rate": "+0%",
+    "pitch": "+0Hz",
+    "boundary": "WordBoundary",
+    "model_revision": "provider does not expose an immutable model revision"
+  },
+  "scenes": [
+    {
+      "scene": "01-event",
+      "voice": "en-US-JennyNeural",
+      "rate": "+0%",
+      "words": 7,
+      "mp3_sha256": "de63ddf63c7d41706b67bf4d665460ca469262ee0681acdafb276fabf51732da",
+      "wav_sha256": "14ab1c93b12550c3cc546e125885b3430d30e3ddd53b02349716573986327274",
+      "metadata_sha256": "922b6024214c8c964e0eab63325f33d3a2760e8b0dda99ecca7a899f268b9aa9",
+      "spoken_text": "Nvidia partners with Corning. What happens next?",
+      "selection": "Same Jenny voice, standard word case. Unprompted independent ASR reads NVIDIA; all-caps draft read and video. ASR is not a subjective voice-quality certification."
+    },
+    {
+      "scene": "02-price",
+      "voice": "en-US-JennyNeural",
+      "rate": "+0%",
+      "words": 11,
+      "mp3_sha256": "5a4535ff283ad9079d4304fde1eda48bb9b4fb7c3a8b3aff403092c6031f988c",
+      "wav_sha256": "ee2bddcb2334abe1b7869da11b7fa1140622801a3bfad97b0b2f0b7566f856cd",
+      "metadata_sha256": "072007d60974b68a3944787c2d3841e0a2ce40193d96cbfa4d8509f6daa4da0f"
+    },
+    {
+      "scene": "03-check",
+      "voice": "en-US-JennyNeural",
+      "rate": "+0%",
+      "words": 9,
+      "mp3_sha256": "5b3ec5226099e9dc19c68f57d36d1bfe1aa7bae1e55a91985de6506b6441cb57",
+      "wav_sha256": "28a336083fdd8fade27ea4f93f163417be9b99007f09c64f53f9dbed2a8ac159",
+      "metadata_sha256": "4709a65029f9110a36dcbcf99696a49b1c399feaaa3c3c7a6a36800551c50664"
+    },
+    {
+      "scene": "04-trigger",
+      "voice": "en-US-JennyNeural",
+      "rate": "+0%",
+      "words": 9,
+      "mp3_sha256": "ff9bea9e35a4965f172ba3f4abdadb57c7e70d98b144c1e3ee845e4ac4e1f441",
+      "wav_sha256": "98cd1af98831a526ed907fa70e89cdd88e484be24b19f179967ab301e6468eae",
+      "metadata_sha256": "b6154955e7c40b1a54b4640ba8792251fe7044618eea45e081ebe92216e1778f"
+    },
+    {
+      "scene": "05-outcome",
+      "voice": "en-US-JennyNeural",
+      "rate": "+0%",
+      "words": 16,
+      "mp3_sha256": "fc7620d14ee586e8207c72d341907b48a6e4b4c6efede3b5dab5c5d2d3a7dc34",
+      "wav_sha256": "4acbdc8932a055f9ac5ef93bc52eb97735cbdc2b421f2ee98a304163a762931b",
+      "metadata_sha256": "5d43370df94a4c80fed546363661e0f2b1ce8fdff9d0ab0c118f886ddc7d282d"
+    },
+    {
+      "scene": "06-start",
+      "voice": "en-US-JennyNeural",
+      "rate": "+0%",
+      "words": 11,
+      "mp3_sha256": "b6fc2704792c59ae205f710bdbbc3d27d917af99ee2b10999585c93f72914c29",
+      "wav_sha256": "198948b1818253cd569bac460eb1628b07ccc6c50a408f2e69cb7071e4d5c844",
+      "metadata_sha256": "bc62a24aa69c0ae794ef9bb131ff0df891ed4ec61634f384f32d9c254f583c45"
+    }
+  ]
+}

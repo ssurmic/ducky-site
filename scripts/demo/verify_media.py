@@ -255,6 +255,11 @@ def verify_video(audit, ffprobe, language, video, manifest, frames, audio_dir, o
         shots = reported.get('shots', [])
         audit.check(shots == expected_shots, f'{filename}/{name}: shots differ from manifest')
         audit.check(bool(shots) and shots[0]['at'] == 0, f'{filename}/{name}: first shot must start at 0')
+        result_cue = scene.get('complete_shots_before_caption', {}).get(language)
+        if result_cue is not None:
+            cue = scene['caption_timings'][language][language][result_cue]
+            audit.check(shots[-1]['at'] * reported['duration'] <= lead + cue['start'],
+                        f'{filename}/{name}: result narration begins before the chart reaches its final date')
         previous = -1.0
         for shot in shots:
             at, shotname = shot['at'], shot['file']
@@ -284,6 +289,20 @@ def verify_video(audit, ffprobe, language, video, manifest, frames, audio_dir, o
             last = first + rendered['duration']
             within = [cue for cue in cues if cue[0] >= first - .002 and cue[1] <= last + .002]
             assigned += len(within)
+            timed = scene.get('caption_timings', {}).get(language, {}).get(caption_language)
+            if timed is not None:
+                audit.check(len(timed) == len(within), f'{caption.name}/{scene["name"]}: authored cue count mismatch')
+                for cue, planned in zip(within, timed):
+                    audit.check(abs(cue[0] - first - lead - planned['start']) <= .002 and
+                                abs(cue[1] - first - lead - planned['end']) <= .002,
+                                f'{caption.name}/{scene["name"]}: cue not aligned to planned word boundaries')
+                    audit.check(cue[2] == planned['text'], f'{caption.name}/{scene["name"]}: authored line breaks changed')
+                    if caption_language == 'en':
+                        lines = cue[2].splitlines()
+                        audit.check(len(lines) <= 2 and max(map(len, lines)) <= 38,
+                                    f'{caption.name}/{scene["name"]}: crowded subtitle lines')
+                        audit.check(len(cue[2]) / (cue[1]-cue[0]) < 25,
+                                    f'{caption.name}/{scene["name"]}: subtitle reading speed too high')
             audit.check(compact(''.join(cue[2] for cue in within)) == compact(scene[caption_language]),
                         f'{caption.name}/{scene["name"]}: script captions do not match this scene window')
         audit.check(assigned == len(cues), f'{caption.name}: cue crosses a scene boundary')

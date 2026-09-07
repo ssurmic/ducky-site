@@ -1,0 +1,34 @@
+{
+  "unchanged_chinese_audio": [
+    {
+      "file": "05-outcome.zh.wav",
+      "sha256": "a99ff7f2dfa8a35a9a42d9f9bb13ebbb5399e6ca867ba224eae8a527eb800acc",
+      "source": "scripts/demo/evidence/voice-v7/05-outcome.zh.wav"
+    },
+    {
+      "file": "02-price.zh.wav",
+      "sha256": "13e921d64cbd260a91cd8d203037176af1e2f13c1ed6e9b415429bbf6608009b",
+      "source": "scripts/demo/evidence/voice-v7/02-price.zh.wav"
+    },
+    {
+      "file": "04-trigger.zh.wav",
+      "sha256": "ac306d2c1ab90d71e9f17ebf726f05d2868e6442800fce9f695b1198d9492ed0",
+      "source": "scripts/demo/evidence/voice-v7/04-trigger.zh.wav"
+    },
+    {
+      "file": "01-event.zh.wav",
+      "sha256": "0c04e01465c1a872f45c649eebe0c67044b37bc3be41877949f9d83afe92fd7b",
+      "source": "scripts/demo/evidence/voice-v7/01-event.zh.wav"
+    },
+    {
+      "file": "03-check.zh.wav",
+      "sha256": "d4c9c9891ed34fecda8086bdff2dffb2a5c3687edc2e6972d52ab7a8e7f38cd7",
+      "source": "scripts/demo/evidence/voice-v7/03-check.zh.wav"
+    },
+    {
+      "file": "06-start.zh.wav",
+      "sha256": "8e9eb834faaa92169f66246fb6ba93c6cce388c9532e33b7cac3d63f4c818add",
+      "source": "scripts/demo/evidence/voice-v7/06-start.zh.wav"
+    }
+  ]
+}

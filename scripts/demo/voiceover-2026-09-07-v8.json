@@ -1,0 +1,678 @@
+{
+  "version": "2026-09-07-english-v8",
+  "speakers": {
+    "en": "en-US-JennyNeural"
+  },
+  "english_synthesis": {
+    "provider": "Microsoft online speech service",
+    "client": "edge-tts",
+    "client_version": "7.2.8",
+    "voice": "en-US-JennyNeural",
+    "locale": "en-US",
+    "rate": "+0%",
+    "pitch": "+0Hz",
+    "boundary": "WordBoundary",
+    "model_revision": "provider does not expose an immutable model revision"
+  },
+  "delivery": {
+    "target_seconds": 27,
+    "maximum_seconds": 35,
+    "status": "Selected for publication after exact-script ASR, word-timed caption, mobile/desktop visual and full-play verification. ASR does not certify voice naturalness."
+  },
+  "timing": {
+    "lead": 0.08,
+    "tail": 0.08,
+    "fade": 0.06
+  },
+  "scenes": [
+    {
+      "name": "01-event",
+      "zh": "英伟达与康宁合作。接下来会怎样？",
+      "en": "NVIDIA partners with Corning. What happens next?",
+      "caption_chunks": {
+        "zh": [
+          "英伟达与康宁合作。",
+          "接下来会怎样？"
+        ],
+        "en": [
+          "NVIDIA partners with Corning.",
+          "What happens next?"
+        ]
+      },
+      "spoken_en": "Nvidia partners with Corning. What happens next?",
+      "caption_line": 70,
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.5125,
+              "text": "NVIDIA partners with Corning.",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 1.7125
+            },
+            {
+              "start": 2.535,
+              "end": 3.95,
+              "text": "What happens next?",
+              "first_word": 4,
+              "last_word": 6,
+              "word_start": 2.575,
+              "word_end": 3.7875
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.5125,
+              "text": "英伟达与康宁合作。",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 1.7125
+            },
+            {
+              "start": 2.535,
+              "end": 3.95,
+              "text": "接下来会怎样？",
+              "first_word": 4,
+              "last_word": 6,
+              "word_start": 2.575,
+              "word_end": 3.7875
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "02-price",
+      "zh": "设一个价格提醒。到你设的价位，就通知你。",
+      "en": "Set a price alert. Get notified when it hits your level.",
+      "caption_chunks": {
+        "zh": [
+          "设一个价格提醒。",
+          "到你设的价位，就通知你。"
+        ],
+        "en": [
+          "Set a price alert.",
+          "Get notified when it hits your level."
+        ]
+      },
+      "shots": {
+        "zh": [
+          {
+            "file": "02-price-00.png",
+            "at": 0.0
+          },
+          {
+            "file": "02-price-01.png",
+            "at": 0.0725
+          },
+          {
+            "file": "02-price-02.png",
+            "at": 0.145
+          },
+          {
+            "file": "02-price-03.png",
+            "at": 0.2175
+          },
+          {
+            "file": "02-price-04.png",
+            "at": 0.29
+          },
+          {
+            "file": "02-price-05.png",
+            "at": 0.3625
+          },
+          {
+            "file": "02-price-06.png",
+            "at": 0.435
+          },
+          {
+            "file": "02-price-07.png",
+            "at": 0.5075
+          },
+          {
+            "file": "02-price-08.png",
+            "at": 0.58
+          }
+        ],
+        "en": [
+          {
+            "file": "02-price-00.png",
+            "at": 0.0
+          },
+          {
+            "file": "02-price-01.png",
+            "at": 0.0725
+          },
+          {
+            "file": "02-price-02.png",
+            "at": 0.145
+          },
+          {
+            "file": "02-price-03.png",
+            "at": 0.2175
+          },
+          {
+            "file": "02-price-04.png",
+            "at": 0.29
+          },
+          {
+            "file": "02-price-05.png",
+            "at": 0.3625
+          },
+          {
+            "file": "02-price-06.png",
+            "at": 0.435
+          },
+          {
+            "file": "02-price-07.png",
+            "at": 0.5075
+          },
+          {
+            "file": "02-price-08.png",
+            "at": 0.58
+          }
+        ]
+      },
+      "spoken_en": "Set a price alert. Get notified when it hits your level.",
+      "caption_line": 70,
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.05,
+              "text": "Set a price alert.",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 1.25
+            },
+            {
+              "start": 2.0725,
+              "end": 4.2,
+              "text": "Get notified when it hits your level.",
+              "first_word": 4,
+              "last_word": 10,
+              "word_start": 2.1125,
+              "word_end": 4.05
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.05,
+              "text": "设一个价格提醒。",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 1.25
+            },
+            {
+              "start": 2.0725,
+              "end": 4.2,
+              "text": "到你设的价位，就通知你。",
+              "first_word": 4,
+              "last_word": 10,
+              "word_start": 2.1125,
+              "word_end": 4.05
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "03-check",
+      "zh": "但股价下跌，不一定代表超跌。",
+      "en": "But a price drop doesn't always mean it's oversold.",
+      "caption_chunks": {
+        "zh": [
+          "但股价下跌，不一定代表超跌。"
+        ],
+        "en": [
+          "But a price drop doesn't always\nmean it's oversold."
+        ]
+      },
+      "spoken_en": "But a price drop doesn't always mean it's oversold.",
+      "caption_line": 70,
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.8375,
+              "text": "But a price drop doesn't always\nmean it's oversold.",
+              "first_word": 0,
+              "last_word": 8,
+              "word_start": 0.1,
+              "word_end": 2.6875
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.8375,
+              "text": "但股价下跌，不一定代表超跌。",
+              "first_word": 0,
+              "last_word": 8,
+              "word_start": 0.1,
+              "word_end": 2.6875
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "04-trigger",
+      "zh": "现在，日线 RSI 已经低于 35。",
+      "en": "Now the daily RSI is below 35.",
+      "caption_chunks": {
+        "zh": [
+          "现在，日线 RSI 已经低于 35。"
+        ],
+        "en": [
+          "Now the daily RSI is below 35."
+        ]
+      },
+      "minimum_seconds": 2.0,
+      "spoken_en": "Now the daily R S I is below 35.",
+      "caption_line": 70,
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.81,
+              "text": "Now the daily RSI is below 35.",
+              "first_word": 0,
+              "last_word": 8,
+              "word_start": 0.1,
+              "word_end": 2.625
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.81,
+              "text": "现在，日线 RSI 已经低于 35。",
+              "first_word": 0,
+              "last_word": 8,
+              "word_start": 0.1,
+              "word_end": 2.625
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "05-outcome",
+      "zh": "20 个交易日后，股价上涨了近 17%。中间的回落也看得到。",
+      "en": "20 trading days later, the stock is up almost 17%. You can see the pullbacks, too.",
+      "caption_chunks": {
+        "zh": [
+          "20 个交易日后，",
+          "股价上涨了近 17%。",
+          "中间的回落也看得到。"
+        ],
+        "en": [
+          "20 trading days later,",
+          "the stock is up almost 17%.",
+          "You can see the pullbacks, too."
+        ]
+      },
+      "shots": {
+        "zh": [
+          {
+            "file": "05-outcome-00.png",
+            "at": 0.0
+          },
+          {
+            "file": "05-outcome-01.png",
+            "at": 0.034
+          },
+          {
+            "file": "05-outcome-02.png",
+            "at": 0.068
+          },
+          {
+            "file": "05-outcome-03.png",
+            "at": 0.102
+          },
+          {
+            "file": "05-outcome-04.png",
+            "at": 0.136
+          },
+          {
+            "file": "05-outcome-05.png",
+            "at": 0.17
+          },
+          {
+            "file": "05-outcome-06.png",
+            "at": 0.204
+          },
+          {
+            "file": "05-outcome-07.png",
+            "at": 0.238
+          },
+          {
+            "file": "05-outcome-08.png",
+            "at": 0.272
+          },
+          {
+            "file": "05-outcome-09.png",
+            "at": 0.306
+          },
+          {
+            "file": "05-outcome-10.png",
+            "at": 0.34
+          },
+          {
+            "file": "05-outcome-11.png",
+            "at": 0.374
+          },
+          {
+            "file": "05-outcome-12.png",
+            "at": 0.408
+          },
+          {
+            "file": "05-outcome-13.png",
+            "at": 0.442
+          },
+          {
+            "file": "05-outcome-14.png",
+            "at": 0.476
+          },
+          {
+            "file": "05-outcome-15.png",
+            "at": 0.51
+          },
+          {
+            "file": "05-outcome-16.png",
+            "at": 0.544
+          },
+          {
+            "file": "05-outcome-17.png",
+            "at": 0.578
+          },
+          {
+            "file": "05-outcome-18.png",
+            "at": 0.612
+          },
+          {
+            "file": "05-outcome-19.png",
+            "at": 0.646
+          },
+          {
+            "file": "05-outcome-20.png",
+            "at": 0.68
+          }
+        ],
+        "en": [
+          {
+            "file": "05-outcome-00.png",
+            "at": 0.0
+          },
+          {
+            "file": "05-outcome-01.png",
+            "at": 0.011
+          },
+          {
+            "file": "05-outcome-02.png",
+            "at": 0.022
+          },
+          {
+            "file": "05-outcome-03.png",
+            "at": 0.033
+          },
+          {
+            "file": "05-outcome-04.png",
+            "at": 0.044
+          },
+          {
+            "file": "05-outcome-05.png",
+            "at": 0.055
+          },
+          {
+            "file": "05-outcome-06.png",
+            "at": 0.066
+          },
+          {
+            "file": "05-outcome-07.png",
+            "at": 0.077
+          },
+          {
+            "file": "05-outcome-08.png",
+            "at": 0.088
+          },
+          {
+            "file": "05-outcome-09.png",
+            "at": 0.099
+          },
+          {
+            "file": "05-outcome-10.png",
+            "at": 0.11
+          },
+          {
+            "file": "05-outcome-11.png",
+            "at": 0.121
+          },
+          {
+            "file": "05-outcome-12.png",
+            "at": 0.132
+          },
+          {
+            "file": "05-outcome-13.png",
+            "at": 0.143
+          },
+          {
+            "file": "05-outcome-14.png",
+            "at": 0.154
+          },
+          {
+            "file": "05-outcome-15.png",
+            "at": 0.165
+          },
+          {
+            "file": "05-outcome-16.png",
+            "at": 0.176
+          },
+          {
+            "file": "05-outcome-17.png",
+            "at": 0.187
+          },
+          {
+            "file": "05-outcome-18.png",
+            "at": 0.198
+          },
+          {
+            "file": "05-outcome-19.png",
+            "at": 0.209
+          },
+          {
+            "file": "05-outcome-20.png",
+            "at": 0.22
+          }
+        ]
+      },
+      "spoken_en": "20 trading days later, the stock is up almost 17%. You can see the pullbacks, too.",
+      "caption_line": 70,
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 1.6025,
+              "text": "20 trading days later,",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 1.4625
+            },
+            {
+              "start": 1.6225,
+              "end": 4.7125,
+              "text": "the stock is up almost 17%.",
+              "first_word": 4,
+              "last_word": 9,
+              "word_start": 1.6625,
+              "word_end": 3.9125
+            },
+            {
+              "start": 4.735,
+              "end": 6.84,
+              "text": "You can see the pullbacks, too.",
+              "first_word": 10,
+              "last_word": 15,
+              "word_start": 4.775,
+              "word_end": 6.6625
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 1.6025,
+              "text": "20 个交易日后，",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 1.4625
+            },
+            {
+              "start": 1.6225,
+              "end": 4.7125,
+              "text": "股价上涨了近 17%。",
+              "first_word": 4,
+              "last_word": 9,
+              "word_start": 1.6625,
+              "word_end": 3.9125
+            },
+            {
+              "start": 4.735,
+              "end": 6.84,
+              "text": "中间的回落也看得到。",
+              "first_word": 10,
+              "last_word": 15,
+              "word_start": 4.775,
+              "word_end": 6.6625
+            }
+          ]
+        }
+      },
+      "shot_timing_note": "All 21 historical points arrive by 1.54 seconds, before the 17% result cue at 1.7025 seconds. The final complete path and its pullbacks stay visible for the remainder of the scene.",
+      "complete_shots_before_caption": {
+        "en": 1
+      }
+    },
+    {
+      "name": "06-start",
+      "zh": "设好提醒，让 Ducky 帮你持续跟进。免费试试吧。",
+      "en": "Set your alerts, and let Ducky keep track. Try it free.",
+      "caption_chunks": {
+        "zh": [
+          "设好提醒，",
+          "让 Ducky 帮你持续跟进。",
+          "免费试试吧。"
+        ],
+        "en": [
+          "Set your alerts,",
+          "and let Ducky keep track.",
+          "Try it free."
+        ]
+      },
+      "shots": {
+        "zh": [
+          {
+            "file": "06-start-00.png",
+            "at": 0
+          },
+          {
+            "file": "06-start.png",
+            "at": 0.54
+          }
+        ],
+        "en": [
+          {
+            "file": "06-start-00.png",
+            "at": 0
+          },
+          {
+            "file": "06-start.png",
+            "at": 0.54
+          }
+        ]
+      },
+      "spoken_en": "Set your alerts, and let Ducky keep track. Try it free.",
+      "caption_line": 70,
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 1.1775,
+              "text": "Set your alerts,",
+              "first_word": 0,
+              "last_word": 2,
+              "word_start": 0.1,
+              "word_end": 1.05
+            },
+            {
+              "start": 1.1975,
+              "end": 3.5125,
+              "text": "and let Ducky keep track.",
+              "first_word": 3,
+              "last_word": 7,
+              "word_start": 1.2375,
+              "word_end": 2.7125
+            },
+            {
+              "start": 3.535,
+              "end": 4.6,
+              "text": "Try it free.",
+              "first_word": 8,
+              "last_word": 10,
+              "word_start": 3.575,
+              "word_end": 4.4375
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 1.1775,
+              "text": "设好提醒，",
+              "first_word": 0,
+              "last_word": 2,
+              "word_start": 0.1,
+              "word_end": 1.05
+            },
+            {
+              "start": 1.1975,
+              "end": 3.5125,
+              "text": "让 Ducky 帮你持续跟进。",
+              "first_word": 3,
+              "last_word": 7,
+              "word_start": 1.2375,
+              "word_end": 2.7125
+            },
+            {
+              "start": 3.535,
+              "end": 4.6,
+              "text": "免费试试吧。",
+              "first_word": 8,
+              "last_word": 10,
+              "word_start": 3.575,
+              "word_end": 4.4375
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "render_languages": [
+    "en"
+  ],
+  "chinese_voice_reused_from": "2026-09-06-alerts-v7"
+}

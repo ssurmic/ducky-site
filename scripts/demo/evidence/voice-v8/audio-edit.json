@@ -1,0 +1,53 @@
+{
+  "method": "Trailing silence only; retain at least 180ms after last active 10ms RMS window above -48dBFS and 150ms after final provider word. No speed/pitch transformation.",
+  "files": [
+    {
+      "file": "01-event.en.wav",
+      "original_seconds": 4.656,
+      "seconds": 3.95,
+      "last_active_window": 3.77,
+      "last_word_end": 3.7875,
+      "sha256": "fe2eb8ccfe5cf260acbb1f4c9567387fea8fb8e4d871a1a962c03304ed95007c"
+    },
+    {
+      "file": "02-price.en.wav",
+      "original_seconds": 4.92,
+      "seconds": 4.2,
+      "last_active_window": 4.01,
+      "last_word_end": 4.05,
+      "sha256": "39f3910614d0ac61d4791358ec9d4722d8137c99428ff7f79fd5469f42144465"
+    },
+    {
+      "file": "03-check.en.wav",
+      "original_seconds": 3.552,
+      "seconds": 2.8375,
+      "last_active_window": 2.65,
+      "last_word_end": 2.6875,
+      "sha256": "24e75931cf8767e9759c680f9a41d1511dfdbecf02e9f0c068ada6392e90f83e"
+    },
+    {
+      "file": "04-trigger.en.wav",
+      "original_seconds": 3.504,
+      "seconds": 2.81,
+      "last_active_window": 2.63,
+      "last_word_end": 2.625,
+      "sha256": "21504a3fe98112d7770cd479497ceb7988a4637f6104aa229a6dc45727bfd7cf"
+    },
+    {
+      "file": "05-outcome.en.wav",
+      "original_seconds": 7.536,
+      "seconds": 6.84,
+      "last_active_window": 6.66,
+      "last_word_end": 6.6625,
+      "sha256": "5630b7f9690af51a3608ff8ab2c08282a30f58515b391ad7fe24383440cb490f"
+    },
+    {
+      "file": "06-start.en.wav",
+      "original_seconds": 5.304,
+      "seconds": 4.6,
+      "last_active_window": 4.42,
+      "last_word_end": 4.4375,
+      "sha256": "ab57211416a6ca62b758b04c68a9be0a1d72f928c7991b8284a3a94eb31513a7"
+    }
+  ]
+}

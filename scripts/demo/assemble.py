@@ -54,7 +54,7 @@ def caption_chunks(text, language):
 report = {'version': manifest['version'], 'audio_processing':
           'Two-pass EBU R128 -16 LUFS / -2 dBTP per scene, with AAC headroom; no speech speed changes',
           'frame_processing': 'Normalize every capture to one 1920x1080 RGB canvas before concatenating; constant 25 fps',
-          'caption_presentation': 'Native WebVTT in each scene’s reserved caption area; demonstration footer visible',
+          'caption_presentation': 'Native WebVTT; authored word-timed cues when supplied, legacy ratio timing otherwise; reserved caption area',
           'videos': {}}
 with tempfile.TemporaryDirectory(prefix='ducky-demo-encode-') as directory:
     temporary = Path(directory)
@@ -134,6 +134,20 @@ with tempfile.TemporaryDirectory(prefix='ducky-demo-encode-') as directory:
                 assert ''.join(''.join(chunks).split()) == ''.join(row[caption_language].split())
                 caption_line = row.get('caption_line', 70)
                 assert 0 <= caption_line <= 90
+                timed = row.get('caption_timings', {}).get(language, {}).get(caption_language)
+                if timed is not None:
+                    assert ''.join(''.join(c['text'] for c in timed).split()) == ''.join(row[caption_language].split())
+                    previous = 0.0
+                    for cue in timed:
+                        first, last = cue['start'], cue['end']
+                        assert previous <= first < last <= speech_seconds
+                        previous = last
+                        display = cue['text']
+                        if caption_language == 'en':
+                            assert len(display.splitlines()) <= 2 and max(map(len, display.splitlines())) <= 38
+                        cues[caption_language].append(
+                            f'{stamp(start+lead+first)} --> {stamp(start+lead+last)} line:{caption_line}% size:90%\n{display}')
+                    continue
                 total = sum(len(chunk) for chunk in chunks)
                 at = start + lead + speech_start
                 # Exact reviewed script, timed within independently recognized speech boundaries.

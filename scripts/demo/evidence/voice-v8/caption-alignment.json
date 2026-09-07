@@ -1,0 +1,137 @@
+{
+  "method": "Every English cue aligned to exact provider WordBoundary ranges. No character-proportional timing. Translated Chinese cues share corresponding phrases.",
+  "cues": [
+    {
+      "scene": "01-event",
+      "start": 0.06,
+      "end": 2.5125,
+      "text": "NVIDIA partners with Corning.",
+      "first_word": 0,
+      "last_word": 3,
+      "word_start": 0.1,
+      "word_end": 1.7125,
+      "characters_per_second": 11.82
+    },
+    {
+      "scene": "01-event",
+      "start": 2.535,
+      "end": 3.95,
+      "text": "What happens next?",
+      "first_word": 4,
+      "last_word": 6,
+      "word_start": 2.575,
+      "word_end": 3.7875,
+      "characters_per_second": 12.72
+    },
+    {
+      "scene": "02-price",
+      "start": 0.06,
+      "end": 2.05,
+      "text": "Set a price alert.",
+      "first_word": 0,
+      "last_word": 3,
+      "word_start": 0.1,
+      "word_end": 1.25,
+      "characters_per_second": 9.05
+    },
+    {
+      "scene": "02-price",
+      "start": 2.0725,
+      "end": 4.2,
+      "text": "Get notified when it hits your level.",
+      "first_word": 4,
+      "last_word": 10,
+      "word_start": 2.1125,
+      "word_end": 4.05,
+      "characters_per_second": 17.39
+    },
+    {
+      "scene": "03-check",
+      "start": 0.06,
+      "end": 2.8375,
+      "text": "But a price drop doesn't always\nmean it's oversold.",
+      "first_word": 0,
+      "last_word": 8,
+      "word_start": 0.1,
+      "word_end": 2.6875,
+      "characters_per_second": 18.36
+    },
+    {
+      "scene": "04-trigger",
+      "start": 0.06,
+      "end": 2.81,
+      "text": "Now the daily RSI is below 35.",
+      "first_word": 0,
+      "last_word": 8,
+      "word_start": 0.1,
+      "word_end": 2.625,
+      "characters_per_second": 10.91
+    },
+    {
+      "scene": "05-outcome",
+      "start": 0.06,
+      "end": 1.6025,
+      "text": "20 trading days later,",
+      "first_word": 0,
+      "last_word": 3,
+      "word_start": 0.1,
+      "word_end": 1.4625,
+      "characters_per_second": 14.26
+    },
+    {
+      "scene": "05-outcome",
+      "start": 1.6225,
+      "end": 4.7125,
+      "text": "the stock is up almost 17%.",
+      "first_word": 4,
+      "last_word": 9,
+      "word_start": 1.6625,
+      "word_end": 3.9125,
+      "characters_per_second": 8.74
+    },
+    {
+      "scene": "05-outcome",
+      "start": 4.735,
+      "end": 6.84,
+      "text": "You can see the pullbacks, too.",
+      "first_word": 10,
+      "last_word": 15,
+      "word_start": 4.775,
+      "word_end": 6.6625,
+      "characters_per_second": 14.73
+    },
+    {
+      "scene": "06-start",
+      "start": 0.06,
+      "end": 1.1775,
+      "text": "Set your alerts,",
+      "first_word": 0,
+      "last_word": 2,
+      "word_start": 0.1,
+      "word_end": 1.05,
+      "characters_per_second": 14.32
+    },
+    {
+      "scene": "06-start",
+      "start": 1.1975,
+      "end": 3.5125,
+      "text": "and let Ducky keep track.",
+      "first_word": 3,
+      "last_word": 7,
+      "word_start": 1.2375,
+      "word_end": 2.7125,
+      "characters_per_second": 10.8
+    },
+    {
+      "scene": "06-start",
+      "start": 3.535,
+      "end": 4.6,
+      "text": "Try it free.",
+      "first_word": 8,
+      "last_word": 10,
+      "word_start": 3.575,
+      "word_end": 4.4375,
+      "characters_per_second": 11.27
+    }
+  ]
+}

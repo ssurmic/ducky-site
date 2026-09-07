@@ -1,0 +1,135 @@
+[
+  {
+    "phase": "local",
+    "language": "en",
+    "seek": 21.68,
+    "result": {
+      "duration": 26.301333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 21.68,
+      "width": 390
+    }
+  },
+  {
+    "phase": "local",
+    "language": "en",
+    "seek": 11.68,
+    "result": {
+      "duration": 26.301333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 11.68,
+      "width": 390
+    }
+  },
+  {
+    "phase": "local",
+    "language": "en",
+    "seek": 8.68,
+    "result": {
+      "duration": 26.301333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 8.68,
+      "width": 390
+    }
+  },
+  {
+    "phase": "local",
+    "language": "en",
+    "seek": 4.28,
+    "result": {
+      "duration": 26.301333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 4.28,
+      "width": 390
+    }
+  },
+  {
+    "phase": "local",
+    "language": "en",
+    "seek": 14.68,
+    "result": {
+      "duration": 26.301333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 14.68,
+      "width": 390
+    }
+  },
+  {
+    "phase": "local",
+    "language": "en",
+    "seek": 0.16,
+    "result": {
+      "duration": 26.301333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 0.16,
+      "width": 390
+    }
+  },
+  {
+    "phase": "local",
+    "language": "en",
+    "check": "full-play",
+    "result": {
+      "duration": 26.301333,
+      "ended": true,
+      "error": null,
+      "paused": true,
+      "time": 26.301333
+    }
+  },
+  {
+    "phase": "local",
+    "language": "en",
+    "check": "desktop",
+    "result": {
+      "overflow": false,
+      "width": 1440
+    }
+  },
+  {
+    "phase": "local",
+    "language": "zh",
+    "check": "english-track-result",
+    "result": {
+      "duration": 22.861333,
+      "error": null,
+      "paused": true,
+      "time": 15.115552,
+      "tracks": [
+        {
+          "language": "zh",
+          "mode": "disabled"
+        },
+        {
+          "language": "en",
+          "mode": "showing"
+        }
+      ]
+    }
+  },
+  {
+    "phase": "local",
+    "language": "zh",
+    "check": "full-play-english-captions",
+    "result": {
+      "duration": 22.861333,
+      "ended": true,
+      "error": null,
+      "muted": false,
+      "paused": true,
+      "time": 22.861333
+    }
+  }
+]

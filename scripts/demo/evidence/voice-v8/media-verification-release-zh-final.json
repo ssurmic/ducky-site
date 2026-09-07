@@ -1,0 +1,272 @@
+{
+  "status": "PASS",
+  "checks": 638,
+  "failures": [],
+  "review_notes": [
+    "04-trigger.zh.wav: ASR differs from script (similarity 0.706); review pronunciation/content, not an automatic rejection",
+    "05-outcome.zh.wav: ASR differs from script (similarity 0.863); review pronunciation/content, not an automatic rejection",
+    "06-start.zh.wav: ASR differs from script (similarity 0.647); review pronunciation/content, not an automatic rejection"
+  ],
+  "audio": {
+    "01-event.zh.wav": {
+      "duration": 3.76,
+      "peak_pcm": 0.417083740234375,
+      "rms_pcm": 0.04761099256301296,
+      "asr_similarity": 1.0,
+      "asr_words": 14
+    },
+    "02-price.zh.wav": {
+      "duration": 2.24,
+      "peak_pcm": 0.249481201171875,
+      "rms_pcm": 0.05495898384128561,
+      "asr_similarity": 1.0,
+      "asr_words": 9
+    },
+    "03-check.zh.wav": {
+      "duration": 3.36,
+      "peak_pcm": 0.338165283203125,
+      "rms_pcm": 0.054644736847840554,
+      "asr_similarity": 1.0,
+      "asr_words": 14
+    },
+    "04-trigger.zh.wav": {
+      "duration": 1.52,
+      "peak_pcm": 0.319122314453125,
+      "rms_pcm": 0.05534831504584805,
+      "asr_similarity": 0.7059,
+      "asr_words": 7
+    },
+    "05-outcome.zh.wav": {
+      "duration": 6.88,
+      "peak_pcm": 0.510284423828125,
+      "rms_pcm": 0.045846622281605943,
+      "asr_similarity": 0.8627,
+      "asr_words": 24
+    },
+    "06-start.zh.wav": {
+      "duration": 3.76,
+      "peak_pcm": 0.31048583984375,
+      "rms_pcm": 0.03154885255040316,
+      "asr_similarity": 0.6471,
+      "asr_words": 14
+    }
+  },
+  "assets": {
+    "scripts/demo/voiceover-2026-09-07-v8-zh.json": {
+      "bytes": 16270,
+      "sha256": "d4b2856d755ac14aa5017ef29bf458f689c77f4a154e8b366f57a7b46a5630f0"
+    },
+    "scripts/demo/evidence/voice-v8/zh/speech-check.json": {
+      "bytes": 14515,
+      "sha256": "2ee46acf4db30564074a9a96e9e6d778a86e3522a9742e9c4cc3e963a8ece73f"
+    },
+    "scripts/demo/evidence/voice-v8/zh/01-event.zh.wav": {
+      "bytes": 180524,
+      "sha256": "0c04e01465c1a872f45c649eebe0c67044b37bc3be41877949f9d83afe92fd7b"
+    },
+    "scripts/demo/evidence/voice-v8/zh/02-price.zh.wav": {
+      "bytes": 107564,
+      "sha256": "13e921d64cbd260a91cd8d203037176af1e2f13c1ed6e9b415429bbf6608009b"
+    },
+    "scripts/demo/evidence/voice-v8/zh/03-check.zh.wav": {
+      "bytes": 161324,
+      "sha256": "d4c9c9891ed34fecda8086bdff2dffb2a5c3687edc2e6972d52ab7a8e7f38cd7"
+    },
+    "scripts/demo/evidence/voice-v8/zh/04-trigger.zh.wav": {
+      "bytes": 73004,
+      "sha256": "ac306d2c1ab90d71e9f17ebf726f05d2868e6442800fce9f695b1198d9492ed0"
+    },
+    "scripts/demo/evidence/voice-v8/zh/05-outcome.zh.wav": {
+      "bytes": 330284,
+      "sha256": "a99ff7f2dfa8a35a9a42d9f9bb13ebbb5399e6ca867ba224eae8a527eb800acc"
+    },
+    "scripts/demo/evidence/voice-v8/zh/06-start.zh.wav": {
+      "bytes": 180524,
+      "sha256": "8e9eb834faaa92169f66246fb6ba93c6cce388c9532e33b7cac3d63f4c818add"
+    },
+    "/tmp/ducky-demo-v8/render-zh-release/render-report.json": {
+      "bytes": 6111,
+      "sha256": "12dfff1625185b339fe3ae0971a42419169583e96a4f8ebc3f9966587a953919"
+    },
+    "/tmp/ducky-demo-v8/render-zh-release/ducky-walkthrough-2026-09-07-english-v8.zh.mp4": {
+      "bytes": 874424,
+      "sha256": "d88496ca5825e93c49f4017887af5d69920e99064693637045957828b0f31d16"
+    },
+    "/tmp/ducky-demo-v8/render-zh-release/ducky-walkthrough-2026-09-07-english-v8.zh.jpg": {
+      "bytes": 89721,
+      "sha256": "4d7c85b1067a04ef914b6371843e0cfc87986df489f7bfb66ac7140d0da89508"
+    },
+    "scripts/demo/frames-v7/zh/01-event.png": {
+      "bytes": 60682,
+      "sha256": "83360dc1aee9b7e397dbcaa77d190b933512bcdc4279bfcad12102955bd59841"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/01-event.png": {
+      "bytes": 60682,
+      "sha256": "83360dc1aee9b7e397dbcaa77d190b933512bcdc4279bfcad12102955bd59841"
+    },
+    "scripts/demo/frames-v7/zh/02-price.png": {
+      "bytes": 54051,
+      "sha256": "51ae19003d672cbf5eb7494a4cd55328f9aee8f954b6b97d119452fa32fc934f"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/02-price-00.png": {
+      "bytes": 48376,
+      "sha256": "6062954c53e10db91e0bda3dcc66ca9140542ab76d7b870170e2d043e8081d81"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/02-price-01.png": {
+      "bytes": 48555,
+      "sha256": "89b688d089c7a8aa1166ca563144e0ed3ae030e870b129da9da55c7f33f54a40"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/02-price-02.png": {
+      "bytes": 49000,
+      "sha256": "92d5dcee0ae68fb7715ff4c617d079fc2684491c66bd88b90511f34de7beb738"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/02-price-03.png": {
+      "bytes": 49505,
+      "sha256": "373d2d6797fd8abc1d4a2e879a978fdc511bb6c016245c15424511d56d420947"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/02-price-04.png": {
+      "bytes": 49982,
+      "sha256": "c8ee72994a5b05dec55471c97429dd9150ede32188f24a1b3677a937d9c64955"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/02-price-05.png": {
+      "bytes": 50294,
+      "sha256": "bafdba6cfe0e928a7e65e39487abd9270a8ec660a4bf0aff6fbb1b4a92773b0c"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/02-price-06.png": {
+      "bytes": 50698,
+      "sha256": "aa119cc37ba5807922811439140c9a9cb8b4b37659aaf3297100e00c67a5c575"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/02-price-07.png": {
+      "bytes": 50980,
+      "sha256": "b7c21d38a14bc4cae0fa88ba5d0dd575356895b98ffa09a02f792a1b5f152833"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/02-price-08.png": {
+      "bytes": 54051,
+      "sha256": "51ae19003d672cbf5eb7494a4cd55328f9aee8f954b6b97d119452fa32fc934f"
+    },
+    "scripts/demo/frames-v7/zh/03-check.png": {
+      "bytes": 50311,
+      "sha256": "8aac2642c1b04c47da1becb655ca37ee78239a11fa152346c3259e495ad63c04"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/03-check.png": {
+      "bytes": 50311,
+      "sha256": "8aac2642c1b04c47da1becb655ca37ee78239a11fa152346c3259e495ad63c04"
+    },
+    "scripts/demo/frames-v7/zh/04-trigger.png": {
+      "bytes": 52223,
+      "sha256": "f1d93953458ad34fe2088f984da4ae5b520485dd829215b0d2695ec907ac27c3"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/04-trigger.png": {
+      "bytes": 52223,
+      "sha256": "f1d93953458ad34fe2088f984da4ae5b520485dd829215b0d2695ec907ac27c3"
+    },
+    "scripts/demo/frames-v7/zh/05-outcome.png": {
+      "bytes": 69386,
+      "sha256": "027dfa313029cabe7dea7d1f633ee2410e83d13588a4cf61760718ba6f95422c"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-00.png": {
+      "bytes": 56063,
+      "sha256": "3d029749b659e0167c29eaaefaab54325581841a537f21e74834e8bcc0d45b0b"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-01.png": {
+      "bytes": 55845,
+      "sha256": "96a9d5c46adfb85077f13f0091c4b2dace50b60a49dc4636db08096482448c6a"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-02.png": {
+      "bytes": 56825,
+      "sha256": "f13f9e4de0a00e60469ea45b939dedfd3ffa8e6294fa4ac9ba501d318f8934f2"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-03.png": {
+      "bytes": 57450,
+      "sha256": "8466a4ec71d60b2c5f22be7c590bde146efa26f260a839f75a2614a7f3984c0a"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-04.png": {
+      "bytes": 58689,
+      "sha256": "e47445eb379b03d4a675c20af198a616f3860e13dc90614c3c117799ecddd870"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-05.png": {
+      "bytes": 59585,
+      "sha256": "50beb0fc54598ec5cba7ca17dd29f65d2c8744277853946f799b3d038033a038"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-06.png": {
+      "bytes": 60051,
+      "sha256": "0e6d903ae8084977e9185e3fd4aa899a17b4d3ed2e5b2a8b28fbc1abf6ddd7ab"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-07.png": {
+      "bytes": 60267,
+      "sha256": "afa82f5031bdd3c313261acae51832671ed24335c9d299a9664dc127d2f1acc4"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-08.png": {
+      "bytes": 60770,
+      "sha256": "c4db4cab33a1f26ae587eaad2933caf3bfdb614351a6232005a3a37b349550f5"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-09.png": {
+      "bytes": 61706,
+      "sha256": "60144d676da8c0eec81799a2c16b08eef4775c7d8c6ad2bb49d347d42487ec6c"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-10.png": {
+      "bytes": 62246,
+      "sha256": "4d6a91edefbb18c8b27bbdf395569c65ec3747389d91facd8d5b26e1499191c3"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-11.png": {
+      "bytes": 62937,
+      "sha256": "e1bac88373c9563321cef17d986def2452eaba5821e1e0a88ea9adbacc0d9166"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-12.png": {
+      "bytes": 63615,
+      "sha256": "ea07be990c998a97212e99ab6ce874e7aa83c20e22373665d4ffb92f374895cd"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-13.png": {
+      "bytes": 63802,
+      "sha256": "69b158c1979981adf22cd2be810023ad0998cb671fe98725923bbe6b0129e807"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-14.png": {
+      "bytes": 64556,
+      "sha256": "6e6f09100e7b23c840f657a1e4203de7517e307e18937500f66377dc2e04b707"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-15.png": {
+      "bytes": 65862,
+      "sha256": "29b058f8468c9bb15beb9252273132992d163f7985d5ed193d52ca4d3be3b9d9"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-16.png": {
+      "bytes": 66158,
+      "sha256": "3329fd9ff4e0047b7e67feff46f7daaad75fe39aa4b666c4dc8d6d344a27f5a5"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-17.png": {
+      "bytes": 66879,
+      "sha256": "6687b16be7a0c7d239c65066218799eb61e832b1a8c2ce2110f94ea03b54bf4d"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-18.png": {
+      "bytes": 67152,
+      "sha256": "ebc16ca994f9fe50f3dc2c49c506b3231f1ef3a3c6ac31c0de9f19c689a6d4fc"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-19.png": {
+      "bytes": 67557,
+      "sha256": "27497434af004a4140d8a78bcbe2900f29088d3db0b4ba81eca60af5a3000056"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/05-outcome-20.png": {
+      "bytes": 69386,
+      "sha256": "027dfa313029cabe7dea7d1f633ee2410e83d13588a4cf61760718ba6f95422c"
+    },
+    "scripts/demo/frames-v7/zh/06-start.png": {
+      "bytes": 39948,
+      "sha256": "e9178245da21a7a1e4c8d37d43377f9ee3dd6e2ade178d58fd8582d8ae06f038"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/06-start-00.png": {
+      "bytes": 54799,
+      "sha256": "9c9c023802cb83f449193633d4a1ab8562d1d59ed6998e26240055c4b380c0ee"
+    },
+    "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v7/zh/06-start.png": {
+      "bytes": 39948,
+      "sha256": "e9178245da21a7a1e4c8d37d43377f9ee3dd6e2ade178d58fd8582d8ae06f038"
+    },
+    "/tmp/ducky-demo-v8/render-zh-release/ducky-walkthrough-2026-09-07-english-v8.zh.zh.vtt": {
+      "bytes": 878,
+      "sha256": "de50f91c14ee29ffda6b88ae0fccfa6fc90693f9c84883019a1c5e2060f847f9"
+    },
+    "/tmp/ducky-demo-v8/render-zh-release/ducky-walkthrough-2026-09-07-english-v8.zh.en.vtt": {
+      "bytes": 853,
+      "sha256": "8c0a14be5d0a042b83d1da127e8fc3db74aa28ff1517d96135d0f6b0c27f8911"
+    }
+  }
+}
