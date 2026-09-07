@@ -90,10 +90,19 @@ test('a disappearing app tab still opens the selected notification', async () =>
   assert.equal(w.opened[0], 'https://duckybot.app/app/#/updates?item=42');
 });
 
+test('notifications use the current brand for legacy payloads and preserve descriptive titles', async () => {
+  const w = worker();
+  await w.dispatch('push', {data:{json:()=>({title:'Ducky TradeBot',body:'Existing queued alert'})}});
+  assert.equal(w.shown[0][0], 'Ducky Bot');
+  assert.equal(w.shown[0][1].body, 'Existing queued alert');
+  await w.dispatch('push', {data:{json:()=>({title:'NVDA alert'})}});
+  assert.equal(w.shown[1][0], 'NVDA alert');
+});
+
 test('malformed push still shows a bounded fallback notification', async () => {
   const w = worker();
   await w.dispatch('push', {data:{json:()=>null}});
-  assert.equal(w.shown[0][0], 'Ducky TradeBot');
+  assert.equal(w.shown[0][0], 'Ducky Bot');
   await w.dispatch('push', {data:{json:()=>({title:'a'.repeat(500),body:'b'.repeat(900),tag:[]})}});
   assert.equal(w.shown[1][0].length, 100);
   assert.equal(w.shown[1][1].body.length, 400);

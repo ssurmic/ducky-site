@@ -20,7 +20,9 @@ self.addEventListener("push", function (event) {
   var data = {};
   try { data = event.data ? event.data.json() : {}; } catch (e) { data = { body: (event.data && event.data.text()) || "" }; }
   if (!data || typeof data !== "object" || Array.isArray(data)) data = {};
-  var title = plain(data.title, "Ducky TradeBot", 100);
+  var title = plain(data.title, "Ducky Bot", 100);
+  // Previously queued payloads and older senders can still carry the former display name.
+  if (/^Ducky[ -]*Trade[ -]*Bot$/i.test(title)) title = "Ducky Bot";
   var opts = {
     body: plain(data.body, "", 400),
     icon: "/avatar-160.jpg",

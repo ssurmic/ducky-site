@@ -11,7 +11,7 @@
 {% endfor %}
 <link rel="alternate" hreflang="x-default" href="{{ x_default }}">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Ducky TradeBot">
+<meta property="og:site_name" content="Ducky Bot">
 <meta property="og:title" content="{% block og_title %}{{ t('meta.og_title') }}{% endblock %}">
 <meta property="og:description" content="{{ self.description() }}">
 <meta property="og:url" content="{{ canonical }}">
@@ -37,7 +37,7 @@
 
 <header class="nav" id="nav">
   <div class="wrap nav-row">
-    <a class="brand" href="{{ url('/') }}"><img class="avatar-mark" src="/avatar-160.jpg" alt="" width="28" height="28" loading="eager" fetchpriority="high" decoding="sync"> <span class="brand-name">{{ t('nav.brand') }}</span><span class="brand-short">Ducky</span></a>
+    <a class="brand" href="{{ url('/') }}" aria-label="{{ t('nav.brand') }}"><img class="avatar-mark" src="/avatar-160.jpg" alt="" width="28" height="28" loading="eager" fetchpriority="high" decoding="sync"> <span class="brand-name">{{ t('nav.brand') }}</span><span class="brand-short">{{ t('nav.brand') }}</span></a>
     <nav class="nav-links" aria-label="primary">
       <a href="{{ url('/') }}#examples">{{ t('nav.proof') }}</a>
       <a href="{{ url('/') }}#features">{{ t('desk.catalog') }}</a>

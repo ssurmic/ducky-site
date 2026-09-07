@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Ducky TradeBot">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Ducky Bot">
   <!-- OG card: mascot.svg composition, 1200×630. Most crawlers prefer raster; a rendered og.png can replace this later (site.config.json → og_image). -->
   <defs>
     <radialGradient id="bgglow" cx="82%" cy="45%" r="55%">
@@ -55,7 +55,7 @@
 
   <!-- wordmark + taglines -->
   <text x="80" y="128" fill="#7dff6a" font-size="26" letter-spacing="4" font-family="ui-monospace,Menlo,Consolas,monospace">TELEGRAM · 中文 / EN</text>
-  <text x="80" y="228" fill="#e6edf3" font-size="88" font-weight="800" font-family="-apple-system,Segoe UI,PingFang SC,Noto Sans CJK SC,sans-serif">Ducky TradeBot</text>
+  <text x="80" y="228" fill="#e6edf3" font-size="88" font-weight="800" font-family="-apple-system,Segoe UI,PingFang SC,Noto Sans CJK SC,sans-serif">Ducky Bot</text>
   <text x="80" y="318" fill="#e6edf3" font-size="40" font-weight="600" font-family="-apple-system,Segoe UI,PingFang SC,Noto Sans CJK SC,sans-serif">一套会算的 AI 盯盘系统，直接推到你的 Telegram。</text>
   <text x="80" y="372" fill="#9aa7b4" font-size="30" font-family="-apple-system,Segoe UI,PingFang SC,Noto Sans CJK SC,sans-serif">AI-backed market signals, pushed to your Telegram before Twitter finds them.</text>
   <text x="80" y="440" fill="#9aa7b4" font-size="24" font-family="ui-monospace,Menlo,Consolas,monospace">SEC Form 4 · 13D/13G · 13F · 8-K · K-index · USD liquidity · IV/HV · gamma walls</text>

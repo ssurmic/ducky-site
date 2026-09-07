@@ -12,7 +12,7 @@ truth; this one only points at it.
   `backtest.kindex.n` at build time — `build.py: load_track_n`, template var `track_n`); missing disclaimer
   lines; leaked private ids; any `<script src="http…">`.
 - `lint_copy.py` also enforces SYSTEMDESIGN §5.1 brand/tech rules (`BANNED_IMPL`, everywhere except `vendor/` and
-  the nightly data exports): the product is **Ducky TradeBot** (never "Ducky Bot"); the tech is described as
+  the nightly data exports): the product is **Ducky Bot** (owner correction, 2026-09-07; supersedes "Ducky TradeBot"); the tech is described as
   "AI-backed / AI 驱动 / AI 引擎" only — no model, hardware, storage or competitor names in user-facing copy.
 - The 🌊 liquidity receipt card + `/track-record/#liquidity` render from `public/receipts/liquidity-2026.json` and
   `liquidity-score-2026.csv` at build time (`build.py: load_liquidity`, `tf()` = `t()` + `str.format`).

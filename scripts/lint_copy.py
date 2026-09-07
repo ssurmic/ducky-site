@@ -7,7 +7,7 @@ Checks (exit 1 on any failure):
   3. both disclaimer lines exist in dist/index.html and dist/en/index.html (zh + en variants)
   4. no private identifiers leak into the public site (supergroup chat id, personal email, private handles)
   5. no third-party <script src="http…"> on any page (landing has no third-party scripts)
-  6. brand + implementation terms banned from user-facing copy (SYSTEMDESIGN.md §5.1): "Ducky Bot", model /
+  6. brand + implementation terms banned from user-facing copy (SYSTEMDESIGN.md §5.1): the retired trading-brand name, model /
      hardware / storage names, competitor names — checked everywhere in dist/ except vendor/ and the nightly
      data exports (track-record.json, feed.json, ideas.json)
 """
@@ -23,10 +23,10 @@ I18N = ROOT / "i18n"
 
 BANNED = re.compile(r"ALL-IN|买这只|目标价|满仓|buy now|现在买|建议买入", re.IGNORECASE)
 # §5.1 brand + "how we describe the tech" rules — separate from the compliance strings above. The product is
-# "Ducky TradeBot"; the tech is "AI-backed / AI 驱动" and nothing more; no competitor names. vendor/ is skipped.
+# "Ducky Bot" (owner correction, 2026-09-07); the tech is "AI-backed / AI 驱动" and nothing more; no competitor names. vendor/ is skipped.
 BANNED_IMPL = re.compile(
     r"本地大模型|大语言模型|\bLLMs?\b|Qwen|Ollama|GB10|\bDGX\b|一台本地机器|本地机器|云成本|云 ?API|self-hosted|"
-    r"\bSQLite\b|Unusual Whales|千亿|\b80B\b|\bDucky[ -]Bot\b|local (?:model|LLM|box)|runs on one box|"
+    r"\bSQLite\b|Unusual Whales|千亿|\b80B\b|\bDucky[ -]*Trade[ -]*Bot\b|\bDucky-Bot\b|local (?:model|LLM|box)|runs on one box|"
     r"\bone box\b|本地模型",
     re.IGNORECASE)
 VENDOR_DIR = "vendor"

@@ -1,6 +1,6 @@
 {
-  "name": "Ducky TradeBot",
-  "short_name": "Ducky",
+  "name": "Ducky Bot",
+  "short_name": "Ducky Bot",
   "description": "美股自选股研究与条件提醒。",
   "id": "/",
   "scope": "/",
