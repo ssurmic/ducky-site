@@ -1164,6 +1164,7 @@ details.product-demo-guide > summary { display:list-item; cursor:pointer; font-w
  .product-demo-guide-access { padding:16px 16px 0; }
 }
 
-.outcome-review { max-width:260px; white-space:normal; text-align:left; }
+.outcome-review { min-width:90px; max-width:260px; white-space:normal; text-align:left; }
+.outcome-review[open] { min-width:240px; }
 .outcome-review summary { cursor:pointer; font-weight:650; }
 .outcome-review p { margin:6px 0; font-size:12px; overflow-wrap:anywhere; }

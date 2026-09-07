@@ -27,10 +27,14 @@
     return td;
   }
   function disputed(r, key) { return r.outcome_review && r.outcome_review.differences && ((r.outcome_review.affected_fields || []).indexOf(key) >= 0 || r.outcome_review.differences[key]); }
+  function visibleReview(details) {
+    details.addEventListener('toggle',function(){if(details.open&&details.scrollIntoView)details.scrollIntoView({block:'nearest',inline:'nearest'});});
+    return details;
+  }
   function reviewCell(r, key) {
     if (!disputed(r,key)) return key==='rnow' ? rnowCell(r) : retCell(r[key]);
     var review=r.outcome_review, diff=review.differences[key]||review.differences.px0;
-    var td=el('td','num'), details=el('details','outcome-review');
+    var td=el('td','num'), details=visibleReview(el('details','outcome-review'));
     details.appendChild(el('summary','',A.review));
     var price=!review.differences[key], display=function(v){return isNum(v)?(price?'$'+v.toFixed(4):pct(v,4)):A.input;};
     details.appendChild(el('p','',A.recorded+': '+display(diff.recorded)));
@@ -39,7 +43,7 @@
     details.appendChild(el('p','',A.missing));td.appendChild(details);return td;
   }
   function aggregateReview(row,key) {
-    var td=el('td','num'),details=el('details','outcome-review');details.appendChild(el('summary','',A.review));
+    var td=el('td','num'),details=visibleReview(el('details','outcome-review'));details.appendChild(el('summary','',A.review));
     var old=row.reported_metrics&&row.reported_metrics[key];
     if(isNum(old))details.appendChild(el('p','',A.recorded+': '+pct(old,4)));
     details.appendChild(el('p','',A.missing));td.appendChild(details);return td;
