@@ -31,3 +31,10 @@ Validation:
 Screenshots: [Chinese light](stock-light-2026-09-06/zh-light-390.png),
 [English light](stock-light-2026-09-06/en-light-390.png),
 [Chinese dark](stock-light-2026-09-06/zh-dark-390.png).
+
+Production: released source `671a6a68`, Pages `4a870af4`. Both formal homepage
+languages reference `/css/site.css?v=671a6a68`; downloaded CSS matches the
+committed file byte for byte (SHA-256 prefix `b68621d82dad5045`). Live Chrome
+at 390px loaded three public NVDA records with the dark theme, the new themed
+surface, and no horizontal overflow. Light-mode validation is the local
+forced-theme matrix above; no operating-system preference was changed.
