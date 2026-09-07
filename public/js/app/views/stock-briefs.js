@@ -7,11 +7,12 @@ const pick=value=>value?.[LANG==='en'?'en':'zh']||'';
 const time=value=>{const d=new Date(value);return value&&Number.isFinite(d.getTime())?d.toISOString().replace('T',' ').slice(0,16)+' UTC':'—';};
 const safeTicker=value=>/^[A-Z][A-Z0-9.\-]{0,9}$/.test(value||'');
 const n=(value,d=1)=>Number.isFinite(value)?num(value,d):'—';
+const sessionDate=value=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}/.test(value)?value.slice(0,10):'—';
 function source(url){try{const u=new URL(url);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch{return null;}}
 
 export function factText(fact){
   const d=fact.data||{};
-  if(fact.topic==='price')return '$'+n(d.price,2)+' · '+(d.price_session||'—');
+  if(fact.topic==='price')return '$'+n(d.price,2)+' · '+sessionDate(d.price_session);
   if(fact.topic==='technicals')return s('stockbrief.fact_technical',{daily:n(d.rsi_d),weekly:n(d.rsi_w),monthly:n(d.rsi_m),drawdown:n(d.dd_pct)});
   if(fact.topic==='rsi_change')return s('stockbrief.fact_rsi',{before:n(d.previous),after:n(d.current),date:d.previous_session||'—'});
   if(fact.topic==='volatility')return 'IV '+n(d.iv)+'% · HV '+n(d.hv)+'% · IV/HV '+n(d.ratio,2);
@@ -57,6 +58,8 @@ export function reportCard(row,{onHistory,archive=false}={}){
     }return p;
   };
   card.append(el('p.stock-brief-state',s('stockbrief.state_'+report.state)),paragraph(report.summary,'.stock-brief-summary'));
+  const price=facts.find(f=>f.topic==='price');
+  if(price)card.append(el('p.small.muted',s('stockbrief.price_session',{date:sessionDate(price.data?.price_session)})));
   if(row.status==='stale'||row.refresh?.status==='failed')card.append(el('p.data-notice',s('stockbrief.saved_report')));
   card.append(el('div.stock-brief-actions',el('section',el('h3',s('stockbrief.not_holding')),paragraph(report.not_holding)),
     el('section',el('h3',s('stockbrief.if_holding')),paragraph(report.if_holding))));
@@ -85,7 +88,7 @@ export async function mountStockBriefs(root,route={}){
   root.append(el('div.view-head',el('h1',s('stockbrief.title')),
     el('a.btn.btn-ghost.btn-sm',{href:'#/briefing?period=daily'},s('stockbrief.events'))),
     el('p.view-intro',s('stockbrief.intro')));
-  const search=el('input.input',{type:'search',value:ticker,placeholder:s('social.search'),'aria-label':s('social.search'),maxlength:10});
+  const search=el('input.input',{type:'search',value:ticker,placeholder:s('stockbrief.search'),'aria-label':s('stockbrief.search'),maxlength:10});
   root.append(el('form.add-row',{onsubmit:e=>{e.preventDefault();const t=search.value.trim().toUpperCase().replace(/^\$/,'');
     if(safeTicker(t))location.hash='#/briefing?ticker='+encodeURIComponent(t);}},search,
     el('button.btn.btn-ghost',{type:'submit'},s('research.load')),ticker?el('a.btn.btn-ghost',{href:'#/briefing'},s('stockbrief.all')):null));

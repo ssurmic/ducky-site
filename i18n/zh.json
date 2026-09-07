@@ -3100,5 +3100,7 @@
   "app.stockbrief.regime_adverse": "环境偏不利",
   "app.stockbrief.regime_unknown": "资料不足",
   "app.stockbrief.regime_supportive": "环境偏支持",
-  "app.stockbrief.regime_mixed": "资金与利率表现不一"
+  "app.stockbrief.regime_mixed": "资金与利率表现不一",
+  "app.stockbrief.price_session": "价格对应交易日：{date} · 非实时报价",
+  "app.stockbrief.search": "股票代码，例如 NVDA"
 }
