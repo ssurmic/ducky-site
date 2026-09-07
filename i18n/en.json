@@ -2833,7 +2833,7 @@
   "app.notify.state.unverified": "Verify your email to enable",
   "app.notify.state.binding_changed": "Email changed. Enable alerts for this address again.",
   "app.notify.state.unlinked": "Telegram is not linked",
-  "app.notify.state.unreachable": "Start the Ducky bot again in Telegram",
+  "app.notify.state.unreachable": "Start Ducky TradeBot again in Telegram",
   "app.notify.delivery.queued": "Queued",
   "app.notify.delivery.pending": "Pending",
   "app.notify.delivery.sending": "Sending",

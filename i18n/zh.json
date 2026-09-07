@@ -2833,7 +2833,7 @@
   "app.notify.state.unverified": "验证邮箱后可开启",
   "app.notify.state.binding_changed": "邮箱已更改，请重新开启邮件提醒。",
   "app.notify.state.unlinked": "尚未关联 Telegram",
-  "app.notify.state.unreachable": "请在 Telegram 中重新启动 Ducky bot",
+  "app.notify.state.unreachable": "请在 Telegram 中重新启动 Ducky TradeBot",
   "app.notify.delivery.queued": "等待发送",
   "app.notify.delivery.pending": "等待发送",
   "app.notify.delivery.sending": "正在发送",
