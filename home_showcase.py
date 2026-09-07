@@ -42,12 +42,4 @@ def load_home_showcase(public):
                   or abs(original - expected) > .00011 or outcome['date'] != dates[n]):
                 raise ValueError('Displayed outcome disagrees with source history')
         cases.append({**row, 'date': row['recorded_at'][:10], 'chart': curve(prices, 320, 88)})
-    quotes = json.loads((public / 'examples/home-quotes-2026-09-07.json').read_text())['items']
-    for quote in quotes:
-        if not math.isfinite(quote['price']) or quote['price'] <= 0:
-            raise ValueError('No missing-to-zero quote fallback')
-        quote['date'] = quote['epoch'][:10]
-        quote['closed'] = quote['epoch'].endswith(':CLOSED')
-    replay = json.loads((public / 'media/ducky-demo-cases-2026-09-07.json').read_text())['cases']['nok']['after_alert']
-    return {'cases': cases, 'quotes': quotes, 'record_history_retrieved': source['retrieved_at'][:10],
-            'replay': {**replay, 'chart': curve(replay['path'])}}
+    return {'cases': cases, 'record_history_retrieved': source['retrieved_at'][:10]}

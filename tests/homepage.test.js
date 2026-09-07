@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 import {mountHomepage} from '../public/js/homepage.js';
-import {mountDuckTape} from '../public/js/duck-tape.js';
 
 function fixture(query='',lang='zh',reduced=false){
  const dom=new JSDOM(readFileSync(lang==='en'?'dist/en/index.html':'dist/index.html','utf8'),{url:'https://duckybot.app/'+(lang==='en'?'en/':'')+query,pretendToBeVisual:true,runScripts:'outside-only'});
@@ -77,17 +76,4 @@ test('motion pauses on request and honors system reduced motion without offering
  assert.equal(pause.disabled,true);assert.equal(hero.classList.contains('motion-paused'),true);assert.equal(pause.textContent,'已减少动态效果');
  f.dispose();f.media.matches=false;f.media.dispatchEvent(new f.w.Event('change'));assert.equal(pause.disabled,true);f.dom.window.close();
  const initial=fixture('','en',true);assert.equal(initial.doc.querySelector('[data-home-motion]').disabled,true);initial.dispose();initial.dom.window.close();
-});
-
-test('the homepage and duck quote lane share pause state in either direction',()=>{
- const f=fixture(),old={window:globalThis.window,document:globalThis.document};let disposeTape;
- try {
-  globalThis.window=f.w;globalThis.document=f.doc;f.w.DUCKY={};
-  disposeTape=mountDuckTape(f.doc.querySelector('[data-duck-tape]'));
-  const hero=f.doc.querySelector('[data-home-hero]'),primary=f.doc.querySelector('[data-home-motion]'),tape=f.doc.querySelector('[data-duck-motion-toggle]');
-  primary.click();assert.equal(f.doc.body.hasAttribute('data-home-paused'),true);assert.equal(tape.getAttribute('aria-pressed'),'true');
-  tape.click();assert.equal(hero.classList.contains('motion-paused'),false);assert.equal(primary.getAttribute('aria-pressed'),'false');
-  f.media.matches=true;f.media.dispatchEvent(new f.w.Event('change'));
-  assert.equal(tape.disabled,true);assert.equal(f.doc.body.hasAttribute('data-home-paused'),true);
- } finally {disposeTape?.();f.dispose();f.dom.window.close();for(const [key,value]of Object.entries(old)){if(value===undefined)delete globalThis[key];else globalThis[key]=value;}}
 });
