@@ -1,6 +1,7 @@
 // Shared selection logic for direct links and in-page radar filters.
 export function selectNavigation(name, query=new URLSearchParams()) {
   if(name==='updates')name='alerts';
+  if(name==='degen')name='vibe';
   if(name==='boards' && query.get('board')==='social')name='vibe';
   const board=query.get('board')||'all';
   document.querySelectorAll('.app-nav a[data-route]').forEach(a=>{

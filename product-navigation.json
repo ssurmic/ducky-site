@@ -1,6 +1,6 @@
 {
   "primary": ["watchlist", "briefing", "chart", "calendar", "alerts", "creators"],
-  "discovery": ["opportunities", "degen", "vibe", "ducky"],
+  "discovery": ["opportunities", "vibe", "ducky"],
   "radar": [
     {"key":"all", "icon":"boards"},
     {"key":"insider", "icon":"insider"},

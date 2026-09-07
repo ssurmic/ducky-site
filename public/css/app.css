@@ -1153,3 +1153,20 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 /* Shared ticker evidence, progressively disclosed. */
 .research-record-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}.research-stream{min-width:0}.research-evidence{padding:12px 0;border-top:1px solid var(--border);overflow-wrap:anywhere}.research-facts{display:flex;gap:16px;flex-wrap:wrap}.research-facts dt{font-size:.8rem}.research-facts dd{margin:4px 0;font-weight:600}.research-change{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.research-record{margin-bottom:24px}
 .social-history-plot{margin:12px 0}.social-history-plot svg{width:100%;max-height:200px;display:block}
+/* Shared stock briefs: a short judgment first, evidence on demand. */
+.stock-briefs{display:grid;gap:16px;max-width:1100px}.stock-briefs>p{margin:0}
+.stock-brief{min-width:0;border-left:3px solid var(--accent,#ff9700)}
+.stock-brief-head,.stock-brief-links{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.stock-brief-head{justify-content:space-between}.stock-brief-head h2{margin:0}
+.stock-brief-state{font-size:.82rem;font-weight:700;color:var(--accent,#ff9700);margin-bottom:8px}
+.stock-brief-summary{font-size:1.08rem;line-height:1.7;max-width:72ch}
+.stock-brief-actions{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:16px 0;border-top:1px solid var(--line,#27323e)}
+.stock-brief-actions h3,.stock-brief-reasoning h3{font-size:.84rem;color:var(--muted,#9ca9b6);margin:0 0 7px}
+.stock-brief-actions p{margin:0;line-height:1.65}.stock-brief-reasoning>section{padding:14px 0;border-bottom:1px solid var(--line,#27323e)}
+.stock-brief-reasoning summary,.stock-brief-evidence summary,.stock-brief-more>summary{cursor:pointer;padding:12px 0;font-weight:600}
+.stock-brief-fact{border-top:1px solid var(--line,#27323e);padding:12px 0;overflow-wrap:anywhere}.stock-brief-fact h4{margin:0}.stock-brief-fact p{margin:8px 0}
+.stock-brief-fact:focus{outline:2px solid var(--accent,#ff9700);outline-offset:4px}
+.brief-citation{font:inherit;font-size:.7rem;vertical-align:super;border:0;background:transparent;color:var(--accent,#ff9700);padding:4px 6px;cursor:pointer;min-width:24px;min-height:24px}
+.stock-brief-history{display:grid;gap:12px;margin-top:18px}.stock-brief-history .stock-brief{border-left-width:1px}
+.vibe-action{font-size:1rem;line-height:1.6;font-weight:600;margin:16px 0}.social-card>.social-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:600px){.stock-brief-actions{grid-template-columns:1fr;gap:16px}.stock-brief-summary{font-size:1rem}.stock-brief-links{gap:8px}.stock-brief .btn{white-space:normal}.stock-brief-history .stock-brief{padding:12px}.brief-citation{min-height:32px;min-width:28px}}

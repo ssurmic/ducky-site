@@ -24,12 +24,16 @@ export function socialCard(row,{stale=false,onHistory}={}) {
   const card=el('article.social-card',{'data-state':stale?'stale':state,'data-record-id':row.id},
     el('div.social-card-heading',el('div',el('a.social-ticker',{href:'#/chart/'+encodeURIComponent(row.ticker)},'$'+row.ticker),
       el('span.social-company',row.company)),el('span.social-state',s(stale?'social.saved_state':'social.state_'+state))));
-  card.append(el('div.social-index',el('strong',score===null?'—':String(score)),el('span',s('social.index_scale')),
-    score===null?null:el('meter',{min:0,max:100,value:score,'aria-label':s('social.index')})),
+  card.append(el('p.vibe-action',s('social.action_'+(stale?'stale':state))),
     el('dl.social-metrics',fact('mentions',num(row.mentions,0)),fact('change',row.change_pct==null?s('social.no_base'):pct(row.change_pct,0)),
-      fact('rank','#'+row.rank)),
-    el('p.social-meaning',s('social.meaning_'+state)));
+      fact('rsi',row.technical?.status==='current'?num(row.technical.rsi_d,1):'—')),
+    el('a.btn.btn-ghost.btn-sm',{href:'#/briefing?ticker='+encodeURIComponent(row.ticker)},s('stockbrief.open')));
   const details=el('details.social-evidence',el('summary',s('social.details')),
+    el('div.social-index',el('strong',score===null?'—':String(score)),el('span',s('social.index_scale')),
+      score===null?null:el('meter',{min:0,max:100,value:score,'aria-label':s('social.index')})),
+    el('p.social-meaning',s('social.meaning_'+state)),
+    el('p.small.muted',s('social.technical_context',{rsi:row.technical?.status==='current'?num(row.technical.rsi_d,1):'—',
+      ratio:row.technical?.status==='current'?num(row.technical.iv_hv,2):'—',date:dateTime(row.technical?.observed_at)})),
     el('dl.social-metrics',fact('previous',num(row.mentions_previous,0)),fact('upvotes',num(row.upvotes,0)),fact('rank_previous',row.rank_previous==null?'—':'#'+row.rank_previous)),
     el('p.small.muted',s('social.components',{volume:row.components?.volume??'—',growth:row.components?.growth??'—',rank:row.components?.rank??'—'})),
     el('p.small',s('social.record_id')),el('code.social-record-id',row.id),
@@ -52,7 +56,7 @@ export async function mountSocial(root,route={}) {
     const params=new URLSearchParams(standalone?{}:{board:'social'});
     if(viewQuery.trim())params.set('ticker',viewQuery.trim());
     if(viewScope!=='all'||degen)params.set('scope',viewScope);
-    const hash=(standalone?'#/'+route.view:'#/boards')+(params.size?'?'+params:'');
+    const hash=(standalone?'#/vibe':'#/boards')+(params.size?'?'+params:'');
     history.replaceState(null,'',location.pathname+location.search+hash);
     for(const a of document.querySelectorAll('[data-lang-toggle]')){
       const u=new URL(a.href,location.href);u.hash=hash;a.href=u.href;
@@ -63,12 +67,10 @@ export async function mountSocial(root,route={}) {
   const valid=()=>alive&&!ctl.signal.aborted&&epoch===store.epoch();
   const page=el('section.radar-workspace.social-workspace');root.append(page);
   page.append(el('header.radar-heading',el('div',el('p.social-eyebrow',s('boards.h1')+' / '+s('boards.t_social')),
-    el('h1',s(degen?'degen.title':'social.title')),el('p.muted',s(degen?'degen.description':'social.description'))),
-    el('a.btn.btn-ghost.btn-sm',{href:degen?'#/vibe':'#/degen'},s(degen?'nav.vibe':'nav.degen'))));
-  if(degen)page.append(el('p.data-notice',s('degen.limit')));
-  page.append(el('div.social-platforms',el('span',s('social.reddit_source')),el('span.muted',s('social.x_unavailable'))));
+    el('h1',s('social.title')),el('p.muted',s('social.description')))));
   const method=el('details.social-method',el('summary',s('social.method')),
-    el('p',s('social.formula')),el('p',s('social.threshold')),el('p',s('social.limits')),
+    el('div.social-platforms',el('span',s('social.reddit_source')),el('span.muted',s('social.x_unavailable'))),
+    el('p',s('social.merged')),el('p',s('social.formula')),el('p',s('social.threshold')),el('p',s('social.limits')),
     el('p.small.muted',s('social.no_forecast')),source('https://apewisdom.io/methodology/','social.provider_method'));
   page.append(method);
   if(!store.isPro()) {
@@ -76,7 +78,7 @@ export async function mountSocial(root,route={}) {
       el('a.btn.btn-primary',{href:'#/billing'},s('radar.access_upgrade'))));
     return cleanup;
   }
-  const content=el('div');page.append(content);
+  const content=el('div');page.insertBefore(content,method);
   async function load() {
     clear(content);content.append(el('p',{role:'status'},s('common.loading')));
     try {
@@ -107,7 +109,8 @@ export async function mountSocial(root,route={}) {
     }
     method.querySelector('.social-coverage')?.remove();
     method.append(el('p.small.muted.social-coverage',s('social.coverage',{n:doc.items.length,total:doc.coverage?.provider_count??'—'})));
-    content.append(el('p.small.muted',s('social.collected',{date:dateTime(doc.collected_at)})));
+    method.querySelector('.social-observed')?.remove();
+    method.append(el('p.small.muted.social-observed',s('social.collected',{date:dateTime(doc.collected_at)})));
     if(stale)content.append(el('p.social-stale',{role:'status'},s('social.stale')));
     content.append(el('div.social-summary',el('strong',s(stale?'social.saved_count':'social.hot_count',{n:doc.items.filter(r=>r.overheated).length})),
         el('span.muted',s('social.window'))));

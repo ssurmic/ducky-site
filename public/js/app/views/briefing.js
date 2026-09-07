@@ -3,6 +3,7 @@ import {s,LANG} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
 import {readingPreview} from '../reading-preview.js';
+import {mountStockBriefs} from './stock-briefs.js';
 
 const localized=(row,key)=>row?.[key+'_'+(LANG==='en'?'en':'zh')]||row?.[key+'_en']||row?.[key+'_zh']||'';
 export function dateTime(value,precision){const d=new Date(value);if(!value||Number.isNaN(d.getTime()))return '—';
@@ -113,12 +114,14 @@ export function renderBriefing(doc){
 
 export async function mount(root,route={}){
   const params=route.query instanceof URLSearchParams?route.query:new URLSearchParams(route.query||'');
+  if(!['daily','weekly'].includes(params.get('period')))return mountStockBriefs(root,route);
   const period=params.get('period')==='weekly'?'weekly':'daily';
   const ctl=new AbortController(),epoch=store.epoch();let alive=true,request=0;
   const head=el('div.view-head',el('h1',s('briefing.title')),
     el('nav',{'aria-label':s('briefing.period')},...['daily','weekly'].map(value=>el('a.btn.btn-ghost.btn-sm',
       {href:'#/briefing?period='+value,'aria-current':value===period?'page':null},s('briefing.'+value)))));
   const body=el('div');root.append(head,body);
+  head.append(el('a.btn.btn-ghost.btn-sm',{href:'#/briefing'},s('stockbrief.title')));
   if(store.isPro())head.append(el('a.btn.btn-ghost.btn-sm',{href:'#/research'},s('record.changes')));
   const valid=id=>alive&&!ctl.signal.aborted&&store.epoch()===epoch&&(id==null||id===request);
   async function load(){

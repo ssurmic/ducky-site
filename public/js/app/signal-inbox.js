@@ -40,7 +40,8 @@ export function signalInboxSession({valid,onLoseAccess}) {
       if(current&&row.effective_at)dates.append(el('p.small',s('event.effective_date')+' · '+date(row.effective_at)));
       card.append(dates);
       const actions=el('div.radar-record-actions');
-      if(tk)actions.append(el('a.btn.btn-ghost.btn-sm',{href:'#/research/'+encodeURIComponent(tk)},s('watch.research_record')),
+      if(tk&&row.kind==='ticker-brief')actions.append(el('a.btn.btn-ghost.btn-sm',{href:'#/briefing?ticker='+encodeURIComponent(tk)},s('stockbrief.open')));
+      else if(tk)actions.append(el('a.btn.btn-ghost.btn-sm',{href:'#/research/'+encodeURIComponent(tk)},s('watch.research_record')),
         el('a.btn.btn-ghost.btn-sm',{href:'#/boards?mode=archive&ticker='+encodeURIComponent(tk)},s('updates.signal_radar')));
       if(source)actions.append(el('a.btn.btn-ghost.btn-sm',{href:source,target:'_blank',rel:'noopener noreferrer'},s('boards.source')+' ↗'));
       card.append(actions);host.append(card);

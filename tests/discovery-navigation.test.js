@@ -27,7 +27,8 @@ test('new destinations survive sign-in and radar links select one matching categ
  selectNavigation('boards',new URLSearchParams('board=insider'));
  assert.ok(nav.querySelector('.nav-desktop-radar').open);
  assert.equal(nav.querySelector('.nav-desktop-radar [aria-current=page]').dataset.board,'insider');
- selectNavigation('degen');assert.ok(nav.querySelector('[data-route=degen]').classList.contains('on'));
+ selectNavigation('degen');assert.equal(nav.querySelector('[data-route=degen]'),null);
+ assert.ok(nav.querySelector('[data-route=vibe]').classList.contains('on'));
  assert.equal(nav.querySelector('.nav-desktop-radar [aria-current=page]'),null);nav.remove();
 });
 test('discovery shows stocks outside the watchlist, preserving zero and unknown metrics',()=>{
