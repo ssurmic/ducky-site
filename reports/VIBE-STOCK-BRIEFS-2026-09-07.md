@@ -1,65 +1,79 @@
 # Vibe Check and shared stock briefs — 2026-09-07
 
-Status: implementation and local UI accepted; real-model quality and production acceptance in progress.
+Status: deployed; two checked stock briefs are readable. The initial stock queue is still filling.
 
-The owner requested one Vibe Check feature and a shared stock-level mini-report twice a day.
-The existing attention score is retained in the details; one discussion state and next check
-lead the interface. Cached daily RSI and IV/HV provide context, without turning attention
-into a trading score. Legacy Degen links and the old daily/weekly event digest remain usable.
+## Released behavior
 
-Each Eastern 08:00/20:00 slot has one leased job per followed stock. The background worker
-reuses shared facts, warms the shared chart cache, compares exactly matching completed
-sessions, drafts bilingual research using the configured local deep model, and separately
-checks every claim against its citations. It gives different conditional observations for
-nonholders and shareholders, not personalized orders. Missing evidence and counterevidence
-remain visible. All accepted reports, source packets, reviews and failed attempts persist.
+The navigation and homepage expose one Vibe Check. The existing Reddit attention score
+remains in a disclosure; a discussion state, next observation, mention change and cached
+RSI lead the card. IV/HV, collection time, formula and history remain available underneath.
+Legacy Degen links work, including their saved hot filter. A stock card opens its shared brief.
 
-Current research/history require a fresh Pro entitlement at the API. No provider or model
-work occurs on a request. Source revisions/withdrawals withhold affected prose immediately.
-New information produces a durable private pointer for followers through enabled channels;
-initial captures and unchanged evidence are silent. The original watch ID, current tier,
-source validity and transport consent are rechecked before delivery. The user never receives
-an unreviewed draft. No oversold qualification, trading weights, taxonomy or entry/exit rules
-were changed; the existing strategy comparison baseline remains authoritative.
+The default summary page now reads one bilingual mini-report per stock, with a short view,
+separate observations for nonholders and existing shareholders, four evidence dimensions,
+counterevidence, next checks, dated sources and previous editions. It does not infer a position
+from a follow. The price session is visible beside the conclusion, separately from evidence
+collection and report generation. Original daily/weekly event digests remain available.
 
-## Validation so far
+At 08:00 and 20:00 America/New_York the background queue starts processing the union of
+followed tickers, one job at a time. A report is shared by its followers; requests only read
+existing records. The configured local deep model drafts and independently reviews claims.
+The queue uses bounded repair, three attempts per slot, 30-minute retry spacing and a
+20-minute lease. Each service run is capped at 19 minutes and schedules the next after two
+minutes. Publication times depend on queue and model availability, not an exact-time promise.
 
-- Frontend: 294 tests, 5 Python asset tests (one pre-existing skip), copy and 932-link checks.
-  After moving low-frequency controls below the reading, 18 targeted UI tests passed.
-- Backend: 60 targeted tests; full selftest ALL GREEN. The sender test fixture now freezes
-  device-registration time alongside message time, fixing an existing afternoon-only failure.
-- Native browser: Chinese 390px Vibe displays the action and summary metrics in the first
-  screen; English 320px stock brief has document width 320px and retains conditional actions.
-  Desktop 1280px uses a two-column action block; evidence remains accessible by citation.
-- Initial real NVDA/TSLA drafts failed reference/format checks and were not published.
-  The prompt now honors the calendar-aware validity of closed-session prices; the packet
-  includes aligned stock/sector and SOXX/QQQ comparisons. Local-model draft/review budgets
-  and bounded repair are being measured against the configured Qwen model.
+Evidence revisions, observations, failed drafts, reviews and accepted reports are retained.
+Unchanged facts reuse the original assessment with a new check time and explicit reuse label.
+Current reports/history have fresh Pro API gates. A source revision or withdrawal withholds
+invalid prose immediately. Initial reports and unchanged evidence stay silent. Later material
+changes create private pointers for followers through their enabled channels, with watch ID,
+current entitlement, source validity and channel consent rechecked at delivery.
 
-## Practical coverage limits
+## Production acceptance
 
-Reddit provider aggregates do not establish bullish sentiment, unique traders or specific
-communities; X is unavailable. Absence of an insider filing is not proof of no insider buying.
-Form 4 code P includes private purchases and unadjusted historical transaction prices cannot
-be declared support. IV/HV and option concentrations do not guarantee an equity entry or
-price boundary. Current taxonomy and freshly retrieved historical prices do not recreate
-past knowledge. A separate model review can still miss errors, so the app retains evidence,
-coverage and dated previous editions.
+- Backend implementation: `0a911d9`, `09f91c2`, `e221eb0`, deployed to the DGX.
+  `ducky-api`, `ducky-sender` and the new ticker-brief timer were restarted/enabled.
+- Frontend implementation: `fc7b679` through `a24f18e`; Cloudflare Pages `089d92f3`.
+  Rebased over the concurrent Ducky Bot rename and homepage interaction fixes.
+- NVDA: `ticker-brief:f3a9fef6af62f297638419e7c6edb0e5`, checked 21:21 UTC.
+- TSLA: `ticker-brief:5a213c7344e2bd42abdb24eb8ed62d3d`, checked 21:22 UTC.
+  Both completed actual local-model drafting/repair and review. Fresh-input review before
+  silent publication took 128 and 97 seconds respectively; earlier full draft/repair runs
+  took 233 and 212 seconds. These are measured samples, not a throughput guarantee.
+- At the acceptance snapshot, 32 distinct stocks were followed, two had reports, AAPL's
+  first attempt was rejected and ALAB was processing. Both published rows had notify=0
+  and dispatch_id=silent; ticker-brief fanout count was zero. Bulk coverage remains partial.
+- The first unattended AAPL draft incorrectly inferred an IV trend from IV/HV. Review
+  rejected it. Prompt version 5 adds a deterministic IV-trend check and tells the reviewer
+  to use explicit source relation/coverage fields, not infer relevance from a title.
+- Native production browser: authenticated Pro NVDA and TSLA reports, citation expansion
+  to the exact option record, history read, old event digest and Degen alias all verified.
+  Chinese 390px Vibe shows its action, metrics and brief link. Chinese 390px and English
+  320px stock briefs have document width equal to viewport width; the final English search
+  field displays the complete ticker. Physical iOS/Android testing is not claimed.
+- Final backend gate: 1,969 tests and selftest ALL GREEN; architecture lint 0 failures.
+  The deployed main implementation also passed DGX selftest and 43 focused production-host
+  tests. Frontend: 300 tests, 5 Python asset checks (one pre-existing skip), copy lint and
+  934 links. The unauthenticated report endpoint returned 401.
 
+## Evidence and remaining limits
 
-## Grounding checks from the real-model audit
+No oversold qualification, strategy weights, entry/exit rules or taxonomy were changed.
+These qualitative observations are not a backtested strategy or performance claim.
+Historical insider transaction prices are not established support, and code P can include
+private purchases. Missing capital records do not establish that no one bought.
 
-One earlier NVDA draft passed the local review but manual inspection found that it called
-product adoption a partnership, described technicals without the corresponding citation,
-ignored divergent RSI timeframes, and questioned an already reviewed ticker mention based
-on the video title alone. That draft was not published. Prompt version 2 adds explicit
-source-meaning requirements and deterministic regression checks for these cases. Uncovered
-dimensions use program-owned bilingual missing-data text. Repairs preserve the original
-draft; no discarded analysis fields are served in the report API.
+Reddit aggregate counts do not establish bullish sentiment, unique traders or specific
+communities; X is unavailable. Reviewed creator mentions do not supply a complete opinion.
+Current technical/option data can be missing. Option concentrations do not guarantee price
+boundaries; IV below HV alone does not establish an equity entry. Aligned sector comparisons
+use the same completed sessions, and today's retrieval does not recreate historical knowledge.
 
-The accepted payload is whitelisted at every text object. Model input omits duplicated
-storage metadata while the immutable source packet retains it. Re-observation timestamps
-alone do not cause a new thesis or repeated model call; a source revision, freshness change
-or material evidence change does. Reused assessments retain their original generation time
-and receive an explicit unchanged-evidence label. Notifications open the ticker brief and
-use the account language without further model calls.
+An earlier NVDA draft passed the model reviewer but failed manual inspection for citation
+meaning, product adoption versus partnership and conflicting RSI timeframes; it was never
+published. Those cases now have deterministic checks. Automated review can still miss errors.
+Production attempts are immutable in the shared DB. The separate manual QA drafts, including
+rejected versions, are archived machine-locally under
+`.signals/ticker-brief-validation-20260907/`; current private research is not committed publicly.
+Actual notification transport was not exercised with test messages. Delivery eligibility,
+consent, deduplication and source correction were tested with isolated fixtures.
