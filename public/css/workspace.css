@@ -256,7 +256,7 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 /* Portrait reading stays compact; targets remain usable with a finger or mouse. */
 .radar-category-toggle{display:none}
 @media(max-width:720px){
- .page-app{--fs-base:.9375rem}
+ body.page-app{--fs-base:.9375rem}
  .page-app .app-main{padding:14px 12px 24px;scroll-padding-block:16px;scrollbar-gutter:auto}
  .page-app .app-view,.page-app .route-page{min-width:0}
  .page-app h1,.page-app .radar-heading h1{font-size:1.375rem}
