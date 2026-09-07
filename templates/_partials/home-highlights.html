@@ -1,0 +1,19 @@
+<section class="home-highlights" id="highlights" aria-labelledby="home-highlights-title"><div class="wrap">
+ <div class="home-highlights-head"><div><p class="eyebrow mono">{{ t('home.proof.eyebrow') }}</p><h2 id="home-highlights-title">{{ t('home.proof.title') }}</h2></div><a href="{{ url('/track-record/') }}">{{ t('home.proof.all') }} ↗</a></div>
+ <p class="home-highlights-intro">{{ t('home.proof.note') }}</p>
+ <div class="home-case-grid">
+ {% for case in home_showcase.cases %}
+  <article class="home-case" id="case-{{ case.case_id }}">
+   <div class="home-case-top"><span class="home-case-symbol mono">{{ case.ticker }}</span><span class="home-case-kind">{{ case.label_zh if is_zh else case.label_en }}</span></div>
+   <p class="home-case-company">{{ case.company }}</p>
+   <p class="home-case-date">{{ t('home.proof.recorded') }} <time datetime="{{ case.recorded_at }}">{{ case.date }}</time></p>
+   <div class="home-case-result"><strong>+{{ '%.1f'|format(case.observed_returns['5'].pct) }}%</strong><span>{{ t('home.proof.five') }}</span></div>
+   {% set chart = case.chart %}
+   <svg class="home-case-chart" viewBox="0 0 {{ chart.width }} {{ chart.height }}" role="img" aria-label="{{ t('home.proof.path') }} {{ chart.start }} — {{ chart.end }}"><path class="chart-fill" d="{{ chart.area }}"/><path class="chart-stroke" d="{{ chart.path }}"/></svg>
+   <div class="home-case-range mono"><span>{{ chart.start }}</span><span>{{ chart.end }}</span></div>
+   <div class="home-case-followup"><span>{{ t('home.proof.twenty') }}</span><strong>{% if case.observed_returns['20'] %}{{ '%+.1f'|format(case.observed_returns['20'].pct) }}%{% else %}{{ t('home.proof.waiting') }}{% endif %}</strong></div>
+   <details class="home-case-detail"><summary>{{ t('home.proof.details') }}</summary><p>{{ t('home.proof.basis') }}</p><p>{{ t('home.proof.window') }} {{ case.base_d }} → {{ case.observed_returns['5'].date }}</p><p>{{ t('home.proof.history_asof') }} {{ home_showcase.record_history_retrieved }}</p><a href="/examples/home-records-2026-09-07.json">{{ t('home.proof.data') }} ↗</a> · <a href="{{ url('/track-record/') }}">{{ t('home.proof.all') }} ↗</a></details>
+  </article>
+ {% endfor %}
+ </div>
+</div></section>

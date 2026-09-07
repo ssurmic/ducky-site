@@ -616,6 +616,8 @@ def main() -> None:
     pages, env, liq, track_n = page_targets(), make_env(), load_liquidity(), load_track_n()
     track_stats = load_track_stats()   # §5.3.4/5 — graceful {'ok': False} when the notary JSON is absent
     video_example = load_video_example()
+    from home_showcase import load_home_showcase
+    home_showcase = load_home_showcase(PUBLIC)
 
     if DIST.exists():
         shutil.rmtree(DIST)
@@ -642,6 +644,7 @@ def main() -> None:
             ctx = build_context(cfg, tables, lang, Path(tpl_name).stem, rel, version, liq, track_n, track_stats)
             ctx["oversold"] = load_oversold_research()
             ctx["video_example"] = video_example
+            ctx["home_showcase"] = home_showcase
             ctx["demo_copy"] = {k[8:]: v for k, v in tables[lang].items() if k.startswith("demo.ui.")}
             ctx["home_stories"] = load_home_stories() if tpl_name == 'index.html' else []
             ctx["home_copy"] = {k[5:]:v for k,v in tables[lang].items() if k.startswith('home.')} if tpl_name == 'index.html' else {}

@@ -12,7 +12,7 @@
   <div class="product-demo-caption"><p id="product-demo-note" class="small muted">{{ t('walkthrough.caption') }}</p><a href="{{ url('/app/') }}#/register">{{ t('walkthrough.start') }} →</a></div>
   {# Actual render offsets, after the opening fade of each scene. #}
   {% set video_starts = [0.16, 3.48, 8.88, 14.48, 20.08, 24.72, 28.72, 33.68] if lang == 'zh' else [0.16, 2.8, 7.12, 12.8, 18.28, 21.56, 26.32, 30.36] %}
-  {% set chapter_routes = ['#/watchlist', '#/boards?screen=insider-oversold', '#/creators?scope=discover', '#/calendar', '#/briefing?period=daily', '#/updates', '#/creators?tab=lab&preview=fictional'] %}
+  {% set chapter_routes = ['#/watchlist', '#/boards?screen=insider-oversold', '#/creators?scope=discover', '#/calendar', '#/briefing?period=daily', '#/updates', '#/creators?tab=lab&preview=fictional', '#/boards?board=social&ticker=MU'] %}
   <details class="product-demo-guide" aria-labelledby="product-demo-guide-title" data-demo-guide
        data-loading="{{ t('walkthrough.guide.loading') }}" data-ready="{{ t('walkthrough.guide.ready') }}" data-error="{{ t('walkthrough.guide.error') }}">
    <summary class="product-demo-guide-heading" id="product-demo-guide-title">{{ t('walkthrough.guide.title') }}</summary>
@@ -25,7 +25,7 @@
     {% endfor %}
    </ol>
    <ol class="product-demo-chapters">
-    {% for i in range(1,8) %}
+    {% for i in range(1,9) %}
     <li class="product-demo-chapter">
      <span class="product-demo-interactive mono">{{ t('walkthrough.guide.interactive') }}</span>
      <h4><span class="product-demo-chapter-number mono" aria-hidden="true">{{ '%02d'|format(i) }}</span>{{ t('walkthrough.guide.' ~ i ~ '.title') }}</h4>
@@ -44,6 +44,7 @@
     <p class="small muted">{{ t('walkthrough.cases.glw') }} <a href="https://www.sec.gov/Archives/edgar/data/24741/000120677426000273/glw4631061-8k.htm" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} ↗</a></p>
     <p class="small muted">{{ t('walkthrough.cases.macro') }} <a href="https://www.federalreserve.gov/newsevents/pressreleases/monetary20250618a.htm" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} ↗</a> · <a href="https://investors.robinhood.com/news-releases/news-release-details/robinhood-reports-first-quarter-2025-results" target="_blank" rel="noopener noreferrer">Robinhood Q1 2025 ↗</a></p>
     <p class="small muted">{{ t('walkthrough.cases.creator') }} <a href="https://www.youtube.com/watch?v=PweaTXhs-aU&amp;t=1366" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} ↗</a></p>
+    <p class="small muted">{{ t('walkthrough.cases.reddit') }} <a href="https://apewisdom.io/stocks/MU/" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} ↗</a> · <a href="/media/ducky-demo-reddit-2026-09-07.json">{{ t('walkthrough.cases.reddit_history') }} →</a></p>
     <a class="small" href="/media/ducky-demo-cases-2026-09-07.json">{{ t('walkthrough.cases.prices') }} →</a>
    </details>
   </details>

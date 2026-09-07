@@ -1,0 +1,596 @@
+{
+  "version": "2026-09-07-vibe-v10",
+  "render_languages": [
+    "zh",
+    "en"
+  ],
+  "speakers": {
+    "en": "en-US-JennyNeural",
+    "zh": "zh-CN-XiaoxiaoNeural"
+  },
+  "synthesis": {
+    "provider": "Microsoft online speech service",
+    "client": "edge-tts",
+    "client_version": "7.2.8",
+    "model_revision": "not exposed by provider",
+    "rate": "+0%",
+    "pitch": "+0Hz",
+    "boundary": "WordBoundary"
+  },
+  "delivery": {
+    "target_seconds": 38,
+    "maximum_seconds": 42,
+    "status": "frozen after frontend f76a4be8 / backend b208e3d acceptance; 2026-09-07"
+  },
+  "timing": {
+    "lead": 0.08,
+    "tail": 0.08,
+    "fade": 0.06
+  },
+  "scenes": [
+    {
+      "name": "01-watch",
+      "zh": "从你的自选股开始。",
+      "en": "Start with the stocks you follow.",
+      "caption_chunks": {
+        "zh": [
+          "从你的自选股开始。"
+        ],
+        "en": [
+          "Start with the stocks you follow."
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "zh": [
+          {
+            "file": "01-watch-s0.png",
+            "at": 0
+          },
+          {
+            "file": "01-watch-s6.png",
+            "at": 0.2
+          },
+          {
+            "file": "01-watch-s12.png",
+            "at": 0.42
+          }
+        ],
+        "en": [
+          {
+            "file": "01-watch-s0.png",
+            "at": 0
+          },
+          {
+            "file": "01-watch-s6.png",
+            "at": 0.2
+          },
+          {
+            "file": "01-watch-s12.png",
+            "at": 0.42
+          }
+        ]
+      },
+      "spoken_en": "Start with the stocks you follow.",
+      "minimum_seconds": 2.8
+    },
+    {
+      "name": "02-people",
+      "zh": "佩洛西披露，罗宾汉董事买入，都能查原文。",
+      "en": "Pelosi’s disclosures. A Robinhood director buys shares. Check the filings.",
+      "caption_chunks": {
+        "zh": [
+          "佩洛西披露，",
+          "罗宾汉董事买入，",
+          "都能查原文。"
+        ],
+        "en": [
+          "Pelosi’s disclosures.",
+          "A Robinhood director buys shares.",
+          "Check the filings."
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "zh": [
+          {
+            "file": "02-people-s0.png",
+            "at": 0
+          },
+          {
+            "file": "02-people-s9.png",
+            "at": 0.3
+          },
+          {
+            "file": "02-people-s16.png",
+            "at": 0.7
+          }
+        ],
+        "en": [
+          {
+            "file": "02-people-s0.png",
+            "at": 0
+          },
+          {
+            "file": "02-people-s9.png",
+            "at": 0.3
+          },
+          {
+            "file": "02-people-s16.png",
+            "at": 0.7
+          }
+        ]
+      },
+      "spoken_en": "Pelosi's disclosures. A Robin Hood director buys shares. Check the filings.",
+      "minimum_seconds": 4.2
+    },
+    {
+      "name": "03-partners",
+      "zh": "英伟达投资诺基亚，与康宁合作，价格和条款一起看。",
+      "en": "NVIDIA backs Nokia and partners with Corning. Check the terms.",
+      "caption_chunks": {
+        "zh": [
+          "英伟达投资诺基亚，",
+          "与康宁合作，",
+          "价格和条款一起看。"
+        ],
+        "en": [
+          "NVIDIA backs Nokia",
+          "and partners with Corning.",
+          "Check the terms."
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "zh": [
+          {
+            "file": "03-partners-s0.png",
+            "at": 0
+          },
+          {
+            "file": "03-partners-s9.png",
+            "at": 0.32
+          },
+          {
+            "file": "03-partners-s15.png",
+            "at": 0.68
+          }
+        ],
+        "en": [
+          {
+            "file": "03-partners-s0.png",
+            "at": 0
+          },
+          {
+            "file": "03-partners-s9.png",
+            "at": 0.32
+          },
+          {
+            "file": "03-partners-s15.png",
+            "at": 0.68
+          }
+        ]
+      },
+      "spoken_en": "Nvidia backs Nokia and partners with Corning. Check the terms.",
+      "minimum_seconds": 4.8
+    },
+    {
+      "name": "04-price",
+      "zh": "回到你设的价位，提醒你。之后的涨跌，接着看。",
+      "en": "Get an alert at your chosen price. Track what happens next.",
+      "caption_chunks": {
+        "zh": [
+          "回到你设的价位，提醒你。",
+          "之后的涨跌，接着看。"
+        ],
+        "en": [
+          "Get an alert at your chosen price.",
+          "Track what happens next."
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "zh": [
+          {
+            "file": "04-price-s0.png",
+            "at": 0.0
+          },
+          {
+            "file": "04-price-s1.png",
+            "at": 0.0365
+          },
+          {
+            "file": "04-price-s2.png",
+            "at": 0.073
+          },
+          {
+            "file": "04-price-s3.png",
+            "at": 0.1095
+          },
+          {
+            "file": "04-price-s4.png",
+            "at": 0.146
+          },
+          {
+            "file": "04-price-s5.png",
+            "at": 0.1825
+          },
+          {
+            "file": "04-price-s6.png",
+            "at": 0.219
+          },
+          {
+            "file": "04-price-s7.png",
+            "at": 0.2555
+          },
+          {
+            "file": "04-price-s8.png",
+            "at": 0.292
+          },
+          {
+            "file": "04-price-s9.png",
+            "at": 0.3285
+          },
+          {
+            "file": "04-price-s10.png",
+            "at": 0.365
+          },
+          {
+            "file": "04-price-s11.png",
+            "at": 0.4015
+          },
+          {
+            "file": "04-price-s12.png",
+            "at": 0.438
+          },
+          {
+            "file": "04-price-s13.png",
+            "at": 0.4745
+          },
+          {
+            "file": "04-price-s14.png",
+            "at": 0.511
+          },
+          {
+            "file": "04-price-s15.png",
+            "at": 0.5475
+          },
+          {
+            "file": "04-price-s16.png",
+            "at": 0.584
+          },
+          {
+            "file": "04-price-s17.png",
+            "at": 0.6205
+          },
+          {
+            "file": "04-price-s18.png",
+            "at": 0.657
+          },
+          {
+            "file": "04-price-s19.png",
+            "at": 0.6935
+          },
+          {
+            "file": "04-price-s20.png",
+            "at": 0.73
+          }
+        ],
+        "en": [
+          {
+            "file": "04-price-s0.png",
+            "at": 0.0
+          },
+          {
+            "file": "04-price-s1.png",
+            "at": 0.0365
+          },
+          {
+            "file": "04-price-s2.png",
+            "at": 0.073
+          },
+          {
+            "file": "04-price-s3.png",
+            "at": 0.1095
+          },
+          {
+            "file": "04-price-s4.png",
+            "at": 0.146
+          },
+          {
+            "file": "04-price-s5.png",
+            "at": 0.1825
+          },
+          {
+            "file": "04-price-s6.png",
+            "at": 0.219
+          },
+          {
+            "file": "04-price-s7.png",
+            "at": 0.2555
+          },
+          {
+            "file": "04-price-s8.png",
+            "at": 0.292
+          },
+          {
+            "file": "04-price-s9.png",
+            "at": 0.3285
+          },
+          {
+            "file": "04-price-s10.png",
+            "at": 0.365
+          },
+          {
+            "file": "04-price-s11.png",
+            "at": 0.4015
+          },
+          {
+            "file": "04-price-s12.png",
+            "at": 0.438
+          },
+          {
+            "file": "04-price-s13.png",
+            "at": 0.4745
+          },
+          {
+            "file": "04-price-s14.png",
+            "at": 0.511
+          },
+          {
+            "file": "04-price-s15.png",
+            "at": 0.5475
+          },
+          {
+            "file": "04-price-s16.png",
+            "at": 0.584
+          },
+          {
+            "file": "04-price-s17.png",
+            "at": 0.6205
+          },
+          {
+            "file": "04-price-s18.png",
+            "at": 0.657
+          },
+          {
+            "file": "04-price-s19.png",
+            "at": 0.6935
+          },
+          {
+            "file": "04-price-s20.png",
+            "at": 0.73
+          }
+        ]
+      },
+      "spoken_en": "Get an alert at your chosen price. Track what happens next.",
+      "minimum_seconds": 5
+    },
+    {
+      "name": "05-macro",
+      "zh": "利率变化，怎样影响罗宾汉？",
+      "en": "How do interest rates affect Robinhood?",
+      "caption_chunks": {
+        "zh": [
+          "利率变化，怎样影响罗宾汉？"
+        ],
+        "en": [
+          "How do interest rates affect Robinhood?"
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "zh": [
+          {
+            "file": "05-macro-s20.png",
+            "at": 0
+          }
+        ],
+        "en": [
+          {
+            "file": "05-macro-s20.png",
+            "at": 0
+          }
+        ]
+      },
+      "spoken_en": "How do interest rates affect Robin Hood?",
+      "minimum_seconds": 3.25
+    },
+    {
+      "name": "06-creator",
+      "zh": "博主观点，连同原话一起看。",
+      "en": "Creator views, with the original context.",
+      "caption_chunks": {
+        "zh": [
+          "博主观点，连同原话一起看。"
+        ],
+        "en": [
+          "Creator views, with the original context."
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "zh": [
+          {
+            "file": "06-creator-s20.png",
+            "at": 0
+          }
+        ],
+        "en": [
+          {
+            "file": "06-creator-s20.png",
+            "at": 0
+          }
+        ]
+      },
+      "spoken_en": "Creator views, with the original context.",
+      "minimum_seconds": 3.25
+    },
+    {
+      "name": "07-social",
+      "zh": "社区讨论升温了吗？看提及数量，也看历史。",
+      "en": "Is Reddit attention rising? See the counts and their history.",
+      "caption_chunks": {
+        "zh": [
+          "社区讨论升温了吗？",
+          "看提及数量，也看历史。"
+        ],
+        "en": [
+          "Is Reddit attention rising?",
+          "See the counts and their history."
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "zh": [
+          {
+            "file": "07-social-s0.png",
+            "at": 0
+          },
+          {
+            "file": "07-social-s3.png",
+            "at": 0.1
+          },
+          {
+            "file": "07-social-s5.png",
+            "at": 0.18
+          },
+          {
+            "file": "07-social-s7.png",
+            "at": 0.26
+          },
+          {
+            "file": "07-social-s9.png",
+            "at": 0.34
+          },
+          {
+            "file": "07-social-s12.png",
+            "at": 0.42
+          },
+          {
+            "file": "07-social-s14.png",
+            "at": 0.5
+          },
+          {
+            "file": "07-social-s16.png",
+            "at": 0.58
+          },
+          {
+            "file": "07-social-s18.png",
+            "at": 0.66
+          },
+          {
+            "file": "07-social-s20.png",
+            "at": 0.74
+          }
+        ],
+        "en": [
+          {
+            "file": "07-social-s0.png",
+            "at": 0
+          },
+          {
+            "file": "07-social-s3.png",
+            "at": 0.1
+          },
+          {
+            "file": "07-social-s5.png",
+            "at": 0.18
+          },
+          {
+            "file": "07-social-s7.png",
+            "at": 0.26
+          },
+          {
+            "file": "07-social-s9.png",
+            "at": 0.34
+          },
+          {
+            "file": "07-social-s12.png",
+            "at": 0.42
+          },
+          {
+            "file": "07-social-s14.png",
+            "at": 0.5
+          },
+          {
+            "file": "07-social-s16.png",
+            "at": 0.58
+          },
+          {
+            "file": "07-social-s18.png",
+            "at": 0.66
+          },
+          {
+            "file": "07-social-s20.png",
+            "at": 0.74
+          }
+        ]
+      },
+      "spoken_en": "Is Reddit attention rising? See the counts and their history.",
+      "minimum_seconds": 4.5
+    },
+    {
+      "name": "08-brief",
+      "zh": "相关变化进收件箱，每天一份自选总结。",
+      "en": "Relevant updates in your inbox. A daily brief brings them together.",
+      "caption_chunks": {
+        "zh": [
+          "相关变化进收件箱，",
+          "每天一份自选总结。"
+        ],
+        "en": [
+          "Relevant updates in your inbox.",
+          "A daily brief brings them together."
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "zh": [
+          {
+            "file": "08-brief-s20.png",
+            "at": 0
+          }
+        ],
+        "en": [
+          {
+            "file": "08-brief-s20.png",
+            "at": 0
+          }
+        ]
+      },
+      "spoken_en": "Relevant updates in your inbox. A daily brief brings them together.",
+      "minimum_seconds": 4.2
+    },
+    {
+      "name": "09-start",
+      "zh": "添加自选，免费开始。",
+      "en": "Add your stocks. Start free.",
+      "caption_chunks": {
+        "zh": [
+          "添加自选，免费开始。"
+        ],
+        "en": [
+          "Add your stocks. Start free."
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "zh": [
+          {
+            "file": "09-start-s20.png",
+            "at": 0
+          }
+        ],
+        "en": [
+          {
+            "file": "09-start-s20.png",
+            "at": 0
+          }
+        ]
+      },
+      "spoken_en": "Add your stocks. Start free.",
+      "minimum_seconds": 2.8
+    }
+  ]
+}

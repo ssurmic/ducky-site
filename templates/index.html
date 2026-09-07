@@ -1,13 +1,16 @@
 {% extends "_base.html" %}
 {% block head %}
 <link rel="stylesheet" href="/css/homepage.css">
+<link rel="stylesheet" href="/css/home-showcase.css">
 <link rel="stylesheet" href="/css/desk.css">
 <script type="module" src="/js/homepage.js"></script>
 {% endblock %}
 {% block content %}
 {% include "_partials/homepage-hero.html" %}
+{% include "_partials/duck-tape.html" %}
 {% include "_partials/product-desk.html" %}
 {% include "_partials/pricing.html" %}
+{% include "_partials/home-highlights.html" %}
 {% include "_partials/product-demo-video.html" %}
 {% include "_partials/stock-workspace.html" %}
 {% include "_partials/video-example.html" %}

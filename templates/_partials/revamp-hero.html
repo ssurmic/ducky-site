@@ -1,17 +1,26 @@
-<section class="hero revamp-hero" id="top">
+<section class="hero revamp-hero home-hero" id="top">
  <div class="wrap hero-grid">
   <div class="hero-copy">
-   <p class="eyebrow mono">{{ t('rev.eyebrow') }}</p>
-   <h1>{{ t('rev.h1') }}</h1><p class="sub">{{ t('rev.sub') }}</p>
-   <div class="cta-row"><a class="btn btn-primary btn-lg" href="{{ url('/app/') }}#/register">{{ t('rev.start') }}</a><a class="btn btn-ghost btn-lg" href="#product-demo">{{ t('walkthrough.watch') }}</a></div>
+   <p class="eyebrow mono">{{ t('home.hero.eyebrow') }}</p>
+   <h1>{{ t('home.hero.title') }}<br><span>{{ t('home.hero.title_accent') }}</span></h1>
+   <p class="sub">{{ t('home.hero.body') }}</p>
+   <div class="cta-row"><a class="btn btn-primary btn-lg" href="{{ url('/app/') }}#/register">{{ t('rev.start') }} <span aria-hidden="true">↗</span></a><a class="home-video-link" href="#product-demo"><span aria-hidden="true">▶</span> {{ t('walkthrough.watch') }}</a></div>
    <p class="cta-note">{{ t('rev.note') }}</p>
   </div>
-  <div class="review-preview">
-   <div class="review-preview-head"><img src="/avatar-160.jpg" width="36" height="36" alt=""><div><b>{{ t('rev.preview') }}</b><small>{{ t('rev.preview_note') }}</small></div></div>
-   <ol class="review-flow">
-    {% for i in range(1,4) %}<li><span class="review-step mono">0{{ i }}</span><div><b>{{ t('rev.step' ~ i) }}</b><p>{{ t('rev.step' ~ i ~ '_b') }}</p></div></li>{% endfor %}
-   </ol>
-   <a href="{{ url('/track-record/') }}">{{ t('benefits.source_link') }} →</a>
+  <div class="home-hero-visual">
+   <img class="hero-duck hero-duck-one" src="/avatar-160.jpg" alt="" width="84" height="84">
+   <img class="hero-duck hero-duck-two" src="/avatar-160.jpg" alt="" width="48" height="48">
+   <img class="hero-duck hero-duck-three" src="/avatar-160.jpg" alt="" width="34" height="34">
+   <article class="hero-replay">
+    <div class="hero-replay-top"><span class="hero-replay-symbol"><img src="/avatar-160.jpg" width="32" height="32" alt=""> <b>NOK</b></span><span class="hero-replay-badge">{{ t('home.hero.replay') }}</span></div>
+    <p class="hero-replay-heading">{{ t('home.hero.replay_title') }}</p>
+    <div class="hero-replay-result"><strong>+{{ '%.1f'|format(home_showcase.replay.return_pct) }}%</strong><span>{{ t('home.hero.replay_metric') }}</span></div>
+    {% set chart = home_showcase.replay.chart %}
+    <svg class="hero-replay-chart" viewBox="0 0 {{ chart.width }} {{ chart.height }}" role="img" aria-label="{{ t('home.hero.chart') }}"><path class="chart-fill" d="{{ chart.area }}"/><path class="chart-stroke" d="{{ chart.path }}"/><circle cx="{{ chart.end_x }}" cy="{{ chart.end_y }}" r="4"/></svg>
+    <div class="hero-chart-dates mono"><span>{{ chart.start }} · ${{ '%.2f'|format(home_showcase.replay.base_close) }}</span><span>{{ chart.end }} · ${{ '%.2f'|format(home_showcase.replay.end_close) }}</span></div>
+    <div class="hero-replay-bottom"><span>{{ t('home.hero.replay_rule') }}</span><a href="{{ url('/app/') }}#/research/NOK">{{ t('home.hero.open_case') }} ↗</a></div>
+   </article>
+   <div class="hero-source-tag"><span aria-hidden="true">↳</span> {{ t('home.hero.source_tag') }}</div>
   </div>
  </div>
 </section>

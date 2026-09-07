@@ -1,0 +1,311 @@
+{
+  "retrieved_at": "2026-09-07T07:22:05.584270+00:00",
+  "selection": "three selected positive five-session cases; not aggregate performance",
+  "price_basis": "Unadjusted daily closes retrieved on the stated date. Source outcomes and recomputed history are kept separately; neither is an executable trading return.",
+  "notification_delivery": null,
+  "items": [
+    {
+      "source": "earnings",
+      "ticker": "AMKR",
+      "summary": "Q2 earnings beat lifted stock despite weak third-quarter sales guidance",
+      "label": "LIVE",
+      "base_d": "2026-07-28",
+      "base_px": 45.69,
+      "computed_at": "2026-08-30T08:35:02.875194+00:00",
+      "source_url": null,
+      "price_path": [
+        {
+          "d": "2026-07-28",
+          "close": 45.689998626708984
+        },
+        {
+          "d": "2026-07-29",
+          "close": 42.72999954223633
+        },
+        {
+          "d": "2026-07-30",
+          "close": 48.2599983215332
+        },
+        {
+          "d": "2026-07-31",
+          "close": 49.869998931884766
+        },
+        {
+          "d": "2026-08-03",
+          "close": 50.84000015258789
+        },
+        {
+          "d": "2026-08-04",
+          "close": 55.869998931884766
+        },
+        {
+          "d": "2026-08-05",
+          "close": 53.86000061035156
+        },
+        {
+          "d": "2026-08-06",
+          "close": 54.15999984741211
+        },
+        {
+          "d": "2026-08-07",
+          "close": 55.27000045776367
+        },
+        {
+          "d": "2026-08-10",
+          "close": 52.869998931884766
+        },
+        {
+          "d": "2026-08-11",
+          "close": 54.29999923706055
+        },
+        {
+          "d": "2026-08-12",
+          "close": 55.59000015258789
+        },
+        {
+          "d": "2026-08-13",
+          "close": 57.75
+        },
+        {
+          "d": "2026-08-14",
+          "close": 58.9900016784668
+        },
+        {
+          "d": "2026-08-17",
+          "close": 61.29999923706055
+        },
+        {
+          "d": "2026-08-18",
+          "close": 54.84000015258789
+        },
+        {
+          "d": "2026-08-19",
+          "close": 50.88999938964844
+        },
+        {
+          "d": "2026-08-20",
+          "close": 50.86000061035156
+        },
+        {
+          "d": "2026-08-21",
+          "close": 50.2599983215332
+        },
+        {
+          "d": "2026-08-24",
+          "close": 47.900001525878906
+        },
+        {
+          "d": "2026-08-25",
+          "close": 48.70000076293945
+        }
+      ],
+      "recorded_at": "2026-07-28T11:03:44.980795+00:00",
+      "signal_kind": "earnings",
+      "price_path_retrieved_at": "2026-09-07T07:22:05.584270+00:00",
+      "recorded_outcomes": {
+        "ret_1d": -6.4784,
+        "ret_5d": 22.2806,
+        "ret_20d": 6.5879
+      },
+      "observed_returns": {
+        "1": {
+          "pct": -6.4784,
+          "date": "2026-07-29"
+        },
+        "5": {
+          "pct": 22.2806,
+          "date": "2026-08-04"
+        },
+        "20": {
+          "pct": 6.5879,
+          "date": "2026-08-25"
+        }
+      },
+      "case_id": "AMKR-2026-07-28",
+      "company": "Amkor Technology",
+      "label_zh": "财报记录",
+      "label_en": "Earnings record"
+    },
+    {
+      "source": "insider",
+      "ticker": "SGI",
+      "summary": "Insider BUY THOMPSON SCOTT L (Dir, Officer/CEO & PRESIDENT) $1,885,314",
+      "label": "LIVE",
+      "base_d": "2026-08-28",
+      "base_px": 64.37,
+      "computed_at": "2026-09-07T02:00:20.575735+00:00",
+      "source_url": null,
+      "price_path": [
+        {
+          "d": "2026-08-28",
+          "close": 64.37000274658203
+        },
+        {
+          "d": "2026-08-31",
+          "close": 64.75
+        },
+        {
+          "d": "2026-09-01",
+          "close": 63.650001525878906
+        },
+        {
+          "d": "2026-09-02",
+          "close": 67.81999969482422
+        },
+        {
+          "d": "2026-09-03",
+          "close": 69.5199966430664
+        },
+        {
+          "d": "2026-09-04",
+          "close": 69.87000274658203
+        }
+      ],
+      "recorded_at": "2026-08-27T22:15:03.098121+00:00",
+      "signal_kind": "insider",
+      "price_path_retrieved_at": "2026-09-07T07:22:05.584270+00:00",
+      "recorded_outcomes": {
+        "ret_1d": 0.3564,
+        "ret_5d": 8.5444,
+        "ret_20d": null
+      },
+      "observed_returns": {
+        "1": {
+          "pct": 0.5903,
+          "date": "2026-08-31"
+        },
+        "5": {
+          "pct": 8.5444,
+          "date": "2026-09-04"
+        },
+        "20": null
+      },
+      "case_id": "SGI-2026-08-27",
+      "company": "Somnigroup International",
+      "label_zh": "高管买入记录",
+      "label_en": "Insider purchase record"
+    },
+    {
+      "source": "earnings",
+      "ticker": "HUBS",
+      "summary": "Guidance miss and growth slowdown overshadow Q2 earnings beat",
+      "label": "LIVE",
+      "base_d": "2026-08-07",
+      "base_px": 210.45,
+      "computed_at": "2026-09-06T02:00:45.921520+00:00",
+      "source_url": null,
+      "price_path": [
+        {
+          "d": "2026-08-07",
+          "close": 210.4499969482422
+        },
+        {
+          "d": "2026-08-10",
+          "close": 215.91000366210938
+        },
+        {
+          "d": "2026-08-11",
+          "close": 220.50999450683594
+        },
+        {
+          "d": "2026-08-12",
+          "close": 210.1199951171875
+        },
+        {
+          "d": "2026-08-13",
+          "close": 240.50999450683594
+        },
+        {
+          "d": "2026-08-14",
+          "close": 224.13999938964844
+        },
+        {
+          "d": "2026-08-17",
+          "close": 215.1699981689453
+        },
+        {
+          "d": "2026-08-18",
+          "close": 226.24000549316406
+        },
+        {
+          "d": "2026-08-19",
+          "close": 241.64999389648438
+        },
+        {
+          "d": "2026-08-20",
+          "close": 239.86000061035156
+        },
+        {
+          "d": "2026-08-21",
+          "close": 240.00999450683594
+        },
+        {
+          "d": "2026-08-24",
+          "close": 244.1699981689453
+        },
+        {
+          "d": "2026-08-25",
+          "close": 237.69000244140625
+        },
+        {
+          "d": "2026-08-26",
+          "close": 237.0800018310547
+        },
+        {
+          "d": "2026-08-27",
+          "close": 255.8300018310547
+        },
+        {
+          "d": "2026-08-28",
+          "close": 260.67999267578125
+        },
+        {
+          "d": "2026-08-31",
+          "close": 261.3599853515625
+        },
+        {
+          "d": "2026-09-01",
+          "close": 251.11000061035156
+        },
+        {
+          "d": "2026-09-02",
+          "close": 245.50999450683594
+        },
+        {
+          "d": "2026-09-03",
+          "close": 255.1199951171875
+        },
+        {
+          "d": "2026-09-04",
+          "close": 247.60000610351562
+        }
+      ],
+      "recorded_at": "2026-08-07T11:08:13.617306+00:00",
+      "signal_kind": "earnings",
+      "price_path_retrieved_at": "2026-09-07T07:22:05.584270+00:00",
+      "recorded_outcomes": {
+        "ret_1d": 2.5944,
+        "ret_5d": 6.5051,
+        "ret_20d": 17.6527
+      },
+      "observed_returns": {
+        "1": {
+          "pct": 2.5944,
+          "date": "2026-08-10"
+        },
+        "5": {
+          "pct": 6.5051,
+          "date": "2026-08-14"
+        },
+        "20": {
+          "pct": 17.6527,
+          "date": "2026-09-04"
+        }
+      },
+      "case_id": "HUBS-2026-08-07",
+      "company": "HubSpot",
+      "label_zh": "财报记录",
+      "label_en": "Earnings record"
+    }
+  ]
+}
