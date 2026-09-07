@@ -115,6 +115,7 @@ function setActiveTab(name) {
   });
   const more = document.querySelector(".nav-more");
   if (more) {
+    if (more.open && more.querySelector('.nav-more-panel')?.contains(document.activeElement)) more.querySelector('summary')?.focus({preventScroll:true});
     more.open = false;
     more.classList.toggle("on", ["chart", "briefing", "creators", "profile", "billing"].includes(name));
   }
@@ -133,7 +134,10 @@ export function start() {
   });
   document.addEventListener("click", (event) => {
     const more = document.querySelector(".nav-more[open]");
-    if (more && (!more.contains(event.target) || event.target.closest("a[data-route]"))) more.open = false;
+    if (more && (!more.contains(event.target) || event.target.closest("a[data-route]"))) {
+      if(more.querySelector('.nav-more-panel')?.contains(document.activeElement)) more.querySelector('summary')?.focus({preventScroll:true});
+      more.open = false;
+    }
   });
   window.addEventListener("hashchange", render);
   store.subscribe("me", (me) => { if (!me && current && !PUBLIC.has(current.name)) render(); });

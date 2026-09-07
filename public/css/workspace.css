@@ -211,8 +211,10 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .radar-filter-actions>.btn{flex:none}
  .page-app .filters-expanded .radar-extra{grid-row:3;grid-template-columns:repeat(2,minmax(0,1fr))}
  .page-app .market-compact{padding:14px}
- .market-compact .market-topics{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:142px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}
- .market-topic-trigger{scroll-snap-align:start;font-size:.875rem;min-height:72px;padding-top:12px}
+ .market-compact .market-topics{grid-template-columns:minmax(0,1fr);margin-top:10px}
+ .market-topic-trigger{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;min-height:48px;padding:10px 22px 10px 0;border-left:0;border-bottom:1px solid var(--border);font-size:.875rem}
+ .market-topic-trigger:last-child{border-bottom:0}
+ .market-topic-arrow{right:0;top:50%;transform:translateY(-50%)}
  .market-compact>.small{display:block;margin-top:5px}
  .page-app .calendar-view{padding:16px}
  .calendar-heading{gap:10px;flex-wrap:wrap}
@@ -251,4 +253,45 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 }
 @media(max-width:360px){.page-app .app-top .brand{font-size:.75rem;gap:6px}.page-app .app-top .avatar-mark{width:24px;height:24px}}
 @media(pointer:coarse){.page-app .btn,.page-app .btn-sm,.page-app .cal-mnav,.page-app .cal-today,.page-app .modal-close{min-height:44px}.page-app .input{font-size:16px}}
+/* Portrait reading stays compact; targets remain usable with a finger or mouse. */
+.radar-category-toggle{display:none}
+@media(max-width:720px){
+ .page-app{--fs-base:.9375rem}
+ .page-app .app-main{padding:14px 12px 24px;scroll-padding-block:16px;scrollbar-gutter:auto}
+ .page-app .app-view,.page-app .route-page{min-width:0}
+ .page-app h1,.page-app .radar-heading h1{font-size:1.375rem}
+ .page-app .card{padding:14px;margin-bottom:12px}
+ .page-app .calendar-view{padding:12px}
+ .page-app .creators-view{padding:0}
+ .page-app .input{font-size:16px;min-height:44px}
+ .page-app .route-page>.chips{gap:6px;margin:8px 0 12px}
+ .page-app .route-page>.chips>a{display:flex;align-items:center;justify-content:center;flex:1 1 120px;min-height:44px;font-size:.75rem;line-height:1.4;white-space:normal;text-align:center}
+ .page-app .chart-workspace{display:flex;flex-direction:column;min-width:0}
+ .page-app .chart-workspace>.legend{order:1;margin:12px 0}
+ .page-app :is(.btn,.btn-sm,.lang-toggle,.cal-mnav,.cal-today,.cal-mode,.radar-category,.radar-filter-toggle,.radar-starter,.radar-tabs button,.seg button,.creator-workspace-tabs button,summary){min-height:44px}
+ .page-app .profile .pwsec .btn,.page-app .calendar-heading .btn,.page-app .calendar-view .cal-mode,.page-app .radar-guide summary{min-height:44px}
+ .page-app .modal-close{width:44px;height:44px}
+ .page-app .cal-mnav{min-width:44px}
+ .page-app .cal-bidnum{font-size:22px}
+ .page-app .cal-biweekday,.page-app .cal-bicell .pill{font-size:14px}
+ .page-app .radar-heading{margin-bottom:14px}
+ .page-app .radar-categories{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;grid-auto-flow:row;grid-auto-columns:auto;overflow:visible;gap:6px}
+ .page-app .radar-sidebar>h2{display:none}
+ .page-app .radar-category-toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:44px;padding:10px 12px;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;font:inherit;font-size:.875rem;text-align:left;cursor:pointer}
+ .page-app .radar-sidebar:not(.categories-open) .radar-categories{display:none}
+ .page-app .categories-open .radar-categories{margin-top:8px}
+ .page-app .radar-filter-actions{gap:6px}
+ .page-app .radar-filters{grid-template-columns:minmax(0,1fr) minmax(90px,1fr);gap:10px}
+ .page-app :is(.market-notes,.radar-browse,.radar-coverage,.cal-filters,.cr-sections,.study-detail,.creator-stock-options)>summary{min-height:44px;align-content:center}
+ .page-app .cr-post .creator-page-actions{gap:8px 14px}
+ .page-app .cr-post .creator-page-actions .btn{min-height:44px}
+ .page-app .nav-more-panel{grid-template-columns:minmax(0,1fr);max-height:calc(100dvh - 150px - var(--safe-top) - var(--safe-bottom));overflow-y:auto;overscroll-behavior:contain;left:auto;width:min(290px,calc(100vw - 24px))}
+ .page-app .nav-more-panel a{min-height:48px;padding:10px 14px}
+ .page-app #modal{padding:max(12px,var(--safe-top)) max(12px,env(safe-area-inset-right)) max(12px,var(--safe-bottom)) max(12px,env(safe-area-inset-left))}
+ .page-app .modal-box{max-height:calc(100dvh - max(12px,var(--safe-top)) - max(12px,var(--safe-bottom)))}
+ .page-app .modal-heading{padding:10px 14px;gap:10px}
+ .page-app .modal-body{padding:14px;overflow-wrap:anywhere}
+ .page-app .modal-actions{padding:10px 14px;flex-wrap:wrap}
+ .page-app :is(.btn,.seg button,.cal-mnav,.cal-today,.cal-mode,.market-topic-trigger,.radar-category,.nav-more summary){touch-action:manipulation}
+}
 @media(prefers-reduced-motion:reduce){.page-app *, .page-app *:before{scroll-behavior:auto!important;animation:none!important;transition:none!important}}

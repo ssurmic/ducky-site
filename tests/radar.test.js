@@ -169,3 +169,17 @@ test('official lowercase live and revision provenance never reuse a historical-b
  try{for(const [i,key] of ['observation_note','revision_note','corroboration_note'].entries()){const row=root.querySelector('[data-record-id="'+(401+i)+'"]');assert.ok(row.textContent.includes(copy['app.radar.'+key]));assert.ok(!row.textContent.includes(copy['app.radar.backfill_note']));}}
  finally{cleanup();}
 });
+
+test('phone category picker exposes every category, preserves its selection and restores focus after choosing',async()=>{
+ window.matchMedia=()=>({matches:true});
+ globalThis.fetch=async()=>response({items:sample,sectors:[],filter_version:3});
+ const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams('board=insider')});
+ const toggle=root.querySelector('.radar-category-toggle');
+ assert.equal(toggle.getAttribute('aria-expanded'),'false');assert.ok(root.querySelector('#'+toggle.getAttribute('aria-controls')));
+ toggle.click();assert.equal(toggle.getAttribute('aria-expanded'),'true');assert.equal(root.querySelectorAll('.radar-category').length,13);
+ const political=root.querySelector('.radar-categories [data-board=political]');political.focus();political.click();await flush();
+ assert.equal(toggle.getAttribute('aria-expanded'),'false');assert.equal(document.activeElement,toggle);
+ assert.match(toggle.textContent,/Congress/);assert.equal(root.querySelector('.radar-categories [data-board=political]').getAttribute('aria-pressed'),'true');
+ toggle.click();assert.equal(toggle.getAttribute('aria-expanded'),'true');
+ cleanup();root.remove();delete window.matchMedia;
+});
