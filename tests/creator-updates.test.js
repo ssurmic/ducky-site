@@ -70,6 +70,41 @@ test('new users can add a topic directly and watchlist disclosure stays open thr
  assert.equal(f.root.querySelector('.updates-watchlist').open,false);f.close();
 });
 
+
+test('superseded deep links hide contradictory old content and keep historical links, dates and read actions',async()=>{
+ const corrected={...item,id:88,mode:'demo',content_status:'superseded',correction:{corrected_at:'2026-09-07T03:15:00Z'}};
+ const f=setup({items:[],override:({path})=>path.endsWith('/inbox/88')?json({item:corrected}):null});mockPush();await f.mount('item=88');
+ const card=()=>f.root.querySelector('[data-update-id="88"]');
+ assert.ok(card().textContent.includes('Content corrected'));assert.ok(card().textContent.includes('Visit the creator page for the latest analysis.'));
+ assert.ok(card().textContent.includes('Historical content demo / replay'));assert.ok(card().textContent.includes(item.creator_name));assert.ok(card().textContent.includes(item.title));
+ for(const date of [item.published_at,item.first_ready_at,item.created_at,corrected.correction.corrected_at])assert.ok(card().textContent.includes(updateDate(date)));
+ assert.ok(card().querySelector('details').open);
+ for(const old of [item.summary.en,item.summary.zh,...item.matched_reasons.map(reason=>reason.evidence)])assert.ok(!card().textContent.includes(old));
+ assert.equal(card().querySelector('.updates-summary,.updates-reason,.updates-evidence'),null);
+ assert.ok(!card().textContent.includes('Read summary and matching evidence'));assert.ok(!card().textContent.includes('Summary source:'));
+ const sources=[...card().querySelectorAll('a[href^="https:"]')];assert.equal(sources.length,1);assert.equal(sources[0].href,item.source_url);
+ const links=[...card().querySelectorAll('a')].map(a=>a.getAttribute('href'));assert.ok(links.includes('#/creators?scope=discover&creator=channel-one'),JSON.stringify(links));assert.ok(links.includes('#/updates?item=88'));
+ f.root.querySelector('[data-updates-enable-push]').click();await flush();assert.equal(card().querySelector('[data-update-preview]'),null);
+ card().querySelector('[data-update-read]').click();await flush();assert.equal(card().dataset.unread,'false');
+ assert.equal(f.calls.filter(call=>call.path.endsWith('/88/read')).length,1);assert.equal(f.calls.some(call=>call.path.endsWith('/test-push')),false);f.close();
+});
+test('missing status and explicit current status retain the summary, evidence and optional preview',async()=>{
+ const f=setup({items:[item,{...item,id:11,content_status:'current'}]});mockPush();await f.mount();
+ f.root.querySelector('[data-updates-enable-push]').click();await flush();
+ for(const id of [10,11]){const card=f.root.querySelector('[data-update-id="'+id+'"]');
+  assert.ok(card.textContent.includes(item.summary.en));assert.ok(card.textContent.includes(item.matched_reasons[0].evidence));
+  assert.ok([...card.querySelectorAll('a')].some(a=>a.getAttribute('href')===item.source_url+'&t=42s'));assert.ok(card.querySelector('[data-update-preview]'));assert.ok(!card.textContent.includes('Content corrected'));
+ }f.close();
+});
+test('refreshing a corrected item removes old evidence and an old preview handler cannot send it',async()=>{
+ let corrected=false;const f=setup({override:({path})=>path.endsWith('/inbox')?json({items:[corrected?{...item,content_status:'superseded'}:item],next_cursor:null,unread_count:1}):null});mockPush();await f.mount();
+ f.root.querySelector('[data-updates-enable-push]').click();await flush();
+ const oldPreview=f.root.querySelector('[data-update-preview]');assert.ok(oldPreview);f.root.querySelector('.updates-detail').open=true;
+ corrected=true;f.root.querySelector('[data-updates-refresh]').click();await flush();
+ const card=f.root.querySelector('[data-update-id="10"]');assert.ok(card.textContent.includes('Content corrected'));assert.equal(card.querySelector('.updates-summary,.updates-reason,[data-update-preview]'),null);
+ oldPreview.click();await flush();assert.equal(f.calls.some(call=>call.path.endsWith('/test-push')),false);assert.equal(card.querySelectorAll('.updates-dates dt').length,2);f.close();
+});
+
 test('a labeled notification test requires a separate click and targets only this browser',async()=>{
  const f=setup({override:({path})=>path.endsWith('/test-push')?json({accepted:true}):null});mockPush();await f.mount();
  assert.equal(f.root.querySelector('[data-update-preview]'),null);

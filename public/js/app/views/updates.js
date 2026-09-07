@@ -128,23 +128,30 @@ export async function mount(root,route={}){
       el('p.small.muted',s('updates.push_optional'))));
   }
   function renderItem(row){
-    const selected=String(row.id)===selectedId;
+    const selected=String(row.id)===selectedId,corrected=row.content_status==='superseded';
     const card=el('article.card.updates-item',{id:'update-'+row.id,'data-update-id':row.id,'data-unread':String(!row.read_at)});
     if(selected)card.classList.add('updates-selected');
     card.append(el('div.updates-item-top',el('span.updates-author',text(row.creator_name)||s('updates.creator_unknown')),
-      el('span.chip',s(row.read_at?'updates.read':'updates.unread')),row.mode==='demo'?el('span.chip',s('updates.demo')):null));
-    const reasons=(Array.isArray(row.matched_reasons)?row.matched_reasons:[]).filter(r=>r&&['ticker','sector'].includes(r.type));
+      el('span.chip',s(row.read_at?'updates.read':'updates.unread')),row.mode==='demo'?el('span.chip',s('updates.demo')):null,
+      corrected?el('span.chip',s('updates.corrected')):null));
+    // Superseded content must stay hidden even if an older response also carries its evidence.
+    const reasons=(corrected?[]:Array.isArray(row.matched_reasons)?row.matched_reasons:[]).filter(r=>r&&['ticker','sector'].includes(r.type));
     const reasonList=el('div.updates-reasons');for(const reason of reasons){
       const label=reason.type==='ticker'&&tickerPattern.test(reason.key)?s('updates.direct',{ticker:reason.key}):reason.type==='sector'?s('updates.industry',{sector:reason.key==='semiconductors'?s('updates.sector_semiconductors'):text(reason.key)}):'';
       if(label)reasonList.append(el('span',{class:'updates-reason '+(reason.type==='ticker'?'updates-direct':'updates-sector')},label));
     }card.append(reasonList);
     card.append(el('h3',text(row.title)||s('updates.untitled')),
       el('p.small.muted',s('updates.published',{date:updateDate(row.published_at)})));
-    const summary=text(row.summary?.[LANG])||text(row.summary?.en)||text(row.summary?.zh);
-    const detail=el('details.updates-detail',{open:selected},el('summary',s('updates.read_summary')));
-    detail.append(el('p.updates-summary',summary||s('updates.summary_unavailable')),el('p.small.muted',s('updates.attributed')),
-      el('p.small.muted',s('updates.transcript_basis',{source:s('updates.transcript_'+(row.transcript_source?.kind==='local_asr'?'asr':row.transcript_source?.kind==='youtube_captions'?(row.transcript_source.generated?'auto':'captions'):'unknown'))})+(text(row.transcript_source?.language)?' · '+text(row.transcript_source.language):'')),
-      el('dl.updates-dates',el('dt',s('updates.first_ready')),el('dd',updateDate(row.first_ready_at)),el('dt',s('updates.recorded')),el('dd',updateDate(row.created_at))));
+    const detail=el('details.updates-detail',{open:selected},el('summary',s(corrected?'updates.permalink':'updates.read_summary')));
+    if(corrected)card.append(el('p.small.muted',s('updates.corrected_hint')));
+    else{
+      const summary=text(row.summary?.[LANG])||text(row.summary?.en)||text(row.summary?.zh);
+      detail.append(el('p.updates-summary',summary||s('updates.summary_unavailable')),el('p.small.muted',s('updates.attributed')),
+        el('p.small.muted',s('updates.transcript_basis',{source:s('updates.transcript_'+(row.transcript_source?.kind==='local_asr'?'asr':row.transcript_source?.kind==='youtube_captions'?(row.transcript_source.generated?'auto':'captions'):'unknown'))})+(text(row.transcript_source?.language)?' · '+text(row.transcript_source.language):'')));
+    }
+    const dates=el('dl.updates-dates',el('dt',s('updates.first_ready')),el('dd',updateDate(row.first_ready_at)),el('dt',s('updates.recorded')),el('dd',updateDate(row.created_at)));
+    if(corrected&&row.correction?.corrected_at)dates.append(el('dt',s('updates.corrected_at')),el('dd',updateDate(row.correction.corrected_at)));
+    detail.append(dates);
     if(reasons.length){detail.append(el('h4',s('updates.match_evidence')));
       for(const reason of reasons){const seconds=Number.isFinite(reason.start_seconds)&&reason.start_seconds>=0&&reason.start_seconds<=86400?reason.start_seconds:null;const url=sourceURL(row.source_url,seconds);
         detail.append(el('div.updates-evidence',text(reason.evidence)?el('blockquote',text(reason.evidence)):el('p.small.muted',s('updates.evidence_unavailable')),
@@ -157,7 +164,7 @@ export async function mount(root,route={}){
     if(source)actions.append(el('a.btn.btn-ghost.btn-sm',{href:source,target:'_blank',rel:'noopener noreferrer'},s('updates.original')));
     if(/^[A-Za-z0-9_-]{1,100}$/.test(row.creator_id||''))actions.append(link('#/creators?scope=discover&creator='+encodeURIComponent(row.creator_id),s('updates.creator_page')));
     actions.append(link('#/updates?item='+row.id,s('updates.permalink')));
-    if(deviceReady)actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:previewBusy||mutation||!!flight,'data-update-preview':row.id,onclick:()=>previewPush(row)},s('updates.test_push')));
+    if(deviceReady&&!corrected)actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:previewBusy||mutation||!!flight,'data-update-preview':row.id,onclick:()=>previewPush(row)},s('updates.test_push')));
     if(!row.read_at)actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:mutation||!!flight,'data-update-read':row.id,onclick:()=>markRead(row)},s('updates.mark_read')));
     card.append(actions);return card;
   }
@@ -237,7 +244,7 @@ export async function mount(root,route={}){
     finally{pushBusy=false;if(sessionValid())render();}
   }
   async function previewPush(row){
-    if(!valid()||!deviceReady||!deviceEndpoint||previewBusy)return;
+    if(!valid()||!deviceReady||!deviceEndpoint||previewBusy||row.content_status==='superseded'||items.find(item=>String(item.id)===String(row.id))?.content_status==='superseded')return;
     previewBusy=true;status=s('updates.test_sending');render();
     try{
       const response=await api.creatorNotifications.preview(row.id,deviceEndpoint,opts);if(!valid())return;
