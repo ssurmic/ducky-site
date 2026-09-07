@@ -1,7 +1,7 @@
 <section class="section product-demo" id="product-demo" aria-labelledby="product-demo-title">
  <div class="wrap">
   <div class="product-demo-heading"><div><p class="eyebrow mono">{{ t('walkthrough.eyebrow') }}</p><h2 id="product-demo-title">{{ t('walkthrough.title') }}</h2></div></div>
-  {% set video_version = '2026-09-07-english-v8' %}
+  {% set video_version = '2026-09-07-watchlist-v9' %}
   {% set video_asset = '/media/ducky-walkthrough-' ~ video_version ~ '.' ~ lang %}
   <video id="product-demo-video" class="product-demo-player" controls playsinline preload="none" width="1920" height="1080" poster="{{ video_asset }}.jpg" aria-label="{{ t('walkthrough.title') }}" aria-describedby="product-demo-note">
    <source src="{{ video_asset }}.mp4" type="video/mp4">
@@ -11,7 +11,7 @@
   </video>
   <div class="product-demo-caption"><p id="product-demo-note" class="small muted">{{ t('walkthrough.caption') }}</p><a href="{{ url('/app/') }}#/register">{{ t('walkthrough.start') }} →</a></div>
   {# Actual render offsets, after the opening fade of each scene. #}
-  {% set video_starts = [0.16, 4.08, 6.52, 10.04, 12.04, 19.08] if lang == 'zh' else [0.16, 4.28, 8.68, 11.68, 14.68, 21.68] %}
+  {% set video_starts = [0.16, 3.48, 8.88, 14.48, 20.08, 24.72, 28.72, 33.68] if lang == 'zh' else [0.16, 2.8, 7.12, 12.8, 18.28, 21.56, 26.32, 30.36] %}
   {% set chapter_routes = ['#/watchlist', '#/boards?screen=insider-oversold', '#/creators?scope=discover', '#/calendar', '#/briefing?period=daily', '#/updates', '#/creators?tab=lab&preview=fictional'] %}
   <details class="product-demo-guide" aria-labelledby="product-demo-guide-title" data-demo-guide
        data-loading="{{ t('walkthrough.guide.loading') }}" data-ready="{{ t('walkthrough.guide.ready') }}" data-error="{{ t('walkthrough.guide.error') }}">
@@ -36,7 +36,16 @@
    </ol>
    <p class="product-demo-guide-status small" role="status" aria-live="polite" aria-atomic="true" data-demo-status></p>
    <p class="small muted product-demo-guide-access">{{ t('walkthrough.guide.access') }}</p>
-   <p class="small muted product-demo-guide-access">{{ t('walkthrough.note') }} <a href="https://www.sec.gov/Archives/edgar/data/24741/000120677426000273/glw4631061-8k.htm" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} ↗</a></p>
+   <p class="small muted product-demo-guide-access">{{ t('walkthrough.note') }}</p>
+   <details class="product-demo-cases"><summary>{{ t('walkthrough.cases.title') }}</summary>
+    <p class="small muted">{{ t('walkthrough.cases.pelosi') }} <a href="https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20035143.pdf" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} ↗</a></p>
+    <p class="small muted">{{ t('walkthrough.cases.hood') }} <a href="https://www.sec.gov/Archives/edgar/data/1783879/000178387925000189/xslF345X03/wk-form4_1750195641.xml" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} ↗</a></p>
+    <p class="small muted">{{ t('walkthrough.cases.nok') }} <a href="https://www.nokia.com/newsroom/inside-information-nvidia-to-make-usd-1-billion-equity-investment-in-nokia-in-addition-to-new-strategic-partnership-nokias-board-resolved-on-directed-share-issuance-to-nvidia/" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} ↗</a></p>
+    <p class="small muted">{{ t('walkthrough.cases.glw') }} <a href="https://www.sec.gov/Archives/edgar/data/24741/000120677426000273/glw4631061-8k.htm" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} ↗</a></p>
+    <p class="small muted">{{ t('walkthrough.cases.macro') }} <a href="https://www.federalreserve.gov/newsevents/pressreleases/monetary20250618a.htm" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} ↗</a> · <a href="https://investors.robinhood.com/news-releases/news-release-details/robinhood-reports-first-quarter-2025-results" target="_blank" rel="noopener noreferrer">Robinhood Q1 2025 ↗</a></p>
+    <p class="small muted">{{ t('walkthrough.cases.creator') }} <a href="https://www.youtube.com/watch?v=PweaTXhs-aU&amp;t=1366" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} ↗</a></p>
+    <a class="small" href="/media/ducky-demo-cases-2026-09-07.json">{{ t('walkthrough.cases.prices') }} →</a>
+   </details>
   </details>
  </div>
 </section>

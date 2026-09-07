@@ -1,0 +1,189 @@
+{
+  "config": {
+    "provider": "Microsoft online speech service",
+    "client": "edge-tts",
+    "client_version": "7.2.8",
+    "model_revision": "not exposed by provider",
+    "rate": "+0%",
+    "pitch": "+0Hz",
+    "boundary": "WordBoundary"
+  },
+  "scenes": [
+    {
+      "scene": "01-watch",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "如果当时就关注了，会看到什么？",
+      "sha256": {
+        "01-watch.zh.mp3": "6b60815a30ec1a57233c957b4a834e86a79de0d1f7bfb0795ace7b2d3176e93b",
+        "01-watch.zh.words.jsonl": "d064364cf778a825f3b25cebfca94d67a37768f68f719f9d30366b01cf954f87",
+        "01-watch.zh.wav": "47096d9fbf20eb0ad917c0df0942126af475f04ccfad8a2df8021b0b7a686539"
+      }
+    },
+    {
+      "scene": "02-people",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "佩洛西的披露，Robinhood 董事买入，先看清谁买了什么。",
+      "sha256": {
+        "02-people.zh.mp3": "5acbd746d0807f4b5a2ca515f8c9747a8316e8d0c9e7fde970000e9c365054af",
+        "02-people.zh.words.jsonl": "03006a20020a84f96a067f145c833bef8cfc36d05852d560181df6cfb38a3be0",
+        "02-people.zh.wav": "6677dbc941243a4212958adf88ffcda875e0c2e094f05dc349afb0e2ecc97e32"
+      }
+    },
+    {
+      "scene": "03-partners",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "英伟达投诺基亚，与康宁合作，价格和条款一起看。",
+      "sha256": {
+        "03-partners.zh.mp3": "ecc5398f856300ec0b4e59f9c81ec4e94781cc663f1c1e078b196104540839f4",
+        "03-partners.zh.words.jsonl": "299c53b6e4a825867da508be07046fc2b7a9c9a4cea687491d1dcd54e974e384",
+        "03-partners.zh.wav": "dc805b55fed58279e30e3e1fe3611e7dd7c26ca7bd942d2403ce7cf5e2fd30f9"
+      }
+    },
+    {
+      "scene": "04-price",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "诺基亚回到你设的价位，提醒你。之后的涨跌，接着看。",
+      "sha256": {
+        "04-price.zh.mp3": "536a3603ab1b03a644a608b0cdd84fc2298fee2967508da18676c5c265362f87",
+        "04-price.zh.words.jsonl": "4fe5ef6d418f81cc6e1da47a5f77783c8e0eeccbf6f78ccc36cad0ebfb18ae00",
+        "04-price.zh.wav": "d545c272abcdabd2e51e276df7b948a05b68bf7ddc267b78b90f332c942afabe"
+      }
+    },
+    {
+      "scene": "05-macro",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "利率变化，会怎样影响 Robinhood 的利息收入？",
+      "sha256": {
+        "05-macro.zh.mp3": "89a5e542ad1fdf1c81257bfdab0e0bb24e00a4dc01085d2826f6f7bafca1d5f3",
+        "05-macro.zh.words.jsonl": "e29a167b3f559430fc857fa2dc739763e49940dda5f0f4b877beeb75dbe4bed8",
+        "05-macro.zh.wav": "e3fe53a33e0b639ac37a621710abd678d9188d6aa08cd064d6bc4d3e887d2dfc"
+      }
+    },
+    {
+      "scene": "06-creator",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "博主谈到诺基亚，观点和原话一起留着。",
+      "sha256": {
+        "06-creator.zh.mp3": "23193f171694cea423364149aebe1fc1dd1dff3cdb925b554f754a76742fa645",
+        "06-creator.zh.words.jsonl": "bb20bcd260eb449856e7447aa810173190d5d1f3551e49006bcc4817e2589f30",
+        "06-creator.zh.wav": "d14ab7d0ff1044338b1472da327f242cccd0837f296824e7cb16d808f0ac109d"
+      }
+    },
+    {
+      "scene": "07-brief",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "相关变化，收件箱里看。每天一份自选总结。",
+      "sha256": {
+        "07-brief.zh.mp3": "c8403525d169e97f57402c9b78f27fc5e928ae1f267c86f277dc7c5ab7f7ad5d",
+        "07-brief.zh.words.jsonl": "b2be45edc88a2ec2116d8fb9a9a8d32600243d92081372d00a7ff1860b02937b",
+        "07-brief.zh.wav": "532d7e1c5e6f2707375d9708605dc43f5ab6b2f7f679039234193a4d995ff7c6"
+      }
+    },
+    {
+      "scene": "08-start",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "添加自选，免费开始。",
+      "sha256": {
+        "08-start.zh.mp3": "6ca00dc0a5c3df00cf166f30cbad51770041eed34da2ee2a0c05d9e184a37527",
+        "08-start.zh.words.jsonl": "a4c30bbdce4da7c589d2abedaeed94b1f91f5c41be3f1eee73120f48b92c9ec4",
+        "08-start.zh.wav": "f1f82122e0d1eec1f344081f2cfa858c6eee3798ea1870de059cbc330aad040a"
+      }
+    },
+    {
+      "scene": "01-watch",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "What if you'd been following these stocks?",
+      "sha256": {
+        "01-watch.en.mp3": "dbcbf15433a8e5e79d1aa41c74cd32e83b5d5ebbd21541627a451cc80107d8ee",
+        "01-watch.en.words.jsonl": "bd41c0ef11735a1364ba66a98623bee940acbca57460ca967a3a7a17d9b72fd6",
+        "01-watch.en.wav": "a505cd1df59410ffc6e064a6467250f919c505040c5fed40f473ec1483a23e32"
+      }
+    },
+    {
+      "scene": "02-people",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "Pelosi's disclosures. A Robinhood director buying shares. See who bought what.",
+      "sha256": {
+        "02-people.en.mp3": "0ae5ddb2759ed92b82a69d2a9688e0e5c6dc8fc8949a561cad40459c9e4adf4d",
+        "02-people.en.words.jsonl": "e911ad7fd97a7a43057311f4d2356dba0a923d200debba8dce855f405ef84de7",
+        "02-people.en.wav": "91d9a387d4a5e55722207ae54f911d910d9ee09ab05885fd8842ada58c355451"
+      }
+    },
+    {
+      "scene": "03-partners",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "Nvidia invests in Nokia and partners with Corning. Check the price and the terms.",
+      "sha256": {
+        "03-partners.en.mp3": "898a55238907bd842eea6f53d1a694e38b27dfa55f18f1d1d87cee2ea8e5888f",
+        "03-partners.en.words.jsonl": "6b478ce7c67e73d42715ec74e1355d81624e2a3a026af52893d1e27b7937f4a2",
+        "03-partners.en.wav": "dc0e25222b7253117ba4b5f40a068d76f01b642aa921015d863e6c759dc598ca"
+      }
+    },
+    {
+      "scene": "04-price",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "Nokia returns to your chosen price. Get an alert, then see what happened.",
+      "sha256": {
+        "04-price.en.mp3": "12e62ac06a2b57372843ce70b7180a6947396d664a8ac8aacef17557399790c3",
+        "04-price.en.words.jsonl": "39db7b2bad2f5764ed69cfc3840170698e552d597160b34243ad6f68e8867274",
+        "04-price.en.wav": "8441960bc5f25f42d407f993e235cda0917c6350e4ab59177ae417b4ae85e0c7"
+      }
+    },
+    {
+      "scene": "05-macro",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "What do rates mean for Robinhood's interest income?",
+      "sha256": {
+        "05-macro.en.mp3": "f2158de304e8d1f178db369005f2c40c9e6dd5b5cd32d3ab388d6220f33ec063",
+        "05-macro.en.words.jsonl": "1624a2b4ccf7615c5b070523a32ba0f7da561a7d8f0d2412a7bec79dc07013de",
+        "05-macro.en.wav": "fd09165381dba9e4cda925624f07b3bf8149c21a58fd734739fc3748673be615"
+      }
+    },
+    {
+      "scene": "06-creator",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "A creator discusses Nokia. Keep the view and its context.",
+      "sha256": {
+        "06-creator.en.mp3": "6d866d241bba5b8c6161bfa7111f9e3ca97d63669e8e6792baa24996efe83117",
+        "06-creator.en.words.jsonl": "98181c9bd9e0ed6c6981c3f9ca66ce7cf61b876c6b21c64013de908fddf3241a",
+        "06-creator.en.wav": "2f1add0fcb725f46f3940c640955f352feceb41b77ecc843fe1d49be4b34bc94"
+      }
+    },
+    {
+      "scene": "07-brief",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "See relevant updates in your inbox and your daily watchlist summary.",
+      "sha256": {
+        "07-brief.en.mp3": "060f08baf44994b30800565d14eb1dd896c5e22239ba8774014a3b265b67eaae",
+        "07-brief.en.words.jsonl": "462e1326bc20a749e5ef971c9da12ed66d79af1973b6edac8e1ff57851a06969",
+        "07-brief.en.wav": "123299d6f092a569290d66d35f0d1019e4d0d6af05a39dfc34c2743f2d4c0ad6"
+      }
+    },
+    {
+      "scene": "08-start",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "Add your stocks. Start free.",
+      "sha256": {
+        "08-start.en.mp3": "d9f5aff1203787ca153ac801681777cd150630062268dde8d5ba1d9096c2786f",
+        "08-start.en.words.jsonl": "34ecdd6aa98ce8452c188296f4069c4f30e3444c39796d9f8ca4e8c98ad7b24e",
+        "08-start.en.wav": "f8417be8ff0d511320e97f22a0496310c3f2299396d74d2d984789bf1bdf2065"
+      }
+    }
+  ]
+}

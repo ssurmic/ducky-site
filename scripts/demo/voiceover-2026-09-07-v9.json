@@ -1,0 +1,1108 @@
+{
+  "version": "2026-09-07-watchlist-v9",
+  "render_languages": [
+    "zh",
+    "en"
+  ],
+  "speakers": {
+    "en": "en-US-JennyNeural",
+    "zh": "zh-CN-XiaoxiaoNeural"
+  },
+  "synthesis": {
+    "provider": "Microsoft online speech service",
+    "client": "edge-tts",
+    "client_version": "7.2.8",
+    "model_revision": "not exposed by provider",
+    "rate": "+0%",
+    "pitch": "+0Hz",
+    "boundary": "WordBoundary"
+  },
+  "delivery": {
+    "target_seconds": 38,
+    "maximum_seconds": 42,
+    "status": "verified release candidate"
+  },
+  "timing": {
+    "lead": 0.08,
+    "tail": 0.08,
+    "fade": 0.06
+  },
+  "scenes": [
+    {
+      "name": "01-watch",
+      "zh": "如果当时就关注了，会看到什么？",
+      "en": "Imagine following these stocks back then.",
+      "caption_chunks": {
+        "zh": [
+          "如果当时就关注了，会看到什么？"
+        ],
+        "en": [
+          "Imagine following these stocks\nback then."
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "en": [
+          {
+            "file": "01-watch-s0.png",
+            "at": 0
+          },
+          {
+            "file": "01-watch-s6.png",
+            "at": 0.2
+          },
+          {
+            "file": "01-watch-s12.png",
+            "at": 0.42
+          }
+        ],
+        "zh": [
+          {
+            "file": "01-watch-s0.png",
+            "at": 0
+          },
+          {
+            "file": "01-watch-s6.png",
+            "at": 0.2
+          },
+          {
+            "file": "01-watch-s12.png",
+            "at": 0.42
+          }
+        ]
+      },
+      "spoken_en": "Imagine following these stocks back then.",
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.47,
+              "text": "Imagine following these stocks\nback then.",
+              "first_word": 0,
+              "last_word": 5,
+              "word_start": 0.1,
+              "word_end": 2.2875
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.47,
+              "text": "如果当时就关注了，会看到什么？",
+              "first_word": 0,
+              "last_word": 5,
+              "word_start": 0.1,
+              "word_end": 2.2875
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 3.16,
+              "text": "如果当时就关注了，会看到什么？",
+              "first_word": 0,
+              "last_word": 6,
+              "word_start": 0.1,
+              "word_end": 2.9625
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 3.16,
+              "text": "Imagine following these stocks\nback then.",
+              "first_word": 0,
+              "last_word": 6,
+              "word_start": 0.1,
+              "word_end": 2.9625
+            }
+          ]
+        }
+      },
+      "minimum_seconds": 0
+    },
+    {
+      "name": "02-people",
+      "zh": "佩洛西的披露，罗宾汉 董事买入，先看清谁买了什么。",
+      "en": "See what Pelosi disclosed, and which Robinhood director bought shares.",
+      "caption_chunks": {
+        "zh": [
+          "佩洛西的披露，",
+          "罗宾汉 董事买入，\n先看清谁买了什么。"
+        ],
+        "en": [
+          "See what Pelosi disclosed,",
+          "and which Robinhood director\nbought shares."
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "en": [
+          {
+            "file": "02-people-s0.png",
+            "at": 0
+          },
+          {
+            "file": "02-people-s9.png",
+            "at": 0.33
+          },
+          {
+            "file": "02-people-s16.png",
+            "at": 0.68
+          }
+        ],
+        "zh": [
+          {
+            "file": "02-people-s0.png",
+            "at": 0
+          },
+          {
+            "file": "02-people-s9.png",
+            "at": 0.33
+          },
+          {
+            "file": "02-people-s16.png",
+            "at": 0.68
+          }
+        ]
+      },
+      "spoken_en": "See what Pelosi disclosed, and which Robin Hood director bought shares.",
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 1.74,
+              "text": "See what Pelosi disclosed,",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 1.6125
+            },
+            {
+              "start": 1.76,
+              "end": 4.13,
+              "text": "and which Robinhood director\nbought shares.",
+              "first_word": 4,
+              "last_word": 10,
+              "word_start": 1.8,
+              "word_end": 3.95
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 1.74,
+              "text": "佩洛西的披露，",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 1.6125
+            },
+            {
+              "start": 1.76,
+              "end": 4.13,
+              "text": "罗宾汉 董事买入，\n先看清谁买了什么。",
+              "first_word": 4,
+              "last_word": 10,
+              "word_start": 1.8,
+              "word_end": 3.95
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 1.3775,
+              "text": "佩洛西的披露，",
+              "first_word": 0,
+              "last_word": 2,
+              "word_start": 0.1,
+              "word_end": 1.2
+            },
+            {
+              "start": 1.3975,
+              "end": 5.22,
+              "text": "罗宾汉 董事买入，\n先看清谁买了什么。",
+              "first_word": 3,
+              "last_word": 11,
+              "word_start": 1.4375,
+              "word_end": 5.025
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 1.3775,
+              "text": "See what Pelosi disclosed,",
+              "first_word": 0,
+              "last_word": 2,
+              "word_start": 0.1,
+              "word_end": 1.2
+            },
+            {
+              "start": 1.3975,
+              "end": 5.22,
+              "text": "and which Robinhood director\nbought shares.",
+              "first_word": 3,
+              "last_word": 11,
+              "word_start": 1.4375,
+              "word_end": 5.025
+            }
+          ]
+        }
+      },
+      "minimum_seconds": 0
+    },
+    {
+      "name": "03-partners",
+      "zh": "英伟达投资诺基亚，与康宁合作，价格和条款一起看。",
+      "en": "NVIDIA invests in Nokia and partners with Corning. Check the price and the terms.",
+      "caption_chunks": {
+        "zh": [
+          "英伟达投资诺基亚，",
+          "与康宁合作，",
+          "价格和条款一起看。"
+        ],
+        "en": [
+          "NVIDIA invests in Nokia",
+          "and partners with Corning.",
+          "Check the price and the terms."
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "en": [
+          {
+            "file": "03-partners-s0.png",
+            "at": 0
+          },
+          {
+            "file": "03-partners-s9.png",
+            "at": 0.32
+          },
+          {
+            "file": "03-partners-s15.png",
+            "at": 0.68
+          }
+        ],
+        "zh": [
+          {
+            "file": "03-partners-s0.png",
+            "at": 0
+          },
+          {
+            "file": "03-partners-s9.png",
+            "at": 0.32
+          },
+          {
+            "file": "03-partners-s15.png",
+            "at": 0.68
+          }
+        ]
+      },
+      "spoken_en": "Nvidia invests in Nokia and partners with Corning. Check the price and the terms.",
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 1.675,
+              "text": "NVIDIA invests in Nokia",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 1.675
+            },
+            {
+              "start": 1.675,
+              "end": 3.7375,
+              "text": "and partners with Corning.",
+              "first_word": 4,
+              "last_word": 7,
+              "word_start": 1.6875,
+              "word_end": 2.9375
+            },
+            {
+              "start": 3.76,
+              "end": 5.52,
+              "text": "Check the price and the terms.",
+              "first_word": 8,
+              "last_word": 13,
+              "word_start": 3.8,
+              "word_end": 5.3375
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 1.675,
+              "text": "英伟达投资诺基亚，",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 1.675
+            },
+            {
+              "start": 1.675,
+              "end": 3.7375,
+              "text": "与康宁合作，",
+              "first_word": 4,
+              "last_word": 7,
+              "word_start": 1.6875,
+              "word_end": 2.9375
+            },
+            {
+              "start": 3.76,
+              "end": 5.52,
+              "text": "价格和条款一起看。",
+              "first_word": 8,
+              "last_word": 13,
+              "word_start": 3.8,
+              "word_end": 5.3375
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 1.89,
+              "text": "英伟达投资诺基亚，",
+              "first_word": 0,
+              "last_word": 2,
+              "word_start": 0.1,
+              "word_end": 1.6875
+            },
+            {
+              "start": 1.91,
+              "end": 3.265,
+              "text": "与康宁合作，",
+              "first_word": 3,
+              "last_word": 5,
+              "word_start": 1.95,
+              "word_end": 3.0125
+            },
+            {
+              "start": 3.285,
+              "end": 5.42,
+              "text": "价格和条款一起看。",
+              "first_word": 6,
+              "last_word": 10,
+              "word_start": 3.325,
+              "word_end": 5.25
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 1.89,
+              "text": "NVIDIA invests in Nokia",
+              "first_word": 0,
+              "last_word": 2,
+              "word_start": 0.1,
+              "word_end": 1.6875
+            },
+            {
+              "start": 1.91,
+              "end": 3.265,
+              "text": "and partners with Corning.",
+              "first_word": 3,
+              "last_word": 5,
+              "word_start": 1.95,
+              "word_end": 3.0125
+            },
+            {
+              "start": 3.285,
+              "end": 5.42,
+              "text": "Check the price and the terms.",
+              "first_word": 6,
+              "last_word": 10,
+              "word_start": 3.325,
+              "word_end": 5.25
+            }
+          ]
+        }
+      },
+      "minimum_seconds": 0
+    },
+    {
+      "name": "04-price",
+      "zh": "诺基亚回到你设的价位，提醒你。之后的涨跌，接着看。",
+      "en": "Nokia returns to your chosen price. Get an alert, then see what happened.",
+      "caption_chunks": {
+        "zh": [
+          "诺基亚回到你设的价位，提醒你。",
+          "之后的涨跌，接着看。"
+        ],
+        "en": [
+          "Nokia returns to your chosen price.\nGet an alert,",
+          "then see what happened."
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "en": [
+          {
+            "file": "04-price-s0.png",
+            "at": 0.0
+          },
+          {
+            "file": "04-price-s1.png",
+            "at": 0.0365
+          },
+          {
+            "file": "04-price-s2.png",
+            "at": 0.073
+          },
+          {
+            "file": "04-price-s3.png",
+            "at": 0.1095
+          },
+          {
+            "file": "04-price-s4.png",
+            "at": 0.146
+          },
+          {
+            "file": "04-price-s5.png",
+            "at": 0.1825
+          },
+          {
+            "file": "04-price-s6.png",
+            "at": 0.219
+          },
+          {
+            "file": "04-price-s7.png",
+            "at": 0.2555
+          },
+          {
+            "file": "04-price-s8.png",
+            "at": 0.292
+          },
+          {
+            "file": "04-price-s9.png",
+            "at": 0.3285
+          },
+          {
+            "file": "04-price-s10.png",
+            "at": 0.365
+          },
+          {
+            "file": "04-price-s11.png",
+            "at": 0.4015
+          },
+          {
+            "file": "04-price-s12.png",
+            "at": 0.438
+          },
+          {
+            "file": "04-price-s13.png",
+            "at": 0.4745
+          },
+          {
+            "file": "04-price-s14.png",
+            "at": 0.511
+          },
+          {
+            "file": "04-price-s15.png",
+            "at": 0.5475
+          },
+          {
+            "file": "04-price-s16.png",
+            "at": 0.584
+          },
+          {
+            "file": "04-price-s17.png",
+            "at": 0.6205
+          },
+          {
+            "file": "04-price-s18.png",
+            "at": 0.657
+          },
+          {
+            "file": "04-price-s19.png",
+            "at": 0.6935
+          },
+          {
+            "file": "04-price-s20.png",
+            "at": 0.73
+          }
+        ],
+        "zh": [
+          {
+            "file": "04-price-s0.png",
+            "at": 0.0
+          },
+          {
+            "file": "04-price-s1.png",
+            "at": 0.0365
+          },
+          {
+            "file": "04-price-s2.png",
+            "at": 0.073
+          },
+          {
+            "file": "04-price-s3.png",
+            "at": 0.1095
+          },
+          {
+            "file": "04-price-s4.png",
+            "at": 0.146
+          },
+          {
+            "file": "04-price-s5.png",
+            "at": 0.1825
+          },
+          {
+            "file": "04-price-s6.png",
+            "at": 0.219
+          },
+          {
+            "file": "04-price-s7.png",
+            "at": 0.2555
+          },
+          {
+            "file": "04-price-s8.png",
+            "at": 0.292
+          },
+          {
+            "file": "04-price-s9.png",
+            "at": 0.3285
+          },
+          {
+            "file": "04-price-s10.png",
+            "at": 0.365
+          },
+          {
+            "file": "04-price-s11.png",
+            "at": 0.4015
+          },
+          {
+            "file": "04-price-s12.png",
+            "at": 0.438
+          },
+          {
+            "file": "04-price-s13.png",
+            "at": 0.4745
+          },
+          {
+            "file": "04-price-s14.png",
+            "at": 0.511
+          },
+          {
+            "file": "04-price-s15.png",
+            "at": 0.5475
+          },
+          {
+            "file": "04-price-s16.png",
+            "at": 0.584
+          },
+          {
+            "file": "04-price-s17.png",
+            "at": 0.6205
+          },
+          {
+            "file": "04-price-s18.png",
+            "at": 0.657
+          },
+          {
+            "file": "04-price-s19.png",
+            "at": 0.6935
+          },
+          {
+            "file": "04-price-s20.png",
+            "at": 0.73
+          }
+        ]
+      },
+      "spoken_en": "Nokia returns to your chosen price. Get an alert, then see what happened.",
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 3.965,
+              "text": "Nokia returns to your chosen price.\nGet an alert,",
+              "first_word": 0,
+              "last_word": 8,
+              "word_start": 0.1,
+              "word_end": 3.85
+            },
+            {
+              "start": 3.985,
+              "end": 5.29,
+              "text": "then see what happened.",
+              "first_word": 9,
+              "last_word": 12,
+              "word_start": 4.025,
+              "word_end": 5.125
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 3.965,
+              "text": "诺基亚回到你设的价位，提醒你。",
+              "first_word": 0,
+              "last_word": 8,
+              "word_start": 0.1,
+              "word_end": 3.85
+            },
+            {
+              "start": 3.985,
+              "end": 5.29,
+              "text": "之后的涨跌，接着看。",
+              "first_word": 9,
+              "last_word": 12,
+              "word_start": 4.025,
+              "word_end": 5.125
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 3.29,
+              "text": "诺基亚回到你设的价位，提醒你。",
+              "first_word": 0,
+              "last_word": 7,
+              "word_start": 0.1,
+              "word_end": 2.7875
+            },
+            {
+              "start": 3.31,
+              "end": 5.43,
+              "text": "之后的涨跌，接着看。",
+              "first_word": 8,
+              "last_word": 12,
+              "word_start": 3.35,
+              "word_end": 5.2375
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 3.29,
+              "text": "Nokia returns to your chosen price.\nGet an alert,",
+              "first_word": 0,
+              "last_word": 7,
+              "word_start": 0.1,
+              "word_end": 2.7875
+            },
+            {
+              "start": 3.31,
+              "end": 5.43,
+              "text": "then see what happened.",
+              "first_word": 8,
+              "last_word": 12,
+              "word_start": 3.35,
+              "word_end": 5.2375
+            }
+          ]
+        }
+      },
+      "minimum_seconds": 0
+    },
+    {
+      "name": "05-macro",
+      "zh": "利率变化，会怎样影响 罗宾汉 的利息收入？",
+      "en": "What do rates mean for Robinhood's interest income?",
+      "caption_chunks": {
+        "zh": [
+          "利率变化，\n会怎样影响 罗宾汉 的利息收入？"
+        ],
+        "en": [
+          "What do rates mean for Robinhood's\ninterest income?"
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "en": [
+          {
+            "file": "05-macro-s20.png",
+            "at": 0
+          }
+        ],
+        "zh": [
+          {
+            "file": "05-macro-s20.png",
+            "at": 0
+          }
+        ]
+      },
+      "spoken_en": "What do rates mean for Robin Hood's interest income?",
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.69,
+              "text": "What do rates mean for Robinhood's\ninterest income?",
+              "first_word": 0,
+              "last_word": 8,
+              "word_start": 0.1,
+              "word_end": 2.525
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.69,
+              "text": "利率变化，\n会怎样影响 罗宾汉 的利息收入？",
+              "first_word": 0,
+              "last_word": 8,
+              "word_start": 0.1,
+              "word_end": 2.525
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 4.47,
+              "text": "利率变化，\n会怎样影响 罗宾汉 的利息收入？",
+              "first_word": 0,
+              "last_word": 8,
+              "word_start": 0.1,
+              "word_end": 4.3
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 4.47,
+              "text": "What do rates mean for Robinhood's\ninterest income?",
+              "first_word": 0,
+              "last_word": 8,
+              "word_start": 0.1,
+              "word_end": 4.3
+            }
+          ]
+        }
+      },
+      "minimum_seconds": 3.25
+    },
+    {
+      "name": "06-creator",
+      "zh": "博主谈到诺基亚，观点和原话一起留着。",
+      "en": "A creator discusses Nokia. Keep the view and its context.",
+      "caption_chunks": {
+        "zh": [
+          "博主谈到诺基亚，",
+          "观点和原话一起留着。"
+        ],
+        "en": [
+          "A creator discusses Nokia.",
+          "Keep the view and its context."
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "en": [
+          {
+            "file": "06-creator-s20.png",
+            "at": 0
+          }
+        ],
+        "zh": [
+          {
+            "file": "06-creator-s20.png",
+            "at": 0
+          }
+        ]
+      },
+      "spoken_en": "A creator discusses Nokia. Keep the view and its context.",
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.525,
+              "text": "A creator discusses Nokia.",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 1.725
+            },
+            {
+              "start": 2.5475,
+              "end": 4.57,
+              "text": "Keep the view and its context.",
+              "first_word": 4,
+              "last_word": 9,
+              "word_start": 2.5875,
+              "word_end": 4.4
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.525,
+              "text": "博主谈到诺基亚，",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 1.725
+            },
+            {
+              "start": 2.5475,
+              "end": 4.57,
+              "text": "观点和原话一起留着。",
+              "first_word": 4,
+              "last_word": 9,
+              "word_start": 2.5875,
+              "word_end": 4.4
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 1.715,
+              "text": "博主谈到诺基亚，",
+              "first_word": 0,
+              "last_word": 2,
+              "word_start": 0.1,
+              "word_end": 1.475
+            },
+            {
+              "start": 1.735,
+              "end": 3.82,
+              "text": "观点和原话一起留着。",
+              "first_word": 3,
+              "last_word": 8,
+              "word_start": 1.775,
+              "word_end": 3.65
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 1.715,
+              "text": "A creator discusses Nokia.",
+              "first_word": 0,
+              "last_word": 2,
+              "word_start": 0.1,
+              "word_end": 1.475
+            },
+            {
+              "start": 1.735,
+              "end": 3.82,
+              "text": "Keep the view and its context.",
+              "first_word": 3,
+              "last_word": 8,
+              "word_start": 1.775,
+              "word_end": 3.65
+            }
+          ]
+        }
+      },
+      "minimum_seconds": 0
+    },
+    {
+      "name": "07-brief",
+      "zh": "相关变化，收件箱里看。每天一份自选总结。",
+      "en": "See relevant updates in your inbox and your daily watchlist summary.",
+      "caption_chunks": {
+        "zh": [
+          "相关变化，收件箱里看。",
+          "每天一份自选总结。"
+        ],
+        "en": [
+          "See relevant updates in your inbox",
+          "and your daily watchlist summary."
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "en": [
+          {
+            "file": "07-brief-s20.png",
+            "at": 0
+          }
+        ],
+        "zh": [
+          {
+            "file": "07-brief-s20.png",
+            "at": 0
+          }
+        ]
+      },
+      "spoken_en": "See relevant updates in your inbox and your daily watchlist summary.",
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 1.9,
+              "text": "See relevant updates in your inbox",
+              "first_word": 0,
+              "last_word": 5,
+              "word_start": 0.1,
+              "word_end": 1.9
+            },
+            {
+              "start": 1.9,
+              "end": 3.86,
+              "text": "and your daily watchlist summary.",
+              "first_word": 6,
+              "last_word": 10,
+              "word_start": 1.9125,
+              "word_end": 3.7
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 1.9,
+              "text": "相关变化，收件箱里看。",
+              "first_word": 0,
+              "last_word": 5,
+              "word_start": 0.1,
+              "word_end": 1.9
+            },
+            {
+              "start": 1.9,
+              "end": 3.86,
+              "text": "每天一份自选总结。",
+              "first_word": 6,
+              "last_word": 10,
+              "word_start": 1.9125,
+              "word_end": 3.7
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.865,
+              "text": "相关变化，收件箱里看。",
+              "first_word": 0,
+              "last_word": 4,
+              "word_start": 0.1,
+              "word_end": 2.35
+            },
+            {
+              "start": 2.885,
+              "end": 4.79,
+              "text": "每天一份自选总结。",
+              "first_word": 5,
+              "last_word": 9,
+              "word_start": 2.925,
+              "word_end": 4.6125
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.865,
+              "text": "See relevant updates in your inbox",
+              "first_word": 0,
+              "last_word": 4,
+              "word_start": 0.1,
+              "word_end": 2.35
+            },
+            {
+              "start": 2.885,
+              "end": 4.79,
+              "text": "and your daily watchlist summary.",
+              "first_word": 5,
+              "last_word": 9,
+              "word_start": 2.925,
+              "word_end": 4.6125
+            }
+          ]
+        }
+      },
+      "minimum_seconds": 0
+    },
+    {
+      "name": "08-start",
+      "zh": "添加自选，免费开始。",
+      "en": "Add your stocks. Start free.",
+      "caption_chunks": {
+        "zh": [
+          "添加自选，免费开始。"
+        ],
+        "en": [
+          "Add your stocks. Start free."
+        ]
+      },
+      "caption_line": 84,
+      "shots": {
+        "en": [
+          {
+            "file": "08-start-s20.png",
+            "at": 0
+          }
+        ],
+        "zh": [
+          {
+            "file": "08-start-s20.png",
+            "at": 0
+          }
+        ]
+      },
+      "spoken_en": "Add your stocks. Start free.",
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 3.01,
+              "text": "Add your stocks. Start free.",
+              "first_word": 0,
+              "last_word": 4,
+              "word_start": 0.1,
+              "word_end": 2.8375
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 3.01,
+              "text": "添加自选，免费开始。",
+              "first_word": 0,
+              "last_word": 4,
+              "word_start": 0.1,
+              "word_end": 2.8375
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.39,
+              "text": "添加自选，免费开始。",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 2.1875
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.39,
+              "text": "Add your stocks. Start free.",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 2.1875
+            }
+          ]
+        }
+      },
+      "minimum_seconds": 0
+    }
+  ]
+}

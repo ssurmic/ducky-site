@@ -1,0 +1,141 @@
+{
+  "playthrough": [
+    {
+      "currentSrc": "http://127.0.0.1:8794/media/ducky-walkthrough-2026-09-07-watchlist-v9.en.mp4",
+      "currentTime": 33.421333,
+      "duration": 33.421333,
+      "ended": true,
+      "error": null,
+      "page": "http://127.0.0.1:8794/en/#product-demo",
+      "paused": true,
+      "readyState": 4,
+      "viewport": 1440
+    },
+    {
+      "currentSrc": "http://127.0.0.1:8794/media/ducky-walkthrough-2026-09-07-watchlist-v9.zh.mp4",
+      "currentTime": 36.101333,
+      "duration": 36.101333,
+      "ended": true,
+      "error": null,
+      "page": "http://127.0.0.1:8794/#product-demo",
+      "paused": true,
+      "readyState": 4,
+      "scrollWidth": 390,
+      "viewport": 390
+    }
+  ],
+  "seeks": [
+    {
+      "language": "en",
+      "target": 0.16,
+      "error": null,
+      "status": "At 0:00 · Start with a watchlist. Press Play in the video to watch.",
+      "time": 0.16
+    },
+    {
+      "language": "en",
+      "target": 2.8,
+      "error": null,
+      "status": "At 0:02 · Who bought what. Press Play in the video to watch.",
+      "time": 2.8
+    },
+    {
+      "language": "en",
+      "target": 7.12,
+      "error": null,
+      "status": "At 0:07 · Nokia and Corning deal terms. Press Play in the video to watch.",
+      "time": 7.12
+    },
+    {
+      "language": "en",
+      "target": 12.8,
+      "error": null,
+      "status": "At 0:12 · Your price level and what followed. Press Play in the video to watch.",
+      "time": 12.8
+    },
+    {
+      "language": "en",
+      "target": 18.28,
+      "error": null,
+      "status": "At 0:18 · Macro context for your stocks. Press Play in the video to watch.",
+      "time": 18.28
+    },
+    {
+      "language": "en",
+      "target": 21.56,
+      "error": null,
+      "status": "At 0:21 · Creator views and sources. Press Play in the video to watch.",
+      "time": 21.56
+    },
+    {
+      "language": "en",
+      "target": 26.32,
+      "error": null,
+      "status": "At 0:26 · Inbox and daily summary. Press Play in the video to watch.",
+      "time": 26.32
+    },
+    {
+      "language": "en",
+      "target": 30.36,
+      "error": null,
+      "status": "At 0:30 · Start your watchlist free. Press Play in the video to watch.",
+      "time": 30.36
+    },
+    {
+      "language": "zh",
+      "target": 0.16,
+      "error": null,
+      "status": "已定位 0:00 · 从自选名单开始。按播放器的播放键观看。",
+      "time": 0.16
+    },
+    {
+      "language": "zh",
+      "target": 3.48,
+      "error": null,
+      "status": "已定位 0:03 · 谁买了什么。按播放器的播放键观看。",
+      "time": 3.48
+    },
+    {
+      "language": "zh",
+      "target": 8.88,
+      "error": null,
+      "status": "已定位 0:08 · 诺基亚与康宁的合作条款。按播放器的播放键观看。",
+      "time": 8.88
+    },
+    {
+      "language": "zh",
+      "target": 14.48,
+      "error": null,
+      "status": "已定位 0:14 · 到价后，继续看涨跌。按播放器的播放键观看。",
+      "time": 14.48
+    },
+    {
+      "language": "zh",
+      "target": 20.08,
+      "error": null,
+      "status": "已定位 0:20 · 宏观怎样关联自选股。按播放器的播放键观看。",
+      "time": 20.08
+    },
+    {
+      "language": "zh",
+      "target": 24.72,
+      "error": null,
+      "status": "已定位 0:24 · 博主观点与原话。按播放器的播放键观看。",
+      "time": 24.72
+    },
+    {
+      "language": "zh",
+      "target": 28.72,
+      "error": null,
+      "status": "已定位 0:28 · 收件箱与每日总结。按播放器的播放键观看。",
+      "time": 28.72
+    },
+    {
+      "language": "zh",
+      "target": 33.68,
+      "error": null,
+      "status": "已定位 0:33 · 免费添加自选。按播放器的播放键观看。",
+      "time": 33.68
+    }
+  ]
+}

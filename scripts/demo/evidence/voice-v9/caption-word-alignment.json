@@ -1,0 +1,366 @@
+[
+  {
+    "scene": "01-watch",
+    "voice": "en",
+    "audio_sha256": "b669b1e8ad337526b1d1a6739045da0f4d4076065800118b4b20717d96acdf6c",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 2.47,
+        "text": "Imagine following these stocks\nback then.",
+        "first_word": 0,
+        "last_word": 5,
+        "word_start": 0.1,
+        "word_end": 2.2875
+      }
+    ]
+  },
+  {
+    "scene": "01-watch",
+    "voice": "zh",
+    "audio_sha256": "0d9317fb4aed5de4e874f5ee19c30ac3f9ddb58db57ab39f5014b50cf47e7b59",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 3.16,
+        "text": "如果当时就关注了，会看到什么？",
+        "first_word": 0,
+        "last_word": 6,
+        "word_start": 0.1,
+        "word_end": 2.9625
+      }
+    ]
+  },
+  {
+    "scene": "02-people",
+    "voice": "en",
+    "audio_sha256": "105a556def711402f1bb39b52ab7d41b7cf3ce7c9850b203c0a216f17fe1096f",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 1.74,
+        "text": "See what Pelosi disclosed,",
+        "first_word": 0,
+        "last_word": 3,
+        "word_start": 0.1,
+        "word_end": 1.6125
+      },
+      {
+        "start": 1.76,
+        "end": 4.13,
+        "text": "and which Robinhood director\nbought shares.",
+        "first_word": 4,
+        "last_word": 10,
+        "word_start": 1.8,
+        "word_end": 3.95
+      }
+    ]
+  },
+  {
+    "scene": "02-people",
+    "voice": "zh",
+    "audio_sha256": "f856e5e2cd2eb6ef7a4dc56d413bbc74a46c711197ea35a7d2916ec83ecca45b",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 1.3775,
+        "text": "佩洛西的披露，",
+        "first_word": 0,
+        "last_word": 2,
+        "word_start": 0.1,
+        "word_end": 1.2
+      },
+      {
+        "start": 1.3975,
+        "end": 5.22,
+        "text": "罗宾汉 董事买入，\n先看清谁买了什么。",
+        "first_word": 3,
+        "last_word": 11,
+        "word_start": 1.4375,
+        "word_end": 5.025
+      }
+    ]
+  },
+  {
+    "scene": "03-partners",
+    "voice": "en",
+    "audio_sha256": "c013dab1bce51c19a1ea2ef40bccc20f3b20e540d7d6bffd0aa474578cc5e39d",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 1.675,
+        "text": "NVIDIA invests in Nokia",
+        "first_word": 0,
+        "last_word": 3,
+        "word_start": 0.1,
+        "word_end": 1.675
+      },
+      {
+        "start": 1.675,
+        "end": 3.7375,
+        "text": "and partners with Corning.",
+        "first_word": 4,
+        "last_word": 7,
+        "word_start": 1.6875,
+        "word_end": 2.9375
+      },
+      {
+        "start": 3.76,
+        "end": 5.52,
+        "text": "Check the price and the terms.",
+        "first_word": 8,
+        "last_word": 13,
+        "word_start": 3.8,
+        "word_end": 5.3375
+      }
+    ]
+  },
+  {
+    "scene": "03-partners",
+    "voice": "zh",
+    "audio_sha256": "cd7bc251cea6f71b9adb58574f87c4b9bd8ecd9f62815dc8cfda020c28de2a55",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 1.89,
+        "text": "英伟达投资诺基亚，",
+        "first_word": 0,
+        "last_word": 2,
+        "word_start": 0.1,
+        "word_end": 1.6875
+      },
+      {
+        "start": 1.91,
+        "end": 3.265,
+        "text": "与康宁合作，",
+        "first_word": 3,
+        "last_word": 5,
+        "word_start": 1.95,
+        "word_end": 3.0125
+      },
+      {
+        "start": 3.285,
+        "end": 5.42,
+        "text": "价格和条款一起看。",
+        "first_word": 6,
+        "last_word": 10,
+        "word_start": 3.325,
+        "word_end": 5.25
+      }
+    ]
+  },
+  {
+    "scene": "04-price",
+    "voice": "en",
+    "audio_sha256": "340f730205a56e458e92bc4cd3aa54e2cbc7c72f59cb56925d6b16ef2d457eab",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 3.965,
+        "text": "Nokia returns to your chosen price.\nGet an alert,",
+        "first_word": 0,
+        "last_word": 8,
+        "word_start": 0.1,
+        "word_end": 3.85
+      },
+      {
+        "start": 3.985,
+        "end": 5.29,
+        "text": "then see what happened.",
+        "first_word": 9,
+        "last_word": 12,
+        "word_start": 4.025,
+        "word_end": 5.125
+      }
+    ]
+  },
+  {
+    "scene": "04-price",
+    "voice": "zh",
+    "audio_sha256": "f118fc2c690f51e2c7568fc6e5a1851fbd869622d7375b47b480b2d19e5ca8b1",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 3.29,
+        "text": "诺基亚回到你设的价位，提醒你。",
+        "first_word": 0,
+        "last_word": 7,
+        "word_start": 0.1,
+        "word_end": 2.7875
+      },
+      {
+        "start": 3.31,
+        "end": 5.43,
+        "text": "之后的涨跌，接着看。",
+        "first_word": 8,
+        "last_word": 12,
+        "word_start": 3.35,
+        "word_end": 5.2375
+      }
+    ]
+  },
+  {
+    "scene": "05-macro",
+    "voice": "en",
+    "audio_sha256": "b13ed44e56f02885ec799ce588ecb4a2ff9201123e93b2d336d5779072140127",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 2.69,
+        "text": "What do rates mean for Robinhood's\ninterest income?",
+        "first_word": 0,
+        "last_word": 8,
+        "word_start": 0.1,
+        "word_end": 2.525
+      }
+    ]
+  },
+  {
+    "scene": "05-macro",
+    "voice": "zh",
+    "audio_sha256": "35b587c3a506e903ecc8418e86647250d06060ad53e17b3fbf1def4c6541784b",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 4.47,
+        "text": "利率变化，\n会怎样影响 罗宾汉 的利息收入？",
+        "first_word": 0,
+        "last_word": 8,
+        "word_start": 0.1,
+        "word_end": 4.3
+      }
+    ]
+  },
+  {
+    "scene": "06-creator",
+    "voice": "en",
+    "audio_sha256": "4606097ff85949ffe489f87465ef5453adb16aea6d383cb935ff9cff3a6afccc",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 2.525,
+        "text": "A creator discusses Nokia.",
+        "first_word": 0,
+        "last_word": 3,
+        "word_start": 0.1,
+        "word_end": 1.725
+      },
+      {
+        "start": 2.5475,
+        "end": 4.57,
+        "text": "Keep the view and its context.",
+        "first_word": 4,
+        "last_word": 9,
+        "word_start": 2.5875,
+        "word_end": 4.4
+      }
+    ]
+  },
+  {
+    "scene": "06-creator",
+    "voice": "zh",
+    "audio_sha256": "023e6dc98db789d4a4efce10bfc030fd9fc3adc395d9ab845781f2542d270f33",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 1.715,
+        "text": "博主谈到诺基亚，",
+        "first_word": 0,
+        "last_word": 2,
+        "word_start": 0.1,
+        "word_end": 1.475
+      },
+      {
+        "start": 1.735,
+        "end": 3.82,
+        "text": "观点和原话一起留着。",
+        "first_word": 3,
+        "last_word": 8,
+        "word_start": 1.775,
+        "word_end": 3.65
+      }
+    ]
+  },
+  {
+    "scene": "07-brief",
+    "voice": "en",
+    "audio_sha256": "dfafc3b1f17d717d028d9a4e3272d3e6b74e7778cae908f58466b84a738be3ab",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 1.9,
+        "text": "See relevant updates in your inbox",
+        "first_word": 0,
+        "last_word": 5,
+        "word_start": 0.1,
+        "word_end": 1.9
+      },
+      {
+        "start": 1.9,
+        "end": 3.86,
+        "text": "and your daily watchlist summary.",
+        "first_word": 6,
+        "last_word": 10,
+        "word_start": 1.9125,
+        "word_end": 3.7
+      }
+    ]
+  },
+  {
+    "scene": "07-brief",
+    "voice": "zh",
+    "audio_sha256": "997648d1d9dba1330aa6ae26594b6e3732474e43cb6ce6dc8831281c228c6c83",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 2.865,
+        "text": "相关变化，收件箱里看。",
+        "first_word": 0,
+        "last_word": 4,
+        "word_start": 0.1,
+        "word_end": 2.35
+      },
+      {
+        "start": 2.885,
+        "end": 4.79,
+        "text": "每天一份自选总结。",
+        "first_word": 5,
+        "last_word": 9,
+        "word_start": 2.925,
+        "word_end": 4.6125
+      }
+    ]
+  },
+  {
+    "scene": "08-start",
+    "voice": "en",
+    "audio_sha256": "8f36e4d34336d29844bf6dd09889697d24f58496a0f3bf230e96b9ab1f79f80e",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 3.01,
+        "text": "Add your stocks. Start free.",
+        "first_word": 0,
+        "last_word": 4,
+        "word_start": 0.1,
+        "word_end": 2.8375
+      }
+    ]
+  },
+  {
+    "scene": "08-start",
+    "voice": "zh",
+    "audio_sha256": "5db9f2366d910f7a9dcf206f37b5ba3a7deb1c2a0d09c6c838e21cd4a0495fe0",
+    "cues": [
+      {
+        "start": 0.06,
+        "end": 2.39,
+        "text": "添加自选，免费开始。",
+        "first_word": 0,
+        "last_word": 3,
+        "word_start": 0.1,
+        "word_end": 2.1875
+      }
+    ]
+  }
+]

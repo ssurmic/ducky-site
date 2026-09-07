@@ -1,0 +1,682 @@
+[
+  {
+    "language": "en",
+    "scene": "01-watch",
+    "step": 0,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/01-watch-s0.png",
+    "heading": "Your stocks.What changed?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "01-watch",
+    "step": 6,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/01-watch-s6.png",
+    "heading": "Your stocks.What changed?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "01-watch",
+    "step": 12,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/01-watch-s12.png",
+    "heading": "Your stocks.What changed?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "02-people",
+    "step": 0,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/02-people-s0.png",
+    "heading": "Who bought what?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "02-people",
+    "step": 9,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/02-people-s9.png",
+    "heading": "Who bought what?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "02-people",
+    "step": 16,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/02-people-s16.png",
+    "heading": "Who bought what?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "03-partners",
+    "step": 0,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/03-partners-s0.png",
+    "heading": "Same investor. Different terms.",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "03-partners",
+    "step": 9,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/03-partners-s9.png",
+    "heading": "Same investor. Different terms.",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "03-partners",
+    "step": 15,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/03-partners-s15.png",
+    "heading": "Same investor. Different terms.",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 0,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s0.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 1,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s1.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 2,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s2.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 3,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s3.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 4,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s4.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 5,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s5.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 6,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s6.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 7,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s7.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 8,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s8.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 9,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s9.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 10,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s10.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 11,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s11.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 12,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s12.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 13,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s13.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 14,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s14.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 15,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s15.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 16,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s16.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 17,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s17.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 18,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s18.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 19,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s19.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "04-price",
+    "step": 20,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/04-price-s20.png",
+    "heading": "Your price level. What happened next?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "05-macro",
+    "step": 20,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/05-macro-s20.png",
+    "heading": "What do rates mean for HOOD?",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "06-creator",
+    "step": 20,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/06-creator-s20.png",
+    "heading": "Keep the view with its source.",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "07-brief",
+    "step": 20,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/07-brief-s20.png",
+    "heading": "Catch up on your watchlist.",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "en",
+    "scene": "08-start",
+    "step": 20,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/en/08-start-s20.png",
+    "heading": "Start with your stocks.",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "01-watch",
+    "step": 0,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/01-watch-s0.png",
+    "heading": "你关注的股票，发生了什么？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "01-watch",
+    "step": 6,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/01-watch-s6.png",
+    "heading": "你关注的股票，发生了什么？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "01-watch",
+    "step": 12,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/01-watch-s12.png",
+    "heading": "你关注的股票，发生了什么？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "02-people",
+    "step": 0,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/02-people-s0.png",
+    "heading": "谁买了什么？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "02-people",
+    "step": 9,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/02-people-s9.png",
+    "heading": "谁买了什么？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "02-people",
+    "step": 16,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/02-people-s16.png",
+    "heading": "谁买了什么？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "03-partners",
+    "step": 0,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/03-partners-s0.png",
+    "heading": "同是英伟达，条款不同。",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "03-partners",
+    "step": 9,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/03-partners-s9.png",
+    "heading": "同是英伟达，条款不同。",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "03-partners",
+    "step": 15,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/03-partners-s15.png",
+    "heading": "同是英伟达，条款不同。",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 0,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s0.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 1,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s1.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 2,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s2.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 3,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s3.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 4,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s4.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 5,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s5.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 6,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s6.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 7,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s7.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 8,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s8.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 9,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s9.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 10,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s10.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 11,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s11.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 12,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s12.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 13,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s13.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 14,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s14.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 15,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s15.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 16,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s16.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 17,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s17.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 18,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s18.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 19,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s19.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "04-price",
+    "step": 20,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/04-price-s20.png",
+    "heading": "到你设的价位。然后呢？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "05-macro",
+    "step": 20,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/05-macro-s20.png",
+    "heading": "宏观消息，和 HOOD 有什么关系？",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "06-creator",
+    "step": 20,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/06-creator-s20.png",
+    "heading": "观点和原话，一起看。",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "07-brief",
+    "step": 20,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/07-brief-s20.png",
+    "heading": "与你有关的变化，放到一起。",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  },
+  {
+    "language": "zh",
+    "scene": "08-start",
+    "step": 20,
+    "file": "/Users/zizhaozhang/dev/ducky-site-voice-2026-09-06/scripts/demo/frames-v9/zh/08-start-s20.png",
+    "heading": "从你的自选股开始。",
+    "height": 810,
+    "ready": "true",
+    "width": 1440
+  }
+]

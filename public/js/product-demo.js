@@ -1,9 +1,41 @@
+// Keep native captions above controls in the taller portrait player. This does
+// not load media, select a language, or change the viewer's caption preference.
+export function mountDemoCaptionLayout(video) {
+  if (!video) return () => {};
+  const win = video.ownerDocument.defaultView;
+  const listeners = [];
+  const listen = (node, event, fn) => {
+    if (!node?.addEventListener) return;
+    node.addEventListener(event, fn);
+    listeners.push(() => node.removeEventListener(event, fn));
+  };
+  function position() {
+    const box = video.getBoundingClientRect();
+    if (!box.width || !box.height) return;
+    const line = box.height / box.width > .7 ? 78 : 84;
+    for (const track of video.textTracks || []) {
+      for (const cue of track.cues || []) {
+        cue.snapToLines = false;
+        cue.line = line;
+      }
+    }
+  }
+  for (const track of video.querySelectorAll('track')) listen(track, 'load', position);
+  for (const event of ['loadedmetadata', 'webkitbeginfullscreen', 'webkitendfullscreen']) listen(video, event, position);
+  listen(video.textTracks, 'change', position);
+  listen(win, 'resize', position);
+  listen(video.ownerDocument, 'fullscreenchange', position);
+  position();
+  return () => listeners.forEach(remove => remove());
+}
+
 // Chapter navigation is a user-initiated enhancement; the guide works without video or JS.
 export function mountProductDemo(root) {
   const video = root?.querySelector('.product-demo-player');
   const guide = root?.querySelector('[data-demo-guide]');
   const status = guide?.querySelector('[data-demo-status]');
   if (!video || !guide || !status) return () => {};
+  const disposeCaptions = mountDemoCaptionLayout(video);
   const chapters = [...guide.querySelectorAll('[data-demo-seek]')].map(button => ({
     button, time: Number(button.dataset.demoSeek),
   })).filter(({button, time}) => button.dataset.demoSeek?.trim() && Number.isFinite(time) && time >= 0 &&
@@ -110,6 +142,7 @@ export function mountProductDemo(root) {
   });
   listen(video, 'error', () => { loading = false; fail(); });
   return () => {
+    disposeCaptions();
     disposed = true;
     pending = null;
     clearTimeout(timer);

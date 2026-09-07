@@ -1,0 +1,1486 @@
+[
+  {
+    "file": "01-watch.en.wav",
+    "language": "en",
+    "duration": 2.47,
+    "text": " Imagine following these stocks back then.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.16,
+        "text": " Imagine following these stocks back then.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.56,
+            "word": " Imagine",
+            "probability": 0.805484414100647
+          },
+          {
+            "start": 0.56,
+            "end": 0.98,
+            "word": " following",
+            "probability": 0.9886360168457031
+          },
+          {
+            "start": 0.98,
+            "end": 1.26,
+            "word": " these",
+            "probability": 0.9940476417541504
+          },
+          {
+            "start": 1.26,
+            "end": 1.56,
+            "word": " stocks",
+            "probability": 0.9867081642150879
+          },
+          {
+            "start": 1.56,
+            "end": 1.88,
+            "word": " back",
+            "probability": 0.998977780342102
+          },
+          {
+            "start": 1.88,
+            "end": 2.16,
+            "word": " then.",
+            "probability": 0.9954784512519836
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "01-watch.zh.wav",
+    "language": "zh",
+    "duration": 3.16,
+    "text": "如果当时就关注了,会看到什么?",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.82,
+        "text": "如果当时就关注了,会看到什么?",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.34,
+            "word": "如果",
+            "probability": 0.9941920638084412
+          },
+          {
+            "start": 0.34,
+            "end": 0.56,
+            "word": "当",
+            "probability": 0.4602104425430298
+          },
+          {
+            "start": 0.56,
+            "end": 0.88,
+            "word": "时",
+            "probability": 0.9961286783218384
+          },
+          {
+            "start": 0.88,
+            "end": 1.2,
+            "word": "就",
+            "probability": 0.8821060657501221
+          },
+          {
+            "start": 1.2,
+            "end": 1.38,
+            "word": "关",
+            "probability": 0.9963446259498596
+          },
+          {
+            "start": 1.38,
+            "end": 1.64,
+            "word": "注",
+            "probability": 0.9885632991790771
+          },
+          {
+            "start": 1.64,
+            "end": 1.88,
+            "word": "了,",
+            "probability": 0.9951732754707336
+          },
+          {
+            "start": 2.12,
+            "end": 2.28,
+            "word": "会",
+            "probability": 0.9890751242637634
+          },
+          {
+            "start": 2.28,
+            "end": 2.5,
+            "word": "看到",
+            "probability": 0.997041642665863
+          },
+          {
+            "start": 2.5,
+            "end": 2.82,
+            "word": "什么?",
+            "probability": 0.9951936602592468
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "02-people.en.wav",
+    "language": "en",
+    "duration": 4.13,
+    "text": " See what Pelosi disclosed, and which Robin had director bought shares.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.62,
+        "text": " See what Pelosi disclosed, and which Robin had director bought shares.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.34,
+            "word": " See",
+            "probability": 0.6926321983337402
+          },
+          {
+            "start": 0.34,
+            "end": 0.52,
+            "word": " what",
+            "probability": 0.9875816106796265
+          },
+          {
+            "start": 0.52,
+            "end": 0.84,
+            "word": " Pelosi",
+            "probability": 0.9886665344238281
+          },
+          {
+            "start": 0.84,
+            "end": 1.64,
+            "word": " disclosed,",
+            "probability": 0.9943320155143738
+          },
+          {
+            "start": 1.88,
+            "end": 1.96,
+            "word": " and",
+            "probability": 0.996740996837616
+          },
+          {
+            "start": 1.96,
+            "end": 2.14,
+            "word": " which",
+            "probability": 0.8426835536956787
+          },
+          {
+            "start": 2.14,
+            "end": 2.46,
+            "word": " Robin",
+            "probability": 0.8290036916732788
+          },
+          {
+            "start": 2.46,
+            "end": 2.66,
+            "word": " had",
+            "probability": 0.9460604190826416
+          },
+          {
+            "start": 2.66,
+            "end": 3.0,
+            "word": " director",
+            "probability": 0.8995331525802612
+          },
+          {
+            "start": 3.0,
+            "end": 3.3,
+            "word": " bought",
+            "probability": 0.22922608256340027
+          },
+          {
+            "start": 3.3,
+            "end": 3.62,
+            "word": " shares.",
+            "probability": 0.9983003735542297
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "02-people.zh.wav",
+    "language": "zh",
+    "duration": 5.22,
+    "text": "佩洛西的披露、羅賓漢、董事買入,先看清誰買了什麼",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 4.9,
+        "text": "佩洛西的披露、羅賓漢、董事買入,先看清誰買了什麼",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.32,
+            "word": "佩",
+            "probability": 0.8891298770904541
+          },
+          {
+            "start": 0.32,
+            "end": 0.48,
+            "word": "洛",
+            "probability": 0.9989660084247589
+          },
+          {
+            "start": 0.48,
+            "end": 0.64,
+            "word": "西",
+            "probability": 0.9892084002494812
+          },
+          {
+            "start": 0.64,
+            "end": 0.76,
+            "word": "的",
+            "probability": 0.9860252737998962
+          },
+          {
+            "start": 0.76,
+            "end": 0.96,
+            "word": "披",
+            "probability": 0.9902111887931824
+          },
+          {
+            "start": 0.96,
+            "end": 1.22,
+            "word": "露、",
+            "probability": 0.9965375661849976
+          },
+          {
+            "start": 1.48,
+            "end": 1.62,
+            "word": "羅",
+            "probability": 0.5594544410705566
+          },
+          {
+            "start": 1.62,
+            "end": 1.84,
+            "word": "賓",
+            "probability": 0.9852561950683594
+          },
+          {
+            "start": 1.84,
+            "end": 2.16,
+            "word": "漢、",
+            "probability": 0.8380814790725708
+          },
+          {
+            "start": 2.4,
+            "end": 2.56,
+            "word": "董",
+            "probability": 0.998218446969986
+          },
+          {
+            "start": 2.56,
+            "end": 2.74,
+            "word": "事",
+            "probability": 0.9762023091316223
+          },
+          {
+            "start": 2.74,
+            "end": 2.96,
+            "word": "買",
+            "probability": 0.9764589071273804
+          },
+          {
+            "start": 2.96,
+            "end": 3.2,
+            "word": "入,",
+            "probability": 0.9948626160621643
+          },
+          {
+            "start": 3.52,
+            "end": 3.7,
+            "word": "先",
+            "probability": 0.9712861180305481
+          },
+          {
+            "start": 3.7,
+            "end": 3.88,
+            "word": "看",
+            "probability": 0.9961925745010376
+          },
+          {
+            "start": 3.88,
+            "end": 4.12,
+            "word": "清",
+            "probability": 0.965910017490387
+          },
+          {
+            "start": 4.12,
+            "end": 4.36,
+            "word": "誰",
+            "probability": 0.9925253391265869
+          },
+          {
+            "start": 4.36,
+            "end": 4.56,
+            "word": "買",
+            "probability": 0.9960891008377075
+          },
+          {
+            "start": 4.56,
+            "end": 4.7,
+            "word": "了",
+            "probability": 0.9965200424194336
+          },
+          {
+            "start": 4.7,
+            "end": 4.9,
+            "word": "什麼",
+            "probability": 0.9292879700660706
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "03-partners.en.wav",
+    "language": "en",
+    "duration": 5.52,
+    "text": " NVIDIA invests in Nokia and partners with Corning. Check the price and the terms.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 5.06,
+        "text": " NVIDIA invests in Nokia and partners with Corning. Check the price and the terms.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.66,
+            "word": " NVIDIA",
+            "probability": 0.8715871771176656
+          },
+          {
+            "start": 0.66,
+            "end": 1.2,
+            "word": " invests",
+            "probability": 0.9418528378009796
+          },
+          {
+            "start": 1.2,
+            "end": 1.3,
+            "word": " in",
+            "probability": 0.9841945171356201
+          },
+          {
+            "start": 1.3,
+            "end": 1.56,
+            "word": " Nokia",
+            "probability": 0.9726418256759644
+          },
+          {
+            "start": 1.56,
+            "end": 1.84,
+            "word": " and",
+            "probability": 0.9607962369918823
+          },
+          {
+            "start": 1.84,
+            "end": 2.18,
+            "word": " partners",
+            "probability": 0.9928929209709167
+          },
+          {
+            "start": 2.18,
+            "end": 2.44,
+            "word": " with",
+            "probability": 0.9986805319786072
+          },
+          {
+            "start": 2.44,
+            "end": 2.88,
+            "word": " Corning.",
+            "probability": 0.9471337199211121
+          },
+          {
+            "start": 3.54,
+            "end": 4.04,
+            "word": " Check",
+            "probability": 0.9895217418670654
+          },
+          {
+            "start": 4.04,
+            "end": 4.22,
+            "word": " the",
+            "probability": 0.9962800145149231
+          },
+          {
+            "start": 4.22,
+            "end": 4.5,
+            "word": " price",
+            "probability": 0.9884202480316162
+          },
+          {
+            "start": 4.5,
+            "end": 4.7,
+            "word": " and",
+            "probability": 0.9936309456825256
+          },
+          {
+            "start": 4.7,
+            "end": 4.84,
+            "word": " the",
+            "probability": 0.984321117401123
+          },
+          {
+            "start": 4.84,
+            "end": 5.06,
+            "word": " terms.",
+            "probability": 0.9951882362365723
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "03-partners.zh.wav",
+    "language": "zh",
+    "duration": 5.42,
+    "text": "因为达投资诺基亚与康宁合作、价格和条款一起看。",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 5.18,
+        "text": "因为达投资诺基亚与康宁合作、价格和条款一起看。",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.4,
+            "word": "因为",
+            "probability": 0.3635096251964569
+          },
+          {
+            "start": 0.4,
+            "end": 0.68,
+            "word": "达",
+            "probability": 0.9913933575153351
+          },
+          {
+            "start": 0.68,
+            "end": 0.92,
+            "word": "投",
+            "probability": 0.8914204835891724
+          },
+          {
+            "start": 0.92,
+            "end": 1.1,
+            "word": "资",
+            "probability": 0.9983267784118652
+          },
+          {
+            "start": 1.1,
+            "end": 1.26,
+            "word": "诺",
+            "probability": 0.9531807601451874
+          },
+          {
+            "start": 1.26,
+            "end": 1.44,
+            "word": "基",
+            "probability": 0.9021672010421753
+          },
+          {
+            "start": 1.44,
+            "end": 1.76,
+            "word": "亚",
+            "probability": 0.9895446300506592
+          },
+          {
+            "start": 1.76,
+            "end": 2.14,
+            "word": "与",
+            "probability": 0.8781751990318298
+          },
+          {
+            "start": 2.14,
+            "end": 2.32,
+            "word": "康",
+            "probability": 0.9762414395809174
+          },
+          {
+            "start": 2.32,
+            "end": 2.54,
+            "word": "宁",
+            "probability": 0.9078769087791443
+          },
+          {
+            "start": 2.54,
+            "end": 2.74,
+            "word": "合",
+            "probability": 0.9960052371025085
+          },
+          {
+            "start": 2.74,
+            "end": 2.98,
+            "word": "作、",
+            "probability": 0.9990673661231995
+          },
+          {
+            "start": 3.32,
+            "end": 3.56,
+            "word": "价",
+            "probability": 0.981841504573822
+          },
+          {
+            "start": 3.56,
+            "end": 3.88,
+            "word": "格",
+            "probability": 0.9998171925544739
+          },
+          {
+            "start": 3.88,
+            "end": 4.18,
+            "word": "和",
+            "probability": 0.9550923705101013
+          },
+          {
+            "start": 4.18,
+            "end": 4.38,
+            "word": "条",
+            "probability": 0.9559116959571838
+          },
+          {
+            "start": 4.38,
+            "end": 4.6,
+            "word": "款",
+            "probability": 0.9998674392700195
+          },
+          {
+            "start": 4.6,
+            "end": 4.84,
+            "word": "一起",
+            "probability": 0.9799107313156128
+          },
+          {
+            "start": 4.84,
+            "end": 5.18,
+            "word": "看。",
+            "probability": 0.9983819723129272
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "04-price.en.wav",
+    "language": "en",
+    "duration": 5.29,
+    "text": " Nokia returns to your chosen price. Get an alert, then see what happened.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 4.9,
+        "text": " Nokia returns to your chosen price. Get an alert, then see what happened.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.48,
+            "word": " Nokia",
+            "probability": 0.8162565231323242
+          },
+          {
+            "start": 0.48,
+            "end": 0.98,
+            "word": " returns",
+            "probability": 0.9518862366676331
+          },
+          {
+            "start": 0.98,
+            "end": 1.18,
+            "word": " to",
+            "probability": 0.9977401494979858
+          },
+          {
+            "start": 1.18,
+            "end": 1.26,
+            "word": " your",
+            "probability": 0.997021496295929
+          },
+          {
+            "start": 1.26,
+            "end": 1.58,
+            "word": " chosen",
+            "probability": 0.9936941266059875
+          },
+          {
+            "start": 1.58,
+            "end": 1.98,
+            "word": " price.",
+            "probability": 0.99741131067276
+          },
+          {
+            "start": 2.8,
+            "end": 3.32,
+            "word": " Get",
+            "probability": 0.9857040047645569
+          },
+          {
+            "start": 3.32,
+            "end": 3.46,
+            "word": " an",
+            "probability": 0.9968796968460083
+          },
+          {
+            "start": 3.46,
+            "end": 3.76,
+            "word": " alert,",
+            "probability": 0.9876120686531067
+          },
+          {
+            "start": 4.06,
+            "end": 4.22,
+            "word": " then",
+            "probability": 0.993119478225708
+          },
+          {
+            "start": 4.22,
+            "end": 4.42,
+            "word": " see",
+            "probability": 0.9975551962852478
+          },
+          {
+            "start": 4.42,
+            "end": 4.58,
+            "word": " what",
+            "probability": 0.9988377690315247
+          },
+          {
+            "start": 4.58,
+            "end": 4.9,
+            "word": " happened.",
+            "probability": 0.9945536851882935
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "04-price.zh.wav",
+    "language": "zh",
+    "duration": 5.43,
+    "text": "洛基亚回到你设的价位,提醒你。之后的涨跌,接着看。",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.78,
+        "text": "洛基亚回到你设的价位,提醒你。",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.3,
+            "word": "洛",
+            "probability": 0.7709654569625854
+          },
+          {
+            "start": 0.3,
+            "end": 0.48,
+            "word": "基",
+            "probability": 0.8617357611656189
+          },
+          {
+            "start": 0.48,
+            "end": 0.68,
+            "word": "亚",
+            "probability": 0.7322461754083633
+          },
+          {
+            "start": 0.68,
+            "end": 0.86,
+            "word": "回",
+            "probability": 0.9913268685340881
+          },
+          {
+            "start": 0.86,
+            "end": 1.0,
+            "word": "到",
+            "probability": 0.9974393844604492
+          },
+          {
+            "start": 1.0,
+            "end": 1.16,
+            "word": "你",
+            "probability": 0.9938119649887085
+          },
+          {
+            "start": 1.16,
+            "end": 1.32,
+            "word": "设",
+            "probability": 0.6622500568628311
+          },
+          {
+            "start": 1.32,
+            "end": 1.44,
+            "word": "的",
+            "probability": 0.9876033663749695
+          },
+          {
+            "start": 1.44,
+            "end": 1.62,
+            "word": "价",
+            "probability": 0.8282102048397064
+          },
+          {
+            "start": 1.62,
+            "end": 1.9,
+            "word": "位,",
+            "probability": 0.9942920207977295
+          },
+          {
+            "start": 2.16,
+            "end": 2.32,
+            "word": "提",
+            "probability": 0.9512654542922974
+          },
+          {
+            "start": 2.32,
+            "end": 2.58,
+            "word": "醒",
+            "probability": 0.9990600943565369
+          },
+          {
+            "start": 2.58,
+            "end": 2.78,
+            "word": "你。",
+            "probability": 0.9990353584289551
+          }
+        ]
+      },
+      {
+        "start": 3.26,
+        "end": 5.16,
+        "text": "之后的涨跌,接着看。",
+        "words": [
+          {
+            "start": 3.26,
+            "end": 3.56,
+            "word": "之",
+            "probability": 0.9341760873794556
+          },
+          {
+            "start": 3.56,
+            "end": 3.76,
+            "word": "后",
+            "probability": 0.9999505281448364
+          },
+          {
+            "start": 3.76,
+            "end": 3.86,
+            "word": "的",
+            "probability": 0.9825462102890015
+          },
+          {
+            "start": 3.86,
+            "end": 4.1,
+            "word": "涨",
+            "probability": 0.6715426743030548
+          },
+          {
+            "start": 4.1,
+            "end": 4.34,
+            "word": "跌,",
+            "probability": 0.977676272392273
+          },
+          {
+            "start": 4.68,
+            "end": 4.82,
+            "word": "接",
+            "probability": 0.9867744445800781
+          },
+          {
+            "start": 4.82,
+            "end": 4.98,
+            "word": "着",
+            "probability": 0.9506924748420715
+          },
+          {
+            "start": 4.98,
+            "end": 5.16,
+            "word": "看。",
+            "probability": 0.9994490742683411
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "05-macro.en.wav",
+    "language": "en",
+    "duration": 2.69,
+    "text": " What do rates mean for Robin Hood's interest income?",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.28,
+        "text": " What do rates mean for Robin Hood's interest income?",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.34,
+            "word": " What",
+            "probability": 0.973097026348114
+          },
+          {
+            "start": 0.34,
+            "end": 0.48,
+            "word": " do",
+            "probability": 0.9597822427749634
+          },
+          {
+            "start": 0.48,
+            "end": 0.7,
+            "word": " rates",
+            "probability": 0.9402400255203247
+          },
+          {
+            "start": 0.7,
+            "end": 0.94,
+            "word": " mean",
+            "probability": 0.9969841837882996
+          },
+          {
+            "start": 0.94,
+            "end": 1.14,
+            "word": " for",
+            "probability": 0.9967243075370789
+          },
+          {
+            "start": 1.14,
+            "end": 1.4,
+            "word": " Robin",
+            "probability": 0.9882829785346985
+          },
+          {
+            "start": 1.4,
+            "end": 1.76,
+            "word": " Hood's",
+            "probability": 0.7496202886104584
+          },
+          {
+            "start": 1.76,
+            "end": 1.96,
+            "word": " interest",
+            "probability": 0.9810529351234436
+          },
+          {
+            "start": 1.96,
+            "end": 2.28,
+            "word": " income?",
+            "probability": 0.9787328839302063
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "05-macro.zh.wav",
+    "language": "zh",
+    "duration": 4.47,
+    "text": "利率变化会怎样影响罗别汉的利息收入?",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 4.24,
+        "text": "利率变化会怎样影响罗别汉的利息收入?",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.28,
+            "word": "利",
+            "probability": 0.8403874635696411
+          },
+          {
+            "start": 0.28,
+            "end": 0.44,
+            "word": "率",
+            "probability": 0.9910666346549988
+          },
+          {
+            "start": 0.44,
+            "end": 0.64,
+            "word": "变",
+            "probability": 0.6170613840222359
+          },
+          {
+            "start": 0.64,
+            "end": 0.98,
+            "word": "化",
+            "probability": 0.998579740524292
+          },
+          {
+            "start": 0.98,
+            "end": 1.34,
+            "word": "会",
+            "probability": 0.8258803486824036
+          },
+          {
+            "start": 1.34,
+            "end": 1.54,
+            "word": "怎",
+            "probability": 0.9715723395347595
+          },
+          {
+            "start": 1.54,
+            "end": 1.74,
+            "word": "样",
+            "probability": 0.9720476865768433
+          },
+          {
+            "start": 1.74,
+            "end": 1.92,
+            "word": "影",
+            "probability": 0.9987605810165405
+          },
+          {
+            "start": 1.92,
+            "end": 2.24,
+            "word": "响",
+            "probability": 0.99894779920578
+          },
+          {
+            "start": 2.24,
+            "end": 2.62,
+            "word": "罗",
+            "probability": 0.9027973115444183
+          },
+          {
+            "start": 2.62,
+            "end": 2.8,
+            "word": "别",
+            "probability": 0.19763295352458954
+          },
+          {
+            "start": 2.8,
+            "end": 3.12,
+            "word": "汉",
+            "probability": 0.850888729095459
+          },
+          {
+            "start": 3.12,
+            "end": 3.46,
+            "word": "的",
+            "probability": 0.913436770439148
+          },
+          {
+            "start": 3.46,
+            "end": 3.64,
+            "word": "利",
+            "probability": 0.967674732208252
+          },
+          {
+            "start": 3.64,
+            "end": 3.84,
+            "word": "息",
+            "probability": 0.9940184354782104
+          },
+          {
+            "start": 3.84,
+            "end": 4.04,
+            "word": "收",
+            "probability": 0.9974077343940735
+          },
+          {
+            "start": 4.04,
+            "end": 4.24,
+            "word": "入?",
+            "probability": 0.99973064661026
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "06-creator.en.wav",
+    "language": "en",
+    "duration": 4.57,
+    "text": " A creator discusses Nokia. Keep the view and its context.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 4.08,
+        "text": " A creator discusses Nokia. Keep the view and its context.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.28,
+            "word": " A",
+            "probability": 0.8141995668411255
+          },
+          {
+            "start": 0.28,
+            "end": 0.56,
+            "word": " creator",
+            "probability": 0.8289408087730408
+          },
+          {
+            "start": 0.56,
+            "end": 1.18,
+            "word": " discusses",
+            "probability": 0.993836522102356
+          },
+          {
+            "start": 1.18,
+            "end": 1.48,
+            "word": " Nokia.",
+            "probability": 0.9675087928771973
+          },
+          {
+            "start": 2.62,
+            "end": 2.8,
+            "word": " Keep",
+            "probability": 0.9848270416259766
+          },
+          {
+            "start": 2.8,
+            "end": 3.0,
+            "word": " the",
+            "probability": 0.9947381615638733
+          },
+          {
+            "start": 3.0,
+            "end": 3.24,
+            "word": " view",
+            "probability": 0.9233320355415344
+          },
+          {
+            "start": 3.24,
+            "end": 3.48,
+            "word": " and",
+            "probability": 0.9824756383895874
+          },
+          {
+            "start": 3.48,
+            "end": 3.64,
+            "word": " its",
+            "probability": 0.9590731263160706
+          },
+          {
+            "start": 3.64,
+            "end": 4.08,
+            "word": " context.",
+            "probability": 0.9970995187759399
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "06-creator.zh.wav",
+    "language": "zh",
+    "duration": 3.82,
+    "text": "博主谈到诺基亚,观点和原话一起留着。",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.58,
+        "text": "博主谈到诺基亚,观点和原话一起留着。",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.3,
+            "word": "博",
+            "probability": 0.9777333736419678
+          },
+          {
+            "start": 0.3,
+            "end": 0.52,
+            "word": "主",
+            "probability": 0.9906360507011414
+          },
+          {
+            "start": 0.52,
+            "end": 0.72,
+            "word": "谈",
+            "probability": 0.5809597298502922
+          },
+          {
+            "start": 0.72,
+            "end": 0.88,
+            "word": "到",
+            "probability": 0.9533677101135254
+          },
+          {
+            "start": 0.88,
+            "end": 1.06,
+            "word": "诺",
+            "probability": 0.953730970621109
+          },
+          {
+            "start": 1.06,
+            "end": 1.26,
+            "word": "基",
+            "probability": 0.9549647569656372
+          },
+          {
+            "start": 1.26,
+            "end": 1.52,
+            "word": "亚,",
+            "probability": 0.9337312877178192
+          },
+          {
+            "start": 1.82,
+            "end": 1.96,
+            "word": "观",
+            "probability": 0.9632415771484375
+          },
+          {
+            "start": 1.96,
+            "end": 2.18,
+            "word": "点",
+            "probability": 0.9973487854003906
+          },
+          {
+            "start": 2.18,
+            "end": 2.36,
+            "word": "和",
+            "probability": 0.9957141280174255
+          },
+          {
+            "start": 2.36,
+            "end": 2.58,
+            "word": "原",
+            "probability": 0.7558426260948181
+          },
+          {
+            "start": 2.58,
+            "end": 2.78,
+            "word": "话",
+            "probability": 0.6471269130706787
+          },
+          {
+            "start": 2.78,
+            "end": 3.08,
+            "word": "一起",
+            "probability": 0.9907544851303101
+          },
+          {
+            "start": 3.08,
+            "end": 3.38,
+            "word": "留",
+            "probability": 0.9045866131782532
+          },
+          {
+            "start": 3.38,
+            "end": 3.58,
+            "word": "着。",
+            "probability": 0.7642611861228943
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "07-brief.en.wav",
+    "language": "en",
+    "duration": 3.86,
+    "text": " See relevant updates in your inbox and your daily watchlist summary.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.42,
+        "text": " See relevant updates in your inbox and your daily watchlist summary.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.36,
+            "word": " See",
+            "probability": 0.9141444563865662
+          },
+          {
+            "start": 0.36,
+            "end": 0.64,
+            "word": " relevant",
+            "probability": 0.9618604183197021
+          },
+          {
+            "start": 0.64,
+            "end": 1.1,
+            "word": " updates",
+            "probability": 0.9889041781425476
+          },
+          {
+            "start": 1.1,
+            "end": 1.34,
+            "word": " in",
+            "probability": 0.9980383515357971
+          },
+          {
+            "start": 1.34,
+            "end": 1.44,
+            "word": " your",
+            "probability": 0.997894823551178
+          },
+          {
+            "start": 1.44,
+            "end": 1.76,
+            "word": " inbox",
+            "probability": 0.8467023372650146
+          },
+          {
+            "start": 1.76,
+            "end": 2.2,
+            "word": " and",
+            "probability": 0.9527818560600281
+          },
+          {
+            "start": 2.2,
+            "end": 2.3,
+            "word": " your",
+            "probability": 0.9779838919639587
+          },
+          {
+            "start": 2.3,
+            "end": 2.58,
+            "word": " daily",
+            "probability": 0.9451971054077148
+          },
+          {
+            "start": 2.58,
+            "end": 3.12,
+            "word": " watchlist",
+            "probability": 0.568927675485611
+          },
+          {
+            "start": 3.12,
+            "end": 3.42,
+            "word": " summary.",
+            "probability": 0.9958325028419495
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "07-brief.zh.wav",
+    "language": "zh",
+    "duration": 4.79,
+    "text": "相關變化,收件箱裡看。每天一份自選總結。",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 4.52,
+        "text": "相關變化,收件箱裡看。每天一份自選總結。",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.36,
+            "word": "相",
+            "probability": 0.908625602722168
+          },
+          {
+            "start": 0.36,
+            "end": 0.56,
+            "word": "關",
+            "probability": 0.689534604549408
+          },
+          {
+            "start": 0.56,
+            "end": 0.74,
+            "word": "變",
+            "probability": 0.9299014806747437
+          },
+          {
+            "start": 0.74,
+            "end": 1.08,
+            "word": "化,",
+            "probability": 0.9906823635101318
+          },
+          {
+            "start": 1.36,
+            "end": 1.5,
+            "word": "收",
+            "probability": 0.9301037192344666
+          },
+          {
+            "start": 1.5,
+            "end": 1.7,
+            "word": "件",
+            "probability": 0.8536553978919983
+          },
+          {
+            "start": 1.7,
+            "end": 1.92,
+            "word": "箱",
+            "probability": 0.829004168510437
+          },
+          {
+            "start": 1.92,
+            "end": 2.1,
+            "word": "裡",
+            "probability": 0.6339735388755798
+          },
+          {
+            "start": 2.1,
+            "end": 2.32,
+            "word": "看。",
+            "probability": 0.9961906671524048
+          },
+          {
+            "start": 2.9,
+            "end": 3.12,
+            "word": "每",
+            "probability": 0.9566069841384888
+          },
+          {
+            "start": 3.12,
+            "end": 3.34,
+            "word": "天",
+            "probability": 0.987569272518158
+          },
+          {
+            "start": 3.34,
+            "end": 3.5,
+            "word": "一",
+            "probability": 0.8506140112876892
+          },
+          {
+            "start": 3.5,
+            "end": 3.66,
+            "word": "份",
+            "probability": 0.9924444556236267
+          },
+          {
+            "start": 3.66,
+            "end": 3.86,
+            "word": "自",
+            "probability": 0.9783048629760742
+          },
+          {
+            "start": 3.86,
+            "end": 4.06,
+            "word": "選",
+            "probability": 0.982413649559021
+          },
+          {
+            "start": 4.06,
+            "end": 4.28,
+            "word": "總",
+            "probability": 0.9979742169380188
+          },
+          {
+            "start": 4.28,
+            "end": 4.52,
+            "word": "結。",
+            "probability": 0.9932730197906494
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "08-start.en.wav",
+    "language": "en",
+    "duration": 3.01,
+    "text": " Add your stocks. Start free.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 0.92,
+        "text": " Add your stocks.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.36,
+            "word": " Add",
+            "probability": 0.8869969844818115
+          },
+          {
+            "start": 0.36,
+            "end": 0.48,
+            "word": " your",
+            "probability": 0.9308246970176697
+          },
+          {
+            "start": 0.48,
+            "end": 0.92,
+            "word": " stocks.",
+            "probability": 0.9240205883979797
+          }
+        ]
+      },
+      {
+        "start": 1.72,
+        "end": 2.68,
+        "text": " Start free.",
+        "words": [
+          {
+            "start": 1.72,
+            "end": 2.34,
+            "word": " Start",
+            "probability": 0.994304358959198
+          },
+          {
+            "start": 2.34,
+            "end": 2.68,
+            "word": " free.",
+            "probability": 0.8323031663894653
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "08-start.zh.wav",
+    "language": "zh",
+    "duration": 2.39,
+    "text": "添加自选 免費開始",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.92,
+        "text": "添加自选 免費開始",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.32,
+            "word": "添",
+            "probability": 0.9603153467178345
+          },
+          {
+            "start": 0.32,
+            "end": 0.52,
+            "word": "加",
+            "probability": 0.9998553991317749
+          },
+          {
+            "start": 0.52,
+            "end": 0.7,
+            "word": "自",
+            "probability": 0.9440011978149414
+          },
+          {
+            "start": 0.7,
+            "end": 1.04,
+            "word": "选",
+            "probability": 0.6512702256441116
+          },
+          {
+            "start": 1.34,
+            "end": 1.48,
+            "word": " 免",
+            "probability": 0.9976580739021301
+          },
+          {
+            "start": 1.48,
+            "end": 1.66,
+            "word": "費",
+            "probability": 0.9463309645652771
+          },
+          {
+            "start": 1.66,
+            "end": 1.92,
+            "word": "開始",
+            "probability": 0.8169790506362915
+          }
+        ]
+      }
+    ]
+  }
+]

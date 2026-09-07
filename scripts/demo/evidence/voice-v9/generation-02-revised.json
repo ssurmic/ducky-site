@@ -1,0 +1,24 @@
+{
+  "config": {
+    "provider": "Microsoft online speech service",
+    "client": "edge-tts",
+    "client_version": "7.2.8",
+    "model_revision": "not exposed by provider",
+    "rate": "+0%",
+    "pitch": "+0Hz",
+    "boundary": "WordBoundary"
+  },
+  "scenes": [
+    {
+      "scene": "02-people",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "See what Pelosi disclosed, and which Robinhood director bought shares.",
+      "sha256": {
+        "02-people.en.mp3": "24db33a7a046996672d7845a3f1780aa0a6e30bb258ab19c3b91ba6f22edc611",
+        "02-people.en.words.jsonl": "f6daefd97e2709041c6a3e26865672c13e4bc743f7f461193f77998169007fba",
+        "02-people.en.wav": "8486402e3cb7344b8d7cd06cd0247cd229b09247f26b704bacf3731946321f0d"
+      }
+    }
+  ]
+}

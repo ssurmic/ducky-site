@@ -1,0 +1,46 @@
+{
+  "config": {
+    "provider": "Microsoft online speech service",
+    "client": "edge-tts",
+    "client_version": "7.2.8",
+    "model_revision": "not exposed by provider",
+    "rate": "+0%",
+    "pitch": "+0Hz",
+    "boundary": "WordBoundary"
+  },
+  "scenes": [
+    {
+      "scene": "02-people",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "佩洛西的披露，罗宾汉 董事买入，先看清谁买了什么。",
+      "sha256": {
+        "02-people.zh.mp3": "bb1e2abe07e3e7ae6980ea05ada3d9749c264f912672af838d9a93adbe916c75",
+        "02-people.zh.words.jsonl": "aa61f010d0e571ceb1bf25e532b0eb85d4b59c30622b639cb6675d48f5ff8b53",
+        "02-people.zh.wav": "8ee2d5c1e5b3b95be71eca3e1e93401fb4d5ab3fd4fb1af11cc575b71469ea60"
+      }
+    },
+    {
+      "scene": "03-partners",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "英伟达投资诺基亚，与康宁合作，价格和条款一起看。",
+      "sha256": {
+        "03-partners.zh.mp3": "3bda2a8f72f02f2b6711aa2a4e25f034bb19a5ac83ffe6181326efe4fe11f754",
+        "03-partners.zh.words.jsonl": "ac1e1db2824a8713051e827536b25d208a80331c343ad6a47c89fbd32acfb028",
+        "03-partners.zh.wav": "d02df5d8420a4e9785bb6968b296d1b0c629ca4de377e19e07fa3b918c58325f"
+      }
+    },
+    {
+      "scene": "05-macro",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "利率变化，会怎样影响 罗宾汉 的利息收入？",
+      "sha256": {
+        "05-macro.zh.mp3": "b8815bfa88f07955996075bbe1eeafc30b4a34e7cbd030c2c6c9ce7d19cc1ff8",
+        "05-macro.zh.words.jsonl": "6978c3694c00479007fb8e02ea7f1b8a0a7e7b905576cf650bd6594f478a208d",
+        "05-macro.zh.wav": "a870ff5534e49b39e44ed331b3a6cd659981f7560aa873cdef5094aeaedf22a1"
+      }
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "method": "Trailing silence only; retain at least 180ms after last active 10ms RMS window above -48dBFS and 150ms after final provider word. No speed/pitch transformation.",
+  "files": [
+    {
+      "file": "01-watch.zh.wav",
+      "original_seconds": 3.552,
+      "seconds": 3.16,
+      "last_active_window": 2.98,
+      "last_word_end": 2.9625,
+      "sha256": "0d9317fb4aed5de4e874f5ee19c30ac3f9ddb58db57ab39f5014b50cf47e7b59"
+    },
+    {
+      "file": "03-partners.en.wav",
+      "original_seconds": 6.216,
+      "seconds": 5.52,
+      "last_active_window": 5.34,
+      "last_word_end": 5.3375,
+      "sha256": "c013dab1bce51c19a1ea2ef40bccc20f3b20e540d7d6bffd0aa474578cc5e39d"
+    },
+    {
+      "file": "04-price.en.wav",
+      "original_seconds": 6.0,
+      "seconds": 5.29,
+      "last_active_window": 5.11,
+      "last_word_end": 5.125,
+      "sha256": "340f730205a56e458e92bc4cd3aa54e2cbc7c72f59cb56925d6b16ef2d457eab"
+    },
+    {
+      "file": "04-price.zh.wav",
+      "original_seconds": 5.808,
+      "seconds": 5.43,
+      "last_active_window": 5.25,
+      "last_word_end": 5.2375,
+      "sha256": "f118fc2c690f51e2c7568fc6e5a1851fbd869622d7375b47b480b2d19e5ca8b1"
+    },
+    {
+      "file": "06-creator.en.wav",
+      "original_seconds": 5.28,
+      "seconds": 4.57,
+      "last_active_window": 4.39,
+      "last_word_end": 4.4,
+      "sha256": "4606097ff85949ffe489f87465ef5453adb16aea6d383cb935ff9cff3a6afccc"
+    },
+    {
+      "file": "06-creator.zh.wav",
+      "original_seconds": 4.224,
+      "seconds": 3.82,
+      "last_active_window": 3.64,
+      "last_word_end": 3.65,
+      "sha256": "023e6dc98db789d4a4efce10bfc030fd9fc3adc395d9ab845781f2542d270f33"
+    },
+    {
+      "file": "07-brief.en.wav",
+      "original_seconds": 4.584,
+      "seconds": 3.86,
+      "last_active_window": 3.68,
+      "last_word_end": 3.7,
+      "sha256": "dfafc3b1f17d717d028d9a4e3272d3e6b74e7778cae908f58466b84a738be3ab"
+    },
+    {
+      "file": "07-brief.zh.wav",
+      "original_seconds": 5.184,
+      "seconds": 4.79,
+      "last_active_window": 4.61,
+      "last_word_end": 4.6125,
+      "sha256": "997648d1d9dba1330aa6ae26594b6e3732474e43cb6ce6dc8831281c228c6c83"
+    },
+    {
+      "file": "08-start.en.wav",
+      "original_seconds": 3.72,
+      "seconds": 3.01,
+      "last_active_window": 2.83,
+      "last_word_end": 2.8375,
+      "sha256": "8f36e4d34336d29844bf6dd09889697d24f58496a0f3bf230e96b9ab1f79f80e"
+    },
+    {
+      "file": "08-start.zh.wav",
+      "original_seconds": 2.784,
+      "seconds": 2.39,
+      "last_active_window": 2.21,
+      "last_word_end": 2.1875,
+      "sha256": "5db9f2366d910f7a9dcf206f37b5ba3a7deb1c2a0d09c6c838e21cd4a0495fe0"
+    },
+    {
+      "file": "01-watch.en.wav",
+      "original_seconds": 3.168,
+      "seconds": 2.47,
+      "last_active_window": 2.29,
+      "last_word_end": 2.2875,
+      "sha256": "b669b1e8ad337526b1d1a6739045da0f4d4076065800118b4b20717d96acdf6c"
+    },
+    {
+      "file": "02-people.en.wav",
+      "original_seconds": 4.824,
+      "seconds": 4.13,
+      "last_active_window": 3.95,
+      "last_word_end": 3.95,
+      "sha256": "105a556def711402f1bb39b52ab7d41b7cf3ce7c9850b203c0a216f17fe1096f"
+    },
+    {
+      "file": "05-macro.en.wav",
+      "original_seconds": 3.408,
+      "seconds": 2.69,
+      "last_active_window": 2.51,
+      "last_word_end": 2.525,
+      "sha256": "b13ed44e56f02885ec799ce588ecb4a2ff9201123e93b2d336d5779072140127"
+    },
+    {
+      "file": "02-people.zh.wav",
+      "original_seconds": 5.616,
+      "seconds": 5.22,
+      "last_active_window": 5.04,
+      "last_word_end": 5.025,
+      "sha256": "f856e5e2cd2eb6ef7a4dc56d413bbc74a46c711197ea35a7d2916ec83ecca45b"
+    },
+    {
+      "file": "03-partners.zh.wav",
+      "original_seconds": 5.832,
+      "seconds": 5.42,
+      "last_active_window": 5.24,
+      "last_word_end": 5.25,
+      "sha256": "cd7bc251cea6f71b9adb58574f87c4b9bd8ecd9f62815dc8cfda020c28de2a55"
+    },
+    {
+      "file": "05-macro.zh.wav",
+      "original_seconds": 4.872,
+      "seconds": 4.47,
+      "last_active_window": 4.29,
+      "last_word_end": 4.3,
+      "sha256": "35b587c3a506e903ecc8418e86647250d06060ad53e17b3fbf1def4c6541784b"
+    }
+  ]
+}

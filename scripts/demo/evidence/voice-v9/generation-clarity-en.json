@@ -1,0 +1,46 @@
+{
+  "config": {
+    "provider": "Microsoft online speech service",
+    "client": "edge-tts",
+    "client_version": "7.2.8",
+    "model_revision": "not exposed by provider",
+    "rate": "+0%",
+    "pitch": "+0Hz",
+    "boundary": "WordBoundary"
+  },
+  "scenes": [
+    {
+      "scene": "01-watch",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "Imagine following these stocks back then.",
+      "sha256": {
+        "01-watch.en.mp3": "afd1106e79c07f7b3b4f71bcad2314122f27963a8bca947093a2672832b3b855",
+        "01-watch.en.words.jsonl": "c042713cd47237b55e6bbf0b3fb96ee6db32c33531df5a0c54e3955b9ef095e6",
+        "01-watch.en.wav": "debf570b472e863003863c474b4cb45dccb8f0e6be79a52da9a47dac0fe357cc"
+      }
+    },
+    {
+      "scene": "02-people",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "See what Pelosi disclosed, and which Robin Hood director bought shares.",
+      "sha256": {
+        "02-people.en.mp3": "b8072aa59069ff8f9e3b65b0961b8e72a539e5c0c414248cd579d4e4ebc8daa6",
+        "02-people.en.words.jsonl": "45410df6ff1be2cda5a98e422f9bfef473fc49eb59c3d35ed526e7550b8a9fb4",
+        "02-people.en.wav": "fdcafc4adcc45e3a52cd05195fd56d5d08bef2cbf371e3bd1d100f960d8ab4e1"
+      }
+    },
+    {
+      "scene": "05-macro",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "What do rates mean for Robin Hood's interest income?",
+      "sha256": {
+        "05-macro.en.mp3": "c67b35ff8b65772327365b559721064e3774f0e8d6d5e82daabb0e6b9368ffbe",
+        "05-macro.en.words.jsonl": "0fb45a8440038c32c02b6d7db7b6c6c9a5eea642eea43a5b45af3a8fb9dacea5",
+        "05-macro.en.wav": "5e566616b5529416a19571333170ff453ef93afeed7a3ecee6f7e6d0adf78ad8"
+      }
+    }
+  ]
+}

@@ -18,4 +18,9 @@ class Captions(unittest.TestCase):
  def test_bad_boundaries_fail_closed(self):
   for words in ([word('A',.4,.8),word('B',.2,.3)],[word('A',.1,1.1)]):
    with self.assertRaises(ValueError):align_chunks(['A B.' if len(words)>1 else 'A.'],words,1)
+ def test_continuous_speech_keeps_both_words_at_phrase_boundary(self):
+  cues=align_chunks(['Nokia','and Corning.'],[word('Nokia',.1,.6),word('and',.6,.8),word('Corning',.8,1.3)],1.5)
+  self.assertEqual(cues[0]['end'],.6)
+  self.assertEqual(cues[1]['start'],.6)
+  self.assertEqual(cues[1]['end'],1.5)
 if __name__=='__main__':unittest.main()

@@ -1,0 +1,182 @@
+{
+  "source": "Microsoft online speech, pinned edge-tts 7.2.8; revision not exposed",
+  "audio_edit": "Trailing silence only; no speech rate or pitch transformation",
+  "selected": [
+    {
+      "scene": "01-watch",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "Imagine following these stocks back then.",
+      "sha256": {
+        "01-watch.en.mp3": "afd1106e79c07f7b3b4f71bcad2314122f27963a8bca947093a2672832b3b855",
+        "01-watch.en.words.jsonl": "c042713cd47237b55e6bbf0b3fb96ee6db32c33531df5a0c54e3955b9ef095e6",
+        "01-watch.en.wav": "b669b1e8ad337526b1d1a6739045da0f4d4076065800118b4b20717d96acdf6c"
+      }
+    },
+    {
+      "scene": "01-watch",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "如果当时就关注了，会看到什么？",
+      "sha256": {
+        "01-watch.zh.mp3": "6b60815a30ec1a57233c957b4a834e86a79de0d1f7bfb0795ace7b2d3176e93b",
+        "01-watch.zh.words.jsonl": "d064364cf778a825f3b25cebfca94d67a37768f68f719f9d30366b01cf954f87",
+        "01-watch.zh.wav": "0d9317fb4aed5de4e874f5ee19c30ac3f9ddb58db57ab39f5014b50cf47e7b59"
+      }
+    },
+    {
+      "scene": "02-people",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "See what Pelosi disclosed, and which Robin Hood director bought shares.",
+      "sha256": {
+        "02-people.en.mp3": "b8072aa59069ff8f9e3b65b0961b8e72a539e5c0c414248cd579d4e4ebc8daa6",
+        "02-people.en.words.jsonl": "45410df6ff1be2cda5a98e422f9bfef473fc49eb59c3d35ed526e7550b8a9fb4",
+        "02-people.en.wav": "105a556def711402f1bb39b52ab7d41b7cf3ce7c9850b203c0a216f17fe1096f"
+      }
+    },
+    {
+      "scene": "02-people",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "佩洛西的披露，罗宾汉 董事买入，先看清谁买了什么。",
+      "sha256": {
+        "02-people.zh.mp3": "bb1e2abe07e3e7ae6980ea05ada3d9749c264f912672af838d9a93adbe916c75",
+        "02-people.zh.words.jsonl": "aa61f010d0e571ceb1bf25e532b0eb85d4b59c30622b639cb6675d48f5ff8b53",
+        "02-people.zh.wav": "f856e5e2cd2eb6ef7a4dc56d413bbc74a46c711197ea35a7d2916ec83ecca45b"
+      }
+    },
+    {
+      "scene": "03-partners",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "Nvidia invests in Nokia and partners with Corning. Check the price and the terms.",
+      "sha256": {
+        "03-partners.en.mp3": "898a55238907bd842eea6f53d1a694e38b27dfa55f18f1d1d87cee2ea8e5888f",
+        "03-partners.en.words.jsonl": "6b478ce7c67e73d42715ec74e1355d81624e2a3a026af52893d1e27b7937f4a2",
+        "03-partners.en.wav": "c013dab1bce51c19a1ea2ef40bccc20f3b20e540d7d6bffd0aa474578cc5e39d"
+      }
+    },
+    {
+      "scene": "03-partners",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "英伟达投资诺基亚，与康宁合作，价格和条款一起看。",
+      "sha256": {
+        "03-partners.zh.mp3": "3bda2a8f72f02f2b6711aa2a4e25f034bb19a5ac83ffe6181326efe4fe11f754",
+        "03-partners.zh.words.jsonl": "ac1e1db2824a8713051e827536b25d208a80331c343ad6a47c89fbd32acfb028",
+        "03-partners.zh.wav": "cd7bc251cea6f71b9adb58574f87c4b9bd8ecd9f62815dc8cfda020c28de2a55"
+      }
+    },
+    {
+      "scene": "04-price",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "Nokia returns to your chosen price. Get an alert, then see what happened.",
+      "sha256": {
+        "04-price.en.mp3": "12e62ac06a2b57372843ce70b7180a6947396d664a8ac8aacef17557399790c3",
+        "04-price.en.words.jsonl": "39db7b2bad2f5764ed69cfc3840170698e552d597160b34243ad6f68e8867274",
+        "04-price.en.wav": "340f730205a56e458e92bc4cd3aa54e2cbc7c72f59cb56925d6b16ef2d457eab"
+      }
+    },
+    {
+      "scene": "04-price",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "诺基亚回到你设的价位，提醒你。之后的涨跌，接着看。",
+      "sha256": {
+        "04-price.zh.mp3": "536a3603ab1b03a644a608b0cdd84fc2298fee2967508da18676c5c265362f87",
+        "04-price.zh.words.jsonl": "4fe5ef6d418f81cc6e1da47a5f77783c8e0eeccbf6f78ccc36cad0ebfb18ae00",
+        "04-price.zh.wav": "f118fc2c690f51e2c7568fc6e5a1851fbd869622d7375b47b480b2d19e5ca8b1"
+      }
+    },
+    {
+      "scene": "05-macro",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "What do rates mean for Robin Hood's interest income?",
+      "sha256": {
+        "05-macro.en.mp3": "c67b35ff8b65772327365b559721064e3774f0e8d6d5e82daabb0e6b9368ffbe",
+        "05-macro.en.words.jsonl": "0fb45a8440038c32c02b6d7db7b6c6c9a5eea642eea43a5b45af3a8fb9dacea5",
+        "05-macro.en.wav": "b13ed44e56f02885ec799ce588ecb4a2ff9201123e93b2d336d5779072140127"
+      }
+    },
+    {
+      "scene": "05-macro",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "利率变化，会怎样影响 罗宾汉 的利息收入？",
+      "sha256": {
+        "05-macro.zh.mp3": "b8815bfa88f07955996075bbe1eeafc30b4a34e7cbd030c2c6c9ce7d19cc1ff8",
+        "05-macro.zh.words.jsonl": "6978c3694c00479007fb8e02ea7f1b8a0a7e7b905576cf650bd6594f478a208d",
+        "05-macro.zh.wav": "35b587c3a506e903ecc8418e86647250d06060ad53e17b3fbf1def4c6541784b"
+      }
+    },
+    {
+      "scene": "06-creator",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "A creator discusses Nokia. Keep the view and its context.",
+      "sha256": {
+        "06-creator.en.mp3": "6d866d241bba5b8c6161bfa7111f9e3ca97d63669e8e6792baa24996efe83117",
+        "06-creator.en.words.jsonl": "98181c9bd9e0ed6c6981c3f9ca66ce7cf61b876c6b21c64013de908fddf3241a",
+        "06-creator.en.wav": "4606097ff85949ffe489f87465ef5453adb16aea6d383cb935ff9cff3a6afccc"
+      }
+    },
+    {
+      "scene": "06-creator",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "博主谈到诺基亚，观点和原话一起留着。",
+      "sha256": {
+        "06-creator.zh.mp3": "23193f171694cea423364149aebe1fc1dd1dff3cdb925b554f754a76742fa645",
+        "06-creator.zh.words.jsonl": "bb20bcd260eb449856e7447aa810173190d5d1f3551e49006bcc4817e2589f30",
+        "06-creator.zh.wav": "023e6dc98db789d4a4efce10bfc030fd9fc3adc395d9ab845781f2542d270f33"
+      }
+    },
+    {
+      "scene": "07-brief",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "See relevant updates in your inbox and your daily watchlist summary.",
+      "sha256": {
+        "07-brief.en.mp3": "060f08baf44994b30800565d14eb1dd896c5e22239ba8774014a3b265b67eaae",
+        "07-brief.en.words.jsonl": "462e1326bc20a749e5ef971c9da12ed66d79af1973b6edac8e1ff57851a06969",
+        "07-brief.en.wav": "dfafc3b1f17d717d028d9a4e3272d3e6b74e7778cae908f58466b84a738be3ab"
+      }
+    },
+    {
+      "scene": "07-brief",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "相关变化，收件箱里看。每天一份自选总结。",
+      "sha256": {
+        "07-brief.zh.mp3": "c8403525d169e97f57402c9b78f27fc5e928ae1f267c86f277dc7c5ab7f7ad5d",
+        "07-brief.zh.words.jsonl": "b2be45edc88a2ec2116d8fb9a9a8d32600243d92081372d00a7ff1860b02937b",
+        "07-brief.zh.wav": "997648d1d9dba1330aa6ae26594b6e3732474e43cb6ce6dc8831281c228c6c83"
+      }
+    },
+    {
+      "scene": "08-start",
+      "language": "en",
+      "voice": "en-US-JennyNeural",
+      "spoken_text": "Add your stocks. Start free.",
+      "sha256": {
+        "08-start.en.mp3": "d9f5aff1203787ca153ac801681777cd150630062268dde8d5ba1d9096c2786f",
+        "08-start.en.words.jsonl": "34ecdd6aa98ce8452c188296f4069c4f30e3444c39796d9f8ca4e8c98ad7b24e",
+        "08-start.en.wav": "8f36e4d34336d29844bf6dd09889697d24f58496a0f3bf230e96b9ab1f79f80e"
+      }
+    },
+    {
+      "scene": "08-start",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "添加自选，免费开始。",
+      "sha256": {
+        "08-start.zh.mp3": "6ca00dc0a5c3df00cf166f30cbad51770041eed34da2ee2a0c05d9e184a37527",
+        "08-start.zh.words.jsonl": "a4c30bbdce4da7c589d2abedaeed94b1f91f5c41be3f1eee73120f48b92c9ec4",
+        "08-start.zh.wav": "5db9f2366d910f7a9dcf206f37b5ba3a7deb1c2a0d09c6c838e21cd4a0495fe0"
+      }
+    }
+  ]
+}

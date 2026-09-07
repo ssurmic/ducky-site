@@ -24,11 +24,14 @@ def align_chunks(chunks, words, audio_seconds):
         start=words[first]['offset']/1e7
         end=(words[index-1]['offset']+words[index-1]['duration'])/1e7
         if not 0<=start<end<=audio_seconds:raise ValueError('Word outside audio')
-        result.append({'start':max(0,start-.04),'end':end,'text':chunk,
+        prior_end=(words[first-1]['offset']+words[first-1]['duration'])/1e7 if first else 0
+        result.append({'start':max(prior_end,start-.04),'end':end,'text':chunk,
                        'first_word':first,'last_word':index-1,'word_start':start,'word_end':end})
     if index!=len(words):raise ValueError('Uncaptioned words remain')
     for i,cue in enumerate(result):
-        limit=result[i+1]['start']-.02 if i+1<len(result) else audio_seconds
+        limit=result[i+1]['start'] if i+1<len(result) else audio_seconds
+        if i+1<len(result) and limit-cue['word_end']>=.02:
+            limit-=.02
         cue['end']=min(limit,cue['end']+.8 if i+1<len(result) else audio_seconds)
         if cue['end']<cue['word_end'] or cue['end']<=cue['start']:raise ValueError('Invalid or overlapping word times')
         cue['start']=round(cue['start'],4);cue['end']=round(cue['end'],4)
