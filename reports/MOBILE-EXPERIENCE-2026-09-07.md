@@ -4,9 +4,9 @@ Owner goal: make the existing website comfortable on portrait phones, keep its i
 
 ## Changes
 
-- Compact portrait spacing and headings; body text remains readable, inputs use 16px and primary controls have at least a 44px target. Calendar date numbers stay 22px and event/weekday labels 14px.
+- Compact portrait spacing and headings; body text remains readable, inputs use 16px and primary controls have at least a 44px target. Initial calendar sizes were 22px / 14px; the owner’s later phone screenshot superseded those sizes. The integrated release uses 18px dates, 12px event/weekday labels and 68px minimum quiet cards.
 - Market topics are vertical rows. Radar categories open as a complete two-column list, show the selected category when collapsed, and return focus after selection. The More navigation menu is vertical on phones; selecting an item does not leave keyboard focus in a hidden panel.
-- On phones the price chart precedes the detailed overlay legend. Related links wrap compactly, while desktop order is preserved.
+- On phones the price chart precedes the detailed overlay legend. The integrated release moves related links below the chart and allocates price/RSI/MACD panes together.
 - Dialogs respect safe-area padding, retain a 44px close button, scroll within the viewport, and restore date focus and the underlying scroll.
 - Browser color-scheme changes, explicit theme changes and Telegram theme events repaint the candlesticks, RSI reference lines, MACD histogram/lines, overlay lines and legend from the active application palette. They reuse the already loaded data and do not request new prices or alter research values.
 
@@ -22,4 +22,4 @@ This is Chrome viewport/iframe and mouse/keyboard testing. Physical iOS/Android,
 
 ## Integration and release
 
-Latest upstream watchlist and font changes are being integrated before final verification. Production release evidence will be appended after deployment.
+Integrated with main bda03880 (new navigation, discovery pages and notification setup), then refined against 600–700px available browser viewports. See [the density acceptance report](MOBILE-CALENDAR-DENSITY-2026-09-07.md) and [independent route audit](UI-MOBILE-DENSITY-AUDIT-2026-09-07.md) for superseding measurements and release evidence.

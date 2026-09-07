@@ -241,9 +241,9 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 }
 @media(max-width:560px){
  .page-app .calendar-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
- .page-app .calendar-heading>div{min-width:0}
- .page-app .calendar-heading p{font-size:.75rem;line-height:1.5;margin-top:4px}
- .page-app .calendar-heading .btn{font-size:.6875rem;padding:6px 8px}
+ .page-app .calendar-heading>div{display:contents}
+ .page-app .calendar-heading p{grid-column:1/-1;font-size:.75rem;line-height:1.5;margin:0}
+ .page-app .calendar-heading .btn{grid-column:2;grid-row:1;font-size:.6875rem;padding:6px 8px}
  .page-app .calendar-view .event-scope-note{font-size:.75rem;line-height:1.5;margin:8px 0}
  .page-app .calendar-view>.data-notice{font-size:12px;line-height:1.5;padding:8px 10px;margin:8px 0}
  .page-app .cal-toolbar{gap:6px;align-items:center;margin-top:8px}
