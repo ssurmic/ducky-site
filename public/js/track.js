@@ -11,6 +11,9 @@
   var SRC = CFG.TRACK_JSON || root.getAttribute("data-src") || "/track-record.json";
   var STALE_MS = 30 * 3600 * 1000;
   var $ = function (id) { return document.getElementById(id); };
+  var auditZh = !String(document.documentElement.lang).startsWith('en');
+  var A = auditZh ? {review:'待核对',recorded:'原记录',recomputed:'本次复算',checked:'核对时间',missing:'原始计算所用价格未留存。',input:'缺少当前价格',note:'部分旧结果与当前价格复算不一致；相关汇总暂不显示，原值保留在展开内容中。'} :
+    {review:'Needs review',recorded:'Originally recorded',recomputed:'Recomputed now',checked:'Checked',missing:'Original calculation price inputs were not preserved.',input:'Current price input missing',note:'Some stored results differ from current price recomputation. Affected summaries are withheld; original values remain available in the details.'};
 
   function fmt(s, vars) { return String(s || "").replace(/\{(\w+)\}/g, function (_, k) { return vars[k] != null ? vars[k] : "—"; }); }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
@@ -22,6 +25,24 @@
     td.textContent = pct(x);
     if (x < 0) td.classList.add("neg"); else if (x > 0) td.classList.add("pos");   // classList.add("") throws
     return td;
+  }
+  function disputed(r, key) { return r.outcome_review && r.outcome_review.differences && ((r.outcome_review.affected_fields || []).indexOf(key) >= 0 || r.outcome_review.differences[key]); }
+  function reviewCell(r, key) {
+    if (!disputed(r,key)) return key==='rnow' ? rnowCell(r) : retCell(r[key]);
+    var review=r.outcome_review, diff=review.differences[key]||review.differences.px0;
+    var td=el('td','num'), details=el('details','outcome-review');
+    details.appendChild(el('summary','',A.review));
+    var price=!review.differences[key], display=function(v){return isNum(v)?(price?'$'+v.toFixed(4):pct(v,4)):A.input;};
+    details.appendChild(el('p','',A.recorded+': '+display(diff.recorded)));
+    details.appendChild(el('p','',A.recomputed+': '+display(diff.recomputed)));
+    details.appendChild(el('p','',A.checked+': '+tsShort(review.checked_at)+' UTC'));
+    details.appendChild(el('p','',A.missing));td.appendChild(details);return td;
+  }
+  function aggregateReview(row,key) {
+    var td=el('td','num'),details=el('details','outcome-review');details.appendChild(el('summary','',A.review));
+    var old=row.reported_metrics&&row.reported_metrics[key];
+    if(isNum(old))details.appendChild(el('p','',A.recorded+': '+pct(old,4)));
+    details.appendChild(el('p','',A.missing));td.appendChild(details);return td;
   }
   // 推送后至今 / since push — same coloring as the fixed-horizon returns, "—" (not "pending") when the
   // exporter has no rnow yet, and the as-of date (rnow_d) surfaced as the cell title.
@@ -60,6 +81,8 @@
   function tieBreak(a, b) { return a.ts < b.ts ? 1 : a.ts > b.ts ? -1 : 0; }
   function rowCmp(a, b) {
     var k = sortState.key, t = COLTYPE[k] || "str", d = sortState.dir, av = a[k], bv = b[k];
+    if (disputed(a,k)) av=null;
+    if (disputed(b,k)) bv=null;
     if (t === "num") {
       var an = isNum(av), bn = isNum(bv);
       if (!an && !bn) return tieBreak(a, b);
@@ -145,8 +168,8 @@
       var tdk = el("td"); tdk.appendChild(el("span", "kind", r.kind)); tr.appendChild(tdk);
       var tdt = el("td"); tdt.appendChild(el("span", "tk", r.ticker || "—")); tr.appendChild(tdt);
       var tdts = el("td", "mono", tsShort(r.ts)); tdts.title = r.ts || ""; tr.appendChild(tdts);
-      tr.appendChild(retCell(r.r1)); tr.appendChild(retCell(r.r5)); tr.appendChild(retCell(r.r20));
-      tr.appendChild(rnowCell(r)); tr.appendChild(scoreCell(r.strength));
+      tr.appendChild(reviewCell(r,'r1')); tr.appendChild(reviewCell(r,'r5')); tr.appendChild(reviewCell(r,'r20'));
+      tr.appendChild(reviewCell(r,'rnow')); tr.appendChild(scoreCell(r.strength));
       var tdm = el("td"); tdm.appendChild(badge(r.mode)); tr.appendChild(tdm);
       var tds = el("td", "summary");
       var dir = dirLabel(r.direction);
@@ -183,9 +206,10 @@
       var tdm = el("td"); tdm.appendChild(badge(s.mode)); tr.appendChild(tdm);
       tr.appendChild(el("td", "num", String(s.n != null ? s.n : "—")));
       // the N beside a hit-rate is ITS denominator (directional signals: n_hit5 / n_hit20), never the return count
-      tr.appendChild(rateCell(s.hit5, s.n_hit5 != null ? s.n_hit5 : (s.n5 != null ? s.n5 : s.n)));
-      tr.appendChild(rateCell(s.hit20, s.n_hit20 != null ? s.n_hit20 : (s.n20 != null ? s.n20 : s.n)));
-      var avg = retCell(s.avg20);
+      var review5=(s.review_horizons||[]).indexOf('5d')>=0, review20=(s.review_horizons||[]).indexOf('20d')>=0;
+      tr.appendChild(review5?aggregateReview(s,'hit5'):rateCell(s.hit5, s.n_hit5 != null ? s.n_hit5 : (s.n5 != null ? s.n5 : s.n)));
+      tr.appendChild(review20?aggregateReview(s,'hit20'):rateCell(s.hit20, s.n_hit20 != null ? s.n_hit20 : (s.n20 != null ? s.n20 : s.n)));
+      var avg = review20?aggregateReview(s,'avg20'):retCell(s.avg20);
       if (isNum(s.avg20)) { var n20 = s.n20 != null ? s.n20 : s.n; avg.appendChild(el("small", "n", " " + (L.n_label || "N=") + n20)); }
       tr.appendChild(avg);
       tbody.appendChild(tr);
@@ -200,6 +224,7 @@
     var k = data.backtest && data.backtest.kindex;
     p.innerHTML = "";
     if (!k) { p.textContent = "—"; return; }
+    if (k.verification_status==='needs_review') {p.textContent=A.note;return;}
     p.appendChild(document.createTextNode(fmt(L.backtest_line, { target: k.target, window: k.window }) + " "));
     var win = el("span", "rate");
     if (isNum(k.win20)) {
@@ -270,6 +295,10 @@
   }
 
   function render() {
+    if(data.reconciliation&&data.reconciliation.rows_needing_review&&!$('outcome-review-note')) {
+      var notice=el('p','data-notice',A.note+' '+A.checked+': '+tsShort(data.reconciliation.checked_at)+' UTC');
+      notice.id='outcome-review-note';root.insertBefore(notice,root.firstChild);
+    }
     renderMeta();
     var kinds = [], modes = [];
     (data.rows || []).forEach(function (r) {
@@ -323,7 +352,9 @@
           if (!shown) tr.className = "low-n";
           var tdk = el("td"); tdk.appendChild(el("span", "kind", x.kind)); tr.appendChild(tdk);
           tr.appendChild(el("td", "num", String(x.n != null ? x.n : "—")));
-          if (shown) {
+          if (x.verification_status==='needs_review') {
+            tr.appendChild(aggregateReview(x,'hit20'));tr.appendChild(aggregateReview(x,'avg_excess20'));tr.appendChild(aggregateReview(x,'win_vs_spy'));
+          } else if (shown) {
             tr.appendChild(rateCell(x.hit20, x.n_hit != null ? x.n_hit : x.n));
             var ex = retCell(x.avg_excess20); if (isNum(x.avg_excess20)) ex.appendChild(el("small", "n", " " + (L.n_label || "N=") + (x.n || 0))); tr.appendChild(ex);
             tr.appendChild(rateCell(x.win_vs_spy, x.n));
@@ -331,7 +362,8 @@
             tr.appendChild(lowNCell(minN)); tr.appendChild(lowNCell(minN)); tr.appendChild(lowNCell(minN));
           }
           var aw = el("td");
-          if (x.all_weather === true) aw.appendChild(el("span", "badge badge-live badge-inline", L.aw_yes || "all-weather"));
+          if (x.verification_status==='needs_review') aw.textContent=A.review;
+          else if (x.all_weather === true) aw.appendChild(el("span", "badge badge-live badge-inline", L.aw_yes || "all-weather"));
           else { var b = el("span", "badge badge-inline", L.aw_no || "not yet"); var why = (x.all_weather_fail || []).map(function (f) { return f.regime + ": " + f.why + (f.n ? " (n=" + f.n + ")" : ""); }).join(" · "); if (why) b.title = (L.aw_why || "why") + ": " + why; aw.appendChild(b); }
           tr.appendChild(aw);
           tb.appendChild(tr);
