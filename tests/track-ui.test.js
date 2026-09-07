@@ -1,0 +1,28 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {JSDOM} from 'jsdom';
+for(const lang of ['zh','en'])test('ledger retains every result while filters and evidence dialogs are usable: '+lang,async()=>{
+ const dom=new JSDOM(readFileSync('dist/'+(lang==='en'?'en/':'')+'track-record/index.html','utf8'),{url:'https://duckybot.app/track-record/',runScripts:'outside-only'}),w=dom.window,d=w.document;
+ w.HTMLDialogElement.prototype.showModal=function(){this.open=true;};
+ w.HTMLDialogElement.prototype.close=function(){this.open=false;this.dispatchEvent(new w.Event('close'));};
+ const data=JSON.parse(readFileSync('public/track-record.json','utf8')),before=JSON.stringify(data);
+ w.fetch=async url=>({ok:true,json:async()=>String(url).includes('track-record')?data:{}});
+ w.eval(readFileSync('public/js/track.js','utf8'));await new Promise(r=>setTimeout(r,10));
+ const rows=d.querySelectorAll('#ledger tbody tr');assert.equal(rows.length,data.rows.filter(r=>r.kind!=='nvdev').length);
+ assert.ok(d.querySelector('#outcome-review-note').closest('.wrap'));
+ assert.match(d.querySelector('#track-generated time').textContent,/\d{4}-\d{2}-\d{2} \d{2}:\d{2} UTC/);
+ const review=d.querySelector('#ledger .outcome-review summary');review.focus();review.click();
+ assert.equal(d.querySelector('#track-dialog').open,true);assert.ok(d.querySelector('.track-dialog-content').textContent.includes(review.parentNode.querySelector('p').textContent));
+ assert.equal(review.parentNode.open,false,'review must not stretch the table');
+ d.querySelector('[data-track-close]').click();assert.equal(d.activeElement,review);
+ d.querySelector('#ledger .track-record-details>summary').click();assert.ok(d.querySelector('.track-dialog-content').textContent.includes(d.querySelector('#ledger .track-summary-preview').textContent));
+ d.querySelector('[data-track-close]').click();
+ const input=d.querySelector('#filter-ticker');input.value='ZZZZZZ';input.dispatchEvent(new w.Event('input'));
+ assert.equal(d.querySelectorAll('#ledger .tk').length,0);assert.equal(d.querySelector('#track-reset').hidden,false);
+ d.querySelector('#track-reset').click();assert.equal(input.value,'');assert.equal(d.querySelectorAll('#ledger .tk').length,rows.length);
+ d.querySelector('#filter-kind [data-v=insider]').click();assert.ok([...d.querySelectorAll('#ledger [data-key=kind]')].slice(1).every(c=>c.textContent===(lang==='zh'?'高管交易':'Insider trades')));
+ d.querySelector('#track-reset').click();const sort=d.querySelector('#track-sort');sort.value='ticker';sort.dispatchEvent(new w.Event('change'));
+ const tickers=[...d.querySelectorAll('#ledger .tk')].map(t=>t.textContent);assert.deepEqual(tickers,[...tickers].sort((a,b)=>a.localeCompare(b)));
+ assert.equal(JSON.stringify(data),before,'presentation never changes source records');dom.window.close();
+});

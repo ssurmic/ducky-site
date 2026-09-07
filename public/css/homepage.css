@@ -160,3 +160,18 @@
 /* Keep the two thought units intact in the longer Chinese positioning headline. */
 :root[data-home-design=brief] .lang-zh .home-copy h1{font-size:clamp(2.7rem,4.2vw,3.8rem)}
 @media(max-width:760px){:root[data-home-design] .lang-zh .home-copy h1{font-size:clamp(2rem,7.5vw,3.3rem)}}
+
+/* Research opens in the top layer, retaining a single set of example tabs and data. */
+.home-dossier-mark{flex-shrink:0;min-width:44px;min-height:44px;background:transparent;font:inherit;cursor:pointer}
+.home-dossier-mark:hover{background:var(--surface-2);color:var(--text)}
+html.home-dialog-open{overflow:hidden;scrollbar-gutter:stable}
+.home-research-dialog{box-sizing:border-box;width:min(720px,calc(100% - 32px));max-width:none;max-height:calc(100dvh - 32px);margin:auto;padding:0;border:1px solid var(--border);border-radius:18px;background:var(--surface);color:var(--text);overflow:auto;overscroll-behavior:contain;box-shadow:0 24px 100px #0006}
+.home-research-dialog::backdrop{background:rgba(0,0,0,.65);backdrop-filter:blur(6px)}
+.home-dialog-toolbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 20px;background:var(--surface);border-bottom:1px solid var(--border);font-size:.8125rem;color:var(--muted)}
+.home-dialog-toolbar button{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:var(--text);font:inherit;cursor:pointer}
+.home-dialog-toolbar button:hover{background:var(--surface-2)}
+.home-dialog-toolbar button span{font-size:24px}
+.home-research-dialog .home-dossier{width:100%;box-sizing:border-box;border:0;border-radius:0;box-shadow:none;background:var(--surface);padding:24px}
+.home-research-dialog .home-dossier:before,.home-research-dialog [data-home-open]{display:none}
+.home-research-dialog .home-price-history svg{max-height:180px}
+@media(max-width:480px){.home-research-dialog{width:calc(100% - 16px);max-height:calc(100dvh - 16px);border-radius:14px}.home-research-dialog .home-dossier{padding:16px}.home-dialog-toolbar{padding-inline:12px}}

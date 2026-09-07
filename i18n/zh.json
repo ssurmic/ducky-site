@@ -2981,5 +2981,22 @@
   "app.notify.link_waiting": "等待 Telegram 确认，还剩 {seconds} 秒。",
   "app.notify.link_confirm_hint": "确认这是你的 Telegram 账号：",
   "app.notify.link_account_note": "关联后，自选股和订阅仍保留在当前 Ducky 账号。",
-  "app.notify.link_confirm": "确认关联"
+  "app.notify.link_confirm": "确认关联",
+  "track.reset": "清除筛选",
+  "track.sort_by": "排序",
+  "track.sort_asc": "升序 ↑",
+  "track.sort_desc": "降序 ↓",
+  "track.details": "查看完整记录",
+  "track.record": "信号记录",
+  "track.review_title": "核对依据",
+  "track.kind.cluster": "集中买入",
+  "track.kind.earnings": "财报",
+  "track.kind.insider": "高管交易",
+  "track.kind.kindex": "行业指标",
+  "track.kind.political": "政客交易",
+  "track.price_recorded": "原记录价格",
+  "track.more": "完整摘要与依据",
+  "track.summary_empty": "暂无摘要",
+  "track.filters": "类型与模式",
+  "track.review_note": "部分结果待核对 · 查看说明"
 }

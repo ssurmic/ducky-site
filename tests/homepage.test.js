@@ -10,6 +10,9 @@ function fixture(query='',lang='zh',reduced=false){
  const media=new w.EventTarget();media.matches=reduced;
  w.matchMedia=q=>q.includes('reduced')?media:{matches:true,addEventListener(){},removeEventListener(){}};
  w.HTMLElement.prototype.scrollIntoView=function(){};
+ w.scrollTo=()=>{};
+ w.HTMLDialogElement.prototype.showModal=function(){this.open=true;};
+ w.HTMLDialogElement.prototype.close=function(){this.open=false;this.dispatchEvent(new w.Event('close'));};
  let requests=0;w.fetch=()=>{requests++;throw Error('Homepage examples must be static');};
  w.eval(readFileSync('public/js/lang.js','utf8'));
  const dispose=mountHomepage(doc);
@@ -60,7 +63,7 @@ test('concept and theme links are shareable, translated and do not affect the de
  assert.equal(new URL(f.doc.querySelector('[data-lang-toggle-footer]').href).searchParams.get('theme'),'dark');
  assert.equal(new URL(f.doc.querySelector('[data-lang-toggle]').href).hash,'#home-dossier');
  const sample=new f.w.MouseEvent('click',{bubbles:true,cancelable:true});
- assert.equal(f.doc.querySelector('.home-text-link').dispatchEvent(sample),true,'ordinary links keep their native action');
+ assert.equal(f.doc.querySelector('.home-cta .btn').dispatchEvent(sample),true,'unrelated links keep their native action');
  assert.equal(html.hasAttribute('aria-current'),false);
  assert.equal(f.w.localStorage.length,0);assert.equal(f.requests,0);f.dispose();f.dom.window.close();
  const normal=fixture('?design=unexpected&theme=invalid');
@@ -76,4 +79,20 @@ test('motion pauses on request and honors system reduced motion without offering
  assert.equal(pause.disabled,true);assert.equal(hero.classList.contains('motion-paused'),true);assert.equal(pause.textContent,'已减少动态效果');
  f.dispose();f.media.matches=false;f.media.dispatchEvent(new f.w.Event('change'));assert.equal(pause.disabled,true);f.dom.window.close();
  const initial=fixture('','en',true);assert.equal(initial.doc.querySelector('[data-home-motion]').disabled,true);initial.dispose();initial.dom.window.close();
+});
+
+for(const lang of ['zh','en'])test('research opens from the CTA and deep link, restores state and closes on browser navigation: '+lang,async()=>{
+ const f=fixture('',lang),doc=f.doc,link=doc.querySelector('.home-text-link'),dossier=doc.getElementById('home-dossier'),dialog=doc.querySelector('[data-home-dialog]');
+ const originalParent=dossier.parentNode;
+ link.focus();link.click();assert.equal(dialog.open,true);assert.equal(dossier.parentNode,dialog);
+ assert.equal(f.w.location.hash,'#home-dossier');assert.equal(doc.querySelector('#home-story-nok details').open,true);
+ doc.querySelector('[data-home-stock=hood]').click();assert.equal(doc.querySelector('#home-story-hood').hidden,false);
+ doc.querySelector('[data-home-close]').click();assert.equal(dialog.open,false);assert.equal(dossier.parentNode,originalParent);
+ assert.equal(doc.activeElement,link);assert.equal(f.w.location.hash,'');assert.equal(doc.querySelector('#home-story-nok details').open,false);
+ assert.equal(doc.querySelectorAll('#home-dossier').length,1);assert.equal(doc.querySelector('#home-story-hood').hidden,false);
+ doc.querySelector('button[data-home-open]').click();assert.equal(dialog.open,true);
+ f.w.history.back();await new Promise(r=>setTimeout(r,30));assert.equal(dialog.open,false);
+ assert.equal(doc.documentElement.classList.contains('home-dialog-open'),false);assert.equal(f.requests,0);
+ f.dispose();f.dom.window.close();
+ const deep=fixture('#home-dossier',lang);assert.equal(deep.doc.querySelector('dialog').open,true);deep.dispose();deep.dom.window.close();
 });

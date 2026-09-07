@@ -2,13 +2,17 @@
 {% block title %}{{ t('meta.track_title') }}{% endblock %}
 {% block og_title %}{{ t('meta.track_title') }}{% endblock %}
 {% block description %}{{ t('meta.track_desc') }}{% endblock %}
-{% block head %}{% include "_data_style.html" %}{% endblock %}
+{% block head %}{% include "_data_style.html" %}<link rel="stylesheet" href="/css/track.css">{% endblock %}
 {% block content %}
 {% set github_json = 'https://github.com/ssurmic/ducky-site/commits/main/public/track-record.json' %}
 <section class="section page-data page-track" id="track"
   data-src="{{ cfg.get('track_json', '/track-record.json') }}"
   data-github="{{ github_json }}"
   data-l10n='{{ {
+    "kind_labels": {"cluster": t('track.kind.cluster'), "earnings": t('track.kind.earnings'), "insider": t('track.kind.insider'), "kindex": t('track.kind.kindex'), "political": t('track.kind.political')},
+    "details": t('track.details'), "more": t('track.more'), "record": t('track.record'), "review_title": t('track.review_title'), "review_note": t('track.review_note'), "filters": t('track.filters'),
+    "summary_empty": t('track.summary_empty'), "price_recorded": t('track.price_recorded'), "strength": t('track.col_strength'),
+    "close": t('app.common.close'), "sort_asc": t('track.sort_asc'), "sort_desc": t('track.sort_desc'),
     "aw_yes": t('track.aw_yes'), "aw_no": t('track.aw_no'), "aw_why": t('track.aw_why'),
     "score_regime": t('track.score_regime'), "score_offline": t('track.score_offline'), "score_low_n": t('track.score_low_n'),
     "stale": t('data.stale'), "loading": t('data.loading'), "load_error": t('data.load_error'),
@@ -21,7 +25,7 @@
     "dir_up": t('data.direction_up'), "dir_down": t('data.direction_down'), "dir_flat": t('data.direction_flat')
   } | tojson }}'>
   <div class="wrap">
-    <h1>{{ t('track.h1') }}</h1>
+    <h1 class="no-glossary">{{ t('track.h1') }}</h1>
     <p class="lead">{{ t('track.lead') }}</p>
     <div class="meta-row mono">
       <span id="track-generated"></span>
@@ -33,20 +37,25 @@
 
     <h2 class="mono-h2">{{ t('track.ledger_h2') }}</h2>
     <div class="filters" id="track-filters">
-      <div class="filter-group" id="filter-kind"><span class="filter-label">{{ t('track.filter_kind') }}</span></div>
-      <div class="filter-group" id="filter-mode"><span class="filter-label">{{ t('track.filter_mode') }}</span></div>
+      <details class="track-filter-options"><summary>{{ t('track.filters') }}</summary><div class="filter-group" id="filter-kind"><span class="filter-label">{{ t('track.filter_kind') }}</span></div>
+      <div class="filter-group" id="filter-mode"><span class="filter-label">{{ t('track.filter_mode') }}</span></div></details>
       <div class="filter-group">
         <label class="filter-label" for="filter-ticker">{{ t('track.filter_ticker') }}</label>
         <input class="filter-input" id="filter-ticker" type="text" autocomplete="off" spellcheck="false" placeholder="{{ t('track.filter_ticker_ph') }}" maxlength="8">
       </div>
-      <span class="rows-shown" id="rows-shown"></span>
+      <button type="button" id="track-reset" class="track-reset" hidden>{{ t('track.reset') }}</button>
     </div>
-    <p class="caption">{{ t('track.sort_note') }}</p>
+    <div class="track-table-toolbar">
+     <label for="track-sort">{{ t('track.sort_by') }}</label>
+     <select id="track-sort">{% for key in ['ts','ticker','kind','r1','r5','r20','rnow','strength','mode','summary'] %}<option value="{{ key }}">{{ t('track.col_' ~ key) }}</option>{% endfor %}</select>
+     <button type="button" id="track-sort-direction">{{ t('track.sort_desc') }}</button>
+     <span class="rows-shown" id="rows-shown" role="status" aria-live="polite"></span>
+    </div>
     <details class="insider-note" data-glossary hidden>
       <summary>{{ t('boards.2.name') }} — {{ t('track.col_summary') }}</summary>
       <p class="muted">{{ t('track.insider_note') }}</p>
     </details>
-    <div class="table-wrap">
+    <div class="table-wrap ledger-wrap">
       <table class="data data-sortable" id="ledger">
         {% macro th(key, type, label, num=False) -%}
         <th class="th-s{{ ' num' if num else '' }}" data-key="{{ key }}" data-type="{{ type }}" aria-sort="none"><button type="button" class="th-sort" title="{{ t('track.sort_hint') }}">{{ label }}<span class="sort-ind dim" aria-hidden="true">⇅</span></button></th>
@@ -146,6 +155,10 @@
       <p class="mono" lang="{{ 'en' if is_zh else 'zh-CN' }}"><span data-line="backtest">{{ t2('footer.backtest_line') }}</span> <span data-line="affiliation">{{ t2('footer.affiliation_line') }}</span></p>
     </div>
   </div>
+ <dialog class="track-dialog" id="track-dialog" aria-labelledby="track-dialog-title">
+  <div class="track-dialog-toolbar"><h2 id="track-dialog-title">{{ t('track.record') }}</h2><button type="button" data-track-close aria-label="{{ t('app.common.close') }}">{{ t('app.common.close') }} <span aria-hidden="true">×</span></button></div>
+  <div class="track-dialog-content"></div>
+ </dialog>
 </section>
 {% endblock %}
 {% block scripts %}
