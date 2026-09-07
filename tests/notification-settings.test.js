@@ -32,6 +32,8 @@ function fixture({initial=ready, delivery, mutate, pauseAt, loseFirstSubmission=
     calls.push({path,method,body,signal:opts.signal,key:opts.headers?.['Idempotency-Key']}); let result;
     if(path==='/me/notifications'&&method==='GET') result=response(prefs);
     else if(path==='/me/notifications'&&method==='PATCH') {prefs=mutate?mutate(body):{...prefs,...body};result=response({ok:true});}
+    else if(path==='/auth/link/telegram/nonce') result=response({nonce:'test_link_nonce_1234',url:'https://t.me/ExampleBot?start=link_test_link_nonce_1234',code:'AB2345',ttl:180});
+    else if(path==='/auth/link/telegram/cancel') result=response({ok:true});
     else if(path==='/me/notifications/test') {
       if(loseFirstSubmission && calls.filter(row=>row.path===path).length===1) throw new Error('response lost after enqueue');
       result=response({message_id:41,status:'queued'},202);
@@ -84,17 +86,16 @@ test('a linked but unreachable Telegram account cannot be enabled until the bot 
   } finally {f.close();}
 });
 
-test('connecting Telegram loads the existing redirect widget only on request and cancellation clears the intent',async()=>{
+test('connecting Telegram starts a nonce only on request and cancels without sending or changing preferences',async()=>{
   const f=fixture({initial:{...ready,telegram_enabled:false,telegram_available:false,telegram_status:'unlinked'}});
   try {
-    await flush();assert.equal(f.root.querySelector('script'),null);
+    await flush();assert.equal(f.calls.length,1);assert.equal(f.root.querySelector('script'),null);
     f.button('notify.link_telegram').click();await flush();
-    const script=f.root.querySelector('script'),url=new URL(script.getAttribute('data-auth-url'));
-    assert.equal(url.searchParams.get('tglink'),'1');assert.equal(script.hasAttribute('data-onauth'),false);
-    assert.ok(window.sessionStorage.getItem('ducky.telegram-link'));assert.equal(f.calls.some(row=>row.method!=='GET'),false);
-    f.button('notify.cancel_link').click();assert.equal(window.sessionStorage.getItem('ducky.telegram-link'),null);assert.ok(f.button('notify.link_telegram'));
-    f.button('notify.link_telegram').click();await flush();f.root.querySelector('script').dispatchEvent(new window.Event('error'));
-    assert.equal(window.sessionStorage.getItem('ducky.telegram-link'),null);assert.ok(f.button('notify.link_telegram'));
+    assert.equal(f.root.querySelector('script'),null);assert.match(f.root.querySelector('a').href,/start=link_test_link_nonce_1234$/);
+    assert.ok(f.root.textContent.includes('AB2345'));
+    f.button('notify.cancel_link').click();await flush();assert.ok(f.button('notify.link_telegram'));
+    assert.deepEqual(f.calls.filter(row=>row.method==='POST').map(row=>row.path),['/auth/link/telegram/nonce','/auth/link/telegram/cancel']);
+    assert.equal(store.get('token'),'test-a');assert.equal(store.get('me').user_id,21);
   } finally {f.close();}
 });
 

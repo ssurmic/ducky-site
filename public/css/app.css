@@ -230,6 +230,10 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 .notification-receipt p { margin:6px 0; overflow-wrap:anywhere; }
 .notification-link { margin:16px 0; display:grid; justify-items:start; gap:10px; min-width:0; }
 .notification-link p { margin:0; }.notification-link iframe { max-width:100%; }
+.telegram-link-code { font-size:28px; letter-spacing:.2em; }
+.telegram-link-qr { padding:8px; background:#fff; border-radius:12px; max-width:100%; }
+.telegram-link-qr svg { display:block; width:180px; max-width:100%; height:auto; }
+.telegram-link-identity { max-width:100%; overflow-wrap:anywhere; }
 .card.profile .account-settings { margin-top:24px; padding-top:18px; border-top:1px solid var(--border); }
 .card.profile details > summary { cursor:pointer; }
 .card.profile .account-settings > section { margin-top:18px; }

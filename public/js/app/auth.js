@@ -7,6 +7,7 @@ import * as store from "./store.js";
 import * as tg from "./tg.js";
 import { CFG } from "./strings.js";
 import {readTelegramLinkReturn, finishTelegramLink, failTelegramLink} from './telegram-link.js';
+import {startNonceFlow} from './nonce-flow.js';
 
 const KEY = "ducky.token";
 let freshBootstrapLogin = false;
@@ -177,39 +178,20 @@ export function injectWidget(container) {
 /** Nonce login: POST /auth/nonce → user opens t.me/<BOT>?start=login_<nonce>; the bot shows the same 4-char
  *  `code` and binds only when the user taps confirm; poll every 5 s for 2 min. */
 export function startNonceLogin(handlers) {
-  let stopped = false, timer = null;
-  const ctl = { stop() { stopped = true; if (timer) clearTimeout(timer); } };
-  (async () => {
-    let nonce, code;
-    try {
-      // Retry the bootstrap on a transient blip (network/5xx/429) with backoff before failing — a single
-      // tunnel hiccup was surfacing the scary "登录失败：network" and the QR never rendered.
-      const r = await retryTransient(() => api.auth.nonce(), 3);
-      nonce = r.nonce; code = r.code || "";
-    } catch (e) { handlers.onError(e); return; }
-    const link = "https://t.me/" + CFG.BOT + "?start=login_" + nonce;
-    handlers.onLink(link, nonce, code);
-    const deadline = Date.now() + 120000;
-    const tick = async () => {
-      if (stopped) return;
-      if (Date.now() > deadline) { handlers.onExpired(); return; }
-      let wait = 5000;
-      try {
-        const r = await api.auth.poll(nonce);
-        if (r && r.token) { await establish(r); handlers.onDone(); return; }
-      } catch (e) {
-        // finding auth.js:118 — abort ONLY on a definitive error (bad/expired/forbidden nonce). A shared-IP
-        // 429, a 5xx tunnel blip, or a network hiccup (status 0) is transient: keep polling within the
-        // deadline, honoring Retry-After. This is the flow the mainland path relies on.
-        const st = e.status;
-        if (st === 400 || st === 401 || st === 403) { handlers.onError(e); return; }
-        const ra = Number((e.body && e.body.retry_after) || 0);
-        if (ra > 0) wait = Math.min(Math.max(ra, 1), 30) * 1000;
+  const epoch=store.epoch(),token=store.get('token'),route=location.hash;
+  return startNonceFlow({
+    isCurrent:()=>store.epoch()===epoch&&store.get('token')===token&&location.hash===route,
+    create:async opts=>({...await retryTransient(()=>{opts.signal.throwIfAborted();return api.auth.nonce(opts);},3),ttl:120}),
+    poll:async(nonce,opts)=>{const value=await api.auth.poll(nonce,opts);return {ready:!!value?.token,value};},
+    onCreated:r=>handlers.onLink('https://t.me/'+CFG.BOT+'?start=login_'+r.nonce,r.nonce,r.code||''),
+    onPending:handlers.onTick,onExpired:handlers.onExpired,onError:handlers.onError,
+    onReady:async response=>{
+      try {await establish(response);}
+      catch(error){
+        if(store.epoch()===epoch&&store.get('token')===response.token&&location.hash===route)handlers.onError(error);
+        return;
       }
-      handlers.onTick(Math.max(0, Math.round((deadline - Date.now()) / 1000)));
-      timer = setTimeout(tick, wait);
-    };
-    timer = setTimeout(tick, 5000);
-  })();
-  return ctl;
+      if(store.epoch()===epoch&&store.get('token')===response.token&&location.hash===route)handlers.onDone();
+    },
+  });
 }

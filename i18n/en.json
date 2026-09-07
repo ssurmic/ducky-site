@@ -2973,5 +2973,13 @@
   "app.notify.link_result.session": "This connection request expired or the account changed. Start again from this account.",
   "app.notify.open_bot": "Open Ducky in Telegram",
   "app.notify.refresh_channels": "Refresh connection status",
-  "app.notify.cancel_link": "Cancel connection"
+  "app.notify.cancel_link": "Cancel connection",
+  "app.notify.link_expired": "This connection request has expired. Please start again.",
+  "app.notify.link_waiting_confirm": "Telegram confirmation is still pending. Please try again shortly.",
+  "app.notify.link_code_hint": "Open the bot below and enter this six-character code. Then return here to confirm your account.",
+  "app.notify.link_qr_label": "Scan to open the Telegram bot",
+  "app.notify.link_waiting": "Waiting for Telegram confirmation. {seconds} seconds remaining.",
+  "app.notify.link_confirm_hint": "Confirm this is your Telegram account:",
+  "app.notify.link_account_note": "Your watchlist and subscription will stay on your current Ducky account.",
+  "app.notify.link_confirm": "Confirm connection"
 }
