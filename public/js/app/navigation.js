@@ -14,5 +14,5 @@ export function selectNavigation(name, query=new URLSearchParams()) {
     if(radarActive)group.open=true;
   });
   const more=document.querySelector('.nav-more');
-  if(more){more.open=false;more.classList.toggle('on',!['watchlist','calendar','alerts','boards'].includes(name));}
+  if(more){if(more.open&&more.querySelector('.nav-more-panel')?.contains(document.activeElement))more.querySelector('summary')?.focus({preventScroll:true});more.open=false;more.classList.toggle('on',!['watchlist','calendar','alerts','boards'].includes(name));}
 }

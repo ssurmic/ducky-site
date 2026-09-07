@@ -8,6 +8,7 @@ import * as overlays from "../overlays.js";
 import { el, clear, spinner, errorBox, lock, px, num } from "../ui.js";
 import { normalizeList } from "./watchlist.js";
 import { unpackSnapshot, reusableSnapshot } from "../snapshot-model.js";
+import { observeTheme } from "../theme.js";
 
 const PERIODS = ["3mo", "6mo", "1y", "2y"];
 // server truth (app.py PERIOD_BARS / BARS_PERIOD): free→6mo, paid→1y, pro→2y. Used to gate the period
@@ -15,7 +16,7 @@ const PERIODS = ["3mo", "6mo", "1y", "2y"];
 const PERIOD_BARS = { "1mo": 22, "3mo": 66, "6mo": 126, "1y": 252, "2y": 504 };
 const TICKER_RE = /^[A-Z][A-Z0-9.\-]{0,9}$/;
 
-function cssVar(name, fallback) { const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim(); return v || fallback; }
+function cssVar(name, fallback) { const v = getComputedStyle(document.body).getPropertyValue(name).trim(); return v || fallback; }
 
 export function normalizeBars(resp) {
   const arr = Array.isArray(resp) ? resp : (resp && (resp.bars || resp.items)) || [];
@@ -42,6 +43,7 @@ export async function mount(root, params) {
   // finding chart.js:63 — drawSeq is a per-draw token; candles/rsiSeries are hoisted so a Telegram theme flip
   // can re-apply their colors without a full refetch (finding tg.js:65).
   let period = allowed("6mo") ? "6mo" : maxPeriod, chart = null, ro = null, ovl = null, alive = true, drawSeq = 0, candles = null, rsiSeries = null, macdHist = null, macdLineS = null, macdSig = null;
+  let histogram = [], referenceLines = [], overlaySnapshot = null;
 
   const input = el("input.input.mono", { type: "text", value: ticker, placeholder: s("chart.pick"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "80", "aria-label": s("chart.pick") });
   const picker = symbolPicker(input);
@@ -55,7 +57,7 @@ export async function mount(root, params) {
   const status = el("div", { id: "chart-status" });
   const companyHost = el("div.company-host");
   const companyName=el('p.chart-company-name.muted.small');
-  root.append(head, companyName, form, periodRow, legendRow, host, status, companyHost);
+  root.append(head, companyName, form, periodRow, el('div.chart-workspace',legendRow,host), status, companyHost);
   const showCompany=(p,rs)=>{companyHost.replaceChildren(companyContext(p,rs));companyName.textContent=p?.company||'';};
   if (ticker) api.company(ticker).then(p=>{if(alive) showCompany(p);}).catch(()=>{if(alive) showCompany(null);});
   if (ticker) form.after(el('div.chips',
@@ -73,7 +75,21 @@ export async function mount(root, params) {
   }
 
   let refreshTimer = null;
-  function destroy() { clearTimeout(refreshTimer); refreshTimer = null; if (ovl) { ovl.remove(); ovl = null; } if (ro) { ro.disconnect(); ro = null; } if (chart) { try { chart.remove(); } catch (e) { /* ignore */ } chart = null; } clear(host); }
+  function destroy() { clearTimeout(refreshTimer); refreshTimer = null; if (ovl) { ovl.remove(); ovl = null; } if (ro) { ro.disconnect(); ro = null; } if (chart) { try { chart.remove(); } catch (e) { /* ignore */ } chart = null; } candles = rsiSeries = macdHist = macdLineS = macdSig = null; histogram = []; referenceLines = []; overlaySnapshot = null; clear(host); }
+
+  function paintOverlays() {
+    if (!candles || !overlaySnapshot) return;
+    const colors = {call:cssVar('--green'),put:cssVar('--red'),flip:cssVar('--orange'),exp:cssVar('--blue'),band:cssVar('--muted')};
+    if (ovl) ovl.remove();
+    ovl = overlays.apply(candles, overlaySnapshot, colors);
+    clear(legendRow);
+    const built = new Date(overlaySnapshot.built_at || '');
+    if (Number.isFinite(built.getTime())) legendRow.append(el('span.small.muted.chart-snapshot-date',s('chart.snapshot_as_of',{date:built.toISOString().slice(0,16).replace('T',' ')})));
+    for (const it of overlays.legend(overlaySnapshot, colors)) {
+      legendRow.appendChild(el('span.legend-item.mono',el('i',{style:{background:it.color}}),it.label+' ',el('b',typeof it.value==='number'?num(it.value,2):String(it.value))));
+    }
+    if (!ovl.count) legendRow.appendChild(el('span.muted.small',s('chart.no_overlays')));
+  }
 
   async function draw(attempt = 0) {
     // finding chart.js:63 — take a per-draw token. Rapid period/ticker switches while /bars is slow used to
@@ -125,19 +141,20 @@ export async function mount(root, params) {
     // RSI(14) in its own pane
     rsiSeries = chart.addSeries(LWC.LineSeries, { color: cssVar("--blue", "#58a6ff"), lineWidth: 1, priceLineVisible: false, lastValueVisible: true, title: s("chart.rsi") }, 1);
     rsiSeries.setData(overlays.rsi(bars, 14));
-    rsiSeries.createPriceLine({ price: 70, color: down, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" });
-    rsiSeries.createPriceLine({ price: 30, color: up, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" });
+    referenceLines.push([rsiSeries.createPriceLine({ price: 70, color: down, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), '--red']);
+    referenceLines.push([rsiSeries.createPriceLine({ price: 30, color: up, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), '--green']);
     try { const panes = chart.panes(); if (panes[1]) panes[1].setHeight(110); } catch (e) { /* older lib */ }
     // MACD(12,26,9) in its own pane: histogram (green above / red below) + MACD line + signal, zero line marked.
     const m = overlays.macd(bars, 12, 26, 9);
     if (m.macd.length) {
       macdHist = chart.addSeries(LWC.HistogramSeries, { priceLineVisible: false, lastValueVisible: false, priceFormat: { type: "price", precision: 2, minMove: 0.01 } }, 2);
-      macdHist.setData(m.hist.map((p) => ({ time: p.time, value: p.value, color: p.value >= 0 ? up : down })));
-      macdSig = chart.addSeries(LWC.LineSeries, { color: cssVar("--accent", "#f5c33b"), lineWidth: 1, priceLineVisible: false, lastValueVisible: false }, 2);
+      histogram = m.hist;
+      macdHist.setData(histogram.map((p) => ({ time: p.time, value: p.value, color: p.value >= 0 ? up : down })));
+      macdSig = chart.addSeries(LWC.LineSeries, { color: cssVar("--orange", "#f0883e"), lineWidth: 1, priceLineVisible: false, lastValueVisible: false }, 2);
       macdSig.setData(m.signal);
       macdLineS = chart.addSeries(LWC.LineSeries, { color: cssVar("--blue", "#58a6ff"), lineWidth: 1, priceLineVisible: false, lastValueVisible: true, title: s("chart.macd") }, 2);
       macdLineS.setData(m.macd);
-      macdLineS.createPriceLine({ price: 0, color: text, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" });
+      referenceLines.push([macdLineS.createPriceLine({ price: 0, color: text, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), '--muted']);
       try { const panes = chart.panes(); if (panes[2]) panes[2].setHeight(90); } catch (e) { /* older lib */ }
     }
     chart.timeScale().fitContent();
@@ -155,14 +172,9 @@ export async function mount(root, params) {
         clear(legendRow);
         if (snap && snap.ok) {
           if(snap.company_context) showCompany(snap.company_context,snap.rs);
-          const built=new Date(snap.built_at||'');
-          if(Number.isFinite(built.getTime()))legendRow.append(el('span.small.muted.chart-snapshot-date',s('chart.snapshot_as_of',{date:built.toISOString().slice(0,16).replace('T',' ')})));
-          ovl = overlays.apply(candles, snap, { call: up, put: down, flip: cssVar("--accent", "#f5c33b"), exp: cssVar("--blue", "#58a6ff"), band: text });
+          overlaySnapshot = snap;
+          paintOverlays();
           levels = overlays.levels(snap); candles.applyOptions({});
-          for (const it of overlays.legend(snap, { call: up, put: down, flip: cssVar("--accent", "#f5c33b"), exp: cssVar("--blue", "#58a6ff"), band: text })) {
-            legendRow.appendChild(el("span.legend-item.mono", el("i", { style: { background: it.color } }), it.label + " ", el("b", typeof it.value === "number" ? num(it.value, 2) : String(it.value))));
-          }
-          if (!ovl.count) legendRow.appendChild(el("span.muted.small", s("chart.no_overlays")));
         } else legendRow.appendChild(el("span.muted.small", s("common.building")));
       } catch (err) { if (my === drawSeq && alive) { clear(legendRow); legendRow.appendChild(el("span.muted.small", s("common.error", { msg: err.message }))); } }
     } else {
@@ -183,11 +195,14 @@ export async function mount(root, params) {
       if (rsiSeries) rsiSeries.applyOptions({ color: cssVar("--blue", "#58a6ff") });
       if (candles) candles.applyOptions({ priceLineColor: cssVar("--text", "#e6edf3") });
       if (macdLineS) macdLineS.applyOptions({ color: cssVar("--blue", "#58a6ff") });
-      if (macdSig) macdSig.applyOptions({ color: cssVar("--accent", "#f5c33b") });
+      if (macdSig) macdSig.applyOptions({ color: cssVar("--orange", "#f0883e") });
+      if (macdHist) macdHist.setData(histogram.map(p => ({...p,color:p.value >= 0 ? up : down})));
+      for (const [line, variable] of referenceLines) line?.applyOptions({color:cssVar(variable)});
+      paintOverlays();
     } catch (e) { /* ignore */ }
   }
-  window.addEventListener("ducky:themechange", retheme);
+  const stopTheme = observeTheme(retheme);
 
   await draw();
-  return () => { picker.dispose(); alive = false; window.removeEventListener("ducky:themechange", retheme); destroy(); };
+  return () => { picker.dispose(); alive = false; stopTheme(); destroy(); };
 }

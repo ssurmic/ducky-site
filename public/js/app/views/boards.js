@@ -144,6 +144,18 @@ export async function mount(root, route={}) {
   const coverage=el('details.radar-coverage',{'aria-label':s('radar.coverage')});
   const pelosiJump=el('button.btn.btn-ghost.btn-sm.radar-pelosi',{type:'button',onclick:showPelosi},s('radar.pelosi_history'));
   const nav=el('nav.radar-categories',{'aria-label':s('radar.categories')});
+  nav.id='radar-categories';
+  const categoryLabel=el('span');
+  const categoryToggle=el('button.radar-category-toggle',{type:'button','aria-expanded':'false','aria-controls':nav.id,onclick:()=>{
+    const open=sidebar.classList.toggle('categories-open');categoryToggle.setAttribute('aria-expanded',String(open));
+  }},categoryLabel,el('span',{'aria-hidden':'true'},'⌄'));
+  const sidebar=el('aside.radar-sidebar',el('h2',s('radar.categories')),categoryToggle,nav);
+  const chooseCategory=key=>{
+    if(window.matchMedia?.('(max-width: 720px)').matches){
+      sidebar.classList.remove('categories-open');categoryToggle.setAttribute('aria-expanded','false');categoryToggle.focus({preventScroll:true});
+    }
+    selectBoard(key);
+  };
   const tabs=el('div.radar-tabs',{'aria-label':s('radar.record_scope')},...['recent','archive','excerpts'].map(mode=>el('button',
     {type:'button','data-mode':mode,onclick:()=>{state.mode=mode;state.start='';state.end='';start.value='';end.value='';apply();}},s('radar.mode_'+mode))));
   const input=(name,type,placeholder)=>el('input.input',{name,type,placeholder,'aria-label':s('radar.'+name),maxlength:name==='q'?100:12});
@@ -177,7 +189,7 @@ export async function mount(root, route={}) {
   const main=el('section.radar-main',tabs,guide,filter,summary,note,rows,more);
   // Explicit screening links lead with their destination. Market data arriving later
   // stays below it, so it cannot push the focused form out of the viewport.
-  card.append(header,...(currentAccess?[]:[accessNote]),screenPanel,el('details.radar-browse',el('summary',s('radar.browse_questions')),starters),coverage,pelosiJump,el('div.radar-layout',el('aside.radar-sidebar',el('h2',s('radar.categories')),nav),main));
+  card.append(header,...(currentAccess?[]:[accessNote]),screenPanel,el('details.radar-browse',el('summary',s('radar.browse_questions')),starters),coverage,pelosiJump,el('div.radar-layout',sidebar,main));
   if(screenEntry && !route.signal?.aborted && root.isConnected && epoch===store.epoch()){
     const target=screenPanel.querySelector('summary');
     target.focus({preventScroll:true});
@@ -246,6 +258,7 @@ export async function mount(root, route={}) {
   }
   function render(){
     if(!alive)return;
+    categoryLabel.textContent=s('radar.categories')+' · '+s(state.board==='all'?'radar.all':'boards.t_'+state.board);
     const source=state.mode==='recent'?recent:state.mode==='excerpts'?excerpts:archived;
     const shown=filterRecords(source,state,readingNow()), available=filterRecords(source,{...state,board:'all'},readingNow());
     const missingCount=filterRecords(source,{...state,content:'missing'},readingNow()).length;
@@ -254,7 +267,7 @@ export async function mount(root, route={}) {
     clear(nav);
     for(const board of [{key:'all'},...BOARDS]){
       const count=board.key==='all'?available.length:available.filter(r=>boardOf(r)===board.key).length;
-      nav.append(el('button.radar-category',{type:'button','aria-pressed':String(board.key===state.board),'data-board':board.key,onclick:()=>selectBoard(board.key)},
+      nav.append(el('button.radar-category',{type:'button','aria-pressed':String(board.key===state.board),'data-board':board.key,onclick:()=>chooseCategory(board.key)},
         icon(board.icon || (board.key==='all'?'boards':board.key)),el('span',s(board.key==='all'?'radar.all':'boards.t_'+board.key)),
         // Archive counts cover the current server query only; don't imply other categories are empty.
         state.mode!=='excerpts'?null:el('span.radar-count',hasError?'—':String(count))));
