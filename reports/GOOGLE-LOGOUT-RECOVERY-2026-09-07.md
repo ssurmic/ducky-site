@@ -60,3 +60,11 @@ JSON/binary responses, ordinary expiry and explicit logout.
 Combined final gate: **322 frontend tests passed**, 20-page build, copy lint and
 1,306 links passed. Backend code is unchanged; its required documentation gate
 also passed: 1,978 tests, five warnings, selftest ALL GREEN, arch lint 0/0.
+
+Final release `3da22fc` / Pages `a6bb2215` is deployed with module graph
+`766aaa8a8409ddcfc3b0`. Production Chrome verified the actual two-tab sequence:
+both tabs started signed in; the second explicitly logged out and signed back in
+through Google; the first then used its old session through the watchlist refresh
+button and returned to login with Google visible; reloading the second tab still
+returned a Pro watchlist. This proves the newer saved session survived the stale
+tab's unauthorized request. No customer identity, password or entitlement was edited.
