@@ -1,0 +1,31 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {JSDOM} from 'jsdom';
+const dom=new JSDOM('<main class="app-main"><p id="profile-reminder" hidden></p><div id="view"></div></main>',{url:'https://ducky.test/app/?tglogin=1&id=21&auth_date=123&hash=local-test'});
+for(const key of ['window','document','Node','MutationObserver','location','history'])globalThis[key]=dom.window[key];
+globalThis.requestAnimationFrame=fn=>setTimeout(fn,0);
+const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(JSON.parse(readFileSync('i18n/en.json'))).filter(([key])=>key.startsWith('app.')).map(([key,value])=>[key.slice(4),value])));document.body.append(strings);
+const target=await import('../public/js/app/login-target.js');
+const auth=await import('../public/js/app/auth.js');
+const reply=body=>new Response(JSON.stringify(body),{headers:{'content-type':'application/json'}});
+test('Telegram widget session boots into email setup and a later saved session keeps its route',async()=>{
+ const calls=[];target.rememberTarget('#/boards?board=social&ticker=MU');
+ globalThis.fetch=async url=>{
+  calls.push(url);
+  if(url.endsWith('/auth/widget'))return reply({token:'telegram-test-session'});
+  if(url.endsWith('/auth/providers'))return reply({google:false});
+  if(url.endsWith('/me'))return reply({user_id:21,profile_complete:true,email_verified:false});
+  if(url.endsWith('/me/profile'))return reply({user_id:21,email:'qa@example.test',email_verified:false});
+  return reply({items:[]});
+ };
+ await import('../public/js/app/main.js');
+ for(let i=0;i<200&&!document.body.classList.contains('ready');i++)await new Promise(r=>setTimeout(r,5));
+ assert.equal(document.body.dataset.route,'profile');
+ assert.equal(location.hash,'#/profile?setup=email&next=boards%3Fboard%3Dsocial%26ticker%3DMU');
+ assert.equal(location.search,'');assert.equal(document.getElementById('profile-reminder').hidden,false);
+ assert.equal(auth.didAuthenticateOnBoot(),true);assert.equal(calls.filter(url=>url.endsWith('/auth/widget')).length,1);
+ assert.ok(document.querySelector('.verify input'));assert.equal(document.querySelector('a[href="#/boards?board=social&ticker=MU"]'),null);
+ assert.equal(await auth.boot(),true);assert.equal(auth.didAuthenticateOnBoot(),false);
+ assert.equal(calls.filter(url=>url.endsWith('/auth/widget')).length,1);
+});

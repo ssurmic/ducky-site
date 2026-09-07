@@ -1,0 +1,19 @@
+# Telegram sign-in, email verification and delivery preferences
+
+Status: frontend implemented and tested locally. Backend transport integration, real receiving-account acceptance, final demo refresh and publication are pending. No production delivery is claimed by these fixture tests.
+
+An explicit Telegram widget, mini-app or web sign-in sends an account without a verified email to email setup, preserving its safe destination. Stored sessions retain their existing deep links. Saving an address and verifying its six-digit code keep the same account. Verification unlocks Continue; optional profile fields and other account settings are collapsed during setup.
+
+The profile page loads the current email/Telegram preferences, saves explicit choices and re-reads the server result before announcing success. Unverified or unavailable channels cannot be newly enabled. Notification preferences are separate from marketing consent. The current description only promises stock events and condition alerts; creator-channel wording waits for the backend bridge acceptance.
+
+Connection tests run only after an explicit click. The browser generates one Idempotency-Key UUID per logical test and retains it with the same channels after an unconfirmed HTTP submission. A confirmed queue response starts owner-scoped receipt polling. Each channel has its own pending, claimed, retry, accepted, failed, cancelled or unknown state; service acceptance is not represented as actual receipt/read confirmation. An unresolved result allows status refresh rather than another send. Polling stops on completion, after 12 retries, on cleanup or account change. Wrong message IDs, duplicate/missing channels and contradictory completion flags fail closed.
+
+API contract agreed with the backend owner:
+
+- GET/PATCH `/me/notifications`: strict booleans, channel availability and status, private/no-store.
+- POST `/me/notifications/test`: `{channels:[...]}` with optional `Idempotency-Key` UUID; first request and replay return 202 `{message_id,status:"queued"}`. Same owner/key/channels reuses the original message for 24 hours. New logical tests retain 60-second and 3/hour limits.
+- GET `/me/notifications/deliveries/{message_id}`: owner-only frozen target statuses. `completed` means all targets are terminal, not simply one provider accepting a request.
+
+Validation: full build and 251 Node tests pass. Focused coverage includes email setup and verified continuation, invalid/expired codes, retained safe Reddit/calendar/alert destinations, Telegram widget bootstrap versus stored-session boot, explicit preference saves, no implicit sends, double clicks, lost response idempotency, partial channel acceptance, unknown results, malformed receipts, polling limit and cross-account/view cleanup.
+
+Still required: deploy the backend contract; browser checks against its actual responses; real Telegram login plus an authorized receiving email, verification, both-channel receipt and unsubscribe checks; mobile/light/dark QA; refresh the final demo with the information-overload → relevant ticker context → personal decision → selected delivery-channel narrative. X remains coming soon.

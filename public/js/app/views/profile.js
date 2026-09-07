@@ -7,12 +7,14 @@ import * as store from "../store.js";
 import * as router from "../router.js";
 import { el, clear, toast, spinner, errorBox, confirm } from "../ui.js";
 import { safeTarget } from "../login-target.js";
+import { mountNotificationSettings } from '../notification-settings.js';
 
 export async function mount(root, params = {}) {
   const lifetime = new AbortController();
+  let disposeNotifications = () => {};
   const owner = store.get('me')?.user_id ?? store.get('me')?.id;
   const initialEpoch = store.epoch(), initialToken = store.get('token');
-  const cleanup = () => { lifetime.abort(); params.signal?.removeEventListener('abort', cleanup); };
+  const cleanup = () => { disposeNotifications(); lifetime.abort(); params.signal?.removeEventListener('abort', cleanup); };
   params.signal?.addEventListener('abort', cleanup, {once:true});
   if (params.signal?.aborted) { cleanup(); return cleanup; }
   const card = el("section.card.profile");
@@ -22,10 +24,18 @@ export async function mount(root, params = {}) {
     owner === (store.get('me')?.user_id ?? store.get('me')?.id);
   const initialSession = () => mounted() && store.epoch() === initialEpoch && store.get('token') === initialToken;
   let prof = null;
+  let busy = false;
+  const setup = params.query?.get('setup') === 'email' || new URLSearchParams(location.hash.split('?')[1] || '').get('setup') === 'email';
+  const requestOptions = {signal: lifetime.signal, silent402: true};
+  const requestValid = node => {
+    const epoch = store.epoch(), token = store.get('token'), route = location.hash;
+    return () => mounted() && store.epoch() === epoch && store.get('token') === token &&
+      location.hash === route && card.contains(node);
+  };
   let providers = {};
   try { providers = await api.auth.providers(); } catch (_) {}
   if (!initialSession()) return cleanup;
-  try { prof = await api.profile.get(); } catch (e) {
+  try { prof = await api.profile.get(requestOptions); } catch (e) {
     if (initialSession()) { clear(card); card.appendChild(errorBox(e, () => { cleanup(); clear(root); mount(root, params); })); }
     return cleanup;
   }
@@ -34,9 +44,10 @@ export async function mount(root, params = {}) {
   return cleanup;
 
   function render() {
+    disposeNotifications();
     clear(card);
     const me = store.get("me") || {};
-    card.append(el("h1", s("profile.title")), el("p.muted", s("profile.sub")));
+    card.append(el("h1", s(setup ? "profile.setup_title" : "profile.title")), el("p.muted", s(setup ? "profile.setup_sub" : "profile.sub")));
     const form = el("form.form", { novalidate: "" });
     const email = input("email", "email", prof.email || "", s("profile.email"), true);
     const name = input("display_name", "text", prof.display_name || me.first_name || "", s("profile.name"), false);
@@ -44,23 +55,29 @@ export async function mount(root, params = {}) {
     lang.value = prof.lang || (document.documentElement.lang || "zh").slice(0, 2);
     const country = input("country", "text", prof.country || "", s("profile.country"), false);
     const opt = el("label.check", el("input", { type: "checkbox", name: "marketing_opt_in", checked: prof.marketing_opt_in ? "" : null }), " " + s("profile.marketing"));
-    form.append(email.wrap, name.wrap, field(s("profile.lang"), lang), country.wrap, opt,
+    const optional = el('div', name.wrap, field(s("profile.lang"), lang), country.wrap, opt);
+    form.append(email.wrap, setup ? el('details', el('summary', s('profile.optional')), optional) : optional,
       el("p.muted.small", s("profile.privacy")),
-      el("div.cta-row", el("button.btn.btn-primary", { type: "submit" }, s("profile.save"))));
+      el("div.cta-row", el("button.btn.btn-primary", { type: "submit" }, s(setup && !prof.email_verified ? "profile.setup_save" : "profile.save"))));
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const save = form.querySelector("button[type=submit]");
-      if (save.disabled) return;
+      if (save.disabled || busy) return;
+      const valid = requestValid(form);
+      if (!valid()) return;
       const body = { email: email.el.value.trim(), display_name: name.el.value.trim(), lang: lang.value, country: country.el.value.trim(), marketing_opt_in: !!form.querySelector("[name=marketing_opt_in]").checked };
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(body.email)) { toast(s("profile.email_invalid"), "err"); email.el.focus(); return; }
-      save.disabled = true;
+      save.disabled = true; busy = true;
       try {
-        prof = await api.profile.save(body);
+        const result = await api.profile.save(body, requestOptions);
+        if (!valid()) return;
+        prof = result;
         toast(s(prof.send_error || prof.dry_run ? "recovery.unavailable" : "profile.saved"), prof.send_error || prof.dry_run ? "err" : "ok");
-        await auth.refreshMe();
+        await auth.refreshMe(requestOptions);
+        if (!valid()) return;
         render();
-      } catch (err) { toast(s("common.error", { msg: err.message }), "err"); }
-      finally { save.disabled = false; }
+      } catch (err) { if (valid()) toast(s("common.error", { msg: err.message }), "err"); }
+      finally { busy = false; if (valid()) save.disabled = false; }
     });
     card.appendChild(form);
 
@@ -72,26 +89,38 @@ export async function mount(root, params = {}) {
       const btn = el("button.btn.btn-primary.btn-sm", { type: "button" }, s("profile.verify_btn"));
       const resend = el("button.btn.btn-ghost.btn-sm", { type: "button" }, s("profile.resend"));
       btn.addEventListener("click", async () => {
-        if (btn.disabled) return;
-        btn.disabled = true;
+        if (btn.disabled || busy) return;
+        const valid = requestValid(v);
+        if (!valid()) return;
+        if (!/^\d{6}$/.test(code.value.trim())) { toast(s('profile.code_invalid'), 'err'); code.focus(); return; }
+        btn.disabled = true; busy = true;
         try {
-          const res = await api.profile.verify(code.value.trim());
+          const res = await api.profile.verify(code.value.trim(), requestOptions);
+          if (!valid()) return;
           // the verify route returns the full profile view; re-fetch if an older backend only sent the flags
-          prof = (res && res.email !== undefined) ? res : await api.profile.get();
-          toast(s("profile.verified"), "ok"); await auth.refreshMe(); render();
-        } catch (err) { toast(s("login.try_again"), "err"); }
-        finally { btn.disabled = false; }
+          const result = (res && res.email !== undefined) ? res : await api.profile.get(requestOptions);
+          if (!valid()) return;
+          prof = result;
+          if (!prof.email_verified) { toast(s('profile.code_invalid'), 'err'); return; }
+          await auth.refreshMe(requestOptions);
+          if (!valid()) return;
+          toast(s("profile.verified"), "ok"); render();
+        } catch (err) { if (valid()) toast(s(['code_invalid','code_expired','too_many_attempts'].includes(err.body?.error) ? 'profile.code_invalid' : 'login.try_again'), "err"); }
+        finally { busy = false; if (valid()) btn.disabled = false; }
       });
       resend.addEventListener("click", async () => {
-        if (resend.disabled) return;
-        resend.disabled = true;
+        if (resend.disabled || busy) return;
+        const valid = requestValid(v);
+        if (!valid()) return;
+        resend.disabled = true; busy = true;
         try {
-          const response = await api.profile.resend();
+          const response = await api.profile.resend(requestOptions);
+          if (!valid()) return;
           const result = api.isAccepted(response) ? response.body : response;
           toast(s(result?.sent && !result?.dry_run ? "profile.resent" : "recovery.unavailable"),
             result?.sent && !result?.dry_run ? "ok" : "err");
-        } catch (err) { toast(s(err.body?.error === "send_failed" ? "recovery.unavailable" : "login.try_again"), "err"); }
-        finally { resend.disabled = false; }
+        } catch (err) { if (valid()) toast(s(err.body?.error === "send_failed" ? "recovery.unavailable" : "login.try_again"), "err"); }
+        finally { busy = false; if (valid()) resend.disabled = false; }
       });
       v.append(el("div.cta-row", field(s("profile.code_label"), code), btn, resend));
     } else if (prof.email && prof.email_verified) {
@@ -99,8 +128,12 @@ export async function mount(root, params = {}) {
     }
     card.appendChild(v);
 
+    disposeNotifications = mountNotificationSettings(card, {signal:lifetime.signal});
+
     const next = safeTarget("#/" + new URLSearchParams(location.hash.split("?")[1] || "").get("next"));
-    if (next) card.appendChild(el("p", el("a.btn.btn-ghost.btn-sm", { href: next }, s("profile.continue"))));
+    if (next && prof.email_verified) card.appendChild(el("p", el("a.btn.btn-ghost.btn-sm", { href: next }, s("profile.continue"))));
+    const account = setup ? el('details.account-settings', el('summary', s('profile.account_settings'))) : card;
+    if (setup) card.append(account);
 
     // §14.6 login password (web email+password sign-in)
     const pw = el("section.pwsec");
@@ -126,7 +159,7 @@ export async function mount(root, params = {}) {
     pwRow.append(field(s("profile.pw_new"), newPw), pwBtn);
     pw.appendChild(pwRow);
     pw.appendChild(el("p.small", el("a", { href: "#/forgot" }, s("recovery.forgot"))));
-    card.appendChild(pw);
+    account.appendChild(pw);
 
     if (providers.google) {
       const section = el("section.pwsec", el("h2", s("google.title")), el("p.muted.small", s("google.link_hint")));
@@ -141,7 +174,7 @@ export async function mount(root, params = {}) {
         });
         section.append(link);
       }
-      card.append(section);
+      account.append(section);
     }
 
     // §web-push — browser notifications without Telegram (progressive: hidden where unsupported).
@@ -153,7 +186,7 @@ export async function mount(root, params = {}) {
         signal:lifetime.signal, mounted:() => mounted() && card.contains(pbtn),
       }));
       ps.appendChild(el("div.cta-row", pbtn));
-      card.appendChild(ps);
+      account.appendChild(ps);
     }
 
     const danger = el("details.danger", el("summary", s("profile.delete_title")), el("p.muted.small", s("profile.delete_sub")));
@@ -163,7 +196,7 @@ export async function mount(root, params = {}) {
       try { await api.profile.remove(); toast(s("profile.deleted"), "ok"); auth.logout(); } catch (err) { toast(s("common.error", { msg: err.message }), "err"); }
     });
     danger.appendChild(del);
-    card.appendChild(danger);
+    account.appendChild(danger);
   }
 
   function field(label, control) { return el("label.field", el("span.label", label), control); }

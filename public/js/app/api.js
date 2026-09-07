@@ -29,6 +29,7 @@ async function parse(res) {
 export async function request(method, path, opts) {
   opts = opts || {};
   const headers = { Accept: "application/json" };
+  if (opts.idempotencyKey) headers['Idempotency-Key'] = opts.idempotencyKey;
   const token = store.get("token");
   const epoch = store.epoch();
   const sessionChanged = () => opts.auth !== false && (token !== store.get("token") || epoch !== store.epoch());
@@ -128,7 +129,7 @@ export const auth = {
   requestReset: (email) => post("/auth/password-reset/request", { email, lang: LANG }, { auth: false }),
   confirmReset: (token, password) => post("/auth/password-reset/confirm", { token, password }, { auth: false }),
 };
-export const me = () => get("/me");
+export const me = (opts) => get("/me", opts);
 export const symbols = (q, opts) => get("/public/symbols?q=" + encodeURIComponent(q), { ...opts, auth:false });
 export const watchlist = {
   list: () => get("/watchlist"),
@@ -143,12 +144,18 @@ export const alerts = {
   remove: (id) => del("/alerts/" + encodeURIComponent(id)),
 };
 export const profile = {
-  get: () => get("/me/profile"),
-  save: (body) => post("/me/profile", body),
-  verify: (code) => post("/me/profile/verify", { code }),
-  resend: () => post("/me/profile/resend", {}),
+  get: (opts) => get("/me/profile", opts),
+  save: (body, opts) => post("/me/profile", body, opts),
+  verify: (code, opts) => post("/me/profile/verify", { code }, opts),
+  resend: (opts) => post("/me/profile/resend", {}, opts),
   setPassword: (body) => post("/me/profile/password", body),
   remove: () => post("/me/delete", {}),
+};
+export const notifications = {
+  get: (opts) => get('/me/notifications', opts),
+  save: (body, opts) => request('PATCH', '/me/notifications', {...opts, body}),
+  test: (channels, opts) => post('/me/notifications/test', {channels}, opts),
+  delivery: (id, opts) => get('/me/notifications/deliveries/' + encodeURIComponent(id), opts),
 };
 export const billing = {
   plans: () => get("/billing/plans?catalog=pro-20260906", { auth: false }),

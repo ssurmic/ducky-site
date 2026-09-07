@@ -19,6 +19,11 @@ export function safeTarget(hash) {
   if (path === '#/creators') return creatorTarget(creatorRoute(new URLSearchParams(hash.split('?')[1] || '')));
   if (path === '#/boards') {
     const q = new URLSearchParams(hash.split('?')[1] || ''), screen = q.get('screen');
+    if (q.get('board') === 'social') {
+      const target = new URLSearchParams({board:'social'}), ticker = (q.get('ticker') || '').toUpperCase();
+      if (/^[A-Z][A-Z0-9.-]{0,11}$/.test(ticker)) target.set('ticker', ticker);
+      return '#/boards?' + target;
+    }
     if (['insider-oversold','institution-oversold'].includes(screen)) return '#/boards?screen=' + screen;
     const ticker=(q.get('ticker')||'').toUpperCase();
     if (!/^[A-Z][A-Z0-9.-]{0,11}$/.test(ticker)) return '#/boards';
@@ -66,4 +71,16 @@ export function takeTarget(fallback = "#/watchlist") {
 export function verificationTarget() {
   const next = takeTarget(null);
   return next && next !== "#/profile" ? "#/profile?next=" + encodeURIComponent(next.slice(2)) : "#/profile";
+}
+
+export function needsEmailSetup(me) {
+  return !!me && (me.profile_complete === false || me.email_verified === false);
+}
+
+// Only explicit sign-ins enter setup. An existing session may keep its deep link.
+export function signedInTarget(me, next = takeTarget()) {
+  const destination = safeTarget(next) || '#/watchlist';
+  if (!needsEmailSetup(me)) return destination;
+  return '#/profile?setup=email&next=' + encodeURIComponent(
+    destination === '#/profile' ? 'watchlist' : destination.slice(2));
 }

@@ -221,6 +221,16 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 .card.profile .check { display: flex; align-items: center; gap: 8px; font-size: var(--fs-base); }
 .card.profile .verify { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
 .card.profile .danger { margin-top: 22px; color: var(--muted); } .card.profile .danger summary { cursor: pointer; }
+.card.profile .notification-settings { margin-top:24px; padding-top:20px; border-top:1px solid var(--border); }
+.notification-settings h2 { margin:0 0 8px; }
+.notification-settings .notification-channel { padding:12px 14px; border:1px solid var(--border); border-radius:12px; }
+.notification-channel p { margin:6px 0 0 24px; }
+.notification-settings .cta-row { margin-top:14px; flex-wrap:wrap; }
+.notification-settings .notification-receipt { margin-top:16px; padding:12px 14px; background:var(--surface2); border-radius:12px; }
+.notification-receipt p { margin:6px 0; overflow-wrap:anywhere; }
+.card.profile .account-settings { margin-top:24px; padding-top:18px; border-top:1px solid var(--border); }
+.card.profile details > summary { cursor:pointer; }
+.card.profile .account-settings > section { margin-top:18px; }
 .btn-danger { background: #3a1216; color: #ff8a80; border: 1px solid #5a1c22; }
 .ok { color: var(--green); }
 

@@ -8,6 +8,8 @@ import * as tg from "./tg.js";
 import { CFG } from "./strings.js";
 
 const KEY = "ducky.token";
+let freshBootstrapLogin = false;
+export const didAuthenticateOnBoot = () => freshBootstrapLogin;
 const storage = () => { try { return tg.inTG ? window.sessionStorage : window.localStorage; } catch (e) { return null; } };
 
 export function loadToken() { try { const st = storage(); return st ? st.getItem(KEY) : null; } catch (e) { return null; } }
@@ -102,20 +104,22 @@ export function logout() {
   if (!/^#\/(?:forgot|reset|register|oauth)(?:\?|$)/.test(location.hash) && location.hash !== "#/login") location.hash = "#/login";
 }
 
-export async function refreshMe() {
-  const me = await api.me();
+export async function refreshMe(opts) {
+  const me = await api.me(opts);
   store.set("me", me);
   return me;
 }
 
 /** Boot: resolves true when a session exists, false when the login view must be shown. */
 export async function boot() {
+  freshBootstrapLogin = false;
   api.setUnauthorizedHandler(logout);
   // OAuth callback owns its cookie handoff; do not hydrate/revoke an old saved account first.
   if (location.hash.startsWith("#/oauth")) return false;
   if (tg.inTG && tg.initData) {
     try {
       await establish(await api.auth.miniapp(tg.initData));
+      freshBootstrapLogin = true;
       return true;
     } catch (e) {
       console.warn("miniapp auth failed", e);
@@ -123,7 +127,7 @@ export async function boot() {
     }
   }
   if (!tg.inTG) {
-    try { if (await consumeWidgetRedirect()) return true; } catch (e) { console.warn("widget redirect auth failed", e); }
+    try { if (await consumeWidgetRedirect()) { freshBootstrapLogin = true; return true; } } catch (e) { console.warn("widget redirect auth failed", e); }
   }
   const token = loadToken();
   if (token) {

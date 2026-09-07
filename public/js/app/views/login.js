@@ -9,12 +9,13 @@ import * as api from "../api.js";
 import * as auth from "../auth.js";
 import * as tg from "../tg.js";
 import * as router from "../router.js";
+import * as store from "../store.js";
 import { el, clear, toast, spinner } from "../ui.js";
-import { takeTarget, verificationTarget } from "../login-target.js";
+import { signedInTarget, verificationTarget } from "../login-target.js";
 
 export async function mount(root) {
   let nonceCtl = null;
-  const done = () => { toast(s("login.ok"), "ok"); router.go(takeTarget()); };
+  const done = () => { toast(s("login.ok"), "ok"); router.go(signedInTarget(store.get('me'))); };
 
   const card = el("section.card.login");
   card.append(el("h1", s("login.title")), el("p.muted", s("login.sub")));
