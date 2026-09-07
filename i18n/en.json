@@ -1982,7 +1982,7 @@
   "app.screen.name_hint": "E.g. Oversold tech with insider purchases",
   "app.screen.name_required": "Give this filter a name.",
   "app.screen.notify": "Notify me through my enabled channels when a new stock matches",
-  "app.screen.notify_note": "The first check records a baseline without notifying you about existing matches. Covered data is checked about every 15 minutes during market hours, with at most one alert per stock per 24 hours. Unchanged matches do not repeat. Existing browser/Telegram settings apply.",
+  "app.screen.notify_note": "The first check records a baseline without notifying you about existing matches. Background checks use already collected data; market updates depend on trading sessions and source availability. At most one alert per stock per 24 hours, with no repeat for unchanged matches. Your enabled browser/Telegram channels apply.",
   "app.screen.save": "Save filter",
   "app.screen.saved_open": "Saved",
   "app.screen.saved_notify": "Saved with new-match notifications enabled",

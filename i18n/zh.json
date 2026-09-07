@@ -1982,7 +1982,7 @@
   "app.screen.name_hint": "例如：科技股的超跌与高管买入",
   "app.screen.name_required": "请给这组条件起个名字。",
   "app.screen.notify": "新增匹配时，通过我已启用的渠道提醒",
-  "app.screen.notify_note": "保存后先记录当前匹配，不补发历史提醒。开市期间约每 15 分钟检查已有数据，每只股票 24 小时最多一次；条件未变化不重复提醒。浏览器通知／Telegram 设置沿用账户选择。",
+  "app.screen.notify_note": "保存后先记录当前匹配，不补发历史提醒。后台定期检查已有数据，行情更新取决于交易时段和来源。每只股票 24 小时最多提醒一次，条件未变化不重复提醒；沿用账户已开启的浏览器／Telegram 渠道。",
   "app.screen.save": "保存筛选",
   "app.screen.saved_open": "已保存",
   "app.screen.saved_notify": "已保存，并启用新增匹配提醒",
