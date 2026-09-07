@@ -1,0 +1,554 @@
+{
+  "version": "2026-09-07-vibe-v10",
+  "audio_processing": "Two-pass EBU R128 -16 LUFS / -2 dBTP per scene, with AAC headroom; no speech speed changes",
+  "frame_processing": "Normalize every capture to one 1920x1080 RGB canvas before concatenating; constant 25 fps",
+  "caption_presentation": "Native WebVTT; authored word-timed cues when supplied, legacy ratio timing otherwise; reserved caption area",
+  "videos": {
+    "zh": {
+      "file": "ducky-walkthrough-2026-09-07-vibe-v10.zh.mp4",
+      "seconds": 38.44,
+      "bytes": 1556474,
+      "scenes": [
+        {
+          "scene": "01-watch",
+          "start": 0.0,
+          "duration": 2.8,
+          "speech_seconds": 2.328,
+          "audio_sha256": "62d510dbdd33ae1107cf3438a65d12dc33b9193c5c7cd3e12d66e456ac52ba22",
+          "frame_sha256": "933ebab6ae4a993fa7cfb2b2a825544c201e1a6d69956acd0b024f82283b21af",
+          "shots": [
+            {
+              "file": "01-watch-s0.png",
+              "at": 0
+            },
+            {
+              "file": "01-watch-s6.png",
+              "at": 0.2
+            },
+            {
+              "file": "01-watch-s12.png",
+              "at": 0.42
+            }
+          ]
+        },
+        {
+          "scene": "02-people",
+          "start": 2.8,
+          "duration": 4.32,
+          "speech_seconds": 4.128,
+          "audio_sha256": "dd7d2e9ce3620f4181d40357e33e3ab91975f0656846fbd9554b4afa99d09cfd",
+          "frame_sha256": "38d41c20dd2b0c19f3e2c56cb4ed8eb84c04edb7cdbda12b11d4f903c7ae7f4e",
+          "shots": [
+            {
+              "file": "02-people-s0.png",
+              "at": 0
+            },
+            {
+              "file": "02-people-s9.png",
+              "at": 0.3
+            },
+            {
+              "file": "02-people-s16.png",
+              "at": 0.7
+            }
+          ]
+        },
+        {
+          "scene": "03-partners",
+          "start": 7.12,
+          "duration": 6.64,
+          "speech_seconds": 6.456,
+          "audio_sha256": "336fdabfb16886be44480a76d7efb1a29ebbe17080e45f7323cae252226c48cf",
+          "frame_sha256": "2b8adf6899d4ed98d7efcd5ed882fc35f75b387b615bbefc6fd42a1beb978e71",
+          "shots": [
+            {
+              "file": "03-partners-s0.png",
+              "at": 0
+            },
+            {
+              "file": "03-partners-s9.png",
+              "at": 0.32
+            },
+            {
+              "file": "03-partners-s15.png",
+              "at": 0.68
+            }
+          ]
+        },
+        {
+          "scene": "04-price",
+          "start": 13.76,
+          "duration": 5.36,
+          "speech_seconds": 5.184,
+          "audio_sha256": "633d7eab5bc9e9a3680db2bf2d07d848b6b821b6222e135065cc8f5ca4c5366c",
+          "frame_sha256": "66879730ca4b63f3d842cad3052fb27ebcb0ff867ad8dd5cb97e0cc216299e65",
+          "shots": [
+            {
+              "file": "04-price-s0.png",
+              "at": 0.0
+            },
+            {
+              "file": "04-price-s1.png",
+              "at": 0.0365
+            },
+            {
+              "file": "04-price-s2.png",
+              "at": 0.073
+            },
+            {
+              "file": "04-price-s3.png",
+              "at": 0.1095
+            },
+            {
+              "file": "04-price-s4.png",
+              "at": 0.146
+            },
+            {
+              "file": "04-price-s5.png",
+              "at": 0.1825
+            },
+            {
+              "file": "04-price-s6.png",
+              "at": 0.219
+            },
+            {
+              "file": "04-price-s7.png",
+              "at": 0.2555
+            },
+            {
+              "file": "04-price-s8.png",
+              "at": 0.292
+            },
+            {
+              "file": "04-price-s9.png",
+              "at": 0.3285
+            },
+            {
+              "file": "04-price-s10.png",
+              "at": 0.365
+            },
+            {
+              "file": "04-price-s11.png",
+              "at": 0.4015
+            },
+            {
+              "file": "04-price-s12.png",
+              "at": 0.438
+            },
+            {
+              "file": "04-price-s13.png",
+              "at": 0.4745
+            },
+            {
+              "file": "04-price-s14.png",
+              "at": 0.511
+            },
+            {
+              "file": "04-price-s15.png",
+              "at": 0.5475
+            },
+            {
+              "file": "04-price-s16.png",
+              "at": 0.584
+            },
+            {
+              "file": "04-price-s17.png",
+              "at": 0.6205
+            },
+            {
+              "file": "04-price-s18.png",
+              "at": 0.657
+            },
+            {
+              "file": "04-price-s19.png",
+              "at": 0.6935
+            },
+            {
+              "file": "04-price-s20.png",
+              "at": 0.73
+            }
+          ]
+        },
+        {
+          "scene": "05-macro",
+          "start": 19.12,
+          "duration": 3.28,
+          "speech_seconds": 3.072,
+          "audio_sha256": "9b6a37354f7e3f69776386334e356fa3772c448975453da4a2b1c28645bff010",
+          "frame_sha256": "58170476b22654a6ee0b4e947f16f24ed6ca2ff354b1271185cb77b89cbb8de0",
+          "shots": [
+            {
+              "file": "05-macro-s20.png",
+              "at": 0
+            }
+          ]
+        },
+        {
+          "scene": "06-creator",
+          "start": 22.4,
+          "duration": 3.48,
+          "speech_seconds": 3.312,
+          "audio_sha256": "09c8785b23b9cbf4a1e316c0a7c3156d242fb0580a20a500ec169edb3199705d",
+          "frame_sha256": "ff17763d6456daea51b95effe6a9448f8fa86ed51381ed0655be18c3bcfd4796",
+          "shots": [
+            {
+              "file": "06-creator-s20.png",
+              "at": 0
+            }
+          ]
+        },
+        {
+          "scene": "07-social",
+          "start": 25.88,
+          "duration": 5.2,
+          "speech_seconds": 5.016,
+          "audio_sha256": "04e959070175c901272ee60b1f7a3ebeda49650c96557aeafcf0abcd7fedc2c0",
+          "frame_sha256": "44ae12dfb59fbb77550c15b0565ab7471ab08ef8f24bc1c0c9a66108e4d75dec",
+          "shots": [
+            {
+              "file": "07-social-s0.png",
+              "at": 0
+            },
+            {
+              "file": "07-social-s3.png",
+              "at": 0.1
+            },
+            {
+              "file": "07-social-s5.png",
+              "at": 0.18
+            },
+            {
+              "file": "07-social-s7.png",
+              "at": 0.26
+            },
+            {
+              "file": "07-social-s9.png",
+              "at": 0.34
+            },
+            {
+              "file": "07-social-s12.png",
+              "at": 0.42
+            },
+            {
+              "file": "07-social-s14.png",
+              "at": 0.5
+            },
+            {
+              "file": "07-social-s16.png",
+              "at": 0.58
+            },
+            {
+              "file": "07-social-s18.png",
+              "at": 0.66
+            },
+            {
+              "file": "07-social-s20.png",
+              "at": 0.74
+            }
+          ]
+        },
+        {
+          "scene": "08-brief",
+          "start": 31.08,
+          "duration": 4.56,
+          "speech_seconds": 4.392,
+          "audio_sha256": "37723a9c1e58e21adcbe3d18a008fdf335ac7e3a1d41f076361c06e3ae2a2129",
+          "frame_sha256": "6172125ad2cd691d78ce0b119b83d55d13f651b5291381daa3315feb3d4c972e",
+          "shots": [
+            {
+              "file": "08-brief-s20.png",
+              "at": 0
+            }
+          ]
+        },
+        {
+          "scene": "09-start",
+          "start": 35.64,
+          "duration": 2.8,
+          "speech_seconds": 1.704,
+          "audio_sha256": "167ed2d2739c164f712ae916846c6c93b28cdabef0eaea87d4db7d5e94bb0eaa",
+          "frame_sha256": "2a004da34729bd30a56eb45f98a2f7d3c448718600fe3f4f1d2a6b340dba6fc1",
+          "shots": [
+            {
+              "file": "09-start-s20.png",
+              "at": 0
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "file": "ducky-walkthrough-2026-09-07-vibe-v10.en.mp4",
+      "seconds": 36.68,
+      "bytes": 1589540,
+      "scenes": [
+        {
+          "scene": "01-watch",
+          "start": 0.0,
+          "duration": 2.8,
+          "speech_seconds": 2.112,
+          "audio_sha256": "226530460f83b7f8b4737cf86446dfedb54400ea2e39ed16ad1f78e16bcec451",
+          "frame_sha256": "88d3d64fe29fb05f68f351d390681b63c8989f32b931378cbf2ee389eedc2fb3",
+          "shots": [
+            {
+              "file": "01-watch-s0.png",
+              "at": 0
+            },
+            {
+              "file": "01-watch-s6.png",
+              "at": 0.2
+            },
+            {
+              "file": "01-watch-s12.png",
+              "at": 0.42
+            }
+          ]
+        },
+        {
+          "scene": "02-people",
+          "start": 2.8,
+          "duration": 5.08,
+          "speech_seconds": 4.896,
+          "audio_sha256": "205e0395528764207346cc16186b8875d3516c0961f9407bb5bac481f9f9906b",
+          "frame_sha256": "5b96ecc8f0cb080cfa31f04b11da3b6aeda6e5f30fac0ea6e269255e7f928e42",
+          "shots": [
+            {
+              "file": "02-people-s0.png",
+              "at": 0
+            },
+            {
+              "file": "02-people-s9.png",
+              "at": 0.3
+            },
+            {
+              "file": "02-people-s16.png",
+              "at": 0.7
+            }
+          ]
+        },
+        {
+          "scene": "03-partners",
+          "start": 7.88,
+          "duration": 4.96,
+          "speech_seconds": 4.8,
+          "audio_sha256": "6dd31a4397cc0f3fe1d17db6bdb5b9c40971c54b44fb2895d3c93f066cd6b2ee",
+          "frame_sha256": "381c3938b74827fc443111890f13fa210f1e71266ba500f0f68b96a26133f5c2",
+          "shots": [
+            {
+              "file": "03-partners-s0.png",
+              "at": 0
+            },
+            {
+              "file": "03-partners-s9.png",
+              "at": 0.32
+            },
+            {
+              "file": "03-partners-s15.png",
+              "at": 0.68
+            }
+          ]
+        },
+        {
+          "scene": "04-price",
+          "start": 12.84,
+          "duration": 5.0,
+          "speech_seconds": 4.224,
+          "audio_sha256": "ee428ddb547d786ea8b6a5b3397622c8afa401b2dd0044b0058bc4a7a048af57",
+          "frame_sha256": "52d0210a8f8241c9fb8c6e667e7fabc780fc191f25dccd763d6e55c6046bf57f",
+          "shots": [
+            {
+              "file": "04-price-s0.png",
+              "at": 0.0
+            },
+            {
+              "file": "04-price-s1.png",
+              "at": 0.0365
+            },
+            {
+              "file": "04-price-s2.png",
+              "at": 0.073
+            },
+            {
+              "file": "04-price-s3.png",
+              "at": 0.1095
+            },
+            {
+              "file": "04-price-s4.png",
+              "at": 0.146
+            },
+            {
+              "file": "04-price-s5.png",
+              "at": 0.1825
+            },
+            {
+              "file": "04-price-s6.png",
+              "at": 0.219
+            },
+            {
+              "file": "04-price-s7.png",
+              "at": 0.2555
+            },
+            {
+              "file": "04-price-s8.png",
+              "at": 0.292
+            },
+            {
+              "file": "04-price-s9.png",
+              "at": 0.3285
+            },
+            {
+              "file": "04-price-s10.png",
+              "at": 0.365
+            },
+            {
+              "file": "04-price-s11.png",
+              "at": 0.4015
+            },
+            {
+              "file": "04-price-s12.png",
+              "at": 0.438
+            },
+            {
+              "file": "04-price-s13.png",
+              "at": 0.4745
+            },
+            {
+              "file": "04-price-s14.png",
+              "at": 0.511
+            },
+            {
+              "file": "04-price-s15.png",
+              "at": 0.5475
+            },
+            {
+              "file": "04-price-s16.png",
+              "at": 0.584
+            },
+            {
+              "file": "04-price-s17.png",
+              "at": 0.6205
+            },
+            {
+              "file": "04-price-s18.png",
+              "at": 0.657
+            },
+            {
+              "file": "04-price-s19.png",
+              "at": 0.6935
+            },
+            {
+              "file": "04-price-s20.png",
+              "at": 0.73
+            }
+          ]
+        },
+        {
+          "scene": "05-macro",
+          "start": 17.84,
+          "duration": 3.28,
+          "speech_seconds": 2.232,
+          "audio_sha256": "e8bdad2de1d926a8c497fb22bec63973a08402058725821681bc8d60819ee5d7",
+          "frame_sha256": "b53f24acc526f43a2669b77a1f52cbf177a326fb52c7aa3d29e0404fe2cde139",
+          "shots": [
+            {
+              "file": "05-macro-s20.png",
+              "at": 0
+            }
+          ]
+        },
+        {
+          "scene": "06-creator",
+          "start": 21.12,
+          "duration": 3.28,
+          "speech_seconds": 3.12,
+          "audio_sha256": "9299c69594db94876c8c48b82383483e9a23a2fad4ed5bd38ac0356f9753fb93",
+          "frame_sha256": "1d848741173d1d4a94574c7fb87889e715d0c3375430ae3f3e97c7abb0333fa0",
+          "shots": [
+            {
+              "file": "06-creator-s20.png",
+              "at": 0
+            }
+          ]
+        },
+        {
+          "scene": "07-social",
+          "start": 24.4,
+          "duration": 4.52,
+          "speech_seconds": 4.248,
+          "audio_sha256": "5eccabbba35eed12cd979e36a31022ea48359342a9edf16f0c972be64a161f7b",
+          "frame_sha256": "94a581dc78880ce9ee541dcabc5a61146e8164aa74545c6b8c4bf79d0af8c324",
+          "shots": [
+            {
+              "file": "07-social-s0.png",
+              "at": 0
+            },
+            {
+              "file": "07-social-s3.png",
+              "at": 0.1
+            },
+            {
+              "file": "07-social-s5.png",
+              "at": 0.18
+            },
+            {
+              "file": "07-social-s7.png",
+              "at": 0.26
+            },
+            {
+              "file": "07-social-s9.png",
+              "at": 0.34
+            },
+            {
+              "file": "07-social-s12.png",
+              "at": 0.42
+            },
+            {
+              "file": "07-social-s14.png",
+              "at": 0.5
+            },
+            {
+              "file": "07-social-s16.png",
+              "at": 0.58
+            },
+            {
+              "file": "07-social-s18.png",
+              "at": 0.66
+            },
+            {
+              "file": "07-social-s20.png",
+              "at": 0.74
+            }
+          ]
+        },
+        {
+          "scene": "08-brief",
+          "start": 28.92,
+          "duration": 4.96,
+          "speech_seconds": 4.8,
+          "audio_sha256": "95a5cb46be6f5744b9978aba14b991346ec036a240b4507890d45165ec1b42e3",
+          "frame_sha256": "ce937afb97249b649facd68ce8c0e50eb383aa251cecc79da6f72b8f21223016",
+          "shots": [
+            {
+              "file": "08-brief-s20.png",
+              "at": 0
+            }
+          ]
+        },
+        {
+          "scene": "09-start",
+          "start": 33.88,
+          "duration": 2.8,
+          "speech_seconds": 1.272,
+          "audio_sha256": "c1c517b0755376af494cbc47a0dde5945b5419198f5fec2e7bee9668f53c9170",
+          "frame_sha256": "0d8f95ad89a37568ed01cc168c7a573a6fce139a3796ecb5081373904a195a9b",
+          "shots": [
+            {
+              "file": "09-start-s20.png",
+              "at": 0
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

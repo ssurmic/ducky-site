@@ -5,7 +5,7 @@
     "en"
   ],
   "speakers": {
-    "en": "en-US-JennyNeural",
+    "en": "en-US-AvaNeural",
     "zh": "zh-CN-XiaoxiaoNeural"
   },
   "synthesis": {
@@ -72,22 +72,72 @@
         ]
       },
       "spoken_en": "Start with the stocks you follow.",
-      "minimum_seconds": 2.8
+      "minimum_seconds": 2.8,
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.112,
+              "text": "Start with the stocks you follow.",
+              "first_word": 0,
+              "last_word": 5,
+              "word_start": 0.1,
+              "word_end": 1.75
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.112,
+              "text": "从你的自选股开始。",
+              "first_word": 0,
+              "last_word": 5,
+              "word_start": 0.1,
+              "word_end": 1.75
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.328,
+              "text": "从你的自选股开始。",
+              "first_word": 0,
+              "last_word": 4,
+              "word_start": 0.1,
+              "word_end": 1.7375
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.328,
+              "text": "Start with the stocks you follow.",
+              "first_word": 0,
+              "last_word": 4,
+              "word_start": 0.1,
+              "word_end": 1.7375
+            }
+          ]
+        }
+      }
     },
     {
       "name": "02-people",
-      "zh": "佩洛西披露，罗宾汉董事买入，都能查原文。",
-      "en": "Pelosi’s disclosures. A Robinhood director buys shares. Check the filings.",
+      "zh": "佩洛西的申报，高管的买入，原文都在。",
+      "en": "Pelosi’s filings. Insider purchases. Check the sources.",
       "caption_chunks": {
         "zh": [
-          "佩洛西披露，",
-          "罗宾汉董事买入，",
-          "都能查原文。"
+          "佩洛西的申报，",
+          "高管的买入，",
+          "原文都在。"
         ],
         "en": [
-          "Pelosi’s disclosures.",
-          "A Robinhood director buys shares.",
-          "Check the filings."
+          "Pelosi’s filings.",
+          "Insider purchases.",
+          "Check the sources."
         ]
       },
       "caption_line": 84,
@@ -121,8 +171,130 @@
           }
         ]
       },
-      "spoken_en": "Pelosi's disclosures. A Robin Hood director buys shares. Check the filings.",
-      "minimum_seconds": 4.2
+      "spoken_en": "Pelosi's filings. Insider purchases. Check the sources.",
+      "minimum_seconds": 4.2,
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 1.765,
+              "text": "Pelosi’s filings.",
+              "first_word": 0,
+              "last_word": 1,
+              "word_start": 0.1,
+              "word_end": 1.4625
+            },
+            {
+              "start": 1.785,
+              "end": 3.3775,
+              "text": "Insider purchases.",
+              "first_word": 2,
+              "last_word": 3,
+              "word_start": 1.825,
+              "word_end": 3.075
+            },
+            {
+              "start": 3.3975,
+              "end": 4.896,
+              "text": "Check the sources.",
+              "first_word": 4,
+              "last_word": 6,
+              "word_start": 3.4375,
+              "word_end": 4.525
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 1.765,
+              "text": "佩洛西的申报，",
+              "first_word": 0,
+              "last_word": 1,
+              "word_start": 0.1,
+              "word_end": 1.4625
+            },
+            {
+              "start": 1.785,
+              "end": 3.3775,
+              "text": "高管的买入，",
+              "first_word": 2,
+              "last_word": 3,
+              "word_start": 1.825,
+              "word_end": 3.075
+            },
+            {
+              "start": 3.3975,
+              "end": 4.896,
+              "text": "原文都在。",
+              "first_word": 4,
+              "last_word": 6,
+              "word_start": 3.4375,
+              "word_end": 4.525
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 1.4025,
+              "text": "佩洛西的申报，",
+              "first_word": 0,
+              "last_word": 2,
+              "word_start": 0.1,
+              "word_end": 1.2125
+            },
+            {
+              "start": 1.4225,
+              "end": 2.59,
+              "text": "高管的买入，",
+              "first_word": 3,
+              "last_word": 5,
+              "word_start": 1.4625,
+              "word_end": 2.4375
+            },
+            {
+              "start": 2.61,
+              "end": 4.128,
+              "text": "原文都在。",
+              "first_word": 6,
+              "last_word": 8,
+              "word_start": 2.65,
+              "word_end": 3.55
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 1.4025,
+              "text": "Pelosi’s filings.",
+              "first_word": 0,
+              "last_word": 2,
+              "word_start": 0.1,
+              "word_end": 1.2125
+            },
+            {
+              "start": 1.4225,
+              "end": 2.59,
+              "text": "Insider purchases.",
+              "first_word": 3,
+              "last_word": 5,
+              "word_start": 1.4625,
+              "word_end": 2.4375
+            },
+            {
+              "start": 2.61,
+              "end": 4.128,
+              "text": "Check the sources.",
+              "first_word": 6,
+              "last_word": 8,
+              "word_start": 2.65,
+              "word_end": 3.55
+            }
+          ]
+        }
+      }
     },
     {
       "name": "03-partners",
@@ -172,16 +344,139 @@
         ]
       },
       "spoken_en": "Nvidia backs Nokia and partners with Corning. Check the terms.",
-      "minimum_seconds": 4.8
+      "minimum_seconds": 4.8,
+      "spoken_zh": "英伟达，投资诺基亚。与康宁合作，价格和条款一起看。",
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 1.675,
+              "text": "NVIDIA backs Nokia",
+              "first_word": 0,
+              "last_word": 2,
+              "word_start": 0.1,
+              "word_end": 1.675
+            },
+            {
+              "start": 1.675,
+              "end": 3.3525,
+              "text": "and partners with Corning.",
+              "first_word": 3,
+              "last_word": 6,
+              "word_start": 1.6875,
+              "word_end": 3.05
+            },
+            {
+              "start": 3.3725,
+              "end": 4.8,
+              "text": "Check the terms.",
+              "first_word": 7,
+              "last_word": 9,
+              "word_start": 3.4125,
+              "word_end": 4.4375
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 1.675,
+              "text": "英伟达投资诺基亚，",
+              "first_word": 0,
+              "last_word": 2,
+              "word_start": 0.1,
+              "word_end": 1.675
+            },
+            {
+              "start": 1.675,
+              "end": 3.3525,
+              "text": "与康宁合作，",
+              "first_word": 3,
+              "last_word": 6,
+              "word_start": 1.6875,
+              "word_end": 3.05
+            },
+            {
+              "start": 3.3725,
+              "end": 4.8,
+              "text": "价格和条款一起看。",
+              "first_word": 7,
+              "last_word": 9,
+              "word_start": 3.4125,
+              "word_end": 4.4375
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.565,
+              "text": "英伟达投资诺基亚，",
+              "first_word": 0,
+              "last_word": 2,
+              "word_start": 0.1,
+              "word_end": 2.05
+            },
+            {
+              "start": 2.585,
+              "end": 3.94,
+              "text": "与康宁合作，",
+              "first_word": 3,
+              "last_word": 5,
+              "word_start": 2.625,
+              "word_end": 3.725
+            },
+            {
+              "start": 3.96,
+              "end": 6.456,
+              "text": "价格和条款一起看。",
+              "first_word": 6,
+              "last_word": 10,
+              "word_start": 4.0,
+              "word_end": 5.875
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.565,
+              "text": "NVIDIA backs Nokia",
+              "first_word": 0,
+              "last_word": 2,
+              "word_start": 0.1,
+              "word_end": 2.05
+            },
+            {
+              "start": 2.585,
+              "end": 3.94,
+              "text": "and partners with Corning.",
+              "first_word": 3,
+              "last_word": 5,
+              "word_start": 2.625,
+              "word_end": 3.725
+            },
+            {
+              "start": 3.96,
+              "end": 6.456,
+              "text": "Check the terms.",
+              "first_word": 6,
+              "last_word": 10,
+              "word_start": 4.0,
+              "word_end": 5.875
+            }
+          ]
+        }
+      }
     },
     {
       "name": "04-price",
-      "zh": "回到你设的价位，提醒你。之后的涨跌，接着看。",
+      "zh": "到你设的价格，就提醒。后面涨跌，继续跟踪。",
       "en": "Get an alert at your chosen price. Track what happens next.",
       "caption_chunks": {
         "zh": [
-          "回到你设的价位，提醒你。",
-          "之后的涨跌，接着看。"
+          "到你设的价格，就提醒。",
+          "后面涨跌，继续跟踪。"
         ],
         "en": [
           "Get an alert at your chosen price.",
@@ -364,7 +659,93 @@
         ]
       },
       "spoken_en": "Get an alert at your chosen price. Track what happens next.",
-      "minimum_seconds": 5
+      "minimum_seconds": 5,
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.4025,
+              "text": "Get an alert at your chosen price.",
+              "first_word": 0,
+              "last_word": 6,
+              "word_start": 0.1,
+              "word_end": 2.1
+            },
+            {
+              "start": 2.4225,
+              "end": 4.224,
+              "text": "Track what happens next.",
+              "first_word": 7,
+              "last_word": 10,
+              "word_start": 2.4625,
+              "word_end": 3.8625
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.4025,
+              "text": "到你设的价格，就提醒。",
+              "first_word": 0,
+              "last_word": 6,
+              "word_start": 0.1,
+              "word_end": 2.1
+            },
+            {
+              "start": 2.4225,
+              "end": 4.224,
+              "text": "后面涨跌，继续跟踪。",
+              "first_word": 7,
+              "last_word": 10,
+              "word_start": 2.4625,
+              "word_end": 3.8625
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.665,
+              "text": "到你设的价格，就提醒。",
+              "first_word": 0,
+              "last_word": 6,
+              "word_start": 0.1,
+              "word_end": 2.1625
+            },
+            {
+              "start": 2.685,
+              "end": 5.184,
+              "text": "后面涨跌，继续跟踪。",
+              "first_word": 7,
+              "last_word": 10,
+              "word_start": 2.725,
+              "word_end": 4.6
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.665,
+              "text": "Get an alert at your chosen price.",
+              "first_word": 0,
+              "last_word": 6,
+              "word_start": 0.1,
+              "word_end": 2.1625
+            },
+            {
+              "start": 2.685,
+              "end": 5.184,
+              "text": "Track what happens next.",
+              "first_word": 7,
+              "last_word": 10,
+              "word_start": 2.725,
+              "word_end": 4.6
+            }
+          ]
+        }
+      }
     },
     {
       "name": "05-macro",
@@ -375,7 +756,7 @@
           "利率变化，怎样影响罗宾汉？"
         ],
         "en": [
-          "How do interest rates affect Robinhood?"
+          "How do interest rates\naffect Robinhood?"
         ]
       },
       "caption_line": 84,
@@ -394,7 +775,57 @@
         ]
       },
       "spoken_en": "How do interest rates affect Robin Hood?",
-      "minimum_seconds": 3.25
+      "minimum_seconds": 3.25,
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.232,
+              "text": "How do interest rates\naffect Robinhood?",
+              "first_word": 0,
+              "last_word": 6,
+              "word_start": 0.1,
+              "word_end": 1.8625
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.232,
+              "text": "利率变化，怎样影响罗宾汉？",
+              "first_word": 0,
+              "last_word": 6,
+              "word_start": 0.1,
+              "word_end": 1.8625
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 3.072,
+              "text": "利率变化，怎样影响罗宾汉？",
+              "first_word": 0,
+              "last_word": 4,
+              "word_start": 0.1,
+              "word_end": 2.4875
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 3.072,
+              "text": "How do interest rates\naffect Robinhood?",
+              "first_word": 0,
+              "last_word": 4,
+              "word_start": 0.1,
+              "word_end": 2.4875
+            }
+          ]
+        }
+      }
     },
     {
       "name": "06-creator",
@@ -405,7 +836,7 @@
           "博主观点，连同原话一起看。"
         ],
         "en": [
-          "Creator views, with the original context."
+          "Creator views,\nwith the original context."
         ]
       },
       "caption_line": 84,
@@ -424,7 +855,57 @@
         ]
       },
       "spoken_en": "Creator views, with the original context.",
-      "minimum_seconds": 3.25
+      "minimum_seconds": 3.25,
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 3.12,
+              "text": "Creator views,\nwith the original context.",
+              "first_word": 0,
+              "last_word": 5,
+              "word_start": 0.1,
+              "word_end": 2.75
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 3.12,
+              "text": "博主观点，连同原话一起看。",
+              "first_word": 0,
+              "last_word": 5,
+              "word_start": 0.1,
+              "word_end": 2.75
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 3.312,
+              "text": "博主观点，连同原话一起看。",
+              "first_word": 0,
+              "last_word": 5,
+              "word_start": 0.1,
+              "word_end": 2.75
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 3.312,
+              "text": "Creator views,\nwith the original context.",
+              "first_word": 0,
+              "last_word": 5,
+              "word_start": 0.1,
+              "word_end": 2.75
+            }
+          ]
+        }
+      }
     },
     {
       "name": "07-social",
@@ -528,15 +1009,101 @@
         ]
       },
       "spoken_en": "Is Reddit attention rising? See the counts and their history.",
-      "minimum_seconds": 4.5
+      "minimum_seconds": 4.5,
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 1.8275,
+              "text": "Is Reddit attention rising?",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 1.525
+            },
+            {
+              "start": 1.8475,
+              "end": 4.248,
+              "text": "See the counts and their history.",
+              "first_word": 4,
+              "last_word": 9,
+              "word_start": 1.8875,
+              "word_end": 3.875
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 1.8275,
+              "text": "社区讨论升温了吗？",
+              "first_word": 0,
+              "last_word": 3,
+              "word_start": 0.1,
+              "word_end": 1.525
+            },
+            {
+              "start": 1.8475,
+              "end": 4.248,
+              "text": "看提及数量，也看历史。",
+              "first_word": 4,
+              "last_word": 9,
+              "word_start": 1.8875,
+              "word_end": 3.875
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.215,
+              "text": "社区讨论升温了吗？",
+              "first_word": 0,
+              "last_word": 4,
+              "word_start": 0.1,
+              "word_end": 1.7125
+            },
+            {
+              "start": 2.235,
+              "end": 5.016,
+              "text": "看提及数量，也看历史。",
+              "first_word": 5,
+              "last_word": 10,
+              "word_start": 2.275,
+              "word_end": 4.425
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.215,
+              "text": "Is Reddit attention rising?",
+              "first_word": 0,
+              "last_word": 4,
+              "word_start": 0.1,
+              "word_end": 1.7125
+            },
+            {
+              "start": 2.235,
+              "end": 5.016,
+              "text": "See the counts and their history.",
+              "first_word": 5,
+              "last_word": 10,
+              "word_start": 2.275,
+              "word_end": 4.425
+            }
+          ]
+        }
+      }
     },
     {
       "name": "08-brief",
-      "zh": "相关变化进收件箱，每天一份自选总结。",
+      "zh": "消息进收件箱。每天一份自选总结。",
       "en": "Relevant updates in your inbox. A daily brief brings them together.",
       "caption_chunks": {
         "zh": [
-          "相关变化进收件箱，",
+          "消息进收件箱。",
           "每天一份自选总结。"
         ],
         "en": [
@@ -560,18 +1127,104 @@
         ]
       },
       "spoken_en": "Relevant updates in your inbox. A daily brief brings them together.",
-      "minimum_seconds": 4.2
+      "minimum_seconds": 4.2,
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.2775,
+              "text": "Relevant updates in your inbox.",
+              "first_word": 0,
+              "last_word": 4,
+              "word_start": 0.1,
+              "word_end": 1.975
+            },
+            {
+              "start": 2.2975,
+              "end": 4.8,
+              "text": "A daily brief brings them together.",
+              "first_word": 5,
+              "last_word": 10,
+              "word_start": 2.3375,
+              "word_end": 4.4375
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.2775,
+              "text": "消息进收件箱。",
+              "first_word": 0,
+              "last_word": 4,
+              "word_start": 0.1,
+              "word_end": 1.975
+            },
+            {
+              "start": 2.2975,
+              "end": 4.8,
+              "text": "每天一份自选总结。",
+              "first_word": 5,
+              "last_word": 10,
+              "word_start": 2.3375,
+              "word_end": 4.4375
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 2.0775,
+              "text": "消息进收件箱。",
+              "first_word": 0,
+              "last_word": 1,
+              "word_start": 0.1,
+              "word_end": 1.5625
+            },
+            {
+              "start": 2.0975,
+              "end": 4.392,
+              "text": "每天一份自选总结。",
+              "first_word": 2,
+              "last_word": 6,
+              "word_start": 2.1375,
+              "word_end": 3.825
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 2.0775,
+              "text": "Relevant updates in your inbox.",
+              "first_word": 0,
+              "last_word": 1,
+              "word_start": 0.1,
+              "word_end": 1.5625
+            },
+            {
+              "start": 2.0975,
+              "end": 4.392,
+              "text": "A daily brief brings them together.",
+              "first_word": 2,
+              "last_word": 6,
+              "word_start": 2.1375,
+              "word_end": 3.825
+            }
+          ]
+        }
+      }
     },
     {
       "name": "09-start",
-      "zh": "添加自选，免费开始。",
-      "en": "Add your stocks. Start free.",
+      "zh": "免费开始。",
+      "en": "Start free.",
       "caption_chunks": {
-        "zh": [
-          "添加自选，免费开始。"
-        ],
         "en": [
-          "Add your stocks. Start free."
+          "Start free."
+        ],
+        "zh": [
+          "免费开始。"
         ]
       },
       "caption_line": 84,
@@ -589,8 +1242,58 @@
           }
         ]
       },
-      "spoken_en": "Add your stocks. Start free.",
-      "minimum_seconds": 2.8
+      "spoken_en": "Start free.",
+      "minimum_seconds": 2.8,
+      "caption_timings": {
+        "en": {
+          "en": [
+            {
+              "start": 0.06,
+              "end": 1.272,
+              "text": "Start free.",
+              "first_word": 0,
+              "last_word": 1,
+              "word_start": 0.1,
+              "word_end": 0.9
+            }
+          ],
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 1.272,
+              "text": "免费开始。",
+              "first_word": 0,
+              "last_word": 1,
+              "word_start": 0.1,
+              "word_end": 0.9
+            }
+          ]
+        },
+        "zh": {
+          "zh": [
+            {
+              "start": 0.06,
+              "end": 1.704,
+              "text": "免费开始。",
+              "first_word": 0,
+              "last_word": 1,
+              "word_start": 0.1,
+              "word_end": 1.125
+            }
+          ],
+          "en": [
+            {
+              "start": 0.06,
+              "end": 1.704,
+              "text": "Start free.",
+              "first_word": 0,
+              "last_word": 1,
+              "word_start": 0.1,
+              "word_end": 1.125
+            }
+          ]
+        }
+      }
     }
   ]
 }

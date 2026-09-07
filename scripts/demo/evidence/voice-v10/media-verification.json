@@ -1,0 +1,681 @@
+{
+  "status": "PASS",
+  "checks": 1641,
+  "failures": [],
+  "review_notes": [
+    "04-price.zh.wav: ASR differs from script (similarity 0.941); review pronunciation/content, not an automatic rejection",
+    "06-creator.zh.wav: ASR differs from script (similarity 0.636); review pronunciation/content, not an automatic rejection",
+    "08-brief.zh.wav: ASR differs from script (similarity 0.857); review pronunciation/content, not an automatic rejection",
+    "09-start.zh.wav: ASR differs from script (similarity 0.500); review pronunciation/content, not an automatic rejection"
+  ],
+  "audio": {
+    "01-watch.zh.wav": {
+      "duration": 2.328,
+      "peak_pcm": 0.5477294921875,
+      "rms_pcm": 0.09924519055438329,
+      "asr_similarity": 1.0,
+      "asr_words": 6
+    },
+    "01-watch.en.wav": {
+      "duration": 2.112,
+      "peak_pcm": 0.5931396484375,
+      "rms_pcm": 0.08969940758969405,
+      "asr_similarity": 1.0,
+      "asr_words": 6
+    },
+    "02-people.zh.wav": {
+      "duration": 4.128,
+      "peak_pcm": 0.662872314453125,
+      "rms_pcm": 0.11288332020568102,
+      "asr_similarity": 1.0,
+      "asr_words": 15
+    },
+    "02-people.en.wav": {
+      "duration": 4.896,
+      "peak_pcm": 0.621795654296875,
+      "rms_pcm": 0.08524873690174117,
+      "asr_similarity": 1.0,
+      "asr_words": 7
+    },
+    "03-partners.zh.wav": {
+      "duration": 6.456,
+      "peak_pcm": 0.5614013671875,
+      "rms_pcm": 0.09112566854925887,
+      "asr_similarity": 1.0,
+      "asr_words": 20
+    },
+    "03-partners.en.wav": {
+      "duration": 4.8,
+      "peak_pcm": 0.667816162109375,
+      "rms_pcm": 0.09123776105119516,
+      "asr_similarity": 1.0,
+      "asr_words": 10
+    },
+    "04-price.zh.wav": {
+      "duration": 5.184,
+      "peak_pcm": 0.581298828125,
+      "rms_pcm": 0.09824261407221886,
+      "asr_similarity": 0.9412,
+      "asr_words": 17
+    },
+    "04-price.en.wav": {
+      "duration": 4.224,
+      "peak_pcm": 0.662933349609375,
+      "rms_pcm": 0.07578604530432204,
+      "asr_similarity": 1.0,
+      "asr_words": 11
+    },
+    "05-macro.zh.wav": {
+      "duration": 3.072,
+      "peak_pcm": 0.61572265625,
+      "rms_pcm": 0.10445035659588071,
+      "asr_similarity": 1.0,
+      "asr_words": 11
+    },
+    "05-macro.en.wav": {
+      "duration": 2.232,
+      "peak_pcm": 0.59979248046875,
+      "rms_pcm": 0.08737379067943829,
+      "asr_similarity": 1.0,
+      "asr_words": 6
+    },
+    "06-creator.zh.wav": {
+      "duration": 3.312,
+      "peak_pcm": 0.6455078125,
+      "rms_pcm": 0.10647441816343663,
+      "asr_similarity": 0.6364,
+      "asr_words": 10
+    },
+    "06-creator.en.wav": {
+      "duration": 3.12,
+      "peak_pcm": 0.511688232421875,
+      "rms_pcm": 0.0859099515741116,
+      "asr_similarity": 1.0,
+      "asr_words": 6
+    },
+    "07-social.zh.wav": {
+      "duration": 5.016,
+      "peak_pcm": 0.487091064453125,
+      "rms_pcm": 0.0905670794945574,
+      "asr_similarity": 1.0,
+      "asr_words": 17
+    },
+    "07-social.en.wav": {
+      "duration": 4.248,
+      "peak_pcm": 0.5712890625,
+      "rms_pcm": 0.08344514875321923,
+      "asr_similarity": 1.0,
+      "asr_words": 10
+    },
+    "08-brief.zh.wav": {
+      "duration": 4.392,
+      "peak_pcm": 0.627410888671875,
+      "rms_pcm": 0.10323070410304873,
+      "asr_similarity": 0.8571,
+      "asr_words": 14
+    },
+    "08-brief.en.wav": {
+      "duration": 4.8,
+      "peak_pcm": 0.59893798828125,
+      "rms_pcm": 0.08966949287063591,
+      "asr_similarity": 1.0,
+      "asr_words": 11
+    },
+    "09-start.zh.wav": {
+      "duration": 1.704,
+      "peak_pcm": 0.570648193359375,
+      "rms_pcm": 0.0968122970478394,
+      "asr_similarity": 0.5,
+      "asr_words": 3
+    },
+    "09-start.en.wav": {
+      "duration": 1.272,
+      "peak_pcm": 0.7247314453125,
+      "rms_pcm": 0.08480443246707245,
+      "asr_similarity": 1.0,
+      "asr_words": 2
+    }
+  },
+  "assets": {
+    "scripts/demo/voiceover-2026-09-07-v10.json": {
+      "bytes": 32792,
+      "sha256": "e30c226190cb3a95da524eaa71baddd9dcbfcb5f06b65bae8c9f209fb57a2b7a"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/speech-check.json": {
+      "bytes": 33976,
+      "sha256": "50191a1962e97a9211a481faf8827489bfc854d370da9bfe4a2876089029c7bb"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/01-watch.zh.wav": {
+      "bytes": 111822,
+      "sha256": "62d510dbdd33ae1107cf3438a65d12dc33b9193c5c7cd3e12d66e456ac52ba22"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/01-watch.en.wav": {
+      "bytes": 101454,
+      "sha256": "226530460f83b7f8b4737cf86446dfedb54400ea2e39ed16ad1f78e16bcec451"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/02-people.zh.wav": {
+      "bytes": 198222,
+      "sha256": "dd7d2e9ce3620f4181d40357e33e3ab91975f0656846fbd9554b4afa99d09cfd"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/02-people.en.wav": {
+      "bytes": 235086,
+      "sha256": "205e0395528764207346cc16186b8875d3516c0961f9407bb5bac481f9f9906b"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/03-partners.zh.wav": {
+      "bytes": 309966,
+      "sha256": "336fdabfb16886be44480a76d7efb1a29ebbe17080e45f7323cae252226c48cf"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/03-partners.en.wav": {
+      "bytes": 230478,
+      "sha256": "6dd31a4397cc0f3fe1d17db6bdb5b9c40971c54b44fb2895d3c93f066cd6b2ee"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/04-price.zh.wav": {
+      "bytes": 248910,
+      "sha256": "633d7eab5bc9e9a3680db2bf2d07d848b6b821b6222e135065cc8f5ca4c5366c"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/04-price.en.wav": {
+      "bytes": 202830,
+      "sha256": "ee428ddb547d786ea8b6a5b3397622c8afa401b2dd0044b0058bc4a7a048af57"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/05-macro.zh.wav": {
+      "bytes": 147534,
+      "sha256": "9b6a37354f7e3f69776386334e356fa3772c448975453da4a2b1c28645bff010"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/05-macro.en.wav": {
+      "bytes": 107214,
+      "sha256": "e8bdad2de1d926a8c497fb22bec63973a08402058725821681bc8d60819ee5d7"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/06-creator.zh.wav": {
+      "bytes": 159054,
+      "sha256": "09c8785b23b9cbf4a1e316c0a7c3156d242fb0580a20a500ec169edb3199705d"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/06-creator.en.wav": {
+      "bytes": 149838,
+      "sha256": "9299c69594db94876c8c48b82383483e9a23a2fad4ed5bd38ac0356f9753fb93"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/07-social.zh.wav": {
+      "bytes": 240846,
+      "sha256": "04e959070175c901272ee60b1f7a3ebeda49650c96557aeafcf0abcd7fedc2c0"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/07-social.en.wav": {
+      "bytes": 203982,
+      "sha256": "5eccabbba35eed12cd979e36a31022ea48359342a9edf16f0c972be64a161f7b"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/08-brief.zh.wav": {
+      "bytes": 210894,
+      "sha256": "37723a9c1e58e21adcbe3d18a008fdf335ac7e3a1d41f076361c06e3ae2a2129"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/08-brief.en.wav": {
+      "bytes": 230478,
+      "sha256": "95a5cb46be6f5744b9978aba14b991346ec036a240b4507890d45165ec1b42e3"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/09-start.zh.wav": {
+      "bytes": 81870,
+      "sha256": "167ed2d2739c164f712ae916846c6c93b28cdabef0eaea87d4db7d5e94bb0eaa"
+    },
+    "/tmp/ducky-demo-v10/audio-v2/09-start.en.wav": {
+      "bytes": 61134,
+      "sha256": "c1c517b0755376af494cbc47a0dde5945b5419198f5fec2e7bee9668f53c9170"
+    },
+    "/tmp/ducky-demo-v10/render-v3/render-report.json": {
+      "bytes": 15674,
+      "sha256": "1e816f2601af5e2031b8e512edd8c10949f1c036823abe8ba644ad5a49e4fcfe"
+    },
+    "/tmp/ducky-demo-v10/render-v3/ducky-walkthrough-2026-09-07-vibe-v10.zh.mp4": {
+      "bytes": 1556474,
+      "sha256": "9f90aaa61cd417671cb9dddaad588890497360b53b7006d461c0bb7603403ce4"
+    },
+    "/tmp/ducky-demo-v10/render-v3/ducky-walkthrough-2026-09-07-vibe-v10.zh.jpg": {
+      "bytes": 109611,
+      "sha256": "47e175fc1350424b22a0ebe058691839a8742a535db5a941f04b0b29bd3c8d32"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/zh/01-watch.png": {
+      "bytes": 73186,
+      "sha256": "933ebab6ae4a993fa7cfb2b2a825544c201e1a6d69956acd0b024f82283b21af"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/01-watch-s0.png": {
+      "bytes": 74986,
+      "sha256": "07dde88b00677a7aeacf2f8ac7f6acd46956ef82443824b538b0eb28f53f3184"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/01-watch-s6.png": {
+      "bytes": 75033,
+      "sha256": "13e960ae363c6f21e15740fbdcdb3d35ea73730e8948cfe680b628ace3630af0"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/01-watch-s12.png": {
+      "bytes": 73186,
+      "sha256": "933ebab6ae4a993fa7cfb2b2a825544c201e1a6d69956acd0b024f82283b21af"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/zh/02-people.png": {
+      "bytes": 75639,
+      "sha256": "38d41c20dd2b0c19f3e2c56cb4ed8eb84c04edb7cdbda12b11d4f903c7ae7f4e"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/02-people-s0.png": {
+      "bytes": 74103,
+      "sha256": "5ceaa9595f1fc6cbb701ca9da2d4604c9a13df255f2b9981a4435f156ffddfe1"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/02-people-s9.png": {
+      "bytes": 73865,
+      "sha256": "db64a21a1cc7ed136b2e72081fc67fb9858361b6e0c395ac18096cc0540ff31c"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/02-people-s16.png": {
+      "bytes": 75639,
+      "sha256": "38d41c20dd2b0c19f3e2c56cb4ed8eb84c04edb7cdbda12b11d4f903c7ae7f4e"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/zh/03-partners.png": {
+      "bytes": 80561,
+      "sha256": "2b8adf6899d4ed98d7efcd5ed882fc35f75b387b615bbefc6fd42a1beb978e71"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/03-partners-s0.png": {
+      "bytes": 77873,
+      "sha256": "709ab751e1f866b602296247387873ab24b6ba358e018ba33e3e5a215766c130"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/03-partners-s9.png": {
+      "bytes": 78255,
+      "sha256": "203287642ace59aeb86f195f8077cb48d1cddf94b948632fc901602a401fa190"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/03-partners-s15.png": {
+      "bytes": 80561,
+      "sha256": "2b8adf6899d4ed98d7efcd5ed882fc35f75b387b615bbefc6fd42a1beb978e71"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/zh/04-price.png": {
+      "bytes": 73887,
+      "sha256": "66879730ca4b63f3d842cad3052fb27ebcb0ff867ad8dd5cb97e0cc216299e65"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s0.png": {
+      "bytes": 62654,
+      "sha256": "2b3ec7643a4b510786b8e0c537d0516614d36cdc56f2f7513154961ad5a07e25"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s1.png": {
+      "bytes": 62867,
+      "sha256": "2f196b922ba00dedc61ede6d58ceffc5984af246c36fa382b9a754a18c88fd33"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s2.png": {
+      "bytes": 62884,
+      "sha256": "8cf9eff4fb0437e9de08f3062792cd8df86ea2280757c23d1f72d4f47957a7c6"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s3.png": {
+      "bytes": 63727,
+      "sha256": "eea8a8a26192f0093bd0cb4b42e4487d388ddd41a415a8b43e6c903b2a579094"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s4.png": {
+      "bytes": 63554,
+      "sha256": "4b3a1b0185ec9d59b1a7ec8d618227bc85f9b0abe7cbbd4b598d7130bffa5563"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s5.png": {
+      "bytes": 63349,
+      "sha256": "984ef76259fb88dd02d12fd29d126806c7299156ace5cfc4b93fdad1218fb42e"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s6.png": {
+      "bytes": 63565,
+      "sha256": "1f5be005f8c69a69581492a8e713060a46f8b913def24c3c3b1dbbce16cf97a4"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s7.png": {
+      "bytes": 63684,
+      "sha256": "f213abe9152a709d14296878f86bc0295052274a625ab5145e4fed3eec1e3e93"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s8.png": {
+      "bytes": 65821,
+      "sha256": "c3d3c9e0b1700edd0170b466e7b2b1f3b8c0f268487b927ba61a3cd3e4c9ee88"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s9.png": {
+      "bytes": 66090,
+      "sha256": "4ce0d5435c384072838e9ddde95eb980c5d780d7071fa5e1ce1f302f0ee2f217"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s10.png": {
+      "bytes": 66659,
+      "sha256": "bd9dea3f5f1227d908bd27eadc4385dde420ef0e536426feb8bd5f2c9fa7ea91"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s11.png": {
+      "bytes": 67323,
+      "sha256": "602b9e951d82dc772970a5a17def6e76c9e25941e6710865a6194b02c7a03181"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s12.png": {
+      "bytes": 67295,
+      "sha256": "34594a6ecce0bcca95593624a483d71c5cdb2211bb1c7faeb6566c4a5fb2156c"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s13.png": {
+      "bytes": 68478,
+      "sha256": "9a49a75df84350049355dda34e0ee2e96dbeffe31fd0856a4f9d6517d51e503b"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s14.png": {
+      "bytes": 69496,
+      "sha256": "bd1f9af5f6e5ea8254aeb9ce214771dc1c28de27f6dcf77ae232c32ce329b02b"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s15.png": {
+      "bytes": 70432,
+      "sha256": "fac1391dd15d19daed48671a84c5cf038d93f5fc1c3ac35feef4c9d5af9256c9"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s16.png": {
+      "bytes": 71665,
+      "sha256": "80c4e7945837b3a03aea1b14459ba4b142677fa6bbe993c92d83a888aefe2dcc"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s17.png": {
+      "bytes": 72244,
+      "sha256": "eedd89c57b4dd23ec88a0850ff043c876da291dc4690f64c3b2764c112deb8ce"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s18.png": {
+      "bytes": 73435,
+      "sha256": "8d7083f53a4fd67d8a94cad2900610d1ff6ea5a45296c4752ef791684ce73b1f"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s19.png": {
+      "bytes": 74241,
+      "sha256": "336bda1743d36be0a96de488608d23c56eed94d0126766579b12af74196d4d24"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/04-price-s20.png": {
+      "bytes": 73887,
+      "sha256": "66879730ca4b63f3d842cad3052fb27ebcb0ff867ad8dd5cb97e0cc216299e65"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/zh/05-macro.png": {
+      "bytes": 81655,
+      "sha256": "58170476b22654a6ee0b4e947f16f24ed6ca2ff354b1271185cb77b89cbb8de0"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/05-macro-s20.png": {
+      "bytes": 81655,
+      "sha256": "58170476b22654a6ee0b4e947f16f24ed6ca2ff354b1271185cb77b89cbb8de0"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/zh/06-creator.png": {
+      "bytes": 70421,
+      "sha256": "ff17763d6456daea51b95effe6a9448f8fa86ed51381ed0655be18c3bcfd4796"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/06-creator-s20.png": {
+      "bytes": 70421,
+      "sha256": "ff17763d6456daea51b95effe6a9448f8fa86ed51381ed0655be18c3bcfd4796"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/zh/07-social.png": {
+      "bytes": 77416,
+      "sha256": "44ae12dfb59fbb77550c15b0565ab7471ab08ef8f24bc1c0c9a66108e4d75dec"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/07-social-s0.png": {
+      "bytes": 71971,
+      "sha256": "774ac1bff413abd1ab4a6745ed3fc4dbd7ed1e9ebf83927554fdf7036da864fd"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/07-social-s3.png": {
+      "bytes": 72595,
+      "sha256": "9088f26ec124b28e0931f8c653350af50ee222da7fd02547c7b9707a0537ee70"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/07-social-s5.png": {
+      "bytes": 73151,
+      "sha256": "4797e16e95c1db54c6494814bc50bca71450aa7496312b6a26602a31f4e0f287"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/07-social-s7.png": {
+      "bytes": 73721,
+      "sha256": "90c8d5f22348f18b8bc2d341d9b72b904538389b031ca36fb3a07461880f96fc"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/07-social-s9.png": {
+      "bytes": 74373,
+      "sha256": "3851fbcef631b5974a5eb7995ec92160c932ea8f0eb592bbee5a80f06e5f4441"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/07-social-s12.png": {
+      "bytes": 74997,
+      "sha256": "7689fb8590de58d328920549a05f7493c361f7a6dfdf0f07ca6c6b0ab2abd27c"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/07-social-s14.png": {
+      "bytes": 75510,
+      "sha256": "60e46bc7e6e9dde01910e3b134cc47432ccb4b147a1523171c1287e3a53571c9"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/07-social-s16.png": {
+      "bytes": 76087,
+      "sha256": "624c8e0949d08caee27e44344ceb4e79da00c5e2f23cf90c4f71895591a887ce"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/07-social-s18.png": {
+      "bytes": 76734,
+      "sha256": "5d6221614aedaa0e771eac865b89fe9942829942d3112080209447bde506b0a7"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/07-social-s20.png": {
+      "bytes": 77416,
+      "sha256": "44ae12dfb59fbb77550c15b0565ab7471ab08ef8f24bc1c0c9a66108e4d75dec"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/zh/08-brief.png": {
+      "bytes": 80260,
+      "sha256": "6172125ad2cd691d78ce0b119b83d55d13f651b5291381daa3315feb3d4c972e"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/08-brief-s20.png": {
+      "bytes": 80260,
+      "sha256": "6172125ad2cd691d78ce0b119b83d55d13f651b5291381daa3315feb3d4c972e"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/zh/09-start.png": {
+      "bytes": 47839,
+      "sha256": "2a004da34729bd30a56eb45f98a2f7d3c448718600fe3f4f1d2a6b340dba6fc1"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/zh/09-start-s20.png": {
+      "bytes": 47839,
+      "sha256": "2a004da34729bd30a56eb45f98a2f7d3c448718600fe3f4f1d2a6b340dba6fc1"
+    },
+    "/tmp/ducky-demo-v10/render-v3/ducky-walkthrough-2026-09-07-vibe-v10.zh.zh.vtt": {
+      "bytes": 1224,
+      "sha256": "a3c3094a9dc5c279d7d1d3e54bded29e9d2737c196d720a2d5646ea90808503c"
+    },
+    "/tmp/ducky-demo-v10/render-v3/ducky-walkthrough-2026-09-07-vibe-v10.zh.en.vtt": {
+      "bytes": 1230,
+      "sha256": "f150751d850e8f523fefe0434fcc424ca0fb722546a4917b552d123891a7a3ce"
+    },
+    "/tmp/ducky-demo-v10/render-v3/ducky-walkthrough-2026-09-07-vibe-v10.en.mp4": {
+      "bytes": 1589540,
+      "sha256": "9859d6e58f221ec8ca0b2fe9d8be2e5719dbbcbdb42a021fce884cc7ba4c8d4d"
+    },
+    "/tmp/ducky-demo-v10/render-v3/ducky-walkthrough-2026-09-07-vibe-v10.en.jpg": {
+      "bytes": 113679,
+      "sha256": "32c6fa506876cc3531e2c9f267c5a26ec3944271d4201f4464c6238e01a85318"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/en/01-watch.png": {
+      "bytes": 78429,
+      "sha256": "88d3d64fe29fb05f68f351d390681b63c8989f32b931378cbf2ee389eedc2fb3"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/01-watch-s0.png": {
+      "bytes": 78177,
+      "sha256": "60a779d903051a1ddd5c6aed8ab5a722b604fb947b1f514dee2a9ba466494d55"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/01-watch-s6.png": {
+      "bytes": 78265,
+      "sha256": "a45ebf113cc843db4f38941725dec9879de81a635b6203ca6114a926e3968b26"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/01-watch-s12.png": {
+      "bytes": 78429,
+      "sha256": "88d3d64fe29fb05f68f351d390681b63c8989f32b931378cbf2ee389eedc2fb3"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/en/02-people.png": {
+      "bytes": 87527,
+      "sha256": "5b96ecc8f0cb080cfa31f04b11da3b6aeda6e5f30fac0ea6e269255e7f928e42"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/02-people-s0.png": {
+      "bytes": 86203,
+      "sha256": "8241a5e6b30088e1c46d5db21bcd9e37198c92bad978145b0ebbd81e4039aa7e"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/02-people-s9.png": {
+      "bytes": 85848,
+      "sha256": "a44c6a0c6d2575f8430c5ca4de8a32e0c9063ea0e73ebb8f640ee53d85ecdcb1"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/02-people-s16.png": {
+      "bytes": 87527,
+      "sha256": "5b96ecc8f0cb080cfa31f04b11da3b6aeda6e5f30fac0ea6e269255e7f928e42"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/en/03-partners.png": {
+      "bytes": 86018,
+      "sha256": "381c3938b74827fc443111890f13fa210f1e71266ba500f0f68b96a26133f5c2"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/03-partners-s0.png": {
+      "bytes": 83882,
+      "sha256": "d84f7315d42430895990ea58a2b6772be27fa42a0fd463843f5c6034585205ac"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/03-partners-s9.png": {
+      "bytes": 83760,
+      "sha256": "52e63dc1ffeb06363906ed1bc17ce1e615c4c84d7a871d0956db671ec4195fcf"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/03-partners-s15.png": {
+      "bytes": 86018,
+      "sha256": "381c3938b74827fc443111890f13fa210f1e71266ba500f0f68b96a26133f5c2"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/en/04-price.png": {
+      "bytes": 77673,
+      "sha256": "52d0210a8f8241c9fb8c6e667e7fabc780fc191f25dccd763d6e55c6046bf57f"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s0.png": {
+      "bytes": 66352,
+      "sha256": "1a0c011cb2f13d7bee302b4a9ea6754a2a0ca03412b90487227a79501761399f"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s1.png": {
+      "bytes": 66649,
+      "sha256": "c872c1738ffa386d7cbbe8c6456992d788fbf344f88e5f481e158cc740867856"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s2.png": {
+      "bytes": 66674,
+      "sha256": "7ac3cd18c065be719250c863077419f52be300c1460bf2b139a4a146ec849de9"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s3.png": {
+      "bytes": 67533,
+      "sha256": "703068d7d0b24244bafc36445a7cf9176a04513a1b6c2efa54a5a54eee637768"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s4.png": {
+      "bytes": 67308,
+      "sha256": "147215c85d0c47f52f8195000c3e92de27c08c630b7ea3e5aaec3278d4e7d6ae"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s5.png": {
+      "bytes": 67168,
+      "sha256": "9126612f991dbc208f8364a1de07b6469272f30c8b5eeb445856b83de20328f9"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s6.png": {
+      "bytes": 67389,
+      "sha256": "2b7d7a752982840ca1c45d415ddfeb04a64097d420410db83420ece2b2f91142"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s7.png": {
+      "bytes": 67634,
+      "sha256": "5dedfab80e12ebc38b794e839d410b1f96a6f57205d69f28195834348a139d72"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s8.png": {
+      "bytes": 68229,
+      "sha256": "2a8e2d5ea0bc2382dd07d1ea5b2241ee8aab0098735d56b924dc5a94af845e08"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s9.png": {
+      "bytes": 68697,
+      "sha256": "b93e54de8e8080b82e618d91ddb9b072760bed94c22e81a9e27b43a9bc61f91d"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s10.png": {
+      "bytes": 69220,
+      "sha256": "aef3e70354b13759e8fd981ecb9bee130a052a416d734e5cfdcd598b5fc0cca4"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s11.png": {
+      "bytes": 69851,
+      "sha256": "cb83d8d7159660f50b68a06b48be3753a7986f0de55b70bca5ca3af25df91993"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s12.png": {
+      "bytes": 69809,
+      "sha256": "d9c86dfb35e21c2ae879ab8ff254b0560d82e4f2bdbc6bea49e2ae315ed16a06"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s13.png": {
+      "bytes": 71030,
+      "sha256": "00f5793d05f0a4522b164cfcb9974753b3e49a1a60dfa27d3c37bb663365ee18"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s14.png": {
+      "bytes": 72082,
+      "sha256": "0de47bb957037ef6d235f94847ae5cec5f6e9ba9630ec8530ddaae258bd136cd"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s15.png": {
+      "bytes": 73042,
+      "sha256": "fb83a88213136d3ae06e112e8a39d77b20870b6b8d010c8872c3febc9d89c291"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s16.png": {
+      "bytes": 74206,
+      "sha256": "31b643d9f0e1961e35ba310ac46a56e801014ae317a1ddd2699956793f250f01"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s17.png": {
+      "bytes": 74761,
+      "sha256": "bfb5cd833f1a41688c3c2d9683dbfadf3b7ed8775ccf65c434d35092bfa54d26"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s18.png": {
+      "bytes": 75998,
+      "sha256": "31095eb46e6b5a8c403819df5f531dca74fb6b859c56e1818a1f6a47383e70c8"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s19.png": {
+      "bytes": 76860,
+      "sha256": "a5f1ba62e7a67827655b38273e8fd5ca697b35a60526bbd6c28ef5c16e0c12fd"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/04-price-s20.png": {
+      "bytes": 77673,
+      "sha256": "52d0210a8f8241c9fb8c6e667e7fabc780fc191f25dccd763d6e55c6046bf57f"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/en/05-macro.png": {
+      "bytes": 91205,
+      "sha256": "b53f24acc526f43a2669b77a1f52cbf177a326fb52c7aa3d29e0404fe2cde139"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/05-macro-s20.png": {
+      "bytes": 91205,
+      "sha256": "b53f24acc526f43a2669b77a1f52cbf177a326fb52c7aa3d29e0404fe2cde139"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/en/06-creator.png": {
+      "bytes": 77338,
+      "sha256": "1d848741173d1d4a94574c7fb87889e715d0c3375430ae3f3e97c7abb0333fa0"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/06-creator-s20.png": {
+      "bytes": 77338,
+      "sha256": "1d848741173d1d4a94574c7fb87889e715d0c3375430ae3f3e97c7abb0333fa0"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/en/07-social.png": {
+      "bytes": 84909,
+      "sha256": "94a581dc78880ce9ee541dcabc5a61146e8164aa74545c6b8c4bf79d0af8c324"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/07-social-s0.png": {
+      "bytes": 79392,
+      "sha256": "c5f953a68f4c0c00e28dfb6dbdaea4d7ab5d86050ab506c071822db5fd773c5b"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/07-social-s3.png": {
+      "bytes": 80019,
+      "sha256": "9bc07c04a3a0980e907c67cf7116ac620952ee45180b7441d540fdaad899f17c"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/07-social-s5.png": {
+      "bytes": 80532,
+      "sha256": "76c397c25309403a673b67a010c58b1c9dd18c213d17b1347a394e258b46c092"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/07-social-s7.png": {
+      "bytes": 81271,
+      "sha256": "548f837401efb574f271a3a9055d26873d5c5d63390c5ec1322132db6d6365ee"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/07-social-s9.png": {
+      "bytes": 81877,
+      "sha256": "7253e1f2ac1efa778a797047a67817c7d140e3a9070bdb3473bb99bd0bc007ec"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/07-social-s12.png": {
+      "bytes": 82354,
+      "sha256": "dca4de9cf4c54d4ce125eee97272a990c056cff0f258df9281b63d93d58af4ae"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/07-social-s14.png": {
+      "bytes": 82936,
+      "sha256": "4ac9c3390cfc5cbf84d290337bc44a7cfc64f28e9d756961989f167d1f0764fd"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/07-social-s16.png": {
+      "bytes": 83525,
+      "sha256": "7b475843a0b7bdaa834225d324b1bb871fc27de5615ee8fe964b43aaf5899373"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/07-social-s18.png": {
+      "bytes": 84278,
+      "sha256": "4aefe9a9711d9add217a3aabe3edf42f809f41de2f4be6193afbfbddf28bc245"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/07-social-s20.png": {
+      "bytes": 84909,
+      "sha256": "94a581dc78880ce9ee541dcabc5a61146e8164aa74545c6b8c4bf79d0af8c324"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/en/08-brief.png": {
+      "bytes": 91048,
+      "sha256": "ce937afb97249b649facd68ce8c0e50eb383aa251cecc79da6f72b8f21223016"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/08-brief-s20.png": {
+      "bytes": 91048,
+      "sha256": "ce937afb97249b649facd68ce8c0e50eb383aa251cecc79da6f72b8f21223016"
+    },
+    "/tmp/ducky-demo-v10/frames-v1/en/09-start.png": {
+      "bytes": 48958,
+      "sha256": "0d8f95ad89a37568ed01cc168c7a573a6fce139a3796ecb5081373904a195a9b"
+    },
+    "/private/tmp/ducky-demo-v10/frames-v1/en/09-start-s20.png": {
+      "bytes": 48958,
+      "sha256": "0d8f95ad89a37568ed01cc168c7a573a6fce139a3796ecb5081373904a195a9b"
+    },
+    "/tmp/ducky-demo-v10/render-v3/ducky-walkthrough-2026-09-07-vibe-v10.en.zh.vtt": {
+      "bytes": 1224,
+      "sha256": "d27d4dd8edeb5393997ae16f89f448c136d753fb47361603fcb3c52008876d7d"
+    },
+    "/tmp/ducky-demo-v10/render-v3/ducky-walkthrough-2026-09-07-vibe-v10.en.en.vtt": {
+      "bytes": 1230,
+      "sha256": "95d7b78498b32e39ee30ce812de69f6ec0fca2437cbb07d8d26bd49f67e2680c"
+    }
+  }
+}

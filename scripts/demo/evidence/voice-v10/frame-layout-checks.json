@@ -1,0 +1,146 @@
+[
+  {
+    "lang": "zh",
+    "scene": "01-watch",
+    "h": 810,
+    "overflows": [],
+    "title": "你关注的股票，发生了什么？",
+    "w": 1440
+  },
+  {
+    "lang": "zh",
+    "scene": "02-people",
+    "h": 810,
+    "overflows": [],
+    "title": "谁买了什么？",
+    "w": 1440
+  },
+  {
+    "lang": "zh",
+    "scene": "03-partners",
+    "h": 810,
+    "overflows": [],
+    "title": "同是英伟达，条款不同。",
+    "w": 1440
+  },
+  {
+    "lang": "zh",
+    "scene": "04-price",
+    "h": 810,
+    "overflows": [],
+    "title": "到你设的价位。然后呢？",
+    "w": 1440
+  },
+  {
+    "lang": "zh",
+    "scene": "05-macro",
+    "h": 810,
+    "overflows": [],
+    "title": "宏观消息，和 HOOD 有什么关系？",
+    "w": 1440
+  },
+  {
+    "lang": "zh",
+    "scene": "06-creator",
+    "h": 810,
+    "overflows": [],
+    "title": "观点和原话，一起看。",
+    "w": 1440
+  },
+  {
+    "lang": "zh",
+    "scene": "07-social",
+    "h": 810,
+    "overflows": [],
+    "title": "讨论变多了，还是少了？",
+    "w": 1440
+  },
+  {
+    "lang": "zh",
+    "scene": "08-brief",
+    "h": 810,
+    "overflows": [],
+    "title": "与你有关的变化，放到一起。",
+    "w": 1440
+  },
+  {
+    "lang": "zh",
+    "scene": "09-start",
+    "h": 810,
+    "overflows": [],
+    "title": "从你的自选股开始。",
+    "w": 1440
+  },
+  {
+    "lang": "en",
+    "scene": "01-watch",
+    "h": 810,
+    "overflows": [],
+    "title": "Your stocks.What changed?",
+    "w": 1440
+  },
+  {
+    "lang": "en",
+    "scene": "02-people",
+    "h": 810,
+    "overflows": [],
+    "title": "Who bought what?",
+    "w": 1440
+  },
+  {
+    "lang": "en",
+    "scene": "03-partners",
+    "h": 810,
+    "overflows": [],
+    "title": "Two deals. Different terms.",
+    "w": 1440
+  },
+  {
+    "lang": "en",
+    "scene": "04-price",
+    "h": 810,
+    "overflows": [],
+    "title": "Your price level. What happened next?",
+    "w": 1440
+  },
+  {
+    "lang": "en",
+    "scene": "05-macro",
+    "h": 810,
+    "overflows": [],
+    "title": "What do rates mean for HOOD?",
+    "w": 1440
+  },
+  {
+    "lang": "en",
+    "scene": "06-creator",
+    "h": 810,
+    "overflows": [],
+    "title": "Keep the view with its source.",
+    "w": 1440
+  },
+  {
+    "lang": "en",
+    "scene": "07-social",
+    "h": 810,
+    "overflows": [],
+    "title": "Is the conversation picking up?",
+    "w": 1440
+  },
+  {
+    "lang": "en",
+    "scene": "08-brief",
+    "h": 810,
+    "overflows": [],
+    "title": "Catch up on your watchlist.",
+    "w": 1440
+  },
+  {
+    "lang": "en",
+    "scene": "09-start",
+    "h": 810,
+    "overflows": [],
+    "title": "Start with your stocks.",
+    "w": 1440
+  }
+]

@@ -12,7 +12,7 @@ export function mountDemoCaptionLayout(video) {
   function position() {
     const box = video.getBoundingClientRect();
     if (!box.width || !box.height) return;
-    const line = box.height / box.width > .7 ? 78 : 84;
+    const line = box.height / box.width > .7 ? 72 : 84;
     for (const track of video.textTracks || []) {
       for (const cue of track.cues || []) {
         cue.snapToLines = false;
