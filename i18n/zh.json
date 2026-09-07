@@ -586,7 +586,7 @@
   "app.profile.email": "邮箱",
   "app.profile.name": "显示名",
   "app.profile.lang": "语言",
-  "app.profile.country": "国家/地区（选填）",
+  "app.profile.country": "国家/地区代码（选填）",
   "app.profile.marketing": "偶尔给我发产品更新（随时可关）",
   "app.profile.privacy": "账号资料不会出现在公开页面。",
   "app.profile.save": "保存",
@@ -2973,5 +2973,6 @@
   "app.notify.link_result.session": "关联请求已过期或账号已切换，请从当前账号重新发起。",
   "app.notify.open_bot": "在 Telegram 中打开 Ducky",
   "app.notify.refresh_channels": "刷新连接状态",
-  "app.notify.cancel_link": "取消关联"
+  "app.notify.cancel_link": "取消关联",
+  "app.profile.country_invalid": "请填写两字母代码，例如 US，或留空。"
 }

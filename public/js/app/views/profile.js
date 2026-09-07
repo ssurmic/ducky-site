@@ -32,6 +32,7 @@ export async function mount(root, params = {}) {
     if (code === 'too_many_attempts') return s('profile.code_locked');
     if (code === 'rate_limited' || error?.status === 429) return s('profile.code_delayed');
     if (code === 'email_taken') return s('profile.email_unavailable');
+    if (code === 'bad_field' && error?.body?.field === 'country') return s('profile.country_invalid');
     if (['bad_email','no_email'].includes(code)) return s('profile.email_invalid');
     if (['code_invalid','code_expired'].includes(code)) return s('profile.code_invalid');
     if (['mail_error','send_failed','test_mode'].includes(code)) return s('profile.code_send_failed');
@@ -77,7 +78,12 @@ export async function mount(root, params = {}) {
       if (save.disabled || busy) return;
       const valid = requestValid(form);
       if (!valid()) return;
-      const body = { email: email.el.value.trim(), display_name: name.el.value.trim(), lang: lang.value, country: country.el.value.trim(), marketing_opt_in: !!form.querySelector("[name=marketing_opt_in]").checked };
+      const body = { email: email.el.value.trim(), display_name: name.el.value.trim(), lang: lang.value, marketing_opt_in: !!form.querySelector("[name=marketing_opt_in]").checked };
+      const countryValue = country.el.value.trim();
+      if (countryValue !== (prof.country || '').trim()) {
+        if (countryValue && !/^[a-z]{2}$/i.test(countryValue)) { toast(s('profile.country_invalid'), 'err'); country.el.focus(); return; }
+        body.country = countryValue.toUpperCase();
+      }
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(body.email)) { toast(s("profile.email_invalid"), "err"); email.el.focus(); return; }
       save.disabled = true; busy = true;
       try {

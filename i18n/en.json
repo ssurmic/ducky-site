@@ -586,7 +586,7 @@
   "app.profile.email": "Email",
   "app.profile.name": "Display name",
   "app.profile.lang": "Language",
-  "app.profile.country": "Country (optional)",
+  "app.profile.country": "Country code (optional)",
   "app.profile.marketing": "Send me occasional product updates (opt out any time)",
   "app.profile.privacy": "Your account details are not shown publicly.",
   "app.profile.save": "Save",
@@ -2973,5 +2973,6 @@
   "app.notify.link_result.session": "This connection request expired or the account changed. Start again from this account.",
   "app.notify.open_bot": "Open Ducky in Telegram",
   "app.notify.refresh_channels": "Refresh connection status",
-  "app.notify.cancel_link": "Cancel connection"
+  "app.notify.cancel_link": "Cancel connection",
+  "app.profile.country_invalid": "Use a two-letter country code, such as US, or leave it blank."
 }

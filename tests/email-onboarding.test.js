@@ -25,11 +25,11 @@ test('explicit sign-in collects missing or unverified email without losing its s
  assert.equal(target.signedInTarget({email_verified:false},'#/boards?board=social&ticker=mu&token=secret'),'#/profile?setup=email&next=boards%3Fboard%3Dsocial%26ticker%3DMU');
 });
 
-function fixture({email=null,pauseAt='',verifyStatus=200,verified=true,saveExtra={}}={}){
+function fixture({email=null,country='',pauseAt='',verifyStatus=200,verified=true,saveExtra={}}={}){
  history.replaceState(null,'','/app/#/profile?setup=email&next=alerts%3Fticker%3DNOK');
  store.bumpEpoch();store.set('token','account-a-token');store.set('me',{user_id:21,profile_complete:!!email,email_verified:false});
  document.getElementById('toasts').textContent='';
- let profile={user_id:21,email,email_verified:false,has_password:false},release;
+ let profile={user_id:21,email,country,email_verified:false,has_password:false},release;
  const calls=[];const root=document.createElement('main');document.body.append(root);const ctl=new AbortController();
  globalThis.fetch=async(url,options={})=>{
   const path=new URL(String(url),'https://ducky.test').pathname,method=options.method||'GET';calls.push({path,method,body:options.body,token:options.headers?.Authorization});
@@ -83,6 +83,18 @@ test('a saved email with a failed or throttled code shows a persistent retry ins
    assert.equal(f.root.querySelector('.verify .err'),null);assert.equal(f.continuation,null);
   }finally{f.close();}
  }
+});
+
+test('an unchanged legacy country name cannot block email setup; edited country codes are validated',async()=>{
+ const f=fixture({country:'United States'});
+ try {await f.mount();let form=f.root.querySelector('form');form.querySelector('[name=email]').value='receiving@example.test';
+  form.dispatchEvent(new window.Event('submit',{cancelable:true}));await flush();
+  const save=f.calls.find(row=>row.path==='/me/profile'&&row.method==='POST');assert.ok(save);assert.equal('country' in JSON.parse(save.body),false);
+  form=f.root.querySelector('form');form.querySelector('[name=country]').value='Not a country code';form.dispatchEvent(new window.Event('submit',{cancelable:true}));await flush();
+  assert.equal(f.calls.filter(row=>row.path==='/me/profile'&&row.method==='POST').length,1);
+  form.querySelector('[name=country]').value='us';form.dispatchEvent(new window.Event('submit',{cancelable:true}));await flush();
+  assert.equal(JSON.parse(f.calls.filter(row=>row.path==='/me/profile'&&row.method==='POST').at(-1).body).country,'US');
+ }finally{f.close();}
 });
 
 test('leaving or switching accounts during verification cannot hydrate the wrong account',async()=>{
