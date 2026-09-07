@@ -2,7 +2,8 @@ import {s} from '../strings.js';
 import {el,px} from '../ui.js';
 
 export function groundedClaim(c) {
-  return c?.extractor_version==='creator-claims-v1'
+  if(['retracted','superseded'].includes(c?.attribution_status))return false;
+  return ['creator-claims-v1','creator-claims-v2'].includes(c?.extractor_version)
     ? c.evidence_verified===true && c.verification==='source_reviewed' && Boolean(c.source_hash) && Array.isArray(c.segment_ids) && c.segment_ids.length>0
     : typeof c?.evidence==='string' && c.evidence.length>=12;
 }
@@ -29,7 +30,9 @@ export function claimDetails(call) {
   stated('creators.stated_condition',sourceWording(call.condition_text));
   stated('creatorclaim.reason',pick(call.reason));
   if(call.stated_price_text)stated('creatorclaim.stated_price',call.stated_price_text);
-  return el('div.creator-claim-detail',pick(call.note)?el('p',pick(call.note)):null,facts);
+  return el('div.creator-claim-detail',
+    ['retracted','superseded'].includes(call.attribution_status)?el('p.err',s('creatorclaim.superseded')):null,
+    pick(call.note)?el('p',pick(call.note)):null,facts);
 }
 
 export function priceContext(context) {

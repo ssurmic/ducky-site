@@ -2570,5 +2570,7 @@
   "app.briefing.details": "Dates and data coverage",
   "app.screen.matches": "{n} matching stocks",
   "app.screen.historical_note": "A current screen does not establish that these conditions coincided historically.",
-  "walkthrough.caption": "Recorded September 6, 2026 · Historical data and example setups"
+  "walkthrough.caption": "Recorded September 6, 2026 · Historical data and example setups",
+  "app.creatorclaim.superseded": "This interpretation has been corrected. Historical prices remain available; this version is excluded from comparisons and simulations.",
+  "app.creatorclaim.corrected": "The company attribution and interpretation have been reviewed and corrected. Earlier versions remain in the research history."
 }

@@ -22,3 +22,10 @@ test('publication references and prospective pending open stay distinct without 
  assert.match(node.textContent,/Previous session close/);assert.match(node.textContent,/Awaiting that session/);assert.match(node.textContent,/Time not available/);assert.match(node.textContent,/no fill is recorded/);
  assert.ok(!node.textContent.includes('$0'));
 });
+
+test('corrected historical interpretation stays labeled and v2 retains source proof',()=>{
+ const call={extractor_version:'creator-claims-v2',evidence_verified:true,verification:'source_reviewed',source_hash:'abc',segment_ids:[524,525],evidence:''};
+ assert.equal(groundedClaim(call),true);
+ assert.equal(groundedClaim({...call,attribution_status:'superseded'}),false);
+ assert.match(claimDetails({...call,attribution_status:'superseded'}).textContent,/interpretation has been corrected/);
+});

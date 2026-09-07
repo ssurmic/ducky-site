@@ -43,3 +43,9 @@ test('paid history keeps a loss, exact dates, and unavailable windows visible',a
  [...root.querySelectorAll('button')].find(b=>b.textContent==='From Ducky’s record').click();
  assert.ok(root.textContent.includes('Prices are missing'));assert.equal(calls,1);root.remove();
 });
+
+test('superseded interpretation is available only in historical view',()=>{
+ const old={...posts[0],calls:[{sym:'NVDA',attribution_status:'superseded'}]};
+ assert.equal(researchRows([old]).length,0);
+ assert.equal(researchRows([old],{history:true}).length,1);
+});

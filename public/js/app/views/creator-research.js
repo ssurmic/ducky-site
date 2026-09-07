@@ -9,6 +9,7 @@ export function researchRows(items, {kolId='', query='', history=false, allowedI
   for (const p of items) if (!latest.has(p.id) || p.revision_id > latest.get(p.id)) latest.set(p.id,p.revision_id);
   return items.filter(p=>(!kolId || p.kol_id===kolId) && (!allowedIds || allowedIds.includes(p.kol_id)) && (history || latest.get(p.id)===p.revision_id))
     .flatMap(p=>(p.calls || []).map(c=>({post:p,call:c})))
+    .filter(({call})=>history || !['retracted','superseded'].includes(call.attribution_status))
     .filter(({post,call})=>(tickers===null||tickers.includes(call.sym))&&[post.kol_name,post.title,call.sym].join(' ').toLowerCase().includes(query.toLowerCase()));
 }
 
