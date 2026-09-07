@@ -10,7 +10,7 @@ The owner’s actual phone screenshot showed 22px date numbers, large empty card
 - Creators: Following leads with recent content; Discover and Add still show the full person lookup, independent of stocks.
 - Chart: related links and legends follow the chart; an empty symbol status no longer reserves blank space. All panes are allocated after all series exist, using proportional sizing so adding MACD cannot squeeze RSI. The bundled5.2 API is documented at [IPaneApi](https://tradingview.github.io/lightweight-charts/docs/api/interfaces/IPaneApi#setstretchfactor).
 - Billing: currency selection uses the shared surface/text colors,16px font and44px target in both themes.
-- Integration: latest main’s market page, navigation, notification controls and unknown-watchlist states are retained. Normal radar entry leads with results; screening links still open and focus their explicit form.
+- Integration: latest main2ac32fe’s market page, navigation, notification controls and unknown-watchlist states are retained. Normal radar entry leads with results; screening links still open and focus their explicit form.
 
 ## Measured acceptance
 
@@ -24,7 +24,7 @@ Independent Chrome touch simulation used the current source through an anonymous
 
 ## Gates and limits
 
-268 Node tests passed after integration/refinement. Twenty pages build;940 links pass; copy lint passes; asset graph4pass/1historical fixture skip. A link scan started during a rebuild saw incomplete output; after the build finished it passed. The fixture is not a live account workflow. Remaining nonblocking density opportunities (including subscription introduction and first-record body placement) are listed in the independent audit instead of claiming every page needs no further work.
+268 Node tests passed after the navigation integration/refinement; the later Telegram-link integration is checked again before release. Twenty pages build;940 links pass; copy lint passes; asset graph4pass/1historical fixture skip. A link scan started during a rebuild saw incomplete output; after the build finished it passed. The fixture is not a live account workflow. Remaining nonblocking density opportunities (including subscription introduction and first-record body placement) are listed in the independent audit instead of claiming every page needs no further work.
 
 Permanent acceptance instructions are recorded in frontend CLAUDE.md and backend WORKFLOW.md: every affected UI change must check real browser viewport constraints, languages, themes, core content position, dialogs and desktop regression. Shared layout changes trigger the route sweep.
 
