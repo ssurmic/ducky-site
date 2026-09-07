@@ -21,7 +21,15 @@ English: **Your investing. Backed by research.** Supporting English copy is writ
 | Creator views with sources | Stock/stance/reason extraction and original video links | Incomplete evidence retains its product labels. |
 | Follow subsequent outcomes | Event/price comparisons and historical records | Dates, sources, declines and price bases retained; historical examples do not establish past alert delivery. |
 
-“Research support” describes the combined workflow, not a human analyst team or complete automated due diligence. The owner also referred to “Boulder 点 AI.” A focused lookup did not establish the intended site; its URL was requested. No wording or claims are attributed to this unverified reference.
+“Research support” describes the combined workflow, not a human analyst team or complete automated due diligence.
+
+## Competitor reference resolved
+
+The owner's subsequent spelling clarification resolved the reference to [Balder AI](https://balder-ai.com/), already named in `UI-WALKTHROUGH-2026-09-07.md`. The initial lookup missed that existing record.
+
+The official homepage, reviewed2026-09-07, leads with an AI-native trading-desk identity, explains an ongoing research/testing/trading process, and offers published entry/exit records as evidence. Its differentiation section describes primary filings, input corrections and research iteration. These are its stated capabilities; this review does not independently validate its accuracy, comparative superiority or investment performance.
+
+The useful copy pattern is a clear product identity, a concrete mechanism, then inspectable evidence. Ducky's supported identity remains research support for independent investors, grounded in recurring screening, attributed creator views and later-price comparisons. Borrow the structure and confidence, with Ducky's own capabilities and evidence. Do not import the competitor's autonomous-trading, scale or performance claims. This clarification updates the reference analysis; it does not imply another production copy release.
 
 ## Verification
 
