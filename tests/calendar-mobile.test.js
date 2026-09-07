@@ -40,11 +40,12 @@ test('desktop defaults to two weeks, pages fourteen days and keeps detail inside
  assert.deepEqual([...root.querySelectorAll('.cal-biweek')].map(w=>w.querySelectorAll('.cal-bicell').length),[7,7]);
  const active=root.querySelector(`[data-date="${date}"]`);
  assert.ok(active.querySelector('.cal-biweekday').textContent);
- assert.equal(active.querySelectorAll('.pill').length,2);
- assert.equal(active.querySelector('.pill-more').textContent,'+6 more');
+ assert.equal(active.querySelectorAll('.pill').length,3);
+ assert.equal(active.querySelector('.pill-tk').textContent,'NVDA');
+ assert.equal(active.querySelector('.pill-more').textContent,'+5 more');
  active.click();
- assert.equal(document.querySelectorAll('#modal .cal-ev').length,8,'two previews still open every event');
- assert.equal(active.querySelector('.pill-kind').textContent,'Macro');
+ assert.equal(document.querySelectorAll('#modal .cal-ev').length,8,'compact previews still open every event');
+ assert.equal(active.querySelector('.pill-kind').textContent,'Earnings');
  assert.equal(document.querySelector('#modal .cal-t-macro .cal-event-brief').textContent,copy['app.event.hint_other']);
  closeModal();
  const first=root.querySelector('.cal-bicell').dataset.date;
@@ -106,8 +107,8 @@ test('official index deep links lead 42 same-day events through preview, dialog,
  try{
   assert.equal(root.querySelector('.cal-bicell[aria-pressed="true"]').dataset.date,day);
   const preview=root.querySelector(`[data-date="${day}"]`);
-  assert.deepEqual([...preview.querySelectorAll('.pill-txt')].map(n=>n.textContent),['BE','AMSF']);
-  assert.equal(preview.querySelector('.pill-more').textContent,'+40 more');
+  assert.deepEqual([...preview.querySelectorAll('.pill-txt')].map(n=>n.textContent),['BE','AMSF','AGNC']);
+  assert.equal(preview.querySelector('.pill-more').textContent,'+39 more');
   assert.match(preview.getAttribute('aria-label'),/42 events/);assert.match(preview.getAttribute('aria-label'),/BE joins/);
   assert.ok(preview.getAttribute('aria-label').length<240);assert.doesNotMatch(preview.getAttribute('aria-label'),/F37/);
   assert.equal(root.querySelector('.cal-mine').getAttribute('aria-pressed'),'false');
@@ -126,4 +127,35 @@ test('official index deep links lead 42 same-day events through preview, dialog,
   button(root,copy['app.calendar.mode_list']).click();assert.equal(root.querySelectorAll('.cal-ev').length,42);assert.equal(root.querySelector('.cal-tk').textContent,'$BE');
   assert.equal(calls.some(url=>url.includes('/calendar/context')||url.includes('/calendar/links')),false);
  }finally{cleanup();root.remove();location.hash='';store.set('me',{tier:'pro'});store.set('watchlist',priorWatch);}
+});
+
+test('ORCL stays visible beside two macro releases; every watched earnings label survives crowded two-week and month views',async()=>{
+ const oldWatch=store.get('watchlist');
+ const earn=ticker=>({date,type:'earnings',tickers:[ticker],title:ticker+' 财报',title_en:ticker+' earnings',note_en:'After market close · fixture'});
+ const macro=[{date,type:'macro',title:'PPI',title_en:'PPI'},{date,type:'macro',title:'初请',title_en:'Jobless claims'}];
+ let fixture=[...macro,earn('ORCL')];
+ globalThis.fetch=async url=>Response.json({events:String(url).startsWith('/calendar.json')?[]:fixture});
+ store.set('watchlist',['ORCL','ADBE','NVDA','AVGO']);
+ const root=document.createElement('div');document.body.append(root);
+ let cleanup=await calendar.mount(root);
+ try {
+  let day=root.querySelector(`[data-date="${date}"]`);
+  assert.equal(day.querySelector('.pill-tk').textContent,'ORCL');
+  assert.equal(day.querySelectorAll('.pill').length,3);
+  assert.equal(day.querySelector('.pill-more'),null,'the reported three-event day exposes all three events');
+  day.click();assert.match(document.querySelector('#modal .cal-t-earnings').textContent,/After market close/);closeModal();
+  cleanup();root.replaceChildren();
+  fixture=[...macro,...['ORCL','ADBE','NVDA','AVGO'].map(earn)];
+  cleanup=await calendar.mount(root);day=root.querySelector(`[data-date="${date}"]`);
+  assert.deepEqual([...day.querySelectorAll('.pill-tk')].map(n=>n.textContent),['ORCL','ADBE','NVDA','AVGO']);
+  assert.equal(day.querySelector('.pill-more').textContent,'+2 more');
+  day.click();assert.equal(document.querySelectorAll('#modal .cal-ev').length,6);closeModal();
+  button(root,copy['app.calendar.mode_month']).click();day=root.querySelector(`[data-date="${date}"]`);
+  assert.deepEqual([...day.querySelectorAll('.cal-month-earnings>span')].map(n=>n.textContent),['ORCL','ADBE','NVDA','AVGO']);
+  assert.deepEqual([...day.querySelectorAll('.mbar .pill-txt')].map(n=>n.textContent),['ORCL','ADBE','NVDA','AVGO']);
+  assert.equal(day.querySelector('.cal-event-count').textContent,'6');
+  day.click();assert.equal(document.querySelectorAll('#modal .cal-ev').length,6);closeModal();
+  button(root,copy['app.calendar.f_macro']).click();
+  assert.equal(root.querySelector('.cal-month-earnings'),null,'earnings stay out when explicitly filtered out');
+ } finally {cleanup();root.remove();store.set('watchlist',oldWatch);}
 });

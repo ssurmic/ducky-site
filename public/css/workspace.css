@@ -132,6 +132,14 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 .page-app .cal-biquiet{font-size:.75rem;color:var(--faint)}
 .page-app .cal-bicell.cal-weekend{background:color-mix(in srgb,var(--bg) 70%,var(--surface))}
 .page-app .cal-bicell.cal-closed{background:color-mix(in srgb,var(--accent) 6%,var(--surface))}
+/* Earnings keep their identity in compact previews, including phone month cells. */
+.page-app .cal-bicell .pill-earn .pill-kind{display:inline;flex-basis:auto;order:2;font-weight:500}
+.page-app .cal-bicell .pill-earn .pill-tk{order:1;font-weight:650}
+.page-app .cal-bicell .pill-earn .pill-logo{order:0}
+.page-app .cal-month-earnings{display:none}
+@media(max-width:560px){
+ .page-app .cal-month-earnings{display:flex;flex-direction:column;gap:2px;width:100%;font-size:12px;line-height:1.3;letter-spacing:-.02em;font-weight:650;color:var(--text);overflow-wrap:anywhere}
+}
 .page-app .seasonality-view{margin-top:24px}
 /* Reading feed: author, publication time, one preview, then optional evidence. */
 .page-app .creators-view{padding:0;border:0;background:none}

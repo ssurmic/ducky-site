@@ -29,8 +29,8 @@ export function calendarEventTicker(event, preferred='') {
   const tickers=(event.tickers || []).map(calendarTicker).filter(Boolean),scope=calendarTicker(preferred);
   return scope && tickers.includes(scope)?scope:(tickers[0] || '');
 }
-// One order for grid previews, agenda and day dialogs. Market session changes
-// stay first; a source link's company remains visible without filtering the day.
+// Full-day order for the agenda and dialogs; compact previews have their own
+// visibility policy below, without changing or filtering the event records.
 export function orderCalendarEvents(events,{scopeTicker='',isWatched=()=>false}={}) {
   const scope=calendarTicker(scopeTicker);
   const priority=e=>['holiday','early_close'].includes(e.type)?0:
@@ -38,4 +38,20 @@ export function orderCalendarEvents(events,{scopeTicker='',isWatched=()=>false}=
   return events.map((event,index)=>({event,index,priority:priority(event)}))
     .sort((a,b)=>a.event.date.localeCompare(b.event.date)||a.priority-b.priority||a.index-b.index)
     .map(row=>row.event);
+}
+
+// A generic overflow count must never stand in for a watched earnings release.
+// Keep session changes, the linked company and ALL watched earnings visible;
+// fill spare preview slots from the existing full-day order. Busy days can grow.
+export function calendarDayPreview(events,{scopeTicker='',isWatched=()=>false,limit=3}={}) {
+  const scope=calendarTicker(scopeTicker);
+  const priority=e=>['holiday','early_close'].includes(e.type)?0:
+    scope && calendarEventTicker(e,scope)===scope?1:
+    e.type==='earnings' && isWatched(e)?2:3;
+  const ranked=events.map((event,index)=>({event,index,priority:priority(event)}))
+    .sort((a,b)=>a.priority-b.priority||a.index-b.index);
+  const count=Math.max(limit,ranked.filter(row=>row.priority<3).length);
+  const visible=ranked.slice(0,count).map(row=>row.event);
+  const selected=new Set(visible);
+  return {visible,hidden:events.filter(event=>!selected.has(event))};
 }
