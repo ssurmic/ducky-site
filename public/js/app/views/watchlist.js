@@ -30,6 +30,8 @@ export async function mount(root) {
   const picker = symbolPicker(input, () => store.get("watchlist") || []);
   unsubs.push(picker.dispose);
   const form = el("form.add-row", { onsubmit: onAdd }, picker.wrap, addBtn);
+  const addOptions = el('details.watch-add-options', {open:!(store.get('watchlist')||[]).length},
+    el('summary',s('watch.add')),el('p.view-intro.muted',s('watch.workflow')),form);
   const list = el("div.watch-overview", { id: "watch-cards" });
   const resize=()=>layoutOverview(list);
   if(document.fonts)document.fonts.ready.then(()=>{if(!disposed)layoutOverview(list,true);});
@@ -62,8 +64,8 @@ export async function mount(root) {
     detail.append(el('button.btn.btn-ghost.btn-sm.watch-close',{type:'button',onclick:closeDetail},s('watch.close_details')),
       card(selected,(store.get('snapshots') || {})[selected]));
   }
-  root.append(head, el("p.view-intro.muted", s("watch.workflow")), form, controls, layout);
-  head.append(el('a.btn.btn-ghost.btn-sm',{href:'#/updates'},s('updates.entry_title')));
+  root.append(head, addOptions, controls, layout,
+    el('div.chips',el('a.chip',{href:'#/updates'},s('updates.entry_title'))));
 
   async function onAdd(e) {
     e.preventDefault();

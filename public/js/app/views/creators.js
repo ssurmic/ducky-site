@@ -181,7 +181,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     clear(content);
     const outerControls=card.querySelector('.creators-controls');
     outerControls.style.display=tab==='rank'||(selected&&tab==='feed')?'none':'';
-    outerControls.querySelector('.creator-person-search').hidden=tab!=='feed';
+    outerControls.querySelector('.creator-person-search').hidden=tab!=='feed'||mine;
     for(const button of outerControls.querySelectorAll('[data-creator-scope]'))button.setAttribute('aria-pressed',String(button.dataset.creatorScope==='following'?mine:!mine));
     card.querySelector('.evidence-page-head').hidden=!!selected&&tab==='feed';
     card.querySelector('.creator-page-actions').hidden=!!selected&&tab==='feed';

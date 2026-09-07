@@ -20,8 +20,8 @@ export function mountDraft(root,{onCreated,signal,company=''}={}) {
   EXAMPLES.forEach(key=>examples.append(el('button.example-chip',{type:'button',onclick:()=>{
     if(confirming)return;subject.value='';text.value=s('alertdraft.example_'+key);invalidate();text.focus();
   }},s('alertdraft.chip_'+key))));
-  card.append(el('p.eyebrow',s('alertdraft.eyebrow')),el('h2',s('alertdraft.title')),el('p.muted.small',s('alertdraft.help')),
-    el('p.small',s('alertdraft.examples')),examples,form,result);root.append(card);
+  card.append(el('h2',s('alertdraft.title')),el('p.muted.small',s('alertdraft.help')),form,
+    el('details.alert-example-options',el('summary',s('alertdraft.examples')),examples),result);root.append(card);
   function live(my=revision){return !stopped && !signal?.aborted && epoch===store.epoch() && my===revision;}
   function stopTimer(){if(timer)clearTimeout(timer);timer=null;}
   function invalidate(){revision++;draft=null;busy=false;stopTimer();submit.disabled=false;clear(result);}

@@ -240,30 +240,64 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .profile .pwsec .field{max-width:none;flex-basis:100%}
 }
 @media(max-width:560px){
- .page-app .cal-toolbar{gap:10px}
- .page-app .cal-toolbar .cal-modebar{flex:1;max-width:240px}
- .page-app .calendar-view .cal-mode{font-size:.8125rem;padding:8px;white-space:nowrap;min-height:38px}
- .page-app .cal-toolbar .cal-filters{flex-basis:100%;order:2}
+ .page-app .calendar-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+ .page-app .calendar-heading>div{min-width:0}
+ .page-app .calendar-heading p{font-size:.75rem;line-height:1.5;margin-top:4px}
+ .page-app .calendar-heading .btn{font-size:.6875rem;padding:6px 8px}
+ .page-app .calendar-view .event-scope-note{font-size:.75rem;line-height:1.5;margin:8px 0}
+ .page-app .calendar-view>.data-notice{font-size:12px;line-height:1.5;padding:8px 10px;margin:8px 0}
+ .page-app .cal-toolbar{gap:6px;align-items:center;margin-top:8px}
+ .page-app .cal-toolbar .cal-modebar{flex:1;max-width:none;min-width:0}
+ .page-app .calendar-view .cal-mode{font-size:.75rem;padding:6px;white-space:nowrap}
+ .page-app .cal-toolbar .cal-filters{flex:0 0 auto;order:0}
+ .page-app .cal-toolbar .cal-filters[open]{flex-basis:100%;order:2}
+ .page-app .cal-toolbar .cal-filters>summary{font-size:.6875rem;padding:6px 0}
+ .page-app .calendar-view .cal-mhead{grid-template-columns:44px minmax(0,1fr) 44px 52px;gap:4px;margin:8px 0 10px;align-items:center}
+ .page-app .calendar-view .cal-mtitle{font-size:.75rem;line-height:1.4}
+ .page-app .calendar-view .cal-today{grid-column:auto;justify-self:stretch;font-size:.6875rem;padding:4px;line-height:1.3}
  .page-app .cal-grid-hint{display:none}
- .page-app .cal-biweek .cal-bigrid{grid-auto-rows:minmax(116px,auto)}
+ .page-app .cal-biweeks{gap:8px}
+ .page-app .cal-biweek{grid-template-rows:auto auto;align-content:start}
+ .page-app .cal-week-label{font-size:.75rem;line-height:1.4;margin-bottom:6px}
+ .page-app .cal-biweek .cal-bigrid{grid-auto-rows:minmax(68px,auto);gap:6px;align-content:start}
+ .page-app .cal-biweek .cal-bicell{min-height:68px;padding:7px;gap:4px;border-radius:9px}
+ .page-app .cal-bidate{gap:6px}
  .page-app .cal-bicell .pill-kind{display:none}
- .page-app .cal-bicell .pill{padding:4px 6px;line-height:1.4}
- .page-app .cal-bicell .cal-events{gap:4px}
- .page-app .cal-bicell .cal-bidnum{height:26px}
+ .page-app .cal-bicell .pill{padding:3px 5px;line-height:1.4}
+ .page-app .cal-bicell .cal-events{gap:3px}
+ .page-app .cal-bicell .cal-bidnum{height:23px;min-width:23px;font-size:18px}
+ .page-app .cal-bicell .pill-tk,.page-app .cal-bicell .pill-more{font-size:12px}
+ .page-app .cal-bicell .cal-biquiet{font-size:11px;line-height:1.4}
+ .page-app .cal-bicell .pill-logo{width:14px;height:14px}
 }
 @media(max-width:360px){.page-app .app-top .brand{font-size:.75rem;gap:6px}.page-app .app-top .avatar-mark{width:24px;height:24px}}
 @media(pointer:coarse){.page-app .btn,.page-app .btn-sm,.page-app .cal-mnav,.page-app .cal-today,.page-app .modal-close{min-height:44px}.page-app .input{font-size:16px}}
 /* Portrait reading stays compact; targets remain usable with a finger or mouse. */
+.watch-add-options{margin:8px 0 12px}
+.watch-add-options>summary,.alert-example-options>summary{cursor:pointer;color:var(--accent-text);min-height:44px;align-content:center;font-size:.8125rem}
+.watch-add-options .view-intro{margin:6px 0}
+.page-app .billing-currency select{background:var(--surface);border-color:var(--border);color:var(--text);font:inherit}
+.page-app .symbol-status:empty{display:none}
 .radar-category-toggle{display:none}
 @media(max-width:720px){
  body.page-app{--fs-base:.9375rem}
  .page-app .app-main{padding:14px 12px 24px;scroll-padding-block:16px;scrollbar-gutter:auto}
  .page-app .app-view,.page-app .route-page{min-width:0}
- .page-app h1,.page-app .radar-heading h1{font-size:1.375rem}
+ .page-app h1,.page-app .radar-heading h1{font-size:1.25rem}
  .page-app .card{padding:14px;margin-bottom:12px}
  .page-app .calendar-view{padding:12px}
  .page-app .creators-view{padding:0}
  .page-app .input{font-size:16px;min-height:44px}
+ .page-app .billing-currency select{font-size:16px;min-height:44px}
+ .page-app .alert-composer{margin-top:12px}
+ .page-app .alert-composer h2{font-size:18px;line-height:1.4;margin:0 0 6px}
+ .page-app .alert-composer>p{font-size:12px;line-height:1.5;margin:0 0 12px}
+ .page-app .alert-draft-form{gap:10px}
+ .page-app .alert-draft-form label>span{font-size:12px}
+ .page-app .alert-draft-footer{gap:10px}
+ .page-app .alert-example-options{margin-top:8px;font-size:12px}
+ .page-app .alert-example-options>summary{align-content:center}
+ .page-app .alert-example-options .alert-examples{margin:4px 0 8px}
  .page-app .route-page>.chips{gap:6px;margin:8px 0 12px}
  .page-app .route-page>.chips>a{display:flex;align-items:center;justify-content:center;flex:1 1 120px;min-height:44px;font-size:.75rem;line-height:1.4;white-space:normal;text-align:center}
  .page-app .chart-workspace{display:flex;flex-direction:column;min-width:0}
@@ -272,8 +306,7 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .profile .pwsec .btn,.page-app .calendar-heading .btn,.page-app .calendar-view .cal-mode,.page-app .radar-guide summary{min-height:44px}
  .page-app .modal-close{width:44px;height:44px}
  .page-app .cal-mnav{min-width:44px}
- .page-app .cal-bidnum{font-size:22px}
- .page-app .cal-biweekday,.page-app .cal-bicell .pill{font-size:14px}
+ .page-app .cal-biweekday,.page-app .cal-bicell .pill{font-size:12px}
  .page-app .radar-heading{margin-bottom:14px}
  .page-app .radar-categories{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;grid-auto-flow:row;grid-auto-columns:auto;overflow:visible;gap:6px}
  .page-app .radar-sidebar>h2{display:none}
@@ -293,6 +326,12 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .modal-body{padding:14px;overflow-wrap:anywhere}
  .page-app .modal-actions{padding:10px 14px;flex-wrap:wrap}
  .page-app :is(.btn,.seg button,.cal-mnav,.cal-today,.cal-mode,.market-topic-trigger,.radar-category,.nav-more summary){touch-action:manipulation}
+}
+@media(max-width:360px){
+ .page-app .watch-controls{display:grid;grid-template-columns:minmax(0,1fr) auto}
+ .page-app .watch-controls .watch-modes{grid-column:1/-1;justify-self:start}
+ .page-app .watch-controls .watch-filter{grid-column:1/-1}
+ .page-app .watch-controls>select{min-width:0;width:100%}
 }
 @media(prefers-reduced-motion:reduce){.page-app *, .page-app *:before{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 

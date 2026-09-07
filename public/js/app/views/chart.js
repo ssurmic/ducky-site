@@ -60,7 +60,7 @@ export async function mount(root, params) {
   root.append(head, companyName, form, periodRow, el('div.chart-workspace',legendRow,host), status, companyHost);
   const showCompany=(p,rs)=>{companyHost.replaceChildren(companyContext(p,rs));companyName.textContent=p?.company||'';};
   if (ticker) api.company(ticker).then(p=>{if(alive) showCompany(p);}).catch(()=>{if(alive) showCompany(null);});
-  if (ticker) form.after(el('div.chips',
+  if (ticker) companyHost.before(el('div.chips',
     el('a.chip',{href:'#/creators?ticker='+encodeURIComponent(ticker)},s('watch.creator_mentions')),
     el('a.chip',{href:'#/boards?mode=archive&ticker='+encodeURIComponent(ticker)},s('watch.radar_records')),
     el('a.chip',{href:'#/calendar?ticker='+encodeURIComponent(ticker)},s('nav.calendar'))));
@@ -143,7 +143,6 @@ export async function mount(root, params) {
     rsiSeries.setData(overlays.rsi(bars, 14));
     referenceLines.push([rsiSeries.createPriceLine({ price: 70, color: down, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), '--red']);
     referenceLines.push([rsiSeries.createPriceLine({ price: 30, color: up, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), '--green']);
-    try { const panes = chart.panes(); if (panes[1]) panes[1].setHeight(110); } catch (e) { /* older lib */ }
     // MACD(12,26,9) in its own pane: histogram (green above / red below) + MACD line + signal, zero line marked.
     const m = overlays.macd(bars, 12, 26, 9);
     if (m.macd.length) {
@@ -155,8 +154,9 @@ export async function mount(root, params) {
       macdLineS = chart.addSeries(LWC.LineSeries, { color: cssVar("--blue", "#58a6ff"), lineWidth: 1, priceLineVisible: false, lastValueVisible: true, title: s("chart.macd") }, 2);
       macdLineS.setData(m.macd);
       referenceLines.push([macdLineS.createPriceLine({ price: 0, color: text, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), '--muted']);
-      try { const panes = chart.panes(); if (panes[2]) panes[2].setHeight(90); } catch (e) { /* older lib */ }
     }
+    // Size all panes together after creating them; adding MACD must not squeeze RSI.
+    chart.panes().forEach((pane,index)=>pane.setStretchFactor([3,1.2,1][index] || 1));
     chart.timeScale().fitContent();
 
     // Overlays: Pro only. Free/paid see a lock strip instead.

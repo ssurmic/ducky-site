@@ -101,7 +101,7 @@ export async function mount(root) {
   const picker = el("div.picker", el("b", s("billing.pick_title")), el("p", s("billing.pick_pro")), el("p.muted.small", s("billing.legacy_preserved")));
   const toggle = el("div.seg.mono", { role: "group" },
     ["monthly", "annual"].map((m) => el("button", { type: "button", "data-m": m, class: (m === "annual") === (selected.months === 12) ? "on" : "", onclick: () => { selected.months = m === "annual" ? 12 : 1; toggle.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.m === m)); renderTiers(); renderRails(); } }, s("billing." + m))));
-  const currencySelect = el("select", {"aria-label":s("billing.currency"), onchange:()=>{
+  const currencySelect = el("select.input", {"aria-label":s("billing.currency"), onchange:()=>{
     selected.currency=currencySelect.value;
     if(selected.currency==="CNY")selected.months=12;
     toggle.hidden=selected.currency==="CNY";

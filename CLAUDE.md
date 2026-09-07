@@ -28,6 +28,18 @@ truth; this one only points at it.
 - Telegram CTAs use `https://t.me/<bot>?start=src_<slug>` (see `site.config.json` → `deeplink`). When
   `channel` is `null`, "join the free channel" CTAs fall back to the bot deep link automatically.
 
+## Mobile browser acceptance (owner, 2026-09-07)
+
+After every UI change, visually check the affected routes on phone browser layouts, including short
+available viewports (320 and 390/393px wide; 600–700px high), both languages and color schemes.
+Measure the remaining content height after the app header/navigation, the first useful content's
+position, and visible rows. Browser chrome consumes screen height; overflow-free is not sufficient.
+Keep input text 16px and common tap targets at least 44px while using compact reading text. Calendar
+phone dates are 18px, event/weekday labels 12px, quiet day cards start at 68px and grow with events.
+Check dialogs, menus, focus restoration and desktop layout. Shared CSS/navigation changes require
+a route sweep of watchlist, briefing, chart, calendar, radar, alerts, creators, profile and billing.
+Record viewport simulation, touch emulation and physical-device checks separately and honestly.
+
 ## File ownership (packs)
 | Owner | Paths |
 |---|---|
