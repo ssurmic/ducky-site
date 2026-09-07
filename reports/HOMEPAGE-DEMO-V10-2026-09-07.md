@@ -4,7 +4,7 @@ Release status: local media and homepage verified. Publication is held for the o
 
 ## Product result
 
-- Homepage now leads with a watchlist-focused message, two opposing glass duck quote lanes, and a dated NOK replay card. The same canonical duck asset is reused at lower opacity. Mobile shows one lane and a horizontal, keyboard-accessible case carousel.
+- The original local checkpoint used two opposing glass duck quote lanes and a NOK replay hero. After the homepage owner published the new research-oriented hero, this branch retains that hero and reduces the additional quote strip to one lane below it. Its stylesheet no longer changes `.home-hero`. Either motion button pauses both the hero and quote strip; reduced-motion preference disables both. The same canonical duck asset remains in use. Mobile keeps a horizontal, keyboard-accessible recorded-case carousel.
 - AMKR, SGI and HUBS are explicitly selected positive recorded examples. The displayed figures are subsequent stock-price changes, not account returns or aggregate performance. Original observation times, assigned price sessions, every available close and pullbacks remain accessible. The complete ledger remains linked.
 - Public prices are dated cached snapshots from the existing shared API. A six-symbol refresh never invokes a producer, uses one bounded request per symbol per minute only while visible, and keeps the dated fallback if unavailable. No live-quote promise. Pausing, keyboard focus, reduced motion, hidden tabs and offscreen state stop movement as applicable.
 - Removed automatic glossary annotations from the new hero, numerical case cards and video area; in particular, a “5%” substring must not become a question-mark button inside +8.5%.
@@ -34,3 +34,5 @@ Independent Whisper ASR supplied no script prompt. All nine English utterances m
 - Full frontend baseline after final feature integration: 235 tests passed; final merged gate pending.
 
 Artifacts: `scripts/demo/voiceover-2026-09-07-v10.json`, `scripts/demo/evidence/voice-v10/`, and immutable `public/media/ducky-walkthrough-2026-09-07-vibe-v10.*`. Source WAVs and 106 captures remain in the task-owned `/tmp/ducky-demo-v10` production directory; synthesis and capture hashes are versioned.
+
+The final narrative is now drafted in `reports/DEMO-V11-NARRATIVE-2026-09-07.md`: information overload around a few watched stocks, attributed examples, then relevant updates and selected delivery channels. Existing v10 audio remains immutable and is not the final publication.
