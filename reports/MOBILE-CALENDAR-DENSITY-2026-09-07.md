@@ -35,3 +35,8 @@ Implemented and deployed as main `aa6c0b11` / Pages `56c5c40a`, then the separat
 Final refined Chinese393×700 calendar: content570px, first card328px below content top,6complete/8at least partially visible dates, no horizontal overflow. Independent final chart measurements320/390×650 in both themes: content520px, chart top231px,289px visible; panes212.5/85/70.5px plus28px time axis. Period selection and theme changes preserve those heights. Independent touch simulation evidence is described above; physical Safari remains untested.
 
 The independent audit is committed with this release. Permanent backend rules/tracker were pushed as `2d38464`, then updated with this final deployment receipt. Temporary root fixture/tab and dependency symlink are cleaned after verification. No other task’s browser tab or server is closed.
+
+
+### Post-release account-link check
+
+The notification integration task loaded the actual Telegram widget after release and observed `Bot domain invalid` from the Telegram OAuth iframe. It cancelled the attempt without changing account details or notification switches. Telegram linking is therefore **not accepted end to end**; domain configuration or an equivalent verified linking flow remains with the notification/backend tasks. Successful module delivery and mobile layout checks do not establish account-link success.
