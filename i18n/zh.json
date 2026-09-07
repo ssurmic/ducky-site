@@ -1110,12 +1110,12 @@
   "app.creators.unverified": "暂无完整摘要",
   "app.creators.attribution": "作者观点：{name}",
   "app.login.invite_method": "邀请码",
-  "app.research.title": "事件前后对照",
-  "app.research.intro": "看看公告前后，股价变了多少。",
+  "app.research.title": "股票研究记录",
+  "app.research.intro": "查看这只股票的来源记录、历史变化和事件前后对照。",
   "app.research.lock_title": "解锁当前事件研究",
   "app.research.lock_body": "Pro 可查看事件与价格对照。历史样例免费开放。",
   "app.research.unlock": "查看付费方案",
-  "app.research.load": "查看对照",
+  "app.research.load": "查看记录",
   "app.research.empty": "这只股票暂无事件对照。",
   "app.research.message_missing": "历史重建 · 未找到当时的提醒记录。",
   "app.research.before": "公告前收盘",
@@ -2681,5 +2681,6 @@
   "app.social.chart_title": "已记录的热度走势（0–100）",
   "app.social.chart_note": "断点表示未评分或采集间隔过长，不是热度为零。",
   "app.record.market_context": "共同市场背景",
-  "app.record.market_basis": "这些事件影响整个市场，不代表与这家公司存在直接业务关系。"
+  "app.record.market_basis": "这些事件影响整个市场，不代表与这家公司存在直接业务关系。",
+  "app.record.unknown_time": "时间未提供"
 }

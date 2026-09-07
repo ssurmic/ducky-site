@@ -1110,12 +1110,12 @@
   "app.creators.unverified": "Summary not ready",
   "app.creators.attribution": "Views expressed by {name}",
   "app.login.invite_method": "Invitation",
-  "app.research.title": "Event comparison",
-  "app.research.intro": "See how the price changed around an announcement.",
+  "app.research.title": "Stock research record",
+  "app.research.intro": "Review this stock’s source records, history and before-and-after event comparisons.",
   "app.research.lock_title": "Unlock current event research",
   "app.research.lock_body": "Event comparisons require Pro. Historical examples are free.",
   "app.research.unlock": "View plans",
-  "app.research.load": "Compare",
+  "app.research.load": "View records",
   "app.research.empty": "No event comparison for this stock yet.",
   "app.research.message_missing": "Reconstructed history · No original alert was found.",
   "app.research.before": "Pre-announcement close",
@@ -2681,5 +2681,6 @@
   "app.social.chart_title": "Recorded heat over time (0–100)",
   "app.social.chart_note": "Gaps mean no score or a collection gap, not zero heat.",
   "app.record.market_context": "Shared market context",
-  "app.record.market_basis": "These events concern the broader market, not a verified direct business relationship with this company."
+  "app.record.market_basis": "These events concern the broader market, not a verified direct business relationship with this company.",
+  "app.record.unknown_time": "Time not provided"
 }

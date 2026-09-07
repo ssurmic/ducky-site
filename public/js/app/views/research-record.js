@@ -29,9 +29,11 @@ export function recordCard(item) {
   if(p.effective_at)fields.push(['effective_at',value(p.effective_at)]);
   if(fields.length)card.append(el('dl.research-facts',...fields.map(([k,v])=>el('div',el('dt',tr(k)),el('dd.mono',v)))));
   if(item.stream==='vibe')card.append(el('p.small.muted',tr('vibe_limit')));
+  const published=item.source_at ? (p.date_precision==='day'||item.source_at.length===10 ? item.source_at.slice(0,10)+' · '+tr('unknown_time') : dateTime(item.source_at)) : tr('unknown');
+  if(item.source_at)card.append(el('p.small.muted',tr('published')+' '+published));
   card.append(el('p.small.muted',tr(item.freshness==='stale'?'stale':'observed')+' '+dateTime(item.observed_at)));
   const details=el('details',el('summary',tr('evidence')),
-    el('p.small',tr('published')+' '+(item.source_at?dateTime(item.source_at):tr('unknown'))),
+    el('p.small',tr('published')+' '+published),
     el('p.small',tr('indexed')+' '+dateTime(item.indexed_at)),
     el('code.social-record-id',item.id));
   if(p.relation_basis)details.append(el('p.small',tr('relation')+' '+value(p.relation_basis)));
