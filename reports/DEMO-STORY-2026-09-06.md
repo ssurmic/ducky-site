@@ -23,7 +23,7 @@ Accepted production revision **317**, recorded **2026-09-07 02:26:12 UTC**, cont
 
 ## Verification
 
-- Frontend after merging the creator-correction release and latest record export: **200 tests passed** before the final notification-UI merge; final combined gate is recorded in the publication section below. Twenty pages build; copy and internal-link checks pass.
+- Frontend after merging the creator-correction release and latest record export: **203 tests passed** after the final notification-UI merge. Twenty pages build; copy and internal-link checks pass.
 - Media gate: **915 checks, zero failures**, all ten WAV/ASR segments and all four complete, nonoverlapping caption tracks checked. Full H.264/AAC decode passes; MP4 fast-start metadata precedes media data. Assets are under 1 MB per video.
 - All **52 final editorial captures** checked for real content and exact 1440×810 dimensions. Three initially incomplete browser captures were replaced; their actual encoded frames were re-extracted and checked in `repaired-frame-check.json`.
 - Audio review notes are explicit: EN “twenty” transcribed as “20”; Chinese follow-up uses traditional variants; the close has ASR homophones 夹/加 and 支/只. This is an independent transcription and timing check, **not a human listening certification**. The available session could not provide subjective audio listening.
@@ -41,3 +41,9 @@ python3 scripts/demo/verify_media.py scripts/demo/voiceover-2026-09-06-v6.json s
 ```
 
 Preserve v5 published media and evidence. Rollback uses its original asset stem and chapter mapping; do not overwrite media under a published filename. The demo heartbeat stays paused. No notification, watchlist, alert or trading state was written for this recording.
+
+## Publication
+
+Source `6d8f2c0` (includes latest upstream `7556630`) pushed to main; Cloudflare Pages **364de88b** published the demo. Both production homepages select story-v6; all eight media files are byte-identical to the reviewed artifacts. Both MP4 range requests return HTTP 206. See `production-http.json` and `browser-qa.json`. Customer-facing copy contains no narration gender, model or production explanation.
+
+Release validation: 203 frontend tests, 20 built pages, authored-copy lint, 730 internal links, 915 media checks and full decoding passed. Production source revision 317 and the complete AMD/SPY path were independently verified before publication. Existing creator correction and notification correction UI were preserved.

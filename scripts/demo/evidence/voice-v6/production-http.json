@@ -1,0 +1,76 @@
+{
+  "deployment": "364de88b",
+  "source_commit": "6d8f2c0",
+  "checks": [
+    {
+      "asset": "ducky-walkthrough-2026-09-06-story-v6.en.en.vtt",
+      "sha256": "e1a84eb8d08e417ebb84d6ba49a41db8dc44de08183526ff99c3b556a9907eff",
+      "bytes": 775,
+      "status": 200
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-06-story-v6.zh.en.vtt",
+      "sha256": "d401737c8b9cd3619d5e89ab3b2aad8066a84b0f1835013ccffe75604ae361e4",
+      "bytes": 775,
+      "status": 200
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-06-story-v6.zh.mp4",
+      "sha256": "7247cefc9a1c97e00f1c27a5aeeccc7b3f2946d696ef750f66c9bf3dbf19f171",
+      "bytes": 832995,
+      "status": 200
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-06-story-v6.en.zh.vtt",
+      "sha256": "2a40bb61920e2c880995d8cd9367a84992d357f955b809daf717a5c611a28c4b",
+      "bytes": 791,
+      "status": 200
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-06-story-v6.en.mp4",
+      "sha256": "09a386be3c31b3a63b0e6e7f896d799812ad2aa0cae2e694d1b891b7fd80545a",
+      "bytes": 858441,
+      "status": 200
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-06-story-v6.zh.zh.vtt",
+      "sha256": "ba231ad51556e8092250ef98227b7a69c75e050b8245668d106f2a68f8b66dd8",
+      "bytes": 791,
+      "status": 200
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-06-story-v6.en.jpg",
+      "sha256": "d8e62e6004634728bf2fc39a2ce1caea355cf7c82c57da992bbee2fd2432f32b",
+      "bytes": 96294,
+      "status": 200
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-06-story-v6.zh.jpg",
+      "sha256": "7a96ecbf83d270319cb7473078755d4418433621a6e821b248456205670ea1ff",
+      "bytes": 88123,
+      "status": 200
+    },
+    {
+      "homepage": "https://duckybot.app/",
+      "new_video": true,
+      "chapters": 5,
+      "production_copy_removed": true
+    },
+    {
+      "range": "zh",
+      "status": 206,
+      "bytes": 1024
+    },
+    {
+      "homepage": "https://duckybot.app/en/",
+      "new_video": true,
+      "chapters": 5,
+      "production_copy_removed": true
+    },
+    {
+      "range": "en",
+      "status": 206,
+      "bytes": 1024
+    }
+  ]
+}

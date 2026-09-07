@@ -35,5 +35,35 @@
     "width": 390,
     "horizontalOverflow": false,
     "captions": "Chinese and English native captions visually observed; full source and chart remain above captions."
+  },
+  "production": {
+    "deployment": "364de88b",
+    "chineseFullPlayback": {
+      "duration": 28.301333,
+      "ended": true,
+      "time": 28.301333
+    },
+    "englishFullPlayback": {
+      "duration": 26.581333,
+      "ended": true,
+      "time": 26.581333
+    },
+    "chineseColdEnd": {
+      "time": 24.48,
+      "paused": true,
+      "readyState": 4
+    },
+    "englishColdEnd": {
+      "overflow": false,
+      "paused": true,
+      "ready": 4,
+      "src": "https://duckybot.app/media/ducky-walkthrough-2026-09-06-story-v6.en.mp4",
+      "time": 22.76
+    },
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "horizontalOverflow": false
   }
 }
