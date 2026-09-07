@@ -16,7 +16,9 @@ function destination(stream,ticker) {
 
 export function recordCard(item) {
   const p=item.payload||{},card=el('article.research-evidence');
-  if(p.content_status) return el('article.research-evidence',el('p.data-notice',tr('corrected')));
+  if(p.content_status) return el('article.research-evidence',el('p.data-notice',tr('corrected')),
+    el('p.small.muted',tr('observed')+' '+dateTime(item.observed_at)),
+    el('details',el('summary',tr('evidence')),el('code.social-record-id',item.id)));
   let title=p.title||p.summary||p.creator_name||'';
   if(typeof title!=='string') title='';
   if(title)card.append(el('p',title));

@@ -22,6 +22,7 @@ test('records retain actual zero, missing scores, full dates and safe links',()=
 test('correction status never displays withdrawn title or facts',()=>{
  const card=recordCard({...row,payload:{content_status:'superseded',title:'obsolete',index:99}});
  assert.match(card.textContent,/corrected/);assert.doesNotMatch(card.textContent,/obsolete|99/);
+ assert.match(card.textContent,/research:1/);assert.match(card.textContent,/2026-09-07/);
 });
 test('heat timeline has gaps for missing scores and absent collection, preserving a real zero',()=>{
  const samples=[0,null,80,90].map((score,i)=>({id:String(i),collected_at:`2026-09-07T0${i}:00:00Z`,index:score}));
