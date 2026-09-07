@@ -47,7 +47,9 @@ export async function mount(root, params = {}) {
     disposeNotifications();
     clear(card);
     const me = store.get("me") || {};
-    card.append(el("h1", s(setup ? "profile.setup_title" : "profile.title")), el("p.muted", s(setup ? "profile.setup_sub" : "profile.sub")));
+    const verifiedSetup = setup && prof.email_verified;
+    card.append(el("h1", s(verifiedSetup ? 'profile.setup_ready_title' : setup ? "profile.setup_title" : "profile.title")),
+      el("p.muted", s(verifiedSetup ? 'profile.setup_ready_sub' : setup ? "profile.setup_sub" : "profile.sub")));
     const form = el("form.form", { novalidate: "" });
     const email = input("email", "email", prof.email || "", s("profile.email"), true);
     const name = input("display_name", "text", prof.display_name || me.first_name || "", s("profile.name"), false);
@@ -79,7 +81,7 @@ export async function mount(root, params = {}) {
       } catch (err) { if (valid()) toast(s("common.error", { msg: err.message }), "err"); }
       finally { busy = false; if (valid()) save.disabled = false; }
     });
-    card.appendChild(form);
+    card.appendChild(verifiedSetup ? el('details.profile-email-change', el('summary', s('profile.change_email')), form) : form);
 
     // verification block
     const v = el("section.verify");

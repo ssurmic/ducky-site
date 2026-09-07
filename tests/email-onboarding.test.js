@@ -61,7 +61,9 @@ test('save sends one code request, verification keeps the account and unlocks it
  code.value='abc';button.click();await flush();assert.equal(f.calls.some(r=>r.path.endsWith('/verify')),false);
  code.value='123456';button.click();button.click();await flush();
  assert.equal(f.calls.filter(r=>r.path.endsWith('/verify')).length,1);
- assert.equal(store.get('me').user_id,21);assert.equal(store.get('me').email_verified,true);assert.ok(f.continuation);f.close();
+ assert.equal(store.get('me').user_id,21);assert.equal(store.get('me').email_verified,true);assert.ok(f.continuation);
+ assert.equal(f.root.querySelector('h1').textContent,copy['app.profile.setup_ready_title']);
+ assert.equal(f.root.querySelector('.profile-email-change').open,false);f.close();
 });
 
 test('expired or unconfirmed verification never offers continue or announces verified',async()=>{
