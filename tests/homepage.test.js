@@ -53,7 +53,7 @@ test('concept and theme links are shareable, translated and do not affect the de
  assert.equal(html.dataset.homeDesign,'flow');assert.equal(f.doc.querySelector('[data-home-review]').hidden,false);
  f.doc.querySelector('[data-home-design=brief]').click();
  assert.equal(html.dataset.homeDesign,'brief');assert.equal(html.dataset.theme,'light');
- assert.equal(f.doc.querySelector('[data-home-headline]').textContent,'Less to scroll.');
+ assert.equal(f.doc.querySelector('[data-home-headline]').textContent,JSON.parse(f.doc.querySelector('[data-home-strings]').textContent)['brief.h1a']);
  assert.equal(new URL(f.doc.querySelector('[data-lang-toggle]').href).searchParams.get('design'),'brief');
  f.doc.querySelector('[data-home-theme]').click();assert.equal(html.dataset.theme,'dark');
  f.w.history.replaceState(null,'',f.w.location.href+'#home-dossier');f.w.dispatchEvent(new f.w.HashChangeEvent('hashchange'));

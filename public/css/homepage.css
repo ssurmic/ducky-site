@@ -15,7 +15,7 @@
 .home-copy{position:relative;z-index:2;max-width:640px}
 .home-eyebrow{display:flex;align-items:center;gap:10px;font-size:.8125rem;font-weight:600;letter-spacing:.12em;color:var(--muted);margin:0 0 26px}
 .home-eyebrow>span{width:18px;height:2px;background:var(--accent);display:inline-block}
-.home-copy h1{font-size:clamp(2.7rem,4.8vw,4.4rem);line-height:1.22;letter-spacing:-.065em;margin:0;font-weight:660;text-wrap:balance}
+.home-copy h1{font-size:clamp(2.7rem,4.2vw,3.8rem);line-height:1.22;letter-spacing:-.065em;margin:0;font-weight:660;text-wrap:balance}
 .home-copy h1 em{font-style:normal;color:var(--muted)}
 .home-intro{font-size:1.0625rem;line-height:1.9;color:var(--muted);max-width:470px;margin:28px 0 30px;text-wrap:pretty}
 .home-cta{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
@@ -157,3 +157,6 @@
 @media(max-width:760px){:root[data-home-design=flow] .home-copy h1 em{margin-left:0}}
 @media(max-width:380px){.home-design-review>a,.home-design-review>button{padding-inline:7px;font-size:.6875rem;gap:3px}.home-design-review .home-review-close{padding-inline:7px}}
 @media(prefers-reduced-motion:reduce){.home-hero *,.home-hero *:before{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+/* Keep the two thought units intact in the longer Chinese positioning headline. */
+:root[data-home-design=brief] .lang-zh .home-copy h1{font-size:clamp(2.7rem,4.2vw,3.8rem)}
+@media(max-width:760px){:root[data-home-design] .lang-zh .home-copy h1{font-size:clamp(2rem,7.5vw,3.3rem)}}
