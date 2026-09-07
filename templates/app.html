@@ -38,9 +38,11 @@
 <script type="module" src="/js/app/main.js"></script>
 <script type="application/json" id="ducky-strings">{{ app_strings|tojson }}</script>
 <link rel="stylesheet" href="/css/radar.css">
+<link rel="stylesheet" href="/css/workspace.css">
 </head>
 <body class="lang-{{ lang }} page-{{ page }}">
 {{ app_icon_sprite }}
+<a class="skip" href="#main">{{ t('app.nav.skip') }}</a>
 <div class="app-shell" id="app">
   <header class="app-top">
     <a class="brand" href="{{ url('/') }}" title="{{ t('app.nav.home') }}"><img class="avatar-mark" src="/avatar-160.jpg" alt="" width="26" height="26" loading="eager" fetchpriority="high" decoding="sync"> {{ t('app.brand') }}</a>
@@ -50,13 +52,6 @@
     <a class="btn btn-ghost btn-sm" id="logout" href="#/login" hidden>{{ t('app.common.logout') }}</a>
   </header>
 
-  <main class="app-main" id="main" data-glossary>
-    <p id="profile-reminder" class="profile-reminder" hidden>{{ t('app.profile.recovery_reminder') }} <a href="#/profile">{{ t('app.profile.recovery_action') }}</a></p>
-    <div class="app-view" id="view" aria-live="polite"></div>
-    <p class="app-foot">{{ t('app.foot.disclaimer') }} <a href="{{ url('/disclaimer/') }}">{{ t('app.billing.disclaimer_link') }}</a></p>
-    <noscript><p class="errbox">{{ t('app.noscript') }}</p></noscript>
-  </main>
-
   {# Order: daily-use analysis views first, then account (Me) + upgrade (订阅) at the far end —
      Billing is an account action, not a mid-bar daily tab. #}
   {% macro nav_icon(name) -%}
@@ -64,17 +59,26 @@
   {%- endmacro %}
   <nav class="app-nav" aria-label="{{ t('app.nav.label') }}">
     {% for route in ['watchlist', 'briefing', 'chart', 'calendar', 'boards', 'alerts', 'creators', 'profile', 'billing'] %}
-    <a href="#/{{ route }}" data-route="{{ route }}"{% if route in ['chart', 'calendar', 'creators', 'profile', 'billing'] %} class="nav-secondary"{% endif %}>{{ nav_icon(route) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
+    <a href="#/{{ route }}" data-route="{{ route }}"{% if route in ['chart', 'briefing', 'creators', 'profile', 'billing'] %} class="nav-secondary"{% endif %}>{{ nav_icon(route) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
     {% endfor %}
     <details class="nav-more">
       <summary>{{ nav_icon('more') }}<span>{{ t('app.nav.more') }}</span></summary>
       <div class="nav-more-panel">
-        {% for route in ['chart', 'calendar', 'creators', 'profile', 'billing'] %}
+        {% for route in ['chart', 'briefing', 'creators', 'profile', 'billing'] %}
         <a href="#/{{ route }}" data-route="{{ route }}">{{ nav_icon(route) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
         {% endfor %}
       </div>
     </details>
   </nav>
+
+  <main class="app-main" id="main" tabindex="-1" data-glossary>
+    <p id="profile-reminder" class="profile-reminder" hidden>{{ t('app.profile.recovery_reminder') }} <a href="#/profile">{{ t('app.profile.recovery_action') }}</a></p>
+    <div class="app-view" id="view" aria-live="polite"></div>
+    <p class="app-foot">{{ t('app.foot.disclaimer') }} <a href="{{ url('/disclaimer/') }}">{{ t('app.billing.disclaimer_link') }}</a></p>
+    <noscript><p class="errbox">{{ t('app.noscript') }}</p></noscript>
+  </main>
+
+
 </div>
 <div id="toasts" aria-live="polite" aria-atomic="false"></div>
 <div id="modal" hidden></div>

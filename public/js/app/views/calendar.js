@@ -8,7 +8,7 @@ import { s } from "../strings.js";
 import * as api from "../api.js";
 import * as store from "../store.js";
 import * as router from "../router.js";
-import { el, clear, spinner, empty } from "../ui.js";
+import { el, clear, spinner, empty, modal, closeModal } from "../ui.js";
 import { mountSeasonality } from "../seasonality.js";
 
 const ICON = { macro: "liquidity", earnings: "chart", opex: "calendar", witching: "calendar", rebal: "digest" };
@@ -77,7 +77,7 @@ export async function mount(root) {
   const scopeTicker = new URLSearchParams((location.hash.split("?")[1] || "")).get("ticker") || "";
   const research = eventResearchSession((store.get("watchlist") || []).includes(scopeTicker) ? scopeTicker : "");
   let disposed = false;
-  const WD = isZh ? ["日", "一", "二", "三", "四", "五", "六"] : ["S", "M", "T", "W", "T", "F", "S"];
+  const WD = isZh ? ["日", "一", "二", "三", "四", "五", "六"] : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const MON = isZh
     ? (y, m) => `${y} 年 ${m + 1} 月`
     : (y, m) => `${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][m]} ${y}`;
@@ -98,7 +98,7 @@ export async function mount(root) {
     if (!watch.length) { try { const w = await api.watchlist.list(); watch = (w.items || []).map((x) => String(x.ticker || x).toUpperCase()); } catch (e) { /* ignore */ } }
   } catch (e) {
     clear(card); card.append(el("h1", s("calendar.h1")), el("p.err", s("calendar.load_error")));
-    return () => { disposed=true; research.dispose(); disposeHistory(); };
+    return () => { disposed=true; closeModal(); research.dispose(); disposeHistory(); };
   }
   const watchSet = new Set(watch);
   const events = ((doc && doc.events) || []).slice().sort((a,b)=>a.date.localeCompare(b.date) || (Number(!["holiday","early_close"].includes(a.type))-Number(!["holiday","early_close"].includes(b.type))));
@@ -154,9 +154,9 @@ export async function mount(root) {
   function render() {
     if(disposed) return;
     clear(card);
-    card.append(el("h1", s("calendar.h1")), el("p.muted", s("calendar.sub")));
+    card.append(el("header.calendar-heading", el("div", el("h1", s("calendar.h1")), el("p.muted", s("calendar.sub"))),
+      el("button.btn.btn-ghost.btn-sm.cal-history-link", {type:"button", "aria-controls":"seasonality-history", onclick:()=>{historyCard.scrollIntoView({block:"start"});historyCard.focus({preventScroll:true});}}, s("calendar.history_short") + " ↓")));
     if(isPro) card.appendChild(el("p.event-scope-note.muted.small",s("event.scope_note",{n:watch.length})));
-    card.append(el("button.btn.btn-ghost.btn-sm", {type:"button", "aria-controls":"seasonality-history", onclick:()=>{historyCard.scrollIntoView({block:"start"});historyCard.focus({preventScroll:true});}}, s("season.title") + " ↓"));
     if (!isPro) {
       card.appendChild(el("div.cr-pro-banner",
         el("span.cr-pro-badge", s("calendar.pro_badge")),
@@ -173,13 +173,12 @@ export async function mount(root) {
       chip.addEventListener("click", () => { filter = f; render(); });
       bar.appendChild(chip);
     }
-    const mineBtn = el("button.cal-fchip.cal-mine" + (mineOnly ? ".on" : ""), { type: "button" },
+    const mineBtn = el("button.cal-fchip.cal-mine" + (mineOnly ? ".on" : ""), { type: "button", "aria-pressed":String(mineOnly) },
       (mineOnly ? "★ " : "☆ ") + s("calendar.mine_only") + (isPro ? "" : " 🔒"));
     mineBtn.addEventListener("click", () => { if (!isPro) { router.go("#/billing"); return; } mineOnly = !mineOnly; render(); });
     bar.appendChild(mineBtn);
     const filters=el("details.cal-filters", el("summary", s("calendar.filters")), bar, el("p.small.muted",s("calendar.timing_note")));
     filters.open=filter!=="all" || mineOnly;
-    card.appendChild(filters);
 
     // view-mode toggle: 两周 (at-a-glance earnings) | 月
     const modeBar = el("div.cal-modebar");
@@ -194,7 +193,7 @@ export async function mount(root) {
       });
       modeBar.appendChild(b);
     }
-    card.appendChild(modeBar);
+    card.appendChild(el('div.cal-toolbar', modeBar, filters));
     if (viewMode !== "list") card.appendChild(el("p.cal-grid-hint.muted.small", s(viewMode === "biweekly" ? "calendar.biweekly_hint" : "calendar.grid_hint")));
 
     if (viewMode === "month") card.appendChild(monthGrid());
@@ -277,12 +276,12 @@ export async function mount(root) {
         const mine = isPro && evs.some(evHasMine);
         const wknd = dt.getDay() === 0 || dt.getDay() === 6;
         const cell = el("button.cal-cell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : "") + (evs.some(e=>e.type==="holiday") ? ".cal-closed" : "") + (evs.some(e=>e.type==="early_close") ? ".cal-early" : ""),
-          { type: "button", "aria-label": iso + ", " + s("calendar.event_count", {n: evs.length}) + (evs.some(e=>e.type==="holiday") ? ", " + s("calendar.closed_short") : ""), "aria-pressed": String(iso === selected) });
+          { type: "button", "aria-label": iso + ", " + s("calendar.event_count", {n: evs.length}) + (evs.some(e=>e.type==="holiday") ? ", " + s("calendar.closed_short") : ""), "aria-pressed": String(iso === selected), "data-date":iso, "aria-haspopup":"dialog" });
         cell.appendChild(el("span.cal-dnum", String(day)));
         if (evs.length) { cell.appendChild(miniBars(evs)); cell.appendChild(el("span.cal-event-count", String(evs.length))); }
         const session=evs.find(e=>["holiday","early_close"].includes(e.type));
         if(session) cell.append(el("span.cal-session-grid-label",shortLabel(session,isZh)));
-        cell.addEventListener("click", () => { selected = iso; render(); card.querySelector(".cal-detail")?.scrollIntoView?.({block: "start", behavior: "auto"}); });
+        cell.addEventListener("click", () => openDay(iso));
         grid.appendChild(cell);
       }
       box.appendChild(grid);
@@ -316,12 +315,12 @@ export async function mount(root) {
           const session = evs.find(e => ["holiday", "early_close"].includes(e.type));
           const weekday = new Intl.DateTimeFormat(isZh ? "zh-CN" : "en-US", {weekday:"short"}).format(d);
           const cell = el("button.cal-bicell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : "") + (session?.type === "holiday" ? ".cal-closed" : "") + (session?.type === "early_close" ? ".cal-early" : ""),
-            {type:"button", "data-date":iso, "aria-label":[dateLabel(iso), s("calendar.event_count", {n:evs.length}), ...evs.map(e => isZh ? e.title : (e.title_en || e.title))].join(", "), "aria-pressed":String(iso === selected)});
+            {type:"button", "data-date":iso, "aria-label":[dateLabel(iso), s("calendar.event_count", {n:evs.length}), ...evs.map(e => isZh ? e.title : (e.title_en || e.title))].join(", "), "aria-pressed":String(iso === selected), "aria-haspopup":"dialog"});
           const date = el("div.cal-bidate", el("span.cal-bidnum", String(d.getDate())), el("span.cal-biweekday", iso === todayIso ? s("calendar.today") : weekday));
           cell.append(date);
           if (evs.length) cell.append(pills(evs, 2));
           else cell.append(el("span.cal-biquiet", s("calendar.no_events_short")));
-          cell.addEventListener("click", () => { selected = iso; render(); card.querySelector(".cal-detail")?.scrollIntoView?.({block:"start", behavior:"auto"}); });
+          cell.addEventListener("click", () => openDay(iso));
           grid.append(cell);
         }
         group.append(grid); weeks.append(group);
@@ -330,12 +329,25 @@ export async function mount(root) {
       return box;
     }
 
-    // The list shows every event in the selected period; grid selections use the same rows.
-    const visibleDates = viewMode === "list"
-      ? Array.from({length: 14}, (_, i) => ymd(addDays(biStart, i))).filter(iso => dayEvents(iso).length)
-      : [selected];
-    if (!visibleDates.length) card.appendChild(el("p.muted", s("calendar.empty")));
-    for (const detailDate of visibleDates) {
+    if (viewMode === "list") {
+      const dates = Array.from({length:14}, (_, i) => ymd(addDays(biStart, i))).filter(iso => dayEvents(iso).length);
+      if (!dates.length) card.appendChild(el("p.muted", s("calendar.empty")));
+      for (const iso of dates) card.appendChild(dayDetail(iso));
+    }
+  }
+
+  function openDay(iso) {
+    selected = iso;
+    for (const cell of card.querySelectorAll("button[data-date]")) {
+      const active = cell.dataset.date === iso;
+      cell.classList.toggle("cal-sel", active);
+      cell.setAttribute("aria-pressed", String(active));
+    }
+    const host = modal(dateLabel(iso), dayDetail(iso));
+    host.querySelector(".modal-box").classList.add("calendar-dialog");
+  }
+
+  function dayDetail(detailDate) {
     const detail = el("div.cal-detail");
     detail.appendChild(el("div.cal-day-h.mono", dateLabel(detailDate)));
     const evs = dayEvents(detailDate);
@@ -376,9 +388,8 @@ export async function mount(root) {
         detail.appendChild(row);
       }
     }
-    card.appendChild(detail);
-    }
+    return detail;
   }
 
-  return () => { disposed=true; research.dispose(); disposeHistory(); };
+  return () => { disposed=true; closeModal(); research.dispose(); disposeHistory(); };
 }

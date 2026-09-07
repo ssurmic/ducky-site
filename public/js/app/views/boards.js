@@ -125,7 +125,7 @@ export async function mount(root, route={}) {
   const screenEntry=Boolean(params.get('screen') || params.get('screening'));
   const disposeScreen=mountScreen(screenPanel,{signal:route.signal,query:params});
   const marketPanel=el('div.radar-market-panel');
-  const disposeMarket=mountMarketContext(marketPanel);
+  const disposeMarket=mountMarketContext(marketPanel,{compact:true});
   const starters=el('div.radar-starters',...['liquidity','partner','volscan'].map(key=>el('button.radar-starter',
     {type:'button',onclick:()=>selectBoard(key)},icon(BOARDS.find(b=>b.key===key).icon || key),
     el('span',el('strong.starter-desktop',s('radar.start_'+key)),el('strong.starter-mobile',s('radar.short_'+key)),el('span.muted',s('radar.start_'+key+'_hint'))),el('span',{'aria-hidden':'true'},'↗'))));
@@ -151,10 +151,13 @@ export async function mount(root, route={}) {
   const filterToggle=el('button.radar-filter-toggle',{type:'button','aria-expanded':'false',onclick:()=>{
     const open=filter.classList.toggle('filters-expanded');filterToggle.setAttribute('aria-expanded',String(open));
   }},s('radar.more_filters'));
-  const filter=el('form.radar-filters',field('q',query),filterToggle,el('div.radar-extra',field('ticker',ticker),field('sector',sector),field('cap',cap),field('purchases',purchases),field('direction',direction),dayField,field('content',content),dateFields),
+  const filter=el('form.radar-filters',field('q',query),field('ticker',ticker),filterToggle,el('div.radar-extra',field('sector',sector),field('cap',cap),field('purchases',purchases),field('direction',direction),dayField,field('content',content),dateFields),
     el('div.radar-filter-actions',el('button.btn.btn-primary',{type:'submit'},s('radar.apply')),
     el('button.btn.btn-ghost',{type:'button',onclick:reset},s('radar.reset'))));
   const guide=el('div.radar-guide');
+  const advancedActive=['sector','cap','direction','start','end'].some(key=>state[key]) || state.purchases!=='open_market' || state.content!=='readable' || state.days!=='7';
+  filter.classList.toggle('filters-expanded',advancedActive);
+  filterToggle.setAttribute('aria-expanded',String(advancedActive));
   const summary=el('div.radar-result-summary',{role:'status','aria-live':'polite'});
   const note=el('p.radar-scope-note.muted');
   const rows=el('div.radar-records');
@@ -162,7 +165,7 @@ export async function mount(root, route={}) {
   const main=el('section.radar-main',tabs,guide,filter,summary,note,rows,more);
   // Explicit screening links lead with their destination. Market data arriving later
   // stays below it, so it cannot push the focused form out of the viewport.
-  card.append(header,...(currentAccess?[]:[accessNote]),...(screenEntry?[screenPanel,marketPanel]:[marketPanel,screenPanel]),starters,coverage,pelosiJump,el('div.radar-layout',el('aside.radar-sidebar',el('h2',s('radar.categories')),nav),main));
+  card.append(header,...(currentAccess?[]:[accessNote]),...(screenEntry?[screenPanel,marketPanel]:[marketPanel,screenPanel]),el('details.radar-browse',el('summary',s('radar.browse_questions')),starters),coverage,pelosiJump,el('div.radar-layout',el('aside.radar-sidebar',el('h2',s('radar.categories')),nav),main));
   if(screenEntry && !route.signal?.aborted && root.isConnected && epoch===store.epoch()){
     const target=screenPanel.querySelector('summary');
     target.focus({preventScroll:true});
@@ -248,6 +251,8 @@ export async function mount(root, route={}) {
     for(const tab of tabs.children)tab.setAttribute('aria-pressed',String(tab.dataset.mode===state.mode));
     dayField.hidden=state.mode!=='recent';dateFields.hidden=state.mode==='recent';
     guide.hidden=state.board==='all';
+    pelosiJump.hidden=state.board!=='political';
+    guide.dataset.board=state.board;
     clear(guide);guide.append(el('strong',s(state.board==='all'?'radar.guide_title':'boards.t_'+state.board)),
       el('p',s('radar.guide_'+state.board)));
     if(['all','insider'].includes(state.board))guide.append(el('details.radar-purchase-rule',el('summary',s('market.details')),el('p',s('radar.purchase_rule'))));
@@ -281,6 +286,7 @@ export async function mount(root, route={}) {
   }
   function renderCoverage(){
     clear(coverage);
+    coverage.hidden=!Array.isArray(coverageDoc?.sources);
     if(!Array.isArray(coverageDoc?.sources))return;
     coverage.append(el('summary.radar-coverage-title',el('strong',s('radar.coverage')),el('span.muted',s('radar.coverage_total',{n:coverageDoc.sources.reduce((n,r)=>n+r.records,0)}))));
     const grid=el('div.radar-coverage-grid');

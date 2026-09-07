@@ -2,7 +2,7 @@
 // Owns the Telegram MainButton (billing only) and BackButton (any non-root route).
 import * as store from "./store.js";
 import * as tg from "./tg.js";
-import { clear, errorBox, spinner } from "./ui.js";
+import { clear, errorBox, spinner, closeModal } from "./ui.js";
 import { rememberTarget, takeTarget } from "./login-target.js";
 import { showModuleRecovery } from "./release-recovery.js";
 
@@ -59,6 +59,7 @@ export async function render() {
     const target = takeTarget(); history.replaceState(null, "", target); route = parse(target);
   }
   const my = ++seq;
+  closeModal();
   if (controller) controller.abort();
   controller = new AbortController();
   route.params.signal = controller.signal;
@@ -115,11 +116,14 @@ function setActiveTab(name) {
   const more = document.querySelector(".nav-more");
   if (more) {
     more.open = false;
-    more.classList.toggle("on", ["chart", "calendar", "creators", "profile", "billing"].includes(name));
+    more.classList.toggle("on", ["chart", "briefing", "creators", "profile", "billing"].includes(name));
   }
 }
 
 export function start() {
+  document.querySelector('.skip[href="#main"]')?.addEventListener('click', event => {
+    event.preventDefault(); document.getElementById('main')?.focus({preventScroll:true});
+  });
   document.addEventListener("keydown", (event) => {
     const more = document.querySelector(".nav-more[open]");
     if (event.key === "Escape" && more) {

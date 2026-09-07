@@ -10,6 +10,7 @@ const copy=JSON.parse(readFileSync('i18n/en.json'));
 const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
 const store=await import('../public/js/app/store.js');
 const calendar=await import('../public/js/app/views/calendar.js');
+const {closeModal}=await import('../public/js/app/ui.js');
 const date=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const events=Array.from({length:8},(_,i)=>({date,type:i%2?'earnings':'macro',title:'Event '+i,title_en:'Event '+i,tickers:i%2?[i===1?'NVDA':'MSFT']:[],note_en:'Complete event detail '+i}));
 globalThis.fetch=async url=>new Response(JSON.stringify({events:String(url).startsWith('/calendar.json')?[]:events}),{headers:{'content-type':'application/json'}});
@@ -18,13 +19,16 @@ const button=(root,label)=>[...root.querySelectorAll('button')].find(x=>x.textCo
 test('mobile starts with two weeks and preserves all events through list, month and filters',async()=>{
  const root=document.createElement('div');document.body.append(root);await calendar.mount(root);
  assert.equal(button(root,copy['app.calendar.mode_biweekly']).getAttribute('aria-pressed'),'true');
- assert.equal(root.querySelectorAll('.cal-ev').length,8);
+ assert.equal(root.querySelectorAll('.cal-ev').length,0,'grid keeps event details out of the reading flow');
  button(root,copy['app.calendar.mode_month']).click();
  const day=root.querySelector(`button[aria-label^="${date},"]`);assert.ok(day);day.click();
- assert.equal(root.querySelectorAll('.cal-ev').length,8);
+ assert.equal(document.querySelectorAll('#modal .cal-ev').length,8);
+ closeModal();
  assert.equal(day.querySelector('.cal-event-count').textContent,'8');
  const mine=root.querySelector('.cal-mine');assert.ok(mine);mine.click();
- assert.equal(root.querySelectorAll('.cal-ev').length,5,'macro remains; only untracked earnings removed');
+ root.querySelector(`button[data-date="${date}"]`).click();
+ assert.equal(document.querySelectorAll('#modal .cal-ev').length,5,'macro remains; only untracked earnings removed');
+ closeModal();
  button(root,copy['app.calendar.mode_list']).click();
  assert.equal(root.querySelectorAll('.cal-ev').length,5);root.remove();
 });
@@ -39,9 +43,10 @@ test('desktop defaults to two weeks, pages fourteen days and keeps detail inside
  assert.equal(active.querySelectorAll('.pill').length,2);
  assert.equal(active.querySelector('.pill-more').textContent,'+6 more');
  active.click();
- assert.equal(root.querySelectorAll('.cal-ev').length,8,'two previews still open every event');
+ assert.equal(document.querySelectorAll('#modal .cal-ev').length,8,'two previews still open every event');
  assert.equal(active.querySelector('.pill-kind').textContent,'Macro');
- assert.equal(root.querySelector('.cal-t-macro .cal-event-brief').textContent,copy['app.event.hint_other']);
+ assert.equal(document.querySelector('#modal .cal-t-macro .cal-event-brief').textContent,copy['app.event.hint_other']);
+ closeModal();
  const first=root.querySelector('.cal-bicell').dataset.date;
  button(root,copy['app.calendar.jump_today']).click();
  root.querySelector(`[aria-label="${copy['app.calendar.next']}"]`).click();
@@ -64,6 +69,7 @@ test('holiday survives category filters and never requests private event researc
  let researchCalls=0;
  globalThis.fetch=async url=>{if(String(url).includes('/calendar/context'))researchCalls++;return new Response(JSON.stringify({events:[holiday]}));};
  const root=document.createElement('div');document.body.append(root);await calendar.mount(root);
+ button(root,copy['app.calendar.mode_list']).click();
  assert.match(root.querySelector('.cal-t-holiday').textContent,/US markets closed/);
  button(root,copy['app.calendar.f_earnings']).click();
  assert.ok(root.querySelector('.cal-t-holiday'));

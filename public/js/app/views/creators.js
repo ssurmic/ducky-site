@@ -26,6 +26,16 @@ function pickSummary(x, isZh) {
   try { const o = JSON.parse(x); return isZh ? (o.zh || o.en || "") : (o.en || o.zh || ""); } catch (e) { return String(x); }
 }
 
+// A reading preview only; the complete attributed text remains in the disclosure.
+export function conciseSummary(value, isZh) {
+  const text = pickSummary(value, isZh).replace(/\s+/g, ' ').trim();
+  const limit = isZh ? 88 : 180;
+  const sentence = text.match(isZh ? /^.*?[。！？](?:[”」』])?/ : /^.*?[.!?](?:[”"])?(?=\s|$)/)?.[0] || text;
+  if (sentence.length <= limit) return sentence;
+  const prefix = sentence.slice(0, limit);
+  return (isZh ? prefix : prefix.replace(/\s+\S*$/, '')) + '…';
+}
+
 export function evidenceMeta(post) {
   let data = post.summary;
   if (typeof data === "string") { try { data = JSON.parse(data); } catch { data = {}; } }
@@ -48,7 +58,8 @@ function atTime(url, seconds) {
 export function filterPosts(posts, { following, mine, archive, query = "", tickers=null }) {
   const needle = query.trim().toLocaleLowerCase();
   return posts.filter(p => (!mine || following.has(p.kol_id)) && matchesStocks(p,tickers) && (archive || hasReviewedSummary(p)) &&
-    (!needle || [p.kol_name, p.title, ...(p.tickers || [])].join(" ").toLocaleLowerCase().includes(needle)));
+    (!needle || [p.kol_name, p.title, ...(p.tickers || []), pickSummary(p.summary,true), pickSummary(p.summary,false)].join(" ").toLocaleLowerCase().includes(needle)))
+    .sort((a,b)=>(Date.parse(b.published_at)||0)-(Date.parse(a.published_at)||0));
 }
 export function videoDate(value, lang) {
   if (!value) return s("creators.date_unknown");
@@ -133,7 +144,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
 
     const actions=el('div.evidence-controls.creator-page-actions',el('button.btn.btn-primary.btn-sm',{type:'button','aria-expanded':String(showSetup),onclick:()=>{showSetup=!showSetup;render();}},s('creatorflow.add')),
       el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:refresh},s('creatorflow.refresh')));
-    card.append(actions);
+    card.querySelector('.evidence-page-head').append(actions);
     if(notice)card.append(el('p.creator-follow-success',{role:'status'},notice));
     if(pending())card.append(el('p.creator-sync-note.small.muted',{role:'status'},s('creatorflow.analysis_auto')));
     if(showSetup){const setup=el('div');card.append(setup);setupCleanup=mountSetup(setup,{onFollow:followed,state:setupState});}
@@ -155,7 +166,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     stockForm.addEventListener('submit',e=>{e.preventDefault();const value=stock.value.trim().replace(/^\$/,'').toUpperCase();if(value&&!/^[A-Z][A-Z0-9.-]{0,9}$/.test(value)){toast(s('creatorstocks.invalid'),'err');return;}stockTicker=value;mine=false;watched=false;showSetup=false;selected='';shown=30;render();});
     const search=el("input.input", {type:"search",value:query,"aria-label":s("creators.search"),placeholder:s("creators.search")});
     search.addEventListener("input",()=>{query=search.value;shown=30;renderContent();});
-    controls.append(search,stockForm);card.appendChild(controls);
+    controls.append(search,el('details.creator-stock-options',{open:!!stockTicker},el('summary',s('creatorstocks.label')),stockForm));card.appendChild(controls);
     card.appendChild(el("div.creators-content"));
     renderContent();
   }
@@ -166,7 +177,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     const content = card.querySelector(".creators-content");
     clear(content);
     const outerControls=card.querySelector('.creators-controls');
-    outerControls.style.display=tab==='rank'||(selected&&tab==='feed')?'none':'';
+    outerControls.style.display=tab==='rank'?'none':'';
     outerControls.querySelector('input').style.display=tab==='lab'?'none':'';
     card.querySelector('.evidence-page-head').hidden=!!selected&&tab==='feed';
     card.querySelector('.creator-page-actions').hidden=!!selected&&tab==='feed';
@@ -207,28 +218,32 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       const page=doc.pages?.[k.id];
       const ready=page?.coverage?.reviewed ?? creatorPosts.filter(hasReviewedSummary).length;
       tile.append(el('p.creator-card-coverage',s('creatorpage.card_ready',{n:ready})));
-      const highlight=page?.highlights?.[0];
-      if(highlight)tile.append(el('p.creator-card-gist',pickSummary(highlight.summary,isZh)));
+      const highlight=[...(page?.highlights || [])].sort((a,b)=>(Date.parse(b.published_at)||0)-(Date.parse(a.published_at)||0))[0];
+      if(highlight)tile.append(el('p.creator-card-gist',conciseSummary(highlight.summary,isZh)));
       else tile.append(el('p.small.muted',s(page?.backfill?'creatorpage.preparing':'creatorpage.no_summary')));
       const label = isPro ? (on ? s("creators.following") : s("creators.follow")) : s("creators.follow");
       const chip = el("button.cr-chip" + (on && isPro ? ".on" : ""), { type: "button",'aria-label':label+' '+k.name }, label);
       chip.addEventListener("click", () => { if (isPro) {if(on)toggle(k.id,chip);else confirmCreator({...k,recent:creatorPosts.slice(0,3)},()=>api.kol.sub(k.id),followed,()=>!disposed&&epoch===store.epoch());} else router.go("#/billing"); });
       tile.append(chip);grid.append(tile);
     }
-    content.appendChild(grid);
+    if (!selected && mine) content.append(el('details.creator-directory-picker',el('summary',s('creators.directory_short')),grid));
+    else content.appendChild(grid);
 
 
     if(selected){
       const creator=kols.find(k=>k.id===selected);
       content.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected='';renderContent();}},'← '+s('creatorpage.all')));
-      const overview=el('section.creator-page');content.append(overview);
+      content.append(el('header.creator-selected-heading',el('h1',creator.name)));
+      const overview=el('section.creator-page');content.append(el('details.creator-overview',el('summary',s('creators.overview_short')),overview));
       renderCreatorPage(overview,{creator,page:doc.pages?.[selected]||{},tickers:stockFilter,onTab:value=>{tab=value;renderContent();}});
     }
-    const feedContent=selected?el('details.creator-video-archive',{open:archiveOpen.has(selected)},el('summary',s('creatorpage.all_videos',{n:doc.pages?.[selected]?.coverage?.indexed ?? stats.length}))):el('section.creator-recent-feed');
-    if(selected){const kid=selected;feedContent.addEventListener('toggle',()=>{if(feedContent.open){archiveOpen.add(kid);if(!histories[kid])loadHistory(kid);}else archiveOpen.delete(kid);});}
+    const feedContent=selected?el('details.creator-video-archive',{open:true},el('summary',s('creators.latest'))):el('section.creator-recent-feed');
+    if(selected){const kid=selected;feedContent.addEventListener('toggle',()=>{if(feedContent.open){archiveOpen.add(kid);}else archiveOpen.delete(kid);});}
     content.append(feedContent);
     const archiveBtn = el("button.btn.btn-ghost.btn-sm", { type: "button", "aria-pressed": String(archive), onclick: () => { archive = !archive; render(); } }, s(archive ? "creators.only_grounded" : "creators.show_archive"));
+    if(!selected)feedContent.append(el('h2.creator-latest-title',s('creators.latest')));
     feedContent.appendChild(archiveBtn);
+    if(selected&&!histories[selected])feedContent.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>loadHistory(selected)},s('creatorpage.all_videos',{n:doc.pages?.[selected]?.coverage?.indexed ?? stats.length})));
     if (mine && !following.size) {feedContent.appendChild(empty(s("creators.no_following")));feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{mine=false;render();}},s('creators.discover')));return;}
     const history=selected?histories[selected]:null;
     if(history?.loading)feedContent.append(el('p.small.muted',{role:'status'},s('common.loading')));
@@ -258,25 +273,27 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
 
       if (p.title) art.appendChild(el("h3.cr-video-title", p.title));
       if (reviewed) {
-        art.appendChild(el("p.cr-attribution.muted.small", s("creators.attribution", { name: p.kol_name || p.kol_id || "—" })));
         if(meta.source?.corrections?.length)art.appendChild(el('p.small',s('creatorclaim.corrected')));
         const sections = meta.source?.sections || [];
-        art.appendChild(el("p.cr-sum", pickSummary(sections[0] || p.summary, isZh)));
+        const fullSummary = pickSummary(p.summary,isZh) || pickSummary(sections[0],isZh);
+        art.appendChild(el("p.cr-sum", conciseSummary(fullSummary,isZh)));
+        const detail = el("details.cr-sections",el("summary",s("creators.read_summary")),el("p.cr-attribution.muted.small", s("creators.attribution", { name: p.kol_name || p.kol_id || "—" })),el("p",fullSummary));
+        if (grounded && p.calls?.length) detail.append(callChips(p.calls,isZh,p.url,p.kol_id));
         if (sections.length) {
-          const detail = el("details.cr-sections", el("summary", s("creators.sections")));
+
           for (const section of sections) detail.appendChild(el("div", safeSource(p.url)?el("a", {href:atTime(p.url,section.start_seconds),target:"_blank",rel:"noopener noreferrer"}, `${Math.floor(section.start_seconds/60)}:${String(Math.floor(section.start_seconds)%60).padStart(2,"0")} ↗`):null, el("p", pickSummary(section,isZh))));
-          art.appendChild(detail);
         }
+        art.appendChild(detail);
       } else {
         const status = meta.source?.status;
         const statusKey = {too_long:'too_long',too_dense:'too_dense',processing:'review_pending',review_unavailable:'review_pending',model_unavailable:'review_pending',source_unavailable:'source_pending',asr_unavailable:'source_pending',asr_timeout:'source_pending'}[status] || 'archive_hint';
         art.appendChild(el("p.muted.small", s('creators.'+statusKey)));
       }
-      if (grounded && p.calls && p.calls.length) art.appendChild(callChips(p.calls, isZh, p.url,p.kol_id));
+
       const audit=el('details.creator-audit',el('summary',s('creators.source_details')),
         el('p.muted.small',s('creators.first_seen')+' '+dateTime(p.first_seen_at)),
         el('p.muted.small',s('creators.analysis_updated')+' '+dateTime(p.fetched_at)));
-      audit.append(sourceFacts);art.append(audit);
+      audit.append(sourceFacts);(art.querySelector(".cr-sections") || art).append(audit);
       const actions=el('div.evidence-controls.creator-page-actions');
       if (safeSource(p.url)) actions.appendChild(el("a.cr-orig", { href: p.url, target: "_blank", rel: "noopener noreferrer" }, s("creators.orig") + " ↗"));
       if(grounded) actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected=p.kol_id;tab='research';renderContent();}},s('creators.research')),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected=p.kol_id;tab='lab';renderContent();}},s('creatorlab.tab')));

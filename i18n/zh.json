@@ -2683,5 +2683,15 @@
   "app.record.market_context": "共同市场背景",
   "app.record.market_basis": "这些事件影响整个市场，不代表与这家公司存在直接业务关系。",
   "app.record.unknown_time": "时间未提供",
-  "app.record.radar_uncovered": "暂无雷达收录。下方历史案例的重建记录单独展示。"
+  "app.record.radar_uncovered": "暂无雷达收录。下方历史案例的重建记录单独展示。",
+  "app.nav.skip": "跳到内容",
+  "app.calendar.history_short": "历史表现",
+  "app.market.summary_label": "解读与原文",
+  "app.market.preview_label": "查看主题",
+  "app.market.pending_label": "解读待核实",
+  "app.creators.latest": "最新发布",
+  "app.creators.overview_short": "博主概览与历史表现",
+  "app.creators.read_summary": "完整解读",
+  "app.creators.directory_short": "选择博主",
+  "app.radar.browse_questions": "按问题浏览"
 }

@@ -36,7 +36,7 @@ test('opening a creator renders its preloaded shared page without another fetch 
   const count=requests.length;root.querySelector('.creator-name').click();
   assert.equal(requests.length,count);
   assert.ok(root.querySelector('.creator-price-chart'));
-  assert.equal(root.querySelector('.creator-video-archive').open,false);
+  assert.equal(root.querySelector('.creator-video-archive').open,true);
   assert.equal(root.querySelector('.evidence-page-head').hidden,true);
   assert.ok(requests.every(([,method])=>method==='GET'));
   assert.equal(location.hash,'#/creators?creator=creator');dispose();
@@ -54,7 +54,7 @@ test('expanded video history fetches that channel and continues beyond the globa
   const root=document.querySelector('main');root.textContent='';
   const dispose=await mount(root,{query:new URLSearchParams('creator=creator')});
   assert.ok(!requests.some(([url])=>url.includes('/history')));
-  const archive=root.querySelector('.creator-video-archive');archive.open=true;archive.dispatchEvent(new window.Event('toggle'));
+  [...root.querySelectorAll('.creator-video-archive button')].find(b=>b.textContent===copy['app.creatorpage.all_videos'].replace('{n}','2')).click();
   await new Promise(r=>setImmediate(r));await new Promise(r=>setImmediate(r));
   assert.ok(root.textContent.includes('First historical video'));
   [...root.querySelectorAll('.creator-video-archive button')].find(b=>b.textContent===copy['app.creators.load_more']).click();

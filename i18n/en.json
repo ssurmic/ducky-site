@@ -2683,5 +2683,15 @@
   "app.record.market_context": "Shared market context",
   "app.record.market_basis": "These events concern the broader market, not a verified direct business relationship with this company.",
   "app.record.unknown_time": "Time not provided",
-  "app.record.radar_uncovered": "No radar entry is available. Reconstructed case studies are shown separately below."
+  "app.record.radar_uncovered": "No radar entry is available. Reconstructed case studies are shown separately below.",
+  "app.nav.skip": "Skip to content",
+  "app.calendar.history_short": "Historical returns",
+  "app.market.summary_label": "Read summary",
+  "app.market.preview_label": "Explore topic",
+  "app.market.pending_label": "Sources only",
+  "app.creators.latest": "Latest posts",
+  "app.creators.overview_short": "Creator overview & history",
+  "app.creators.read_summary": "Full summary",
+  "app.creators.directory_short": "Choose a creator",
+  "app.radar.browse_questions": "Browse by question"
 }

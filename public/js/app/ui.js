@@ -105,19 +105,51 @@ export function toast(msg, kind) {
 }
 
 // ---- modal --------------------------------------------------------------------------------
+let modalState = null;
 export function modal(title, body, actions) {
   closeModal();
   const host = document.getElementById("modal") || document.body.appendChild(el("div#modal"));
-  const box = el("div.modal-box", { role: "dialog", "aria-modal": "true", "aria-label": title },
-    el("h3", title), el("div.modal-body", body),
+  const opener = document.activeElement;
+  const shell = document.querySelector(".app-shell");
+  const scroller = document.querySelector('.app-main');
+  const scrollTop = scroller?.scrollTop;
+  const wasInert = shell?.inert;
+  const box = el("div.modal-box", { role: "dialog", "aria-modal": "true", "aria-labelledby": "modal-title", tabindex: -1 },
+    el("div.modal-heading", el("h2#modal-title", title),
+      el("button.modal-close", {type:"button", "aria-label":s("common.close"), onclick:closeModal}, "×")),
+    el("div.modal-body", body),
     el("div.modal-actions", (actions || []).map((a) => el("a.btn", { class: a.primary ? "btn-primary" : "btn-ghost", href: a.href || "#", onclick: (e) => { if (!a.href) e.preventDefault(); if (a.onclick) a.onclick(e); if (a.close !== false) closeModal(); } }, a.label)),
       el("button.btn.btn-ghost", { type: "button", onclick: closeModal }, s("common.close"))));
   host.appendChild(box);
   host.hidden = false;
   host.onclick = (e) => { if (e.target === host) closeModal(); };
+  const keydown = (event) => {
+    if (event.key === "Escape") { event.preventDefault(); closeModal(); return; }
+    if (event.key !== "Tab") return;
+    const nodes = [...box.querySelectorAll('a[href],button,input,select,textarea,summary,[tabindex="0"]')]
+      .filter(node => !node.disabled && !node.closest('[hidden]') && ![...box.querySelectorAll('details:not([open])')].some(detail => detail.contains(node) && node !== detail.querySelector('summary')));
+    const first = nodes[0], last = nodes.at(-1);
+    if (!first) { event.preventDefault(); box.focus(); }
+    else if (event.shiftKey && (document.activeElement === first || document.activeElement === box)) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  };
+  modalState = {opener, shell, wasInert, keydown, scroller, scrollTop};
+  if (shell) shell.inert = true;
+  document.body.classList.add("modal-open");
+  document.addEventListener("keydown", keydown);
+  box.querySelector(".modal-close").focus({preventScroll:true});
   return host;
 }
 export function closeModal() {
+  if (modalState) {
+    const {opener, shell, wasInert, keydown, scroller, scrollTop} = modalState;
+    document.removeEventListener("keydown", keydown);
+    if (shell) shell.inert = !!wasInert;
+    document.body.classList.remove("modal-open");
+    modalState = null;
+    if (opener?.isConnected) opener.focus({preventScroll:true});
+    if (scroller) scroller.scrollTop = scrollTop;
+  }
   const host = document.getElementById("modal");
   if (!host) return;
   clear(host);

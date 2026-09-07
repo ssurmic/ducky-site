@@ -1,4 +1,4 @@
-import { el, clear } from '../ui.js';
+import { el, clear, modal } from '../ui.js';
 import { s, LANG } from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
@@ -7,9 +7,10 @@ import { readableDate as marketDate } from '../date-format.js';
 function source(value){try{const u=new URL(value);return u.protocol==='https:'?u.href:null;}catch{return null;}}
 function localized(value,key){return value?.[key+'_'+(LANG==='en'?'en':'zh')]||value?.[key+'_en']||'';}
 
-export function renderMarketContext(doc,{preview=false,watches=[]}={}) {
+export function renderMarketContext(doc,{preview=false,watches=[],compact=false}={}) {
   const box=el('section.card.market-context',el('div.market-context-heading',
     el('h2',s('market.title'))));
+  box.classList.toggle('market-compact',compact);
   if(doc.status==='unavailable'||!doc.topics?.length) {
     box.append(el('p.data-notice',s('market.unavailable')));return box;
   }
@@ -58,22 +59,28 @@ export function renderMarketContext(doc,{preview=false,watches=[]}={}) {
     const tickers=el('div.event-related-chips');
     for(const ticker of topic.tickers||[])tickers.append(el('a.event-related',{href:'#/chart/'+encodeURIComponent(ticker)},ticker));
     if(tickers.childElementCount)card.append(tickers);
-    grid.append(card);
+    if(compact) {
+      const trigger=el('button.market-topic-trigger',{type:'button','aria-haspopup':'dialog',onclick:()=>{
+        const host=modal(localized(topic,'label'),card.cloneNode(true));
+        host.querySelector('.modal-box').classList.add('market-dialog');
+      }},el('span',localized(topic,'label')),el('span.market-topic-status',s(preview?'market.preview_label':synthesis?'market.summary_label':'market.pending_label')),el('span.market-topic-arrow',{'aria-hidden':'true'},'↗'));
+      grid.append(trigger);
+    } else grid.append(card);
   }
   box.append(grid,notes);
   if(preview)box.append(el('a.btn.btn-primary.btn-sm',{href:'#/billing'},s('market.open_research')));
-  box.append(el('a.small',{href:'#/calendar'},s('market.calendar_link')+' →'));
+  if(!compact)box.append(el('a.small',{href:'#/calendar'},s('market.calendar_link')+' →'));
   return box;
 }
 
-export function mountMarketContext(root) {
+export function mountMarketContext(root,{compact=false}={}) {
   const epoch=store.epoch(), ctl=new AbortController();let disposed=false;
   const placeholder=el('section.card.market-context',el('h2',s('market.title')),el('p.muted',s('market.loading')));
   root.append(placeholder);
   const pro=store.isPro();
   api.get(pro?'/market/context':'/public/market-preview.json',{signal:ctl.signal,auth:pro,silent402:true}).then(doc=>{
     if(disposed||epoch!==store.epoch())return;
-    placeholder.replaceWith(renderMarketContext(doc,{preview:!pro,watches:store.get('watchlist')||[]}));
+    placeholder.replaceWith(renderMarketContext(doc,{preview:!pro,watches:store.get('watchlist')||[],compact}));
   }).catch(()=>{
     if(disposed||epoch!==store.epoch())return;
     clear(placeholder);placeholder.append(el('h2',s('market.title')),el('p.data-notice',s('market.unavailable')));
