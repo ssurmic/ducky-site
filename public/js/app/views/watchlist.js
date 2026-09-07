@@ -1,6 +1,6 @@
 // views/watchlist.js — add ticker · list of 全景 mini-cards from /snapshot · remove.
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
-import { overviewView } from "../watchlist-overview.js";
+import { overviewView, layoutOverview } from "../watchlist-overview.js";
 import { companyContext } from "../company-context.js";
 import { symbolPicker } from "../symbol-picker.js";
 import { s } from "../strings.js";
@@ -31,6 +31,9 @@ export async function mount(root) {
   unsubs.push(picker.dispose);
   const form = el("form.add-row", { onsubmit: onAdd }, picker.wrap, addBtn);
   const list = el("div.watch-overview", { id: "watch-cards" });
+  const resize=()=>layoutOverview(list);
+  if(typeof ResizeObserver!=='undefined'){const observer=new ResizeObserver(resize);observer.observe(list);unsubs.push(()=>observer.disconnect());}
+  else{window.addEventListener('resize',resize);unsubs.push(()=>window.removeEventListener('resize',resize));}
   const detail = el('section.watch-detail', {hidden:true, 'aria-label':s('watch.details')});
   const layout = el('div.watch-layout', list, detail);
   const modes = el('div.watch-modes', {'role':'group','aria-label':s('watch.display')});
@@ -103,6 +106,7 @@ export async function mount(root) {
     const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
     list.append(overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
       {view,query,sort,selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
+    layoutOverview(list);
   }
 
   function card(t, snap) {

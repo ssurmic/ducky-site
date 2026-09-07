@@ -30,13 +30,13 @@ test('full archive filters and pagination are sent to the server, not applied on
  assert.equal(url.searchParams.get('start'),'2026-08-01');assert.equal(url.searchParams.get('end'),'2026-09-05');
  assert.equal(url.searchParams.get('before'),'42');assert.equal(url.searchParams.get('content'),'missing');
 });
-test('ten categories, combined search, keyboard disclosures and explicit excerpt mode stay usable',async()=>{
+test('twelve categories, combined search, keyboard disclosures and explicit excerpt mode stay usable',async()=>{
  globalThis.fetch=async url=>response(String(url).includes('radar-history')?{items:[{board:'insider',ticker:'TTMI',ts:'2026-08-26T12:00:00Z',summary:{en:'Historical receipt'},body:{en:'Identity unverified'}}]}:{items:sample});
  const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams()});
  assert.equal(root.querySelector('.signal-screen').open,false);
  assert.equal(root.querySelector('.radar-market-panel').nextElementSibling,root.querySelector('.radar-screen-panel'));
  assert.equal(document.activeElement,document.body);
- assert.equal(root.querySelectorAll('.radar-category').length,11);
+ assert.equal(root.querySelectorAll('.radar-category').length,13);
  root.querySelector('[name="ticker"]').value='TTMI';root.querySelector('[name="ticker"]').dispatchEvent(new window.Event('input'));
  root.querySelector('[data-board="insider"]').click();assert.equal(root.querySelectorAll('.radar-record').length,1);
  const toggle=root.querySelector('.radar-record-toggle'),detail=root.querySelector('#'+toggle.getAttribute('aria-controls'));
@@ -145,4 +145,27 @@ test('LIVE observations keep unknown publication separate from archive dates and
   assert.equal(sourceFacts(103).querySelector('strong:last-child').textContent,'2026-08-04');
   assert.ok(!root.textContent.includes('radar.observation_note'));
  }finally{cleanup();root.remove();}
+});
+
+test('index and news archive categories retain official timing, meaning and stock links',async()=>{
+ const index={id:301,kind:'index',ticker:'BE',ts:'2026-09-05T12:00:00Z',provenance:'LIVE',summary:'BE added',extra:{event_type:'index_constituent_change',action:'add',index_name:'S&P 500',effective_at:'2026-09-21',effective_session:'before_open',effective_timezone:'America/New_York',source_published_at:'2026-09-04'}};
+ const news={id:302,kind:'news',ticker:'BE',ts:'2026-09-05T13:00:00Z',provenance:'LIVE',summary:'Company announcement',extra:{event_type:'issuer_news',source_published_at:null,publication_basis:'first_observed'}};
+ const url=new URL(archivePath({board:'all'}),'https://ducky.test');assert.ok(url.searchParams.get('kind').split(',').includes('index'));assert.ok(url.searchParams.get('kind').split(',').includes('news'));
+ assert.deepEqual(filterRecords([index,news],{mode:'archive',board:'news'}).map(row=>row.id),[302]);
+ globalThis.fetch=async url=>response(String(url).includes('archive.json')?{items:[index,news],filter_version:3}:{items:[],sources:[],sectors:[]});
+ const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams('mode=archive')});
+ try {
+  const event=root.querySelector('[data-record-id="301"]');assert.match(event.textContent,/Before market open · ET/);assert.match(event.textContent,/Funds tracking/);
+  assert.ok(event.querySelector('a[href="#/research/BE"]'));assert.equal(event.querySelector('a[href^="#/calendar?"]').getAttribute('href'),'#/calendar?ticker=BE&date=2026-09-21');
+  const release=root.querySelector('[data-record-id="302"]');assert.match(release.textContent,/headline alone/);assert.ok(release.textContent.includes(copy['app.radar.publication_unknown']));
+  assert.ok(release.querySelector('a[href="#/calendar?ticker=BE"]'));assert.ok(!root.textContent.includes('radar.kind_index'));
+ }finally{cleanup();root.remove();}
+});
+
+test('official lowercase live and revision provenance never reuse a historical-backfill claim',async()=>{
+ const records=['live','source_revision','source_corroboration'].map((provenance,i)=>({id:401+i,kind:'news',ticker:'BE',ts:'2026-09-05T12:00:00Z',provenance,summary:'Official source record',extra:{event_type:'issuer_news',source_published_at:null}}));
+ globalThis.fetch=async url=>response(String(url).includes('archive.json')?{items:records,filter_version:3}:{items:[],sources:[],sectors:[]});
+ const root=document.createElement('section');const cleanup=await mount(root,{query:new URLSearchParams('mode=archive')});
+ try{for(const [i,key] of ['observation_note','revision_note','corroboration_note'].entries()){const row=root.querySelector('[data-record-id="'+(401+i)+'"]');assert.ok(row.textContent.includes(copy['app.radar.'+key]));assert.ok(!row.textContent.includes(copy['app.radar.backfill_note']));}}
+ finally{cleanup();}
 });

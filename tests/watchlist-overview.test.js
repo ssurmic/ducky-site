@@ -5,7 +5,7 @@ import {readFileSync} from 'node:fs';
 const dom=new JSDOM('<html lang="en"><body><main id="view"></main></body></html>',{url:'https://ducky.test/app/#/watchlist'});
 for(const k of ['window','document','Node','location','history','localStorage'])globalThis[k]=dom.window[k];
 const copy=JSON.parse(readFileSync('i18n/en.json'));const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
-const {treemap,weighted,changeClass,overviewView}=await import('../public/js/app/watchlist-overview.js');
+const {treemap,weighted,changeClass,overviewView,layoutOverview}=await import('../public/js/app/watchlist-overview.js');
 const store=await import('../public/js/app/store.js');
 const {mount}=await import('../public/js/app/views/watchlist.js');
 const row=(ticker,cap,change=0)=>({ticker,company:ticker+' Company',market_cap:cap,market_cap_status:'ready',market_cap_currency:'USD',market_cap_as_of:'2026-09-07T00:00:00Z',price:100,price_status:'ready',change_pct:change});
@@ -45,4 +45,29 @@ test('large watchlist fetches no details until selection and pending quote keeps
  const filter=root.querySelector('.watch-filter');filter.value='Company';filter.dispatchEvent(new window.Event('input'));assert.equal(root.querySelectorAll('.watch-tile').length,50);
  filter.value='T49';filter.dispatchEvent(new window.Event('input'));assert.equal(root.querySelectorAll('.watch-tile').length,1);
  dispose();root.replaceChildren();
+});
+
+test('squarify preserves exact areas in phone and desktop shapes without turning similar caps into strips',()=>{
+ const rows=Array.from({length:50},(_,i)=>row('TK'+i,1e10*(1-i/250))),total=rows.reduce((n,r)=>n+r.market_cap,0);
+ for(const [width,height] of [[284,310],[356,356],[1000,600],[480,600]]){
+  const tiles=treemap(rows,width,height);
+  assert.equal(tiles.length,50);
+  for(const a of tiles){assert.ok(Math.abs(a.w*a.h/(width*height)-a.market_cap/total)<1e-10);assert.ok(a.x>=0&&a.y>=0&&a.x+a.w<=width+1e-8&&a.y+a.h<=height+1e-8);
+   for(const b of tiles)if(a!==b)assert.ok(Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x)<1e-8||Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y)<1e-8);
+  }
+  assert.ok(tiles.filter(r=>r.w>=35&&r.h>=24).length>=45,'most phone cells have room for a short ticker at 12px');
+ }
+});
+test('resizing repositions existing heatmap controls, preserves focus and never requests prices',()=>{
+ const rows=Array.from({length:50},(_,i)=>row('TK'+i,1e10*(1-i/250))),view=overviewView(rows,{view:'heatmap',onSelect:()=>{}});
+ document.body.append(view);const map=view.querySelector('.watch-treemap'),first=map.firstElementChild;
+ let width=284,height=310;map.getBoundingClientRect=()=>({width,height});
+ const original=globalThis.getComputedStyle,originalFetch=globalThis.fetch;globalThis.fetch=()=>{assert.fail('layout must not fetch');};globalThis.getComputedStyle=dom.window.getComputedStyle.bind(dom.window);
+ try{
+  first.focus();layoutOverview(view);const small=[first.style.left,first.style.top,first.style.width,first.style.height];
+  width=1000;height=600;layoutOverview(view);
+  assert.equal(document.activeElement,first);assert.equal(map.firstElementChild,first);
+  assert.notDeepEqual([first.style.left,first.style.top,first.style.width,first.style.height],small);
+  assert.equal(map.children.length,50);assert.equal(view.querySelectorAll('.watch-small-tiles button').length,50);
+ }finally{globalThis.getComputedStyle=original;globalThis.fetch=originalFetch;view.remove();}
 });

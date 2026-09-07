@@ -31,8 +31,11 @@ export function safeTarget(hash) {
     return period==='weekly' ? '#/briefing?period=weekly' : '#/briefing';
   }
   if (path === '#/alerts' || path === '#/calendar') {
-    const ticker=(new URLSearchParams(hash.split('?')[1] || '').get('ticker')||'').toUpperCase();
-    return /^[A-Z][A-Z0-9.-]{0,11}$/.test(ticker) ? path+'?ticker='+ticker : path;
+    const query=new URLSearchParams(hash.split('?')[1] || ''),target=new URLSearchParams();
+    const ticker=(query.get('ticker')||'').toUpperCase(),date=query.get('date')||'';
+    if(/^[A-Z][A-Z0-9.-]{0,11}$/.test(ticker))target.set('ticker',ticker);
+    if(path==='#/calendar'&&/^\d{4}-\d{2}-\d{2}$/.test(date)&&Number.isFinite(Date.parse(date))&&new Date(date).toISOString().slice(0,10)===date)target.set('date',date);
+    return path+(target.size?'?'+target:'');
   }
   if (SIMPLE.has(path.slice(2)) && path.startsWith("#/")) return path;
   const match = /^#\/(chart|research)(?:\/([A-Za-z0-9][A-Za-z0-9.-]{0,14}))?$/.exec(path);

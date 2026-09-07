@@ -1,4 +1,5 @@
-import { eventResearchSession, eventHint } from "../calendar-event.js";
+import { eventResearchSession, eventHint, safeSource } from "../calendar-event.js";
+import {sourceDay, effectiveTiming} from '../source-event.js';
 import { icon } from "../icons.js";
 // views/calendar.js — 投资日历 (Pro): mobile agenda and selectable date grids for a
 // US-stock watchlist — Fed speakers (ET times), FOMC / rate decisions, CPI/PPI/PCE macro, earnings,
@@ -14,8 +15,9 @@ import { mountSeasonality } from "../seasonality.js";
 const ICON = { macro: "liquidity", earnings: "chart", opex: "calendar", witching: "calendar", rebal: "digest" };
 const DOTC = { macro: "var(--accent)", earnings: "#4ea1ff", opex: "#c07cff", witching: "#c07cff", rebal: "#33c793" };
 const FILTERS = ["all", "macro", "earnings", "opex", "rebal"];
-const FILTER_TYPES = { all: null, macro: ["macro"], earnings: ["earnings"], opex: ["opex", "witching"], rebal: ["rebal"] };
-const CATEGORY = {earnings:"earnings", macro:"macro", opex:"expiry", witching:"expiry", rebal:"rebal", holiday:"session", early_close:"session"};
+const FILTER_TYPES = { all: null, macro: ["macro"], earnings: ["earnings"], opex: ["opex", "witching"], rebal: ["rebal", "index_change"] };
+const CATEGORY = {earnings:"earnings", macro:"macro", opex:"expiry", witching:"expiry", rebal:"rebal", index_change:"rebal", holiday:"session", early_close:"session"};
+const visualType = e => e.type==='index_change'?'rebal':e.type;
 const category = e => CATEGORY[e.type] || "other";
 const categoryLabel = e => s("calendar.kind_" + category(e));
 
@@ -74,7 +76,8 @@ function addDays(d, n) { const x = new Date(d.getFullYear(), d.getMonth(), d.get
 export async function mount(root) {
   const isZh = (document.documentElement.lang || "zh").slice(0, 2) !== "en";
   const isPro = store.isPro();
-  const scopeTicker = new URLSearchParams((location.hash.split("?")[1] || "")).get("ticker") || "";
+  const query = new URLSearchParams((location.hash.split("?")[1] || ""));
+  const scopeTicker = query.get("ticker") || "";
   const research = eventResearchSession((store.get("watchlist") || []).includes(scopeTicker) ? scopeTicker : "");
   let disposed = false;
   const WD = isZh ? ["日", "一", "二", "三", "四", "五", "六"] : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -112,12 +115,12 @@ export async function mount(root) {
   const todayDate = new Date(todayIso + "T12:00:00");
   // default the selected day to today (even if it has no events), and open the grid on today's month —
   // NOT events[0], which is a backfilled prior-month event and would open last month on the 1st–5th.
-  let selected = todayIso;
+  let selected = sourceDay(query.get('date')) || todayIso;
   const anchor = new Date((selected || todayIso) + "T00:00:00");
   let viewY = anchor.getFullYear(), viewM = anchor.getMonth();  // month being shown
   let filter = "all", mineOnly = false;
   let viewMode = "biweekly"; // Every new visit starts with the current two weeks, on phones and desktop.
-  let biStart = weekSunday(todayDate);      // Sunday on/before today; prev/next shift by 14d
+  let biStart = weekSunday(anchor);      // A source-event link opens its effective period.
   render();
 
   function typeMatch(e) { if(["holiday", "early_close"].includes(e.type)) return true; const t = FILTER_TYPES[filter]; return !t || t.includes(e.type); }
@@ -219,9 +222,9 @@ export async function mount(root) {
           box.appendChild(pill);
         } else {
           const full = isZh ? (e.title || "") : (e.title_en || e.title || "");
-          const pill = el("span.pill.pill-" + e.type + ".cal-kind-" + category(e), { title: full });
+          const pill = el("span.pill.pill-" + visualType(e) + ".cal-kind-" + category(e), { title: full });
           pill.appendChild(el("span.pill-kind", categoryLabel(e)));
-          pill.appendChild(el("span.pill-ic", { "aria-hidden": "true" }, icon(ICON[e.type] || "calendar")));
+          pill.appendChild(el("span.pill-ic", { "aria-hidden": "true" }, icon(ICON[visualType(e)] || "calendar")));
           pill.appendChild(el("span.pill-txt", shortLabel(e, isZh)));
           box.appendChild(pill);
         }
@@ -235,7 +238,7 @@ export async function mount(root) {
       const box = el("div.cal-mini");
       for (const e of evs.slice(0, 3)) {
         const b = el("div.mbar");
-        const dot = el("i.bardot"); dot.style.background = DOTC[e.type] || "var(--muted)"; b.appendChild(dot);
+        const dot = el("i.bardot"); dot.style.background = DOTC[visualType(e)] || "var(--muted)"; b.appendChild(dot);
         const label = e.type === "earnings" ? ((e.tickers || [])[0] || (isZh ? "财报" : "ER")) : shortLabel(e, isZh);
         b.setAttribute("title", isZh ? (e.title || "") : (e.title_en || e.title || ""));
         b.appendChild(el("span.pill-txt" + (e.type === "earnings" && isPro && evHasMine(e) ? ".mine" : ""), label));
@@ -355,15 +358,16 @@ export async function mount(root) {
     else {
       for (const e of evs) {
         const isMine = isPro && evHasMine(e);
-        const row = el("div.cal-ev" + (isMine ? ".cal-mine-ev" : "") + ".cal-t-" + e.type + ".cal-kind-" + category(e));
+        const row = el("div.cal-ev" + (isMine ? ".cal-mine-ev" : "") + ".cal-t-" + visualType(e) + ".cal-kind-" + category(e));
         if (e.type === "earnings" && e.logo) row.appendChild(el("img.cal-ev-logo", { src: e.logo, alt: (e.tickers || [])[0] || "", loading: "lazy" }));
-        else row.appendChild(el("span.cal-ico", { "aria-hidden": "true" }, icon(ICON[e.type] || "calendar")));
+        else row.appendChild(el("span.cal-ico", { "aria-hidden": "true" }, icon(ICON[visualType(e)] || "calendar")));
         const main = el("div.cal-main");
         main.appendChild(el("span.cal-kind-label", categoryLabel(e)));
         const title = el("div.cal-title", isZh ? (e.title || "") : (e.title_en || e.title || ""));
         for (const t of (e.tickers || [])) title.appendChild(el("a.cal-tk.mono" + (watchSet.has(String(t).toUpperCase()) ? ".on" : ""), { href: "#/chart/" + encodeURIComponent(t) }, "$" + t));
         if (isMine) title.appendChild(el("span.cal-mine-badge", s("calendar.mine_badge")));
         main.appendChild(title);
+        if(e.type==='index_change')main.append(el('p.cal-note',s('event.effective_date')+' · '+effectiveTiming(e)));
         const note = isZh ? (e.note || "") : (e.note_en || e.note || "");
         if (note) main.appendChild(el("div.cal-note.muted", note));
         if(["holiday","early_close"].includes(e.type)) {
@@ -383,7 +387,8 @@ export async function mount(root) {
           more.addEventListener("toggle",()=>{if(more.open&&!mounted&&!disposed){mounted=true;more.append(research.mount(e,{showHint:false}));}});
           main.append(more);
         }
-        if (e.url) main.appendChild(el("a.cal-link.mono", { href: e.url, target: "_blank", rel: "noopener" }, s(["holiday","early_close"].includes(e.type)?"calendar.source":"event.source")+" ↗"));
+        const source=safeSource(e.source_url || e.url);
+        if (source) main.appendChild(el("a.cal-link.mono", { href: source, target: "_blank", rel: "noopener" }, s(["holiday","early_close"].includes(e.type)?"calendar.source":"event.source")+" ↗"));
         row.appendChild(main);
         detail.appendChild(row);
       }

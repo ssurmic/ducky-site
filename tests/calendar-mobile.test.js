@@ -4,7 +4,7 @@ import {JSDOM} from 'jsdom';
 import {readFileSync} from 'node:fs';
 const dom=new JSDOM('<main></main>',{url:'https://ducky.test/en/app/'});
 for(const k of ['window','document','Node','location','history'])globalThis[k]=dom.window[k];
-document.documentElement.lang='en';
+document.documentElement.lang='en';document.documentElement.dataset.lang='en';
 let narrow=true;window.matchMedia=()=>({matches:narrow});
 const copy=JSON.parse(readFileSync('i18n/en.json'));
 const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
@@ -93,4 +93,22 @@ test('month navigation and view changes keep the selected detail in the visible 
  const selectedDate=selected.getAttribute('aria-label').split(',')[0];
  button(root,copy['app.calendar.mode_biweekly']).click();
  assert.equal(root.querySelector('.cal-bicell[aria-pressed="true"]').dataset.date,selectedDate);
+});
+
+test('official index deep links select the effective date and survive rebalance filtering without private access',async()=>{
+ const day='2026-09-21',calls=[];
+ const official={id:'index:BE:add',event_id:'index:BE:add',type:'index_change',date:day,title:'BE 纳入 S&P 500',title_en:'BE joins S&P 500',tickers:['BE'],action:'add',index_name:'S&P 500',time:'盘前',time_en:'Before market open',effective_at:day,time_zone:'America/New_York',source_url:'https://example.test/official'};
+ globalThis.fetch=async url=>{calls.push(String(url));return new Response(JSON.stringify({events:String(url).startsWith('/calendar.json')?[]:[official]}),{headers:{'content-type':'application/json'}});};
+ store.set('me',{tier:'free'});location.hash='#/calendar?ticker=BE&date='+day;
+ const root=document.createElement('div');document.body.append(root);const cleanup=await calendar.mount(root);
+ try{
+  assert.equal(root.querySelector('.cal-bicell[aria-pressed="true"]').dataset.date,day);
+  button(root,copy['app.calendar.f_rebal']).click();
+  const row=root.querySelector('.cal-t-rebal');assert.ok(row);assert.match(row.textContent,/Added to S&P 500/);assert.match(row.textContent,/Before market open · ET/);
+  assert.ok(row.querySelector('a[href="https://example.test/official"]'));
+  const more=row.querySelector('.cal-research-more');more.open=true;more.dispatchEvent(new window.Event('toggle'));
+  assert.equal(calls.some(url=>url.includes('/calendar/context')||url.includes('/calendar/links')),false);
+  assert.ok(more.querySelector('a[href="#/billing"]'));
+  button(root,copy['app.calendar.mode_month']).click();assert.ok(root.querySelector('.cal-sel .mbar'));
+ }finally{cleanup();root.remove();location.hash='';store.set('me',{tier:'pro'});}
 });

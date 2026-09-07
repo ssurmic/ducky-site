@@ -20,13 +20,14 @@ function setup({tier='pro',topics=[],items=[item],override}={}){
  hidden=false;store.bumpEpoch();store.set('token','test-token');store.set('me',{id:1,tier});
  const calls=[];globalThis.fetch=async(url,options)=>{
   const path=new URL(String(url),'https://ducky.test').pathname;const body=options.body?JSON.parse(options.body):null;calls.push({path,url:String(url),method:options.method,body,options});
+  if(path==='/signals/inbox')return json({items:[],next_cursor:null});
   const special=await override?.({path,url:String(url),method:options.method,body});if(special)return special;
   if(path.endsWith('/options'))return json({tickers:[{ticker:'INTC',name:'Intel'}],sectors:[{key:'semiconductors',label_en:'Semiconductors',label_zh:'半导体'}],push_enabled:true});
   if(path.endsWith('/topics')&&options.method==='GET')return json({topics});
   if(path.endsWith('/topics')&&options.method==='PUT')return json({topic:{...body,notify_from:'2026-09-06T12:00:00Z'}});
   if(path.includes('/topics/')&&options.method==='DELETE')return json({ok:true});
   if(path.endsWith('/read'))return json({ok:true});
-  if(path.endsWith('/inbox'))return json({items,next_cursor:null,unread_count:items.filter(row=>!row.read_at).length});
+  if(path==='/creator-notifications/inbox')return json({items,next_cursor:null,unread_count:items.filter(row=>!row.read_at).length});
   if(/\/inbox\/\d+$/.test(path))return json({item:{...item,id:Number(path.split('/').at(-1)),mode:'demo'}});
   if(path==='/push/config')return json({enabled:true,vapid_public:'BAAA'});
   if(path==='/push/subscribe')return json({subscribed:true});
@@ -97,7 +98,7 @@ test('missing status and explicit current status retain the summary, evidence an
  }f.close();
 });
 test('refreshing a corrected item removes old evidence and an old preview handler cannot send it',async()=>{
- let corrected=false;const f=setup({override:({path})=>path.endsWith('/inbox')?json({items:[corrected?{...item,content_status:'superseded'}:item],next_cursor:null,unread_count:1}):null});mockPush();await f.mount();
+ let corrected=false;const f=setup({override:({path})=>path==='/creator-notifications/inbox'?json({items:[corrected?{...item,content_status:'superseded'}:item],next_cursor:null,unread_count:1}):null});mockPush();await f.mount();
  f.root.querySelector('[data-updates-enable-push]').click();await flush();
  const oldPreview=f.root.querySelector('[data-update-preview]');assert.ok(oldPreview);f.root.querySelector('.updates-detail').open=true;
  corrected=true;f.root.querySelector('[data-updates-refresh]').click();await flush();
@@ -163,7 +164,7 @@ test('watchlist selection saves only after user input, with push off; failed wri
  assert.deepEqual(f.calls.filter(call=>call.method==='PUT').at(-1).body,{topic_type:'ticker',topic_key:'INTC',enabled:true,web_push:false});f.close();
 });
 test('402 clears private content while preserving cancellation access for saved topics',async()=>{
- let expired=false;const f=setup({topics:[topic],override:({path})=>expired&&path.endsWith('/inbox')?json({error:'pro_required'},402):null});mockPush();await f.mount();
+ let expired=false;const f=setup({topics:[topic],override:({path})=>expired&&path==='/creator-notifications/inbox'?json({error:'pro_required'},402):null});mockPush();await f.mount();
  assert.ok(f.root.querySelector('.updates-item'));expired=true;f.root.querySelector('[data-updates-refresh]').click();await flush();
  assert.equal(f.root.querySelector('.updates-item'),null);assert.ok(f.root.querySelector('[data-topic-pause]'));assert.ok(!f.root.textContent.includes(item.summary.en));f.close();
 });
@@ -186,9 +187,9 @@ test('explicit browser authorization registers this device but does not enable t
  topicPush.click();await flush();assert.equal(f.calls.find(call=>call.method==='PUT').body.web_push,true);f.close();
 });
 test('visibility pauses initial reads; resume is single-flight and unload blocks late results',async()=>{
- let release;const f=setup({override:({path})=>path.endsWith('/inbox')?new Promise(resolve=>release=()=>resolve(json({items:[item],unread_count:1}))):null});mockPush();hidden=true;await f.mount();assert.equal(f.calls.length,0);
+ let release;const f=setup({override:({path})=>path==='/creator-notifications/inbox'?new Promise(resolve=>release=()=>resolve(json({items:[item],unread_count:1}))):null});mockPush();hidden=true;await f.mount();assert.equal(f.calls.length,0);
  hidden=false;document.dispatchEvent(new dom.window.Event('visibilitychange'));document.dispatchEvent(new dom.window.Event('visibilitychange'));await flush();
- assert.equal(f.calls.filter(call=>call.path.endsWith('/inbox')).length,1);f.close();release();await flush();assert.equal(f.root.querySelector('.updates-item'),null);
+ assert.equal(f.calls.filter(call=>call.path==='/creator-notifications/inbox').length,1);f.close();release();await flush();assert.equal(f.root.querySelector('.updates-item'),null);
 });
 test('account switches during push permission cannot attach a subscription to the next account',async()=>{
  const f=setup();mockPush();let permission;Notification.requestPermission=()=>new Promise(resolve=>permission=resolve);await f.mount();
@@ -196,7 +197,7 @@ test('account switches during push permission cannot attach a subscription to th
  assert.equal(f.calls.some(call=>call.path.startsWith('/push/')),false);assert.equal(f.root.querySelector('.updates-item'),null);f.close();
 });
 test('pagination merges repeated ids and direct deep links remain safe through login',async()=>{
- const f=setup({override:({path,url})=>path.endsWith('/inbox')?json({items:url.includes('before_id=')?[item,{...item,id:9}]:[item],next_cursor:url.includes('before_id=')?null:10,unread_count:2}):null});mockPush();await f.mount();
+ const f=setup({override:({path,url})=>path==='/creator-notifications/inbox'?json({items:url.includes('before_id=')?[item,{...item,id:9}]:[item],next_cursor:url.includes('before_id=')?null:10,unread_count:2}):null});mockPush();await f.mount();
  f.root.querySelector('[data-updates-more]').click();await flush();assert.equal(f.root.querySelectorAll('.updates-item').length,2);
  assert.equal(safeTarget('#/updates?ticker=intc&item=99&token=private'),'#/updates?ticker=INTC&item=99');
  assert.equal(safeTarget('#/updates?item=../../other&ticker=<svg>'),'#/updates');f.close();
@@ -215,7 +216,7 @@ test('transcript provenance labels distinguish machine transcription, generated 
 test('upgrading while saved-topic management is loading starts the private inbox after that flight settles',async()=>{
  let release,first=true;const f=setup({tier:'free',override:({path,method})=>{if(first&&method==='GET'&&path.endsWith('/topics')){first=false;return new Promise(resolve=>release=()=>resolve(json({topics:[topic]})));}return null;}});mockPush();
  const mounting=f.mount();await flush();store.set('me',{id:1,tier:'pro'});release();await mounting;await flush();
- assert.equal(f.calls.filter(call=>call.path.endsWith('/inbox')).length,1);assert.ok(f.root.querySelector('.updates-item'));f.close();
+ assert.equal(f.calls.filter(call=>call.path==='/creator-notifications/inbox').length,1);assert.ok(f.root.querySelector('.updates-item'));f.close();
 });
 test('entering an already-followed ticker does not reset its existing push preference',async()=>{
  const f=setup({topics:[{...topic,web_push:true}]});mockPush();await f.mount('ticker=INTC');
@@ -226,7 +227,7 @@ test('service-worker hints refresh the visible inbox once, reject foreign origin
  const f=setup();mockPush();await f.mount();const clock=Date.now;Date.now=()=>clock()+3000;
  try{
   const worker=navigator.serviceWorker,send=origin=>worker.dispatchEvent(new dom.window.MessageEvent('message',{origin,data:{type:'ducky-creator-update'}}));
-  const count=()=>f.calls.filter(call=>call.path.endsWith('/inbox')).length;
+  const count=()=>f.calls.filter(call=>call.path==='/creator-notifications/inbox').length;
   send('https://foreign.test');await new Promise(r=>setTimeout(r,5));assert.equal(count(),1);
   hidden=true;send('https://ducky.test');send('https://ducky.test');await new Promise(r=>setTimeout(r,5));assert.equal(count(),1);
   hidden=false;document.dispatchEvent(new dom.window.Event('visibilitychange'));await new Promise(r=>setTimeout(r,5));await flush();assert.equal(count(),2);
@@ -234,9 +235,9 @@ test('service-worker hints refresh the visible inbox once, reject foreign origin
  }finally{Date.now=clock;f.close();}
 });
 test('a push hint received during an inbox request is coalesced into one follow-up read',async()=>{
- let release,block=false;const f=setup({override:({path})=>block&&path.endsWith('/inbox')?new Promise(resolve=>release=()=>{block=false;resolve(json({items:[item],unread_count:1}));}):null});mockPush();await f.mount();
+ let release,block=false;const f=setup({override:({path})=>block&&path==='/creator-notifications/inbox'?new Promise(resolve=>release=()=>{block=false;resolve(json({items:[item],unread_count:1}));}):null});mockPush();await f.mount();
  block=true;f.root.querySelector('[data-updates-refresh]').click();await flush();
  const worker=navigator.serviceWorker;for(let i=0;i<3;i++)worker.dispatchEvent(new dom.window.MessageEvent('message',{origin:'https://ducky.test',data:{type:'ducky-creator-update'}}));
- assert.equal(f.calls.filter(call=>call.path.endsWith('/inbox')).length,2);release();await flush();
- await new Promise(r=>setTimeout(r,2050));await flush();assert.equal(f.calls.filter(call=>call.path.endsWith('/inbox')).length,3);f.close();
+ assert.equal(f.calls.filter(call=>call.path==='/creator-notifications/inbox').length,2);release();await flush();
+ await new Promise(r=>setTimeout(r,2050));await flush();assert.equal(f.calls.filter(call=>call.path==='/creator-notifications/inbox').length,3);f.close();
 });

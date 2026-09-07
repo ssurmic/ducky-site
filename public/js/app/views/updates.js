@@ -3,6 +3,7 @@ import {s,LANG} from '../strings.js';
 import * as store from '../store.js';
 import * as api from '../api.js';
 import {symbolPicker} from '../symbol-picker.js';
+import {signalInboxSession} from '../signal-inbox.js';
 
 const tickerPattern=/^[A-Z][A-Z0-9.-]{0,9}$/;
 const idPattern=/^[1-9][0-9]{0,15}$/;
@@ -35,10 +36,11 @@ export async function mount(root,route={}){
   const shell=el('div.updates-page');root.append(shell);
   const sessionValid=()=>alive&&!ctl.signal.aborted&&epoch===store.epoch()&&token===store.get('token')&&owner===(store.get('me')?.user_id??store.get('me')?.id);
   const valid=()=>sessionValid()&&!locked&&store.isPro();
+  const signalFeed=signalInboxSession({valid,onLoseAccess:loseAccess});
   const visible=()=>document.visibilityState!=='hidden';
   const activeTopics=()=>topics.filter(t=>t.enabled);
-  function clean(){if(!alive)return;alive=false;ctl.abort();clearTimeout(refreshTimer);picker?.dispose();disposers.forEach(fn=>fn());}
-  function loseAccess(){queuedRefresh=false;clearTimeout(refreshTimer);locked=true;items=[];cursor=null;unread=0;status='';render();}
+  function clean(){if(!alive)return;alive=false;ctl.abort();signalFeed.dispose();clearTimeout(refreshTimer);picker?.dispose();disposers.forEach(fn=>fn());}
+  function loseAccess(){queuedRefresh=false;clearTimeout(refreshTimer);locked=true;signalFeed.reset();items=[];cursor=null;unread=0;status='';render();}
   function topicLabel(t){if(t.topic_type==='ticker')return '$'+t.topic_key;const sector=options.sectors.find(x=>x.key===t.topic_key);return text(sector?.['label_'+LANG])||s('updates.sector_'+t.topic_key);}
   const link=(href,label)=>el('a.btn.btn-ghost.btn-sm',{href},label);
   function render(){
@@ -46,7 +48,7 @@ export async function mount(root,route={}){
     const draft=shell.querySelector('[name=updates-ticker]');if(draft)draftTicker=draft.value;
     const watchChoices=shell.querySelector('.updates-watchlist');if(watchChoices)watchlistOpen=watchChoices.open;
     picker?.dispose();picker=null;clear(shell);
-    const refresh=el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:!!flight||mutation,'data-updates-refresh':'',onclick:()=>locked?loadManagement():load(false)},s('updates.refresh'));
+    const refresh=el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:!!flight||mutation,'data-updates-refresh':'',onclick:()=>locked?loadManagement():Promise.all([load(false),signalFeed.load(false)])},s('updates.refresh'));
     shell.append(el('div.view-head',el('div',el('a.small.muted',{href:'#/alerts'},s('updates.back')),el('h1',s('updates.title'))),refresh),
       el('p.view-intro.muted',s('updates.intro')));
     if(locked){shell.append(el('section.card.updates-gate',el('span.chip','Pro'),el('h2',s('updates.gate_title')),
@@ -61,6 +63,7 @@ export async function mount(root,route={}){
         shell.append(manage);
       }return;}
     const notice=el('p.updates-status',{role:'status','aria-live':'polite'},status);shell.append(notice);
+    shell.append(signalFeed.render());
     if(loadError)shell.append(el('div.errbox',el('p',loadError),el('button.btn.btn-ghost',{type:'button',disabled:!!flight,onclick:()=>load(false)},s('common.retry'))));
     if(!ready){if(flight)shell.append(spinner());return;}
     const layout=el('div.updates-layout'),settings=el('aside.updates-settings'),feed=el('section.updates-feed');layout.append(settings,feed);shell.append(layout);
@@ -265,15 +268,15 @@ export async function mount(root,route={}){
   function onSession(){
     if(!sessionValid()){clean();clear(root).append(el('p.muted',s('updates.session_changed')),link('#/updates',s('updates.entry_open')));return;}
     if(!store.isPro())loseAccess();
-    else if(locked){locked=false;ready=false;load(false);}
+    else if(locked){locked=false;ready=false;load(false);signalFeed.load(false);}
   }
   const resume=()=>{if(!visible()){clearTimeout(refreshTimer);refreshTimer=null;return;}
     if(queuedRefresh){pumpUpdates();return;}
-    if(sessionValid()&&Date.now()-lastLoaded>30000){if(locked)loadManagement();else load(false);}};
+    if(sessionValid()&&Date.now()-lastLoaded>30000){if(locked)loadManagement();else{load(false);signalFeed.load(false);}}};
   disposers.push(store.subscribe('me',onSession),store.subscribe('token',onSession));
   document.addEventListener('visibilitychange',resume);window.addEventListener('online',resume);
   disposers.push(()=>document.removeEventListener('visibilitychange',resume),()=>window.removeEventListener('online',resume));
   route.signal?.addEventListener('abort',clean,{once:true});
   if(route.signal?.aborted){clean();return clean;}
-  render();if(locked)await loadManagement();else await load(false);return clean;
+  render();if(locked)await loadManagement();else await Promise.all([load(false),signalFeed.load(false)]);return clean;
 }

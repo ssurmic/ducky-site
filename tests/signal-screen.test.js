@@ -57,6 +57,29 @@ test('editing while preview is pending drops late results and cannot save a stal
  assert.equal(r.querySelector('.screen-save').hidden,true);assert.equal(r.querySelectorAll('.screen-match').length,0);
  dispose();r.remove();
 });
+test('official event choices survive saved-rule loading and preview without changing defaults or enabling alerts',async()=>{
+ pro();const calls=[],config={...defaults(),scope:'watchlist',events:['index','news'],event_op:'or'};
+ globalThis.fetch=async(url,opts)=>{url=String(url);calls.push({url,opts});
+  if(url.includes('facets'))return response({sectors:[]});
+  if(url.endsWith('/screens/preview'))return response({...fixture(JSON.parse(opts.body).config),coverage:{tickers:3,event_stocks:{index:2,news:3}}});
+  return response({items:[{id:9,name:'Official watchlist events',config,notify:false}]});
+ };
+ const r=root(),dispose=mountScreen(r,{query:new URLSearchParams('screen=9')});await flush();
+ try{
+  for(const kind of ['index','news']){
+   const checkbox=r.querySelector('[name=event_'+kind+']');assert.equal(checkbox.checked,true);
+   assert.equal(checkbox.closest('label').textContent,copy['app.screen.event_'+kind]);
+   assert.ok(r.querySelector('.screen-save-summary').textContent.includes(copy['app.screen.event_'+kind]));
+  }
+  const preview=calls.find(c=>c.url.endsWith('/screens/preview'));assert.deepEqual(JSON.parse(preview.opts.body).config,config);
+  assert.equal(r.querySelector('[name=screen_notify]').checked,false);
+  assert.equal(calls.some(c=>c.url.endsWith('/screens')&&c.opts.method==='POST'),false);
+  assert.deepEqual(defaults().events,[]);assert.equal(defaults().event_op,'and');
+  assert.ok(r.querySelector('.screen-coverage').textContent.includes('Index changes: 2'));
+  assert.ok(r.querySelector('.screen-coverage').textContent.includes('Company news: 3'));
+  const zh=JSON.parse(readFileSync('i18n/zh.json'));assert.equal(zh['app.screen.event_index'],'指数调整');assert.equal(zh['app.screen.event_news'],'公司新闻');
+ }finally{dispose();r.remove();}
+});
 test('free user cannot fetch composite research or accidentally create notifications',async()=>{
  store.set('me',{tier:'free'});store.set('token',null);const calls=[];
  globalThis.fetch=async(url,opts)=>{calls.push(String(url));return response({sectors:[]});};

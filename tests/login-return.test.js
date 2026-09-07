@@ -19,6 +19,9 @@ test('only canonical internal routes survive login; credentials and external des
   assert.equal(target.safeTarget('#/chart/brk-b?token=secret'),'#/chart/BRK-B');
   assert.equal(target.safeTarget('#/boards?ticker=nvda&mode=archive&token=secret'),'#/boards?mode=archive&ticker=NVDA');
   assert.equal(target.safeTarget('#/calendar?ticker=orcl&token=secret'),'#/calendar?ticker=ORCL');
+  assert.equal(target.safeTarget('#/calendar?ticker=be&date=2026-09-21&token=secret'),'#/calendar?ticker=BE&date=2026-09-21');
+  assert.equal(target.safeTarget('#/calendar?date=2026-02-30'),'#/calendar');
+  assert.equal(target.safeTarget('#/alerts?ticker=BE&date=2026-09-21'),'#/alerts?ticker=BE');
   assert.equal(target.safeTarget('#/alerts?ticker=mu&amount=999'),'#/alerts?ticker=MU');
   assert.equal(target.safeTarget('#/briefing?period=weekly&token=secret'),'#/briefing?period=weekly');
   target.rememberTarget('#/creators?token=secret');

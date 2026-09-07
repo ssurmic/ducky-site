@@ -1053,7 +1053,7 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 .watch-up {color:var(--green)} .watch-down {color:var(--red)} .watch-flat,.watch-unknown {color:var(--muted)}
 .watch-session {margin:8px 0 12px}
 .watch-treemap {position:relative;width:100%;aspect-ratio:5/3;min-height:280px;max-height:600px;background:var(--surface);border-radius:14px;overflow:hidden}
-.watch-tile {position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;overflow:hidden;min-width:0;min-height:0;margin:0;padding:4px;border:2px solid var(--bg);cursor:pointer;color:#fff;font:inherit;background:#444c59}
+.watch-tile {position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;overflow:hidden;min-width:0;min-height:0;margin:0;padding:1px;border:2px solid var(--bg);cursor:pointer;color:#fff;font:inherit;background:#444c59}
 .watch-tile.watch-up {background:color-mix(in srgb,#147353 calc(40% + var(--strength, .5)*60%),#273b35)}
 .watch-tile.watch-down {background:color-mix(in srgb,#ae3448 calc(40% + var(--strength, .5)*60%),#403035)}
 .watch-tile.watch-unknown {background:repeating-linear-gradient(135deg,#424a56 0 6px,#303844 6px 12px)}
@@ -1072,9 +1072,13 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 
 .app-view.watchlist-view, .app-view:has(.watchlist-view) {max-width:1280px}
 .watch-tile {container-type:size}
-.watch-tile strong {font-size:clamp(10px,12cqw,22px)}
+.watch-tile strong {font-size:clamp(12px,12cqw,22px);white-space:nowrap;flex-shrink:0}
 .watch-tile>span.mono {font-size:clamp(10px,10cqw,16px)}
-@container (max-width:78px) or (max-height:54px) {.watch-tile>* {visibility:hidden}}
+/* Keep the ticker when a compact cell cannot fit all three lines. Never shrink
+   names below 12px or alter market-cap areas to make a label fit. The complete
+   ticker and numeric change remain in the accessible buttons below the map. */
+.watch-tile.compact>span {display:none}
+.watch-tile.compact>strong {font-size:12px;line-height:1}
 
 
 

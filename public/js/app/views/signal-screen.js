@@ -4,7 +4,7 @@ import * as api from '../api.js';
 import * as store from '../store.js';
 import { el, clear, spinner, toast, confirm } from '../ui.js';
 
-const EVENTS=['insider','stake','partner','13f','political'];
+const EVENTS=['insider','stake','partner','13f','political','index','news'];
 export const defaults=()=>({scope:'covered',sector:'',cap_min:null,cap_max:null,events:[],event_op:'and',days:30,institutional_change:'all',
   oversold:false,rsi_max:null,iv_hv_max:null,drawdown_min:null,insider_min:200000});
 export const presets={

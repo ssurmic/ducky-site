@@ -1,6 +1,7 @@
 export function eventKind(e) {
   const hay=(e.title_en||'')+' '+(e.title||'');
   if(e.type==='earnings') return 'earnings';
+  if(e.type==='index_change') return 'index';
   if(e.type==='opex'||e.type==='witching') return e.type;
   if(e.type==='rebal') return /month.end|月末/i.test(hay)?'month_end':'index';
   if(e.type!=='macro') return 'other';
@@ -13,6 +14,7 @@ export function eventKind(e) {
   return 'other';
 }
 export function calendarEventKey(e) {
+  if(e.type==='index_change' && (e.event_id || e.id))return 'index_change|'+(e.event_id || e.id);
   const kind=eventKind(e), hay=(e.title_en||e.title||'').trim().toLowerCase();
   const precise=['other','pmi','index'].includes(kind)?hay:kind;
   const issuers=kind==='earnings'?(e.tickers||[]).slice().sort().join(','):'';

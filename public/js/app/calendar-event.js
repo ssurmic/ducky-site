@@ -6,11 +6,12 @@ import * as api from './api.js';
 import * as store from './store.js';
 import { predictionPanel } from './calendar-prediction.js';
 import { earningsPanel } from './calendar-earnings.js';
+import {isIndexChange, sourceEventHint} from './source-event.js';
 
 export function safeSource(url) { try { const u=new URL(url);return u.protocol==='https:'?u.href:null; }catch{return null;} }
 export function weekday(day){const d=new Date(day+'T12:00:00Z');return Number.isFinite(d.getTime())?new Intl.DateTimeFormat(LANG==='en'?'en-US':'zh-CN',{weekday:'short',timeZone:'America/New_York'}).format(d):'—';}
 const family=k=>['cpi','ppi','pce'].includes(k)?'inflation':['nfp','claims','adp'].includes(k)?'jobs':['retail','gdp','pmi'].includes(k)?'growth':['opex','witching'].includes(k)?'expiry':k;
-export const eventHint = e => s('event.hint_'+family(eventKind(e)));
+export const eventHint = e => isIndexChange(e)?sourceEventHint(e):s('event.hint_'+family(eventKind(e)));
 
 // Request dedup lives for a view only; no private data survives account changes.
 export function eventResearchSession(scopeTicker='') {
