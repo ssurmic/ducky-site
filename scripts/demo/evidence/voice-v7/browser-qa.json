@@ -1,0 +1,184 @@
+[
+  {
+    "phase": "local",
+    "language": "zh",
+    "width": 390,
+    "seek": 19.08,
+    "result": {
+      "duration": 22.861333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 19.08,
+      "width": 390
+    }
+  },
+  {
+    "phase": "local",
+    "language": "zh",
+    "width": 390,
+    "seek": 4.08,
+    "result": {
+      "duration": 22.861333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 4.08,
+      "width": 390
+    }
+  },
+  {
+    "phase": "local",
+    "language": "zh",
+    "width": 390,
+    "seek": 6.52,
+    "result": {
+      "duration": 22.861333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 6.52,
+      "width": 390
+    }
+  },
+  {
+    "phase": "local",
+    "language": "zh",
+    "width": 390,
+    "seek": 10.04,
+    "result": {
+      "duration": 22.861333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 10.04,
+      "width": 390
+    }
+  },
+  {
+    "phase": "local",
+    "language": "zh",
+    "width": 390,
+    "seek": 12.04,
+    "result": {
+      "duration": 22.861333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 12.04,
+      "width": 390
+    }
+  },
+  {
+    "phase": "local",
+    "language": "zh",
+    "width": 390,
+    "seek": 0.16,
+    "result": {
+      "duration": 22.861333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 0.16,
+      "width": 390
+    }
+  },
+  {
+    "phase": "local",
+    "language": "zh",
+    "playback": {
+      "duration": 22.861333,
+      "ended": true,
+      "error": null,
+      "time": 22.861333
+    }
+  },
+  {
+    "phase": "local",
+    "language": "en",
+    "seek": 17.28,
+    "result": {
+      "duration": 21.461333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 17.28,
+      "width": 1440
+    }
+  },
+  {
+    "phase": "local",
+    "language": "en",
+    "seek": 3.16,
+    "result": {
+      "duration": 21.461333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 3.16,
+      "width": 1440
+    }
+  },
+  {
+    "phase": "local",
+    "language": "en",
+    "seek": 5.4,
+    "result": {
+      "duration": 21.461333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 5.4,
+      "width": 1440
+    }
+  },
+  {
+    "phase": "local",
+    "language": "en",
+    "seek": 9.16,
+    "result": {
+      "duration": 21.461333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 9.16,
+      "width": 1440
+    }
+  },
+  {
+    "phase": "local",
+    "language": "en",
+    "seek": 11.96,
+    "result": {
+      "duration": 21.461333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 11.96,
+      "width": 1440
+    }
+  },
+  {
+    "phase": "local",
+    "language": "en",
+    "seek": 0.16,
+    "result": {
+      "duration": 21.461333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "time": 0.16,
+      "width": 1440
+    }
+  },
+  {
+    "phase": "local",
+    "language": "en",
+    "playback": {
+      "duration": 21.461333,
+      "ended": true,
+      "error": null,
+      "time": 21.461333
+    }
+  }
+]

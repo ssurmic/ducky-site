@@ -70,7 +70,10 @@ with tempfile.TemporaryDirectory(prefix='ducky-demo-encode-') as directory:
             with wave.open(str(audio)) as handle:
                 speech_seconds = handle.getnframes() / handle.getframerate()
             # Short pauses protect endings and let the next scene settle before its first word.
-            lead, tail = 0.22, 0.38
+            timing = manifest.get('timing', {})
+            lead, tail = timing.get('lead', 0.22), timing.get('tail', 0.38)
+            fade = timing.get('fade', 0.16)
+            assert 0 <= lead <= 1 and 0 <= tail <= 1 and 0 <= fade <= 0.5
             duration = math.ceil(max(speech_seconds + lead + tail, row.get("minimum_seconds", 0)) * 25) / 25
             segment = temporary / f'{name}-{language}.mp4'
             measurement = run(['-i', str(audio), '-af',
@@ -89,9 +92,9 @@ with tempfile.TemporaryDirectory(prefix='ducky-demo-encode-') as directory:
                   f'pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=0x090d0a,setsar=1,'
                   f'format=yuv420p,setparams=range=limited:color_primaries=bt709:'
                   f'color_trc=bt709:colorspace=bt709,'
-                  f'fade=t=in:st=0:d=0.16,fade=t=out:st={duration-.16}:d=0.16')
+                  f'fade=t=in:st=0:d={fade},fade=t=out:st={duration-fade}:d={fade}')
             af = (f'{loudnorm},aresample=48000,afade=t=in:d=0.008,'
-                  f'adelay=220:all=1,apad,atrim=duration={duration}')
+                  f'adelay={round(lead*1000)}:all=1,apad,atrim=duration={duration}')
             shots = row.get('shots', {}).get(language, [{'file': image.name, 'at': 0}])
             assert shots[0]['at'] == 0
             assert all(0 <= shot['at'] < 1 for shot in shots)

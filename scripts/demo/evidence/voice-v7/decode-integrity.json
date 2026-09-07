@@ -1,0 +1,149 @@
+{
+  "full_decode": "Both complete H264/AAC files decode without errors",
+  "frames": [
+    {
+      "file": "zh-01-event-0.5.png",
+      "second": 1.96,
+      "bright_content_pixels": 73575,
+      "sha256": "48a21261cbbda9711fa2a5d5a208fbe185e10b16811306c10614f526b50042a3"
+    },
+    {
+      "file": "zh-02-price-0.2.png",
+      "second": 4.408,
+      "bright_content_pixels": 38317,
+      "sha256": "e46fd1d4ab2f1e71c680af15c6bbe94a19df1e7f9cac698768a3a86290c493cd"
+    },
+    {
+      "file": "zh-02-price-0.6.png",
+      "second": 5.384,
+      "bright_content_pixels": 45515,
+      "sha256": "97a701ebf3e5a3b98243fa6f07049cc27072edf013b179e364312f20ac0a06be"
+    },
+    {
+      "file": "zh-02-price-0.9.png",
+      "second": 6.116,
+      "bright_content_pixels": 45524,
+      "sha256": "8ff3759e81b0e9aa8c8711a9647cec15882fb5e251394f4910e813055af553a2"
+    },
+    {
+      "file": "zh-03-check-0.5.png",
+      "second": 8.12,
+      "bright_content_pixels": 54648,
+      "sha256": "a40b9094194088a6314b3884434a1fb173083e328fed9b2254952aeab4796e41"
+    },
+    {
+      "file": "zh-04-trigger-0.5.png",
+      "second": 10.88,
+      "bright_content_pixels": 57009,
+      "sha256": "24179050bc07ace5f6a76d6adc7804fb66597b3d51fe52b7b7416f55018c3315"
+    },
+    {
+      "file": "zh-05-outcome-0.2.png",
+      "second": 13.288,
+      "bright_content_pixels": 40753,
+      "sha256": "17dcb385f27560b9932a9bc11621c06e2edf9b80a7d66be6343b46d475095c44"
+    },
+    {
+      "file": "zh-05-outcome-0.6.png",
+      "second": 16.104,
+      "bright_content_pixels": 50602,
+      "sha256": "94f25a04fc16adef5949635836478c2fd5e55ec02b1284abccfddce1209b6eb5"
+    },
+    {
+      "file": "zh-05-outcome-0.9.png",
+      "second": 18.216,
+      "bright_content_pixels": 53911,
+      "sha256": "3d5bd55c9d46115e2711378a3918179df305ab208fa3352c01ddf7ea2fc66197"
+    },
+    {
+      "file": "zh-06-start-0.2.png",
+      "second": 19.704,
+      "bright_content_pixels": 50677,
+      "sha256": "64217b87a7c1c2ce7987211f0dca8ede8e499f5a4ca171b045200a741a267833"
+    },
+    {
+      "file": "zh-06-start-0.6.png",
+      "second": 21.272,
+      "bright_content_pixels": 68062,
+      "sha256": "3c93253aab7a9dc13f77ad9b1aa6dee630b8407a82105a66d36fcbd1c38774e3"
+    },
+    {
+      "file": "zh-06-start-0.9.png",
+      "second": 22.448,
+      "bright_content_pixels": 68062,
+      "sha256": "65344ed865d2d57596efd6c468344ef4d655638c458183aaac7e7827dab70b71"
+    },
+    {
+      "file": "en-01-event-0.5.png",
+      "second": 1.5,
+      "bright_content_pixels": 82848,
+      "sha256": "7ef36096a568ae1cfa347068b97eba53d4af12c6956ef930bb2484bdacf612d2"
+    },
+    {
+      "file": "en-02-price-0.2.png",
+      "second": 3.448,
+      "bright_content_pixels": 39091,
+      "sha256": "5a65994344ad982d20072b189f6b6682fe95fc1f3d5f731f0aab549652c7b565"
+    },
+    {
+      "file": "en-02-price-0.6.png",
+      "second": 4.344,
+      "bright_content_pixels": 46040,
+      "sha256": "d55cc114451bc36bf66b6669a48022406c9d11f6fb30b398d7e6f5e168c7691b"
+    },
+    {
+      "file": "en-02-price-0.9.png",
+      "second": 5.016,
+      "bright_content_pixels": 46049,
+      "sha256": "f23e3ce6dda0d0b8f0f6cfede2c24d1dc49d7621b0e5373b75c765deeb086f60"
+    },
+    {
+      "file": "en-03-check-0.5.png",
+      "second": 7.12,
+      "bright_content_pixels": 52095,
+      "sha256": "12d1251980c9e21b580fccf1874c292b27d2d6b51395768d2e917c87e61a82fb"
+    },
+    {
+      "file": "en-04-trigger-0.5.png",
+      "second": 10.4,
+      "bright_content_pixels": 59297,
+      "sha256": "31a875e5f3cef950da6260b8281010418b3169aeefd1ce428db403c356525281"
+    },
+    {
+      "file": "en-05-outcome-0.2.png",
+      "second": 12.864,
+      "bright_content_pixels": 46551,
+      "sha256": "a8b2117800e222380044b0b156c142137002fbd0c444f8a47667efc2d1807500"
+    },
+    {
+      "file": "en-05-outcome-0.6.png",
+      "second": 14.992,
+      "bright_content_pixels": 55696,
+      "sha256": "3437d290668385fee99e2f410ff9d8bb19ac258276bb572a2af4f2ff64ee0c3c"
+    },
+    {
+      "file": "en-05-outcome-0.9.png",
+      "second": 16.588,
+      "bright_content_pixels": 59067,
+      "sha256": "36cb8f0347d5ed6db6d8157dc4371ff76c0f50200e065caea404f7b7bff5e07e"
+    },
+    {
+      "file": "en-06-start-0.2.png",
+      "second": 17.984,
+      "bright_content_pixels": 55872,
+      "sha256": "9a8e93dc7ce2a37ebb2aeac6e40e52d811c97193d3f890409e1bb715af7c043b"
+    },
+    {
+      "file": "en-06-start-0.6.png",
+      "second": 19.712,
+      "bright_content_pixels": 72446,
+      "sha256": "0d0aa87f59f3fe1e6922c486f5cfec31eca6fd10020c7375d9245e0447029bed"
+    },
+    {
+      "file": "en-06-start-0.9.png",
+      "second": 21.008,
+      "bright_content_pixels": 72446,
+      "sha256": "00beeee3ec6ac9cf74760c5fbb96823175e5985c18a1ddbd171accc5f3a1b8c7"
+    }
+  ]
+}

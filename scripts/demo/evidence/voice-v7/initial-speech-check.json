@@ -1,0 +1,994 @@
+[
+  {
+    "file": "01-event.en.wav",
+    "language": "en",
+    "duration": 3.025,
+    "text": " Nvidia Bax Corning. What do you watch next?",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.5,
+        "text": " Nvidia Bax Corning. What do you watch next?",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.54,
+            "word": " Nvidia",
+            "probability": 0.36876627802848816
+          },
+          {
+            "start": 0.54,
+            "end": 0.94,
+            "word": " Bax",
+            "probability": 0.6665727198123932
+          },
+          {
+            "start": 0.94,
+            "end": 1.32,
+            "word": " Corning.",
+            "probability": 0.9800052642822266
+          },
+          {
+            "start": 1.64,
+            "end": 1.78,
+            "word": " What",
+            "probability": 0.9929470419883728
+          },
+          {
+            "start": 1.78,
+            "end": 1.86,
+            "word": " do",
+            "probability": 0.9938020706176758
+          },
+          {
+            "start": 1.86,
+            "end": 1.94,
+            "word": " you",
+            "probability": 0.9968265891075134
+          },
+          {
+            "start": 1.94,
+            "end": 2.18,
+            "word": " watch",
+            "probability": 0.9973983764648438
+          },
+          {
+            "start": 2.18,
+            "end": 2.5,
+            "word": " next?",
+            "probability": 0.9989660978317261
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "01-event.zh.wav",
+    "language": "zh",
+    "duration": 3.2,
+    "text": "英伟达逃了康宁接下来盯什么",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.38,
+        "text": "英伟达逃了康宁",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.24,
+            "word": "英",
+            "probability": 0.2244013249874115
+          },
+          {
+            "start": 0.24,
+            "end": 0.42,
+            "word": "伟",
+            "probability": 0.7232995480298996
+          },
+          {
+            "start": 0.42,
+            "end": 0.62,
+            "word": "达",
+            "probability": 0.7819572985172272
+          },
+          {
+            "start": 0.62,
+            "end": 0.8,
+            "word": "逃",
+            "probability": 0.9733042418956757
+          },
+          {
+            "start": 0.8,
+            "end": 0.9,
+            "word": "了",
+            "probability": 0.9951583743095398
+          },
+          {
+            "start": 0.9,
+            "end": 1.08,
+            "word": "康",
+            "probability": 0.9585430324077606
+          },
+          {
+            "start": 1.08,
+            "end": 1.38,
+            "word": "宁",
+            "probability": 0.977165937423706
+          }
+        ]
+      },
+      {
+        "start": 1.38,
+        "end": 3.04,
+        "text": "接下来盯什么",
+        "words": [
+          {
+            "start": 1.38,
+            "end": 2.02,
+            "word": "接",
+            "probability": 0.3319673240184784
+          },
+          {
+            "start": 2.02,
+            "end": 2.16,
+            "word": "下",
+            "probability": 0.996650755405426
+          },
+          {
+            "start": 2.16,
+            "end": 2.46,
+            "word": "来",
+            "probability": 0.9934781789779663
+          },
+          {
+            "start": 2.46,
+            "end": 2.76,
+            "word": "盯",
+            "probability": 0.8802858889102936
+          },
+          {
+            "start": 2.76,
+            "end": 3.04,
+            "word": "什么",
+            "probability": 0.9317594766616821
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "02-price.en.wav",
+    "language": "en",
+    "duration": 2.275,
+    "text": " Your price level, get an alert.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.66,
+        "text": " Your price level, get an alert.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.36,
+            "word": " Your",
+            "probability": 0.8313080072402954
+          },
+          {
+            "start": 0.36,
+            "end": 0.62,
+            "word": " price",
+            "probability": 0.9774656295776367
+          },
+          {
+            "start": 0.62,
+            "end": 0.92,
+            "word": " level,",
+            "probability": 0.9821392893791199
+          },
+          {
+            "start": 1.18,
+            "end": 1.32,
+            "word": " get",
+            "probability": 0.991981565952301
+          },
+          {
+            "start": 1.32,
+            "end": 1.42,
+            "word": " an",
+            "probability": 0.9971936345100403
+          },
+          {
+            "start": 1.42,
+            "end": 1.66,
+            "word": " alert.",
+            "probability": 0.9836230874061584
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "02-price.zh.wav",
+    "language": "zh",
+    "duration": 2.24,
+    "text": "到你设的价格,提醒你。",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.1,
+        "text": "到你设的价格,提醒你。",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.18,
+            "word": "到",
+            "probability": 0.7901862263679504
+          },
+          {
+            "start": 0.18,
+            "end": 0.34,
+            "word": "你",
+            "probability": 0.9561248421669006
+          },
+          {
+            "start": 0.34,
+            "end": 0.56,
+            "word": "设",
+            "probability": 0.8446563482284546
+          },
+          {
+            "start": 0.56,
+            "end": 0.68,
+            "word": "的",
+            "probability": 0.972729504108429
+          },
+          {
+            "start": 0.68,
+            "end": 0.9,
+            "word": "价",
+            "probability": 0.994460791349411
+          },
+          {
+            "start": 0.9,
+            "end": 1.18,
+            "word": "格,",
+            "probability": 0.9996486902236938
+          },
+          {
+            "start": 1.4,
+            "end": 1.62,
+            "word": "提",
+            "probability": 0.8651958107948303
+          },
+          {
+            "start": 1.62,
+            "end": 1.88,
+            "word": "醒",
+            "probability": 0.9968560934066772
+          },
+          {
+            "start": 1.88,
+            "end": 2.1,
+            "word": "你。",
+            "probability": 0.9811021685600281
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "03-check.en.wav",
+    "language": "en",
+    "duration": 3.85,
+    "text": " A dip isn't always oversold. Check the daily RSI.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.22,
+        "text": " A dip isn't always oversold. Check the daily RSI.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.36,
+            "word": " A",
+            "probability": 0.9241716265678406
+          },
+          {
+            "start": 0.36,
+            "end": 0.52,
+            "word": " dip",
+            "probability": 0.9262852668762207
+          },
+          {
+            "start": 0.52,
+            "end": 0.86,
+            "word": " isn't",
+            "probability": 0.9900345802307129
+          },
+          {
+            "start": 0.86,
+            "end": 1.06,
+            "word": " always",
+            "probability": 0.9977501034736633
+          },
+          {
+            "start": 1.06,
+            "end": 1.66,
+            "word": " oversold.",
+            "probability": 0.9639704823493958
+          },
+          {
+            "start": 2.06,
+            "end": 2.28,
+            "word": " Check",
+            "probability": 0.9960980415344238
+          },
+          {
+            "start": 2.28,
+            "end": 2.48,
+            "word": " the",
+            "probability": 0.985104501247406
+          },
+          {
+            "start": 2.48,
+            "end": 2.76,
+            "word": " daily",
+            "probability": 0.8570308685302734
+          },
+          {
+            "start": 2.76,
+            "end": 3.22,
+            "word": " RSI.",
+            "probability": 0.9659321904182434
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "03-check.zh.wav",
+    "language": "zh",
+    "duration": 3.28,
+    "text": "跌了就算超低,先看日线指标。",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.2,
+        "text": "跌了就算超低,先看日线指标。",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.26,
+            "word": "跌",
+            "probability": 0.723831981420517
+          },
+          {
+            "start": 0.26,
+            "end": 0.46,
+            "word": "了",
+            "probability": 0.9703255295753479
+          },
+          {
+            "start": 0.46,
+            "end": 0.78,
+            "word": "就",
+            "probability": 0.7389936447143555
+          },
+          {
+            "start": 0.78,
+            "end": 0.94,
+            "word": "算",
+            "probability": 0.9993751645088196
+          },
+          {
+            "start": 0.94,
+            "end": 1.2,
+            "word": "超",
+            "probability": 0.9932897686958313
+          },
+          {
+            "start": 1.2,
+            "end": 1.44,
+            "word": "低,",
+            "probability": 0.17094296216964722
+          },
+          {
+            "start": 1.76,
+            "end": 2.36,
+            "word": "先",
+            "probability": 0.7626770734786987
+          },
+          {
+            "start": 2.36,
+            "end": 2.52,
+            "word": "看",
+            "probability": 0.911389172077179
+          },
+          {
+            "start": 2.52,
+            "end": 2.68,
+            "word": "日",
+            "probability": 0.9864180088043213
+          },
+          {
+            "start": 2.68,
+            "end": 2.84,
+            "word": "线",
+            "probability": 0.5856792479753494
+          },
+          {
+            "start": 2.84,
+            "end": 3.0,
+            "word": "指",
+            "probability": 0.9516035318374634
+          },
+          {
+            "start": 3.0,
+            "end": 3.2,
+            "word": "标。",
+            "probability": 0.98757603764534
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "04-trigger.en.wav",
+    "language": "en",
+    "duration": 2.875,
+    "text": " Below 35, your condition is met.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.32,
+        "text": " Below 35, your condition is met.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.46,
+            "word": " Below",
+            "probability": 0.9263081550598145
+          },
+          {
+            "start": 0.46,
+            "end": 0.98,
+            "word": " 35,",
+            "probability": 0.954481840133667
+          },
+          {
+            "start": 1.46,
+            "end": 1.52,
+            "word": " your",
+            "probability": 0.9823952317237854
+          },
+          {
+            "start": 1.52,
+            "end": 1.88,
+            "word": " condition",
+            "probability": 0.9925047159194946
+          },
+          {
+            "start": 1.88,
+            "end": 2.12,
+            "word": " is",
+            "probability": 0.9989892840385437
+          },
+          {
+            "start": 2.12,
+            "end": 2.32,
+            "word": " met.",
+            "probability": 0.970990002155304
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "04-trigger.zh.wav",
+    "language": "zh",
+    "duration": 1.52,
+    "text": "低于35条件满足",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.4,
+        "text": "低于35条件满足",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.18,
+            "word": "低",
+            "probability": 0.6448718309402466
+          },
+          {
+            "start": 0.18,
+            "end": 0.3,
+            "word": "于",
+            "probability": 0.8855172991752625
+          },
+          {
+            "start": 0.3,
+            "end": 0.6,
+            "word": "35",
+            "probability": 0.9508604407310486
+          },
+          {
+            "start": 0.6,
+            "end": 0.9,
+            "word": "条",
+            "probability": 0.47770822048187256
+          },
+          {
+            "start": 0.9,
+            "end": 1.08,
+            "word": "件",
+            "probability": 0.9500864744186401
+          },
+          {
+            "start": 1.08,
+            "end": 1.2,
+            "word": "满",
+            "probability": 0.9954749643802643
+          },
+          {
+            "start": 1.2,
+            "end": 1.4,
+            "word": "足",
+            "probability": 0.9998148083686829
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "05-outcome.en.wav",
+    "language": "en",
+    "duration": 5.425,
+    "text": " In this case, up nearly 17% over 20 trading days, pullbacks included.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 4.72,
+        "text": " In this case, up nearly 17% over 20 trading days, pullbacks included.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.36,
+            "word": " In",
+            "probability": 0.9843816161155701
+          },
+          {
+            "start": 0.36,
+            "end": 0.52,
+            "word": " this",
+            "probability": 0.999336302280426
+          },
+          {
+            "start": 0.52,
+            "end": 0.76,
+            "word": " case,",
+            "probability": 0.9998502731323242
+          },
+          {
+            "start": 1.0,
+            "end": 1.1,
+            "word": " up",
+            "probability": 0.9917861819267273
+          },
+          {
+            "start": 1.1,
+            "end": 1.38,
+            "word": " nearly",
+            "probability": 0.996773898601532
+          },
+          {
+            "start": 1.38,
+            "end": 1.84,
+            "word": " 17",
+            "probability": 0.9824250340461731
+          },
+          {
+            "start": 1.84,
+            "end": 2.2,
+            "word": "%",
+            "probability": 0.5791926383972168
+          },
+          {
+            "start": 2.2,
+            "end": 2.44,
+            "word": " over",
+            "probability": 0.9960810542106628
+          },
+          {
+            "start": 2.44,
+            "end": 2.74,
+            "word": " 20",
+            "probability": 0.972292959690094
+          },
+          {
+            "start": 2.74,
+            "end": 3.06,
+            "word": " trading",
+            "probability": 0.9970172643661499
+          },
+          {
+            "start": 3.06,
+            "end": 3.4,
+            "word": " days,",
+            "probability": 0.9977599382400513
+          },
+          {
+            "start": 3.92,
+            "end": 4.3,
+            "word": " pullbacks",
+            "probability": 0.831913024187088
+          },
+          {
+            "start": 4.3,
+            "end": 4.72,
+            "word": " included.",
+            "probability": 0.9994031190872192
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "05-outcome.zh.wav",
+    "language": "zh",
+    "duration": 5.84,
+    "text": "这次20个疆义日后,股价涨了近17%,回落也看得到。",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 5.74,
+        "text": "这次20个疆义日后,股价涨了近17%,回落也看得到。",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.22,
+            "word": "这",
+            "probability": 0.6680865287780762
+          },
+          {
+            "start": 0.22,
+            "end": 0.56,
+            "word": "次",
+            "probability": 0.9912745356559753
+          },
+          {
+            "start": 0.56,
+            "end": 1.28,
+            "word": "20",
+            "probability": 0.5080042481422424
+          },
+          {
+            "start": 1.28,
+            "end": 1.56,
+            "word": "个",
+            "probability": 0.9646493196487427
+          },
+          {
+            "start": 1.56,
+            "end": 1.72,
+            "word": "疆",
+            "probability": 0.6334229409694672
+          },
+          {
+            "start": 1.72,
+            "end": 1.88,
+            "word": "义",
+            "probability": 0.6440996080636978
+          },
+          {
+            "start": 1.88,
+            "end": 2.02,
+            "word": "日",
+            "probability": 0.9879635572433472
+          },
+          {
+            "start": 2.02,
+            "end": 2.3,
+            "word": "后,",
+            "probability": 0.9981667995452881
+          },
+          {
+            "start": 2.52,
+            "end": 2.62,
+            "word": "股",
+            "probability": 0.946241706609726
+          },
+          {
+            "start": 2.62,
+            "end": 2.8,
+            "word": "价",
+            "probability": 0.9968970119953156
+          },
+          {
+            "start": 2.8,
+            "end": 2.98,
+            "word": "涨",
+            "probability": 0.9975237250328064
+          },
+          {
+            "start": 2.98,
+            "end": 3.08,
+            "word": "了",
+            "probability": 0.9351698160171509
+          },
+          {
+            "start": 3.08,
+            "end": 3.22,
+            "word": "近",
+            "probability": 0.9439858198165894
+          },
+          {
+            "start": 3.22,
+            "end": 3.9,
+            "word": "17",
+            "probability": 0.9576160907745361
+          },
+          {
+            "start": 3.9,
+            "end": 4.66,
+            "word": "%,",
+            "probability": 0.65562903881073
+          },
+          {
+            "start": 4.66,
+            "end": 4.98,
+            "word": "回",
+            "probability": 0.9424636363983154
+          },
+          {
+            "start": 4.98,
+            "end": 5.14,
+            "word": "落",
+            "probability": 0.9606159925460815
+          },
+          {
+            "start": 5.14,
+            "end": 5.28,
+            "word": "也",
+            "probability": 0.9842870235443115
+          },
+          {
+            "start": 5.28,
+            "end": 5.46,
+            "word": "看",
+            "probability": 0.9929443001747131
+          },
+          {
+            "start": 5.46,
+            "end": 5.56,
+            "word": "得",
+            "probability": 0.67812579870224
+          },
+          {
+            "start": 5.56,
+            "end": 5.74,
+            "word": "到。",
+            "probability": 0.986271858215332
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "06-start.en.wav",
+    "language": "en",
+    "duration": 4.4,
+    "text": " Set your price and RSI alerts. Ducky keeps watch, try it free.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.76,
+        "text": " Set your price and RSI alerts.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.4,
+            "word": " Set",
+            "probability": 0.9315292239189148
+          },
+          {
+            "start": 0.4,
+            "end": 0.54,
+            "word": " your",
+            "probability": 0.9967343807220459
+          },
+          {
+            "start": 0.54,
+            "end": 0.8,
+            "word": " price",
+            "probability": 0.9874638319015503
+          },
+          {
+            "start": 0.8,
+            "end": 1.0,
+            "word": " and",
+            "probability": 0.8060402274131775
+          },
+          {
+            "start": 1.0,
+            "end": 1.38,
+            "word": " RSI",
+            "probability": 0.9516220092773438
+          },
+          {
+            "start": 1.38,
+            "end": 1.76,
+            "word": " alerts.",
+            "probability": 0.9761012196540833
+          }
+        ]
+      },
+      {
+        "start": 2.2,
+        "end": 3.8,
+        "text": " Ducky keeps watch, try it free.",
+        "words": [
+          {
+            "start": 2.2,
+            "end": 2.54,
+            "word": " Ducky",
+            "probability": 0.8655087947845459
+          },
+          {
+            "start": 2.54,
+            "end": 2.76,
+            "word": " keeps",
+            "probability": 0.9622880220413208
+          },
+          {
+            "start": 2.76,
+            "end": 3.06,
+            "word": " watch,",
+            "probability": 0.9800187945365906
+          },
+          {
+            "start": 3.34,
+            "end": 3.5,
+            "word": " try",
+            "probability": 0.988155722618103
+          },
+          {
+            "start": 3.5,
+            "end": 3.6,
+            "word": " it",
+            "probability": 0.9964642524719238
+          },
+          {
+            "start": 3.6,
+            "end": 3.8,
+            "word": " free.",
+            "probability": 0.9901594519615173
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "06-start.zh.wav",
+    "language": "zh",
+    "duration": 5.28,
+    "text": "价格、超跌、调价你订、Ducky帮你盯、免费试试吧。",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 5.18,
+        "text": "价格、超跌、调价你订、Ducky帮你盯、免费试试吧。",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.3,
+            "word": "价",
+            "probability": 0.9704707264900208
+          },
+          {
+            "start": 0.3,
+            "end": 0.58,
+            "word": "格、",
+            "probability": 0.9998295307159424
+          },
+          {
+            "start": 0.8,
+            "end": 0.98,
+            "word": "超",
+            "probability": 0.9580981135368347
+          },
+          {
+            "start": 0.98,
+            "end": 1.22,
+            "word": "跌、",
+            "probability": 0.8665458858013153
+          },
+          {
+            "start": 1.54,
+            "end": 1.7,
+            "word": "调",
+            "probability": 0.8874768316745758
+          },
+          {
+            "start": 1.7,
+            "end": 1.86,
+            "word": "价",
+            "probability": 0.8664635121822357
+          },
+          {
+            "start": 1.86,
+            "end": 2.0,
+            "word": "你",
+            "probability": 0.4431682527065277
+          },
+          {
+            "start": 2.0,
+            "end": 2.2,
+            "word": "订、",
+            "probability": 0.9186081290245056
+          },
+          {
+            "start": 2.9,
+            "end": 3.04,
+            "word": "D",
+            "probability": 0.6586364507675171
+          },
+          {
+            "start": 3.04,
+            "end": 3.24,
+            "word": "ucky",
+            "probability": 0.5515879392623901
+          },
+          {
+            "start": 3.24,
+            "end": 3.46,
+            "word": "帮",
+            "probability": 0.8773848414421082
+          },
+          {
+            "start": 3.46,
+            "end": 3.6,
+            "word": "你",
+            "probability": 0.9990328550338745
+          },
+          {
+            "start": 3.6,
+            "end": 3.76,
+            "word": "盯、",
+            "probability": 0.660472571849823
+          },
+          {
+            "start": 4.42,
+            "end": 4.58,
+            "word": "免",
+            "probability": 0.9928126931190491
+          },
+          {
+            "start": 4.58,
+            "end": 4.74,
+            "word": "费",
+            "probability": 0.997700035572052
+          },
+          {
+            "start": 4.74,
+            "end": 4.92,
+            "word": "试",
+            "probability": 0.9970434904098511
+          },
+          {
+            "start": 4.92,
+            "end": 5.04,
+            "word": "试",
+            "probability": 0.999149352312088
+          },
+          {
+            "start": 5.04,
+            "end": 5.18,
+            "word": "吧。",
+            "probability": 0.9958913326263428
+          }
+        ]
+      }
+    ]
+  }
+]

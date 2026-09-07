@@ -1,0 +1,59 @@
+{
+  "method": "Remove only trailing English silence. Keep at least 180ms after last 10ms window above -48 dBFS RMS and 150ms after final ASR word. No resampling or speed/pitch change. Original audio preserved.",
+  "files": [
+    {
+      "file": "01-event.en.wav",
+      "original_seconds": 3.025,
+      "selected_seconds": 2.82,
+      "last_active_10ms_window": 2.64,
+      "asr_last_word_end": 2.5,
+      "original_sha256": "446479ec75c4515080f06bac0941563926eb27c7d89b052630b0e06cfe14ee27",
+      "selected_sha256": "14bda7211d498ea76ca770ffa5517c2a6af4fdc80ca7553a5684766d631869eb"
+    },
+    {
+      "file": "02-price.en.wav",
+      "original_seconds": 2.275,
+      "selected_seconds": 2.06,
+      "last_active_10ms_window": 1.88,
+      "asr_last_word_end": 1.66,
+      "original_sha256": "c895e304e8d8283a9885ec700d3680532d99a92b28053ba6af9f43c5469dbd4f",
+      "selected_sha256": "3659e3fb82e029923bc0c88a0b7fb0e643d35ed3c17865a66da1cf433276aa45"
+    },
+    {
+      "file": "03-check.en.wav",
+      "original_seconds": 3.85,
+      "selected_seconds": 3.58,
+      "last_active_10ms_window": 3.4,
+      "asr_last_word_end": 3.22,
+      "original_sha256": "9ff515dacf1eb92e023ae14f27c317c0b2dc574e579999d79695151da03f1d08",
+      "selected_sha256": "31a32b3f51a6a9352c64bdd5dd8278b6fd28647747dc84139b8ebed3ae2d47d3"
+    },
+    {
+      "file": "04-trigger.en.wav",
+      "original_seconds": 2.875,
+      "selected_seconds": 2.63,
+      "last_active_10ms_window": 2.45,
+      "asr_last_word_end": 2.32,
+      "original_sha256": "1d8cd824de95498b297656d7ce853222c65134d5b26926e21bd1ca81885149ff",
+      "selected_sha256": "3187fe4e367e93014d473b9c54965f5b5ceda0cbfc3d41d28eafb09abc527268"
+    },
+    {
+      "file": "05-outcome.en.wav",
+      "original_seconds": 5.425,
+      "selected_seconds": 5.15,
+      "last_active_10ms_window": 4.97,
+      "asr_last_word_end": 4.72,
+      "original_sha256": "f7f5d00e5e8c6343e95bb46f71b83614621687dbfd7814ee14c8d6427619f99c",
+      "selected_sha256": "e3903f10d93d374946718d1a4abdc1c5c60fc0f55001cd2fdd7087b54b26882a"
+    },
+    {
+      "file": "06-start.en.wav",
+      "original_seconds": 4.4,
+      "selected_seconds": 4.13,
+      "last_active_10ms_window": 3.95,
+      "asr_last_word_end": 3.8,
+      "original_sha256": "d5fd3e3523c81232a3192525ec4e20ecc634e590394a6d82d2c14e497c7ea2ee",
+      "selected_sha256": "4db59191989560660c2c1363dbf6ef17bcf29fd90dda57e4ec6ca6e4fea50e0f"
+    }
+  ]
+}

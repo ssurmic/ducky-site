@@ -227,6 +227,11 @@ def verify_video(audit, ffprobe, language, video, manifest, frames, audio_dir, o
     audit.check([r['scene'] for r in timeline] == [r['name'] for r in manifest['scenes']],
                 f'{filename}: report does not cover manifest scenes in order')
     expected_start = 0.0
+    timing = manifest.get('timing', {})
+    lead, tail = timing.get('lead', .22), timing.get('tail', .38)
+    if not audit.check(all(finite(v) and 0 <= v <= 1 for v in (lead, tail)),
+                       f'{filename}: invalid narration padding'):
+        return
     for reported, scene in zip(timeline, manifest['scenes']):
         name = scene['name']
         audit.check(finite(reported['start']) and abs(reported['start'] - expected_start) <= .002,
@@ -244,7 +249,7 @@ def verify_video(audit, ffprobe, language, video, manifest, frames, audio_dir, o
         if measured:
             audit.check(abs(reported['speech_seconds'] - measured['duration']) < .05,
                         f'{filename}/{name}: reported speech duration mismatch')
-            audit.check(reported['duration'] >= measured['duration'] + .58,
+            audit.check(reported['duration'] >= measured['duration'] + lead + tail - .02,
                         f'{filename}/{name}: scene truncates speech or its intended padding')
         expected_shots = scene.get('shots', {}).get(language, [{'file': f'{name}.png', 'at': 0}])
         shots = reported.get('shots', [])

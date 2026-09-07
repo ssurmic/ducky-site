@@ -1,0 +1,610 @@
+{
+  "capture": "CUA screenshots of recording/alerts-stage.html, 1440\u00d7810. Full image/font ready, screenshots sampled twice; all frames pass content and duck-brand paint checks.",
+  "raw": "Actual production Alerts page, unsaved examples, September 6 2026. No alert created.",
+  "frames": [
+    {
+      "file": "scripts/demo/frames-v7/en/01-event.png",
+      "sha256": "838d945e7cb518e31bd676b00c6f7510b6655db88c2caa7d418eb1949c8f3ac1",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 45428,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/02-price-00.png",
+      "sha256": "3f657b12267b4d93eba56024a64aaaf6631924edfded011c6d01364fa2634ea3",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 20500,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/02-price-01.png",
+      "sha256": "deb3ce44e332f0a2adfb9c05ddea9ff8505675f866f6fecbebf08e720310a813",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 20869,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/02-price-02.png",
+      "sha256": "94759adce5b6c1698ed4cbb9442a3f5510c2e213857f96654aab10c3d400d82d",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 21237,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/02-price-03.png",
+      "sha256": "1ad21d0291e38f0338bc8a169dd56073377f3b2d3cc00ac2552b7743393ac6e2",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 21566,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/02-price-04.png",
+      "sha256": "e7510e8c6edacccc5cb17a243b1ea14a1f7042a039d504e8e09b4a80a3164731",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 21884,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/02-price-05.png",
+      "sha256": "ff8d003af5461e09e4c5376aa90c9feeadceaa829f8d82fe114455546af6f505",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 22197,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/02-price-06.png",
+      "sha256": "bc2d061ef2c14018f193c15ce0ccf11115677560b9bc3b7748b0dd0a7c44fed9",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 22615,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/02-price-07.png",
+      "sha256": "6de6c5e3dca2fddd3344bda8c62ce762fec164453e16b0315e7b01b5e05b1382",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 22666,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/02-price-08.png",
+      "sha256": "26f2a7d47bb4f15358cfecf92a44fdefd90751ee574e7051e8b2590944c0e9e3",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 24542,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/02-price.png",
+      "sha256": "26f2a7d47bb4f15358cfecf92a44fdefd90751ee574e7051e8b2590944c0e9e3",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 24542,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/03-check.png",
+      "sha256": "48e1784cd7418f042a4a62840453e841d6c4686cb61002fec3848a78308f4d9f",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 26297,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/04-trigger.png",
+      "sha256": "fb85b44b9d6ec8444f0b36095f49d0709404cd08cf3f80e13c48b13aa224fc53",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 30711,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-00.png",
+      "sha256": "aec8ca6d9b42907997a863232a8ea5e46687d20809675450f2dd8d67e64873b5",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 22181,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-01.png",
+      "sha256": "890ede436b2e081cdcc271f5d071da2f67779a76306948731525f4525fe417da",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 21653,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-02.png",
+      "sha256": "e613d62bb4f0fcf7ca584b4bdf5d9469f075f24b3aad2408a9bdebaf33af2964",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 22426,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-03.png",
+      "sha256": "53afd86363d6562cdd0fdcf560e6680e532e9eecdefd996b4dc7303e499b6de6",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 23087,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-04.png",
+      "sha256": "610c9a7c1bf5906176973d188810ac740ca2085467163a3ee9b47970f5a03ee2",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 24168,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-05.png",
+      "sha256": "ea18dac04ff47028ca7bcd1cfb34368a935c0dd6a3aea5ea5ee0d92283a42ca5",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 24890,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-06.png",
+      "sha256": "6e3f5736836320e1b1e8c83ba1229fa495c07186edcdb10db6bcbce7dc0a5fbf",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 25239,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-07.png",
+      "sha256": "05eefb021420b446ab165d228f350ab43d89304873f34e3e453a64d20d3842dd",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 25308,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-08.png",
+      "sha256": "add493ad021823626cc0a6c6c6c3f8177d5b32a720bf30923160118ea99b758d",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 25841,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-09.png",
+      "sha256": "ed4858d9f3f02f205b500ebd3e15932db28a19bb054f2ed8aaad2961a6b39544",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 26460,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-10.png",
+      "sha256": "d6880049b5dcf01d68242663b3fb60873ea3b4e703abdb91698d56f44fc5867a",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 26918,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-11.png",
+      "sha256": "2ea245b0baa86499589dc824762eb5efa59486b25f3de8a9a2206d260ff5f9ba",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 27335,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-12.png",
+      "sha256": "151a3ff6b48ff20b8b1ec0f9791905e687c8fda8ff82504bf46858533d42e382",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 27977,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-13.png",
+      "sha256": "f55cf146819f0c85bd4b4572b9a397a2d8ef3d95cfc4bae394d3079b76fb5f32",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 27871,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-14.png",
+      "sha256": "e8be32c9a4eb722ec53afd2f1f4f9db8c93787bf409a7d174d1d6352cc9e13ae",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 28383,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-15.png",
+      "sha256": "68199b9562e37653a99ddbcc1be38d12647b2dc56e022ca1178a7883a21b58d9",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 29412,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-16.png",
+      "sha256": "c9e3e63ec3c969231b9674ac1583e56e3dc950855e0bf5996fe0e7f57b2b003a",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 29505,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-17.png",
+      "sha256": "75adad7d2db369027dd5006ff79c14c40c5576a04d4c1b77318683012332f73e",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 30192,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-18.png",
+      "sha256": "daf850b4c6b922859cc78f0d2c17bba5ffcd0e5489896a5830e11948686c243f",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 30404,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-19.png",
+      "sha256": "bd1349b7a5f37b68043654da7cb09732e637a28cdc0c6826e9189d1abd453b53",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 30623,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome-20.png",
+      "sha256": "f36528df19c017eebcd4eee2f8efde9aa0be5a12ee43289bfb4efc82fb39b336",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 31962,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/05-outcome.png",
+      "sha256": "f36528df19c017eebcd4eee2f8efde9aa0be5a12ee43289bfb4efc82fb39b336",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 31962,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/06-start-00.png",
+      "sha256": "eb4fb30f3fc3780b95f89851e31069ec00e237c3cce83f6f2c771304ab584aa2",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 30058,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/en/06-start.png",
+      "sha256": "e3daf6cb197d5e50dabca8c27cce671d2e391616e8fc9e8fa4c4bedb88a8cd63",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 40336,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/raw/alerts-en.png",
+      "sha256": "82aa14a9b3e8e3682ea3c60e91addd297523f2d8c36ff2c4d14fce479e2af4c3",
+      "width": 759,
+      "height": 525
+    },
+    {
+      "file": "scripts/demo/frames-v7/raw/alerts-zh.png",
+      "sha256": "2e2ae9f9d0eadd4c58113b8fb8506c1e89efeef379135e4b937529fe13f2cab1",
+      "width": 759,
+      "height": 525
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/01-event.png",
+      "sha256": "83360dc1aee9b7e397dbcaa77d190b933512bcdc4279bfcad12102955bd59841",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 40191,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/02-price-00.png",
+      "sha256": "6062954c53e10db91e0bda3dcc66ca9140542ab76d7b870170e2d043e8081d81",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 19969,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/02-price-01.png",
+      "sha256": "89b688d089c7a8aa1166ca563144e0ed3ae030e870b129da9da55c7f33f54a40",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 20327,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/02-price-02.png",
+      "sha256": "92d5dcee0ae68fb7715ff4c617d079fc2684491c66bd88b90511f34de7beb738",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 20704,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/02-price-03.png",
+      "sha256": "373d2d6797fd8abc1d4a2e879a978fdc511bb6c016245c15424511d56d420947",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 21033,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/02-price-04.png",
+      "sha256": "c8ee72994a5b05dec55471c97429dd9150ede32188f24a1b3677a937d9c64955",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 21349,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/02-price-05.png",
+      "sha256": "bafdba6cfe0e928a7e65e39487abd9270a8ec660a4bf0aff6fbb1b4a92773b0c",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 21676,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/02-price-06.png",
+      "sha256": "aa119cc37ba5807922811439140c9a9cb8b4b37659aaf3297100e00c67a5c575",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 22078,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/02-price-07.png",
+      "sha256": "b7c21d38a14bc4cae0fa88ba5d0dd575356895b98ffa09a02f792a1b5f152833",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 22139,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/02-price-08.png",
+      "sha256": "51ae19003d672cbf5eb7494a4cd55328f9aee8f954b6b97d119452fa32fc934f",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 23967,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/02-price.png",
+      "sha256": "51ae19003d672cbf5eb7494a4cd55328f9aee8f954b6b97d119452fa32fc934f",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 23967,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/03-check.png",
+      "sha256": "8aac2642c1b04c47da1becb655ca37ee78239a11fa152346c3259e495ad63c04",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 26092,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/04-trigger.png",
+      "sha256": "f1d93953458ad34fe2088f984da4ae5b520485dd829215b0d2695ec907ac27c3",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 27121,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-00.png",
+      "sha256": "3d029749b659e0167c29eaaefaab54325581841a537f21e74834e8bcc0d45b0b",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 19222,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-01.png",
+      "sha256": "96a9d5c46adfb85077f13f0091c4b2dace50b60a49dc4636db08096482448c6a",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 18691,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-02.png",
+      "sha256": "f13f9e4de0a00e60469ea45b939dedfd3ffa8e6294fa4ac9ba501d318f8934f2",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 19458,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-03.png",
+      "sha256": "8466a4ec71d60b2c5f22be7c590bde146efa26f260a839f75a2614a7f3984c0a",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 20126,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-04.png",
+      "sha256": "e47445eb379b03d4a675c20af198a616f3860e13dc90614c3c117799ecddd870",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 21196,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-05.png",
+      "sha256": "50beb0fc54598ec5cba7ca17dd29f65d2c8744277853946f799b3d038033a038",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 21909,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-06.png",
+      "sha256": "0e6d903ae8084977e9185e3fd4aa899a17b4d3ed2e5b2a8b28fbc1abf6ddd7ab",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 22261,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-07.png",
+      "sha256": "afa82f5031bdd3c313261acae51832671ed24335c9d299a9664dc127d2f1acc4",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 22333,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-08.png",
+      "sha256": "c4db4cab33a1f26ae587eaad2933caf3bfdb614351a6232005a3a37b349550f5",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 22858,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-09.png",
+      "sha256": "60144d676da8c0eec81799a2c16b08eef4775c7d8c6ad2bb49d347d42487ec6c",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 23486,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-10.png",
+      "sha256": "4d6a91edefbb18c8b27bbdf395569c65ec3747389d91facd8d5b26e1499191c3",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 23940,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-11.png",
+      "sha256": "e1bac88373c9563321cef17d986def2452eaba5821e1e0a88ea9adbacc0d9166",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 24366,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-12.png",
+      "sha256": "ea07be990c998a97212e99ab6ce874e7aa83c20e22373665d4ffb92f374895cd",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 25017,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-13.png",
+      "sha256": "69b158c1979981adf22cd2be810023ad0998cb671fe98725923bbe6b0129e807",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 24895,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-14.png",
+      "sha256": "6e6f09100e7b23c840f657a1e4203de7517e307e18937500f66377dc2e04b707",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 25414,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-15.png",
+      "sha256": "29b058f8468c9bb15beb9252273132992d163f7985d5ed193d52ca4d3be3b9d9",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 26443,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-16.png",
+      "sha256": "3329fd9ff4e0047b7e67feff46f7daaad75fe39aa4b666c4dc8d6d344a27f5a5",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 26552,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-17.png",
+      "sha256": "6687b16be7a0c7d239c65066218799eb61e832b1a8c2ce2110f94ea03b54bf4d",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 27231,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-18.png",
+      "sha256": "ebc16ca994f9fe50f3dc2c49c506b3231f1ef3a3c6ac31c0de9f19c689a6d4fc",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 27435,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-19.png",
+      "sha256": "27497434af004a4140d8a78bcbe2900f29088d3db0b4ba81eca60af5a3000056",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 27668,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome-20.png",
+      "sha256": "027dfa313029cabe7dea7d1f633ee2410e83d13588a4cf61760718ba6f95422c",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 29026,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/05-outcome.png",
+      "sha256": "027dfa313029cabe7dea7d1f633ee2410e83d13588a4cf61760718ba6f95422c",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 29026,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/06-start-00.png",
+      "sha256": "9c9c023802cb83f449193633d4a1ab8562d1d59ed6998e26240055c4b380c0ee",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 26913,
+      "brand_bright_pixels": 2233
+    },
+    {
+      "file": "scripts/demo/frames-v7/zh/06-start.png",
+      "sha256": "e9178245da21a7a1e4c8d37d43377f9ee3dd6e2ade178d58fd8582d8ae06f038",
+      "width": 1440,
+      "height": 810,
+      "content_bright_pixels": 37778,
+      "brand_bright_pixels": 2233
+    }
+  ]
+}

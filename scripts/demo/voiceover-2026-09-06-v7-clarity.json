@@ -1,0 +1,49 @@
+{
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
+  "revision": "0c0e3051f131929182e2c023b9537f8b1c68adfe",
+  "version": "2026-09-06-alerts-v7",
+  "speakers": {
+    "zh": "Serena",
+    "en": "af_heart"
+  },
+  "english_synthesis": {
+    "model": "hexgrad/Kokoro-82M",
+    "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "speed": 1.12
+  },
+  "instructions": {
+    "zh": "用清晰自然的标准普通话，专业女声，像熟练的产品顾问。语速明快，但每个字都要说清楚。数字和交易日要清楚。短句之间自然停顿，不拖音。语气口语化，有精神，克制，不喊口号，不撒娇。"
+  },
+  "delivery": {
+    "target_seconds": 27,
+    "maximum_seconds": 35,
+    "status": "Draft: evidence and audio checks in progress"
+  },
+  "timing": {
+    "lead": 0.12,
+    "tail": 0.2,
+    "fade": 0.08
+  },
+  "scenes": [
+    {
+      "name": "01-event",
+      "zh": "英伟达与康宁合作。接下来，关注什么？",
+      "en": "NVIDIA backs Corning. What do you watch next?"
+    },
+    {
+      "name": "03-check",
+      "zh": "股价跌了，就是超跌吗？先看日线指标。",
+      "en": "A dip isn't always oversold. Check the daily RSI."
+    },
+    {
+      "name": "05-outcome",
+      "zh": "这次，二十个交易日，股价涨了近百分之十七。中间的回落，也看得到。",
+      "en": "In this case, up nearly seventeen percent over twenty trading days. Pullbacks included."
+    },
+    {
+      "name": "06-start",
+      "zh": "设好条件，Ducky 帮你盯。免费试试吧。",
+      "en": "Set your price and RSI alerts. Ducky keeps watch. Try it free."
+    }
+  ]
+}

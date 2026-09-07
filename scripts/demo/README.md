@@ -105,3 +105,19 @@ The selected voice still requires both complete caption tracks. Use that version
 scene count and independent ASR report; do not mix another voice's report into the new cut.
 Update website chapter start times from the final render report, then check seeking before
 and after metadata loads. No chapter click should start audio automatically.
+
+## v7 Corning alert story
+
+`voiceover-2026-09-06-v7.json`, `frames-v7/`, and `evidence/voice-v7/` reproduce the
+22.84-second Chinese / 21.44-second English timeline. Serve the recording stage with
+`python3 recording/serve_alerts.py` on localhost:8792. This movie is a historical daily-close
+condition replay, not evidence of historical alert delivery. The $180 example is not
+NVIDIA’s cost basis. Full method, selection limits and acceptance evidence are in
+`reports/DEMO-ALERT-STORY-2026-09-06.md` at repository root.
+
+English native synthesis speed is manifest-controlled (default 1.0 for older cuts).
+Optional manifest `timing` sets bounded lead/tail/fade values; omitted settings preserve
+the old 220/380/160 ms defaults. Original English audio remains under `audio-original/`;
+`audio-edit.json` records the selected trailing-silence cuts. No speech time stretching.
+Both languages were independently transcribed after the final audio edit. Assemble into
+a new directory with `--frames-dir frames-v7`; verify the same directory and manifest.

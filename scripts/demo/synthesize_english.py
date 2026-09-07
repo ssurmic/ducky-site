@@ -22,6 +22,9 @@ torch.set_num_threads(2)
 torch.manual_seed(6092026)
 manifest_path, model_path, output_path = map(Path, sys.argv[1:4])
 manifest = json.loads(manifest_path.read_text())
+speed = float(manifest.get('english_synthesis', {}).get('speed', 1.0))
+if not 0.8 <= speed <= 1.3:
+    raise ValueError('Narration speed must stay within a clear spoken range')
 revision = 'f3ff3571791e39611d31c381e3a41a3af07b4987'
 files = ['config.json', 'kokoro-v1_0.pth', 'voices/af_heart.pt']
 assets = {}
@@ -40,7 +43,7 @@ pipeline = KPipeline(lang_code='a', model=model, device='cpu')
 output_path.mkdir(parents=True, exist_ok=True)
 (output_path / 'model-manifest.json').write_text(json.dumps({
     'repo': 'hexgrad/Kokoro-82M', 'revision': revision, 'files': assets,
-    'speaker': 'af_heart', 'language': 'American English', 'synthesis_speed': 1.0,
+    'speaker': 'af_heart', 'language': 'American English', 'synthesis_speed': speed,
     'post_synthesis_speed_change': False}, indent=2) + '\n')
 rows = []
 for scene in manifest['scenes']:
@@ -49,7 +52,7 @@ for scene in manifest['scenes']:
         raise FileExistsError('Use a new output directory; reviewed audio is immutable')
     started = time.monotonic()
     parts = list(pipeline(scene['en'], voice=str(model_path / 'voices/af_heart.pt'),
-                          speed=1.0, split_pattern=None))
+                          speed=speed, split_pattern=None))
     samples = np.concatenate([part.audio.detach().cpu().numpy() for part in parts])
     if not np.isfinite(samples).all() or np.max(np.abs(samples)) >= 1:
         raise ValueError('Invalid or clipped narration')

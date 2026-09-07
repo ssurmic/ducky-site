@@ -1,0 +1,237 @@
+{
+  "version": "glw-alert-demo-v1",
+  "ticker": "GLW",
+  "company": "Corning",
+  "source": {
+    "date": "2026-05-06",
+    "type": "Commercial partnership and warrant purchase",
+    "purchase_usd": 500000000,
+    "traditional_warrant_strike": 180,
+    "traditional_warrant_max_shares": 15000000,
+    "prefunded_warrant_max_shares": 3000000,
+    "sec_url": "https://www.sec.gov/Archives/edgar/data/24741/000120677426000273/glw4631061-8k.htm",
+    "announcement_url": "https://investor.corning.com/news-and-events/news/news-details/2026/NVIDIA-and-Corning-Announce-Long-Term-Partnership-To-Strengthen-U-S--Manufacturing-for-AI-Infrastructure/default.aspx",
+    "interpretation": "The $180 alert level is a user-defined example, not NVIDIA’s acquisition cost or a valuation claim."
+  },
+  "price_alert": {
+    "rule": {
+      "op": "and",
+      "clauses": [
+        {
+          "field": "price",
+          "cmp": "<=",
+          "value": 180
+        }
+      ]
+    },
+    "first_after_event": "2026-05-18",
+    "close": 178.5500030517578,
+    "technical_snapshot": {
+      "px": 178.55,
+      "rsi_d": 51.6,
+      "rsi_w": 64.7,
+      "rsi_m": 91.7,
+      "dd_pct": -14.3,
+      "vs_50dma": 13.0,
+      "vs_200dma": 66.2,
+      "oversold": false
+    },
+    "path": [
+      {
+        "d": "2026-05-06",
+        "close": 181.57000732421875
+      },
+      {
+        "d": "2026-05-07",
+        "close": 182.39999389648438
+      },
+      {
+        "d": "2026-05-08",
+        "close": 186.94000244140625
+      },
+      {
+        "d": "2026-05-11",
+        "close": 207.38999938964844
+      },
+      {
+        "d": "2026-05-12",
+        "close": 198.24000549316406
+      },
+      {
+        "d": "2026-05-13",
+        "close": 206.50999450683594
+      },
+      {
+        "d": "2026-05-14",
+        "close": 208.27999877929688
+      },
+      {
+        "d": "2026-05-15",
+        "close": 191.80999755859375
+      },
+      {
+        "d": "2026-05-18",
+        "close": 178.5500030517578
+      }
+    ]
+  },
+  "rsi_alert": {
+    "rule": {
+      "op": "and",
+      "clauses": [
+        {
+          "field": "rsi_d",
+          "cmp": "<",
+          "value": 35
+        }
+      ]
+    },
+    "first_after_event": "2026-07-28",
+    "close": 126.01000213623047,
+    "rsi_d": 30.7,
+    "input_bars": 474,
+    "method": "Existing bin/technicals.py Wilder RSI(14), evaluated on each prefix of the retrieved unadjusted closing-price series; no future bars used."
+  },
+  "outcome": {
+    "base_day": "2026-07-28",
+    "base_close": 126.01000213623047,
+    "end_day": "2026-08-25",
+    "end_close": 147.16000366210938,
+    "return_pct": 16.7844,
+    "spy_return_pct": 3.3812,
+    "minimum_close_change_pct": -1.5554,
+    "path": [
+      {
+        "d": "2026-07-28",
+        "close": 126.01000213623047,
+        "stock": 0.0,
+        "spy": 0.0
+      },
+      {
+        "d": "2026-07-29",
+        "close": 124.05000305175781,
+        "stock": -1.5554,
+        "spy": -1.5387
+      },
+      {
+        "d": "2026-07-30",
+        "close": 135.22000122070312,
+        "stock": 7.3089,
+        "spy": 0.112
+      },
+      {
+        "d": "2026-07-31",
+        "close": 138.25,
+        "stock": 9.7135,
+        "spy": 0.8328
+      },
+      {
+        "d": "2026-08-03",
+        "close": 146.63999938964844,
+        "stock": 16.3717,
+        "spy": 2.269
+      },
+      {
+        "d": "2026-08-04",
+        "close": 159.88999938964844,
+        "stock": 26.8868,
+        "spy": 4.1128
+      },
+      {
+        "d": "2026-08-05",
+        "close": 156.6999969482422,
+        "stock": 24.3552,
+        "spy": 3.9049
+      },
+      {
+        "d": "2026-08-06",
+        "close": 157.17999267578125,
+        "stock": 24.7361,
+        "spy": 3.7389
+      },
+      {
+        "d": "2026-08-07",
+        "close": 165.67999267578125,
+        "stock": 31.4816,
+        "spy": 4.3733
+      },
+      {
+        "d": "2026-08-10",
+        "close": 157.75999450683594,
+        "stock": 25.1964,
+        "spy": 4.3423
+      },
+      {
+        "d": "2026-08-11",
+        "close": 159.19000244140625,
+        "stock": 26.3312,
+        "spy": 4.0089
+      },
+      {
+        "d": "2026-08-12",
+        "close": 167.44000244140625,
+        "stock": 32.8783,
+        "spy": 4.2694
+      },
+      {
+        "d": "2026-08-13",
+        "close": 158.5399932861328,
+        "stock": 25.8154,
+        "spy": 4.9969
+      },
+      {
+        "d": "2026-08-14",
+        "close": 165.99000549316406,
+        "stock": 31.7276,
+        "spy": 4.789
+      },
+      {
+        "d": "2026-08-17",
+        "close": 173.2100067138672,
+        "stock": 37.4573,
+        "spy": 4.2937
+      },
+      {
+        "d": "2026-08-18",
+        "close": 159.89999389648438,
+        "stock": 26.8947,
+        "spy": 3.5891
+      },
+      {
+        "d": "2026-08-19",
+        "close": 152.4600067138672,
+        "stock": 20.9904,
+        "spy": 3.8064
+      },
+      {
+        "d": "2026-08-20",
+        "close": 151.4499969482422,
+        "stock": 20.1889,
+        "spy": 2.9344
+      },
+      {
+        "d": "2026-08-21",
+        "close": 149.83999633789062,
+        "stock": 18.9112,
+        "spy": 3.3556
+      },
+      {
+        "d": "2026-08-24",
+        "close": 145.5500030517578,
+        "stock": 15.5067,
+        "spy": 3.0519
+      },
+      {
+        "d": "2026-08-25",
+        "close": 147.16000366210938,
+        "stock": 16.7844,
+        "spy": 3.3812
+      }
+    ]
+  },
+  "historical_status": "Retrospective condition demonstration using daily closes only, not first intraday crossings or notification timestamps. No contemporaneous GLW public signal found; historical notification delivery is not claimed. RSI recomputed today, not a historical stored indicator snapshot. No actual alerts or outbox rows written.",
+  "price_basis": "Unadjusted daily close, excludes dividends/fees/taxes. Price change, not executable trading return. First qualifying day after the event, not the subsequent price low.",
+  "as_of": "2026-09-07T02:36:16+00:00",
+  "last_price_day": "2026-09-04",
+  "technical_code_sha256": "f96d3e06deb6da172200e055775109adc2e41aa582ed4e6d07e37929502a690c"
+}

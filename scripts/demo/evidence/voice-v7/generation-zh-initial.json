@@ -1,0 +1,56 @@
+[
+  {
+    "file": "01-event.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 3.2,
+    "generation_seconds": 66.85,
+    "peak": 0.2773754298686981,
+    "rss_peak_kib": 11683296
+  },
+  {
+    "file": "02-price.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 2.24,
+    "generation_seconds": 16.96,
+    "peak": 0.24947184324264526,
+    "rss_peak_kib": 11683296
+  },
+  {
+    "file": "03-check.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 3.28,
+    "generation_seconds": 24.48,
+    "peak": 0.3552163243293762,
+    "rss_peak_kib": 11683296
+  },
+  {
+    "file": "04-trigger.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 1.52,
+    "generation_seconds": 19.14,
+    "peak": 0.31911033391952515,
+    "rss_peak_kib": 11683296
+  },
+  {
+    "file": "05-outcome.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 5.84,
+    "generation_seconds": 46.32,
+    "peak": 0.3651920258998871,
+    "rss_peak_kib": 11683296
+  },
+  {
+    "file": "06-start.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 5.28,
+    "generation_seconds": 40.01,
+    "peak": 0.6682921648025513,
+    "rss_peak_kib": 11683296
+  }
+]

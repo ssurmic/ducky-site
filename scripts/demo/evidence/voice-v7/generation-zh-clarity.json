@@ -1,0 +1,38 @@
+[
+  {
+    "file": "01-event.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 3.76,
+    "generation_seconds": 80.37,
+    "peak": 0.4170718789100647,
+    "rss_peak_kib": 11684212
+  },
+  {
+    "file": "03-check.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 3.36,
+    "generation_seconds": 70.63,
+    "peak": 0.33817949891090393,
+    "rss_peak_kib": 11684212
+  },
+  {
+    "file": "05-outcome.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 6.88,
+    "generation_seconds": 52.3,
+    "peak": 0.5103086233139038,
+    "rss_peak_kib": 11684212
+  },
+  {
+    "file": "06-start.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 3.76,
+    "generation_seconds": 28.49,
+    "peak": 0.310489684343338,
+    "rss_peak_kib": 11684212
+  }
+]
