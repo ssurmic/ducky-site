@@ -32,3 +32,12 @@ Provider references: [Microsoft voice inventory](https://learn.microsoft.com/en-
 - All v7 assets remain available for rollback. No production alert, notification, watchlist or backend process was changed. Voice and production details stay in this internal report, outside the customer UI.
 
 Final evidence is `media-verification-release-en.json`, `media-verification-release-zh-final.json`, the two render reports, `browser-qa.json` and `production-http.json`. Earlier draft artifacts are retained for traceability and are not final acceptance.
+
+
+## Publication accepted
+
+Source `c38fa637` is on frontend main; CI passed ([run](https://github.com/ssurmic/ducky-site/actions/runs/34080508970)). Cloudflare Pages **b3846fe4** serves both new cuts. Canonical Chinese and English homepages select v8. All eight production media assets are byte-identical to the reviewed files, both MP4s return HTTP 206 for byte ranges, and the published subtitle CSS is exact.
+
+Production mobile cold-seek is paused and correct in both languages. Both full movies reach `ended=true` without media errors. Production screenshots show the final +16.8% path together with the corresponding Chinese/English result caption. Local 1440px and 390px review covers the two-line cue and the Chinese movie’s selectable English translation; no layout overflow was found. No playback naturalness claim is inferred from these technical checks.
+
+Task-owned speech review units exited successfully. No production service was restarted. The temporary viewport is reset; the preview server is stopped after acceptance. Earlier media and unrelated working-tree files are retained.

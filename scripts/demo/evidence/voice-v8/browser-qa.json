@@ -131,5 +131,57 @@
       "paused": true,
       "time": 22.861333
     }
+  },
+  {
+    "phase": "production",
+    "language": "en",
+    "check": "cold-seek",
+    "result": {
+      "duration": 26.301333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "src": "https://duckybot.app/media/ducky-walkthrough-2026-09-07-english-v8.en.mp4",
+      "time": 21.68,
+      "width": 390
+    }
+  },
+  {
+    "phase": "production",
+    "language": "en",
+    "check": "full-play",
+    "result": {
+      "duration": 26.301333,
+      "ended": true,
+      "error": null,
+      "paused": true,
+      "time": 26.301333
+    }
+  },
+  {
+    "phase": "production",
+    "language": "zh",
+    "check": "cold-seek",
+    "result": {
+      "duration": 22.861333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "src": "https://duckybot.app/media/ducky-walkthrough-2026-09-07-english-v8.zh.mp4",
+      "time": 19.08,
+      "width": 390
+    }
+  },
+  {
+    "phase": "production",
+    "language": "zh",
+    "check": "full-play",
+    "result": {
+      "duration": 22.861333,
+      "ended": true,
+      "error": null,
+      "paused": true,
+      "time": 22.861333
+    }
   }
 ]

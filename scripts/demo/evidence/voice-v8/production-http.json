@@ -1,0 +1,158 @@
+{
+  "checked_at": "2026-09-07T03:43:33.574469+00:00",
+  "source_commit": "c38fa637",
+  "pages": [
+    {
+      "page": "/",
+      "status": 200,
+      "version": "c38fa637",
+      "selected_video": "2026-09-07-english-v8"
+    },
+    {
+      "page": "/en/",
+      "status": 200,
+      "version": "c38fa637",
+      "selected_video": "2026-09-07-english-v8"
+    }
+  ],
+  "assets": [
+    {
+      "asset": "ducky-walkthrough-2026-09-07-english-v8.en.en.vtt",
+      "status": 200,
+      "bytes": 923,
+      "sha256": "e1af8cadc7cb0aed9763d9386c16644a34173a029d2d5cb7ef3027666c2141b5",
+      "matches": true,
+      "headers": {
+        "Content-Type": "text/vtt; charset=utf-8",
+        "Content-Length": "923",
+        "Content-Range": null,
+        "Accept-Ranges": null,
+        "ETag": "\"86fd3acf8dc51e0376f1bcd7f946118c\""
+      }
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-07-english-v8.en.jpg",
+      "status": 200,
+      "bytes": 100951,
+      "sha256": "88f9ce7de0e9d8c3833624274118075f24d5740ee85af4c638407e1b3278e1cb",
+      "matches": true,
+      "headers": {
+        "Content-Type": "image/jpeg",
+        "Content-Length": "100951",
+        "Content-Range": null,
+        "Accept-Ranges": "bytes",
+        "ETag": "\"476db8ba9301cfeba938e34915f57f30\""
+      }
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-07-english-v8.en.mp4",
+      "status": 200,
+      "bytes": 969091,
+      "sha256": "55d13fa37ef5d811230cf98a39e295a273abd6a5cc74ecd727da696dbcfc82ae",
+      "matches": true,
+      "headers": {
+        "Content-Type": "video/mp4",
+        "Content-Length": "969091",
+        "Content-Range": null,
+        "Accept-Ranges": "bytes",
+        "ETag": "\"19b2dcc9f934b4828e6bf2f7ff44c8f5\""
+      },
+      "range": {
+        "status": 206,
+        "bytes": 1024,
+        "headers": {
+          "Content-Type": "video/mp4",
+          "Content-Length": "1024",
+          "Content-Range": "bytes 0-1023/969091",
+          "Accept-Ranges": null,
+          "ETag": "\"19b2dcc9f934b4828e6bf2f7ff44c8f5\""
+        }
+      }
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-07-english-v8.en.zh.vtt",
+      "status": 200,
+      "bytes": 935,
+      "sha256": "e1d642ec47147de724bfd77ca3346647dc90fb0ddb6ab9061c1500776fafc2a4",
+      "matches": true,
+      "headers": {
+        "Content-Type": "text/vtt; charset=utf-8",
+        "Content-Length": "935",
+        "Content-Range": null,
+        "Accept-Ranges": null,
+        "ETag": "\"7bb5cbf9193286f9d1c830315eef4704\""
+      }
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-07-english-v8.zh.en.vtt",
+      "status": 200,
+      "bytes": 853,
+      "sha256": "8c0a14be5d0a042b83d1da127e8fc3db74aa28ff1517d96135d0f6b0c27f8911",
+      "matches": true,
+      "headers": {
+        "Content-Type": "text/vtt; charset=utf-8",
+        "Content-Length": "853",
+        "Content-Range": null,
+        "Accept-Ranges": null,
+        "ETag": "\"db8d7594e752e88df18a381a106e3239\""
+      }
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-07-english-v8.zh.jpg",
+      "status": 200,
+      "bytes": 89721,
+      "sha256": "4d7c85b1067a04ef914b6371843e0cfc87986df489f7bfb66ac7140d0da89508",
+      "matches": true,
+      "headers": {
+        "Content-Type": "image/jpeg",
+        "Content-Length": "89721",
+        "Content-Range": null,
+        "Accept-Ranges": "bytes",
+        "ETag": "\"238edf52e2576d1677e4d3e1561f2b40\""
+      }
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-07-english-v8.zh.mp4",
+      "status": 200,
+      "bytes": 874424,
+      "sha256": "d88496ca5825e93c49f4017887af5d69920e99064693637045957828b0f31d16",
+      "matches": true,
+      "headers": {
+        "Content-Type": "video/mp4",
+        "Content-Length": "874424",
+        "Content-Range": null,
+        "Accept-Ranges": "bytes",
+        "ETag": "\"e22743ba5e2832b5b0df16ab52a56171\""
+      },
+      "range": {
+        "status": 206,
+        "bytes": 1024,
+        "headers": {
+          "Content-Type": "video/mp4",
+          "Content-Length": "1024",
+          "Content-Range": "bytes 0-1023/874424",
+          "Accept-Ranges": null,
+          "ETag": "\"e22743ba5e2832b5b0df16ab52a56171\""
+        }
+      }
+    },
+    {
+      "asset": "ducky-walkthrough-2026-09-07-english-v8.zh.zh.vtt",
+      "status": 200,
+      "bytes": 878,
+      "sha256": "de50f91c14ee29ffda6b88ae0fccfa6fc90693f9c84883019a1c5e2060f847f9",
+      "matches": true,
+      "headers": {
+        "Content-Type": "text/vtt; charset=utf-8",
+        "Content-Length": "878",
+        "Content-Range": null,
+        "Accept-Ranges": null,
+        "ETag": "\"17b2e48e6dcc9a43549de694c617f718\""
+      }
+    }
+  ],
+  "caption_css": {
+    "status": 200,
+    "matches": true
+  }
+}
