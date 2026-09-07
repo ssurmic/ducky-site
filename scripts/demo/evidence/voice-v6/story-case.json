@@ -1,0 +1,133 @@
+{
+  "ticker": "AMD",
+  "creator": "商浩金 Shanghao Jin",
+  "url": "https://www.youtube.com/watch?v=PweaTXhs-aU",
+  "timestamp": 1369.76,
+  "source_published_at": "2026-05-05T01:39:51+00:00",
+  "original_title": "市场概述2026年4月21日",
+  "recorded_at": "2026-09-06T23:26:44+00:00",
+  "source_hash": "1269c3050cf8af85c132aa6a80fc70ec76a88fa2194dd8ec66e6dfaef3bf2d32",
+  "action": "hold",
+  "intent": "self_reported",
+  "stance": "neutral",
+  "description": {
+    "zh": "持有 AMD，暂不调整。半导体需求按更长周期来看。",
+    "en": "Holding AMD, with no immediate change planned. A longer-term view of semiconductor demand."
+  },
+  "base_day": "2026-05-05",
+  "base_close": 355.260009765625,
+  "end_day": "2026-06-03",
+  "end_close": 542.52001953125,
+  "return_pct": 52.7107,
+  "spy_return_pct": 4.2099,
+  "path": [
+    {
+      "d": "2026-05-05",
+      "spy": 0.0,
+      "stock": 0.0
+    },
+    {
+      "d": "2026-05-06",
+      "spy": 1.3899,
+      "stock": 18.6145
+    },
+    {
+      "d": "2026-05-07",
+      "spy": 1.0791,
+      "stock": 14.9749
+    },
+    {
+      "d": "2026-05-08",
+      "spy": 1.9136,
+      "stock": 28.1287
+    },
+    {
+      "d": "2026-05-11",
+      "spy": 2.1457,
+      "stock": 29.142
+    },
+    {
+      "d": "2026-05-12",
+      "spy": 1.991,
+      "stock": 26.1865
+    },
+    {
+      "d": "2026-05-13",
+      "spy": 2.5616,
+      "stock": 25.4011
+    },
+    {
+      "d": "2026-05-14",
+      "spy": 3.3712,
+      "stock": 26.5833
+    },
+    {
+      "d": "2026-05-15",
+      "spy": 2.1277,
+      "stock": 19.3774
+    },
+    {
+      "d": "2026-05-18",
+      "spy": 2.0559,
+      "stock": 18.5019
+    },
+    {
+      "d": "2026-05-19",
+      "spy": 1.3761,
+      "stock": 16.5484
+    },
+    {
+      "d": "2026-05-20",
+      "spy": 2.4151,
+      "stock": 25.9866
+    },
+    {
+      "d": "2026-05-21",
+      "spy": 2.6182,
+      "stock": 26.5524
+    },
+    {
+      "d": "2026-05-22",
+      "spy": 3.0217,
+      "stock": 31.5966
+    },
+    {
+      "d": "2026-05-26",
+      "spy": 3.7056,
+      "stock": 41.837
+    },
+    {
+      "d": "2026-05-27",
+      "spy": 3.6876,
+      "stock": 39.4866
+    },
+    {
+      "d": "2026-05-28",
+      "spy": 4.2596,
+      "stock": 45.834
+    },
+    {
+      "d": "2026-05-29",
+      "spy": 4.5194,
+      "stock": 45.2739
+    },
+    {
+      "d": "2026-06-01",
+      "spy": 4.804,
+      "stock": 43.5934
+    },
+    {
+      "d": "2026-06-02",
+      "spy": 4.9463,
+      "stock": 46.8051
+    },
+    {
+      "d": "2026-06-03",
+      "spy": 4.2099,
+      "stock": 52.7107
+    }
+  ],
+  "basis": "Unadjusted daily close; publication-based retrospective study; not creator account returns. No dividends, transaction costs, or fill assumptions. Selected historical illustration, not aggregate performance.",
+  "price_crosscheck": "All 21 AMD and SPY points independently recomputed from public prices API; max difference < 0.0001 percentage point.",
+  "source_review": "Independent source review confirmed the AMD holding clause begins at 1369.76s, not the broad segment start at 1332.44s. Final source revision pending owner verification."
+}

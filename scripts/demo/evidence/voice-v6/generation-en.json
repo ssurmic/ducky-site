@@ -1,0 +1,42 @@
+[
+  {
+    "file": "01-idea.en.wav",
+    "seconds": 3.275,
+    "generation_seconds": 1.32,
+    "speaker": "af_heart",
+    "peak": 0.3315071165561676,
+    "sha256": "f8438cb8cc495f2d1fcb94ddfa7ccfc9719bd4064897d93d5f0c2c4d47d6de0a"
+  },
+  {
+    "file": "02-source.en.wav",
+    "seconds": 4.25,
+    "generation_seconds": 1.58,
+    "speaker": "af_heart",
+    "peak": 0.4774406850337982,
+    "sha256": "4b7ab4cfe8462bd4b970b5e64216671806856580d0f4a330b93786e779324879"
+  },
+  {
+    "file": "03-outcome.en.wav",
+    "seconds": 6.65,
+    "generation_seconds": 2.84,
+    "speaker": "af_heart",
+    "peak": 0.5619168877601624,
+    "sha256": "dd47d8a9500cb40299f288aaa748fa214787b74ea6c9d239fef08abfb97f56de"
+  },
+  {
+    "file": "04-follow.en.wav",
+    "seconds": 4.05,
+    "generation_seconds": 1.47,
+    "speaker": "af_heart",
+    "peak": 0.429286926984787,
+    "sha256": "393a7d347a4b5986880e6a9c2a18aac2a99979dfda5d4df678909fe210566a26"
+  },
+  {
+    "file": "05-start.en.wav",
+    "seconds": 3.325,
+    "generation_seconds": 1.21,
+    "speaker": "af_heart",
+    "peak": 0.3596872389316559,
+    "sha256": "6a18d2aaabc88c296ad6e8d185fa21f15954d690339273a3a65430ff5643f278"
+  }
+]

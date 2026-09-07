@@ -1,7 +1,7 @@
 <section class="section product-demo" id="product-demo" aria-labelledby="product-demo-title">
  <div class="wrap">
   <div class="product-demo-heading"><div><p class="eyebrow mono">{{ t('walkthrough.eyebrow') }}</p><h2 id="product-demo-title">{{ t('walkthrough.title') }}</h2></div></div>
-  {% set video_version = '2026-09-06-voice-v5' %}
+  {% set video_version = '2026-09-06-story-v6' %}
   {% set video_asset = '/media/ducky-walkthrough-' ~ video_version ~ '.' ~ lang %}
   <video id="product-demo-video" class="product-demo-player" controls playsinline preload="none" width="1920" height="1080" poster="{{ video_asset }}.jpg" aria-label="{{ t('walkthrough.title') }}" aria-describedby="product-demo-note">
    <source src="{{ video_asset }}.mp4" type="video/mp4">
@@ -10,23 +10,24 @@
    <a href="{{ video_asset }}.mp4">{{ t('walkthrough.download') }}</a>
   </video>
   <div class="product-demo-caption"><p id="product-demo-note" class="small muted">{{ t('walkthrough.caption') }}</p><a href="{{ url('/app/') }}#/register">{{ t('walkthrough.start') }} →</a></div>
-  {# Reviewed render offsets: skip the 160ms scene fade; the briefing starts within scene 4. #}
-  {% set chapter_starts = [0.2, 5.76, 12.92, 20.08, 22.80, 26.60, none] if lang == 'zh' else [0.2, 7.04, 15.24, 23.12, 27.60, 32.08, none] %}
+  {# Actual render offsets, after the opening fade of each scene. #}
+  {% set video_starts = [0.2, 4.2, 10.48, 19.48, 24.48] if lang == 'zh' else [0.2, 4.2, 9.08, 18.08, 22.76] %}
   {% set chapter_routes = ['#/watchlist', '#/boards?screen=insider-oversold', '#/creators?scope=discover', '#/calendar', '#/briefing?period=daily', '#/updates', '#/creators?tab=lab&preview=fictional'] %}
   <details class="product-demo-guide" aria-labelledby="product-demo-guide-title" data-demo-guide
        data-loading="{{ t('walkthrough.guide.loading') }}" data-ready="{{ t('walkthrough.guide.ready') }}" data-error="{{ t('walkthrough.guide.error') }}">
    <summary class="product-demo-guide-heading" id="product-demo-guide-title">{{ t('walkthrough.guide.title') }}</summary>
    <p class="small muted product-demo-guide-hint">{{ t('walkthrough.guide.hint') }}</p>
+   <ol class="product-demo-video-chapters" aria-label="{{ t('walkthrough.chapters') }}">
+    {% for second in video_starts %}
+    {% set chapter_title = t('walkthrough.scene.' ~ loop.index) %}
+    {% set clock = '%d:%02d'|format((second / 60)|int, (second % 60)|int) %}
+    <li><button class="product-demo-seek" type="button" data-demo-seek="{{ second }}" data-demo-title="{{ chapter_title }}" data-demo-clock="{{ clock }}" aria-controls="product-demo-video" aria-label="{{ t('walkthrough.guide.seek') }} {{ clock }} · {{ chapter_title }}" disabled><span>{{ clock }}</span> {{ chapter_title }}</button></li>
+    {% endfor %}
+   </ol>
    <ol class="product-demo-chapters">
     {% for i in range(1,8) %}
-    {% set second = chapter_starts[i - 1] %}
     <li class="product-demo-chapter">
-     {% if second is not none %}
-     {% set clock = '%d:%02d'|format((second / 60)|int, (second % 60)|int) %}
-     <button class="product-demo-seek mono" type="button" data-demo-seek="{{ second }}" data-demo-title="{{ t('walkthrough.guide.' ~ i ~ '.title') }}" data-demo-clock="{{ clock }}" aria-controls="product-demo-video" aria-label="{{ t('walkthrough.guide.seek') }} {{ clock }} · {{ t('walkthrough.guide.' ~ i ~ '.title') }}" disabled><span aria-hidden="true">↳</span> {{ clock }}</button>
-     {% else %}
      <span class="product-demo-interactive mono">{{ t('walkthrough.guide.interactive') }}</span>
-     {% endif %}
      <h4><span class="product-demo-chapter-number mono" aria-hidden="true">{{ '%02d'|format(i) }}</span>{{ t('walkthrough.guide.' ~ i ~ '.title') }}</h4>
      <p>{{ t('walkthrough.guide.' ~ i ~ '.body') }}</p>
      <a class="product-demo-guide-link" href="{{ url('/app/') }}{{ chapter_routes[i - 1] }}">{{ t('walkthrough.guide.' ~ i ~ '.link') }} <span aria-hidden="true">→</span></a>
@@ -35,7 +36,7 @@
    </ol>
    <p class="product-demo-guide-status small" role="status" aria-live="polite" aria-atomic="true" data-demo-status></p>
    <p class="small muted product-demo-guide-access">{{ t('walkthrough.guide.access') }}</p>
-   <p class="small muted product-demo-guide-access">{{ t('walkthrough.note') }}</p>
+   <p class="small muted product-demo-guide-access">{{ t('walkthrough.note') }} <a href="https://www.youtube.com/watch?v=PweaTXhs-aU&amp;t=1369" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} ↗</a></p>
   </details>
  </div>
 </section>

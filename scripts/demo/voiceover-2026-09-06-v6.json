@@ -1,0 +1,281 @@
+{
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
+  "revision": "0c0e3051f131929182e2c023b9537f8b1c68adfe",
+  "version": "2026-09-06-story-v6",
+  "speakers": {
+    "zh": "Serena",
+    "en": "af_heart"
+  },
+  "instructions": {
+    "zh": "用清晰自然的标准普通话，像产品顾问向朋友介绍一个自己常用的工具。专业、从容、温暖，语速适中而连贯。句内不要突然停顿，每个字咬字完整，句末简洁干净。重点略微强调，不要拖长尾音，不要夸张推销，不要撒娇。"
+  },
+  "delivery": {
+    "target_seconds": 30,
+    "maximum_seconds": 35,
+    "status": "Selected: 28.301 seconds Chinese, 26.581 seconds English; independent ASR and technical checks, no human listening certification."
+  },
+  "scenes": [
+    {
+      "name": "01-idea",
+      "zh": "博主的股票观点，后来表现怎么样？",
+      "en": "A stock idea catches your eye. What happened next?",
+      "minimum_seconds": 4,
+      "caption_chunks": {
+        "zh": [
+          "博主的股票观点，",
+          "后来表现怎么样？"
+        ],
+        "en": [
+          "A stock idea catches your eye.",
+          "What happened next?"
+        ]
+      }
+    },
+    {
+      "name": "02-source",
+      "zh": "在 Ducky，先读观点，再点开时间，听听博主怎么说。",
+      "en": "With Ducky, read the key points and open the original timestamp.",
+      "minimum_seconds": 0,
+      "caption_chunks": {
+        "zh": [
+          "在 Ducky，先读观点，",
+          "再点开时间，听听博主怎么说。"
+        ],
+        "en": [
+          "With Ducky, read the key points",
+          "and open the original timestamp."
+        ]
+      }
+    },
+    {
+      "name": "03-outcome",
+      "zh": "比如这条持有观点，之后二十个交易日，涨了多少，中间怎么回落，都能看清。",
+      "en": "Take this view on holding AMD. See all twenty trading days that followed, including the pullbacks.",
+      "minimum_seconds": 9,
+      "caption_chunks": {
+        "zh": [
+          "比如这条持有观点，",
+          "之后二十个交易日，涨了多少，",
+          "中间怎么回落，都能看清。"
+        ],
+        "en": [
+          "Take this view on holding AMD.",
+          "See all twenty trading days that followed,",
+          "including the pullbacks."
+        ]
+      },
+      "shots": {
+        "zh": [
+          {
+            "file": "03-outcome-00.png",
+            "at": 0.0
+          },
+          {
+            "file": "03-outcome-01.png",
+            "at": 0.035
+          },
+          {
+            "file": "03-outcome-02.png",
+            "at": 0.07
+          },
+          {
+            "file": "03-outcome-03.png",
+            "at": 0.105
+          },
+          {
+            "file": "03-outcome-04.png",
+            "at": 0.14
+          },
+          {
+            "file": "03-outcome-05.png",
+            "at": 0.175
+          },
+          {
+            "file": "03-outcome-06.png",
+            "at": 0.21
+          },
+          {
+            "file": "03-outcome-07.png",
+            "at": 0.245
+          },
+          {
+            "file": "03-outcome-08.png",
+            "at": 0.28
+          },
+          {
+            "file": "03-outcome-09.png",
+            "at": 0.315
+          },
+          {
+            "file": "03-outcome-10.png",
+            "at": 0.35
+          },
+          {
+            "file": "03-outcome-11.png",
+            "at": 0.385
+          },
+          {
+            "file": "03-outcome-12.png",
+            "at": 0.42
+          },
+          {
+            "file": "03-outcome-13.png",
+            "at": 0.455
+          },
+          {
+            "file": "03-outcome-14.png",
+            "at": 0.49
+          },
+          {
+            "file": "03-outcome-15.png",
+            "at": 0.525
+          },
+          {
+            "file": "03-outcome-16.png",
+            "at": 0.56
+          },
+          {
+            "file": "03-outcome-17.png",
+            "at": 0.595
+          },
+          {
+            "file": "03-outcome-18.png",
+            "at": 0.63
+          },
+          {
+            "file": "03-outcome-19.png",
+            "at": 0.665
+          },
+          {
+            "file": "03-outcome-20.png",
+            "at": 0.7
+          }
+        ],
+        "en": [
+          {
+            "file": "03-outcome-00.png",
+            "at": 0.0
+          },
+          {
+            "file": "03-outcome-01.png",
+            "at": 0.035
+          },
+          {
+            "file": "03-outcome-02.png",
+            "at": 0.07
+          },
+          {
+            "file": "03-outcome-03.png",
+            "at": 0.105
+          },
+          {
+            "file": "03-outcome-04.png",
+            "at": 0.14
+          },
+          {
+            "file": "03-outcome-05.png",
+            "at": 0.175
+          },
+          {
+            "file": "03-outcome-06.png",
+            "at": 0.21
+          },
+          {
+            "file": "03-outcome-07.png",
+            "at": 0.245
+          },
+          {
+            "file": "03-outcome-08.png",
+            "at": 0.28
+          },
+          {
+            "file": "03-outcome-09.png",
+            "at": 0.315
+          },
+          {
+            "file": "03-outcome-10.png",
+            "at": 0.35
+          },
+          {
+            "file": "03-outcome-11.png",
+            "at": 0.385
+          },
+          {
+            "file": "03-outcome-12.png",
+            "at": 0.42
+          },
+          {
+            "file": "03-outcome-13.png",
+            "at": 0.455
+          },
+          {
+            "file": "03-outcome-14.png",
+            "at": 0.49
+          },
+          {
+            "file": "03-outcome-15.png",
+            "at": 0.525
+          },
+          {
+            "file": "03-outcome-16.png",
+            "at": 0.56
+          },
+          {
+            "file": "03-outcome-17.png",
+            "at": 0.595
+          },
+          {
+            "file": "03-outcome-18.png",
+            "at": 0.63
+          },
+          {
+            "file": "03-outcome-19.png",
+            "at": 0.665
+          },
+          {
+            "file": "03-outcome-20.png",
+            "at": 0.7
+          }
+        ]
+      }
+    },
+    {
+      "name": "04-follow",
+      "zh": "把股票加入自选，查公司消息，设好提醒，继续跟进。",
+      "en": "Follow the stock, check company events, and set your own alerts.",
+      "minimum_seconds": 0,
+      "caption_chunks": {
+        "zh": [
+          "把股票加入自选，",
+          "查公司消息，设好提醒，继续跟进。"
+        ],
+        "en": [
+          "Follow the stock, check company events,",
+          "and set your own alerts."
+        ]
+      }
+    },
+    {
+      "name": "05-start",
+      "zh": "先加一只股票，免费试试吧。",
+      "en": "Add your first stock for free. Try Ducky today.",
+      "minimum_seconds": 4,
+      "caption_chunks": {
+        "zh": [
+          "先加一只股票，",
+          "免费试试吧。"
+        ],
+        "en": [
+          "Add your first stock for free.",
+          "Try Ducky today."
+        ]
+      }
+    }
+  ],
+  "english_synthesis": {
+    "model": "hexgrad/Kokoro-82M",
+    "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "voice": "af_heart",
+    "speed": 1.0
+  }
+}

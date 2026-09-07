@@ -1,0 +1,55 @@
+{
+  "files": [
+    {
+      "file": "01-idea.en.wav",
+      "seconds": 3.275,
+      "sha256": "f8438cb8cc495f2d1fcb94ddfa7ccfc9719bd4064897d93d5f0c2c4d47d6de0a"
+    },
+    {
+      "file": "01-idea.zh.wav",
+      "seconds": 2.64,
+      "sha256": "c90016c66556b34d6daa74c523f2f8dd40cb836fac498227fe757cc966fe4230"
+    },
+    {
+      "file": "02-source.en.wav",
+      "seconds": 4.25,
+      "sha256": "4b7ab4cfe8462bd4b970b5e64216671806856580d0f4a330b93786e779324879"
+    },
+    {
+      "file": "02-source.zh.wav",
+      "seconds": 5.68,
+      "sha256": "63dc96dfa15b8f3301af5d3e942482562fb838d8a5a8598d05ff4f107a0a4893"
+    },
+    {
+      "file": "03-outcome.en.wav",
+      "seconds": 6.65,
+      "sha256": "dd47d8a9500cb40299f288aaa748fa214787b74ea6c9d239fef08abfb97f56de"
+    },
+    {
+      "file": "03-outcome.zh.wav",
+      "seconds": 6.72,
+      "sha256": "cc4fdb6e972864c5d5f3df8cb33b8b8f1d8c16606966df3113eeb6033e26e94f"
+    },
+    {
+      "file": "04-follow.en.wav",
+      "seconds": 4.05,
+      "sha256": "393a7d347a4b5986880e6a9c2a18aac2a99979dfda5d4df678909fe210566a26"
+    },
+    {
+      "file": "04-follow.zh.wav",
+      "seconds": 4.4,
+      "sha256": "3191e4850a1857cce10181b15058173fc60382d5e38b7ad55a1645367da79b26"
+    },
+    {
+      "file": "05-start.en.wav",
+      "seconds": 3.325,
+      "sha256": "6a18d2aaabc88c296ad6e8d185fa21f15954d690339273a3a65430ff5643f278"
+    },
+    {
+      "file": "05-start.zh.wav",
+      "seconds": 2.64,
+      "sha256": "7800e988dbd857f7be7a7fca585383e1019a93eed2c6a5d2d86a9403b318f963"
+    }
+  ],
+  "review": "Independent ASR and waveform checks; not a human listening certification. Chinese closing ASR uses homophones 夹/加 and 支/只; words remain temporally continuous. Final sentence regenerated as a whole, not spliced or speed-adjusted."
+}

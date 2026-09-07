@@ -1,0 +1,322 @@
+{
+  "version": "2026-09-06-story-v6",
+  "audio_processing": "Two-pass EBU R128 -16 LUFS / -2 dBTP per scene, with AAC headroom; no speech speed changes",
+  "frame_processing": "Normalize every capture to one 1920x1080 RGB canvas before concatenating; constant 25 fps",
+  "caption_presentation": "Native WebVTT in each scene\u2019s reserved caption area; demonstration footer visible",
+  "videos": {
+    "zh": {
+      "file": "ducky-walkthrough-2026-09-06-story-v6.zh.mp4",
+      "seconds": 28.28,
+      "bytes": 832995,
+      "scenes": [
+        {
+          "scene": "01-idea",
+          "start": 0.0,
+          "duration": 4.0,
+          "speech_seconds": 2.64,
+          "audio_sha256": "c90016c66556b34d6daa74c523f2f8dd40cb836fac498227fe757cc966fe4230",
+          "frame_sha256": "26521c0090308ea350f540e6e3c72d27ea4ceb1da61c9e93e22bb7a6ee9119c8",
+          "shots": [
+            {
+              "file": "01-idea.png",
+              "at": 0
+            }
+          ]
+        },
+        {
+          "scene": "02-source",
+          "start": 4.0,
+          "duration": 6.28,
+          "speech_seconds": 5.68,
+          "audio_sha256": "63dc96dfa15b8f3301af5d3e942482562fb838d8a5a8598d05ff4f107a0a4893",
+          "frame_sha256": "e394377126b336b12e23e36e1ceadbc8b1670ded322f66141d1ab49ed943736c",
+          "shots": [
+            {
+              "file": "02-source.png",
+              "at": 0
+            }
+          ]
+        },
+        {
+          "scene": "03-outcome",
+          "start": 10.28,
+          "duration": 9.0,
+          "speech_seconds": 6.72,
+          "audio_sha256": "cc4fdb6e972864c5d5f3df8cb33b8b8f1d8c16606966df3113eeb6033e26e94f",
+          "frame_sha256": "a8e7fb727232f2eb764a55af96bc7b8ac4b180816f61c3be2a7f0b745f678294",
+          "shots": [
+            {
+              "file": "03-outcome-00.png",
+              "at": 0.0
+            },
+            {
+              "file": "03-outcome-01.png",
+              "at": 0.035
+            },
+            {
+              "file": "03-outcome-02.png",
+              "at": 0.07
+            },
+            {
+              "file": "03-outcome-03.png",
+              "at": 0.105
+            },
+            {
+              "file": "03-outcome-04.png",
+              "at": 0.14
+            },
+            {
+              "file": "03-outcome-05.png",
+              "at": 0.175
+            },
+            {
+              "file": "03-outcome-06.png",
+              "at": 0.21
+            },
+            {
+              "file": "03-outcome-07.png",
+              "at": 0.245
+            },
+            {
+              "file": "03-outcome-08.png",
+              "at": 0.28
+            },
+            {
+              "file": "03-outcome-09.png",
+              "at": 0.315
+            },
+            {
+              "file": "03-outcome-10.png",
+              "at": 0.35
+            },
+            {
+              "file": "03-outcome-11.png",
+              "at": 0.385
+            },
+            {
+              "file": "03-outcome-12.png",
+              "at": 0.42
+            },
+            {
+              "file": "03-outcome-13.png",
+              "at": 0.455
+            },
+            {
+              "file": "03-outcome-14.png",
+              "at": 0.49
+            },
+            {
+              "file": "03-outcome-15.png",
+              "at": 0.525
+            },
+            {
+              "file": "03-outcome-16.png",
+              "at": 0.56
+            },
+            {
+              "file": "03-outcome-17.png",
+              "at": 0.595
+            },
+            {
+              "file": "03-outcome-18.png",
+              "at": 0.63
+            },
+            {
+              "file": "03-outcome-19.png",
+              "at": 0.665
+            },
+            {
+              "file": "03-outcome-20.png",
+              "at": 0.7
+            }
+          ]
+        },
+        {
+          "scene": "04-follow",
+          "start": 19.28,
+          "duration": 5.0,
+          "speech_seconds": 4.4,
+          "audio_sha256": "3191e4850a1857cce10181b15058173fc60382d5e38b7ad55a1645367da79b26",
+          "frame_sha256": "c126e8703f1046ca9e395a44bd3c042eda1fe478ffad2d84777ff07bc8c34fb0",
+          "shots": [
+            {
+              "file": "04-follow.png",
+              "at": 0
+            }
+          ]
+        },
+        {
+          "scene": "05-start",
+          "start": 24.28,
+          "duration": 4.0,
+          "speech_seconds": 2.64,
+          "audio_sha256": "7800e988dbd857f7be7a7fca585383e1019a93eed2c6a5d2d86a9403b318f963",
+          "frame_sha256": "b19f7cb780f942b5cbee13894b7779901f91ad6213dc1cc5715fa1b7ba1a7fb0",
+          "shots": [
+            {
+              "file": "05-start.png",
+              "at": 0
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "file": "ducky-walkthrough-2026-09-06-story-v6.en.mp4",
+      "seconds": 26.56,
+      "bytes": 858441,
+      "scenes": [
+        {
+          "scene": "01-idea",
+          "start": 0.0,
+          "duration": 4.0,
+          "speech_seconds": 3.275,
+          "audio_sha256": "f8438cb8cc495f2d1fcb94ddfa7ccfc9719bd4064897d93d5f0c2c4d47d6de0a",
+          "frame_sha256": "200e823cb44b07f8715c02db70a0311103046558acc115c9b9aa408eebec0597",
+          "shots": [
+            {
+              "file": "01-idea.png",
+              "at": 0
+            }
+          ]
+        },
+        {
+          "scene": "02-source",
+          "start": 4.0,
+          "duration": 4.88,
+          "speech_seconds": 4.25,
+          "audio_sha256": "4b7ab4cfe8462bd4b970b5e64216671806856580d0f4a330b93786e779324879",
+          "frame_sha256": "fd9548918839d3b3e1c71234d25f187f53ca71168100b922f454f478ffefc8b3",
+          "shots": [
+            {
+              "file": "02-source.png",
+              "at": 0
+            }
+          ]
+        },
+        {
+          "scene": "03-outcome",
+          "start": 8.88,
+          "duration": 9.0,
+          "speech_seconds": 6.65,
+          "audio_sha256": "dd47d8a9500cb40299f288aaa748fa214787b74ea6c9d239fef08abfb97f56de",
+          "frame_sha256": "139d3f2d96b7f22f9bcb167a5159b2f9fc4c7ac4f1bdfb0e5c4e989e3f360391",
+          "shots": [
+            {
+              "file": "03-outcome-00.png",
+              "at": 0.0
+            },
+            {
+              "file": "03-outcome-01.png",
+              "at": 0.035
+            },
+            {
+              "file": "03-outcome-02.png",
+              "at": 0.07
+            },
+            {
+              "file": "03-outcome-03.png",
+              "at": 0.105
+            },
+            {
+              "file": "03-outcome-04.png",
+              "at": 0.14
+            },
+            {
+              "file": "03-outcome-05.png",
+              "at": 0.175
+            },
+            {
+              "file": "03-outcome-06.png",
+              "at": 0.21
+            },
+            {
+              "file": "03-outcome-07.png",
+              "at": 0.245
+            },
+            {
+              "file": "03-outcome-08.png",
+              "at": 0.28
+            },
+            {
+              "file": "03-outcome-09.png",
+              "at": 0.315
+            },
+            {
+              "file": "03-outcome-10.png",
+              "at": 0.35
+            },
+            {
+              "file": "03-outcome-11.png",
+              "at": 0.385
+            },
+            {
+              "file": "03-outcome-12.png",
+              "at": 0.42
+            },
+            {
+              "file": "03-outcome-13.png",
+              "at": 0.455
+            },
+            {
+              "file": "03-outcome-14.png",
+              "at": 0.49
+            },
+            {
+              "file": "03-outcome-15.png",
+              "at": 0.525
+            },
+            {
+              "file": "03-outcome-16.png",
+              "at": 0.56
+            },
+            {
+              "file": "03-outcome-17.png",
+              "at": 0.595
+            },
+            {
+              "file": "03-outcome-18.png",
+              "at": 0.63
+            },
+            {
+              "file": "03-outcome-19.png",
+              "at": 0.665
+            },
+            {
+              "file": "03-outcome-20.png",
+              "at": 0.7
+            }
+          ]
+        },
+        {
+          "scene": "04-follow",
+          "start": 17.88,
+          "duration": 4.68,
+          "speech_seconds": 4.05,
+          "audio_sha256": "393a7d347a4b5986880e6a9c2a18aac2a99979dfda5d4df678909fe210566a26",
+          "frame_sha256": "83b362c296084e11943d834e2057b4225c92a1e2c9c09a41b07642fbf0837169",
+          "shots": [
+            {
+              "file": "04-follow.png",
+              "at": 0
+            }
+          ]
+        },
+        {
+          "scene": "05-start",
+          "start": 22.56,
+          "duration": 4.0,
+          "speech_seconds": 3.325,
+          "audio_sha256": "6a18d2aaabc88c296ad6e8d185fa21f15954d690339273a3a65430ff5643f278",
+          "frame_sha256": "3e903b8e9fbbf8a95448c60c6c1c1f002808e6d68b670f734fdf32e6c3965842",
+          "shots": [
+            {
+              "file": "05-start.png",
+              "at": 0
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

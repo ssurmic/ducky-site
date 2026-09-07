@@ -1,0 +1,45 @@
+{
+  "videos": [
+    {
+      "file": "ducky-walkthrough-2026-09-06-story-v6.zh.mp4",
+      "decode": "PASS",
+      "loudness": {
+        "input_i": "-17.12",
+        "input_tp": "-1.92",
+        "input_lra": "5.40",
+        "input_thresh": "-27.46",
+        "output_i": "-16.28",
+        "output_tp": "-2.00",
+        "output_lra": "4.00",
+        "output_thresh": "-26.61",
+        "normalization_type": "dynamic",
+        "target_offset": "0.28"
+      },
+      "sha256": "7247cefc9a1c97e00f1c27a5aeeccc7b3f2946d696ef750f66c9bf3dbf19f171",
+      "bytes": 832995
+    },
+    {
+      "file": "ducky-walkthrough-2026-09-06-story-v6.en.mp4",
+      "decode": "PASS",
+      "loudness": {
+        "input_i": "-16.38",
+        "input_tp": "-1.79",
+        "input_lra": "3.20",
+        "input_thresh": "-26.73",
+        "output_i": "-16.06",
+        "output_tp": "-2.00",
+        "output_lra": "3.50",
+        "output_thresh": "-26.39",
+        "normalization_type": "dynamic",
+        "target_offset": "0.06"
+      },
+      "sha256": "09a386be3c31b3a63b0e6e7f896d799812ad2aa0cae2e694d1b891b7fd80545a",
+      "bytes": 858441
+    }
+  ],
+  "closing_silences": [
+    "silence_start: 1.350667",
+    "silence_end: 1.547875 | silence_duration: 0.197208"
+  ],
+  "note": "Pause threshold: 150 ms below -38 dB. No time stretching; the final closing is a single regenerated sentence."
+}

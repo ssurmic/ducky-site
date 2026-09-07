@@ -2260,7 +2260,7 @@
   "walkthrough.title": "Keep up with the stocks you follow.",
   "walkthrough.watch": "Watch the product tour",
   "walkthrough.download": "Download the product walkthrough",
-  "walkthrough.note": "Includes historical data and unsaved example conditions. Notification tests are labeled Demo. Past price changes do not predict future returns.",
+  "walkthrough.note": "A selected historical example, showing stock price changes rather than the creator’s returns. Pullbacks are included. Past performance does not predict future results.",
   "walkthrough.start": "Follow your first stock for free",
   "walkthrough.captions_zh": "Chinese",
   "walkthrough.captions_en": "English",
@@ -2573,7 +2573,14 @@
   "app.briefing.details": "Dates and data coverage",
   "app.screen.matches": "{n} matching stocks",
   "app.screen.historical_note": "A current screen does not establish that these conditions coincided historically.",
-  "walkthrough.caption": "Recorded September 6, 2026 · Historical data and example setups",
+  "walkthrough.caption": "From the original view to price history and your watchlist.",
   "app.creatorclaim.superseded": "This interpretation has been corrected. Historical prices remain available; this version is excluded from comparisons and simulations.",
-  "app.creatorclaim.corrected": "The company attribution and interpretation have been reviewed and corrected. Earlier versions remain in the research history."
+  "app.creatorclaim.corrected": "The company attribution and interpretation have been reviewed and corrected. Earlier versions remain in the research history.",
+  "walkthrough.chapters": "Video chapters",
+  "walkthrough.source": "View the original source",
+  "walkthrough.scene.1": "The idea",
+  "walkthrough.scene.2": "The source",
+  "walkthrough.scene.3": "What followed",
+  "walkthrough.scene.4": "Keep following",
+  "walkthrough.scene.5": "Start free"
 }

@@ -54,7 +54,7 @@ def caption_chunks(text, language):
 report = {'version': manifest['version'], 'audio_processing':
           'Two-pass EBU R128 -16 LUFS / -2 dBTP per scene, with AAC headroom; no speech speed changes',
           'frame_processing': 'Normalize every capture to one 1920x1080 RGB canvas before concatenating; constant 25 fps',
-          'caption_presentation': 'Native WebVTT at line 70%; creator scene at line 5% to preserve price results; demonstration footer visible',
+          'caption_presentation': 'Native WebVTT in each scene’s reserved caption area; demonstration footer visible',
           'videos': {}}
 with tempfile.TemporaryDirectory(prefix='ducky-demo-encode-') as directory:
     temporary = Path(directory)
@@ -71,7 +71,7 @@ with tempfile.TemporaryDirectory(prefix='ducky-demo-encode-') as directory:
                 speech_seconds = handle.getnframes() / handle.getframerate()
             # Short pauses protect endings and let the next scene settle before its first word.
             lead, tail = 0.22, 0.38
-            duration = math.ceil((speech_seconds + lead + tail) * 25) / 25
+            duration = math.ceil(max(speech_seconds + lead + tail, row.get("minimum_seconds", 0)) * 25) / 25
             segment = temporary / f'{name}-{language}.mp4'
             measurement = run(['-i', str(audio), '-af',
                                'loudnorm=I=-16:TP=-2:LRA=7:print_format=json',

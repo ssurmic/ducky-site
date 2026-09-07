@@ -1,0 +1,11 @@
+[
+  {
+    "file": "05-start.zh.wav",
+    "language": "zh",
+    "speaker": "Serena",
+    "seconds": 2.64,
+    "generation_seconds": 110.42,
+    "peak": 0.3940819501876831,
+    "rss_peak_kib": 11684428
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "language": "zh",
+    "step": 9,
+    "seconds": 13.275,
+    "content_pixels_above_85": 15943
+  },
+  {
+    "language": "en",
+    "step": 1,
+    "seconds": 9.355,
+    "content_pixels_above_85": 13550
+  },
+  {
+    "language": "en",
+    "step": 20,
+    "seconds": 15.34,
+    "content_pixels_above_85": 24215
+  }
+]

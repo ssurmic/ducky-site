@@ -63,8 +63,7 @@ export async function mountResearch(root, selection) {
       else row.append(el('p.study-status',s('creators.status_'+status)));
       const evidence=el('details.cr-evidence',el('summary',s('creators.evidence_version')),
         call.evidence?el('blockquote',call.evidence):el('p.small.muted',s('creatorclaim.source_link')),
-        el('p.muted.small',s('creators.version_recorded')+' '+dateTime(post.recorded_at)),
-        el('code',post.content_hash || '—'));
+        el('p.muted.small',s('creators.version_recorded')+' '+dateTime(post.recorded_at)));
       const source=sourceAt(post.url,call.action_start_seconds??call.start_seconds)||safeSource(post.url);
       if(source) evidence.append(el('a',{href:source,target:'_blank',rel:'noopener noreferrer'},s('creators.orig')+' ↗'));
       row.append(evidence);list.append(row);

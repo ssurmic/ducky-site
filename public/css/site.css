@@ -1121,6 +1121,9 @@ button.cr-chip[disabled] { opacity: .55; cursor: default; }
 .product-demo-guide-heading p { margin:0; }
 details.product-demo-guide > summary { display:list-item; cursor:pointer; font-weight:600; font-size:1.05rem; min-height:44px; }
 .product-demo-guide-hint { padding-inline:24px; }
+.product-demo-video-chapters { display:flex; flex-wrap:wrap; gap:10px; list-style:none; margin:0; padding:0 24px 22px; }
+.product-demo-video-chapters .product-demo-seek { white-space:normal; text-align:left; }
+.product-demo-video-chapters .product-demo-seek span { margin-right:6px; }
 .product-demo-chapters { list-style:none; padding:0; margin:0; }
 .product-demo-chapter { display:grid; grid-template-columns:76px minmax(144px,.85fr) minmax(0,2fr) minmax(116px,auto); gap:18px; align-items:center; padding:19px 24px; border-top:1px solid var(--border); }
 .product-demo-chapter h4 { margin:0; font-size:.95rem; line-height:1.5; }

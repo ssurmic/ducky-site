@@ -2260,7 +2260,7 @@
   "walkthrough.title": "关注股票，跟进相关变化",
   "walkthrough.watch": "看产品演示",
   "walkthrough.download": "下载产品演示视频",
-  "walkthrough.note": "影片含历史内容和未保存的条件示例；通知测试标明 Demo。历史涨跌不代表未来收益。",
+  "walkthrough.note": "影片展示一条历史案例的股价变化，不代表博主实际收益。保留期间回落；历史表现不代表未来收益。",
   "walkthrough.start": "免费关注一只股票",
   "walkthrough.captions_zh": "中文字幕",
   "walkthrough.captions_en": "英文字幕",
@@ -2573,7 +2573,14 @@
   "app.briefing.details": "时间与数据范围",
   "app.screen.matches": "匹配 {n} 只股票",
   "app.screen.historical_note": "这是当前筛选，不代表这些条件曾在历史上同时出现。",
-  "walkthrough.caption": "录制于 2026-09-06 · 含历史内容与操作示例",
+  "walkthrough.caption": "从博主原话，到后续涨跌，再到你的自选。",
   "app.creatorclaim.superseded": "这条解读已更正。历史价格保留，此版本不再参与比较或模拟。",
-  "app.creatorclaim.corrected": "公司归属和观点解读已重新核对并更正，旧版本保留在研究历史中。"
+  "app.creatorclaim.corrected": "公司归属和观点解读已重新核对并更正，旧版本保留在研究历史中。",
+  "walkthrough.chapters": "视频章节",
+  "walkthrough.source": "核对案例原视频",
+  "walkthrough.scene.1": "股票观点",
+  "walkthrough.scene.2": "核对原话",
+  "walkthrough.scene.3": "后续涨跌",
+  "walkthrough.scene.4": "继续跟进",
+  "walkthrough.scene.5": "免费开始"
 }

@@ -1,0 +1,1026 @@
+[
+  {
+    "file": "01-idea.en.wav",
+    "language": "en",
+    "duration": 3.275,
+    "text": " A stock idea catches your eye. What happened next?",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.72,
+        "text": " A stock idea catches your eye. What happened next?",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.36,
+            "word": " A",
+            "probability": 0.9333487153053284
+          },
+          {
+            "start": 0.36,
+            "end": 0.6,
+            "word": " stock",
+            "probability": 0.9846136569976807
+          },
+          {
+            "start": 0.6,
+            "end": 0.92,
+            "word": " idea",
+            "probability": 0.9940156936645508
+          },
+          {
+            "start": 0.92,
+            "end": 1.28,
+            "word": " catches",
+            "probability": 0.9985439777374268
+          },
+          {
+            "start": 1.28,
+            "end": 1.5,
+            "word": " your",
+            "probability": 0.997575581073761
+          },
+          {
+            "start": 1.5,
+            "end": 1.74,
+            "word": " eye.",
+            "probability": 0.997244119644165
+          },
+          {
+            "start": 2.04,
+            "end": 2.16,
+            "word": " What",
+            "probability": 0.9949519634246826
+          },
+          {
+            "start": 2.16,
+            "end": 2.38,
+            "word": " happened",
+            "probability": 0.7334327697753906
+          },
+          {
+            "start": 2.38,
+            "end": 2.72,
+            "word": " next?",
+            "probability": 0.9991416931152344
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "01-idea.zh.wav",
+    "language": "zh",
+    "duration": 2.64,
+    "text": "博主的股票观点后来表现怎么样",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.38,
+        "text": "博主的股票观点后来表现怎么样",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.2,
+            "word": "博",
+            "probability": 0.9820136725902557
+          },
+          {
+            "start": 0.2,
+            "end": 0.38,
+            "word": "主",
+            "probability": 0.9949642419815063
+          },
+          {
+            "start": 0.38,
+            "end": 0.5,
+            "word": "的",
+            "probability": 0.9839643239974976
+          },
+          {
+            "start": 0.5,
+            "end": 0.66,
+            "word": "股",
+            "probability": 0.9885483384132385
+          },
+          {
+            "start": 0.66,
+            "end": 0.84,
+            "word": "票",
+            "probability": 0.998902440071106
+          },
+          {
+            "start": 0.84,
+            "end": 1.0,
+            "word": "观",
+            "probability": 0.9657467007637024
+          },
+          {
+            "start": 1.0,
+            "end": 1.28,
+            "word": "点",
+            "probability": 0.99747234582901
+          },
+          {
+            "start": 1.28,
+            "end": 1.6,
+            "word": "后",
+            "probability": 0.8003778457641602
+          },
+          {
+            "start": 1.6,
+            "end": 1.76,
+            "word": "来",
+            "probability": 0.9922745823860168
+          },
+          {
+            "start": 1.76,
+            "end": 1.92,
+            "word": "表",
+            "probability": 0.9968069791793823
+          },
+          {
+            "start": 1.92,
+            "end": 2.1,
+            "word": "现",
+            "probability": 0.9886562824249268
+          },
+          {
+            "start": 2.1,
+            "end": 2.38,
+            "word": "怎么样",
+            "probability": 0.9638365507125854
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "02-source.en.wav",
+    "language": "en",
+    "duration": 4.25,
+    "text": " With Ducky, read the key points and open the original timestamp.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.74,
+        "text": " With Ducky, read the key points and open the original timestamp.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.42,
+            "word": " With",
+            "probability": 0.9307460188865662
+          },
+          {
+            "start": 0.42,
+            "end": 0.74,
+            "word": " Ducky,",
+            "probability": 0.7673898339271545
+          },
+          {
+            "start": 1.08,
+            "end": 1.24,
+            "word": " read",
+            "probability": 0.9725416302680969
+          },
+          {
+            "start": 1.24,
+            "end": 1.4,
+            "word": " the",
+            "probability": 0.9980819225311279
+          },
+          {
+            "start": 1.4,
+            "end": 1.56,
+            "word": " key",
+            "probability": 0.9741125106811523
+          },
+          {
+            "start": 1.56,
+            "end": 1.84,
+            "word": " points",
+            "probability": 0.8495548963546753
+          },
+          {
+            "start": 1.84,
+            "end": 2.34,
+            "word": " and",
+            "probability": 0.7631068229675293
+          },
+          {
+            "start": 2.34,
+            "end": 2.58,
+            "word": " open",
+            "probability": 0.9668734073638916
+          },
+          {
+            "start": 2.58,
+            "end": 2.76,
+            "word": " the",
+            "probability": 0.9987562894821167
+          },
+          {
+            "start": 2.76,
+            "end": 3.02,
+            "word": " original",
+            "probability": 0.9936038851737976
+          },
+          {
+            "start": 3.02,
+            "end": 3.74,
+            "word": " timestamp.",
+            "probability": 0.8872040212154388
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "02-source.zh.wav",
+    "language": "zh",
+    "duration": 5.68,
+    "text": "在Ducky,先读观点再点开时间,听听博主怎么说。",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 5.54,
+        "text": "在Ducky,先读观点再点开时间,听听博主怎么说。",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.34,
+            "word": "在",
+            "probability": 0.9176165461540222
+          },
+          {
+            "start": 0.34,
+            "end": 0.6,
+            "word": "D",
+            "probability": 0.35093772411346436
+          },
+          {
+            "start": 0.6,
+            "end": 0.86,
+            "word": "ucky,",
+            "probability": 0.760979413986206
+          },
+          {
+            "start": 1.72,
+            "end": 1.88,
+            "word": "先",
+            "probability": 0.9289572834968567
+          },
+          {
+            "start": 1.88,
+            "end": 2.12,
+            "word": "读",
+            "probability": 0.7355174273252487
+          },
+          {
+            "start": 2.12,
+            "end": 2.3,
+            "word": "观",
+            "probability": 0.9211857914924622
+          },
+          {
+            "start": 2.3,
+            "end": 2.6,
+            "word": "点",
+            "probability": 0.9989266991615295
+          },
+          {
+            "start": 2.6,
+            "end": 3.02,
+            "word": "再",
+            "probability": 0.5021006464958191
+          },
+          {
+            "start": 3.02,
+            "end": 3.24,
+            "word": "点",
+            "probability": 0.9982636570930481
+          },
+          {
+            "start": 3.24,
+            "end": 3.42,
+            "word": "开",
+            "probability": 0.9591428637504578
+          },
+          {
+            "start": 3.42,
+            "end": 3.78,
+            "word": "时间,",
+            "probability": 0.984372079372406
+          },
+          {
+            "start": 4.18,
+            "end": 4.36,
+            "word": "听",
+            "probability": 0.9529172778129578
+          },
+          {
+            "start": 4.36,
+            "end": 4.6,
+            "word": "听",
+            "probability": 0.9948613047599792
+          },
+          {
+            "start": 4.6,
+            "end": 4.82,
+            "word": "博",
+            "probability": 0.9805708825588226
+          },
+          {
+            "start": 4.82,
+            "end": 5.06,
+            "word": "主",
+            "probability": 0.9918956160545349
+          },
+          {
+            "start": 5.06,
+            "end": 5.24,
+            "word": "怎么",
+            "probability": 0.987013041973114
+          },
+          {
+            "start": 5.24,
+            "end": 5.54,
+            "word": "说。",
+            "probability": 0.9990468621253967
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "03-outcome.en.wav",
+    "language": "en",
+    "duration": 6.65,
+    "text": " Take this view on holding AMD. See all 20 trading days that followed, including the pullbacks.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.02,
+        "text": " Take this view on holding AMD.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.46,
+            "word": " Take",
+            "probability": 0.955024003982544
+          },
+          {
+            "start": 0.46,
+            "end": 0.66,
+            "word": " this",
+            "probability": 0.9980742931365967
+          },
+          {
+            "start": 0.66,
+            "end": 0.9,
+            "word": " view",
+            "probability": 0.9955385327339172
+          },
+          {
+            "start": 0.9,
+            "end": 1.12,
+            "word": " on",
+            "probability": 0.9929043650627136
+          },
+          {
+            "start": 1.12,
+            "end": 1.42,
+            "word": " holding",
+            "probability": 0.9671398997306824
+          },
+          {
+            "start": 1.42,
+            "end": 2.02,
+            "word": " AMD.",
+            "probability": 0.8361079692840576
+          }
+        ]
+      },
+      {
+        "start": 2.74,
+        "end": 6.02,
+        "text": " See all 20 trading days that followed, including the pullbacks.",
+        "words": [
+          {
+            "start": 2.74,
+            "end": 2.94,
+            "word": " See",
+            "probability": 0.9942941069602966
+          },
+          {
+            "start": 2.94,
+            "end": 3.12,
+            "word": " all",
+            "probability": 0.9983344674110413
+          },
+          {
+            "start": 3.12,
+            "end": 3.42,
+            "word": " 20",
+            "probability": 0.9281753897666931
+          },
+          {
+            "start": 3.42,
+            "end": 3.72,
+            "word": " trading",
+            "probability": 0.9921497106552124
+          },
+          {
+            "start": 3.72,
+            "end": 4.08,
+            "word": " days",
+            "probability": 0.9957693815231323
+          },
+          {
+            "start": 4.08,
+            "end": 4.34,
+            "word": " that",
+            "probability": 0.9981532692909241
+          },
+          {
+            "start": 4.34,
+            "end": 4.72,
+            "word": " followed,",
+            "probability": 0.9943637847900391
+          },
+          {
+            "start": 5.0,
+            "end": 5.32,
+            "word": " including",
+            "probability": 0.9988634586334229
+          },
+          {
+            "start": 5.32,
+            "end": 5.56,
+            "word": " the",
+            "probability": 0.9933916330337524
+          },
+          {
+            "start": 5.56,
+            "end": 6.02,
+            "word": " pullbacks.",
+            "probability": 0.8616863787174225
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "03-outcome.zh.wav",
+    "language": "zh",
+    "duration": 6.72,
+    "text": "比如这条持有观点之后二十个交易日涨了多少中间怎么回落都能看清",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.44,
+        "text": "比如这条持有观点",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.24,
+            "word": "比如",
+            "probability": 0.98282790184021
+          },
+          {
+            "start": 0.24,
+            "end": 0.46,
+            "word": "这",
+            "probability": 0.5475466847419739
+          },
+          {
+            "start": 0.46,
+            "end": 0.7,
+            "word": "条",
+            "probability": 0.9949087500572205
+          },
+          {
+            "start": 0.7,
+            "end": 0.88,
+            "word": "持",
+            "probability": 0.982672929763794
+          },
+          {
+            "start": 0.88,
+            "end": 1.02,
+            "word": "有",
+            "probability": 0.9989728927612305
+          },
+          {
+            "start": 1.02,
+            "end": 1.18,
+            "word": "观",
+            "probability": 0.9371681213378906
+          },
+          {
+            "start": 1.18,
+            "end": 1.44,
+            "word": "点",
+            "probability": 0.9977213740348816
+          }
+        ]
+      },
+      {
+        "start": 1.44,
+        "end": 3.94,
+        "text": "之后二十个交易日涨了多少",
+        "words": [
+          {
+            "start": 1.44,
+            "end": 2.16,
+            "word": "之",
+            "probability": 0.43993183970451355
+          },
+          {
+            "start": 2.16,
+            "end": 2.4,
+            "word": "后",
+            "probability": 0.9998997449874878
+          },
+          {
+            "start": 2.4,
+            "end": 2.64,
+            "word": "二",
+            "probability": 0.45947563648223877
+          },
+          {
+            "start": 2.64,
+            "end": 2.78,
+            "word": "十",
+            "probability": 0.9989354014396667
+          },
+          {
+            "start": 2.78,
+            "end": 2.88,
+            "word": "个",
+            "probability": 0.9880080223083496
+          },
+          {
+            "start": 2.88,
+            "end": 3.02,
+            "word": "交",
+            "probability": 0.9791730642318726
+          },
+          {
+            "start": 3.02,
+            "end": 3.18,
+            "word": "易",
+            "probability": 0.9983842372894287
+          },
+          {
+            "start": 3.18,
+            "end": 3.32,
+            "word": "日",
+            "probability": 0.9943882822990417
+          },
+          {
+            "start": 3.32,
+            "end": 3.52,
+            "word": "涨",
+            "probability": 0.9896553456783295
+          },
+          {
+            "start": 3.52,
+            "end": 3.64,
+            "word": "了",
+            "probability": 0.9860032200813293
+          },
+          {
+            "start": 3.64,
+            "end": 3.94,
+            "word": "多少",
+            "probability": 0.9971950054168701
+          }
+        ]
+      },
+      {
+        "start": 3.94,
+        "end": 6.62,
+        "text": "中间怎么回落都能看清",
+        "words": [
+          {
+            "start": 3.94,
+            "end": 4.58,
+            "word": "中",
+            "probability": 0.7817803025245667
+          },
+          {
+            "start": 4.58,
+            "end": 4.82,
+            "word": "间",
+            "probability": 0.997577965259552
+          },
+          {
+            "start": 4.82,
+            "end": 5.12,
+            "word": "怎么",
+            "probability": 0.990623414516449
+          },
+          {
+            "start": 5.12,
+            "end": 5.34,
+            "word": "回",
+            "probability": 0.9787241816520691
+          },
+          {
+            "start": 5.34,
+            "end": 5.56,
+            "word": "落",
+            "probability": 0.9817519783973694
+          },
+          {
+            "start": 5.56,
+            "end": 6.06,
+            "word": "都",
+            "probability": 0.9362261891365051
+          },
+          {
+            "start": 6.06,
+            "end": 6.22,
+            "word": "能",
+            "probability": 0.9985468983650208
+          },
+          {
+            "start": 6.22,
+            "end": 6.38,
+            "word": "看",
+            "probability": 0.9993526339530945
+          },
+          {
+            "start": 6.38,
+            "end": 6.62,
+            "word": "清",
+            "probability": 0.9526214003562927
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "04-follow.en.wav",
+    "language": "en",
+    "duration": 4.05,
+    "text": " Follow the stock, check company events, and set your own alerts.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.44,
+        "text": " Follow the stock, check company events, and set your own alerts.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.5,
+            "word": " Follow",
+            "probability": 0.9115729928016663
+          },
+          {
+            "start": 0.5,
+            "end": 0.7,
+            "word": " the",
+            "probability": 0.9945977926254272
+          },
+          {
+            "start": 0.7,
+            "end": 1.06,
+            "word": " stock,",
+            "probability": 0.9622775316238403
+          },
+          {
+            "start": 1.38,
+            "end": 1.52,
+            "word": " check",
+            "probability": 0.9874939322471619
+          },
+          {
+            "start": 1.52,
+            "end": 1.82,
+            "word": " company",
+            "probability": 0.9721003770828247
+          },
+          {
+            "start": 1.82,
+            "end": 2.22,
+            "word": " events,",
+            "probability": 0.9961140155792236
+          },
+          {
+            "start": 2.54,
+            "end": 2.64,
+            "word": " and",
+            "probability": 0.9964213371276855
+          },
+          {
+            "start": 2.64,
+            "end": 2.82,
+            "word": " set",
+            "probability": 0.998090922832489
+          },
+          {
+            "start": 2.82,
+            "end": 2.96,
+            "word": " your",
+            "probability": 0.9987099170684814
+          },
+          {
+            "start": 2.96,
+            "end": 3.14,
+            "word": " own",
+            "probability": 0.9972224235534668
+          },
+          {
+            "start": 3.14,
+            "end": 3.44,
+            "word": " alerts.",
+            "probability": 0.9963071346282959
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "04-follow.zh.wav",
+    "language": "zh",
+    "duration": 4.4,
+    "text": "把股票加入自選,查公司消息設好提醒,繼續跟進。",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 4.32,
+        "text": "把股票加入自選,查公司消息設好提醒,繼續跟進。",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.16,
+            "word": "把",
+            "probability": 0.9469714164733887
+          },
+          {
+            "start": 0.16,
+            "end": 0.34,
+            "word": "股",
+            "probability": 0.9973011910915375
+          },
+          {
+            "start": 0.34,
+            "end": 0.56,
+            "word": "票",
+            "probability": 0.9995280504226685
+          },
+          {
+            "start": 0.56,
+            "end": 0.82,
+            "word": "加入",
+            "probability": 0.7151021361351013
+          },
+          {
+            "start": 0.82,
+            "end": 1.08,
+            "word": "自",
+            "probability": 0.9599239230155945
+          },
+          {
+            "start": 1.08,
+            "end": 1.36,
+            "word": "選,",
+            "probability": 0.7864551544189453
+          },
+          {
+            "start": 1.68,
+            "end": 2.02,
+            "word": "查",
+            "probability": 0.9852421879768372
+          },
+          {
+            "start": 2.02,
+            "end": 2.18,
+            "word": "公",
+            "probability": 0.9978410005569458
+          },
+          {
+            "start": 2.18,
+            "end": 2.34,
+            "word": "司",
+            "probability": 0.9954397082328796
+          },
+          {
+            "start": 2.34,
+            "end": 2.52,
+            "word": "消",
+            "probability": 0.935784101486206
+          },
+          {
+            "start": 2.52,
+            "end": 2.74,
+            "word": "息",
+            "probability": 0.9993811845779419
+          },
+          {
+            "start": 2.74,
+            "end": 2.94,
+            "word": "設",
+            "probability": 0.3368067741394043
+          },
+          {
+            "start": 2.94,
+            "end": 3.12,
+            "word": "好",
+            "probability": 0.9960533380508423
+          },
+          {
+            "start": 3.12,
+            "end": 3.26,
+            "word": "提",
+            "probability": 0.9970513582229614
+          },
+          {
+            "start": 3.26,
+            "end": 3.54,
+            "word": "醒,",
+            "probability": 0.9982866644859314
+          },
+          {
+            "start": 3.72,
+            "end": 3.92,
+            "word": "繼續",
+            "probability": 0.8591396808624268
+          },
+          {
+            "start": 3.92,
+            "end": 4.12,
+            "word": "跟",
+            "probability": 0.9733572602272034
+          },
+          {
+            "start": 4.12,
+            "end": 4.32,
+            "word": "進。",
+            "probability": 0.9985395669937134
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "05-start.en.wav",
+    "language": "en",
+    "duration": 3.325,
+    "text": " Add your first stock for free. Try Ducky today.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.68,
+        "text": " Add your first stock for free. Try Ducky today.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.46,
+            "word": " Add",
+            "probability": 0.9205014705657959
+          },
+          {
+            "start": 0.46,
+            "end": 0.58,
+            "word": " your",
+            "probability": 0.9971019625663757
+          },
+          {
+            "start": 0.58,
+            "end": 0.76,
+            "word": " first",
+            "probability": 0.989069938659668
+          },
+          {
+            "start": 0.76,
+            "end": 1.06,
+            "word": " stock",
+            "probability": 0.9842278957366943
+          },
+          {
+            "start": 1.06,
+            "end": 1.26,
+            "word": " for",
+            "probability": 0.9959660768508911
+          },
+          {
+            "start": 1.26,
+            "end": 1.54,
+            "word": " free.",
+            "probability": 0.9892227649688721
+          },
+          {
+            "start": 1.9,
+            "end": 2.1,
+            "word": " Try",
+            "probability": 0.9879899621009827
+          },
+          {
+            "start": 2.1,
+            "end": 2.42,
+            "word": " Ducky",
+            "probability": 0.8614562749862671
+          },
+          {
+            "start": 2.42,
+            "end": 2.68,
+            "word": " today.",
+            "probability": 0.9586795568466187
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "05-start.zh.wav",
+    "language": "zh",
+    "duration": 2.4,
+    "text": "免费加一只自选骨试试看",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.58,
+        "text": "免费加一只自选骨",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.3,
+            "word": "免",
+            "probability": 0.994353711605072
+          },
+          {
+            "start": 0.3,
+            "end": 0.54,
+            "word": "费",
+            "probability": 0.9448137879371643
+          },
+          {
+            "start": 0.54,
+            "end": 0.72,
+            "word": "加",
+            "probability": 0.9215322732925415
+          },
+          {
+            "start": 0.72,
+            "end": 0.88,
+            "word": "一",
+            "probability": 0.9500867128372192
+          },
+          {
+            "start": 0.88,
+            "end": 0.98,
+            "word": "只",
+            "probability": 0.7555476427078247
+          },
+          {
+            "start": 0.98,
+            "end": 1.12,
+            "word": "自",
+            "probability": 0.9261681437492371
+          },
+          {
+            "start": 1.12,
+            "end": 1.32,
+            "word": "选",
+            "probability": 0.8639289438724518
+          },
+          {
+            "start": 1.32,
+            "end": 1.58,
+            "word": "骨",
+            "probability": 0.6455524116754532
+          }
+        ]
+      },
+      {
+        "start": 1.58,
+        "end": 2.3,
+        "text": "试试看",
+        "words": [
+          {
+            "start": 1.58,
+            "end": 2.06,
+            "word": "试",
+            "probability": 0.7516470551490784
+          },
+          {
+            "start": 2.06,
+            "end": 2.16,
+            "word": "试",
+            "probability": 0.9985858201980591
+          },
+          {
+            "start": 2.16,
+            "end": 2.3,
+            "word": "看",
+            "probability": 0.9962571859359741
+          }
+        ]
+      }
+    ]
+  }
+]

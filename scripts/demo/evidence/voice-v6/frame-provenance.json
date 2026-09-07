@@ -1,0 +1,422 @@
+{
+  "capture": "CUA browser screenshots, 1440x810 local editorial canvas. Native product screenshots from duckybot.app/app/#/chart/AMD and /en/app/#/chart/AMD, cropped x390 y135 w772 h664. No price paths fabricated.",
+  "blank_capture_gate": "RGB maximum > 85 in x70–1370, y100–550; at least 8000 pixels, all 52 final frames passed. Three incomplete first-pass captures replaced before publication.",
+  "frames": [
+    {
+      "file": "scripts/demo/frames-v6/zh/01-idea.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 34951,
+      "sha256": "26521c0090308ea350f540e6e3c72d27ea4ceb1da61c9e93e22bb7a6ee9119c8"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/02-source.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 27516,
+      "sha256": "e394377126b336b12e23e36e1ceadbc8b1670ded322f66141d1ab49ed943736c"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-00.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 11718,
+      "sha256": "92455a505fb2b7ce482ca9478a43e70e10e384ed5497100be2907cfec3e20c11"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-01.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 12251,
+      "sha256": "510711d58a8b14187d3341c5b0af541773075aa99526c4b0abea05d5ea8cda64"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-02.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 12676,
+      "sha256": "71c8da5660b84743ea931223418ad156a93049e84d0eac7afa02692586ae5223"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-03.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 13157,
+      "sha256": "d097a27fc0092fb3c0e86712f1bb155b2081d2a01245fe9b6f8acc49099830cb"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-04.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 13573,
+      "sha256": "d22e93f6aa6430e8723102214c07261f7baf6396df4b6c34de6c6b555a94e84f"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-05.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 13992,
+      "sha256": "987c0d7e58b0f39e84d18ae3359c2f1b7c9c727950e7284f115cd0287c0910d6"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-06.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 14401,
+      "sha256": "7af619e317286e61e29d39fc1877b383207e9c71a9695f3382872e9035226ece"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-07.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 14815,
+      "sha256": "5ca2d850866cd8c99cebb3dc7c1fc4ccd37e0d19ad704ad4abad9aece0898699"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-08.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 15255,
+      "sha256": "22403eaf4a4b913c0b45f6142a44cac4fc56e24ad209ea0057cfca225cb4bc88"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-09.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 15649,
+      "sha256": "6b2fcfde53cfb71d95bb95f68d5d8b0d57e1e71d554f413c3d6e96db50aeb9a5"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-10.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 16065,
+      "sha256": "cca0599961e21e54cdcdd05c13b673fc19ffe4347c2e2db2d6c0bd1c3275ea6d"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-11.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 16533,
+      "sha256": "4e9c13fa8cf7ea7347638ad0e48dbbdd3c7b5cc7415d1bc7c67af5f2bc0a071b"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-12.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 16938,
+      "sha256": "124b3e5955dc1a66f183f90759d1bba98e3cb8c52f23992b03a59d3eee0e6cb4"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-13.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 17368,
+      "sha256": "42ccce0a63be692d067037377f5c53feb96a646fd14bd9555d91945751f1eff8"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-14.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 17839,
+      "sha256": "9cee1443e11c34e68c53455abeb4da27760dc817599524114e685d56ad7b0277"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-15.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 18254,
+      "sha256": "676445b61c7afb8286b55e9bae96d5fc1b356aea062290df72f267cacd5d52b4"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-16.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 18686,
+      "sha256": "e8898dfa294c5a45c5422cf2798632a45114ce974d2865ff620bc929bbf90b91"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-17.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 19100,
+      "sha256": "6fcac5c1ecf7878f286bae87089cd1aaf71ffd034abc76bf031339668e786ef1"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-18.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 19517,
+      "sha256": "105a68ecf9fa8555d45e3786db79590b409a3fc7f06c90605e812571e2ec8895"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-19.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 19931,
+      "sha256": "185bfb832abc40867123858e4030fc9b958241c4786aeb99e9ed6507f7b010e0"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome-20.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 22825,
+      "sha256": "a8e7fb727232f2eb764a55af96bc7b8ac4b180816f61c3be2a7f0b745f678294"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/03-outcome.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 22825,
+      "sha256": "a8e7fb727232f2eb764a55af96bc7b8ac4b180816f61c3be2a7f0b745f678294"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/04-follow.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 26964,
+      "sha256": "c126e8703f1046ca9e395a44bd3c042eda1fe478ffad2d84777ff07bc8c34fb0"
+    },
+    {
+      "file": "scripts/demo/frames-v6/zh/05-start.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 34630,
+      "sha256": "b19f7cb780f942b5cbee13894b7779901f91ad6213dc1cc5715fa1b7ba1a7fb0"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/01-idea.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 35437,
+      "sha256": "200e823cb44b07f8715c02db70a0311103046558acc115c9b9aa408eebec0597"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/02-source.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 29437,
+      "sha256": "fd9548918839d3b3e1c71234d25f187f53ca71168100b922f454f478ffefc8b3"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-00.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 12849,
+      "sha256": "24b3e3915976de7fceea3097a5499036e68263579b5313b08f66338f695cc598"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-01.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 13375,
+      "sha256": "5d1dbaf8b5c39967a750b0efd0bdd56f66ceb9394481a0c42b9ddac7742c46f4"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-02.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 13805,
+      "sha256": "16cda4e18c1913668815be44657cce72c9a6ecf782846ffb016c20f07ee902ae"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-03.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 14291,
+      "sha256": "32f224bbd893f3b15f04a0dab761254420e190365325ae05006f94b2b3f81fea"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-04.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 14708,
+      "sha256": "c259d5a51dda0caf3bc162492533b15dc7fe6fe5f5b894507a13e5ccf8f6cda5"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-05.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 15129,
+      "sha256": "1d3da8972a0ea36acead66e6ea5e3625c4f91294192308b39244c99d3983a981"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-06.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 15543,
+      "sha256": "f77595802aad6e85a80354d244187eb4e8e8d62c609341ca1a77ddb876b95ec4"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-07.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 15963,
+      "sha256": "bbb821e49593f900f31a0522ed01dbcae9e8c9a59cae0756e5e43c671eaca558"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-08.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 16407,
+      "sha256": "02a3bfadf8f87d6c2772f40e03a47c5ae221c4099fa87a467c29bb35042da252"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-09.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 16803,
+      "sha256": "d3d84600eafe91708d558bc7211da3ea6053ae0c9f8f84522cb4cd8ff41c0ca3"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-10.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 17220,
+      "sha256": "8465a0c81e896996c0e8339ac94eb52c357cb94623abdc32137c6d95744bfc2a"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-11.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 17690,
+      "sha256": "dd5ec3acdd4d097318072ba46f48467afe4d7f6b93e2a501ad17c5bfeb2f642d"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-12.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 18095,
+      "sha256": "54ad1743fb2afb8ec86d6689f27e7e5770f1184cefac5b06197c63d6d17ddc97"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-13.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 18524,
+      "sha256": "27e3714fde730bd7796ab8f6a402e66d7fd02c20563582b8d8ea78dbc49d6cfa"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-14.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 18994,
+      "sha256": "b6e38ab8e1b9c523954bb1aa61fa477a2fe3d8058599027e0dce1e5b235196c6"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-15.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 19407,
+      "sha256": "803174623fca05ca84f9932b63047071037350435300ffa1e7d2f6e4997e7c2a"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-16.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 19842,
+      "sha256": "fd96c8802f71ad800560922cae2f5e03bd31feb6b20d15a49338cf018e6ae7ec"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-17.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 20258,
+      "sha256": "6228a722088cf587c26d1c7ea84727111ac64c30dae927a560ed8f1ea3b8abb9"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-18.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 20671,
+      "sha256": "249ac3202174dde0b398c9c1a8f72f54442daa2b39a8c33ff126fca4da9092fc"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-19.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 21083,
+      "sha256": "cfc7f99a71fd3fb7bfd0bc5371611bf99055ccae8d8b0ce87fe13a15ddda18da"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome-20.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 23988,
+      "sha256": "139d3f2d96b7f22f9bcb167a5159b2f9fc4c7ac4f1bdfb0e5c4e989e3f360391"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/03-outcome.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 23988,
+      "sha256": "139d3f2d96b7f22f9bcb167a5159b2f9fc4c7ac4f1bdfb0e5c4e989e3f360391"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/04-follow.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 29819,
+      "sha256": "83b362c296084e11943d834e2057b4225c92a1e2c9c09a41b07642fbf0837169"
+    },
+    {
+      "file": "scripts/demo/frames-v6/en/05-start.png",
+      "format": "JPEG",
+      "width": 1440,
+      "height": 810,
+      "content_pixels_above_85": 34040,
+      "sha256": "3e903b8e9fbbf8a95448c60c6c1c1f002808e6d68b670f734fdf32e6c3965842"
+    }
+  ]
+}
