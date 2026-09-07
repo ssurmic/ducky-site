@@ -22,4 +22,8 @@ This is Chrome viewport/iframe and mouse/keyboard testing. Physical iOS/Android,
 
 ## Integration and release
 
-Latest upstream watchlist and font changes are being integrated before final verification. Production release evidence will be appended after deployment.
+Integrated the latest watchlist/font release (`79a991a`) and homepage comparison release (`ca2d9d3`). Final application code commits: `c39d8df` and `9e04609`. The post-font browser recheck covered radar (EN), chart (ZH), watchlist (EN), calendar (ZH), each at 320/390px in both themes: 16 further checks passed.
+
+Final gates: 245 frontend tests passed; 4 asset graph tests passed / 1 unavailable old fixture skipped; bilingual build produced 20 pages; copy lint covered 1,783 files; 774 internal links passed; git diff check passed. The generated calendar timestamp was restored so this frontend patch does not alter committed event data. No secrets or test fixtures are included in the change.
+
+Ready for release, awaiting the owner’s explicit confirmation for GitHub push and public deployment under the repository Safety rule. No production update has been performed by this task. Browser-only fixture preview: `http://127.0.0.1:8876/qa?route=boards&lang=zh&widths=390&themes=light,dark`.
