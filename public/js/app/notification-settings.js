@@ -73,10 +73,10 @@ export function mountNotificationSettings(root, {signal} = {}) {
     const form = el('form.form'), controls = {};
     for (const channel of CHANNELS) {
       const enabled = current[channel+'_enabled'], available = current[channel+'_available'];
-      const checkbox = el('input', {type:'checkbox', name:channel+'_enabled', checked:enabled,
-        disabled:busy || (!available && !enabled)});
-      controls[channel] = checkbox;
       const state = current[channel+'_status'];
+      const checkbox = el('input', {type:'checkbox', name:channel+'_enabled', checked:enabled,
+        disabled:busy || ((!available || state === 'unreachable') && !enabled)});
+      controls[channel] = checkbox;
       form.append(el('div.notification-channel', el('label.check', checkbox, ' '+s('notify.'+channel)),
         el('p.muted.small', s('notify.state.'+(!available && ['ready','disabled'].includes(state) ? 'unavailable' : state)))));
     }

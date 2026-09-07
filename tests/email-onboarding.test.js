@@ -25,7 +25,7 @@ test('explicit sign-in collects missing or unverified email without losing its s
  assert.equal(target.signedInTarget({email_verified:false},'#/boards?board=social&ticker=mu&token=secret'),'#/profile?setup=email&next=boards%3Fboard%3Dsocial%26ticker%3DMU');
 });
 
-function fixture({email=null,pauseAt='',verifyStatus=200,verified=true}={}){
+function fixture({email=null,pauseAt='',verifyStatus=200,verified=true,saveExtra={}}={}){
  history.replaceState(null,'','/app/#/profile?setup=email&next=alerts%3Fticker%3DNOK');
  store.bumpEpoch();store.set('token','account-a-token');store.set('me',{user_id:21,profile_complete:!!email,email_verified:false});
  document.getElementById('toasts').textContent='';
@@ -37,7 +37,7 @@ function fixture({email=null,pauseAt='',verifyStatus=200,verified=true}={}){
   if(path==='/auth/providers')result=reply({google:false});
   else if(path==='/me')result=reply({user_id:21,profile_complete:!!profile.email,email_verified:profile.email_verified});
   else if(path==='/me/profile'&&method==='GET')result=reply(profile);
-  else if(path==='/me/profile'&&method==='POST'){profile={...profile,...JSON.parse(options.body),email_verified:false};result=reply({...profile,code_sent:true});}
+  else if(path==='/me/profile'&&method==='POST'){profile={...profile,...JSON.parse(options.body),email_verified:false};result=reply({...profile,code_sent:true,...saveExtra});}
   else if(path==='/me/profile/verify'){
    if(verifyStatus===200){profile={...profile,email_verified:verified};result=reply(profile);}
    else result=reply({error:'code_expired'},verifyStatus);
@@ -70,6 +70,18 @@ test('expired or unconfirmed verification never offers continue or announces ver
  for(const options of [{verifyStatus:410},{verified:false}]){
   const f=fixture({email:'receiving@example.test',...options});await f.mount();f.root.querySelector('.verify input').value='123456';f.root.querySelector('.verify button').click();await flush();
   assert.equal(f.continuation,null);assert.equal(f.root.querySelector('.verify .ok'),null);assert.equal(store.get('me').email_verified,false);f.close();
+ }
+});
+
+test('a saved email with a failed or throttled code shows a persistent retry instruction until resend succeeds',async()=>{
+ for(const saveExtra of [{code_sent:false,send_error:'send_failed'},{code_sent:false,retry_after:60}]){
+  const f=fixture({saveExtra});
+  try {await f.mount();const form=f.root.querySelector('form');form.querySelector('[name=email]').value='receiving@example.test';
+   form.dispatchEvent(new window.Event('submit',{cancelable:true}));await flush();
+   assert.ok(f.root.querySelector('.verify .err'));assert.equal(f.continuation,null);
+   const resend=[...f.root.querySelectorAll('.verify button')].find(button=>button.textContent===copy['app.profile.resend']);resend.click();await flush();
+   assert.equal(f.root.querySelector('.verify .err'),null);assert.equal(f.continuation,null);
+  }finally{f.close();}
  }
 });
 

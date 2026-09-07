@@ -2831,7 +2831,7 @@
   "app.notify.state.ready": "可以接收提醒",
   "app.notify.state.disabled": "尚未开启",
   "app.notify.state.unverified": "验证邮箱后可开启",
-  "app.notify.state.binding_changed": "邮箱已更改，请验证后重新开启",
+  "app.notify.state.binding_changed": "邮箱已更改，请重新开启邮件提醒。",
   "app.notify.state.unlinked": "尚未关联 Telegram",
   "app.notify.state.unreachable": "请在 Telegram 中重新启动 Ducky bot",
   "app.notify.delivery.queued": "等待发送",
@@ -2851,5 +2851,9 @@
   "app.profile.account_settings": "其他账号设置",
   "app.profile.setup_ready_title": "邮箱已验证",
   "app.profile.setup_ready_sub": "接下来，选择在哪接收提醒。",
-  "app.profile.change_email": "更改邮箱"
+  "app.profile.change_email": "更改邮箱",
+  "app.profile.code_send_failed": "验证码未能发出，请点击重发验证码。",
+  "app.profile.code_delayed": "请稍后再请求验证码。",
+  "app.profile.code_locked": "验证码错误次数较多，请重新获取验证码后再试。",
+  "app.profile.email_unavailable": "这个邮箱无法用于当前账号，请换一个邮箱。"
 }

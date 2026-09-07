@@ -76,6 +76,13 @@ test('invalid settings are retryable and a server-disagreed preference never ann
   }
 });
 
+test('a linked but unreachable Telegram account cannot be enabled until the bot is restarted',async()=>{
+  const f=fixture({initial:{...ready,telegram_enabled:false,telegram_available:true,telegram_status:'unreachable'}});
+  try {await flush();assert.equal(f.root.querySelector('[name=telegram_enabled]').disabled,true);
+    assert.ok(f.root.textContent.includes(copy['app.notify.state.unreachable']));
+  } finally {f.close();}
+});
+
 test('one test request survives double click and partial acceptance remains pending until both results are terminal',async()=>{
   const f=fixture({pauseAt:'/me/notifications/test',delivery:n=>receipt([{channel:'telegram',status:'accepted'},{channel:'email',status:n?'failed':'retry'}])});
   try {

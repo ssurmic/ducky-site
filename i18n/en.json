@@ -2831,7 +2831,7 @@
   "app.notify.state.ready": "Ready for alerts",
   "app.notify.state.disabled": "Turned off",
   "app.notify.state.unverified": "Verify your email to enable",
-  "app.notify.state.binding_changed": "Email changed. Verify it and enable alerts again.",
+  "app.notify.state.binding_changed": "Email changed. Enable alerts for this address again.",
   "app.notify.state.unlinked": "Telegram is not linked",
   "app.notify.state.unreachable": "Start the Ducky bot again in Telegram",
   "app.notify.delivery.queued": "Queued",
@@ -2851,5 +2851,9 @@
   "app.profile.account_settings": "Other account settings",
   "app.profile.setup_ready_title": "Email verified",
   "app.profile.setup_ready_sub": "Now choose where to receive your updates.",
-  "app.profile.change_email": "Change email"
+  "app.profile.change_email": "Change email",
+  "app.profile.code_send_failed": "The verification code could not be sent. Please try resending it.",
+  "app.profile.code_delayed": "Please wait before requesting another verification code.",
+  "app.profile.code_locked": "Too many incorrect codes. Request a new code and try again.",
+  "app.profile.email_unavailable": "This email cannot be used for this account. Try another address."
 }

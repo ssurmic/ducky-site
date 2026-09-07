@@ -27,6 +27,16 @@ export async function mount(root, params = {}) {
   let busy = false;
   const setup = params.query?.get('setup') === 'email' || new URLSearchParams(location.hash.split('?')[1] || '').get('setup') === 'email';
   const requestOptions = {signal: lifetime.signal, silent402: true};
+  const profileError = error => {
+    const code = error?.body?.error;
+    if (code === 'too_many_attempts') return s('profile.code_locked');
+    if (code === 'rate_limited' || error?.status === 429) return s('profile.code_delayed');
+    if (code === 'email_taken') return s('profile.email_unavailable');
+    if (['bad_email','no_email'].includes(code)) return s('profile.email_invalid');
+    if (['code_invalid','code_expired'].includes(code)) return s('profile.code_invalid');
+    if (['mail_error','send_failed','test_mode'].includes(code)) return s('profile.code_send_failed');
+    return s('login.try_again');
+  };
   const requestValid = node => {
     const epoch = store.epoch(), token = store.get('token'), route = location.hash;
     return () => mounted() && store.epoch() === epoch && store.get('token') === token &&
@@ -74,11 +84,12 @@ export async function mount(root, params = {}) {
         const result = await api.profile.save(body, requestOptions);
         if (!valid()) return;
         prof = result;
-        toast(s(prof.send_error || prof.dry_run ? "recovery.unavailable" : "profile.saved"), prof.send_error || prof.dry_run ? "err" : "ok");
+        const notSent = prof.send_error || prof.dry_run || prof.retry_after;
+        toast(s(prof.send_error || prof.dry_run ? 'profile.code_send_failed' : prof.retry_after ? 'profile.code_delayed' : "profile.saved"), notSent ? "err" : "ok");
         await auth.refreshMe(requestOptions);
         if (!valid()) return;
         render();
-      } catch (err) { if (valid()) toast(s("common.error", { msg: err.message }), "err"); }
+      } catch (err) { if (valid()) toast(profileError(err), "err"); }
       finally { busy = false; if (valid()) save.disabled = false; }
     });
     card.appendChild(verifiedSetup ? el('details.profile-email-change', el('summary', s('profile.change_email')), form) : form);
@@ -87,6 +98,8 @@ export async function mount(root, params = {}) {
     const v = el("section.verify");
     if (prof.email && !prof.email_verified) {
       v.append(el("h2", s("profile.verify_title")), el("p.muted.small", s("profile.verify_sub", { email: prof.email })));
+      if (prof.send_error || prof.dry_run || prof.retry_after) v.append(el('p.err', {role:'status'},
+        s(prof.send_error || prof.dry_run ? 'profile.code_send_failed' : 'profile.code_delayed')));
       const code = el("input.input.mono", { type: "text", inputmode: "numeric", maxlength: "6", placeholder: "123456", autocomplete: "one-time-code" });
       const btn = el("button.btn.btn-primary.btn-sm", { type: "button" }, s("profile.verify_btn"));
       const resend = el("button.btn.btn-ghost.btn-sm", { type: "button" }, s("profile.resend"));
@@ -107,7 +120,7 @@ export async function mount(root, params = {}) {
           await auth.refreshMe(requestOptions);
           if (!valid()) return;
           toast(s("profile.verified"), "ok"); render();
-        } catch (err) { if (valid()) toast(s(['code_invalid','code_expired','too_many_attempts'].includes(err.body?.error) ? 'profile.code_invalid' : 'login.try_again'), "err"); }
+        } catch (err) { if (valid()) toast(profileError(err), "err"); }
         finally { busy = false; if (valid()) btn.disabled = false; }
       });
       resend.addEventListener("click", async () => {
@@ -119,9 +132,13 @@ export async function mount(root, params = {}) {
           const response = await api.profile.resend(requestOptions);
           if (!valid()) return;
           const result = api.isAccepted(response) ? response.body : response;
+          if (result?.sent && !result.dry_run) {
+            prof = {...prof, send_error:null, dry_run:false, retry_after:null};
+            render();
+          }
           toast(s(result?.sent && !result?.dry_run ? "profile.resent" : "recovery.unavailable"),
             result?.sent && !result?.dry_run ? "ok" : "err");
-        } catch (err) { if (valid()) toast(s(err.body?.error === "send_failed" ? "recovery.unavailable" : "login.try_again"), "err"); }
+        } catch (err) { if (valid()) toast(profileError(err), "err"); }
         finally { busy = false; if (valid()) resend.disabled = false; }
       });
       v.append(el("div.cta-row", field(s("profile.code_label"), code), btn, resend));
