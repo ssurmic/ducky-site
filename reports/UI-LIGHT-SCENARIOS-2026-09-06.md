@@ -59,3 +59,12 @@ No research values, strategies, entitlements or backend data are changed.
   standard light surfaces: **32 pairs**, minimum **4.594:1**.
   [Palette calculations](ui-light-scenarios-2026-09-06/palette-contrast.json)
   supplement actual browser checks; they do not substitute for them.
+
+## Production verification
+
+Published source `8e2984ad`, Cloudflare Pages `42a97277`. Both homepage languages
+and both App shells reference the new version. The live `site.css`, `app.css`,
+`radar.css` and `home-demo.js` match the committed files byte for byte. A live
+390px Chrome check loaded three public NVDA records with no horizontal overflow
+in the browser's dark preference. Light-mode evidence is the automatic/explicit
+local browser matrix above; no OS setting or private account was changed.
