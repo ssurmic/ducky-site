@@ -1068,7 +1068,7 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 @media(max-width:1050px) {.watch-layout.has-detail {display:block}.watch-detail {position:static;max-height:none;margin-top:18px}}
 @media(max-width:580px) {.watch-row {grid-template-columns:minmax(95px,1fr) 74px 75px;gap:7px;padding:12px 6px}.watch-row-cap,.watch-columns>span:last-child {display:none}.watch-treemap {min-height:310px;aspect-ratio:1/1}.watch-tile-company {display:none}.watch-controls>.input {max-width:100%}.watch-legend {gap:9px;font-size:12px}.watch-filter {min-width:140px}.watch-identity .small {font-size:11px}}
 
-.app-view.watchlist-view {max-width:1280px}
+.app-view.watchlist-view, .app-view:has(.watchlist-view) {max-width:1280px}
 .watch-tile {container-type:size}
 .watch-tile strong {font-size:clamp(10px,12cqw,22px)}
 .watch-tile>span.mono {font-size:clamp(10px,10cqw,16px)}
