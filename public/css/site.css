@@ -42,10 +42,14 @@
   --fg: var(--text);   /* alias: app.css/boards were written against --fg; tokens define --text */
   --muted: #4d5966;
   --faint: #5d6875;   /* finding site.css:12 — was #7b8794 (3.5:1, fails AA); ~5.6:1 on light bg/surface */
-  --green: #1f883d;
+  --green: #187b35;
   --red: #cf222e;
-  --orange: #bc4c00;
-  --yellow: #9a6700;
+  --orange: #b54700;
+  /* Brand fills stay bright; small text and keyboard focus need more contrast. */
+  --accent-text: var(--orange);
+  --accent-text-hover: var(--orange);
+  --focus-ring: var(--orange);
+  --yellow: #8c5b00;
   --blue: #0969da;
   --bubble: #ffffff;
   --bubble-ink: #1f2a37;
@@ -69,6 +73,9 @@
     --green: #3fb950;
     --red: #f85149;
     --orange: #f0883e;
+    --accent-text: var(--accent);
+    --accent-text-hover: var(--accent-2);
+    --focus-ring: var(--accent);
     --yellow: #d29922;
     --blue: #58a6ff;
     --bubble: #1d2733;
@@ -90,6 +97,9 @@
   --green: #3fb950;
   --red: #f85149;
   --orange: #f0883e;
+  --accent-text: var(--accent);
+  --accent-text-hover: var(--accent-2);
+  --focus-ring: var(--accent);
   --yellow: #d29922;
   --blue: #58a6ff;
   --bubble: #1d2733;
@@ -449,15 +459,15 @@ abbr.term:hover, abbr.term:focus { background: color-mix(in srgb, var(--neon) 14
 body.gl-open .gl-backdrop { opacity: 1; pointer-events: auto; } body.gl-open .gl-sheet { transform: translateY(0); }
 .gl-head { display: flex; align-items: center; gap: 8px; } .gl-name { margin: 0; font-size: var(--fs-lg); flex: 1; }
 .gl-lang, .gl-close { background: transparent; color: var(--muted); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 4px 8px; cursor: pointer; font: inherit; }
-.gl-short { margin: 10px 0 6px; font-size: var(--fs-md); } .gl-formula { color: var(--muted); font-size: var(--fs-sm); margin: 4px 0; } .gl-example { color: var(--muted); font-size: var(--fs-base); margin: 6px 0; } .gl-label { color: var(--neon); }
+.gl-short { margin: 10px 0 6px; font-size: var(--fs-md); } .gl-formula { color: var(--muted); font-size: var(--fs-sm); margin: 4px 0; } .gl-example { color: var(--muted); font-size: var(--fs-base); margin: 6px 0; } .gl-label { color: var(--green); }
 .gl-long summary { cursor: pointer; color: var(--muted); font-size: var(--fs-sm); } .gl-long p { font-size: var(--fs-base); line-height: 1.55; }
 .gl-see { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; } .gl-foot { color: var(--faint); font-size: var(--fs-xs); margin: 12px 0 0; }
-.warn { color: #f0b429; }
+.warn { color: var(--yellow); }
 #basket-chart, .chart-box { min-height: 220px; }
 
 /* --- landing redesign v2 (§5.3): nav track link, proof stats band, hero carousel, folded receipts, why/who strip --- */
-.nav-links a.nav-strong { color: var(--accent); font-weight: 700; }
-.nav-links a.nav-strong:hover { color: var(--accent-2); }
+.nav-links a.nav-strong { color: var(--accent-text); font-weight: 700; }
+.nav-links a.nav-strong:hover { color: var(--accent-text-hover); }
 
 .stats-band { padding: 26px 0; }
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
@@ -471,7 +481,7 @@ body.gl-open .gl-backdrop { opacity: 1; pointer-events: auto; } body.gl-open .gl
 .hero-visual { flex-direction: column; align-items: center; }
 .hero-carousel { display: flex; width: 320px; max-width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .hero-carousel::-webkit-scrollbar { display: none; }
-.hero-carousel:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: var(--r-lg); }
+.hero-carousel:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; border-radius: var(--r-lg); }
 .hero-slide { flex: 0 0 100%; min-width: 100%; scroll-snap-align: center; scroll-snap-stop: always; display: flex; justify-content: center; align-items: stretch; }
 .hero-dots { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 14px; }
 .hero-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); border: 0; padding: 0; cursor: pointer; }
@@ -555,7 +565,7 @@ h1, h2, h3, .btn, .login-h2 { font-family: ui-rounded, var(--font); }
 
 /* finding app.css:87 — keyboard focus was styled on only .input and .hero-carousel. One consistent
    focus-visible ring on every interactive element (buttons, tabs, dots, links, summary), shared site + app. */
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 summary:focus-visible { outline-offset: 0; }
 
 /* finding site.css:126 — long-form sentences (compliance strips, hero proof strip, backtest explanation)
@@ -615,7 +625,7 @@ summary:focus-visible { outline-offset: 0; }
 .chip-src { display: inline-flex; align-items: center; gap: 6px; font: inherit; font-family: var(--font); font-size: var(--fs-sm); font-weight: 600; line-height: 1.2; color: var(--text); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--border)); border-radius: var(--r-pill); padding: 7px 11px; cursor: pointer; transition: background .12s ease, border-color .12s ease, transform .08s ease; }
 .chip-src:hover { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); border-color: var(--accent); transform: translateY(-1px); text-decoration: none; }
 .chip-src:active { transform: translateY(0); }
-.chip-src:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chip-src:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 .chip-src .chip-ico { font-size: 1.02em; line-height: 1; }
 .chip-src .chip-q { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; border-radius: 50%; font-size: .66em; font-weight: 800; color: var(--accent-ink); background: var(--accent); }
 .chip-src.chip-plain { cursor: default; }
@@ -624,9 +634,9 @@ summary:focus-visible { outline-offset: 0; }
 
 /* 2) obvious tap-to-explain — glossary jargon reads as tappable: orange dotted underline + superscript "?" */
 abbr.term { text-decoration: underline dotted var(--accent); text-decoration-thickness: 1.5px; text-underline-offset: 3px; cursor: pointer; border: 0; }
-abbr.term::after { content: "?"; font-size: .62em; font-weight: 800; color: var(--accent); vertical-align: super; line-height: 0; margin-left: 1px; }
+abbr.term::after { content: "?"; font-size: .62em; font-weight: 800; color: var(--accent-text); vertical-align: super; line-height: 0; margin-left: 1px; }
 abbr.term:hover, abbr.term:focus { background: color-mix(in srgb, var(--accent) 15%, transparent); border-radius: 3px; outline: none; }
-abbr.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+abbr.term:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
 
 /* 3) live-demo feel — pulsing green LIVE dot on the top push + staggered bubble entrance (motion-gated) */
 .phone-live { display: inline-block; width: 7px; height: 7px; margin-right: 5px; border-radius: 50%; background: var(--green); vertical-align: middle; box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 60%, transparent); animation: pulse 2.4s ease-out infinite; }
@@ -883,7 +893,7 @@ button.cr-chip[disabled] { opacity: .55; cursor: default; }
 .review-preview-head small { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
 .review-flow { list-style: none; padding: 0; margin: 12px 0 22px; }
 .review-flow li { display: flex; gap: 16px; align-items: baseline; padding: 15px 0; }
-.review-step { color: var(--accent); font-size: 13px; }
+.review-step { color: var(--accent-text); font-size: 13px; }
 .review-flow p { color: var(--muted); margin: 5px 0 0; font-size: 14px; line-height: 1.65; }
 .workflow-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 18px; margin: 30px 0; }
 .workflow-card { padding: 24px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); }
@@ -1083,7 +1093,7 @@ button.cr-chip[disabled] { opacity: .55; cursor: default; }
 .stock-demo-form label {display:block;font-size:14px;color:var(--muted,#a5acb8);margin-bottom:10px}
 .stock-demo-input{display:flex;gap:10px}.stock-demo-input input{min-width:0;width:100%;max-width:230px;border:1px solid var(--muted);background:var(--bg);color:var(--text);padding:12px 15px;border-radius:10px;font-size:22px;font-family:var(--mono,monospace)}
 .demo-stock-examples{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:14px 0 20px;font-size:13px}.demo-stock-examples button{cursor:pointer;color:inherit;background:transparent;border:1px solid var(--muted);padding:5px 12px;border-radius:30px}
-.demo-record{border-top:1px solid var(--border);padding:18px 0}.demo-record h3{font-size:18px;margin:10px 0}.demo-record p{line-height:1.7;overflow-wrap:anywhere}.demo-record a,.demo-next a,.demo-paths a{color:var(--orange)}
+.demo-record{border-top:1px solid var(--border);padding:18px 0}.demo-record h3{font-size:18px;margin:10px 0;overflow-wrap:anywhere}.demo-record p{line-height:1.7;overflow-wrap:anywhere}.demo-record a,.demo-next a,.demo-paths a{color:var(--orange)}
 .demo-next{display:flex;flex-wrap:wrap;gap:12px 20px;border-top:1px solid var(--border);padding-top:18px;font-size:13px}.demo-next[hidden]{display:none}
 .demo-background h3{margin-top:0}.demo-background .chip{display:inline-block;border:1px solid var(--border);padding:4px 9px;margin:4px 5px 4px 0;border-radius:15px;font-size:12px}.demo-headline{font-size:14px;line-height:1.6;border-top:1px solid var(--border);padding-top:13px;overflow-wrap:anywhere}.demo-headline small{display:block;margin-top:5px}
 .demo-paths{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:25px;margin-top:34px}.demo-paths article{min-width:0;padding:12px 4px}.demo-paths h3{font-size:19px}.demo-paths p{color:var(--muted,#a5acb8);font-size:14px;line-height:1.75}.demo-paths a{font-size:14px}

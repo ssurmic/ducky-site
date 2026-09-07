@@ -47,3 +47,29 @@ test('historical filings retain day precision and distinguish collection from pu
  assert.ok(!card.textContent.includes(old+' 00:00'));
  f.dispose();
 });
+
+test('market preview explains when no source can be displayed instead of implying fresh news',async()=>{
+ const f=fixture(async()=>({ok:true,json:async()=>({status:'ready',observed_at:new Date().toISOString(),topics:[{label_zh:'AI'}],evidence:[
+  {title:'Missing source'}, {title:'Unsafe source',source_url:'javascript:alert(1)'}, null,
+ ]})}));
+ f.root.querySelector('[data-demo-market-load]').click();await tick();
+ const market=f.root.querySelector('[data-demo-market]');
+ const copy=JSON.parse(f.root.querySelector('[data-demo-copy]').textContent);
+ assert.equal(market.textContent,copy.market_empty);
+ assert.equal(market.querySelectorAll('a,.chip').length,0);
+ assert.equal(f.root.querySelector('[data-demo-market-load]').disabled,false);
+ f.dispose();
+});
+
+test('invalid market sources do not hide valid headlines later in the response',async()=>{
+ const f=fixture(async()=>({ok:true,json:async()=>({status:'ready',observed_at:new Date().toISOString(),evidence:[
+  {title:'Missing source'}, {title:'Unsafe source',source_url:'javascript:alert(1)'}, {title:'Credentials',source_url:'https://user:pass@example.com'},
+  {title:'Verified source',source_url:'https://example.com/news',published_at:'2026-08-25T12:00:00Z',publisher:'Example'},
+ ]})}));
+ f.root.querySelector('[data-demo-market-load]').click();await tick();
+ const headlines=f.root.querySelectorAll('.demo-headline a');
+ assert.equal(headlines.length,1);
+ assert.equal(headlines[0].textContent,'Verified source');
+ assert.equal(headlines[0].href,'https://example.com/news');
+ f.dispose();
+});

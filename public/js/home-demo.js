@@ -41,11 +41,12 @@ export function mountStockDemo(root,fetcher=fetch) {
   marketButton.disabled=true;
   market.replaceChildren(element('p',t('loading'),'small muted'));
   try{const r=await fetcher(base+'/public/market-preview.json',{credentials:'omit'});if(!r.ok)throw Error();const doc=await r.json();if(disposed)return;market.replaceChildren();
-   if(doc.status==='unavailable'||!doc.evidence?.length){market.append(element('p',t('market_empty'),'small muted'));return;}
+   const evidence=(Array.isArray(doc.evidence)?doc.evidence:[]).filter(fact=>safeSource(fact?.source_url));
+   if(doc.status==='unavailable'||!evidence.length){market.append(element('p',t('market_empty'),'small muted'));return;}
    const stale=doc.status==='stale'||Date.now()-Date.parse(doc.observed_at)>86400000;
    market.append(element('p',(stale?t('stale'):t('observed'))+' '+stamp(doc.observed_at),'mono small muted'));
    for(const topic of (doc.topics||[]).slice(0,3))market.append(element('span',root.dataset.lang==='zh'?topic.label_zh:topic.label_en,'chip'));
-   for(const fact of doc.evidence.slice(0,3)){const url=safeSource(fact.source_url);if(!url)continue;const p=element('p',null,'demo-headline'),a=link(fact.title,url);a.target='_blank';a.rel='noopener noreferrer';p.append(a,element('small',(fact.publisher||'')+' · '+stamp(fact.published_at),'muted'));market.append(p);}
+   for(const fact of evidence.slice(0,3)){const url=safeSource(fact.source_url);const p=element('p',null,'demo-headline'),a=link(fact.title,url);a.target='_blank';a.rel='noopener noreferrer';p.append(a,element('small',(fact.publisher||'')+' · '+stamp(fact.published_at),'muted'));market.append(p);}
    market.append(element('p',t('coverage'),'small muted'));
   }catch{if(!disposed)market.replaceChildren(element('p',t('unavailable'),'small muted'));}
   finally{if(!disposed)marketButton.disabled=false;}
