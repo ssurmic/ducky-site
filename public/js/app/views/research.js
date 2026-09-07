@@ -17,6 +17,7 @@ export async function mount(root, params = {}) {
   const input=el('input.input.mono',{value:ticker,'aria-label':s('alerts.ticker_ph'),placeholder:s('alerts.ticker_ph'),maxlength:'10'});
   root.appendChild(el('form.add-row',{onsubmit:e=>{e.preventDefault();const t=input.value.trim().toUpperCase();if(/^[A-Z][A-Z0-9.-]{0,9}$/.test(t))location.hash='#/research/'+t;}},input,el('button.btn.btn-primary',{type:'submit'},s('research.load'))));
   if(!ticker){await mountChanges(root,params.signal);return;}
+  root.append(el('p',el('a.btn.btn-ghost.btn-sm',{href:'#/research'},s('record.changes'))));
   await mountRecord(root,ticker,params.signal);
   if(params.signal?.aborted)return;
   const host=el('div');root.appendChild(host);host.appendChild(spinner());

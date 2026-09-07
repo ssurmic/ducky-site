@@ -118,6 +118,7 @@ export async function mount(root,route={}){
     el('nav',{'aria-label':s('briefing.period')},...['daily','weekly'].map(value=>el('a.btn.btn-ghost.btn-sm',
       {href:'#/briefing?period='+value,'aria-current':value===period?'page':null},s('briefing.'+value)))));
   const body=el('div');root.append(head,body);
+  if(store.isPro())head.append(el('a.btn.btn-ghost.btn-sm',{href:'#/research'},s('record.changes')));
   const valid=id=>alive&&!ctl.signal.aborted&&store.epoch()===epoch&&(id==null||id===request);
   function stopComponents(){for(const dispose of disposers.splice(0))dispose();}
   function expandable(label,loader,id){
