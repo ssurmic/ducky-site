@@ -4202,23 +4202,12 @@
         ]
       },
       "rsi_example": {
-        "rule": {
-          "op": "and",
-          "clauses": [
-            {
-              "field": "rsi_d",
-              "cmp": "<",
-              "value": 35
-            }
-          ]
-        },
-        "first_after_event": "2026-07-28",
-        "close": 126.01000213623047,
-        "rsi_d": 30.7,
-        "input_bars": 474,
-        "method": "Existing bin/technicals.py Wilder RSI(14), evaluated on each prefix of the retrieved unadjusted closing-price series; no future bars used.",
-        "source_version": "2026-09-07-alert-v7",
-        "historical_basis": "Recomputed from bars available through each price date; not an indicator snapshot stored at that historical time."
+        "date": "2026-07-28",
+        "period": 14,
+        "method": "Wilder RSI",
+        "value": 30.7,
+        "condition": "RSI below 35",
+        "basis": "Recomputed from closes through that price date, not a stored historical indicator snapshot."
       }
     },
     "hood": {
