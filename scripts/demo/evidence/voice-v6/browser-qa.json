@@ -1,0 +1,39 @@
+{
+  "englishFullPlayback": {
+    "duration": 26.581333,
+    "ended": true,
+    "time": 26.581333
+  },
+  "englishChapters": [
+    {
+      "paused": true,
+      "time": 0.2
+    },
+    {
+      "paused": true,
+      "time": 4.2
+    },
+    {
+      "paused": true,
+      "time": 9.08
+    },
+    {
+      "paused": true,
+      "time": 18.08
+    },
+    {
+      "paused": true,
+      "time": 22.76
+    }
+  ],
+  "chineseFullPlayback": {
+    "time": 28.301333,
+    "duration": 28.301333,
+    "ended": true
+  },
+  "mobile": {
+    "width": 390,
+    "horizontalOverflow": false,
+    "captions": "Chinese and English native captions visually observed; full source and chart remain above captions."
+  }
+}
