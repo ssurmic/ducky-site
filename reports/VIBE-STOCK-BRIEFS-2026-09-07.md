@@ -1,6 +1,6 @@
 # Vibe Check and shared stock briefs — 2026-09-07
 
-Status: deployed; two checked stock briefs are readable. The initial stock queue is still filling.
+Status: deployed; three checked stock briefs are readable. The initial stock queue is still filling.
 
 ## Released behavior
 
@@ -31,7 +31,7 @@ current entitlement, source validity and channel consent rechecked at delivery.
 
 ## Production acceptance
 
-- Backend implementation: `0a911d9`, `09f91c2`, `e221eb0`, deployed to the DGX.
+- Backend implementation: `0a911d9` through `0186716`, deployed to the DGX.
   `ducky-api`, `ducky-sender` and the new ticker-brief timer were restarted/enabled.
 - Frontend implementation: `fc7b679` through `a24f18e`; Cloudflare Pages `089d92f3`.
   Rebased over the concurrent Ducky Bot rename and homepage interaction fixes.
@@ -51,9 +51,9 @@ current entitlement, source validity and channel consent rechecked at delivery.
   Chinese 390px Vibe shows its action, metrics and brief link. Chinese 390px and English
   320px stock briefs have document width equal to viewport width; the final English search
   field displays the complete ticker. Physical iOS/Android testing is not claimed.
-- Final backend gate: 1,969 tests and selftest ALL GREEN; architecture lint 0 failures.
-  The deployed main implementation also passed DGX selftest and 43 focused production-host
-  tests. Frontend: 300 tests, 5 Python asset checks (one pre-existing skip), copy lint and
+- Final DGX gate: 1,974 tests passed, one skip, selftest ALL GREEN; architecture lint
+  0 failures. Local prompt-6 gate: 1,970 tests before the concurrent company-classification
+  update, then 31 focused merge checks; the final merged code passed the DGX gate. Frontend: 300 tests, 5 Python asset checks (one pre-existing skip), copy lint and
   934 links. The unauthenticated report endpoint returned 401.
 
 ## Evidence and remaining limits
@@ -77,3 +77,18 @@ rejected versions, are archived machine-locally under
 `.signals/ticker-brief-validation-20260907/`; current private research is not committed publicly.
 Actual notification transport was not exercised with test messages. Delivery eligibility,
 consent, deduplication and source correction were tested with isolated fixtures.
+
+## Final unattended run and guard correction
+
+At 21:44:48 UTC, the timer completed AMD without manual drafting or approval:
+`ticker-brief:7e54335d6504bbc658b115416525e53b`. Drafting, independent review,
+immutable save and silent dispatch all completed through `ticker_brief_worker.run`.
+The final production snapshot contains NVDA, TSLA and AMD, all notify=0 / dispatch_id=silent;
+ticker-brief fanout remains zero. Other stocks remain in the scheduled queue.
+
+ALAB's first attempt was rejected. Inspection found that an unbounded RSI match also matched
+the English word “persists”; prompt version 6 matches indicator tokens and separately requires
+relative-performance citations. Regression cases cover both the false rejection and actual
+missing sector citations. The rejected ALAB draft also had unsupported sector references,
+so it remains unpublished and retryable. No existing report was rewritten to hide a failure.
+Final production services and timer are active; viewport overrides and local QA server removed.
