@@ -40,3 +40,8 @@ The independent audit is committed with this release. Permanent backend rules/tr
 ### Post-release account-link check
 
 The notification integration task loaded the actual Telegram widget after release and observed `Bot domain invalid` from the Telegram OAuth iframe. It cancelled the attempt without changing account details or notification switches. Telegram linking is therefore **not accepted end to end**; domain configuration or an equivalent verified linking flow remains with the notification/backend tasks. Successful module delivery and mobile layout checks do not establish account-link success.
+
+
+### Independent production phone confirmation
+
+The mobile-experience task subsequently checked the existing signed-in production session at390×650: main content520px, date18px, first day267.8px below content top,6complete date cards, zero outer horizontal overflow. The September7 closure dialog was366px wide at y89–561 with a44px close target; closing restored the date focus. More→Profile closed the menu and restored its summary focus with no overflow. The browser viewport was reset after testing. Production workspace CSS/chart/theme/boards/router assets matched this worktree byte for byte. No account, channel or profile values were written. This is browser phone-viewport confirmation, not physical Safari testing.
