@@ -35,3 +35,9 @@ The live application asset references still exclude these mobile commits. A subs
 The subsequent homepage positioning changes were integrated through `origin/main` at `1cfe072`. The rebased application commits are `16267a5` and `803895a`. Integration verification again passed: 245 frontend tests, 4 asset graph checks with 1 unavailable historical fixture skipped, 1,783 copy files and 774 internal links. The generated calendar timestamps were restored again. Before approved publication, check for any newer main-branch changes; do not deploy over concurrent work.
 
 The goal remains incomplete: publication confirmation is unanswered, and reliable touch-device interaction evidence is unavailable in this session. Neither is inferred from the passing layout and mouse/keyboard checks. The local implementation and release evidence are preserved while these outstanding conditions are resolved.
+
+## Coordinated density follow-up
+
+The calendar task received a new owner phone screenshot requesting smaller calendar text and less space above the dates. That task is integrating `16267a5` and `803895a`, owns subsequent density changes and publication under its existing authorization, and will return its final commit and acceptance results. This task will not duplicate the deployment or edit those product files concurrently.
+
+The fixture now accepts `height=650` to account for a shorter browser viewport. Read-only checks at 320/390px in both themes found the English chart starts 365/363px below the main content top, exposing only 155/157px of the 400px price canvas in the 520px main area. This is a density defect despite zero horizontal overflow; it was sent to the calendar task for the coordinated fix. At 320×650 in both themes, the More menu fits at y=300–574 with five 48px links; More → Me correctly opens Profile, closes the menu and restores focus to More. These checks remain browser mouse/keyboard evidence.
