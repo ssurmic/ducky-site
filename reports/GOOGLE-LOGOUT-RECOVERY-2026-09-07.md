@@ -35,4 +35,28 @@ navigation/disposal ignores late results. No identity, permission or billing cha
   Chinese 390px dark layout was inspected; the temporary viewport was reset.
   No signup form, password or notification was submitted by the fixture.
 
-Deployment and final production verification are recorded below after publication.
+## Published entry recovery
+
+Release `77263ce` / Pages `036cbc08` is deployed. Production Chrome loaded module
+graph `4149c80c1dac3302350d`; logout displayed the Google entry, its link opened the
+real account chooser, and selecting the existing account returned to a Pro watchlist.
+GitHub CI for `77263ce` succeeded. No customer account was impersonated and no
+membership was changed by this test.
+
+## Multiple open tabs
+
+A further isolated memory test reproduced a related session bug: tab A's request
+returns 401 after another tab has completed Google sign-in and saved token B. The
+old 401 hook called explicit logout, re-read B from shared storage, revoked B and
+deleted it. Production customer sessions were not used to reproduce this race.
+
+Automatic 401 handling now receives the failed request's token/epoch, clears only
+that tab's state, and removes shared storage only while it still contains that
+token. It never posts logout. The bootstrap catch and binary-response path follow
+the same rule. A deliberate logout still revokes the tab's own session. Six new
+regressions cover separate-tab replacement, same-tab replacement, stale boot,
+JSON/binary responses, ordinary expiry and explicit logout.
+
+Combined final gate: **322 frontend tests passed**, 20-page build, copy lint and
+1,306 links passed. Backend code is unchanged; its required documentation gate
+also passed: 1,978 tests, five warnings, selftest ALL GREEN, arch lint 0/0.

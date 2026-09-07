@@ -60,7 +60,7 @@ export async function request(method, path, opts) {
   const data = await parse(res);
   if (sessionChanged()) throw new ApiError(0, { detail: "session_changed" }, path);
   if (res.status === 401 && opts.auth !== false) {
-    if (onUnauthorized && !(opts.preserveBadTelegram && data?.error === 'bad_telegram')) onUnauthorized();
+    if (onUnauthorized && !(opts.preserveBadTelegram && data?.error === 'bad_telegram')) onUnauthorized({token,epoch});
     throw new ApiError(401, data, path);
   }
   if (res.status === 402) {
@@ -102,8 +102,9 @@ export function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
 
 /** Authenticated binary fetch → data: URI (CSP img-src allows data:, not blob:). */
 export async function getDataUri(path) {
+  const session={token:store.get('token'),epoch:store.epoch()};
   const res = await request("GET", path, { raw: true });
-  if (res.status === 401) { if (onUnauthorized) onUnauthorized(); throw new ApiError(401, null, path); }
+  if (res.status === 401) { if (onUnauthorized) onUnauthorized(session); throw new ApiError(401, null, path); }
   if (!res.ok) throw new ApiError(res.status, await parse(res), path);
   const blob = await res.blob();
   return new Promise((resolve, reject) => {

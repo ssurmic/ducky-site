@@ -90,13 +90,24 @@ export function logout() {
   // Best-effort SERVER-SIDE revocation: bump users.session_epoch so a token copied before this
   // logout dies NOW, not at its 24h expiry. Direct keepalive fetch with the still-present token
   // (bypasses the api wrapper's 401→logout handler to avoid recursion); never blocks the UI.
+  const tok = store.get('token') || loadToken();
   try {
-    const tok = loadToken();
     if (tok) fetch(api.base() + "/auth/logout", { method: "POST", keepalive: true,
       headers: { Authorization: "Bearer " + tok } }).catch(() => {});
   } catch (e) { /* ignore */ }
+  forgetSession(tok);
+}
+
+// A failed request belongs to this tab's captured session. Another tab may have
+// already completed Google sign-in and replaced the shared saved token.
+export function expireSession({token,epoch} = {}) {
+  if(token!==store.get('token') || epoch!==store.epoch())return;
+  forgetSession(token); // An already-invalid session needs no server-side logout.
+}
+
+function forgetSession(token) {
   store.bumpEpoch();   // finding watchlist.js:123 — invalidate in-flight fetches before wiping the store
-  clearToken();
+  if(loadToken()===token)clearToken();
   store.set("token", null);
   store.set("me", null);
   store.set("watchlist", []);
@@ -115,7 +126,7 @@ export async function refreshMe(opts) {
 /** Boot: resolves true when a session exists, false when the login view must be shown. */
 export async function boot() {
   freshBootstrapLogin = false;
-  api.setUnauthorizedHandler(logout);
+  api.setUnauthorizedHandler(expireSession);
   const linking = readTelegramLinkReturn();
   if (linking) {
     const token = loadToken();
@@ -142,7 +153,12 @@ export async function boot() {
   const token = loadToken();
   if (token) {
     store.set("token", token);
-    try { await hydrate(); return true; } catch (e) { if (e && e.status === 401) { clearToken(); store.set("token", null); } /* transient (network/5xx) → keep the valid token */ }
+    try { await hydrate(); return true; } catch (e) {
+      if (e && e.status === 401) {
+        if(loadToken()===token)clearToken();
+        if(store.get('token')===token)store.set('token',null);
+      } // transient (network/5xx) → keep the valid token
+    }
   }
   return false;
 }
