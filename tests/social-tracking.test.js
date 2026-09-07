@@ -61,3 +61,13 @@ test('navigation or logout discards an in-flight private snapshot',async()=>{
  const root=document.createElement('div');const task=mountSocial(root);store.bumpEpoch();store.set('me',null);
  finish(response(doc));const cleanup=await task;assert.doesNotMatch(root.textContent,/NVIDIA/);cleanup();
 });
+test('social search and scope survive language navigation without an extra snapshot fetch',async()=>{
+ store.set('me',{tier:'pro'});globalThis.fetch=async url=>response(String(url).includes('/watchlist')?{items:[{ticker:'MU'}]}:doc);
+ const lang=document.createElement('a');lang.setAttribute('data-lang-toggle','');lang.href='/en/app/#/boards?board=social&ticker=NVDA';document.body.append(lang);
+ const root=document.createElement('div');document.body.append(root);
+ const clean=await mountSocial(root,{query:new URLSearchParams('ticker=NVDA&scope=watchlist')});await flush();
+ const input=root.querySelector('input');input.value='MU';input.dispatchEvent(new window.Event('input'));
+ assert.match(location.hash,/ticker=MU/);assert.match(lang.hash,/ticker=MU/);assert.match(lang.hash,/scope=watchlist/);
+ assert.equal(root.querySelectorAll('.social-card').length,1);assert.match(root.querySelector('.social-card').textContent,/MU/);
+ clean();root.remove();lang.remove();
+});

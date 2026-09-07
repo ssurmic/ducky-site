@@ -46,7 +46,17 @@ export function socialCard(row,{stale=false,onHistory}={}) {
 
 export async function mountSocial(root,route={}) {
   const ctl=new AbortController(), epoch=store.epoch();let alive=true,doc=null,watchState='unloaded',watches=[],expiry=null;
-  let viewQuery=route.query?.get('ticker')||'',viewScope='all';
+  let viewQuery=route.query?.get('ticker')||'',viewScope=['hot','watchlist'].includes(route.query?.get('scope'))?route.query.get('scope'):'all';
+  function syncFilterUrl(){
+    const params=new URLSearchParams({board:'social'});
+    if(viewQuery.trim())params.set('ticker',viewQuery.trim());
+    if(viewScope!=='all')params.set('scope',viewScope);
+    const hash='#/boards?'+params;
+    history.replaceState(null,'',location.pathname+location.search+hash);
+    for(const a of document.querySelectorAll('[data-lang-toggle]')){
+      const u=new URL(a.href,location.href);u.hash=hash;a.href=u.href;
+    }
+  }
   const cleanup=()=>{alive=false;clearTimeout(expiry);ctl.abort();};
   route.signal?.addEventListener('abort',cleanup,{once:true});
   const valid=()=>alive&&!ctl.signal.aborted&&epoch===store.epoch();
@@ -129,11 +139,13 @@ export async function mountSocial(root,route={}) {
       } catch {if(!valid())return;watchState='error';}
       if(valid())update();
     }
-    query.addEventListener('input',update);scope.addEventListener('change',()=>{
+    query.addEventListener('input',()=>{update();syncFilterUrl();});scope.addEventListener('change',()=>{
+      viewScope=scope.value;syncFilterUrl();
       if(scope.value==='watchlist' && watchState==='unloaded')loadWatches();else update();
     });
     content.append(el('div.social-filters',el('label',el('span',s('social.search')),query),el('label',el('span',s('social.filter')),scope)),count,list);
     update();
+    if(viewScope==='watchlist' && watchState==='unloaded')loadWatches();
   }
   async function loadHistory(ticker,host,button) {
     button.disabled=true;

@@ -2493,9 +2493,9 @@
   "app.social.meaning_overheated": "讨论量与增速偏高，不代表股价见顶。",
   "app.social.meaning_insufficient": "任一期间不足 20 次提及或缺数据，暂不评分。",
   "app.social.mentions": "24 小时提及",
-  "app.social.change": "较上次窗口",
+  "app.social.change": "较来源 24 小时前计数",
   "app.social.rank": "来源排名",
-  "app.social.previous": "上次窗口提及",
+  "app.social.previous": "来源 24 小时前提及次数",
   "app.social.upvotes": "来源净赞数",
   "app.social.rank_previous": "此前排名",
   "app.social.no_base": "无有效基数",
@@ -2507,7 +2507,7 @@
   "app.social.identity": "股票代码与名称由来源网站提供，未逐帖核对；可能包含 ETF。",
   "app.social.source": "查看来源",
   "app.social.history": "查看热度历史",
-  "app.social.history_note": "按采集时间保留全部快照，包含降温和样本不足。相邻 24 小时窗口重叠，不是独立事件。",
+  "app.social.history_note": "按采集时间保留全部快照，包含降温和样本不足。变化率使用来源的 mentions_24h_ago 字段，不是与上一条小时快照比较。相邻滚动窗口重叠，不是独立事件。",
   "app.social.history_error": "历史加载失败，可重试；已加载记录保留。",
   "app.social.method": "计算方法与覆盖范围",
   "app.social.formula": "规则 reddit-attention-v1：提及量最多 50 分〔50 × min(1, log10(1+提及量)/3)〕；增速最多 30 分〔30 × min(1, max(0, log2(本期/上期))/3)〕；排名最多 20 分〔20 × max(0, (26−排名)/25)〕。分项相加，指数范围 0–100。",
@@ -2682,5 +2682,6 @@
   "app.social.chart_note": "断点表示未评分或采集间隔过长，不是热度为零。",
   "app.record.market_context": "共同市场背景",
   "app.record.market_basis": "这些事件影响整个市场，不代表与这家公司存在直接业务关系。",
-  "app.record.unknown_time": "时间未提供"
+  "app.record.unknown_time": "时间未提供",
+  "app.record.radar_uncovered": "暂无雷达收录。下方历史案例的重建记录单独展示。"
 }

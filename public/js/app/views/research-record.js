@@ -24,7 +24,7 @@ export function recordCard(item) {
   if(item.stream==='price')fields=[['spot',px(p.spot)]];
   if(item.stream==='technical')fields=[['rsi',num(p.rsi_d,1)],['drawdown',p.dd_pct==null?'—':num(p.dd_pct,1)+'%']];
   if(item.stream==='options')fields=[['iv',p.iv==null?'—':num(p.iv,1)+'%'],['hv',p.hv==null?'—':num(p.hv,1)+'%'],['call_wall',px(p.call_wall)],['put_wall',px(p.put_wall)]];
-  if(item.stream==='vibe')fields=[['mentions',num(p.mentions,0)],['heat',p.index==null?'—':num(p.index,0)+' / 100']];
+  if(item.stream==='vibe')fields=[['mentions',num(p.mentions,0)],['heat',p.index==null?'—':num(p.index,1)+' / 100']];
   if(item.stream==='calendar')fields=[['event_date',value(p.date)],['event_time',value(p.time_et)]];
   if(p.effective_at)fields.push(['effective_at',value(p.effective_at)]);
   if(fields.length)card.append(el('dl.research-facts',...fields.map(([k,v])=>el('div',el('dt',tr(k)),el('dd.mono',v)))));
@@ -52,7 +52,7 @@ export function renderRecord(doc) {
   for(const stream of streams) {
     const items=doc.items.filter(r=>r.stream===stream);
     const card=el('section.card.research-stream',el('h3',tr(stream)),link(destination(stream,doc.ticker),tr('open_'+stream)));
-    if(!items.length)card.append(el('p.muted.small',tr('uncovered')));
+    if(!items.length)card.append(el('p.muted.small',tr(stream==='radar'?'radar_uncovered':'uncovered')));
     else {
       card.append(recordCard(items[0]));
       if(items.length>1)card.append(el('details',el('summary',tr('more')),...items.slice(1).map(recordCard)));

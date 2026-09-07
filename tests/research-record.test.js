@@ -14,6 +14,7 @@ const response=body=>new Response(JSON.stringify(body),{status:200,headers:{'con
 test('records retain actual zero, missing scores, full dates and safe links',()=>{
  const card=recordCard(row);assert.match(card.textContent,/0/);assert.match(card.textContent,/—/);assert.match(card.textContent,/Not provided/);
  assert.equal(card.querySelector('a'),null);assert.match(card.textContent,/not been validated/);
+ assert.match(recordCard({...row,payload:{index:42.5,mentions:30}}).textContent,/42.5 \/ 100/);
  const doc=renderRecord({ticker:'NVDA',items:[row],streams:[]});assert.equal(doc.querySelectorAll('.research-stream').length,8);
  assert.ok([...doc.getElementsByTagName('a')].some(a=>a.getAttribute('href')==='#/boards?board=social&ticker=NVDA'));
  assert.match(doc.textContent,/No record yet/);assert.doesNotMatch(doc.textContent,/undefined|null|record\./);

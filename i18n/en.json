@@ -2493,9 +2493,9 @@
   "app.social.meaning_overheated": "High volume and growth in discussion do not establish a price peak.",
   "app.social.meaning_insufficient": "Below 20 mentions in either window, or missing data. No score.",
   "app.social.mentions": "Mentions · 24h",
-  "app.social.change": "Change vs prior window",
+  "app.social.change": "Vs provider’s 24h-ago count",
   "app.social.rank": "Source rank",
-  "app.social.previous": "Prior-window mentions",
+  "app.social.previous": "Provider’s 24h-ago mentions",
   "app.social.upvotes": "Reported net votes",
   "app.social.rank_previous": "Prior rank",
   "app.social.no_base": "No valid baseline",
@@ -2507,7 +2507,7 @@
   "app.social.identity": "Symbols and names come from the provider; each underlying mention has not been checked. The list may include ETFs.",
   "app.social.source": "View source",
   "app.social.history": "View attention history",
-  "app.social.history_note": "All saved observations are included, including cooling activity and small samples. Rolling 24-hour windows overlap and are not independent events.",
+  "app.social.history_note": "All saved observations include cooling and small samples. The change uses the provider’s mentions_24h_ago field, not the previous hourly snapshot. Rolling windows overlap and are not independent events.",
   "app.social.history_error": "History could not be loaded. Retry to continue from the saved records.",
   "app.social.method": "Method & coverage",
   "app.social.formula": "Rule reddit-attention-v1: volume contributes up to 50 points [50 × min(1, log10(1+mentions)/3)]; growth up to 30 [30 × min(1, max(0, log2(current/prior))/3)]; rank up to 20 [20 × max(0, (26−rank)/25)]. The components sum to an index from 0 to 100.",
@@ -2682,5 +2682,6 @@
   "app.social.chart_note": "Gaps mean no score or a collection gap, not zero heat.",
   "app.record.market_context": "Shared market context",
   "app.record.market_basis": "These events concern the broader market, not a verified direct business relationship with this company.",
-  "app.record.unknown_time": "Time not provided"
+  "app.record.unknown_time": "Time not provided",
+  "app.record.radar_uncovered": "No radar entry is available. Reconstructed case studies are shown separately below."
 }
