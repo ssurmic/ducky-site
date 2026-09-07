@@ -24,10 +24,14 @@ Independent Chrome touch simulation used the current source through an anonymous
 
 ## Gates and limits
 
-268 Node tests passed after the navigation integration/refinement; the later Telegram-link integration is checked again before release. Twenty pages build;940 links pass; copy lint passes; asset graph4pass/1historical fixture skip. A link scan started during a rebuild saw incomplete output; after the build finished it passed. The fixture is not a live account workflow. Remaining nonblocking density opportunities (including subscription introduction and first-record body placement) are listed in the independent audit instead of claiming every page needs no further work.
+276 Node tests passed after the final navigation and account-link integration. Twenty pages build;940 links pass; copy lint passes; asset graph4pass/1historical fixture skip. A link scan started during a rebuild saw incomplete output; after the build finished it passed. The fixture is not a live account workflow. Remaining nonblocking density opportunities (including subscription introduction and first-record body placement) are listed in the independent audit instead of claiming every page needs no further work.
 
 Permanent acceptance instructions are recorded in frontend CLAUDE.md and backend WORKFLOW.md: every affected UI change must check real browser viewport constraints, languages, themes, core content position, dialogs and desktop regression. Shared layout changes trigger the route sweep.
 
 ## Release
 
-Pending final commit, production deployment and asset verification.
+Implemented and deployed as main `aa6c0b11` / Pages `56c5c40a`, then the separately integrated account-country regression was corrected in `797f51f6` / Pages `81dc329f`. Final app graph: `fe4bc95159e9ea2d4bf0`. Both language app shells, workspace CSS, profile module and chart module return200 and match the local final build byte for byte. The signed-in production calendar loads the9-symbol watchlist, September7 holiday and September10 ORCL/macro events correctly.
+
+Final refined Chinese393×700 calendar: content570px, first card328px below content top,6complete/8at least partially visible dates, no horizontal overflow. Independent final chart measurements320/390×650 in both themes: content520px, chart top231px,289px visible; panes212.5/85/70.5px plus28px time axis. Period selection and theme changes preserve those heights. Independent touch simulation evidence is described above; physical Safari remains untested.
+
+The independent audit is committed with this release. Permanent backend rules/tracker were pushed as `2d38464`, then updated with this final deployment receipt. Temporary root fixture/tab and dependency symlink are cleaned after verification. No other task’s browser tab or server is closed.

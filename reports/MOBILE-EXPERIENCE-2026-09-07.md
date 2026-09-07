@@ -23,3 +23,6 @@ This is Chrome viewport/iframe and mouse/keyboard testing. Physical iOS/Android,
 ## Integration and release
 
 Integrated with main2ac32fe (new navigation, discovery pages, notification setup and Telegram account linking), then refined against 600–700px available browser viewports. See [the density acceptance report](MOBILE-CALENDAR-DENSITY-2026-09-07.md) and [independent route audit](UI-MOBILE-DENSITY-AUDIT-2026-09-07.md) for superseding measurements and release evidence.
+
+
+Final integrated production: `797f51f6` / Pages `81dc329f`, app graph `fe4bc95159e9ea2d4bf0`.276 frontend tests passed. The source task subsequently verified Chrome touch emulation with actual touch/coarse events for menus, calendar dialogs, period selection and vertical chart swipes. Physical Safari/iOS remains untested; this supersedes the earlier mouse-only limitation for Chrome simulation only.
