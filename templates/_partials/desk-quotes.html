@@ -1,0 +1,14 @@
+  <div class="duck-orbit home-quote-strip wrap" data-duck-orbit data-api="{{ cfg.api_base }}" data-app="{{ url('/app/') }}" data-greeting="{{ t('desk.duck_note') }}" data-reply="{{ t('desk.duck_reply') }}">
+   <div class="duck-bubble" data-duck-message>{{ t('desk.duck_note') }}</div>
+   <div class="duck-anchor"><button class="desk-duck" type="button" aria-label="{{ t('desk.duck_hint') }}"><img src="/avatar-160.jpg" alt="" width="136" height="136" fetchpriority="high"></button></div>
+   {% for ticker in ['NVDA','SPY','NOK'] %}
+   {% set quote = desk_quotes.get(ticker) %}
+   <a class="desk-quote desk-quote-{{ loop.index }}" href="{{ url('/app/') }}#/chart/{{ ticker }}" data-quote="{{ ticker }}">
+    <span class="quote-top"><b class="mono">{{ ticker }}</b><span aria-hidden="true">↗</span></span><strong class="quote-price mono" data-quote-price>{{ '$%.2f' % quote.bars[-1].c if quote else '—' }}</strong>
+    <svg class="quote-spark" viewBox="0 0 140 32" aria-hidden="true"><polyline points=""/></svg>
+    <small data-quote-date>{{ quote.last_d if quote else t('desk.quote_missing') }}</small>
+   </a>
+   {% endfor %}
+   <script type="application/json" data-desk-quotes>{{ desk_quotes|tojson }}</script>
+   <div class="orbit-controls"><span class="mono">{{ t('desk.quote_label') }}</span><button type="button" class="motion-toggle" data-motion-toggle data-pause="{{ t('desk.motion_pause') }}" data-resume="{{ t('desk.motion_resume') }}">{{ t('desk.motion_pause') }}</button></div>
+  </div>

@@ -28,7 +28,7 @@ test('homepage previews all tools without private research and keeps sourced exa
   assert.equal(d.querySelectorAll('.proof-case').length,0);
   assert.ok(d.querySelector(`.oversold-study a[href^="/${prefix}research-records/#positions"]`));
   assert.equal(d.querySelectorAll('.oversold-study a[href^="/oversold-research.json"]').length,0);
-  assert.ok(d.querySelector(`.desk-hero a[href="/${prefix}app/#/register"]`));
+  assert.ok(d.querySelector(`.home-hero a[href="/${prefix}app/#/register"]`));
   const links=[...d.querySelectorAll('.video-source-points a')];
   assert.equal(links.length,3);
   assert.deepEqual(links.map(a=>new URL(a.href).searchParams.get('t')),['3s','349s','700s']);

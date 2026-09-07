@@ -1,35 +1,22 @@
-/* A research desk with Ducky's own mark and a small, optional moment of play. */
-.page-index{--desk-ink:var(--text);--desk-panel:var(--surface,#121a24)}
-.desk-hero{padding:64px 0 52px;border-bottom:1px solid var(--border);background:none;overflow:hidden}
-.desk-hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center;min-height:520px}
-.desk-hero .eyebrow{font-size:.75rem;letter-spacing:.1em;color:var(--muted);margin:0 0 25px}
-.desk-hero h1{font-size:clamp(48px,5vw,78px);font-weight:750;letter-spacing:-.065em;line-height:1.12;max-width:none;margin:0}
-.desk-hero h1 span{display:block}.desk-hero .desk-accent{color:var(--accent-text,var(--accent))}
-.desk-hero .sub{font-size:1.125rem;line-height:1.85;max-width:470px;margin:25px 0 28px}
-.desk-hero .cta-row{gap:12px}.desk-hero .btn{border-radius:8px;min-height:48px;font-size:.9375rem;padding:13px 20px}
-.desk-hero-price{display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:.8125rem;margin:22px 0 0;color:var(--muted)}
-.desk-hero-price b{color:var(--text);font-weight:500}
-.duck-orbit{position:relative;height:480px;min-width:0;isolation:isolate;--duck-x:0px;--duck-y:0px}
-.orbit-guide{position:absolute;inset:55px 20px 45px;border:1px dashed var(--border);border-radius:50%;transform:rotate(-20deg);color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:.1em;pointer-events:none}
-.orbit-guide:before{content:"";position:absolute;inset:45px;border:1px solid var(--border);border-radius:50%}
-.orbit-guide span{position:absolute;transform:rotate(20deg)}.orbit-guide span:nth-child(1){top:3%;left:42%}.orbit-guide span:nth-child(2){bottom:5%;left:23%}.orbit-guide span:nth-child(3){top:45%;left:0}.orbit-guide span:nth-child(4){right:-4%;top:45%}
-.duck-anchor{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);width:150px;height:150px;z-index:3}
+/* One product catalogue from the landing page through the member workspace. */
+.desk-hero-price{display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-size:.8125rem;margin:18px 0 0;color:var(--muted)}
+.desk-hero-price b{color:var(--text);font-weight:500}.desk-hero-price a{color:var(--accent-text)}
+.home-quote-strip{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;padding:0 0 42px 300px;min-height:142px;--duck-x:0px;--duck-y:0px;isolation:isolate}
+.home-quote-strip .duck-anchor{position:absolute;top:10px;left:0;width:76px;height:76px}
 .desk-duck{display:grid;place-items:center;width:100%;height:100%;padding:0;border:0;background:none;cursor:pointer;border-radius:50%}
-.desk-duck img{width:136px;height:136px;border-radius:50%;transform:translate(var(--duck-x),var(--duck-y));transition:transform .2s ease;filter:drop-shadow(0 14px 22px rgb(0 0 0 / .18))}
-.desk-duck:focus-visible{outline:2px solid var(--accent);outline-offset:7px}
-.duck-bubble{position:absolute;z-index:4;top:70px;left:40%;max-width:235px;background:var(--text);color:var(--bg);padding:12px 16px;border-radius:12px 12px 12px 0;font-size:.875rem;font-weight:550;transform:rotate(-5deg);box-shadow:0 8px 24px rgb(0 0 0 / .08)}
-.desk-quote{position:absolute;display:block;z-index:2;width:155px;padding:14px 15px;border:1px solid var(--border);border-radius:9px;background:var(--bg);color:var(--text);text-decoration:none;box-shadow:0 12px 25px rgb(0 0 0 / .09);animation:desk-float 6s ease-in-out infinite}
-.desk-quote-1{left:0;top:90px;--tilt:-7deg}.desk-quote-2{right:0;top:220px;--tilt:5deg;animation-delay:-2s}.desk-quote-3{left:20%;bottom:24px;--tilt:-3deg;animation-delay:-4s}
-.quote-top{display:flex;justify-content:space-between;align-items:center;font-size:.8125rem;color:var(--muted)}
-.quote-price{display:block;margin:7px 0;font-size:1.25rem;letter-spacing:-.04em}
-.quote-spark{height:30px;width:100%;overflow:visible}.quote-spark polyline{fill:none;stroke:var(--accent-text,var(--accent));stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.desk-quote small{display:block;font-size:.6875rem;color:var(--muted);margin-top:5px}
+.desk-duck img{width:72px;height:72px;border-radius:50%;transform:translate(var(--duck-x),var(--duck-y));transition:transform .2s ease}
+.desk-duck:focus-visible{outline:2px solid var(--accent);outline-offset:5px}
+.duck-bubble{position:absolute;top:26px;left:91px;max-width:180px;color:var(--muted);font-size:.8125rem;line-height:1.8}
+.desk-quote{display:grid;grid-template-columns:1fr auto;gap:5px 12px;min-width:0;padding:13px 16px;border:1px solid var(--border);border-radius:8px;background:var(--home-glass);color:var(--text);text-decoration:none;animation:desk-float 8s ease-in-out infinite;--tilt:-1deg}
+.desk-quote-2{--tilt:1deg;animation-delay:-2s}.desk-quote-3{--tilt:-1deg;animation-delay:-4s}
+.quote-top{display:flex;align-items:center;gap:14px;font-size:.75rem;color:var(--muted)}
+.quote-price{font-size:1.125rem;letter-spacing:-.04em}
+.quote-spark{height:23px;width:100%;min-width:0;grid-column:1/-1}.quote-spark polyline{fill:none;stroke:var(--accent-text);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.desk-quote small{font-size:.625rem;color:var(--muted);grid-column:1/-1}
 .desk-quote:hover{border-color:var(--accent)}.desk-quote:focus-visible{outline:2px solid var(--accent);outline-offset:4px;animation-play-state:paused}
-.orbit-note{position:absolute;top:22px;left:8%;z-index:4;font-size:.8125rem;border:1px solid var(--border);border-radius:5px;padding:8px 12px;background:var(--bg);color:var(--text);text-decoration:none;transform:rotate(3deg);display:flex;align-items:center;gap:10px}
-.orbit-dot{width:7px;height:7px;background:#71a344;border-radius:50%}.orbit-vibe{top:auto;left:auto;right:3%;bottom:41px;transform:rotate(-4deg)}
-.orbit-controls{position:absolute;left:0;right:0;bottom:-28px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.625rem;color:var(--muted)}
-.motion-toggle{border:0;border-bottom:1px solid var(--border);background:none;color:var(--muted);font:inherit;min-height:32px;cursor:pointer}
-@keyframes desk-float{0%,100%{transform:translateY(0) rotate(var(--tilt))}50%{transform:translateY(-7px) rotate(var(--tilt))}}
+.orbit-controls{position:absolute;left:300px;bottom:18px;color:var(--muted);font-size:.625rem}
+.motion-toggle{border:0;background:none;color:var(--muted);font:inherit;cursor:pointer;min-height:32px}
+@keyframes desk-float{0%,100%{transform:translateY(0) rotate(var(--tilt))}50%{transform:translateY(-5px) rotate(var(--tilt))}}
 .motion-paused .desk-quote{animation-play-state:paused}.motion-paused .desk-duck img{transition:none}
 .desk-section-head{display:flex;justify-content:space-between;align-items:end;gap:28px;margin-bottom:30px}
 .desk-section-head h2{font-size:clamp(28px,3vw,42px);line-height:1.25;letter-spacing:-.045em;margin:0}
@@ -63,25 +50,14 @@
 .desk-plan .desk-annual{font-size:.8125rem;color:var(--muted);margin:0 0 10px}.desk-plan ul{list-style:none;margin:15px 0 28px;padding:0;line-height:1.9;font-size:.875rem;color:var(--muted);flex:1}
 .desk-plan li{padding:9px 0;border-bottom:1px solid var(--border)}.desk-plan .btn{align-self:start;border-radius:7px;font-size:.875rem}
 .page-index .nav-links a{font-size:.875rem}
-@media(max-width:1000px){.desk-hero-grid{gap:25px}.desk-hero h1{font-size:52px}.desk-quote{width:135px}.desk-quote-1{left:0}.duck-bubble{left:35%;font-size:.8125rem}.desk-duck img{width:112px;height:112px}.orbit-note{font-size:.75rem;left:0}.orbit-vibe{left:auto;right:0}}
+@media(max-width:1000px){.home-quote-strip{padding-left:220px;gap:12px}.duck-bubble{max-width:120px;font-size:.75rem}.desk-quote{display:block;padding:12px}.quote-price{display:block;margin-block:6px}.orbit-controls{left:220px}}
 @media(max-width:760px){
- .desk-hero{padding:35px 0 42px}.desk-hero-grid{grid-template-columns:1fr;gap:15px;min-height:0}.desk-hero h1{font-size:clamp(40px,9vw,60px);letter-spacing:-.05em}.desk-hero .eyebrow{margin-bottom:20px}.desk-hero .sub{font-size:1rem;line-height:1.85;max-width:520px;margin-top:22px}.desk-hero-price{font-size:.75rem;margin-top:18px}
- .duck-orbit{height:370px;max-width:490px;width:100%;margin:10px auto 0}.duck-anchor{top:43%;width:110px;height:110px}.desk-duck img{width:100px;height:100px}.duck-bubble{top:36px;left:33%;max-width:200px;font-size:.75rem;padding:10px 13px}
- .desk-quote{width:125px;padding:12px;animation:none}.desk-quote-1{top:80px}.desk-quote-2{top:145px}.desk-quote-3{bottom:8px;left:14%}.quote-price{font-size:1.125rem}.quote-spark{height:22px}.quote-top{font-size:.75rem}.orbit-note{top:0;font-size:.6875rem;padding:7px 9px}.orbit-vibe{top:auto;bottom:18px;font-size:.75rem}.orbit-guide{inset:30px 10px 20px}.orbit-controls{bottom:-22px;font-size:.625rem}
+ .home-quote-strip{padding:95px 0 42px;gap:8px;min-height:0}.home-quote-strip .duck-anchor{top:0;width:64px;height:64px}.desk-duck img{width:60px;height:60px}.duck-bubble{top:17px;left:78px;max-width:none;right:0;font-size:.8125rem}.desk-quote{animation:none;padding:10px 9px}.quote-price{font-size:1rem}.quote-top{font-size:.6875rem;justify-content:space-between}.desk-quote small{font-size:.5625rem}.orbit-controls{left:0;bottom:18px}
  .desk-section-head{display:block}.desk-section-head>p{margin-top:14px;max-width:none}.product-desk,.desk-pricing{padding-block:42px}
  .desk-tour{grid-template-columns:1fr}.desk-tools{display:grid;grid-template-columns:1fr 1fr;border:0;border-bottom:1px solid var(--border);padding:8px;gap:3px}.desk-tools button{min-height:44px;padding:8px;font-size:.75rem;gap:7px}.desk-tool-number{font-size:.625rem}.desk-tool-arrow{display:none}
  .desk-preview{padding:24px;min-height:365px}.desk-feature .eyebrow{margin-bottom:22px}.desk-feature h3{font-size:32px}.desk-feature-copy{font-size:1rem}.desk-feature-actions{margin-top:25px;gap:15px}.desk-feature-tags{margin:18px 0}.desk-preview-footer{margin-top:28px;font-size:.6875rem}.desk-preview:after{display:none}
  .desk-plans{grid-template-columns:1fr}.desk-plan{padding:24px}.desk-plan ul{font-size:.8125rem}.desk-plan .price{font-size:3rem}
 }
-@media(max-width:360px){.desk-hero h1{font-size:40px}.desk-hero .btn{font-size:.8125rem;padding:12px 14px}.desk-quote{width:111px}.duck-bubble{max-width:175px}.desk-quote-3{left:13%}.desk-tool-number{display:none}.desk-preview{padding:20px}.desk-feature h3{font-size:28px}}
-/* On phones the price cards become a steady row, with no overlapping targets. */
-@media(max-width:760px){
- .duck-orbit{height:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding-top:185px;margin-bottom:26px}
- .duck-anchor{top:100px}.duck-bubble{top:37px;left:40%;max-width:190px}
- .duck-orbit .desk-quote{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto;min-width:0;padding:10px 9px;transform:none}
- .quote-price{font-size:1rem}.desk-quote small{font-size:.625rem}.quote-top{font-size:.6875rem}
- .orbit-vibe{top:139px;bottom:auto}.orbit-guide{inset:22px 8px 100px}.orbit-controls{bottom:-30px}
- .motion-toggle{display:none}
-}
+@media(max-width:360px){.desk-tool-number{display:none}.desk-preview{padding:20px}.desk-feature h3{font-size:28px}}
 @media(hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){.desk-quote{animation:none;transform:none}.desk-duck img{transition:none;transform:none}.motion-toggle{display:none}}
 @media(prefers-reduced-motion:reduce){.desk-tour *, .duck-orbit *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}

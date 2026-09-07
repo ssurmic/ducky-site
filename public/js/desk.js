@@ -27,16 +27,19 @@ export function mountTour(root) {
 export function mountDuck(root,{fetcher=fetch}={}) {
   const duck=root.querySelector('.desk-duck'),anchor=root.querySelector('.duck-anchor');
   const message=root.querySelector('[data-duck-message]'),toggle=root.querySelector('[data-motion-toggle]');
+  const sharedToggle=root.closest('[data-home-hero]')?.querySelector('[data-home-motion]');
   const fine=window.matchMedia('(min-width: 761px) and (hover: hover) and (pointer: fine)'),reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
   const ctl=new AbortController();let alive=true,paused=false,visible=true,frame=0,timer=0;
   const reset=()=>{root.style.setProperty('--duck-x','0px');root.style.setProperty('--duck-y','0px');};
   function apply(){
     const enabled=fine.matches&&!reduce.matches;
     root.classList.toggle('motion-paused',paused||!enabled||!visible);
-    toggle.hidden=!enabled;toggle.textContent=paused?toggle.dataset.resume:toggle.dataset.pause;
+    toggle.hidden=!enabled||!!sharedToggle;toggle.textContent=paused?toggle.dataset.resume:toggle.dataset.pause;
     toggle.setAttribute('aria-pressed',String(paused));reset();
   }
   const pause=()=>{paused=!paused;apply();};
+  const sharedPause=()=>{queueMicrotask(()=>{if(alive){paused=sharedToggle.getAttribute('aria-pressed')==='true';apply();}});};
+  sharedToggle?.addEventListener('click',sharedPause);
   const move=e=>{
     if(paused||!visible||!fine.matches||reduce.matches||document.activeElement===duck)return;
     if(frame)cancelAnimationFrame(frame);
@@ -72,6 +75,7 @@ export function mountDuck(root,{fetcher=fetch}={}) {
   });
   Promise.allSettled(jobs).then(()=>clearTimeout(timeout));
   return()=>{alive=false;ctl.abort();clearTimeout(timeout);clearTimeout(timer);cancelAnimationFrame(frame);observer?.disconnect();
+    sharedToggle?.removeEventListener('click',sharedPause);
     root.removeEventListener('pointermove',move);root.removeEventListener('pointerleave',reset);duck.removeEventListener('focus',reset);
     duck.removeEventListener('click',hello);toggle.removeEventListener('click',pause);fine.removeEventListener('change',apply);reduce.removeEventListener('change',apply);};
 }

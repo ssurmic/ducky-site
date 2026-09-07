@@ -7,6 +7,7 @@
    <p class="home-intro">{{ t('home.intro') }}</p>
    <div class="home-cta"><a class="btn btn-primary" href="{{ url('/app/') }}#/register">{{ t('home.start') }} <span aria-hidden="true">↗</span></a><a class="home-text-link" href="#home-dossier">{{ t('home.try') }} <span aria-hidden="true">↓</span></a></div>
    <p class="home-access">{{ t('home.access') }}</p>
+   <p class="desk-hero-price"><b class="mono">Pro ${{ prices.pro.monthly_usd }}{{ t('pricing.per_mo') }}</b><a href="#pricing">{{ t('desk.subscribe') }} ↗</a></p>
   </div>
   <div class="home-stage">
    <div class="home-inputs" aria-label="{{ t('home.sources') }}">
@@ -35,6 +36,7 @@
    </section>
   </div>
  </div>
+ {% include "_partials/desk-quotes.html" %}
  <div class="wrap home-bottomline"><span>{{ t('home.bottomline') }}</span><button type="button" class="home-motion" data-home-motion aria-pressed="false" data-play="{{ t('home.play') }}" data-pause="{{ t('home.pause') }}">{{ t('home.pause') }}</button></div>
 </section>
 <nav class="home-design-review" aria-label="{{ t('home.designs') }}" data-home-review hidden>
