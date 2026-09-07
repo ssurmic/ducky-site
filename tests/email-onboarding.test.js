@@ -85,15 +85,15 @@ test('a saved email with a failed or throttled code shows a persistent retry ins
  }
 });
 
-test('an unchanged legacy country name cannot block email setup; edited country codes are validated',async()=>{
+test('email setup omits unchanged country values and preserves edited free-text countries',async()=>{
  const f=fixture({country:'United States'});
  try {await f.mount();let form=f.root.querySelector('form');form.querySelector('[name=email]').value='receiving@example.test';
   form.dispatchEvent(new window.Event('submit',{cancelable:true}));await flush();
   const save=f.calls.find(row=>row.path==='/me/profile'&&row.method==='POST');assert.ok(save);assert.equal('country' in JSON.parse(save.body),false);
-  form=f.root.querySelector('form');form.querySelector('[name=country]').value='Not a country code';form.dispatchEvent(new window.Event('submit',{cancelable:true}));await flush();
-  assert.equal(f.calls.filter(row=>row.path==='/me/profile'&&row.method==='POST').length,1);
-  form.querySelector('[name=country]').value='us';form.dispatchEvent(new window.Event('submit',{cancelable:true}));await flush();
-  assert.equal(JSON.parse(f.calls.filter(row=>row.path==='/me/profile'&&row.method==='POST').at(-1).body).country,'US');
+  form=f.root.querySelector('form');form.querySelector('[name=country]').value='中国';form.dispatchEvent(new window.Event('submit',{cancelable:true}));await flush();
+  assert.equal(JSON.parse(f.calls.filter(row=>row.path==='/me/profile'&&row.method==='POST').at(-1).body).country,'中国');
+  form=f.root.querySelector('form');form.querySelector('[name=country]').value='United Kingdom';form.dispatchEvent(new window.Event('submit',{cancelable:true}));await flush();
+  assert.equal(JSON.parse(f.calls.filter(row=>row.path==='/me/profile'&&row.method==='POST').at(-1).body).country,'United Kingdom');
  }finally{f.close();}
 });
 
