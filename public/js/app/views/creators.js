@@ -259,6 +259,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       if (p.title) art.appendChild(el("h3.cr-video-title", p.title));
       if (reviewed) {
         art.appendChild(el("p.cr-attribution.muted.small", s("creators.attribution", { name: p.kol_name || p.kol_id || "—" })));
+        if(meta.source?.corrections?.length)art.appendChild(el('p.small',s('creatorclaim.corrected')));
         const sections = meta.source?.sections || [];
         art.appendChild(el("p.cr-sum", pickSummary(sections[0] || p.summary, isZh)));
         if (sections.length) {

@@ -2573,5 +2573,7 @@
   "app.briefing.details": "时间与数据范围",
   "app.screen.matches": "匹配 {n} 只股票",
   "app.screen.historical_note": "这是当前筛选，不代表这些条件曾在历史上同时出现。",
-  "walkthrough.caption": "录制于 2026-09-06 · 含历史内容与操作示例"
+  "walkthrough.caption": "录制于 2026-09-06 · 含历史内容与操作示例",
+  "app.creatorclaim.superseded": "这条解读已更正。历史价格保留，此版本不再参与比较或模拟。",
+  "app.creatorclaim.corrected": "公司归属和观点解读已重新核对并更正，旧版本保留在研究历史中。"
 }
