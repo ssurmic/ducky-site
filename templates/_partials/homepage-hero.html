@@ -24,6 +24,7 @@
      <h3>{{ t('home.' ~ story.key ~ '.title') }}</h3><p class="home-story-summary">{{ t('home.' ~ story.key ~ '.summary') }}</p>
      <div class="home-takeaway"><span>{{ t('home.takeaway') }}</span><p>{{ t('home.' ~ story.key ~ '.takeaway') }}</p></div>
      <details class="home-evidence"><summary><span>{{ t('home.followup') }}<small>{{ t('home.' ~ story.key ~ '.window') }}</small></span><span class="home-change{{ ' is-negative' if story.negative else '' }}">{{ story.change }} <span aria-hidden="true">↗</span></span></summary>
+      <div class="home-takeaway home-flow-takeaway"><span>{{ t('home.takeaway') }}</span><p>{{ t('home.' ~ story.key ~ '.takeaway') }}</p></div>
       <figure class="home-price-history"><figcaption>{{ t('home.price_change') }} · {{ story.start }} → {{ story.end }}</figcaption><svg viewBox="0 0 360 104" role="img" aria-label="{{ t('home.price_change') }} {{ story.change }}"><line x1="12" x2="348" y1="{{ story.zero_y }}" y2="{{ story.zero_y }}" class="home-chart-zero"/><polyline points="{{ story.points }}" class="home-chart-line{{ ' is-negative' if story.negative else '' }}"/></svg><div class="home-chart-labels"><span>${{ story.price_start }}</span><span>${{ story.price_end }}</span></div></figure>
       <p>{{ t('walkthrough.cases.' ~ story.key) }}</p><p class="home-basis">{{ t('home.price_basis') }}</p><a href="/media/ducky-demo-cases-2026-09-07.json">{{ t('home.full_data') }} ↗</a>
      </details>
