@@ -3102,5 +3102,6 @@
   "app.stockbrief.regime_supportive": "supportive",
   "app.stockbrief.regime_mixed": "mixed funding and rates",
   "app.stockbrief.price_session": "Price session: {date} · Saved quote, not a live price",
-  "app.stockbrief.search": "Stock symbol, e.g. NVDA"
+  "app.stockbrief.search": "Stock symbol, e.g. NVDA",
+  "app.stockbrief.load": "View"
 }

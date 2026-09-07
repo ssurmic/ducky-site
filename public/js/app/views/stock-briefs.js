@@ -89,9 +89,9 @@ export async function mountStockBriefs(root,route={}){
     el('a.btn.btn-ghost.btn-sm',{href:'#/briefing?period=daily'},s('stockbrief.events'))),
     el('p.view-intro',s('stockbrief.intro')));
   const search=el('input.input',{type:'search',value:ticker,placeholder:s('stockbrief.search'),'aria-label':s('stockbrief.search'),maxlength:10});
-  root.append(el('form.add-row',{onsubmit:e=>{e.preventDefault();const t=search.value.trim().toUpperCase().replace(/^\$/,'');
+  root.append(el('form.add-row.stock-brief-search',{onsubmit:e=>{e.preventDefault();const t=search.value.trim().toUpperCase().replace(/^\$/,'');
     if(safeTicker(t))location.hash='#/briefing?ticker='+encodeURIComponent(t);}},search,
-    el('button.btn.btn-ghost',{type:'submit'},s('research.load')),ticker?el('a.btn.btn-ghost',{href:'#/briefing'},s('stockbrief.all')):null));
+    el('button.btn.btn-ghost',{type:'submit'},s('stockbrief.load')),ticker?el('a.btn.btn-ghost',{href:'#/briefing'},s('stockbrief.all')):null));
   const host=el('div.stock-briefs');root.append(host);
   async function load(){
     const id=++request;clear(host);
