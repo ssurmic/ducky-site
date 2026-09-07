@@ -16,6 +16,7 @@ import {groundedClaim,claimDetails} from './creator-claim.js';
 import {renderCreatorPage} from './creator-page.js';
 import {creatorRoute,creatorTarget} from '../creator-route.js';
 import {matchesStocks,taggedTickers} from '../creator-match.js';
+import {readingPreview} from '../reading-preview.js';
 
 const TAKE_CLS = { bull: "cr-bull", bear: "cr-bear", neutral: "cr-neutral" };
 const CALL_ARROW = { bull: "▲", bear: "▼", neutral: "•" };
@@ -28,12 +29,14 @@ function pickSummary(x, isZh) {
 
 // A reading preview only; the complete attributed text remains in the disclosure.
 export function conciseSummary(value, isZh) {
-  const text = pickSummary(value, isZh).replace(/\s+/g, ' ').trim();
-  const limit = isZh ? 88 : 180;
-  const sentence = text.match(isZh ? /^.*?[。！？](?:[”」』])?/ : /^.*?[.!?](?:[”"])?(?=\s|$)/)?.[0] || text;
-  if (sentence.length <= limit) return sentence;
-  const prefix = sentence.slice(0, limit);
-  return (isZh ? prefix : prefix.replace(/\s+\S*$/, '')) + '…';
+  return readingPreview(pickSummary(value,isZh),isZh);
+}
+
+// Remove trailing promotion tags from the reading title, retaining the source title below.
+export function previewTitle(value) {
+  const original = String(value || '').trim();
+  return original.replace(/(?:\s*[#＃][\p{L}\p{N}_]+)+\s*$/u, '')
+    .replace(/[✨🌟⭐]\s*\d{8}\s*$/u, '').replace(/^[✨🌟⭐]\s*/u, '').trim() || original;
 }
 
 export function evidenceMeta(post) {
@@ -241,8 +244,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     if(selected){const kid=selected;feedContent.addEventListener('toggle',()=>{if(feedContent.open){archiveOpen.add(kid);}else archiveOpen.delete(kid);});}
     content.append(feedContent);
     const archiveBtn = el("button.btn.btn-ghost.btn-sm", { type: "button", "aria-pressed": String(archive), onclick: () => { archive = !archive; render(); } }, s(archive ? "creators.only_grounded" : "creators.show_archive"));
-    if(!selected)feedContent.append(el('h2.creator-latest-title',s('creators.latest')));
-    feedContent.appendChild(archiveBtn);
+    if(!selected)feedContent.append(el('header.creator-feed-heading',el('h2.creator-latest-title',s('creators.latest')),archiveBtn));
+    else feedContent.appendChild(archiveBtn);
     if(selected&&!histories[selected])feedContent.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>loadHistory(selected)},s('creatorpage.all_videos',{n:doc.pages?.[selected]?.coverage?.indexed ?? stats.length})));
     if (mine && !following.size) {feedContent.appendChild(empty(s("creators.no_following")));feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{mine=false;render();}},s('creators.discover')));return;}
     const history=selected?histories[selected]:null;
@@ -271,7 +274,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       if(source.caption_language) sourceFacts.append(el('span',source.caption_language+' · '+s(source.caption_source==='local_asr'?'creatorclaim.local_asr':source.caption_generated?'creators.auto_captions':'creators.manual_captions')));
       if(Number.isFinite(source.caption_coverage_pct)) sourceFacts.append(el('span',s('creators.coverage',{n:source.caption_coverage_pct})));
 
-      if (p.title) art.appendChild(el("h3.cr-video-title", p.title));
+      if (p.title) art.appendChild(el("h3.cr-video-title", {title:p.title}, previewTitle(p.title)));
       if (reviewed) {
         if(meta.source?.corrections?.length)art.appendChild(el('p.small',s('creatorclaim.corrected')));
         const sections = meta.source?.sections || [];
@@ -293,6 +296,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       const audit=el('details.creator-audit',el('summary',s('creators.source_details')),
         el('p.muted.small',s('creators.first_seen')+' '+dateTime(p.first_seen_at)),
         el('p.muted.small',s('creators.analysis_updated')+' '+dateTime(p.fetched_at)));
+      if(p.title)audit.append(el('p.creator-original-title',p.title));
       audit.append(sourceFacts);(art.querySelector(".cr-sections") || art).append(audit);
       const actions=el('div.evidence-controls.creator-page-actions');
       if (safeSource(p.url)) actions.appendChild(el("a.cr-orig", { href: p.url, target: "_blank", rel: "noopener noreferrer" }, s("creators.orig") + " ↗"));

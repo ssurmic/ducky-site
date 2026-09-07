@@ -8,7 +8,7 @@ const copy=JSON.parse(readFileSync('i18n/en.json'));
 const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
 const {modal,closeModal,el}=await import('../public/js/app/ui.js');
 const {renderMarketContext}=await import('../public/js/app/views/market-context.js');
-const {filterPosts,conciseSummary}=await import('../public/js/app/views/creators.js');
+const {filterPosts,conciseSummary,previewTitle}=await import('../public/js/app/views/creators.js');
 
 test('dialog traps focus, closes by Escape or backdrop and restores the original scroll and trigger',()=>{
  const main=document.querySelector('main'),opener=document.querySelector('#day');main.scrollTop=380;opener.focus();
@@ -36,4 +36,6 @@ test('creator search sorts by publication, never processing time, retains undate
  assert.equal(conciseSummary('The creator discusses margins. Evidence remains uncertain.',false),'The creator discusses margins.');
  assert.equal(conciseSummary('博主讨论利润变化。资料还不完整。',true),'博主讨论利润变化。');
  assert.ok(conciseSummary('很'.repeat(200),true).length<=89);
+ assert.equal(previewTitle('✨【第 10 期】利润变化✨20260904#CPI #美股'),'【第 10 期】利润变化');
+ assert.equal(previewTitle('C# tools for investors'),'C# tools for investors');
 });

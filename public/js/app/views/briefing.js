@@ -2,6 +2,7 @@ import {el,clear,spinner,errorBox,num} from '../ui.js';
 import {s,LANG} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
+import {readingPreview} from '../reading-preview.js';
 
 const localized=(row,key)=>row?.[key+'_'+(LANG==='en'?'en':'zh')]||row?.[key+'_en']||row?.[key+'_zh']||'';
 export function dateTime(value,precision){const d=new Date(value);if(!value||Number.isNaN(d.getTime()))return '—';
@@ -15,9 +16,10 @@ function historyLink(row){
   if(!path.startsWith('#/boards?'))return '#/boards?mode=archive&ticker='+encodeURIComponent(row.ticker);
   return path;
 }
-function viewSource(view){return el('article.market-evidence-item',
+function viewSource(view){const full=localized(view,'summary'),preview=readingPreview(full,LANG!=='en');return el('article.market-evidence-item',
   el('p.small.muted',view.publisher+' · '+dateTime(view.published_at)),
-  sourceLink(view.source_url,view.title),el('p',localized(view,'summary')),
+  sourceLink(view.source_url,view.title),el('p',preview),
+  full!==preview?el('details.briefing-summary-details',el('summary',s('creators.read_summary')),el('p',full)):null,
   el('p.small.muted',s('briefing.attributed')));}
 function eventRow(event){
   const row=el('li',sourceLink(event.source_url,s('radar.kind_'+event.kind)),

@@ -1,8 +1,9 @@
-import { s } from '../strings.js';
+import { s, LANG } from '../strings.js';
 import { el, clear, pct, px } from '../ui.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
 import {claimDetails,priceContext,sourceAt} from './creator-claim.js';
+import {readingPreview} from '../reading-preview.js';
 
 export function researchRows(items, {kolId='', query='', history=false, allowedIds=null,tickers=null}={}) {
   const latest = new Map();
@@ -33,7 +34,8 @@ export async function mountResearch(root, selection) {
     controls.append(el('button.btn.btn-ghost.btn-sm',{type:'button','aria-pressed':String(history),onclick:()=>{history=!history;render();}},s(history?'creators.latest_versions':'creators.all_versions')));
     root.append(controls,el('p.research-method',s('creators.method')),
       el('p.muted.small',s(basis==='published'?'creators.published_caveat':'creators.recorded_caveat')));
-    const rows=researchRows(doc.items || [],{...selection,history});
+    const rows=researchRows(doc.items || [],{...selection,history}).sort((a,b)=>
+      (Date.parse(b.post[basis==='published'?'published_at':'recorded_at'])||0)-(Date.parse(a.post[basis==='published'?'published_at':'recorded_at'])||0));
     const complete=rows.filter(r=>r.call.windows?.[basis]?.horizons?.[horizon]?.status==='ready');
     const losses=complete.filter(r=>r.call.windows[basis].horizons[horizon].ret<0);
     root.append(el('div.evidence-metrics',
@@ -45,28 +47,32 @@ export async function mountResearch(root, selection) {
       const window=call.windows?.[basis] || {},out=window.horizons?.[horizon] || {};
       const status=window.status==='ready'?(out.status || 'pending'):(window.status || 'pending');
       const row=el('article.study-row');
+      const note=typeof call.note==='object'&&call.note?(call.note[LANG]||call.note.zh||call.note.en):call.note;
       row.append(el('div.study-heading',el('a.mono',{href:'#/chart/'+encodeURIComponent(call.sym)},'$'+call.sym),
         el('span.cr-take',s('creators.take_'+call.stance)),el('span.evidence-badge','BACKTEST')),
-        el('h3',post.title || post.kol_name),el('p.muted.small',post.kol_name+' · '+s('creators.published')+' '+dateTime(post.published_at)));
+        el('h3',readingPreview(note||post.title||post.kol_name,LANG!=='en')),el('p.muted.small',post.kol_name+' · '+s('creators.published')+' '+dateTime(post.published_at)));
+      if(['retracted','superseded'].includes(call.attribution_status))row.append(el('p.err',s('creatorclaim.superseded')));
+      if(call.price_context?.simulation?.reason==='condition_not_evaluated')row.append(el('p.small',s('creatorclaim.conditional')));
+      const details=el('details.study-detail',el('summary',s('creators.evidence_version')),el('p.small.muted',post.title||''));
       const timeline=el('dl.evidence-timeline');
       for(const [key,value] of [['creators.first_seen',dateTime(post.first_seen_at)],['creators.version_recorded',dateTime(post.recorded_at)],['creators.base_close',window.base_d?window.base_d+' · '+px(window.base_px):'—'],['creators.end_close',out.end_d?out.end_d+' · '+px(out.end_px):'—']])
         timeline.append(el('div',el('dt',s(key)),el('dd',value)));
-      row.append(claimDetails(call));
+      details.append(claimDetails(call));
       const anchors=priceContext(call.price_context);
-      if(anchors)row.append(anchors);
-      row.append(timeline);
+      if(anchors)details.append(anchors);
+      details.append(timeline);
       if(post.provenance==='legacy_import') row.append(el('p.muted.small',s('creators.legacy_import')));
-      if(status==='ready') row.append(priceChart(out.path,call.sym),el('div.study-results',
+      if(status==='ready') {details.append(priceChart(out.path,call.sym));row.append(el('div.study-results',
         metric(s('creators.stock_return'),pct(out.ret),out.ret),metric('SPY',pct(out.spy_ret),out.spy_ret),
         metric(s('creators.excess'),pct(out.excess),out.excess)),
-        el('p.muted.small',s('creators.close_range',{low:pct(out.min_close_return),high:pct(out.max_close_return)})));
+        el('p.muted.small',s('creators.close_range',{low:pct(out.min_close_return),high:pct(out.max_close_return)})));}
       else row.append(el('p.study-status',s('creators.status_'+status)));
       const evidence=el('details.cr-evidence',el('summary',s('creators.evidence_version')),
         call.evidence?el('blockquote',call.evidence):el('p.small.muted',s('creatorclaim.source_link')),
         el('p.muted.small',s('creators.version_recorded')+' '+dateTime(post.recorded_at)));
       const source=sourceAt(post.url,call.action_start_seconds??call.start_seconds)||safeSource(post.url);
       if(source) evidence.append(el('a',{href:source,target:'_blank',rel:'noopener noreferrer'},s('creators.orig')+' ↗'));
-      row.append(evidence);list.append(row);
+      details.append(evidence);row.append(details);list.append(row);
     }
     root.append(list,el('p.muted.small',s('creators.research_limit',{n:doc.limit || 500})));
   }

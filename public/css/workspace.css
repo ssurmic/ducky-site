@@ -150,20 +150,26 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 .creator-overview .creator-page-heading h1{font-size:1.125rem}
 .page-app .creator-video-archive{border:0;padding:0;margin-top:16px}
 .creator-video-archive>summary,.creator-latest-title{font-weight:650;font-size:1.0625rem;margin:0 0 14px;cursor:pointer}
+.creator-feed-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.creator-feed-heading .creator-latest-title{margin:0;cursor:auto}
 .page-app .cr-feed{display:grid;grid-template-columns:minmax(0,1fr);gap:0;margin-top:14px}
 .page-app .cr-post{border:0;border-bottom:1px solid var(--border);border-radius:0;background:none;padding:22px 0;margin:0}
 .page-app .cr-post:first-child{padding-top:8px}
 .page-app .cr-post-head{margin-bottom:6px;gap:12px}
 .page-app .cr-post time{font-size:.75rem}
-.page-app .cr-video-title{font-size:1.0625rem;line-height:1.55;margin:10px 0 6px}
+.page-app .cr-video-title{font-size:1.0625rem;line-height:1.55;margin:10px 0 6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .page-app .cr-sum{font-size:.9375rem;line-height:1.7;margin:6px 0 10px;max-width:78ch}
 .page-app .cr-attribution{margin:6px 0;font-size:.75rem}
 .page-app .cr-sections{font-size:.9375rem;line-height:1.75;margin:8px 0}
-.page-app .cr-sections>summary{font-size:.8125rem;cursor:pointer;min-height:30px}
+.page-app .cr-sections>summary{font-size:.8125rem;cursor:pointer;min-height:30px;padding:4px 0;line-height:1.5}
 .page-app .cr-sections[open]{padding:16px 18px;background:var(--surface);border:1px solid var(--border);border-radius:10px}
-.page-app .cr-post .creator-page-actions{margin-top:8px;gap:16px}
+.page-app .cr-post .creator-page-actions{margin:8px 0 0;gap:16px}
 .page-app .cr-post .creator-page-actions .btn{background:none;border:0;padding:0;min-height:30px;font-size:.8125rem;color:var(--muted)}
 .page-app .cr-call{padding:14px;border-radius:8px}
+.page-app .study-row{padding:18px;border-radius:10px}
+.page-app .study-row h3{font-size:1rem;line-height:1.6;margin:12px 0 6px}
+.page-app .study-detail>summary{font-size:.8125rem;cursor:pointer;min-height:36px;padding:8px 0}
+.page-app .study-detail[open]{border-top:1px solid var(--border);margin-top:12px}
 .page-app .profile .form{gap:14px}
 .page-app .profile .form>p{margin:0}
 .page-app .profile .form>.cta-row{margin:2px 0 0}
@@ -174,6 +180,9 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 .page-app .profile .pwsec .cta-row{margin:14px 0}
 .page-app .profile .pwsec .field{flex:1 1 200px;max-width:320px;min-width:0}
 .page-app .profile .pwsec .btn{flex:none;min-height:40px;align-self:flex-end}
+.page-app .add-row>.btn{align-self:flex-start;min-height:44px}
+.page-app :is(.alert-draft-footer,.creator-find-form)>.btn{align-self:flex-end;min-height:44px}
+.page-app .app-top #logout{white-space:nowrap;flex:none}
 @media(max-width:999px){
  .page-app .app-main{padding:22px 18px 30px}
  .page-app .app-top{padding-inline:18px;min-height:56px}
@@ -217,7 +226,7 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .modal-actions{padding:12px 16px}
  .page-app .creators-view{padding:0}
  .page-app .creators-view .evidence-page-head{flex-wrap:wrap;gap:12px}
- .page-app .creator-workspace-tabs{overflow-x:auto;justify-content:start;gap:6px}
+ .page-app .creator-workspace-tabs{display:flex;overflow-x:auto;justify-content:start;gap:6px}
  .page-app .creator-workspace-tabs button{padding:10px 12px;white-space:nowrap}
  .page-app .cr-post{padding-block:18px}
  .page-app .cr-post .evidence-controls{flex-wrap:wrap}
@@ -236,5 +245,6 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .cal-bicell .cal-events{gap:4px}
  .page-app .cal-bicell .cal-bidnum{height:26px}
 }
+@media(max-width:360px){.page-app .app-top .brand{font-size:.75rem;gap:6px}.page-app .app-top .avatar-mark{width:24px;height:24px}}
 @media(pointer:coarse){.page-app .btn,.page-app .btn-sm,.page-app .cal-mnav,.page-app .cal-today,.page-app .modal-close{min-height:44px}.page-app .input{font-size:16px}}
 @media(prefers-reduced-motion:reduce){.page-app *, .page-app *:before{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
