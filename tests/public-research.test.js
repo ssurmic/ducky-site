@@ -20,29 +20,30 @@ test('readable records retain every closed, open and losing position and compose
  status.value='';ticker.value='';ticker.dispatchEvent(new dom.window.Event('change'));
  assert.equal(rows.filter(r=>!r.hidden).length,rows.length);
 });
-test('homepage uses illustrative locked previews, one sourced video and readable trade links',()=>{
+test('homepage previews all tools without private research and keeps sourced examples',()=>{
  for(const prefix of ['', 'en/']) {
   const d=new JSDOM(readFileSync(`dist/${prefix}index.html`,'utf8')).window.document;
-  assert.equal(d.querySelectorAll('.member-preview-card').length,2);
+  assert.equal(d.querySelectorAll('.desk-feature').length,14);
   assert.equal(d.querySelectorAll('.member-preview-card script,.member-preview-card template,.member-preview-card [data-ticker]').length,0);
   assert.equal(d.querySelectorAll('.proof-case').length,0);
   assert.ok(d.querySelector(`.oversold-study a[href^="/${prefix}research-records/#positions"]`));
   assert.equal(d.querySelectorAll('.oversold-study a[href^="/oversold-research.json"]').length,0);
-  assert.ok(d.querySelector(`.preview-actions a[href="/${prefix}app/#/register"]`));
+  assert.ok(d.querySelector(`.desk-hero a[href="/${prefix}app/#/register"]`));
   const links=[...d.querySelectorAll('.video-source-points a')];
   assert.equal(links.length,3);
   assert.deepEqual(links.map(a=>new URL(a.href).searchParams.get('t')),['3s','349s','700s']);
  }
 });
-test('storefront leads with a free journey and keeps all payment currencies inside a compact comparison',()=>{
+test('storefront exposes actual plan prices and checkout without a collapsed comparison',()=>{
  const prices=json('site.config.json').prices.pro;
  for(const prefix of ['', 'en/']) {
   const d=new JSDOM(readFileSync(`dist/${prefix}index.html`,'utf8')).window.document,p=d.querySelector('#pricing');
-  assert.equal(p.querySelectorAll('.tier').length,2);
-  assert.ok(p.querySelector('details:not([open])'));
+  assert.equal(p.querySelectorAll('.desk-plan').length,2);
+  assert.equal(p.querySelector('details'),null);
   assert.ok(p.textContent.includes('$'+prices.monthly_usd));
   assert.ok(p.textContent.includes('$'+prices.annual_usd));
-  assert.ok(p.textContent.includes('¥'+prices.annual_cny));
+  assert.equal(p.textContent.includes('¥'+prices.annual_cny),prefix==='');
+  assert.ok(p.querySelector(`a[href="/${prefix}app/#/billing"]`));
   assert.ok(p.querySelector(`a[href="/${prefix}app/#/register"]`));
  }
 });

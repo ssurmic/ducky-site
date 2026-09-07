@@ -13,6 +13,7 @@ export const presets={
   volatility:()=>({...defaults(),iv_hv_max:1,drawdown_min:20}),
 };
 export function routePreset(value){
+  if(value==='oversold')return {...defaults(),oversold:true};
   if(value==='insider-oversold')return presets.insider();
   if(value==='institution-oversold')return {...defaults(),events:['stake','13f'],event_op:'or',oversold:true};
   return null;
@@ -37,7 +38,7 @@ export function configSummary(c){
   return parts.join(' · ') || s('screen.no_conditions');
 }
 
-export function mountScreen(root,{signal,query}={}){
+export function mountScreen(root,{signal,query,initialConfig}={}){
   let alive=true,request=0,current=defaults(),saved=[],lastPreview=null;
   const epoch=store.epoch(), screenId=query?.get('screen');
   const expanded=Boolean(screenId || query?.get('screening'));
@@ -76,7 +77,7 @@ export function mountScreen(root,{signal,query}={}){
   const savedChoice=el('select.input',{'aria-label':s('screen.saved')},el('option',{value:''},s('screen.saved')));
   savedChoice.addEventListener('change',()=>{const row=saved.find(x=>String(x.id)===savedChoice.value);if(row){fill(row.config);saveName.value=row.name;clearResults();runPreview();}});
   box.append(el('div.screen-body',el('p',s('screen.explanation')),presetsRow,savedChoice,form,status,results,saveForm));
-  fill(current);
+  fill(initialConfig||current);
   if(routePreset(screenId))fill(routePreset(screenId));
   form.addEventListener('submit',event=>{event.preventDefault();runPreview();});
   form.addEventListener('input',clearResults);

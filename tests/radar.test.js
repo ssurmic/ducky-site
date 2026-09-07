@@ -34,7 +34,7 @@ test('twelve categories, combined search, keyboard disclosures and explicit exce
  globalThis.fetch=async url=>response(String(url).includes('radar-history')?{items:[{board:'insider',ticker:'TTMI',ts:'2026-08-26T12:00:00Z',summary:{en:'Historical receipt'},body:{en:'Identity unverified'}}]}:{items:sample});
  const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams()});
  assert.equal(root.querySelector('.signal-screen').open,false);
- assert.equal(root.querySelector('.radar-market-panel').nextElementSibling,root.querySelector('.radar-screen-panel'));
+ assert.equal(root.querySelector('.radar-market-panel'),null);
  assert.equal(document.activeElement,document.body);
  assert.equal(root.querySelectorAll('.radar-category').length,13);
  root.querySelector('[name="ticker"]').value='TTMI';root.querySelector('[name="ticker"]').dispatchEvent(new window.Event('input'));
@@ -46,24 +46,24 @@ test('twelve categories, combined search, keyboard disclosures and explicit exce
  assert.ok(!root.textContent.includes('radar.'));cleanup();root.remove();
 });
 
-test('screen deep links focus their open destination before slow market data and never refocus on arrival',async()=>{
+test('screen deep links focus their open destination without loading unrelated market research',async()=>{
  const original=window.HTMLElement.prototype.scrollIntoView,scrolls=[];
  window.HTMLElement.prototype.scrollIntoView=function(options){scrolls.push({node:this,options});};
  try{
   for(const query of ['screen=insider-oversold','screen=institution-oversold','screening=1']){
-   let finishMarket;const methods=[];
-   globalThis.fetch=async(url,opts)=>{methods.push(opts?.method);
-    if(String(url).includes('/market/'))return new Promise(resolve=>finishMarket=()=>resolve(response({status:'unavailable'})));
+   const methods=[],urls=[];
+   globalThis.fetch=async(url,opts)=>{methods.push(opts?.method);urls.push(String(url));
     return response({items:[],sectors:[],filter_version:3});
    };
    const root=document.createElement('section');document.body.append(root);
    const pending=mount(root,{query:new URLSearchParams(query)}),target=root.querySelector('.signal-screen>summary');
    assert.equal(root.querySelector('.signal-screen').open,true);
-   assert.equal(root.querySelector('.radar-screen-panel').nextElementSibling,root.querySelector('.radar-market-panel'));
+   assert.equal(root.querySelector('.radar-market-panel'),null);
    assert.equal(document.activeElement,target);
    assert.equal(scrolls.at(-1).node,target);assert.equal(scrolls.at(-1).options.block,'start');
    const cleanup=await pending,control=root.querySelector('[name=scope]');control.focus();
-   const before=scrolls.length;finishMarket();await flush();
+   const before=scrolls.length;await flush();
+   assert.equal(urls.some(url=>url.includes('/market/')),false);
    assert.equal(document.activeElement,control);assert.equal(scrolls.length,before);
    assert.equal(methods.includes('POST'),false);
    cleanup();root.remove();

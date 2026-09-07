@@ -6,8 +6,8 @@ import { el, clear, spinner, pct, px } from "../ui.js";
 import { icon } from "../icons.js";
 import { dateTime, metric } from './creator-research.js';
 import { mountScreen } from './signal-screen.js';
-import { mountMarketContext } from './market-context.js';
 import { mountSocial } from './social-tracking.js';
+import { selectNavigation } from '../navigation.js';
 import {isIndexChange, sourceEventHint, effectiveDate, effectiveTiming} from '../source-event.js';
 
 export const BOARDS = [
@@ -138,8 +138,6 @@ export async function mount(root, route={}) {
   const screenPanel=el('div.radar-screen-panel');
   const screenEntry=Boolean(params.get('screen') || params.get('screening'));
   const disposeScreen=mountScreen(screenPanel,{signal:route.signal,query:params});
-  const marketPanel=el('div.radar-market-panel');
-  const disposeMarket=mountMarketContext(marketPanel,{compact:true});
   const starters=el('div.radar-starters',...['liquidity','partner','volscan'].map(key=>el('button.radar-starter',
     {type:'button',onclick:()=>selectBoard(key)},icon(BOARDS.find(b=>b.key===key).icon || key),
     el('span',el('strong.starter-desktop',s('radar.start_'+key)),el('strong.starter-mobile',s('radar.short_'+key)),el('span.muted',s('radar.start_'+key+'_hint'))),el('span',{'aria-hidden':'true'},'↗'))));
@@ -179,7 +177,7 @@ export async function mount(root, route={}) {
   const main=el('section.radar-main',tabs,guide,filter,summary,note,rows,more);
   // Explicit screening links lead with their destination. Market data arriving later
   // stays below it, so it cannot push the focused form out of the viewport.
-  card.append(header,...(currentAccess?[]:[accessNote]),...(screenEntry?[screenPanel,marketPanel]:[marketPanel,screenPanel]),el('details.radar-browse',el('summary',s('radar.browse_questions')),starters),coverage,pelosiJump,el('div.radar-layout',el('aside.radar-sidebar',el('h2',s('radar.categories')),nav),main));
+  card.append(header,...(currentAccess?[]:[accessNote]),screenPanel,el('details.radar-browse',el('summary',s('radar.browse_questions')),starters),coverage,pelosiJump,el('div.radar-layout',el('aside.radar-sidebar',el('h2',s('radar.categories')),nav),main));
   if(screenEntry && !route.signal?.aborted && root.isConnected && epoch===store.epoch()){
     const target=screenPanel.querySelector('summary');
     target.focus({preventScroll:true});
@@ -209,8 +207,8 @@ export async function mount(root, route={}) {
   if(state.mode==='archive')await loadArchive(true);else render();
   return cleanup;
 
-  function cleanup(){disposeScreen();disposeMarket();clearTimeout(recentDebounce);alive=false;requestId++;archiveCtl?.abort();staticCtl.abort();clearTimeout(timer);}
-  function persist(){const p=new URLSearchParams();for(const [k,v] of Object.entries(state))if(v)p.set(k,v);history.replaceState(null,'','#/boards?'+p);}
+  function cleanup(){disposeScreen();clearTimeout(recentDebounce);alive=false;requestId++;archiveCtl?.abort();staticCtl.abort();clearTimeout(timer);}
+  function persist(){const p=new URLSearchParams();for(const [k,v] of Object.entries(state))if(v)p.set(k,v);history.replaceState(null,'','#/boards?'+p);selectNavigation('boards',p);}
   function readFilters(){state.q=query.value.trim();state.ticker=ticker.value.trim().toUpperCase().replace(/^\$/,'');state.content=content.value;state.direction=direction.value;state.sector=sector.value;state.cap=cap.value;state.purchases=purchases.value;state.days=days.value;state.start=start.value;state.end=end.value;}
   function apply(){
     readFilters();end.setCustomValidity(state.start && state.end && state.start>state.end?s('radar.date_error'):'');

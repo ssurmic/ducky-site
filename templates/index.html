@@ -1,27 +1,29 @@
 {% extends "_base.html" %}
 {% block head %}
 <link rel="stylesheet" href="/css/homepage.css">
+<link rel="stylesheet" href="/css/desk.css">
 <script type="module" src="/js/homepage.js"></script>
 {% endblock %}
 {% block content %}
 {% include "_partials/homepage-hero.html" %}
+{% include "_partials/product-desk.html" %}
+{% include "_partials/pricing.html" %}
 {% include "_partials/product-demo-video.html" %}
 {% include "_partials/stock-workspace.html" %}
-{% include "_partials/member-preview.html" %}
 {% include "_partials/video-example.html" %}
 {% include "_partials/revamp-proof.html" %}
 {% include "_partials/revamp-workflow.html" %}
-{% include "_partials/pricing.html" %}
 {% include "_partials/faq.html" %}
 {% include "_partials/disclaimer.html" %}
 
 {# Mobile entry points follow the page language. #}
 <div class="sticky-bar" id="sticky-bar" aria-hidden="true">
   <a class="btn btn-ghost" href="{{ url('/app/') }}#/register">{{ t('sticky.free') }}</a>
-  <a class="btn btn-primary" href="#features">{{ t('rev.how') }}</a>
+  <a class="btn btn-primary" href="#pricing">{{ t('desk.price_cta') }}</a>
 </div>
 {% endblock %}
 {% block scripts %}
 <script src="/js/site.js" defer></script>
 <script type="module" src="/js/home-demo.js"></script>
+<script type="module" src="/js/desk.js"></script>
 {% endblock %}

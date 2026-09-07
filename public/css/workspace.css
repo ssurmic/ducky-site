@@ -252,3 +252,48 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 @media(max-width:360px){.page-app .app-top .brand{font-size:.75rem;gap:6px}.page-app .app-top .avatar-mark{width:24px;height:24px}}
 @media(pointer:coarse){.page-app .btn,.page-app .btn-sm,.page-app .cal-mnav,.page-app .cal-today,.page-app .modal-close{min-height:44px}.page-app .input{font-size:16px}}
 @media(prefers-reduced-motion:reduce){.page-app *, .page-app *:before{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* Product destinations share the outer navigation; radar categories unfold here. */
+.nav-desktop-radar{display:none}
+.nav-radar>summary{display:flex;align-items:center;gap:12px;list-style:none;cursor:pointer;color:var(--muted);padding:10px 13px;min-height:44px;border-radius:8px;font-size:.9375rem}
+.nav-radar>summary::-webkit-details-marker{display:none}
+.nav-chevron{margin-left:auto;transition:transform .15s}
+.nav-radar[open]>summary .nav-chevron{transform:rotate(180deg)}
+.nav-radar.on>summary{color:var(--accent-text);background:color-mix(in srgb,var(--accent) 8%,var(--surface))}
+.nav-radar-links{display:grid;gap:3px;margin:4px 0 10px 15px;padding-left:9px;border-left:1px solid var(--border)}
+.nav-radar-links>a{display:flex;align-items:center;gap:9px;min-height:38px;padding:8px;color:var(--muted);font-size:.8125rem;text-decoration:none;border-radius:6px;line-height:1.4}
+.nav-radar-links .app-icon{width:16px;height:16px;flex:none}
+.nav-radar-links>a:hover,.nav-radar-links>a.on{background:var(--surface-2);color:var(--text)}
+.nav-more-panel>.nav-radar{grid-column:1/-1;border-top:1px solid var(--border)}
+.nav-more-panel>.nav-radar>summary{flex-direction:row;justify-content:flex-start;font-size:.875rem}
+.nav-more-panel .nav-radar-links{grid-template-columns:repeat(2,minmax(0,1fr));margin:0;border:0;padding:0}
+.nav-more-panel .nav-radar-links>a{font-size:.8125rem;min-width:0;min-height:44px}
+@media(min-width:1000px){
+ .page-app .app-shell{grid-template-columns:218px minmax(0,1fr)}
+ .page-app .app-nav{padding:16px 12px;gap:3px;scrollbar-width:thin}
+ .page-app .app-nav>a{min-height:40px;padding:8px 12px;font-size:.875rem}
+ .page-app .app-nav>a[data-route=opportunities]{margin-top:15px}
+ .page-app .app-nav>.nav-mobile-radar{display:none}
+ .nav-desktop-radar{display:block;flex:none;margin-top:15px}
+ .page-app .app-nav>a[data-route=profile]{margin-top:auto}
+ .page-app .radar-sidebar{display:none}
+ .page-app .radar-layout{grid-template-columns:minmax(0,1fr)}
+}
+.opportunity-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.page-app .opportunity-card{margin:0;padding:20px;min-width:0}
+.opportunity-heading{display:flex;justify-content:space-between;gap:12px;align-items:start}
+.opportunity-heading .ticker{font-size:1.25rem;font-weight:700;color:var(--text);text-decoration:none}
+.opportunity-heading p{font-size:.875rem;margin:4px 0 0}
+.opportunity-heading .chip{font-size:.6875rem;white-space:normal;text-align:center}
+.opportunity-metrics{display:grid;grid-template-columns:1fr 1fr;gap:18px 10px;padding:18px 0;border-bottom:1px solid var(--border);margin:0}
+.opportunity-metrics>div:last-child{grid-column:1/-1}
+.opportunity-metrics dt{font-size:.75rem;color:var(--muted)}
+.opportunity-metrics dd{font-size:1.125rem;margin:5px 0 0}
+.opportunity-reason{font-size:.875rem;color:var(--accent-text);margin:16px 0 6px}
+.opportunity-evidence>summary,.opportunity-method>summary{cursor:pointer;min-height:40px;align-content:center}
+.opportunity-evidence{font-size:.875rem}
+.opportunity-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.opportunity-filters{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 10px}
+.opportunity-filters label{display:grid;gap:6px;flex:1;min-width:180px;font-size:.8125rem}
+.ducky-empty img{border-radius:50%;margin-bottom:8px}
+@media(max-width:720px){.opportunity-grid{grid-template-columns:minmax(0,1fr)}.opportunity-filters label{min-width:120px}.page-app .nav-more-panel{max-height:calc(100dvh - 150px);overscroll-behavior:contain}}

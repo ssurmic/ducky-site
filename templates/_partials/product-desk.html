@@ -1,0 +1,26 @@
+{% set tools = navigation.discovery + navigation.primary + ['boards'] + navigation.research %}
+<section class="section product-desk no-glossary" id="features"><div class="wrap">
+ <div class="desk-section-head"><div><p class="eyebrow mono">{{ t('desk.catalog') }}</p><h2>{{ t('desk.map_title') }}</h2></div><p class="muted">{{ t('desk.map_sub') }}</p></div>
+ <div class="desk-tour" data-product-tour>
+  <nav class="desk-tools" aria-label="{{ t('desk.catalog') }}">
+   {% for route in tools %}<button type="button" data-tool="{{ route }}" aria-pressed="{{ 'true' if loop.first else 'false' }}" aria-controls="desk-feature-{{ route }}"><span class="mono desk-tool-number">{{ '%02d' % loop.index }}</span>{{ t('app.nav.' ~ route) }}<span class="desk-tool-arrow" aria-hidden="true">↗</span></button>{% endfor %}
+  </nav>
+  <div class="desk-preview">
+   {% for route in tools %}
+   <article id="desk-feature-{{ route }}" class="desk-feature"{% if not loop.first %} hidden{% endif %}>
+    <p class="eyebrow mono">{{ t('desk.preview_label') }} / {{ '%02d' % loop.index }}</p>
+    <h3>{{ t('app.nav.' ~ route) }}</h3><p class="desk-feature-copy">{{ t('desk.preview_' ~ route) }}</p>
+    <div class="desk-feature-tags">
+     {% if route == 'boards' %}{% for board in navigation.radar %}<a href="{{ url('/app/') }}#/boards?board={{ board.key }}">{{ t('app.radar.all') if board.key == 'all' else t('app.boards.t_' ~ board.key) }} ↗</a>{% endfor %}
+     {% elif route in ['opportunities','chart','screens'] %}<span>RSI</span><span>IV / HV</span><span>20D</span>
+     {% elif route in ['degen','vibe'] %}<span>Reddit</span><span>{{ t('app.social.history') }}</span>
+     {% elif route == 'ducky' %}<span>{{ t('ideas.book_live') }}</span><span>{{ t('ideas.book_paper') }}</span>
+     {% endif %}
+    </div>
+    <div class="desk-feature-actions"><a class="btn btn-primary" href="{{ url('/app/') }}#/{{ route }}">{{ t('desk.preview_open') }} ↗</a><a href="#pricing">{{ t('desk.subscribe') }} →</a></div>
+   </article>
+   {% endfor %}
+   <div class="desk-preview-footer"><img src="/avatar-160.jpg" alt="" width="32" height="32"><span>{{ t('desk.pro_note') }}</span></div>
+  </div>
+ </div>
+</div></section>

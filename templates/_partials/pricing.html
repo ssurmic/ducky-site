@@ -1,12 +1,15 @@
-{# Currency is a payment preference, independent of interface language. #}
 {% set pro = prices.pro %}
-<section class="section pricing pricing-compact" id="pricing"><div class="wrap">
- <div class="price-intro"><div><h2>{{ t('pricing.h2') }}</h2><p>{{ t('pricing.lead') }}</p></div><a class="btn btn-ghost" href="{{ url('/app/') }}#/register">{{ t('pricing.free_cta_bot') }}</a></div>
- <details class="plan-details"><summary>{{ t('pricing.compare') }} <span class="mono">Pro ${{ pro.monthly_usd }}{{ t('pricing.per_mo') }}</span></summary>
- <p class="muted small">{{ t('pricing.currency_note') }}</p>
- <div class="tiers tiers-unified" data-billing-mode="monthly">
-  <article class="tier tier-free"><h3>{{ t('pricing.free_name') }}</h3><p class="price mono">$0</p><p>{{ t('pricing.free_firehose') }}</p><p>{{ t('pricing.free_extras') }}</p><p>{{ t('pricing.free_alerts') }} {{ t('pricing.row_alerts') }}</p></article>
-  <article class="tier tier-pro"><h3>Pro</h3><p class="price mono">${{ pro.monthly_usd }}<small>{{ t('pricing.per_mo') }}</small></p><p class="mono">${{ pro.annual_usd }}{{ t('pricing.per_yr') }} · ¥{{ pro.annual_cny }}{{ t('pricing.per_yr') }}</p><p>{{ t('pricing.pro_dm') }}</p><p>{{ t('pricing.pro_extras') }}</p><a class="btn btn-ghost" href="{{ url('/app/') }}#/billing">{{ t('pricing.pro_cta') }}</a></article>
- </div><p class="under">{{ t('pricing.under') }}</p><p class="small">{{ t('pricing.microfaq_a') }}</p>
- </details>
+<section class="section pricing desk-pricing" id="pricing"><div class="wrap">
+ <div class="desk-section-head"><div><p class="eyebrow mono">{{ t('nav.pricing') }}</p><h2>{{ t('desk.price_title') }}</h2></div><p>{{ t('desk.price_sub') }}</p></div>
+ <div class="desk-plans">
+  <article class="desk-plan desk-plan-free"><p class="eyebrow">{{ t('desk.price_free') }}</p><h3>{{ t('pricing.free_name') }}</h3><p class="price mono">$0</p>
+   <ul><li>{{ t('desk.price_free_records') }}</li><li>{{ t('desk.price_free_radar') }}</li><li>{{ t('desk.price_free_alerts') }}</li></ul>
+   <a class="btn btn-ghost" href="{{ url('/app/') }}#/register">{{ t('rev.start') }} →</a>
+  </article>
+  <article class="desk-plan desk-plan-pro"><p class="eyebrow">{{ t('desk.price_pro') }}</p><h3>Pro</h3><p class="price mono">${{ pro.monthly_usd }}<small>{{ t('pricing.per_mo') }}</small></p>
+   <p class="desk-annual mono">${{ pro.annual_usd }}{{ t('pricing.per_yr') }}{% if is_zh %} · ¥{{ pro.annual_cny }}{{ t('pricing.per_yr') }}{% endif %}</p>
+   <ul><li>{{ t('desk.price_current') }}</li><li>{{ t('desk.price_research') }}</li><li>{{ t('desk.price_alerts') }}</li></ul>
+   <a class="btn btn-primary" href="{{ url('/app/') }}#/billing">{{ t('desk.price_cta') }} ↗</a>
+  </article>
+ </div><p class="small muted">{{ t('desk.price_methods') }}</p>
 </div></section>

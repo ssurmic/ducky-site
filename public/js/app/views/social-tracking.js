@@ -45,13 +45,14 @@ export function socialCard(row,{stale=false,onHistory}={}) {
 }
 
 export async function mountSocial(root,route={}) {
+  const degen=route.view==='degen', standalone=['degen','vibe'].includes(route.view);
   const ctl=new AbortController(), epoch=store.epoch();let alive=true,doc=null,watchState='unloaded',watches=[],expiry=null;
-  let viewQuery=route.query?.get('ticker')||'',viewScope=['hot','watchlist'].includes(route.query?.get('scope'))?route.query.get('scope'):'all';
+  let viewQuery=route.query?.get('ticker')||'',viewScope=['all','hot','watchlist'].includes(route.query?.get('scope'))?route.query.get('scope'):(degen?'hot':'all');
   function syncFilterUrl(){
-    const params=new URLSearchParams({board:'social'});
+    const params=new URLSearchParams(standalone?{}:{board:'social'});
     if(viewQuery.trim())params.set('ticker',viewQuery.trim());
-    if(viewScope!=='all')params.set('scope',viewScope);
-    const hash='#/boards?'+params;
+    if(viewScope!=='all'||degen)params.set('scope',viewScope);
+    const hash=(standalone?'#/'+route.view:'#/boards')+(params.size?'?'+params:'');
     history.replaceState(null,'',location.pathname+location.search+hash);
     for(const a of document.querySelectorAll('[data-lang-toggle]')){
       const u=new URL(a.href,location.href);u.hash=hash;a.href=u.href;
@@ -62,8 +63,9 @@ export async function mountSocial(root,route={}) {
   const valid=()=>alive&&!ctl.signal.aborted&&epoch===store.epoch();
   const page=el('section.radar-workspace.social-workspace');root.append(page);
   page.append(el('header.radar-heading',el('div',el('p.social-eyebrow',s('boards.h1')+' / '+s('boards.t_social')),
-    el('h1',s('social.title')),el('p.muted',s('social.description'))),
-    el('a.btn.btn-ghost.btn-sm',{href:'#/boards'},s('social.back'))));
+    el('h1',s(degen?'degen.title':'social.title')),el('p.muted',s(degen?'degen.description':'social.description'))),
+    el('a.btn.btn-ghost.btn-sm',{href:degen?'#/vibe':'#/degen'},s(degen?'nav.vibe':'nav.degen'))));
+  if(degen)page.append(el('p.data-notice',s('degen.limit')));
   page.append(el('div.social-platforms',el('span',s('social.reddit_source')),el('span.muted',s('social.x_unavailable'))));
   const method=el('details.social-method',el('summary',s('social.method')),
     el('p',s('social.formula')),el('p',s('social.threshold')),el('p',s('social.limits')),

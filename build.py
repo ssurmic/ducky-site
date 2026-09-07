@@ -520,6 +520,8 @@ def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, versi
         return f"{lang_prefix(for_lang or lang)}{rel_path}"
 
     return {
+        "navigation": json.loads((ROOT / "product-navigation.json").read_text()),
+        "desk_quotes": {row['ticker']: row for row in json.loads((ROOT / cfg['desk_prices']).read_text())['quotes']},
         "app_strings": {k[4:]:v for k,v in table.items() if k.startswith("app.")},
         "app_icon_sprite": app_icon_sprite() if page == "app" else "",
         "lang": lang, "html_lang": HTML_LANG[lang], "other_lang": other, "is_zh": lang == "zh",

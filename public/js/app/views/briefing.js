@@ -115,35 +115,22 @@ export async function mount(root,route={}){
   const params=route.query instanceof URLSearchParams?route.query:new URLSearchParams(route.query||'');
   const period=params.get('period')==='weekly'?'weekly':'daily';
   const ctl=new AbortController(),epoch=store.epoch();let alive=true,request=0;
-  const disposers=[];
   const head=el('div.view-head',el('h1',s('briefing.title')),
     el('nav',{'aria-label':s('briefing.period')},...['daily','weekly'].map(value=>el('a.btn.btn-ghost.btn-sm',
       {href:'#/briefing?period='+value,'aria-current':value===period?'page':null},s('briefing.'+value)))));
   const body=el('div');root.append(head,body);
   if(store.isPro())head.append(el('a.btn.btn-ghost.btn-sm',{href:'#/research'},s('record.changes')));
   const valid=id=>alive&&!ctl.signal.aborted&&store.epoch()===epoch&&(id==null||id===request);
-  function stopComponents(){for(const dispose of disposers.splice(0))dispose();}
-  function expandable(label,loader,id){
-    const target=el('div'),details=el('details.card',el('summary',s(label)),target);let started=false;
-    const toggle=async()=>{
-      if(!details.open||started||!valid(id))return;started=true;
-      try{const mountComponent=await loader();if(valid(id))disposers.push(mountComponent(target));}
-      catch{if(valid(id)){started=false;clear(target).append(el('p.muted',s('briefing.component_unavailable')));}}
-    };
-    details.addEventListener('toggle',toggle);return details;
-  }
   async function load(){
-    const id=++request;stopComponents();clear(body).append(spinner());
+    const id=++request;clear(body).append(spinner());
     try{
       const doc=await api.get('/briefing?period='+period,{signal:ctl.signal});
       if(!valid(id))return;
-      clear(body).append(renderBriefing(doc),
-        expandable('briefing.market_detail',()=>import('./market-context.js').then(module=>module.mountMarketContext),id),
-        expandable('briefing.macro_detail',()=>import('../macro-beta.js').then(module=>module.mountMacroBeta),id));
+      clear(body).append(renderBriefing(doc));
     }catch(error){if(valid(id))clear(body).append(errorBox(error,load));}
   }
   const unsubs=[store.subscribe('watchlist',load),store.subscribe('me',load)];
-  function cleanup(){if(!alive)return;alive=false;request++;ctl.abort();stopComponents();unsubs.forEach(fn=>fn());}
+  function cleanup(){if(!alive)return;alive=false;request++;ctl.abort();unsubs.forEach(fn=>fn());}
   route.signal?.addEventListener('abort',cleanup,{once:true});
   if(route.signal?.aborted)cleanup();
   if(alive)await load();

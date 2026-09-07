@@ -1,0 +1,20 @@
+{
+  "primary": ["watchlist", "briefing", "chart", "calendar", "alerts", "creators"],
+  "discovery": ["opportunities", "degen", "vibe", "ducky"],
+  "radar": [
+    {"key":"all", "icon":"boards"},
+    {"key":"insider", "icon":"insider"},
+    {"key":"partner", "icon":"partner"},
+    {"key":"political", "icon":"insider"},
+    {"key":"earnings", "icon":"earnings"},
+    {"key":"index", "icon":"calendar"},
+    {"key":"news", "icon":"digest"},
+    {"key":"liquidity", "icon":"liquidity"},
+    {"key":"volscan", "icon":"volscan"},
+    {"key":"hiring", "icon":"hiring"},
+    {"key":"industry", "icon":"partner"},
+    {"key":"digest", "icon":"digest"}
+  ],
+  "research": ["market", "macro", "screens"],
+  "account": ["profile", "billing"]
+}

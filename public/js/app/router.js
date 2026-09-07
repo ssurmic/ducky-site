@@ -5,8 +5,16 @@ import * as tg from "./tg.js";
 import { clear, errorBox, spinner, closeModal } from "./ui.js";
 import { rememberTarget, takeTarget } from "./login-target.js";
 import { showModuleRecovery } from "./release-recovery.js";
+import { selectNavigation } from './navigation.js';
 
 const ROUTES = {
+  opportunities: () => import('./views/opportunities.js'),
+  degen: () => import('./views/discovery.js'),
+  vibe: () => import('./views/discovery.js'),
+  ducky: () => import('./views/ducky.js'),
+  market: () => import('./views/discovery.js'),
+  macro: () => import('./views/discovery.js'),
+  screens: () => import('./views/discovery.js'),
   research: () => import("./views/research.js"),
   login: () => import("./views/login.js"),
   oauth: () => import("./views/google.js"),
@@ -65,7 +73,7 @@ export async function render() {
   route.params.signal = controller.signal;
   if (cleanup) { try { cleanup(); } catch (e) { /* ignore */ } cleanup = null; }
   store.set("route", route);
-  setActiveTab(route.name);
+  selectNavigation(route.name, route.params.query);
   document.body.setAttribute("data-route", route.name);
   clear(root);
   const main = root.closest(".app-main");
@@ -103,21 +111,8 @@ export async function render() {
   } else tg.hideMain();
   if (route.name === "updates") tg.showBack(() => go("#/alerts"));
   else if (route.name === "briefing" || route.name === "research" || route.name === "chart" || route.name === "billing" || route.name === "alerts" || route.name === "profile" || route.name === "creators" || route.name === "calendar" || route.name === "boards") tg.showBack(() => go("#/watchlist"));
+  else if(!PUBLIC.has(route.name) && route.name!=='watchlist')tg.showBack(()=>go('#/watchlist'));
   else tg.hideBack();
-}
-
-function setActiveTab(name) {
-  if (name === 'updates') name = 'alerts';
-  document.querySelectorAll(".app-nav a[data-route]").forEach((a) => {
-    const on = a.getAttribute("data-route") === name;
-    a.classList.toggle("on", on);
-    if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
-  });
-  const more = document.querySelector(".nav-more");
-  if (more) {
-    more.open = false;
-    more.classList.toggle("on", ["chart", "briefing", "creators", "profile", "billing"].includes(name));
-  }
 }
 
 export function start() {

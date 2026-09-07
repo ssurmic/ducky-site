@@ -4,7 +4,7 @@
 import { creatorRoute, creatorTarget } from './creator-route.js';
 const KEY = "ducky.login-target";
 const MAX_AGE = 20 * 60 * 1000;
-const SIMPLE = new Set(["watchlist", "alerts", "billing", "profile", "creators", "calendar", "boards"]);
+const SIMPLE = new Set(["watchlist", "alerts", "billing", "profile", "creators", "calendar", "boards", "opportunities", "degen", "vibe", "ducky", "market", "macro", "screens"]);
 
 export function safeTarget(hash) {
   if (typeof hash !== "string" || hash.length > 2048) return null;
@@ -24,12 +24,14 @@ export function safeTarget(hash) {
       if (/^[A-Z][A-Z0-9.-]{0,11}$/.test(ticker)) target.set('ticker', ticker);
       return '#/boards?' + target;
     }
-    if (['insider-oversold','institution-oversold'].includes(screen)) return '#/boards?screen=' + screen;
+    if (['oversold','insider-oversold','institution-oversold'].includes(screen)) return '#/boards?screen=' + screen;
     const ticker=(q.get('ticker')||'').toUpperCase();
-    if (!/^[A-Z][A-Z0-9.-]{0,11}$/.test(ticker)) return '#/boards';
-    const target=new URLSearchParams({mode:'archive',ticker});
+    const target=new URLSearchParams();
+    const board=q.get('board');
+    if(['all','insider','partner','political','earnings','index','news','liquidity','volscan','hiring','industry','digest','social'].includes(board))target.set('board',board);
+    if (/^[A-Z][A-Z0-9.-]{0,11}$/.test(ticker)){target.set('mode','archive');target.set('ticker',ticker);}
     for (const key of ['start','end']) { const date=q.get(key)||''; if (/^\d{4}-\d{2}-\d{2}$/.test(date) && Number.isFinite(Date.parse(date)) && new Date(date).toISOString().slice(0,10)===date) target.set(key,date); }
-    return '#/boards?'+target;
+    return '#/boards'+(target.size?'?'+target:'');
   }
   if (path === '#/briefing') {
     const period=new URLSearchParams(hash.split('?')[1] || '').get('period');
