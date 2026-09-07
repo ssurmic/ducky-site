@@ -180,5 +180,51 @@
       "error": null,
       "time": 21.461333
     }
+  },
+  {
+    "phase": "production",
+    "language": "zh",
+    "cold_seek": {
+      "duration": 22.861333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "src": "https://duckybot.app/media/ducky-walkthrough-2026-09-06-alerts-v7.zh.mp4",
+      "time": 19.08,
+      "width": 390
+    }
+  },
+  {
+    "phase": "production",
+    "language": "zh",
+    "playback": {
+      "duration": 22.861333,
+      "ended": true,
+      "error": null,
+      "time": 22.861333
+    }
+  },
+  {
+    "phase": "production",
+    "language": "en",
+    "cold_seek": {
+      "duration": 21.461333,
+      "error": null,
+      "overflow": false,
+      "paused": true,
+      "src": "https://duckybot.app/media/ducky-walkthrough-2026-09-06-alerts-v7.en.mp4",
+      "time": 17.28,
+      "width": 390
+    }
+  },
+  {
+    "phase": "production",
+    "language": "en",
+    "playback": {
+      "duration": 21.461333,
+      "ended": true,
+      "error": null,
+      "time": 21.461333
+    }
   }
 ]

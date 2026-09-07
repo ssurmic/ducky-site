@@ -31,3 +31,17 @@ This agent cannot directly hear audio in this session. ASR, waveform checks and 
 - Six video chapters are separate from the existing seven feature links. Free/Pro boundaries remain explicit. Voice gender, model names and production details appear only in this internal report, never in the customer UI.
 
 Browser and production verification are recorded in `browser-qa.json` and `production-http.json` after final publication.
+
+## Publication accepted
+
+Source `546ba8f` pushed to frontend main; Cloudflare Pages **d9e0aa56** serves the new cut.
+Both canonical homepages select alerts-v7. All eight production media assets are byte-identical
+to the reviewed files; both MP4s return HTTP 206 for range requests. Production mobile Chinese
+and English cold-seek correctly, remain paused until Play, and both complete to `ended=true`
+without media errors. Native captions and 390px layouts were visually checked; local 1440px
+English and 390px Chinese checks cover all six offsets. The free-alert CTA is live in both
+languages. See the final `production-http.json` and appended `browser-qa.json` evidence.
+
+Backend clean-upstream selftest: 1,460 passed; architecture lint: zero failures/warnings.
+Task-owned synthesis/ASR units have exited successfully. No production process or model was
+restarted. Local preview servers are stopped and the temporary browser viewport is reset.

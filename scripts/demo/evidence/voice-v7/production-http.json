@@ -1,0 +1,88 @@
+{
+  "origin": "https://duckybot.app",
+  "commit": "546ba8f",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "bytes": 139250,
+      "sha256": "eea5ce9e965c437c461a927651c52de26e99316a9d78ee861a4620a2a192b032",
+      "version": "2026-09-06-alerts-v7",
+      "video_chapters": 6
+    },
+    {
+      "path": "/en/",
+      "status": 200,
+      "bytes": 139542,
+      "sha256": "162cb9cfa1eeb3f85b4181b38e456a2decd2b53b5d5ff57c45b36e5ec623d95c",
+      "version": "2026-09-06-alerts-v7",
+      "video_chapters": 6
+    },
+    {
+      "path": "/media/ducky-walkthrough-2026-09-06-alerts-v7.en.mp4",
+      "status": 200,
+      "bytes": 929352,
+      "sha256": "b62f6731c7101e7acfeab495b931323a6a56796a4dd85aba84e066d32140df52",
+      "matches_local": true
+    },
+    {
+      "path": "/media/ducky-walkthrough-2026-09-06-alerts-v7.zh.mp4",
+      "status": 200,
+      "bytes": 888425,
+      "sha256": "beb4a48524eb170c278a2bb4bfa976b2c6ba7f07ba76475d226f8243a8e9a5fe",
+      "matches_local": true
+    },
+    {
+      "path": "/media/ducky-walkthrough-2026-09-06-alerts-v7.en.en.vtt",
+      "status": 200,
+      "bytes": 848,
+      "sha256": "523f06b1d9c6195a95c5ef29a8033354c720a161515dafdf9942542eaf6a6675",
+      "matches_local": true
+    },
+    {
+      "path": "/media/ducky-walkthrough-2026-09-06-alerts-v7.zh.en.vtt",
+      "status": 200,
+      "bytes": 848,
+      "sha256": "98017cfceed59edf504a3bee9d9c74d7afac68ce72177898a2edec9cfc318097",
+      "matches_local": true
+    },
+    {
+      "path": "/media/ducky-walkthrough-2026-09-06-alerts-v7.zh.jpg",
+      "status": 200,
+      "bytes": 89721,
+      "sha256": "4d7c85b1067a04ef914b6371843e0cfc87986df489f7bfb66ac7140d0da89508",
+      "matches_local": true
+    },
+    {
+      "path": "/media/ducky-walkthrough-2026-09-06-alerts-v7.en.jpg",
+      "status": 200,
+      "bytes": 100951,
+      "sha256": "88f9ce7de0e9d8c3833624274118075f24d5740ee85af4c638407e1b3278e1cb",
+      "matches_local": true
+    },
+    {
+      "path": "/media/ducky-walkthrough-2026-09-06-alerts-v7.en.zh.vtt",
+      "status": 200,
+      "bytes": 779,
+      "sha256": "192543f7bb10198427dd8607e654c1676730029bb82bec54df45343cf0fbf57f",
+      "matches_local": true
+    },
+    {
+      "path": "/media/ducky-walkthrough-2026-09-06-alerts-v7.zh.zh.vtt",
+      "status": 200,
+      "bytes": 779,
+      "sha256": "8613b6e498a3df295e4bc9414650b828f05fc0dc8c44554696f478cbd4c6222e",
+      "matches_local": true
+    },
+    {
+      "path": "/media/ducky-walkthrough-2026-09-06-alerts-v7.zh.mp4",
+      "range_status": 206,
+      "content_range": "bytes 0-1023/888425"
+    },
+    {
+      "path": "/media/ducky-walkthrough-2026-09-06-alerts-v7.en.mp4",
+      "range_status": 206,
+      "content_range": "bytes 0-1023/929352"
+    }
+  ]
+}
