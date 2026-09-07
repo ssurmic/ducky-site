@@ -14,7 +14,7 @@ test('quote requires a matching identity, actual price, and dated source snapsho
 });
 
 function setup(){
- const dom=new JSDOM('<body><section data-duck-tape data-close="Close" data-snapshot="Snapshot" data-pause="Pause flight" data-resume="Resume flight"><button data-motion-toggle hidden>Pause flight</button>'+[0,1].map(()=>'<a data-quote="NOK" data-built="2026-09-01T20:30:00Z"><span data-quote-price>$10.03</span><small data-quote-date>2026-09-01 · Close</small></a>').join('')+'</section></body>',{pretendToBeVisual:true});
+ const dom=new JSDOM('<body><section data-duck-tape data-close="Close" data-snapshot="Snapshot" data-pause="Pause flight" data-resume="Resume flight"><button data-duck-motion-toggle hidden>Pause flight</button>'+[0,1].map(()=>'<a data-quote="NOK" data-built="2026-09-01T20:30:00Z"><span data-quote-price>$10.03</span><small data-quote-date>2026-09-01 · Close</small></a>').join('')+'</section></body>',{pretendToBeVisual:true});
  return {dom,root:dom.window.document.querySelector('section')};
 }
 test('both visual copies update together, and older responses cannot rewind a quote',()=>{

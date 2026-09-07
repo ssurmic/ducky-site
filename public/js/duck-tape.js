@@ -17,7 +17,7 @@ export function paintQuote(root, quote) {
   return changed;
 }
 export function mountDuckTape(root) {
-  const button=root.querySelector('[data-motion-toggle]'),body=root.ownerDocument.body;
+  const button=root.querySelector('[data-duck-motion-toggle]'),body=root.ownerDocument.body;
   const hero=root.ownerDocument.querySelector('[data-home-hero]');
   let reduced=!!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   let paused=reduced||!!hero?.classList.contains('motion-paused'),onscreen=true,last=0,controller=null,timer=null,destroyed=false;

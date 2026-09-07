@@ -84,7 +84,7 @@ test('the homepage and duck quote lane share pause state in either direction',()
  try {
   globalThis.window=f.w;globalThis.document=f.doc;f.w.DUCKY={};
   disposeTape=mountDuckTape(f.doc.querySelector('[data-duck-tape]'));
-  const hero=f.doc.querySelector('[data-home-hero]'),primary=f.doc.querySelector('[data-home-motion]'),tape=f.doc.querySelector('[data-motion-toggle]');
+  const hero=f.doc.querySelector('[data-home-hero]'),primary=f.doc.querySelector('[data-home-motion]'),tape=f.doc.querySelector('[data-duck-motion-toggle]');
   primary.click();assert.equal(f.doc.body.hasAttribute('data-home-paused'),true);assert.equal(tape.getAttribute('aria-pressed'),'true');
   tape.click();assert.equal(hero.classList.contains('motion-paused'),false);assert.equal(primary.getAttribute('aria-pressed'),'false');
   f.media.matches=true;f.media.dispatchEvent(new f.w.Event('change'));
