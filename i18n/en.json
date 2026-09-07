@@ -3045,7 +3045,7 @@
   "app.stockbrief.next_check": "What to check next",
   "app.stockbrief.dimension_technical": "Technicals and options",
   "app.stockbrief.lock_title": "Stock briefs with Pro",
-  "app.stockbrief.all": "All followed stocks",
+  "app.stockbrief.all": "All followed",
   "app.stockbrief.missing_option_concentrations": "Option concentrations",
   "app.social.merged": "Degen Index is now part of Vibe Check. Start with the state and next check, then expand the score and its calculation.",
   "app.stockbrief.unready_source_changed": "A cited source changed. This report is withheld until it has been checked again.",
