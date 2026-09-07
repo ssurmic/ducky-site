@@ -29,4 +29,4 @@ Humanizer-zh applied with the owner's requested confident marketing tone. 243 ex
 
 Actual browser views: Chinese dark desktop, English light desktop, Chinese light320px Focus, Chinese dark320px Flow, Chinese light390px Journal, English dark320px Journal. The Chinese headline uses two intact lines; tested320px layouts have document/scroll width320/320. Narrow English Journal wraps naturally into three lines. The initial desktop Chinese word split was fixed by adjusting the headline scale and checked again. No physical-device claim.
 
-Production release evidence follows after deployment.
+Released as `be395735`, Pages `a17535d7` (`https://a17535d7.ducky-site.pages.dev`). The production Chinese homepage was visually checked with the new headline and intact two-line typography. Both localized deployed pages return200 with their new headlines and release assets. App graph remains `976e1cacfd641adc5f3c`.
