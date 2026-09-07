@@ -1,17 +1,14 @@
-import { s, LANG } from "../strings.js";
+import { s } from "../strings.js";
 import * as api from "../api.js";
 import * as auth from "../auth.js";
 import * as router from "../router.js";
 import { el, toast } from "../ui.js";
 import { verificationTarget } from "../login-target.js";
+import { googleLogin } from '../google-login.js';
 
 export async function mount(root, { signal } = {}) {
   const card = el("section.card.login", el("h1", s("register.title")), el("p.muted", s("register.sub")));
-  const google = el("div.google-login-block", el("a.btn.google-login", {
-    href: api.base() + "/auth/google/start?lang=" + LANG
-  }, s("google.continue")), el("p.muted.small", s("google.scope")));
-  google.hidden = true; card.append(google);
-  api.auth.providers().then(config => { if (!signal?.aborted) google.hidden = !config.google; }).catch(() => {});
+  const google = googleLogin({signal});card.append(google.element);
   const form = el("form.login-block");
   const email = el("input.input", { type: "email", name: "email", autocomplete: "email", maxlength: "254", required: "" });
   const password = el("input.input", { type: "password", name: "password", autocomplete: "new-password", minlength: "8", maxlength: "1024", required: "" });
@@ -43,4 +40,5 @@ export async function mount(root, { signal } = {}) {
       button.disabled = false;
     }
   });
+  return google.dispose;
 }

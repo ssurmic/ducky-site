@@ -116,7 +116,7 @@ export async function getDataUri(path) {
 
 // ---- typed endpoints (contract: SYSTEMDESIGN.md §4.2, backend pack M3) ------------------------
 export const auth = {
-  providers: () => get("/auth/providers", { auth: false }),
+  providers: (opts) => get("/auth/providers", { ...opts, auth: false }),
   googleSession: () => post("/auth/session", {}, { auth: false, credentials: "include" }),
   googleLink: () => post("/auth/google/link", { lang: LANG }, { credentials: "include" }),
   miniapp: (initData) => post("/auth/miniapp", { initData }, { auth: false }),
