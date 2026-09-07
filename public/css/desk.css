@@ -1,4 +1,6 @@
 /* One product catalogue from the landing page through the member workspace. */
+#features,#pricing{scroll-margin-top:76px}
+.desk-feature{scroll-margin-top:90px}
 .desk-hero-price{display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-size:.8125rem;margin:18px 0 0;color:var(--muted)}
 .desk-hero-price b{color:var(--text);font-weight:500}.desk-hero-price a{color:var(--accent-text)}
 .home-quote-strip{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;padding:0 0 42px 300px;min-height:142px;--duck-x:0px;--duck-y:0px;isolation:isolate}

@@ -19,6 +19,11 @@ export function mountTour(root) {
     const button=event.currentTarget;
     for(const b of buttons)b.setAttribute('aria-pressed',String(b===button));
     for(const p of panels)p.hidden=p.id!==button.getAttribute('aria-controls');
+    const win=root.ownerDocument.defaultView;
+    if(win.matchMedia?.('(max-width: 760px)').matches) {
+      const panel=panels.find(p=>!p.hidden);
+      panel?.scrollIntoView({block:'start',behavior:win.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+    }
   };
   buttons.forEach(b=>b.addEventListener('click',select));
   return()=>buttons.forEach(b=>b.removeEventListener('click',select));

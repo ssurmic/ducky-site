@@ -297,3 +297,8 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 .opportunity-filters label{display:grid;gap:6px;flex:1;min-width:180px;font-size:.8125rem}
 .ducky-empty img{border-radius:50%;margin-bottom:8px}
 @media(max-width:720px){.opportunity-grid{grid-template-columns:minmax(0,1fr)}.opportunity-filters label{min-width:120px}.page-app .nav-more-panel{max-height:calc(100dvh - 150px);overscroll-behavior:contain}}
+@media(max-width:480px){
+ .opportunity-filters{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+ .opportunity-filters label{min-width:0;width:100%}
+ .opportunity-filters .input{width:100%;min-width:0}
+}
