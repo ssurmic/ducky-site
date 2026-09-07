@@ -1,5 +1,6 @@
 // views/watchlist.js — add ticker · list of 全景 mini-cards from /snapshot · remove.
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
+import { overviewView } from "../watchlist-overview.js";
 import { companyContext } from "../company-context.js";
 import { symbolPicker } from "../symbol-picker.js";
 import { s } from "../strings.js";
@@ -18,7 +19,9 @@ export function normalizeList(resp) {
 
 export async function mount(root) {
   const unsubs = [];
-  const rendered = new Map();
+  let overview = null, selected = null, disposed = false;
+  let view = "list", query = "", sort = "market_cap";
+  try { view = localStorage.getItem("ducky-watch-view") === "heatmap" ? "heatmap" : "list"; } catch {}
   const inflight = new Map();   // finding watchlist.js:118 — ticker -> in-flight fetch promise (dedup)
   const head = el("div.view-head", el("h1", s("watch.title")), el("span.count.mono", { id: "watch-count" }));
   const input = el("input.input.mono", { type: "text", placeholder: s("watch.placeholder"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "80", "aria-label": s("watch.placeholder") });
@@ -26,8 +29,35 @@ export async function mount(root) {
   const picker = symbolPicker(input, () => store.get("watchlist") || []);
   unsubs.push(picker.dispose);
   const form = el("form.add-row", { onsubmit: onAdd }, picker.wrap, addBtn);
-  const list = el("div.cards", { id: "watch-cards" });
-  root.append(head, el("p.view-intro.muted", s("watch.workflow")), form, list);
+  const list = el("div.watch-overview", { id: "watch-cards" });
+  const detail = el('section.watch-detail', {hidden:true, 'aria-label':s('watch.details')});
+  const layout = el('div.watch-layout', list, detail);
+  const modes = el('div.watch-modes', {'role':'group','aria-label':s('watch.display')});
+  for (const mode of ['list','heatmap']) modes.append(el('button.btn.btn-ghost.btn-sm', {type:'button',
+    'data-mode':mode, 'aria-pressed':String(view===mode), onclick:()=>{
+      view=mode; try { localStorage.setItem('ducky-watch-view',view); } catch {} render();
+    }},s('watch.view_'+mode)));
+  const filter = el('input.input.watch-filter',{type:'search',placeholder:s('watch.filter'), 'aria-label':s('watch.filter'),
+    oninput:()=>{query=filter.value;render();}});
+  const sorting = el('select.input',{'aria-label':s('watch.sort'),onchange:()=>{sort=sorting.value;render();}},
+    ...['market_cap','change_pct','ticker'].map(key=>el('option',{value:key},s('watch.sort_'+key))));
+  const controls = el('div.watch-controls',modes,filter,sorting,el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:load},s('watch.refresh')));
+  function selectTicker(t) {
+    selected=t;render();renderDetail();loadSnapshot(t,false);
+    detail.querySelector('button')?.focus();
+    detail.scrollIntoView?.({block:'nearest',behavior:'smooth'});
+  }
+  function closeDetail() {
+    const previous=selected;selected=null;render();renderDetail();
+    list.querySelector(`[data-open="${previous}"]`)?.focus();
+  }
+  function renderDetail() {
+    clear(detail);detail.hidden=!selected;layout.classList.toggle('has-detail',!!selected);
+    if (!selected) return;
+    detail.append(el('button.btn.btn-ghost.btn-sm.watch-close',{type:'button',onclick:closeDetail},s('watch.close_details')),
+      card(selected,(store.get('snapshots') || {})[selected]));
+  }
+  root.append(head, el("p.view-intro.muted", s("watch.workflow")), form, controls, layout);
   head.append(el('a.btn.btn-ghost.btn-sm',{href:'#/updates'},s('updates.entry_title')));
 
   async function onAdd(e) {
@@ -42,9 +72,7 @@ export async function mount(root) {
       toast(result?.added === false ? s("watch.following") : s("watch.added", { t:result?.ticker || t }), "ok");
       tg.haptic("success");
       await load();
-      // finding watchlist.js:118 — load() sets watchlist, which fires the subscriber below that already
-      // fetches every ticker's snapshot; the old explicit loadSnapshot(t,true) here doubled it into two
-      // concurrent 6-try polling loops per add. The subscriber (with in-flight dedup) covers it.
+
     } catch (err) {
       if (err.status !== 402) toast(s("common.error", { msg: err.message }), "err");
     } finally { addBtn.disabled = false; }
@@ -66,17 +94,14 @@ export async function mount(root) {
     const cap = me.watch_cap;
     const cnt = document.getElementById("watch-count");
     if (cnt) cnt.textContent = cap ? s("watch.count", { n: items.length, cap }) : String(items.length);
-    if (!items.length) { clear(list); rendered.clear(); list.appendChild(empty(s("watch.empty"))); return; }
-    list.querySelectorAll(".empty, .errbox").forEach(n => n.remove());
-    for (const [t, old] of rendered) if (!items.includes(t)) { old.node.remove(); rendered.delete(t); }
-    const snaps = store.get("snapshots") || {};
-    for (const t of items) {
-      const old = rendered.get(t);
-      if (old && old.snap === snaps[t] && old.pro === store.isPro()) continue;
-      const node = card(t, snaps[t]);
-      if (old && old.node.isConnected) old.node.replaceWith(node); else list.appendChild(node);
-      rendered.set(t, { node, snap: snaps[t], pro: store.isPro() });
-    }
+    if (selected && !items.includes(selected)) {selected=null;renderDetail();}
+    modes.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.mode===view)));
+    sorting.hidden=view==='heatmap';
+    clear(list);
+    if (!items.length) {list.append(empty(s('watch.empty')));return;}
+    const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
+    list.append(overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
+      {view,query,sort,selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
   }
 
   function card(t, snap) {
@@ -89,6 +114,7 @@ export async function mount(root) {
       el("a.btn.btn-ghost.btn-sm", { href: "#/chart/" + t }, s("watch.chart")),
       el("button.btn.btn-ghost.btn-sm.danger", { type: "button", "aria-label": s("watch.remove") + " " + t, onclick: () => onRemove(t) }, "✕"));
     c.appendChild(head);
+    c.append(el('a.btn.btn-ghost.btn-sm.watch-research',{href:'#/research/'+encodeURIComponent(t)},s('watch.research_record')));
     if (!snap) { c.appendChild(spinner()); return c; }
     if (snap.pending) { c.appendChild(spinner(s("common.building"))); return c; }
     if (snap.error && !snap.ok) {
@@ -116,7 +142,7 @@ export async function mount(root) {
     row(s("watch.vs200"), pct(te.vs_200dma), signClass(te.vs_200dma));
     if (r20) row(s("watch.retrace"), int(r20.pos * 100) + "% · " + posWord(r20.pos) + " [" + num(r20.lo, 2) + "–" + num(r20.hi, 2) + "]", r20.pos < 0.25 ? "neg" : r20.pos > 0.75 ? "pos" : "");
     if (rs.status === "benchmark_changed") row(s("company.comparison_pending"), "—");
-    if (rs.excess20 !== undefined && rs.excess20 !== null) row(s("watch.rs", { b: rs.benchmark || "—" }), pct(rs.excess20) + (rs.label ? " · " + rsWord(rs.label) : ""), signClass(rs.excess20));
+    if (rs.excess20 !== undefined && rs.excess20 !== null) row(s(rs.scope === "business_peers" ? "watch.rs_peers" : rs.kind === "basket" ? "watch.rs_theme" : "watch.rs_reference", { b: rs.benchmark || "—" }), pct(rs.excess20) + (rs.label ? " · " + rsWord(rs.label) : ""), signClass(rs.excess20));
     const pctOrDash = (x) => (x == null ? "—" : num(x, 1) + "%");   // avoid a broken "—%" when only one side is present
     if (v.iv || v.hv) row(s("watch.ivhv"), pctOrDash(v.iv) + " / " + pctOrDash(v.hv) + (v.ratio ? " → " + num(v.ratio, 2) + (v.label ? " (" + volWord(v.label) + ")" : "") : ""));
     c.appendChild(rows);
@@ -138,7 +164,6 @@ export async function mount(root) {
       el('a.btn.btn-ghost.btn-sm',{href:'#/updates?ticker='+encodeURIComponent(t)},s('updates.follow_content')),
       el("a.btn.btn-ghost.btn-sm", { href: "#/creators?ticker=" + encodeURIComponent(t) }, s("watch.creator_mentions")),
       el("a.btn.btn-ghost.btn-sm", { href: "#/boards?mode=archive&ticker=" + encodeURIComponent(t) }, s("watch.radar_records")),
-      el("a.btn.btn-ghost.btn-sm", { href: "#/research/" + encodeURIComponent(t) }, s("research.title")),
       el("a.btn.btn-primary.btn-sm", { href: "#/alerts?ticker=" + encodeURIComponent(t) }, s("watch.set_alert")),
       el("a.btn.btn-ghost.btn-sm", { href: "#/calendar?ticker=" + encodeURIComponent(t) }, s("watch.events"))));
     return c;
@@ -156,11 +181,13 @@ export async function mount(root) {
     // otherwise repopulate it; capture the epoch and drop the write if the session changed.
     const epoch = store.epoch();
     try {
-      const items = normalizeList(await api.watchlist.list());
-      if (store.epoch() !== epoch) return;
+      const response = await api.watchlist.list();
+      const items = normalizeList(response);
+      if (disposed || store.epoch() !== epoch) return;
+      overview = response?.overview || null;
       store.set("watchlist", items);
     } catch (err) {
-      if (store.epoch() !== epoch) return;
+      if (disposed || store.epoch() !== epoch) return;
       clear(list); list.appendChild(errorBox(err, load));
     }
   }
@@ -175,12 +202,12 @@ export async function mount(root) {
     if (!snaps[t]?.ok) store.patch("snapshots", { [t]: { pending: true } });
     const p = (async () => {
       try {
-        const r = await api.snapshot(t, { tries: 6, onWait: () => { if (store.epoch() === epoch) store.patch("snapshots", { [t]: { pending: true } }); } });
-        if (store.epoch() !== epoch) return;   // logged out mid-flight — don't repopulate the wiped store
+        const r = await api.snapshot(t, { tries: 6, onWait: () => { if (!disposed && store.epoch() === epoch) store.patch("snapshots", { [t]: { pending: true } }); } });
+        if (disposed || store.epoch() !== epoch) return;   // logged out mid-flight — don't repopulate the wiped store
         const snap = unpackSnapshot(r);
         store.patch("snapshots", { [t]: api.isAccepted(r) ? { ok: false, error: { message: s("common.building") } } : snap });
       } catch (err) {
-        if (err.status === 401 || store.epoch() !== epoch) return;
+        if (disposed || err.status === 401 || store.epoch() !== epoch) return;
         store.patch("snapshots", { [t]: { ok: false, error: err } });
       } finally {
         inflight.delete(t);
@@ -190,10 +217,10 @@ export async function mount(root) {
     return p;
   }
 
-  unsubs.push(store.subscribe("watchlist", () => { render(); for (const t of store.get("watchlist")) loadSnapshot(t, false); }));
-  unsubs.push(store.subscribe("snapshots", render));
+  unsubs.push(store.subscribe("watchlist", render));
+  unsubs.push(store.subscribe("snapshots", renderDetail));
+  unsubs.push(store.subscribe("me", () => {render();renderDetail();}));
   render();
-  if ((store.get("watchlist") || []).length) for (const t of store.get("watchlist")) loadSnapshot(t, false);
   await load();
-  return () => unsubs.forEach((u) => u());
+  return () => {disposed=true;unsubs.forEach((u) => u());};
 }

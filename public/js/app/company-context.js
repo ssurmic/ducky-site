@@ -4,7 +4,7 @@ import { s, LANG } from './strings.js';
 
 export function companyContext(p, rs = {}) {
   const box = el('section.company-context', {'aria-label':s('company.title')});
-  if (!p || p.status === 'pending') {
+  if (!p || (p.status === 'pending' && !p.description_status)) {
     box.append(el('p.muted.small',s('company.pending'))); return box;
   }
   const zh = LANG === 'zh';
@@ -34,7 +34,7 @@ export function companyContext(p, rs = {}) {
   const reason = zh ? p.reason_zh : p.reason_en;
   if (reason) details.append(el('p.small',reason));
   details.append(el('p.muted.small',s('company.related_note')));
-  const when = p.reviewed_at || p.profile_as_of;
+  const when = p.description_reviewed_at || p.reviewed_at || p.profile_as_of;
   if (when) details.append(el('p.muted.small',s('company.as_of',{date:String(when).slice(0,10)})));
   const w=rs.windows?.['20'];
   if(w?.start && w?.end) details.append(el('p.muted.small',s('company.window',{start:w.start,end:w.end})));
