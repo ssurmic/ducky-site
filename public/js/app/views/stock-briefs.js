@@ -21,7 +21,7 @@ export function factText(fact){
     (d.transactions||[]).map(t=>`${t.date} · ${n(t.shares,0)} × $${n(t.price,2)}`).join(' / ');
   if(fact.topic==='business_peer_comparison')return (d.benchmark||'')+' · '+n(d.excess20)+' pp';
   if(d.left&&d.right)return `${d.left} ${pct(d.left_return_pct)} / ${d.right} ${pct(d.right_return_pct)} · ${n(d.excess_pp,2)} pp · ${d.start} → ${d.end}`;
-  if(fact.topic==='macro_background')return s('stockbrief.fact_macro',{date:d.date||'—',regime:d.regime||'—',rate:n(d.metrics?.nominal_10y,2)});
+  if(fact.topic==='macro_background')return s('stockbrief.fact_macro',{date:d.date||'—',regime:s('stockbrief.regime_'+(['mixed','supportive','adverse'].includes(d.regime)?d.regime:'unknown')),rate:n(d.metrics?.nominal_10y,2)});
   return [d.publisher||d.author||'',LANG==='en'?(d.summary_en||d.title||''):(d.summary||d.title||'')].filter(Boolean).join(' · ')||s('stockbrief.recorded_source');
 }
 

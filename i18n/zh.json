@@ -3096,5 +3096,9 @@
   "app.stockbrief.missing_sector_etf_vs_nasdaq100": "板块 ETF 与 Nasdaq-100",
   "app.stockbrief.not_holding": "还没持有",
   "app.stockbrief.reasoning": "判断依据与反证",
-  "app.stockbrief.dimension_context": "板块与宏观"
+  "app.stockbrief.dimension_context": "板块与宏观",
+  "app.stockbrief.regime_adverse": "环境偏不利",
+  "app.stockbrief.regime_unknown": "资料不足",
+  "app.stockbrief.regime_supportive": "环境偏支持",
+  "app.stockbrief.regime_mixed": "资金与利率表现不一"
 }

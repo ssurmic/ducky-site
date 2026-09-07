@@ -10,6 +10,7 @@ const strings=document.createElement('script');strings.id='ducky-strings';string
 const store=await import('../public/js/app/store.js');
 const {mountStockBriefs,reportCard,factText}=await import('../public/js/app/views/stock-briefs.js');
 const {mountSocial}=await import('../public/js/app/views/social-tracking.js');
+const {safeTarget}=await import('../public/js/app/login-target.js');
 const response=(d,status=200)=>new Response(JSON.stringify(d),{status,headers:{'content-type':'application/json'}});
 const text={zh:'等待进一步确认。',en:'Wait for confirmation.',citations:['one']};
 const fixture=()=>({ticker:'NVDA',id:'brief-1',status:'ready',checked_at:'2026-09-07T12:00:00Z',generated_at:'2026-09-07T12:00:00Z',
@@ -51,4 +52,10 @@ test('Degen legacy link uses one Vibe Check heading, action first, score in deta
  assert.equal(root.querySelector('h1').textContent,'Vibe Check');assert.equal(root.querySelector('a[href="#/degen"]'),null);
  const card=root.querySelector('.social-card');assert.ok(card.querySelector('.vibe-action'));assert.equal(card.querySelector('meter').closest('details').open,false);
  assert.ok(card.querySelector('a[href="#/briefing?ticker=NVDA"]'));cleanup();
+});
+test('stock notification and Vibe targets survive sign-in without retaining arbitrary query data',()=>{
+ assert.equal(safeTarget('#/briefing?ticker=nvda&token=secret'),'#/briefing?ticker=NVDA');
+ assert.equal(safeTarget('#/briefing?period=daily'),'#/briefing?period=daily');
+ assert.equal(safeTarget('#/vibe?ticker=TSLA&scope=hot&token=secret'),'#/vibe?ticker=TSLA&scope=hot');
+ assert.equal(safeTarget('#/briefing?ticker=<script>'),'#/briefing');
 });

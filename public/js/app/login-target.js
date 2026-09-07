@@ -34,8 +34,17 @@ export function safeTarget(hash) {
     return '#/boards'+(target.size?'?'+target:'');
   }
   if (path === '#/briefing') {
-    const period=new URLSearchParams(hash.split('?')[1] || '').get('period');
-    return period==='weekly' ? '#/briefing?period=weekly' : '#/briefing';
+    const query=new URLSearchParams(hash.split('?')[1] || ''),period=query.get('period');
+    if(['daily','weekly'].includes(period))return '#/briefing?period='+period;
+    const ticker=(query.get('ticker')||'').toUpperCase();
+    return '#/briefing'+(/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker)?'?ticker='+encodeURIComponent(ticker):'');
+  }
+  if(path==='#/vibe'||path==='#/degen'){
+    const query=new URLSearchParams(hash.split('?')[1]||''),target=new URLSearchParams();
+    const ticker=(query.get('ticker')||'').toUpperCase();
+    if(/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker))target.set('ticker',ticker);
+    if(['hot','watchlist','all'].includes(query.get('scope')))target.set('scope',query.get('scope'));
+    return path+(target.size?'?'+target:'');
   }
   if (path === '#/alerts' || path === '#/calendar') {
     const query=new URLSearchParams(hash.split('?')[1] || ''),target=new URLSearchParams();

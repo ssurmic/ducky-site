@@ -3096,5 +3096,9 @@
   "app.stockbrief.missing_sector_etf_vs_nasdaq100": "Sector ETF versus Nasdaq-100",
   "app.stockbrief.not_holding": "If you do not own it",
   "app.stockbrief.reasoning": "Reasoning and counterevidence",
-  "app.stockbrief.dimension_context": "Sector and macro"
+  "app.stockbrief.dimension_context": "Sector and macro",
+  "app.stockbrief.regime_adverse": "adverse",
+  "app.stockbrief.regime_unknown": "insufficient data",
+  "app.stockbrief.regime_supportive": "supportive",
+  "app.stockbrief.regime_mixed": "mixed funding and rates"
 }
