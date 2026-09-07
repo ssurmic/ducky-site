@@ -3,6 +3,7 @@ import { s } from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
 import { el, clear, spinner, errorBox, px, pct } from '../ui.js';
+import {mountRecord, mountChanges} from './research-record.js';
 export async function mount(root, params = {}) {
   const ticker = String(params.ticker || '').toUpperCase();
   const zh = document.documentElement.lang.startsWith('zh');
@@ -15,7 +16,9 @@ export async function mount(root, params = {}) {
   }
   const input=el('input.input.mono',{value:ticker,'aria-label':s('alerts.ticker_ph'),placeholder:s('alerts.ticker_ph'),maxlength:'10'});
   root.appendChild(el('form.add-row',{onsubmit:e=>{e.preventDefault();const t=input.value.trim().toUpperCase();if(/^[A-Z][A-Z0-9.-]{0,9}$/.test(t))location.hash='#/research/'+t;}},input,el('button.btn.btn-primary',{type:'submit'},s('research.load'))));
-  if(!ticker)return;
+  if(!ticker){await mountChanges(root,params.signal);return;}
+  await mountRecord(root,ticker,params.signal);
+  if(params.signal?.aborted)return;
   const host=el('div');root.appendChild(host);host.appendChild(spinner());
   try {
     const result=await api.get('/research/events/'+encodeURIComponent(ticker),{signal:params.signal});

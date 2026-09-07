@@ -52,6 +52,7 @@ export function renderMarketContext(doc,{preview=false,watches=[]}={}) {
         details.append(row);
       }
       if(topic.tickers?.length)details.append(el('p.small.muted',s('market.ticker_basis')));
+      for(const edge of topic.ticker_links||[])details.append(el('p.small',el('strong',edge.ticker+' · '),edge.excerpt||''));
       card.append(details);
     }
     const tickers=el('div.event-related-chips');

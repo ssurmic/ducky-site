@@ -31,7 +31,7 @@ test('evidence keeps missing post IDs, signed votes and unsafe provider text exp
 test('radar social category mounts its own section and free access never fetches private rows',async()=>{
  store.set('me',{tier:'free'});let requests=0;globalThis.fetch=()=>{requests++;throw new Error('unexpected');};
  const root=document.createElement('div');const cleanup=await mount(root,{query:new URLSearchParams('board=social')});
- assert.equal(requests,0);assert.match(root.textContent,/Degen Index/);assert.match(root.textContent,/X \/ Twitter · not available/);
+ assert.equal(requests,0);assert.match(root.textContent,/Vibe Check/);assert.match(root.textContent,/X \/ Twitter · not available/);
  assert.ok(root.querySelector('a[href="#/billing"]'));assert.doesNotMatch(root.textContent,/NVDA/);cleanup();
 });
 test('current rows, search, history retry and cursor are usable without duplicated pages',async()=>{

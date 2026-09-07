@@ -3,6 +3,7 @@ import { s } from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
 import { dateTime } from './creator-research.js';
+import { socialHistoryChart } from './social-history-chart.js';
 
 export function filterSocial(items, query='', scope='all', watches=[]) {
   const q=query.trim().replace(/^\$/,'').toLowerCase();
@@ -143,6 +144,8 @@ export async function mountSocial(root,route={}) {
       if(!Array.isArray(data?.items))throw new Error('invalid_response');
       host.querySelector('.social-history-error')?.remove();
       if(!host.childElementCount)host.append(el('p.small.muted',s('social.history_note')));
+      host._historyRows=[...(host._historyRows||[]),...data.items];
+      host.querySelector('.social-history-plot')?.remove();host.prepend(socialHistoryChart(host._historyRows));
       for(const row of data.items)host.append(el('div.social-history-row',el('time',{datetime:row.collected_at},dateTime(row.collected_at)),
         el('strong',(row.index??'—')+' / 100'),el('span',s('social.state_'+row.state)),
         el('span',num(row.mentions,0)+' · '+pct(row.change_pct,0)),el('code.social-record-id',row.id),

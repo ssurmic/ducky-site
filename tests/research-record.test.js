@@ -1,0 +1,36 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {JSDOM} from 'jsdom';
+import {readFileSync} from 'node:fs';
+const dom=new JSDOM('<html lang="en" data-lang="en"><body></body></html>',{url:'https://ducky.test/app/'});
+for(const k of ['window','document','Node','location','history'])globalThis[k]=dom.window[k];
+const copy=JSON.parse(readFileSync('i18n/en.json'));
+const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
+const {renderRecord,recordCard,mountRecord}=await import('../public/js/app/views/research-record.js');
+const {socialHistoryChart}=await import('../public/js/app/views/social-history-chart.js');
+const store=await import('../public/js/app/store.js');
+const row={id:'research:1',ticker:'NVDA',stream:'vibe',observed_at:'2026-09-07T01:00:00Z',indexed_at:'2026-09-07T01:05:00Z',source_at:null,payload:{mentions:0,index:null,source_url:'javascript:alert(1)'}};
+const response=body=>new Response(JSON.stringify(body),{status:200,headers:{'content-type':'application/json'}});
+test('records retain actual zero, missing scores, full dates and safe links',()=>{
+ const card=recordCard(row);assert.match(card.textContent,/0/);assert.match(card.textContent,/—/);assert.match(card.textContent,/Not provided/);
+ assert.equal(card.querySelector('a'),null);assert.match(card.textContent,/not been validated/);
+ const doc=renderRecord({ticker:'NVDA',items:[row],streams:[]});assert.equal(doc.querySelectorAll('.research-stream').length,8);
+ assert.ok([...doc.getElementsByTagName('a')].some(a=>a.getAttribute('href')==='#/boards?board=social&ticker=NVDA'));
+ assert.match(doc.textContent,/No record yet/);assert.doesNotMatch(doc.textContent,/undefined|null|record\./);
+});
+test('correction status never displays withdrawn title or facts',()=>{
+ const card=recordCard({...row,payload:{content_status:'superseded',title:'obsolete',index:99}});
+ assert.match(card.textContent,/corrected/);assert.doesNotMatch(card.textContent,/obsolete|99/);
+});
+test('heat timeline has gaps for missing scores and absent collection, preserving a real zero',()=>{
+ const samples=[0,null,80,90].map((score,i)=>({id:String(i),collected_at:`2026-09-07T0${i}:00:00Z`,index:score}));
+ const chart=socialHistoryChart(samples);assert.equal(chart.querySelectorAll('circle').length,3);
+ assert.equal(chart.querySelectorAll('path').length,2);assert.match(chart.textContent,/not zero heat/);
+ const single=socialHistoryChart([samples[0]]);assert.equal(single.querySelector('circle').getAttribute('cx'),'320');
+ const empty=socialHistoryChart([{id:'missing',collected_at:'invalid',index:99}]);assert.equal(empty.querySelector('svg'),null);
+});
+test('private evidence response is discarded after account changes',async()=>{
+ store.set('me',{tier:'pro'});let finish;globalThis.fetch=()=>new Promise(r=>finish=r);
+ const root=document.createElement('div'),task=mountRecord(root,'NVDA');store.bumpEpoch();store.set('me',null);
+ finish(response({ticker:'NVDA',items:[row]}));await task;assert.doesNotMatch(root.textContent,/research:1/);
+});
