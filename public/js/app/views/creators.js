@@ -130,7 +130,9 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     },onError:()=>{const node=card.querySelector('.creator-sync-note');if(node)node.textContent=s('creatorflow.reconnecting');}});
   const posts = (doc && doc.posts) || [];
   let archive = false;
-  let mine = initial.ticker ? false : initial.mine, watched=initial.watched, stockTicker=initial.ticker;
+  // Legacy stock-entry URLs must not hide creators. A stock can still locate a
+  // particular selected creator's research claim, after their identity is selected.
+  let mine = initial.mine, watched=false, stockTicker=initial.selected&&initial.tab==='research'?initial.ticker:'';
   let query = "";
   let selected=kols.some(k=>k.id===initial.selected)?initial.selected:'', tab=initial.tab, shown=30;
   const labState={demo:initial.demo}, histories={}, archiveOpen=new Set();
@@ -145,12 +147,11 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     card.append(el('div.evidence-page-head',el('div',el("h1", s("creators.h1")), el("p.muted", s("creators.sub"))),
       el('span')));
 
-    const actions=el('div.evidence-controls.creator-page-actions',el('button.btn.btn-primary.btn-sm',{type:'button','aria-expanded':String(showSetup),onclick:()=>{showSetup=!showSetup;render();}},s('creatorflow.add')),
+    const actions=el('div.evidence-controls.creator-page-actions',el('button.btn.btn-primary.btn-sm',{type:'button',onclick:()=>{mine=false;selected='';tab='feed';render();card.querySelector('[role=combobox]')?.focus();}},s('creatorflow.add')),
       el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:refresh},s('creatorflow.refresh')));
     card.querySelector('.evidence-page-head').append(actions);
     if(notice)card.append(el('p.creator-follow-success',{role:'status'},notice));
     if(pending())card.append(el('p.creator-sync-note.small.muted',{role:'status'},s('creatorflow.analysis_auto')));
-    if(showSetup){const setup=el('div');card.append(setup);setupCleanup=mountSetup(setup,{onFollow:followed,state:setupState});}
     const isPro = store.isPro();
     if (!isPro) {
       const banner = el("div.cr-pro-banner",
@@ -161,15 +162,14 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     }
 
     const controls = el("div.creators-controls");
-    for (const [value,key] of [['following',"creators.mine"],['watchlist','creatorstocks.watchlist'],['discover',"creators.discover"]]) {
-      controls.appendChild(el("button.btn.btn-ghost.btn-sm", {type:"button", "aria-pressed":String(value==='watchlist'?watched:value==='following'?mine:!mine&&!watched), onclick:()=>{mine=value==='following';watched=value==='watchlist';if(watched)showSetup=false;stockTicker='';selected='';shown=30;render();}},s(key)));
+    for (const [value,key] of [['following',"creators.mine"],['discover',"creators.discover"]]) {
+      controls.appendChild(el("button.btn.btn-ghost.btn-sm", {type:"button",'data-creator-scope':value, "aria-pressed":String(value==='following'?mine:!mine), onclick:()=>{mine=value==='following';stockTicker='';selected='';query='';setupState.input='';setupState.doc=null;shown=30;render();}},s(key)));
     }
-    const stock=el('input.input.mono',{type:'search',value:stockTicker,maxlength:10,placeholder:s('creatorstocks.placeholder'),'aria-label':s('creatorstocks.label')});
-    const stockForm=el('form.creator-stock-filter',el('label',el('span.small',s('creatorstocks.label')),stock),el('button.btn.btn-ghost.btn-sm',{type:'submit'},s('creatorstocks.apply')));
-    stockForm.addEventListener('submit',e=>{e.preventDefault();const value=stock.value.trim().replace(/^\$/,'').toUpperCase();if(value&&!/^[A-Z][A-Z0-9.-]{0,9}$/.test(value)){toast(s('creatorstocks.invalid'),'err');return;}stockTicker=value;mine=false;watched=false;showSetup=false;selected='';shown=30;render();});
-    const search=el("input.input", {type:"search",value:query,"aria-label":s("creators.search"),placeholder:s("creators.search")});
-    search.addEventListener("input",()=>{query=search.value;shown=30;renderContent();});
-    controls.append(search,el('details.creator-stock-options',{open:!!stockTicker},el('summary',s('creatorstocks.label')),stockForm));card.appendChild(controls);
+    card.appendChild(controls);
+    const search=el('div.creator-person-search');controls.append(search);
+    setupCleanup=mountSetup(search,{onFollow:followed,state:setupState,compact:true,onQuery:value=>{
+      query=value.trim();mine=false;selected='';stockTicker='';tab='feed';shown=30;renderContent();
+    }});
     card.appendChild(el("div.creators-content"));
     renderContent();
   }
@@ -180,22 +180,21 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     const content = card.querySelector(".creators-content");
     clear(content);
     const outerControls=card.querySelector('.creators-controls');
-    outerControls.style.display=tab==='rank'?'none':'';
-    outerControls.querySelector('input').style.display=tab==='lab'?'none':'';
+    outerControls.style.display=tab==='rank'||(selected&&tab==='feed')?'none':'';
+    outerControls.querySelector('.creator-person-search').hidden=tab!=='feed';
+    for(const button of outerControls.querySelectorAll('[data-creator-scope]'))button.setAttribute('aria-pressed',String(button.dataset.creatorScope==='following'?mine:!mine));
     card.querySelector('.evidence-page-head').hidden=!!selected&&tab==='feed';
     card.querySelector('.creator-page-actions').hidden=!!selected&&tab==='feed';
     const isPro = store.isPro();
-    const stockFilter=stockTicker?[stockTicker]:watched?watchedTickers:null;
+    const stockFilter=selected&&tab==='research'&&stockTicker?[stockTicker]:null;
     const stockPosts=posts.filter(p=>matchesStocks(p,stockFilter));
-    const available=kols.filter(k=>(!mine || following.has(k.id))&&(!stockFilter||stockPosts.some(p=>p.kol_id===k.id)));
+    const available=kols.filter(k=>(!mine || following.has(k.id)));
     const tabs=el('nav.creator-workspace-tabs',{'aria-label':s('creatorflow.workspace')});
     for(const [value,key] of [['feed','creators.feed_h'],['research','creators.research'],['lab','creatorlab.tab'],['rank','creatorrank.tab']])tabs.append(el('button',{type:'button','aria-pressed':String(tab===value),onclick:()=>{tab=value;renderContent();}},s(key)));
     content.append(tabs);
     if(tab!=='rank'&&stockFilter){
       content.append(el('p.muted.small',s('creatorstocks.coverage')));
-      if(watched&&watches===null)content.append(el('p.err',s('creatorstocks.load_failed')));
-      else if(watched&&!watchedTickers.length)content.append(el('p.empty',s('creatorstocks.empty_watchlist')),el('a.btn.btn-ghost.btn-sm',{href:'#/watchlist'},s('creatorstocks.open_watchlist')));
-      else if(stockTicker)content.append(el('p.creator-stock-context',el('b','$'+stockTicker+' '),el('a',{href:'#/chart/'+stockTicker},s('creators.chart')), ' · ', el('a',{href:'#/boards?ticker='+stockTicker},s('creatorstocks.radar'))));
+      if(stockTicker)content.append(el('p.creator-stock-context',el('b','$'+stockTicker+' '),el('a',{href:'#/chart/'+stockTicker},s('creators.chart')), ' · ', el('a',{href:'#/boards?ticker='+stockTicker},s('creatorstocks.radar'))));
     }
     if(tab!=='feed'){
       if(tab!=='rank'){
@@ -215,7 +214,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       const on = following.has(k.id);
       const profile=k.profile || {};
       const tile=el('article.creator-profile',{class:selected===k.id?'selected':''});
-      const title=el('button.creator-name',{type:'button','aria-pressed':String(selected===k.id),onclick:()=>{selected=selected===k.id?'':k.id;shown=30;renderContent();}},k.name || k.id);
+      const title=el('button.creator-name',{type:'button','aria-pressed':String(selected===k.id),onclick:()=>{selected=k.id;query='';setupState.input='';shown=30;render();}},k.name || k.id);
       tile.append(el('div.creator-identity',avatar(k),el('div',title,el('p.muted.small',(profile.handle || k.handle || '')+' · '+(k.platform==='youtube'?'YouTube':k.platform || '')+' · '+(k.lang || '—')))));
       const creatorPosts=posts.filter(p=>p.kol_id===k.id);
       const page=doc.pages?.[k.id];
@@ -231,6 +230,9 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     }
     if (!selected && mine) content.append(el('details.creator-directory-picker',el('summary',s('creators.directory_short')),grid));
     else content.appendChild(grid);
+    // Search is for people, not the subset that happens to have reviewed stock posts.
+    // The same visible input searches the shared directory and submits a channel lookup.
+    if(query&&!selected)return;
 
 
     if(selected){
@@ -252,7 +254,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     if(history?.loading)feedContent.append(el('p.small.muted',{role:'status'},s('common.loading')));
     if(history?.error)feedContent.append(el('p.err',s('creators.load_error')));
     if(history&&!history.loading&&(history.error||history.next_cursor))feedContent.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>loadHistory(selected)},s(history.error?'creatorflow.refresh':'creators.load_more')));
-    const visiblePosts = filterPosts(history?.items || posts, {following,mine,archive,query,tickers:stockFilter}).filter(p=>!selected || p.kol_id===selected);
+    const visiblePosts = filterPosts(history?.items || posts, {following,mine,archive,query:'',tickers:null}).filter(p=>!selected || p.kol_id===selected);
     if (!visiblePosts.length) { feedContent.appendChild(empty(s("creators.feed_empty"))); return; }
     const feed = el("div.cr-feed");
     for (const p of visiblePosts.slice(0, history?.items?visiblePosts.length:shown)) {
@@ -266,7 +268,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
         el("span.cr-take." + TAKE_CLS[stance], grounded ? s("creators.take_" + stance) : s(reviewed ? "creators.summary_ready" : "creators.unverified")));
       if (grounded && p.tickers && p.tickers.length) head.appendChild(el("span.cr-tks.mono", p.tickers.slice(0, 4).map((t) => "$" + t).join(" · ")));
       art.appendChild(head);
-      if(stockFilter){const matched=taggedTickers(p).filter(t=>stockFilter.includes(t));art.append(el('p.small',s('creatorstocks.matched')+' ',...matched.flatMap((t,i)=>[i?' · ':'',el('a.mono',{href:'#/chart/'+t},'$'+t)])));}
+      const matched=reviewed?taggedTickers(p).filter(t=>watchedTickers.includes(t)):[];
+      if(matched.length)art.append(el('p.creator-watch-match.small',s('creatorstocks.matched')+' ',...matched.flatMap((t,i)=>[i?' · ':'',el('a.mono',{href:'#/chart/'+t},'$'+t)])));
       art.appendChild(el("time.muted.small", { datetime: p.published_at || "" }, s("creators.published") + " " + videoDate(p.published_at,isZh ? "zh-CN" : "en-US")));
       const source=meta.source || {};
       const sourceFacts=el('div.creator-source-facts');
@@ -343,7 +346,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     if(response?.subscribed!==true){toast(s('creatorflow.follow_error'),'err');return;}
     const name=response.creator?.name||kols.find(k=>k.id===response.kol_id)?.name||'';
     notice=s(response.already_following?'creatorflow.already_added':'creatorflow.added',{name});
-    following.add(response.kol_id);selected=response.kol_id;mine=true;showSetup=false;tab='feed';
+    following.add(response.kol_id);selected=response.kol_id;mine=true;showSetup=false;tab='feed';query='';setupState.input='';
     if(response.creator&&!kols.some(k=>k.id===response.kol_id))kols.push({...response.creator,id:response.kol_id});
     if(response.analysis)analysis[response.kol_id]=response.analysis;
     render();progress.schedule();

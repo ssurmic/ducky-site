@@ -18,7 +18,7 @@ export function avatar(creator) {
   return fallback;
 }
 
-export function mountSetup(root,{onFollow,initial='',state={}}) {
+export function mountSetup(root,{onFollow,initial='',state={},compact=false,onQuery=()=>{}}) {
   const epoch=store.epoch();let stopped=false,busy=false,generation=0,suggestVersion=0,debounce=null,activeIndex=-1,choices=[];
   const ctl=new AbortController();
   const wrap=el('section.creator-onboarding');root.append(wrap);
@@ -34,8 +34,10 @@ export function mountSetup(root,{onFollow,initial='',state={}}) {
   const picks=el('div.creator-example-grid',...examples.map(([name,topic])=>el('button.creator-pick',{type:'button',onclick:()=>{
     field.value=name;field.dispatchEvent(new field.ownerDocument.defaultView.Event('input'));field.focus();
   }},el('strong',name),el('span',s('creatorflow.topic_'+topic)))));
-  wrap.append(el('div.creator-setup-heading',el('div',el('h2',s('creatorflow.add')),el('p.muted.small',s('creatorflow.find_hint')))),
-    picks,form,suggestions,hint,results);
+  if(!compact)wrap.append(el('div.creator-setup-heading',el('div',el('h2',s('creatorflow.add')),el('p.muted.small',s('creatorflow.find_hint')))),picks);
+  wrap.append(form,suggestions);
+  if(!compact)wrap.append(hint);
+  wrap.append(results);
   function live(){return !stopped && epoch===store.epoch() && root.isConnected;}
   function failure(err){clear(results);results.append(el('p.err',{role:'alert'},s('creatorflow.error_'+err.message)===('creatorflow.error_'+err.message)?s('creatorflow.error'):s('creatorflow.error_'+err.message)));}
   const poll=progressPoll({active:()=>live()&&['queued','running'].includes(state.doc?.status),
@@ -56,7 +58,7 @@ export function mountSetup(root,{onFollow,initial='',state={}}) {
     }catch {if(live()&&version===suggestVersion)closeSuggestions();}
   }
   function pick(c){closeSuggestions();field.value=c.name;state.input=c.name;begin(c.channel_id,c.channel_id);}
-  field.addEventListener('input',()=>{state.input=field.value;state.doc=null;generation++;suggestVersion++;clear(results);closeSuggestions();clearTimeout(debounce);debounce=setTimeout(search,200);});
+  field.addEventListener('input',()=>{state.input=field.value;state.doc=null;generation++;suggestVersion++;clear(results);closeSuggestions();onQuery(field.value);clearTimeout(debounce);debounce=setTimeout(search,200);});
   field.addEventListener('focus',search);
   field.addEventListener('blur',()=>{setTimeout(()=>{if(!suggestions.contains(document.activeElement))closeSuggestions();},0);});
   field.addEventListener('keydown',e=>{

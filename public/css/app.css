@@ -506,6 +506,8 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 .profile-reminder{margin:0 0 16px;padding:12px 16px;border:1px solid var(--border);border-radius:12px;font-size:14px;line-height:1.5}.profile-reminder a{text-decoration:underline}
 
 .creators-controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}.creators-controls .input{flex:1;min-width:180px}.creators-controls [aria-pressed="true"]{border-color:var(--accent);color:var(--accent-text, var(--accent))}.cr-video-title{font-size:16px;line-height:1.5;margin:8px 0}
+.creator-person-search{flex:1 1 26rem;min-width:0}.creator-person-search .creator-onboarding{padding:0;margin:0;border:0;background:transparent}.creator-person-search .creator-find-form{margin-top:0}.creator-person-search .creator-find-form label{min-width:0}.creator-person-search .creator-find-form input{min-width:0}.creators-controls>[data-creator-scope]{align-self:flex-start;margin-top:25px}.creator-watch-match{color:var(--accent-text,var(--accent))}
+@media(max-width:600px){.creator-person-search{flex-basis:100%}.creators-controls>[data-creator-scope]{margin-top:0}.creator-person-search .creator-find-form{gap:8px}}
 
 /* Keep the brand warm without a neon halo competing with navigation. */
 .app-top .avatar-mark { width: 30px; height: 30px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 18%, transparent); }

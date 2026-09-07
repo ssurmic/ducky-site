@@ -2058,7 +2058,7 @@
   "app.creatorstocks.empty_watchlist": "先添加自选股，或在上方输入股票代码查找相关博主内容。",
   "app.creatorstocks.open_watchlist": "打开自选股",
   "app.creatorstocks.radar": "相关公司事件",
-  "app.creatorstocks.matched": "股票标签：",
+  "app.creatorstocks.matched": "提及你的自选股：",
   "app.radar.access_current": "Pro · 当前记录",
   "app.radar.access_delayed": "免费记录延迟 5 天，日期范围相应顺延。",
   "app.radar.access_upgrade": "查看 Pro 当前雷达",

@@ -191,11 +191,12 @@ test('long-running alert setup keeps polling with bounded backoff until ready',a
 
 test('creator search keeps the input mounted and archives never show unsupported claims',async()=>{
  globalThis.fetch=async(url)=>String(url).includes('/subs')?response({subs:['creator-a']}):response({kols:[{id:'creator-a',name:'Wall Street'}],posts:[{kol_id:'creator-a',kol_name:'Wall Street',title:'Memory report',published_at:'2026-09-04T20:02:00Z',tickers:['WRONG'],summary:'UNSUPPORTED CLAIM'}],subs:['creator-a']});
- store.set('me',{tier:'pro'});const root=document.createElement('div');await creators.mount(root);
- const search=root.querySelector('input[type="search"]');search.value='Wall Street';search.dispatchEvent(new window.Event('input'));
- assert.equal(root.querySelector('input[type="search"]'),search);assert.equal(search.value,'Wall Street');
+ store.set('me',{tier:'pro'});const root=document.createElement('div');const dispose=await creators.mount(root);
+ const search=root.querySelector('[role="combobox"]');search.value='Wall Street';search.dispatchEvent(new window.Event('input'));
+ assert.equal(root.querySelector('[role="combobox"]'),search);assert.equal(search.value,'Wall Street');
+ root.querySelector('.creator-name').click();
  const archive=[...root.querySelectorAll('button')].find(b=>b.textContent===copy['app.creators.show_archive']);archive.click();
- assert.ok(root.textContent.includes('Memory report'));assert.equal(root.textContent.includes('UNSUPPORTED CLAIM'),false);assert.equal(root.textContent.includes('$WRONG'),false);
+ assert.ok(root.textContent.includes('Memory report'));assert.equal(root.textContent.includes('UNSUPPORTED CLAIM'),false);assert.equal(root.textContent.includes('$WRONG'),false);dispose();
 });
 
 test('short video summaries without stock calls are readable but never directional',()=>{
