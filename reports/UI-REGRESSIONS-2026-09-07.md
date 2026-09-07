@@ -28,3 +28,9 @@ Scope: owner reported that “看看 Ducky 怎么研究” did nothing, plus the
 - Production read-only application sweep: watchlist, briefing, chart, calendar, radar, alerts, creators, profile and billing. Calendar holiday opened its detail dialog; creator feed showed publication dates in descending order; profile/billing were inspected without saving or purchasing. Phone navigation and the More menu were also exercised. These were browser viewport checks, not physical phone or touch emulation certification.
 
 Production deployment and final URL checks are recorded in the release follow-up.
+
+## Released
+
+Release `56748ddf04579d24312d0194230ca7a3753a4a3f`, Cloudflare Pages deployment `4c1d049e`. Rebased on the concurrent Ducky Bot brand update `0a22f9d`; it is included in this release.
+
+On `https://duckybot.app/?design=focus`, the research CTA opened the dialog, GLW switched correctly and Escape closed it. `https://duckybot.app/track-record/` showed all 62 rows, a 1078px ledger inside its 1080px container, an in-column review notice and a working full-record dialog. English production at 320×600 had no document overflow, first record at y=457px, correct empty search and restoration to 62/62 after Clear filters. No console errors were observed. The local flow variant also passed real browser Back navigation. Final focused suite: 10/10; copy and 942-link checks passed after rebasing.
