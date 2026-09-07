@@ -104,11 +104,13 @@ test('official index deep links select the effective date and survive rebalance 
  try{
   assert.equal(root.querySelector('.cal-bicell[aria-pressed="true"]').dataset.date,day);
   button(root,copy['app.calendar.f_rebal']).click();
-  const row=root.querySelector('.cal-t-rebal');assert.ok(row);assert.match(row.textContent,/Added to S&P 500/);assert.match(row.textContent,/Before market open · ET/);
+  root.querySelector(`button[data-date="${day}"]`).click();
+  const row=document.querySelector('#modal .cal-t-rebal');assert.ok(row);assert.match(row.textContent,/Added to S&P 500/);assert.match(row.textContent,/Before market open · ET/);
   assert.ok(row.querySelector('a[href="https://example.test/official"]'));
   const more=row.querySelector('.cal-research-more');more.open=true;more.dispatchEvent(new window.Event('toggle'));
   assert.equal(calls.some(url=>url.includes('/calendar/context')||url.includes('/calendar/links')),false);
   assert.ok(more.querySelector('a[href="#/billing"]'));
+  closeModal();
   button(root,copy['app.calendar.mode_month']).click();assert.ok(root.querySelector('.cal-sel .mbar'));
  }finally{cleanup();root.remove();location.hash='';store.set('me',{tier:'pro'});}
 });

@@ -56,3 +56,7 @@ BE 来源样本来自 backend 官方适配器保存的 `canonical-be-source-reco
 - 官方 calendar adapter 的 `schedule_status=source_scheduled` 已由主任务补上；本 fixture 有意保留缺失状态，前端仍如实显示未逐项确认，不能自行补造。主任务另行验证实际服务最新状态。
 
 复现：先运行 `build.py`，再执行 `python3 reports/official-ui-20260907/serve_fixture.py --port 8846`。只绑定 loopback；打开其打印的 URL。更换 `lang=zh/en`、`theme=light/dark`、`width=320/390`、`view=boards/calendar/updates/watchlist`。UI fixture 及截图不随生产 public 目录发布。
+
+## 最终主线整合
+
+已合并主线 `09e76df` 的导航、阅读和日历弹窗更新，以及 `8299483` 的官方发布时间精度/英文研究说明。i18n 末尾冲突保留双方键。日历深链仍选择 9/21，随后点日期打开完整事件弹窗；回归随实际交互从 `#modal` 验证全部官方内容和免费 API 门禁。最终 Node 230/230 通过，双语 20 页、copy lint 1745 文件和 748 链接通过。发布及生产只读验收追加在此，不将隔离截图冒充上线证据。
