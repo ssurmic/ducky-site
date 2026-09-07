@@ -40,9 +40,9 @@ export function mountHomepage(root=document) {
   placeholder.after(dossier);placeholder.hidden=true;evidenceState.forEach(([d,open])=>d.open=open);
   html.classList.remove('home-dialog-open');
   if(win.location.hash==='#home-dossier'){const url=new URL(win.location.href);url.hash=previousHash;win.history.replaceState(null,'',url.href);}
-  win.scrollTo(...scrollPosition);opener?.focus({preventScroll:true});syncLinks();
+  win.scrollTo(...scrollPosition);(opener?.closest('details:not([open])')?.querySelector('summary')||opener)?.focus({preventScroll:true});syncLinks();
  };
- hero.querySelectorAll('[data-home-open]').forEach(link=>listen(link,'click',e=>{
+ root.querySelectorAll('[data-home-open]').forEach(link=>listen(link,'click',e=>{
   if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||typeof dialog.showModal!=='function')return;
   e.preventDefault();openResearch(link);
  }));

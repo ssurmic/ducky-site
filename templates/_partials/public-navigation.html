@@ -1,0 +1,35 @@
+<header class="nav public-nav no-glossary" id="nav">
+ <div class="wrap public-nav-row">
+  <a class="brand public-brand" href="{{ url('/') }}" aria-label="{{ t('nav.brand') }}"><img class="avatar-mark" src="/avatar-160.jpg" alt="" width="32" height="32" loading="eager" fetchpriority="high" decoding="sync"><span>{{ t('nav.brand') }}</span></a>
+  <nav class="public-primary" aria-label="primary">
+   <details class="public-explore" data-public-menu>
+    <summary class="public-menu-toggle" aria-label="{{ t('nav.explore') }}" aria-controls="public-menu-panel"><span class="public-menu-icon" aria-hidden="true"><i></i><i></i></span><span class="public-menu-label">{{ t('nav.explore') }}</span><span class="public-chevron" aria-hidden="true">⌄</span></summary>
+    <div class="public-menu-panel" id="public-menu-panel">
+     <div class="public-menu-heading"><div><h2>{{ t('nav.menu_title') }}</h2><p>{{ t('nav.menu_hint') }}</p></div><a href="{{ url('/') }}#features">{{ t('nav.all_tools') }} →</a></div>
+     <div class="public-mobile-links">
+      <a href="{{ url('/') }}#desk-feature-creators">{{ t('nav.creators') }}</a><a href="{{ url('/') }}#home-dossier" data-home-open aria-haspopup="dialog">{{ t('nav.examples') }}</a><a href="{{ url('/') }}#pricing">{{ t('nav.pro') }}</a>
+     </div>
+     <div class="public-menu-grid">
+      {% for group in navigation.public_groups %}
+      <details class="public-tool-group" open>
+       <summary>{{ t('nav.group.' ~ group.key) }}<span aria-hidden="true">⌄</span></summary>
+       <div class="public-tool-list">
+        {% for route in group.routes %}{% set access = navigation.catalog[route].access %}
+        <a class="public-tool-link" href="{{ url('/') }}#desk-feature-{{ route }}" data-feature-link="{{ route }}"><span class="public-tool-heading"><strong>{{ t('desk.title.' ~ route) }}</strong><small class="feature-access feature-access-{{ access }}">{{ t('nav.access.' ~ access) }}</small></span><span class="public-tool-description">{{ t('desk.preview_' ~ route) }}</span></a>
+        {% endfor %}
+       </div>
+      </details>
+      {% endfor %}
+      <aside class="public-pro-panel"><span class="public-pro-label">PRO</span><h2>{{ t('nav.pro_title') }}</h2><p>{{ t('nav.pro_body') }}</p><ul><li>{{ t('nav.pro_current') }}</li><li>{{ t('nav.pro_creators') }}</li><li>{{ t('nav.pro_alerts') }}</li></ul><a href="{{ url('/') }}#pricing">{{ t('nav.pro_cta') }} <span aria-hidden="true">→</span></a></aside>
+     </div>
+     <div class="public-menu-footer"><p>{{ t('nav.access_note') }}</p><div><a href="{{ url('/track-record/') }}">{{ t('nav.history') }}</a><a href="{{ url('/') }}#faq">{{ t('nav.help') }}</a></div></div>
+     <div class="public-mobile-account"><a class="btn btn-ghost" href="{{ url('/app/') }}">{{ t('nav.signin') }}</a><a class="lang-toggle" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle aria-label="{{ t('nav.lang_toggle_aria') }}">{{ t('nav.lang_toggle') }}</a></div>
+    </div>
+   </details>
+   <a class="public-top-link" href="{{ url('/') }}#desk-feature-creators">{{ t('nav.creators') }}</a>
+   <a class="public-top-link" href="{{ url('/') }}#home-dossier" data-home-open aria-haspopup="dialog">{{ t('nav.examples') }}</a>
+   <a class="public-top-link public-pro-link" href="{{ url('/') }}#pricing">{{ t('nav.pro') }}</a>
+  </nav>
+  <div class="public-nav-actions"><a class="lang-toggle mono public-desktop-action" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle aria-label="{{ t('nav.lang_toggle_aria') }}">{{ t('nav.lang_toggle') }}</a><a class="public-signin public-desktop-action" href="{{ url('/app/') }}">{{ t('nav.signin') }}</a><a class="btn btn-primary public-start" href="{{ url('/app/') }}#/register">{{ t('nav.cta_bot') }}</a></div>
+ </div>
+</header>
