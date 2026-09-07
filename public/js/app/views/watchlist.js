@@ -1,8 +1,10 @@
 // views/watchlist.js — add ticker · list of 全景 mini-cards from /snapshot · remove.
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
 import { overviewView, layoutOverview } from "../watchlist-overview.js";
+import {optionView,expiryLabel} from '../option-model.js';
 import { companyContext } from "../company-context.js";
 import { symbolPicker } from "../symbol-picker.js";
+import {openStockQuickView} from '../stock-quickview.js';
 import { s } from "../strings.js";
 import * as api from "../api.js";
 import * as store from "../store.js";
@@ -32,6 +34,9 @@ export async function mount(root) {
   const form = el("form.add-row", { onsubmit: onAdd }, picker.wrap, addBtn);
   const addOptions = el('details.watch-add-options', {open:!(store.get('watchlist')||[]).length},
     el('summary',s('watch.add')),el('p.view-intro.muted',s('watch.workflow')),form);
+  let addTouched=false;
+  addOptions.addEventListener('click',()=>{addTouched=true;});
+  form.addEventListener('focusin',()=>{addTouched=true;});
   const list = el("div.watch-overview", { id: "watch-cards" });
   const resize=()=>layoutOverview(list);
   if(document.fonts)document.fonts.ready.then(()=>{if(!disposed)layoutOverview(list,true);});
@@ -109,7 +114,7 @@ export async function mount(root) {
     if (!items.length) {list.append(empty(s('watch.empty')));return;}
     const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
     list.append(overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
-      {view,query,sort,selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
+      {view,query,sort,selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker,onQuickTake:openStockQuickView}));
     layoutOverview(list);
   }
 
@@ -120,6 +125,7 @@ export async function mount(root) {
       el("span.spot.mono", snap && snap.ok ? px(snap.spot) : ""),
       snap && snap.ok && typeof snap.tech?.oversold === "boolean" ? el("span.chip", { class: snap.tech && snap.tech.oversold ? "chip-red" : "chip-dim" }, snap.tech && snap.tech.oversold ? s("watch.oversold") : s("watch.not_oversold")) : null,
       el("span.spacer"),
+      el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>openStockQuickView(t)},s('quick.title')),
       el("a.btn.btn-ghost.btn-sm", { href: "#/chart/" + t }, s("watch.chart")),
       el("button.btn.btn-ghost.btn-sm.danger", { type: "button", "aria-label": s("watch.remove") + " " + t, onclick: () => onRemove(t) }, "✕"));
     c.appendChild(head);
@@ -158,14 +164,15 @@ export async function mount(root) {
 
     // Pro rows: gamma walls + expected range
     const pro = el("dl.kv-grid.pro-rows");
-    const g = snap.gamma, ex = snap.expected;
+    const options=optionView(snap),g=['ready','partial'].includes(options.status)?options.row:null,ex=g?.expected;
     const proRow = (k, val) => pro.append(el("dt", k), el("dd.mono", val));
     if (store.isPro()) {
-      proRow(s("watch.gamma"), g ? px(g.call_wall) + " / " + px(g.put_wall) + " / " + px(g.flip) + (g.regime ? " · " + regimeWord(g.regime) : "") : "—");
+      proRow(s('option.expiry'),g?expiryLabel(g.expiry):s('option.status_'+(options.status==='stale'?'stale':'unavailable')));
+      proRow(s("watch.gamma"), g ? px(g.call_wall) + " / " + px(g.put_wall) : "—");
       proRow(s("watch.expected"), ex ? px(ex.low) + "–" + px(ex.high) + " (±" + num(ex.move_pct, 1) + "%" + (ex.expiry ? " · " + ex.expiry : "") + ")" : "—");
       c.appendChild(pro);
     } else {
-      proRow(s("watch.gamma"), "$000 / $000 / $000");
+      proRow(s("watch.gamma"), "$000 / $000");
       proRow(s("watch.expected"), "$000–$000 (±0.0%)");
       c.appendChild(lock(pro));
     }
@@ -183,7 +190,6 @@ export async function mount(root) {
   function enumWord(val, map) { const k = map[String(val).trim().toLowerCase()]; return k ? s(k) : (val == null ? "" : String(val)); }
   function volWord(x) { return enumWord(x, { "便宜": "watch.v_cheap", "cheap": "watch.v_cheap", "合理": "watch.v_fair", "fair": "watch.v_fair", "贵": "watch.v_rich", "偏贵": "watch.v_rich", "rich": "watch.v_rich", "expensive": "watch.v_rich" }); }
   function rsWord(x) { return enumWord(x, { "领先": "watch.rs_leading", "leading": "watch.rs_leading", "落后": "watch.rs_lagging", "lagging": "watch.rs_lagging", "同步": "watch.rs_inline", "持平": "watch.rs_inline", "相当": "watch.rs_inline", "inline": "watch.rs_inline" }); }
-  function regimeWord(x) { return enumWord(x, { "positive": "watch.regime_pos", "偏多": "watch.regime_pos", "negative": "watch.regime_neg", "偏空": "watch.regime_neg", "neutral": "watch.regime_neutral", "中性": "watch.regime_neutral" }); }
 
   async function load() {
     // finding watchlist.js:123 — a /watchlist response in flight when logout() wipes the store would
@@ -194,6 +200,7 @@ export async function mount(root) {
       const items = normalizeList(response);
       if (disposed || store.epoch() !== epoch) return;
       overview = response?.overview || null;
+      if(loading&&!addTouched&&items.length)addOptions.open=false;
       loading = false;
       store.set("watchlist", items);
     } catch (err) {

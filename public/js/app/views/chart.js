@@ -9,6 +9,9 @@ import { el, clear, spinner, errorBox, lock, px, num } from "../ui.js";
 import { normalizeList } from "./watchlist.js";
 import { unpackSnapshot, reusableSnapshot } from "../snapshot-model.js";
 import { observeTheme } from "../theme.js";
+import {optionView,optionOverlay} from '../option-model.js';
+import {renderOptionPanel} from '../option-panel.js';
+import {openStockQuickView} from '../stock-quickview.js';
 
 const PERIODS = ["3mo", "6mo", "1y", "2y"];
 // server truth (app.py PERIOD_BARS / BARS_PERIOD): free→6mo, paid→1y, pro→2y. Used to gate the period
@@ -29,21 +32,26 @@ export function normalizeBars(resp) {
     const o = Number(b.o ?? b.open), h = Number(b.h ?? b.high), l = Number(b.l ?? b.low), c = Number(b.c ?? b.close);
     if ([b.o ?? b.open, b.h ?? b.high, b.l ?? b.low, b.c ?? b.close].some(v => v == null) ||
         [o, h, l, c].some(v => !Number.isFinite(v) || v <= 0)) continue;
-    out.push({ time: t, open: o, high: h, low: l, close: c, volume: Number(b.v ?? b.volume ?? 0) });
+    const volume=b.v??b.volume;
+    out.push({ time: t, open: o, high: h, low: l, close: c, volume:volume==null||!Number.isFinite(Number(volume))||Number(volume)<0?null:Number(volume) });
   }
   out.sort((a, b) => (a.time < b.time ? -1 : a.time > b.time ? 1 : 0));
   return out.filter((b, i) => i === 0 || b.time !== out[i - 1].time);
 }
 
 export async function mount(root, params) {
+  params=params||{};
+  const compact=!!params.compact,ctl=new AbortController(),epoch=store.epoch();
   let ticker = (params && params.ticker) || "";
   // finding chart.js:364 — gate periods to the tier the server enforces (me.gates.bars_period).
   const maxPeriod = (((store.get("me") || {}).gates || {}).bars_period) || "6mo";
   const allowed = (p) => PERIOD_BARS[p] <= (PERIOD_BARS[maxPeriod] || PERIOD_BARS["6mo"]);
   // finding chart.js:63 — drawSeq is a per-draw token; candles/rsiSeries are hoisted so a Telegram theme flip
   // can re-apply their colors without a full refetch (finding tg.js:65).
-  let period = allowed("6mo") ? "6mo" : maxPeriod, chart = null, ro = null, ovl = null, alive = true, drawSeq = 0, candles = null, rsiSeries = null, macdHist = null, macdLineS = null, macdSig = null;
+  let period = allowed("3mo") ? "3mo" : maxPeriod, chart = null, ro = null, ovl = null, alive = true, drawSeq = 0, candles = null, rsiSeries = null, macdHist = null, macdLineS = null, macdSig = null;
   let histogram = [], referenceLines = [], overlaySnapshot = null;
+  let selectedExpiry=null,showExpected=false,showRetrace=false,showIndicators=false,volumeSeries=null,lastPayload=null,lastPayloadPeriod=null,expiryTimer=null;
+  const valid=()=>alive&&!ctl.signal.aborted&&epoch===store.epoch();
 
   const input = el("input.input.mono", { type: "text", value: ticker, placeholder: s("chart.pick"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "80", "aria-label": s("chart.pick") });
   const picker = symbolPicker(input);
@@ -57,16 +65,33 @@ export async function mount(root, params) {
   const status = el("div", { id: "chart-status" });
   const companyHost = el("div.company-host");
   const companyName=el('p.chart-company-name.muted.small');
-  root.append(head, companyName, form, periodRow, el('div.chart-workspace',legendRow,host), status, companyHost);
+  const optionHost=el('section.chart-options'),optionControls=el('div.chart-option-controls'),ohlc=el('div.chart-ohlc.small.muted');
+  const indicators=el('button.btn.btn-ghost.btn-sm',{type:'button','aria-pressed':'false',onclick:()=>{
+    showIndicators=!showIndicators;indicators.setAttribute('aria-pressed',String(showIndicators));draw(0,true);
+  }},s('chart.indicators'));
+  const check=(key,set)=>el('label.chart-overlay-toggle',el('input',{type:'checkbox',onchange:e=>{set(e.target.checked);paintOverlays();}}),s(key));
+  const toggles=el('div.chart-toggles',indicators,
+    el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>chart?.timeScale().fitContent()},s('chart.reset_zoom')),
+    check('option.show_range',v=>showExpected=v),check('option.show_retrace',v=>showRetrace=v));
+  if(!compact&&ticker)head.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>openStockQuickView(ticker,{withChart:false})},s('quick.title')));
+  const searchControl=ticker?el('details.chart-search',el('summary',s('chart.change_stock')),form):form;
+  const chartWorkspace=el('div.chart-workspace',ohlc,host,legendRow);
+  if(compact)head.prepend(companyName);
+  root.append(head);
+  if(!compact)root.append(companyName);
+  if(!compact)root.append(searchControl);
+  root.append(el('div.chart-time-controls',el('div.chart-period-controls',el('span.small.muted',s('chart.history_range')),periodRow),optionControls),chartWorkspace,status,toggles,optionHost);
+  if(!compact)root.append(el('details.chart-company-details',el('summary',s('chart.company_details')),companyHost));
+  if(compact)head.querySelector('h1').hidden=true;
   const showCompany=(p,rs)=>{companyHost.replaceChildren(companyContext(p,rs));companyName.textContent=p?.company||'';};
-  if (ticker) api.company(ticker).then(p=>{if(alive) showCompany(p);}).catch(()=>{if(alive) showCompany(null);});
-  if (ticker) companyHost.before(el('div.chips',
+  if (ticker) api.company(ticker,{signal:ctl.signal}).then(p=>{if(valid()) showCompany(p);}).catch(()=>{if(valid()) showCompany(null);});
+  if (ticker&&!compact) companyHost.before(el('div.chips',
     el('a.chip',{href:'#/creators?ticker='+encodeURIComponent(ticker)},s('watch.creator_mentions')),
     el('a.chip',{href:'#/boards?mode=archive&ticker='+encodeURIComponent(ticker)},s('watch.radar_records')),
     el('a.chip',{href:'#/calendar?ticker='+encodeURIComponent(ticker)},s('nav.calendar'))));
 
   if (!ticker) {
-    host.hidden = true; legendRow.hidden = true; periodRow.hidden = true;
+    host.hidden = true; legendRow.hidden = true; periodRow.parentElement.hidden = true;toggles.hidden=true;optionHost.hidden=true;
     const wl = store.get("watchlist") || [];
     const chips = el("div.chips", wl.map((t) => el("a.chip.mono", { href: "#/chart/" + t }, "$" + t)));
     status.append(el("p.muted", s("chart.pick_hint")), chips);
@@ -75,23 +100,28 @@ export async function mount(root, params) {
   }
 
   let refreshTimer = null;
-  function destroy() { clearTimeout(refreshTimer); refreshTimer = null; if (ovl) { ovl.remove(); ovl = null; } if (ro) { ro.disconnect(); ro = null; } if (chart) { try { chart.remove(); } catch (e) { /* ignore */ } chart = null; } candles = rsiSeries = macdHist = macdLineS = macdSig = null; histogram = []; referenceLines = []; overlaySnapshot = null; clear(host); }
+  function destroy() { clearTimeout(refreshTimer);clearTimeout(expiryTimer); refreshTimer = null; if (ovl) { ovl.remove(); ovl = null; } if (ro) { ro.disconnect(); ro = null; } if (chart) { try { chart.remove(); } catch (e) { /* ignore */ } chart = null; } candles = rsiSeries = macdHist = macdLineS = macdSig = volumeSeries = null; histogram = []; referenceLines = []; overlaySnapshot = null; clear(host); }
 
   function paintOverlays() {
     if (!candles || !overlaySnapshot) return;
-    const colors = {call:cssVar('--green'),put:cssVar('--red'),flip:cssVar('--orange'),exp:cssVar('--blue'),band:cssVar('--muted')};
+    const colors = {call:cssVar('--orange'),put:cssVar('--blue'),exp:cssVar('--blue'),band:cssVar('--muted')};
+    const view=optionView(overlaySnapshot,selectedExpiry);
+    selectedExpiry=view.row?.expiry||null;
+    const projection=optionOverlay(view,{expected:showExpected,retrace:showRetrace,snapshot:overlaySnapshot});
+    renderOptionPanel(optionHost,view,value=>{selectedExpiry=value;paintOverlays();optionControls.querySelector('select')?.focus();},optionControls);
     if (ovl) ovl.remove();
-    ovl = overlays.apply(candles, overlaySnapshot, colors);
+    ovl = overlays.apply(candles, projection, colors);
     clear(legendRow);
-    const built = new Date(overlaySnapshot.built_at || '');
-    if (Number.isFinite(built.getTime())) legendRow.append(el('span.small.muted.chart-snapshot-date',s('chart.snapshot_as_of',{date:built.toISOString().slice(0,16).replace('T',' ')})));
-    for (const it of overlays.legend(overlaySnapshot, colors)) {
+    for (const it of overlays.legend(projection, colors)) {
       legendRow.appendChild(el('span.legend-item.mono',el('i',{style:{background:it.color}}),it.label+' ',el('b',typeof it.value==='number'?num(it.value,2):String(it.value))));
     }
-    if (!ovl.count) legendRow.appendChild(el('span.muted.small',s('chart.no_overlays')));
+    if(ovl.count)legendRow.append(el('span.small.muted',s('option.lines_for',{date:selectedExpiry||'—'})));
+    clearTimeout(expiryTimer);
+    const deadline=Date.parse(view.context?.observed_at)+26*3600000-Date.now();
+    if(deadline>0)expiryTimer=setTimeout(()=>{if(valid())paintOverlays();},Math.min(deadline+1,3600000));
   }
 
-  async function draw(attempt = 0) {
+  async function draw(attempt = 0, reuse=false) {
     // finding chart.js:63 — take a per-draw token. Rapid period/ticker switches while /bars is slow used to
     // race: each draw passed the lone 'alive' check, each created a chart in the same host (stacked duplicates,
     // leaked ResizeObserver/canvas, and the slower response could win with the WRONG period). Every await below
@@ -103,9 +133,10 @@ export async function mount(root, params) {
     const LWC = window.LightweightCharts;
     if (!LWC) { clear(status); status.appendChild(errorBox(new Error("charts lib missing"))); return; }
     let bars, payload;
-    try { payload = await api.bars(ticker, period); bars = normalizeBars(payload); }
+    try { payload = reuse&&lastPayload&&lastPayloadPeriod===period?lastPayload:await api.bars(ticker, period,{signal:ctl.signal}); bars = normalizeBars(payload); }
     catch (err) { if (my !== drawSeq || !alive) return; clear(status); status.appendChild(errorBox(err, draw)); return; }
-    if (my !== drawSeq || !alive) return;
+    if (my !== drawSeq || !valid()) return;
+    lastPayload=payload;lastPayloadPeriod=period;
     clear(status);
     const retry = () => {
       status.appendChild(el('button.btn.btn-ghost.btn-sm', { type: 'button', onclick: () => draw() }, s('common.retry')));
@@ -114,8 +145,8 @@ export async function mount(root, params) {
     if (api.isAccepted(payload)) { status.appendChild(el('p.muted', s('common.building'))); retry(); return; }
     if (!bars.length) { status.appendChild(el("p.muted", s("chart.no_bars"))); return; }
     const last=bars[bars.length-1];
-    const spot = document.getElementById("chart-spot");
-    if (spot) spot.replaceChildren(el('span',px(last.close)),el('time.small.muted',{datetime:String(last.time)},s('chart.last_bar',{date:String(last.time)})));
+    const spot = root.querySelector('#chart-spot');
+    if (spot) spot.replaceChildren(el('span',px(last.close)),el('time.small.muted',{datetime:String(last.time)},s(compact?'chart.compact_bar':'chart.last_bar',{date:String(last.time)})));
     if (payload?.stale) {
       status.appendChild(el('p.data-notice', s('chart.stale_bars', { date: payload.expected_last_d || '—' })));
       retry();
@@ -124,20 +155,24 @@ export async function mount(root, params) {
     const text = cssVar("--muted", "#9aa7b4"), grid = cssVar("--border", "#223041"), up = cssVar("--green", "#3fb950"), down = cssVar("--red", "#f85149");
     chart = LWC.createChart(host, {
       autoSize: true,
-      layout: { background: { type: "solid", color: "transparent" }, textColor: text, attributionLogo: false, panes: { separatorColor: grid, enableResize: false } },
-      grid: { vertLines: { color: grid }, horzLines: { color: grid } },
-      rightPriceScale: { borderColor: grid },
-      timeScale: { borderColor: grid, rightOffset: 4 },
+      layout: { background: { type: "solid", color: "transparent" }, fontFamily:'Manrope, sans-serif',fontSize:11,textColor: text, attributionLogo: false, panes: { separatorColor: grid, enableResize: false } },
+      grid: { vertLines: { visible:false }, horzLines: { color: grid,style:1 } },
+      rightPriceScale: { borderVisible:false,scaleMargins:{top:.1,bottom:.2} },
+      timeScale: { borderVisible:false,rightOffset:6,barSpacing:8,minBarSpacing:2 },
       crosshair: { mode: 0 },
       handleScroll: { vertTouchDrag: false },
     });
-    let levels = []; // overlay prices folded into autoscale so walls outside the candle range stay visible
     candles = chart.addSeries(LWC.CandlestickSeries, { upColor: up, downColor: down, borderUpColor: up, borderDownColor: down, wickUpColor: up, wickDownColor: down,
-      // the live price is the hero: a thick bright horizontal line + its up/down last-value badge, so it reads
-      // clearly above the (now axis-label-free) overlay lines (owner: "最新价格被靠墙 overshadow 了").
-      priceLineVisible: true, priceLineWidth: 2, priceLineColor: cssVar("--text", "#e6edf3"), lastValueVisible: true,
-      autoscaleInfoProvider: (orig) => { const r = orig(); if (!r || !r.priceRange || !levels.length) return r; const lo = Math.min(r.priceRange.minValue, ...levels), hi = Math.max(r.priceRange.maxValue, ...levels); return { priceRange: { minValue: lo, maxValue: hi }, margins: r.margins }; } });
+      // Keep the last recorded close legible with a quiet line and an axis badge.
+      priceLineVisible: true, priceLineWidth: 1,priceLineStyle:2, priceLineColor: cssVar("--text", "#e6edf3"), lastValueVisible: true });
     candles.setData(bars);
+    volumeSeries=chart.addSeries(LWC.HistogramSeries,{priceScaleId:'volume',priceFormat:{type:'volume'},priceLineVisible:false,lastValueVisible:false});
+    volumeSeries.setData(bars.filter(b=>Number.isFinite(b.volume)&&b.volume>=0).map(b=>({time:b.time,value:b.volume,color:b.close>=b.open?up+'40':down+'40'})));
+    volumeSeries.priceScale?.().applyOptions({scaleMargins:{top:.84,bottom:0}});
+    const readBar=b=>{if(!b)return;ohlc.replaceChildren(el('span',String(b.time)),...['open','high','low','close'].map(k=>el('span',s('chart.'+k)+' '+px(b[k]))));};
+    readBar(last);
+    chart.subscribeCrosshairMove?.(event=>{const bar=event.seriesData?.get(candles);readBar(bar?.open!=null?bar:last);});
+    if(showIndicators){
     // RSI(14) in its own pane
     rsiSeries = chart.addSeries(LWC.LineSeries, { color: cssVar("--blue", "#58a6ff"), lineWidth: 1, priceLineVisible: false, lastValueVisible: true, title: s("chart.rsi") }, 1);
     rsiSeries.setData(overlays.rsi(bars, 14));
@@ -155,8 +190,9 @@ export async function mount(root, params) {
       macdLineS.setData(m.macd);
       referenceLines.push([macdLineS.createPriceLine({ price: 0, color: text, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), '--muted']);
     }
+    }
     // Size all panes together after creating them; adding MACD must not squeeze RSI.
-    chart.panes().forEach((pane,index)=>pane.setStretchFactor([3,1.2,1][index] || 1));
+    chart.panes().forEach((pane,index)=>pane.setStretchFactor([4.5,1.2,1][index] || 1));
     chart.timeScale().fitContent();
 
     // Overlays: Pro only. Free/paid see a lock strip instead.
@@ -167,17 +203,17 @@ export async function mount(root, params) {
         let snap = reusableSnapshot(snaps[ticker]) ? snaps[ticker] : null;
         // finding chart.js:97 — /snapshot wraps data as {ticker, snapshot:{…}} (app.py _snap_payload); unwrap it
         // (same class as the watchlist bug) so the .ok/overlays fields exist and the store isn't poisoned.
-        if (!snap) { const r = await api.snapshot(ticker, { tries: 6 }); if (!api.isAccepted(r)) { snap = unpackSnapshot(r); store.patch("snapshots", { [ticker]: snap }); } }
-        if (my !== drawSeq || !alive || !chart) return;   // finding chart.js:63 — recheck before applying overlays
+        if (!snap) { const r = await api.snapshot(ticker, { tries: 6,signal:ctl.signal }); if (!api.isAccepted(r)&&valid()&&my===drawSeq) { snap = unpackSnapshot(r); store.patch("snapshots", { [ticker]: snap }); } }
+        if (my !== drawSeq || !valid() || !chart) return;
         clear(legendRow);
         if (snap && snap.ok) {
           if(snap.company_context) showCompany(snap.company_context,snap.rs);
           overlaySnapshot = snap;
           paintOverlays();
-          levels = overlays.levels(snap); candles.applyOptions({});
         } else legendRow.appendChild(el("span.muted.small", s("common.building")));
       } catch (err) { if (my === drawSeq && alive) { clear(legendRow); legendRow.appendChild(el("span.muted.small", s("common.error", { msg: err.message }))); } }
     } else {
+      optionHost.hidden=true;optionControls.hidden=true;toggles.querySelectorAll('label').forEach(node=>node.hidden=true);
       const fake = el("div.legend-fake.mono", s("chart.overlays"));
       legendRow.appendChild(lock(fake, s("chart.lock")));
     }
@@ -197,12 +233,14 @@ export async function mount(root, params) {
       if (macdLineS) macdLineS.applyOptions({ color: cssVar("--blue", "#58a6ff") });
       if (macdSig) macdSig.applyOptions({ color: cssVar("--orange", "#f0883e") });
       if (macdHist) macdHist.setData(histogram.map(p => ({...p,color:p.value >= 0 ? up : down})));
+      if(volumeSeries&&lastPayload)volumeSeries.setData(normalizeBars(lastPayload).filter(b=>Number.isFinite(b.volume)&&b.volume>=0).map(b=>({time:b.time,value:b.volume,color:b.close>=b.open?up+'40':down+'40'})));
       for (const [line, variable] of referenceLines) line?.applyOptions({color:cssVar(variable)});
       paintOverlays();
     } catch (e) { /* ignore */ }
   }
   const stopTheme = observeTheme(retheme);
-
-  await draw();
-  return () => { picker.dispose(); alive = false; stopTheme(); destroy(); };
+  const cleanup=()=>{picker.dispose();alive=false;ctl.abort();stopTheme();destroy();};
+  params.signal?.addEventListener('abort',cleanup,{once:true});
+  if(params.signal?.aborted)cleanup();else await draw();
+  return cleanup;
 }

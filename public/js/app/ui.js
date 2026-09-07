@@ -107,7 +107,7 @@ export function toast(msg, kind) {
 
 // ---- modal --------------------------------------------------------------------------------
 let modalState = null;
-export function modal(title, body, actions) {
+export function modal(title, body, actions, {onClose}={}) {
   closeModal();
   const host = document.getElementById("modal") || document.body.appendChild(el("div#modal"));
   const opener = document.activeElement;
@@ -134,7 +134,7 @@ export function modal(title, body, actions) {
     else if (event.shiftKey && (document.activeElement === first || document.activeElement === box)) { event.preventDefault(); last.focus(); }
     else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
   };
-  modalState = {opener, shell, wasInert, keydown, scroller, scrollTop};
+  modalState = {opener, shell, wasInert, keydown, scroller, scrollTop, onClose};
   if (shell) shell.inert = true;
   document.body.classList.add("modal-open");
   document.addEventListener("keydown", keydown);
@@ -143,11 +143,12 @@ export function modal(title, body, actions) {
 }
 export function closeModal() {
   if (modalState) {
-    const {opener, shell, wasInert, keydown, scroller, scrollTop} = modalState;
+    const {opener, shell, wasInert, keydown, scroller, scrollTop, onClose} = modalState;
     document.removeEventListener("keydown", keydown);
     if (shell) shell.inert = !!wasInert;
     document.body.classList.remove("modal-open");
     modalState = null;
+    onClose?.();
     if (opener?.isConnected) opener.focus({preventScroll:true});
     if (scroller) scroller.scrollTop = scrollTop;
   }

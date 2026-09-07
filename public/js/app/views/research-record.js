@@ -9,7 +9,7 @@ const value=v=>v===null||v===undefined||v===''?'—':String(v);
 const link=(href,label)=>el('a.btn.btn-ghost.btn-sm',{href},label);
 function destination(stream,ticker) {
   const tk=encodeURIComponent(ticker);
-  return ({price:'#/chart/'+tk,technical:'#/chart/'+tk,options:'#/watchlist?ticker='+tk,
+  return ({price:'#/chart/'+tk,technical:'#/chart/'+tk,options:'#/chart/'+tk,
     vibe:'#/boards?board=social&ticker='+tk,radar:'#/boards?mode=archive&ticker='+tk,
     creator:'#/creators?ticker='+tk,calendar:'#/calendar',digest:'#/briefing'})[stream];
 }
@@ -30,6 +30,8 @@ export function recordCard(item) {
   if(item.stream==='calendar')fields=[['event_date',value(p.date)],['event_time',value((LANG==='en'&&p.time_en)||p.time_et||p.time)]];
   if(p.effective_at)fields.push(['effective_at',value(p.effective_at)]);
   if(fields.length)card.append(el('dl.research-facts',...fields.map(([k,v])=>el('div',el('dt',tr(k)),el('dd.mono',v)))));
+  if(item.stream==='options')card.append(el('p.small.muted',p.expiry_status==='aggregate'&&p.expiries?.length?
+    s('option.aggregate_scope',{dates:p.expiries.join(' · ')}):s('option.legacy_scope')));
   if(item.stream==='vibe')card.append(el('p.small.muted',tr('vibe_limit')));
   const precision=p.publication_precision??p.date_precision;
   const published=item.source_at ? (precision==='day'||item.source_at.length===10 ? item.source_at.slice(0,10)+' · '+tr('unknown_time') : dateTime(item.source_at)) : tr('unknown');

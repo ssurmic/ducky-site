@@ -148,7 +148,7 @@ export const watchlist = {
   remove: (t) => del("/watchlist/" + encodeURIComponent(t)),
 };
 export const snapshot = (t, o) => getWithRetry("/snapshot/" + encodeURIComponent(t), o);
-export const bars = (t, period) => get("/bars/" + encodeURIComponent(t) + "?period=" + encodeURIComponent(period || "6mo"));
+export const bars = (t, period, opts) => get("/bars/" + encodeURIComponent(t) + "?period=" + encodeURIComponent(period || "6mo"), opts);
 export const alerts = {
   list: () => get("/alerts"),
   add: (ticker, condition) => post("/alerts", { ticker, condition }),
