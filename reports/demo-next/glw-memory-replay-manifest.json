@@ -1,0 +1,34 @@
+{
+  "kind": "historical-condition-replay",
+  "display_sessions": 85,
+  "input_rows": 339,
+  "rsi_july28_input_rows": 311,
+  "rsi_14_july28_recomputed": 30.7,
+  "method": "Existing technicals.rsi; each prefix only, no future closes; not a historical stored indicator snapshot",
+  "start": "2026-05-06",
+  "end": "2026-09-04",
+  "price_basis": "provider unadjusted daily OHLC; Close not Adj Close",
+  "retrieved_at": "2026-09-07T03:55:38.736744+00:00",
+  "source_url": "https://www.sec.gov/Archives/edgar/data/24741/000120677426000273/glw4631061-8k.htm",
+  "historical_delivery_verified": false,
+  "future_alert_configuration_enabled": false,
+  "july_degen_sector_fud_luna_context": "No point-in-time evidence supplied; no score, polarity or causal story drawn",
+  "price_change_pct": -15.019,
+  "max_close_drawdown_pct": -51.484218441358486,
+  "intraday_low": {
+    "date": "2026-07-28",
+    "value": 114.5
+  },
+  "later_lower_close": {
+    "date": "2026-07-29",
+    "value": 124.05000305175781
+  },
+  "traditional_warrant_exercise_price_usd": 180,
+  "traditional_warrant_exercise_price_is_stock_cost": false,
+  "source_hashes": {
+    "scripts/demo/evidence/voice-v9/market-inputs/GLW.json": "54cc49185159fdd92bab3a8d60b6a29d947488d01f21593e4bd701c1177bda06",
+    "scripts/demo/evidence/voice-v9/case.json": "ace92d40d7ab3d585053454ee0dea52fe2c447d025a1e811164800b7dec4952f",
+    "public/media/ducky-demo-cases-2026-09-07.json": "0119cd3d398690d7bd00014c9482ec40b07351a6165b12746bfa25e95c3079fa"
+  },
+  "technicals_sha256": "f96d3e06deb6da172200e055775109adc2e41aa582ed4e6d07e37929502a690c"
+}

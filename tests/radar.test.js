@@ -121,3 +121,28 @@ test('company and venue filters compose with search and unknown caps stay explic
  const url=new URL(archivePath({sector:'Technology',cap:'mid',purchases:'open_market'}),'https://example.test');
  assert.equal(url.searchParams.get('sector'),'Technology');assert.equal(url.searchParams.get('cap'),'mid');assert.equal(url.searchParams.get('purchases'),'open_market');
 });
+
+test('LIVE observations keep unknown publication separate from archive dates and delivery',async()=>{
+ const records=[
+  {id:101,kind:'political',ticker:'BE',provenance:'LIVE',ts:'2026-09-07T01:00:00Z',observed_at:'2026-09-07T01:00:00Z',event_date:'2026-09-04',summary:'Fresh source observation',extra:{publication_basis:'first_observed',source_published_at:null}},
+  {id:102,kind:'political',ticker:'INTC',provenance:'LIVE',ts:'2026-09-07T01:00:00Z',observed_at:'2026-09-07T01:00:00Z',summary:'Known publication',extra:{source_published_at:'2026-09-02T13:30:00Z'}},
+  {id:103,kind:'political',ticker:'BE',provenance:'INGESTED',ts:'2026-08-04T00:00:00Z',observed_at:'2026-09-07T01:00:00Z',summary:'Historical filing',extra:{date_precision:'day'}},
+ ];
+ globalThis.fetch=async url=>response(String(url).includes('archive.json')?{items:records,filter_version:3}:{items:[],sources:[],sectors:[]});
+ const root=document.createElement('section');document.body.append(root);
+ const cleanup=await mount(root,{query:new URLSearchParams('mode=archive&board=political')});
+ try{
+  const detail=id=>root.querySelector('[data-record-id="'+id+'"] .radar-detail');
+  const unknown=detail(101),known=detail(102),historical=detail(103);
+  assert.ok(unknown.textContent.includes(copy['app.radar.observation_note']));
+  assert.ok(!unknown.textContent.includes(copy['app.radar.backfill_note']));
+  const sourceFacts=id=>[...detail(id).querySelectorAll('.radar-detail-facts')].find(row=>row.textContent.includes(copy['app.radar.published_date']));
+  assert.equal(sourceFacts(101).querySelector('strong:last-child').textContent,copy['app.radar.publication_unknown']);
+  assert.ok(sourceFacts(101).textContent.includes('2026-09-04'));
+  assert.equal(sourceFacts(102).querySelector('strong:last-child').textContent,'2026-09-02');
+  assert.ok(known.textContent.includes(copy['app.radar.observation_note']));
+  assert.ok(historical.textContent.includes(copy['app.radar.backfill_note']));
+  assert.equal(sourceFacts(103).querySelector('strong:last-child').textContent,'2026-08-04');
+  assert.ok(!root.textContent.includes('radar.observation_note'));
+ }finally{cleanup();root.remove();}
+});

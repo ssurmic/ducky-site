@@ -26,6 +26,17 @@ export const CAP_BANDS={micro:[0,3e8],small:[3e8,2e9],mid:[2e9,1e10],large:[1e10
 const sectorLabel=value=>{const label=s('radar.sector_'+value);return label==='radar.sector_'+value?value:label;};
 const boardOf = row => row.board || BOARDS.find(b=>b.kinds.split(',').includes(row.kind))?.key;
 const readable = row => Boolean(String(row.summary || '').trim() || String(row.extra?.message_text || '').trim());
+function publicationDate(row) {
+  const extra=row.extra || {};
+  // New records explicitly distinguish source publication from our observation.
+  // Only legacy records with no declared basis may use the old date field.
+  const declared=Object.hasOwn(extra,'source_published_at')?extra.source_published_at:
+    Object.hasOwn(row,'source_published_at')?row.source_published_at:
+    extra.publication_basis==='first_observed'?null:
+    Object.hasOwn(row,'published_at')?row.published_at:row.ts;
+  return typeof declared==='string' && /^\d{4}-\d{2}-\d{2}/.test(declared) && Number.isFinite(Date.parse(declared))
+    ?declared.slice(0,10):s('radar.publication_unknown');
+}
 export function filterRecords(rows, state, now=Date.now()) {
   const query=(state.q || '').trim().toLocaleLowerCase();
   const ticker=(state.ticker || '').trim().replace(/^\$/,'').toUpperCase();
@@ -344,8 +355,8 @@ export async function mount(root, route={}) {
     if(it.extra?.message_truncated)detail.append(el('p.muted',s('boards.truncated')));
     if(!body && !it.archived)detail.append(el('p.muted',s('radar.body_note')));
     detail.append(el('div.radar-detail-facts',el('span',s('boards.recorded_at')),el('strong',dateTime(it.observed_at || it.ts)),
-      el('span',s('radar.record_type')),el('strong',kind)),el('p.radar-time-note.muted',s(it.provenance?'radar.backfill_note':'boards.timestamp_note')));
-    if(it.provenance)detail.append(el('div.radar-detail-facts',el('span',s('radar.event_date')),el('strong',it.event_date || '—'),el('span',s('radar.published_date')),el('strong',String(it.ts || '').slice(0,10))));
+      el('span',s('radar.record_type')),el('strong',kind)),el('p.radar-time-note.muted',s(it.provenance==='LIVE'?'radar.observation_note':it.provenance?'radar.backfill_note':'boards.timestamp_note')));
+    if(it.provenance)detail.append(el('div.radar-detail-facts',el('span',s('radar.event_date')),el('strong',it.event_date || '—'),el('span',s('radar.published_date')),el('strong',publicationDate(it))));
     if(!it.archived && !it.provenance){
       detail.append(el('h4',s('radar.follow_up')));
       if(it.base_d)detail.append(el('p.muted',s('creators.base_close')+' '+it.base_d+' · '+px(it.base_px)),

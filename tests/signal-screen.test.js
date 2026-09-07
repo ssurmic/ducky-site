@@ -81,3 +81,21 @@ test('scope and event time windows remain legible in the saved summary',()=>{
  const c={...defaults(),scope:'watchlist',events:['insider','stake'],days:90,cap_min:2e9,oversold:true};
  const summary=configSummary(c);assert.ok(summary.includes('My watchlist'));assert.ok(summary.includes('90'));assert.ok(summary.includes(' AND '));assert.ok(summary.includes('$2B'));
 });
+
+test('unknown and cancelled delivery render as distinct states without a sent claim',async()=>{
+ pro();const config=defaults();
+ globalThis.fetch=async(url,opts)=>response(String(url).endsWith('/screens/hits')?
+  {items:['unknown','cancelled'].map((delivery,index)=>({ticker:'EX',name:'Rule '+index,matched_at:'2026-09-06T12:00:00Z',delivery,evidence:fixture(config).items[0]}))}:
+  {items:[{id:8,name:'My rule',config,notify:false}],evaluation_enabled:true});
+ const r=root(),dispose=mountSavedScreens(r,{});await flush();
+ try{
+  assert.ok(r.textContent.includes(copy['app.screen.delivery_unknown']));
+  assert.ok(r.textContent.includes(copy['app.screen.delivery_cancelled']));
+  assert.ok(!r.textContent.includes(copy['app.screen.delivery_sent']));
+  assert.ok(!r.textContent.includes(copy['app.screen.delivery_queued']));
+  assert.ok(!r.textContent.includes('screen.delivery_'));
+  const zh=JSON.parse(readFileSync('i18n/zh.json'));
+  assert.equal(zh['app.screen.delivery_unknown'],'无法确认投递状态');
+  assert.equal(zh['app.screen.delivery_cancelled'],'已取消提醒');
+ }finally{dispose();r.remove();}
+});
