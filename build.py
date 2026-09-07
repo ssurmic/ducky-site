@@ -115,6 +115,27 @@ def page_targets() -> list[tuple[str, str]]:
     return out
 
 
+def load_home_stories() -> list[dict]:
+    """Small, dated landing examples derived from the existing public evidence artifact."""
+    doc = json.loads((PUBLIC / 'media/ducky-demo-cases-2026-09-07.json').read_text())
+    stories = []
+    for key, window in [('nok', 'first_20_after_announcement'), ('glw', 'whole_path'), ('hood', 'after_disclosure_20')]:
+        source = doc['cases'][key]
+        data = source[window]
+        points = data['path']
+        values = [p['return_pct'] for p in points]
+        if not values or any(not math.isfinite(v) for v in values):
+            fail('invalid homepage historical path: ' + key)
+        low, high = min(0, min(values)), max(0, max(values))
+        span = high - low or 1
+        coords = ' '.join(f'{12 + i / max(1,len(values)-1) * 336:.2f},{16 + (high-v)/span*72:.2f}' for i,v in enumerate(values))
+        stories.append(dict(key=key, ticker=key.upper(), source_url=source['source_url'],
+            start=data['start'], end=data['end'], change=f"{data['return_pct']:+.1f}%",
+            negative=data['return_pct'] < 0, points=coords, zero_y=16+high/span*72,
+            price_start=f"{data['base_close']:.2f}", price_end=f"{data['end_close']:.2f}"))
+    return stories
+
+
 def lang_prefix(lang: str) -> str:
     return "" if lang == "zh" else f"/{lang}"
 
@@ -620,6 +641,8 @@ def main() -> None:
             ctx["oversold"] = load_oversold_research()
             ctx["video_example"] = video_example
             ctx["demo_copy"] = {k[8:]: v for k, v in tables[lang].items() if k.startswith("demo.ui.")}
+            ctx["home_stories"] = load_home_stories() if tpl_name == 'index.html' else []
+            ctx["home_copy"] = {k[5:]:v for k,v in tables[lang].items() if k.startswith('home.')} if tpl_name == 'index.html' else {}
             html = version_assets(tpl.render(**ctx), version, app_version)
             if tpl_name == "app.html":
                 validate_app_strings(html, tables[lang], lang)
