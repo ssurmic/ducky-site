@@ -6,7 +6,7 @@ const dom=new JSDOM('<html lang="en" data-lang="en"><body></body></html>',{url:'
 for(const key of ['window','document','Node','location','history'])globalThis[key]=dom.window[key];
 const copy=JSON.parse(readFileSync('i18n/en.json'));
 const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
-const {filterRecords,archivePath,mount}=await import('../public/js/app/views/boards.js');
+const {filterRecords,archivePath,mount,radarPreview}=await import('../public/js/app/views/boards.js');
 const store=await import('../public/js/app/store.js');store.set('me',{tier:'pro'});
 const now=Date.parse('2026-09-06T00:00:00Z');
 const sample=[
@@ -16,6 +16,11 @@ const sample=[
  {id:4,kind:'insider',ticker:'TTMI',ts:'2026-08-20T12:00:00Z',summary:'Old purchase'}];
 const response=body=>new Response(JSON.stringify(body),{headers:{'content-type':'application/json'}});
 const flush=async()=>{for(let i=0;i<6;i++)await new Promise(r=>setTimeout(r,0));};
+test('radar previews drop Telegram decoration, stay concise and preserve multiplication',()=>{
+ assert.equal(radarPreview('🗞️ *Daily insider report*\nNo qualifying purchases. Additional context.',false),'🗞️ Daily insider report No qualifying purchases.');
+ assert.equal(radarPreview('2*3*4 = 24; 2 * 3 * 4 = 24.',false),'2*3*4 = 24; 2 * 3 * 4 = 24.');
+ assert.ok(radarPreview('很'.repeat(400),true).length<=89);
+});
 test('radar filters compose without treating historical excerpts, losses or missing text as new events',()=>{
  assert.deepEqual(filterRecords(sample,{mode:'recent',days:7,board:'insider',ticker:'$ttmi',q:'evidence',content:'readable'},now).map(r=>r.id),[1]);
  assert.deepEqual(filterRecords(sample,{mode:'archive',content:'missing'},now).map(r=>r.id),[3]);

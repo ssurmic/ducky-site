@@ -6,6 +6,19 @@ body[data-route="boards"] .app-view{max-width:1160px}
 .social-method{border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:24px;font-size:.875rem;line-height:1.7}
 .social-method summary,.social-evidence summary{cursor:pointer;font-weight:600}
 .social-summary{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:16px 0}
+.social-leaderboard{border:1px solid var(--border);border-radius:14px;padding:18px;margin:12px 0 20px;background:var(--surface)}
+.social-leaderboard h2{font-size:1rem;margin:0 0 5px}
+.social-leaderboard ol{list-style:none;margin:12px 0 0;padding:0}
+.social-leaderboard li+li{border-top:1px solid var(--border)}
+.social-rank-row{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;min-height:56px;padding:10px 0;text-align:left;background:none;border:0;color:var(--text);font:inherit;cursor:pointer}
+.social-rank-row:hover{background:var(--surface-2)}
+.social-rank-row:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.social-rank-number{color:var(--muted);font-variant-numeric:tabular-nums}
+.social-rank-row small{display:block;color:var(--muted);font-size:.75rem;line-height:1.5;overflow-wrap:anywhere}
+.social-rank-reading{text-align:right;font-variant-numeric:tabular-nums}
+.social-hot-list{display:flex;flex-wrap:wrap;gap:8px}
+.social-x-row{display:flex;gap:8px 16px;flex-wrap:wrap;padding:12px 0;border-top:1px solid var(--border);align-items:center}
+.social-x-row small{flex-basis:100%}
 .social-filters{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin:12px 0}
 .social-filters label{display:grid;gap:6px;font-size:.8rem;color:var(--muted);min-width:0}
 .social-filters .input{width:100%;min-width:0;min-height:44px}

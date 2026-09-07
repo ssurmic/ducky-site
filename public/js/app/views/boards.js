@@ -9,6 +9,12 @@ import { mountScreen } from './signal-screen.js';
 import { mountSocial } from './social-tracking.js';
 import { selectNavigation } from '../navigation.js';
 import {isIndexChange, sourceEventHint, effectiveDate, effectiveTiming} from '../source-event.js';
+import {readingPreview} from '../reading-preview.js';
+
+export function radarPreview(value,isZh=LANG==='zh') {
+  const plain=String(value||'').replace(/(^|\s)(\*{1,2}|`)(\S(?:[^*`\n]*?\S)?)\2(?=\s|$)/g,'$1$3');
+  return readingPreview(plain,isZh);
+}
 
 export const BOARDS = [
   {key:'liquidity', kinds:'liquidity,kindex,macro'},
@@ -349,7 +355,7 @@ export async function mount(root, route={}) {
         el('span.radar-kind',kind),el('time.muted',{datetime:it.ts},it.extra?.date_precision==='day'?String(it.ts || '').slice(0,10):String(it.ts || '').slice(11,16)+' UTC')),
       (it.issuer_name || it.company)?el('span.radar-company-name',it.issuer_name || it.company):null,
       it.reporter_name?el('span.radar-reporter',s('radar.reporter')+' · '+it.reporter_name):null,
-      el('span.radar-record-title',label),
+      el('span.radar-record-title',radarPreview(label)),
       indexChange?el('span.radar-company-meta',s('event.effective_date')+' · '+effectiveTiming(sourceEvent)):null,
       (it.sector || it.market_cap)?el('span.radar-company-meta',[it.sector?sectorLabel(it.sector):'',it.market_cap?s('radar.cap_value',{value:new Intl.NumberFormat(LANG==='en'?'en-US':'zh-CN',{notation:'compact',maximumFractionDigits:1,style:'currency',currency:'USD'}).format(it.market_cap)}):''].filter(Boolean).join(' · ')):null,
       el('span.radar-record-footer',el('span.radar-status',s(it.provenance?'radar.source_archive':it.kind==='nvdev'?'radar.mapping_unverified':it.archived?'boards.history':body?'radar.body_available':readable(it)?'radar.summary_only':'radar.body_missing')),disclosure));

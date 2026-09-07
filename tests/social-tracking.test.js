@@ -6,7 +6,7 @@ const dom=new JSDOM('<html lang="en" data-lang="en"><body></body></html>',{url:'
 for(const k of ['window','document','Node','location','history'])globalThis[k]=dom.window[k];
 const copy=JSON.parse(readFileSync('i18n/en.json'));
 const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
-const {filterSocial,socialCard,mountSocial}=await import('../public/js/app/views/social-tracking.js');
+const {filterSocial,socialCard,mountSocial,rankSocial,xSourceSection}=await import('../public/js/app/views/social-tracking.js');
 const {mount}=await import('../public/js/app/views/boards.js');
 const store=await import('../public/js/app/store.js');
 const row={ticker:'NVDA',company:'NVIDIA',rank:1,rank_previous:5,mentions:1000,mentions_previous:100,upvotes:500,change_pct:900,index:100,state:'overheated',overheated:true,components:{volume:50,growth:30,rank:20},id:'social:example:NVDA',collected_at:'2026-09-06T12:00:00Z',source_url:'https://apewisdom.io/stocks/NVDA/'};
@@ -70,4 +70,58 @@ test('social search and scope survive language navigation without an extra snaps
  assert.match(location.hash,/ticker=MU/);assert.match(lang.hash,/ticker=MU/);assert.match(lang.hash,/scope=watchlist/);
  assert.equal(root.querySelectorAll('.social-card').length,1);assert.match(root.querySelector('.social-card').textContent,/MU/);
  clean();root.remove();lang.remove();
+});
+
+test('legacy entry starts with stocks; volume ranking includes small samples and ignores personal filters',async()=>{
+ store.set('me',{tier:'pro'});
+ const small={...row,ticker:'AGI',company:'Alamos Gold',mentions:2000,index:null,state:'insufficient',overheated:false};
+ const items=[{...row,state:'elevated',overheated:false,mentions:30},small];
+ assert.equal(rankSocial(items)[0].ticker,'AGI');assert.equal(items[0].ticker,'NVDA');
+ globalThis.fetch=async()=>response({...doc,items});
+ const root=document.createElement('div');document.body.append(root);
+ const clean=await mountSocial(root,{view:'degen'});
+ assert.equal(root.querySelector('select').value,'all');assert.match(root.textContent,/No sampled stock meets/);
+ assert.match(root.querySelector('.social-rank-row').textContent,/AGI.*Insufficient sample/);
+ root.querySelector('.social-rank-row').click();
+ assert.equal(root.querySelector('input').value,'AGI');assert.equal(root.querySelectorAll('.social-card').length,1);
+ assert.equal(root.querySelectorAll('.social-rank-row').length,2);
+ clean();root.remove();
+});
+
+test('every overheated stock is reachable and empty hot filter offers a reset',async()=>{
+ store.set('me',{tier:'pro'});globalThis.fetch=async()=>response(doc);
+ const root=document.createElement('div');const clean=await mountSocial(root,{view:'vibe'});
+ assert.equal(root.querySelectorAll('.social-hot-list button').length,1);
+ const scope=root.querySelector('select');scope.value='hot';scope.dispatchEvent(new window.Event('change'));
+ const search=root.querySelector('input');search.value='MU';search.dispatchEvent(new window.Event('input'));
+ root.querySelector('.social-empty button').click();
+ assert.equal(scope.value,'all');assert.equal(search.value,'');assert.equal(root.querySelectorAll('.social-card').length,2);
+ clean();
+});
+
+test('expiry while watchlist loads does not leave the new filter loading or restore an old query',async()=>{
+ store.set('me',{tier:'pro'});let finish;
+ globalThis.fetch=async url=>String(url).includes('/watchlist')?new Promise(r=>finish=r):response({...doc,
+   collected_at:new Date(Date.now()-970).toISOString(),stale_after_seconds:1});
+ const root=document.createElement('div');document.body.append(root);
+ const clean=await mountSocial(root,{query:new URLSearchParams('scope=watchlist&ticker=MU')});
+ await new Promise(r=>setTimeout(r,60));
+ const search=root.querySelector('input');search.value='NVDA';search.dispatchEvent(new window.Event('input'));
+ finish(response({items:[{ticker:'NVDA'}]}));await flush();
+ assert.equal(root.querySelector('input').value,'NVDA');assert.equal(root.querySelectorAll('.social-card').length,1);
+ assert.equal(root.querySelector('.social-card').dataset.state,'stale');
+ assert.doesNotMatch(root.querySelector('.social-rank-row').textContent,/Overheated discussion/);
+ clean();root.remove();
+});
+
+test('X count coverage preserves zero and unavailable data separately from Reddit heat',async()=>{
+ const now=new Date().toISOString();
+ const x={status:'partial',items:[{ticker:'NVDA',status:'ready',posts:0,observed_at:now,window_end:now},
+   {ticker:'AMD',status:'unavailable',posts:null}]};
+ const panel=xSourceSection(x);assert.match(panel.textContent,/0 posts/);assert.match(panel.textContent,/— posts/);
+ assert.doesNotMatch(panel.textContent,/Overheated/);assert.equal(xSourceSection({status:'not_connected'}),null);
+ assert.match(xSourceSection({status:'ready',items:[{...x.items[0],observed_at:'2020-01-01',window_end:'2020-01-01'}]}).textContent,/Saved sample/);
+ store.set('me',{tier:'pro'});globalThis.fetch=async()=>response({status:'unavailable',items:[],x});
+ const root=document.createElement('div');const clean=await mountSocial(root);
+ assert.ok(root.querySelector('.social-x'));assert.match(root.textContent,/No social data is available yet/);clean();
 });

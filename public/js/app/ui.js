@@ -41,18 +41,19 @@ export function clear(node) { while (node.firstChild) node.removeChild(node.firs
 
 // ---- formatters ---------------------------------------------------------------------------
 export function num(v, digits) {
-  if (v === null || v === undefined || v === "" || Number.isNaN(Number(v))) return "—";
+  if (!numeric(v)) return "—";
   const n = Number(v);
   return n.toLocaleString(LANG === "zh" ? "zh-CN" : "en-US", { minimumFractionDigits: digits ?? 2, maximumFractionDigits: digits ?? 2 });
 }
-export function px(v) { return v === null || v === undefined ? "—" : "$" + num(v, Number(v) >= 1000 ? 0 : 2); }
+function numeric(v) { return (typeof v === 'number' || typeof v === 'string' && v.trim() !== '') && Number.isFinite(Number(v)); }
+export function px(v) { return !numeric(v) ? "—" : "$" + num(v, Number(v) >= 1000 ? 0 : 2); }
 export function pct(v, digits) {
-  if (v === null || v === undefined || Number.isNaN(Number(v))) return "—";
+  if (!numeric(v)) return "—";
   const n = Number(v);
   return (n > 0 ? "+" : "") + num(n, digits ?? 1) + "%";
 }
-export function int(v) { return v === null || v === undefined || Number.isNaN(Number(v)) ? "—" : String(Math.round(Number(v))); }
-export function signClass(v) { const n = Number(v); return Number.isNaN(n) || n === 0 ? "" : n > 0 ? "pos" : "neg"; }
+export function int(v) { return !numeric(v) ? "—" : String(Math.round(Number(v))); }
+export function signClass(v) { const n = Number(v); return !numeric(v) || n === 0 ? "" : n > 0 ? "pos" : "neg"; }
 export function date(iso) {
   if (!iso) return "—";
   const d = new Date(iso);

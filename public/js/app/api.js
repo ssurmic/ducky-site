@@ -20,7 +20,7 @@ export function base() { return (CFG.API_BASE || "").replace(/\/+$/, ""); }
 async function parse(res) {
   const ct = res.headers.get("content-type") || "";
   if (res.status === 204) return null;
-  if (ct.includes("application/json")) { try { return await res.json(); } catch (e) { return null; } }
+  if (ct.includes("application/json")) return await res.json();
   const text = await res.text();
   return text ? { detail: text } : null;
 }
@@ -43,22 +43,28 @@ export async function request(method, path, opts) {
   // optional opts.signal lets a caller (router cleanup) abort in-flight requests on view switch.
   const ctl = new AbortController();
   const to = setTimeout(() => { try { ctl.abort(); } catch (e) { /* ignore */ } }, opts.timeout || 15000);
+  const abort = () => ctl.abort();
   if (opts.signal) {
-    if (opts.signal.aborted) { try { ctl.abort(); } catch (e) { /* ignore */ } }
-    else opts.signal.addEventListener("abort", () => { try { ctl.abort(); } catch (e) { /* ignore */ } }, { once: true });
+    if (opts.signal.aborted) abort();
+    else opts.signal.addEventListener("abort", abort, { once: true });
   }
-  let res;
+  let res, data, bytes;
   try {
     res = await fetch(base() + path, { method, headers, body, credentials: opts.credentials || "omit", cache: "no-store", signal: ctl.signal });
+    // Headers can arrive while the body stalls. Keep cancellation and the deadline
+    // active until JSON or binary content is fully read, including raw callers.
+    if (opts.raw) bytes = await res.arrayBuffer();
+    else data = await parse(res);
   } catch (e) {
-    throw new ApiError(0, { detail: "network" }, path);
+    if (e instanceof SyntaxError && res && !res.ok) data = {detail:'invalid_response'};
+    else if (e instanceof SyntaxError) throw new ApiError(502, { detail: 'invalid_response' }, path);
+    else throw new ApiError(0, { detail: "network" }, path);
   } finally {
     clearTimeout(to);
+    opts.signal?.removeEventListener('abort', abort);
   }
   if (sessionChanged()) throw new ApiError(0, { detail: "session_changed" }, path);
-  if (opts.raw) return res;
-  const data = await parse(res);
-  if (sessionChanged()) throw new ApiError(0, { detail: "session_changed" }, path);
+  if (opts.raw) return new Response([204,205,304].includes(res.status)?null:bytes, {status:res.status,statusText:res.statusText,headers:res.headers});
   if (res.status === 401 && opts.auth !== false) {
     if (onUnauthorized && !(opts.preserveBadTelegram && data?.error === 'bad_telegram')) onUnauthorized();
     throw new ApiError(401, data, path);
@@ -192,7 +198,10 @@ export const calendar = {
     // verified macro schedule (FOMC/CPI/NFP/PCE). Merging is correct whether the API is stale or fresh.
     let apiEv = [], staticEv = [], apiDoc = null;
     try { apiDoc = await get("/public/calendar.json", { auth: false }); if (apiDoc && Array.isArray(apiDoc.events)) apiEv = apiDoc.events; } catch (e) { /* API down */ }
-    try { const r = await fetch("/calendar.json", { cache: "no-store" }); if (r.ok) { const j = await r.json(); if (j && Array.isArray(j.events)) staticEv = j.events; } } catch (e) { /* ignore */ }
+    const staticCtl = new AbortController();
+    const staticTimer = setTimeout(() => staticCtl.abort(), 3000);
+    try { const r = await fetch("/calendar.json", { cache: "no-store", signal: staticCtl.signal }); if (r.ok) { const j = await r.json(); if (j && Array.isArray(j.events)) staticEv = j.events; } } catch (e) { /* Preserve the live result when static coverage is unavailable. */ }
+    finally { clearTimeout(staticTimer); }
     if (!apiEv.length && !staticEv.length) return { events: [], partial: true, source: "empty" };
     if (!staticEv.length) return apiDoc;
     if (!apiEv.length) return { events: staticEv, partial: true, source: "static-fallback" };
