@@ -1,6 +1,6 @@
 import { eventResearchSession, eventHint, safeSource } from "../calendar-event.js";
 import {sourceDay, effectiveTiming} from '../source-event.js';
-import {calendarTicker, calendarEventTicker, orderCalendarEvents} from '../calendar-model.js';
+import {calendarTicker, calendarEventTicker, orderCalendarEvents, calendarDayPreview} from '../calendar-model.js';
 import { icon } from "../icons.js";
 // views/calendar.js — 投资日历 (Pro): mobile agenda and selectable date grids for a
 // US-stock watchlist — Fed speakers (ET times), FOMC / rate decisions, CPI/PPI/PCE macro, earnings,
@@ -210,13 +210,21 @@ export async function mount(root) {
         () => shiftPeriod(14)));
     }
 
-    function pills(evs, limit = 3) {
+    function preview(evs) { return calendarDayPreview(evs,{scopeTicker,isWatched:evHasMine}); }
+
+    function previewDescription(evs) {
+      const {visible,hidden}=preview(evs);
+      return [s("calendar.event_count",{n:evs.length}), ...visible.map(e=>String(isZh?e.title:(e.title_en||e.title)).slice(0,80)), ...(hidden.length?[s("calendar.more_events",{n:hidden.length})]:[])].join(", ");
+    }
+
+    function pills(evs) {
       // biweekly: color-coded event pills — earnings show the company LOGO + $TICKER so you can SEE who
       // reports at a glance; other events use recognisable short labels. Extra events remain in the day detail.
       const box = el("div.cal-events");
-      for (const e of evs.slice(0, limit)) {
+      const {visible,hidden}=preview(evs);
+      for (const e of visible) {
         if (e.type === "earnings") {
-          const sym = (e.tickers || [])[0] || "";
+          const sym = calendarEventTicker(e,scopeTicker);
           const pill = el("span.pill.pill-earn.cal-kind-earnings" + (isPro && evHasMine(e) ? ".mine" : ""), { title: (sym + " " + (isZh ? (e.title || "") : (e.title_en || e.title || ""))).trim() });
           pill.appendChild(el("span.pill-kind", categoryLabel(e)));
           if (e.logo) pill.appendChild(el("img.pill-logo", { src: e.logo, alt: sym, loading: "lazy" }));
@@ -231,22 +239,23 @@ export async function mount(root) {
           box.appendChild(pill);
         }
       }
-      if (evs.length > limit) box.appendChild(el("span.pill-more", s("calendar.more_events", {n: evs.length - limit})));
+      if (hidden.length) box.appendChild(el("span.pill-more", s("calendar.more_events", {n: hidden.length})));
       return box;
     }
 
     function miniBars(evs) {
       // month cells: compact colour-dot + label rows (ticker for earnings, name for macro/structural).
       const box = el("div.cal-mini");
-      for (const e of evs.slice(0, 3)) {
+      const {visible,hidden}=preview(evs);
+      for (const e of visible) {
         const b = el("div.mbar");
         const dot = el("i.bardot"); dot.style.background = DOTC[visualType(e)] || "var(--muted)"; b.appendChild(dot);
-        const label = e.type === "earnings" ? ((e.tickers || [])[0] || (isZh ? "财报" : "ER")) : shortLabel(e, isZh, scopeTicker);
+        const label = e.type === "earnings" ? (calendarEventTicker(e,scopeTicker) || categoryLabel(e)) : shortLabel(e, isZh, scopeTicker);
         b.setAttribute("title", isZh ? (e.title || "") : (e.title_en || e.title || ""));
         b.appendChild(el("span.pill-txt" + (e.type === "earnings" && isPro && evHasMine(e) ? ".mine" : ""), label));
         box.appendChild(b);
       }
-      if (evs.length > 3) box.appendChild(el("div.pill-more", "+" + (evs.length - 3)));
+      if (hidden.length) box.appendChild(el("div.pill-more", "+" + hidden.length));
       return box;
     }
 
@@ -281,9 +290,17 @@ export async function mount(root) {
         const mine = isPro && evs.some(evHasMine);
         const wknd = dt.getDay() === 0 || dt.getDay() === 6;
         const cell = el("button.cal-cell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : "") + (evs.some(e=>e.type==="holiday") ? ".cal-closed" : "") + (evs.some(e=>e.type==="early_close") ? ".cal-early" : ""),
-          { type: "button", "aria-label": iso + ", " + s("calendar.event_count", {n: evs.length}) + (evs.some(e=>e.type==="holiday") ? ", " + s("calendar.closed_short") : ""), "aria-pressed": String(iso === selected), "data-date":iso, "aria-haspopup":"dialog" });
+          { type: "button", "aria-label": iso + ", " + previewDescription(evs), "aria-pressed": String(iso === selected), "data-date":iso, "aria-haspopup":"dialog" });
         cell.appendChild(el("span.cal-dnum", String(day)));
         if (evs.length) { cell.appendChild(miniBars(evs)); cell.appendChild(el("span.cal-event-count", String(evs.length))); }
+        // Phone month cells hide the regular preview. Preserve watched earnings
+        // identities as compact, wrapping labels instead of only a star/count.
+        const earnings=preview(evs).visible.filter(e=>e.type==='earnings' && (evHasMine(e) || (scopeTicker && calendarEventTicker(e,scopeTicker)===scopeTicker)));
+        if(earnings.length) {
+          const labels=el('span.cal-month-earnings',{'aria-label':s('calendar.kind_earnings')});
+          for(const e of earnings) labels.append(el('span',calendarEventTicker(e,scopeTicker) || categoryLabel(e)));
+          cell.append(labels);
+        }
         const session=evs.find(e=>["holiday","early_close"].includes(e.type));
         if(session) cell.append(el("span.cal-session-grid-label",shortLabel(session,isZh)));
         cell.addEventListener("click", () => openDay(iso));
@@ -320,10 +337,10 @@ export async function mount(root) {
           const session = evs.find(e => ["holiday", "early_close"].includes(e.type));
           const weekday = new Intl.DateTimeFormat(isZh ? "zh-CN" : "en-US", {weekday:"short"}).format(d);
           const cell = el("button.cal-bicell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : "") + (session?.type === "holiday" ? ".cal-closed" : "") + (session?.type === "early_close" ? ".cal-early" : ""),
-            {type:"button", "data-date":iso, "aria-label":[dateLabel(iso), s("calendar.event_count", {n:evs.length}), ...evs.slice(0,3).map(e => String(isZh ? e.title : (e.title_en || e.title)).slice(0,80)), ...(evs.length>3?[s("calendar.more_events",{n:evs.length-3})]:[])].join(", "), "aria-pressed":String(iso === selected), "aria-haspopup":"dialog"});
+            {type:"button", "data-date":iso, "aria-label":dateLabel(iso) + ", " + previewDescription(evs), "aria-pressed":String(iso === selected), "aria-haspopup":"dialog"});
           const date = el("div.cal-bidate", el("span.cal-bidnum", String(d.getDate())), el("span.cal-biweekday", iso === todayIso ? s("calendar.today") : weekday));
           cell.append(date);
-          if (evs.length) cell.append(pills(evs, 2));
+          if (evs.length) cell.append(pills(evs));
           else cell.append(el("span.cal-biquiet", s("calendar.no_events_short")));
           cell.addEventListener("click", () => openDay(iso));
           grid.append(cell);

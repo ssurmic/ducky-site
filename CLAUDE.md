@@ -52,3 +52,12 @@ Record viewport simulation, touch emulation and physical-device checks separatel
 Later packs add pages by dropping `templates/<name>.html` (rendered to `/<name>/` and `/en/<name>/`) and adding
 their keys to **both** i18n files. `window.DUCKY` (from generated `dist/config.js`) exposes `API_BASE`, `BOT`,
 `MINIAPP`, `CHANNEL`, `TRACK_JSON`, `FEED_JSON`, `PRICES`, `VERSION`.
+
+## Calendar preview acceptance (owner, 2026-09-07)
+
+A watchlisted earnings release must be named in the date cell, including when several companies
+report on the same day. A star or generic “more” count is not sufficient. Preserve session closures
+and source-linked company events; keep the complete source records and full-day details intact.
+Test macro/earnings collisions, more watched earnings than preview slots, both calendar grids and
+explicit category filters. Narrow month cells retain watched ticker labels when normal previews
+are hidden. This is presentation priority, not a change to dates, facts or investing algorithms.

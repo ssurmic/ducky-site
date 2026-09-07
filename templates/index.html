@@ -16,11 +16,7 @@
 {% include "_partials/faq.html" %}
 {% include "_partials/disclaimer.html" %}
 
-{# Mobile entry points follow the page language. #}
-<div class="sticky-bar" id="sticky-bar" aria-hidden="true">
-  <a class="btn btn-ghost" href="{{ url('/app/') }}#/register">{{ t('sticky.free') }}</a>
-  <a class="btn btn-primary" href="#pricing">{{ t('desk.price_cta') }}</a>
-</div>
+{# The persistent public header owns mobile entry points; keep content unobstructed. #}
 {% endblock %}
 {% block scripts %}
 <script src="/js/site.js" defer></script>

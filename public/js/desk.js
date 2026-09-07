@@ -15,18 +15,34 @@ export function quoteModel(doc,ticker) {
 
 export function mountTour(root) {
   const buttons=[...root.querySelectorAll('[data-tool]')],panels=[...root.querySelectorAll('.desk-feature')];
-  const select=event=>{
-    const button=event.currentTarget;
+  const doc=root.ownerDocument,win=doc.defaultView,remove=[];
+  const listen=(node,event,fn)=>{node.addEventListener(event,fn);remove.push(()=>node.removeEventListener(event,fn));};
+  const select=(button,{scroll=false,focus=false}={})=>{
     for(const b of buttons)b.setAttribute('aria-pressed',String(b===button));
     for(const p of panels)p.hidden=p.id!==button.getAttribute('aria-controls');
-    const win=root.ownerDocument.defaultView;
-    if(win.matchMedia?.('(max-width: 760px)').matches) {
-      const panel=panels.find(p=>!p.hidden);
-      panel?.scrollIntoView({block:'start',behavior:win.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
-    }
+    const panel=panels.find(p=>!p.hidden);
+    if(scroll)panel?.scrollIntoView?.({block:'start',behavior:win.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+    if(focus)panel?.focus({preventScroll:true});
   };
-  buttons.forEach(b=>b.addEventListener('click',select));
-  return()=>buttons.forEach(b=>b.removeEventListener('click',select));
+  const forHash=hash=>buttons.find(b=>'#'+b.getAttribute('aria-controls')===hash);
+  const fromURL=()=>{const button=forHash(win.location.hash);if(button)select(button,{scroll:true});};
+  buttons.forEach(button=>listen(button,'click',()=>{
+    select(button,{scroll:!!win.matchMedia?.('(max-width: 760px)').matches});
+    // Keep a selected preview shareable without filling browser history on every tab.
+    if(win.location.origin!=='null'){const url=new URL(win.location.href);url.hash=button.getAttribute('aria-controls');win.history.replaceState(null,'',url.href);}
+  }));
+  listen(doc,'click',event=>{
+    const link=event.target.closest('a[href]');if(!link||event.defaultPrevented||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+    let url;try{url=new URL(link.href,win.location.href);}catch{return;}
+    if(url.origin!==win.location.origin||url.pathname!==win.location.pathname||(url.search&&url.search!==win.location.search))return;
+    const button=forHash(url.hash);if(!button)return;
+    // Feature links keep the visitor's selected homepage concept and theme.
+    if(!url.search)url.search=win.location.search;
+    event.preventDefault();if(win.location.hash!==url.hash)win.history.pushState(null,'',url.href);
+    select(button,{scroll:true,focus:true});
+  });
+  listen(win,'hashchange',fromURL);listen(win,'popstate',fromURL);fromURL();
+  return()=>remove.forEach(fn=>fn());
 }
 
 export function mountDuck(root,{fetcher=fetch}={}) {
