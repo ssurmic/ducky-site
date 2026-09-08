@@ -69,7 +69,7 @@ export function layoutOverview(root, force=false) {
 let tooltipSequence=0;
 function mapInspector(frame, label, session) {
   const tip=el('div.watch-map-tooltip',{id:'watch-map-tip-'+(++tooltipSequence),role:'tooltip',hidden:true});
-  let active=null,activeRow=null,dismissed=null;
+  let active=null,activeRow=null,dismissed=null,touched=null;
   function hide(){tip.hidden=true;active?.removeAttribute('aria-describedby');active=null;}
   function show(row,node,event) {
     if(event?.pointerType==='touch'||dismissed===node)return;
@@ -89,8 +89,9 @@ function mapInspector(frame, label, session) {
     tip.style.left=left+'px';tip.style.top=Math.max(8,Math.min(box.height-rect.height-8,top))+'px';
   }
   frame.addEventListener('pointerleave',()=>{dismissed=null;hide();});
-  frame.addEventListener('keydown',event=>{if(event.key==='Escape'){dismissed=active;hide();}});
-  return {tip,show,resize(){if(active)show(activeRow,active);},blur(){dismissed=null;hide();}};
+  frame.addEventListener('pointerdown',event=>{touched=event.pointerType==='touch'?event.target.closest('.watch-tile'):null;if(touched)hide();},true);
+  frame.addEventListener('keydown',event=>{touched=null;if(event.key==='Escape'){dismissed=active;hide();}});
+  return {tip,show,focus(row,node){if(touched!==node)show(row,node);},resize(){if(active)show(activeRow,active);},blur(event){if(touched===event?.target)touched=null;dismissed=null;hide();}};
 }
 
 export function overviewView(rows, options) {
@@ -122,7 +123,10 @@ export function overviewView(rows, options) {
       const tile=el('button.watch-tile',{type:'button','data-open':r.ticker, 'aria-label':title(r),
         'aria-pressed':String(selected===r.ticker),class:'watch-'+changeClass(r.change_pct),
         style:area==='equal'?{}:{left:r.x/10+'%',top:r.y/6+'%',width:r.w/10+'%',height:r.h/6+'%'},onclick:()=>onSelect(r.ticker),
-        onpointerenter:event=>inspector.show(r,tile,event),onfocus:()=>inspector.show(r,tile),onblur:inspector.blur},
+        onpointerenter:event=>inspector.show(r,tile,event),
+        // Touch also focuses a button. Opening a hover layer at that point can
+        // consume the first tap; keyboard focus still gets its full inspector.
+        onfocus:()=>inspector.focus(r,tile),onblur:inspector.blur},
         el('span.watch-tile-sector',label(r)),el('strong',r.ticker),
         el('span.mono.watch-tile-change',pct(r.change_pct,2)),el('span.mono.watch-tile-price',px(r.price)),el('span.watch-tile-company',r.company || ''),
         el('span.watch-tile-cap',s('watch.cap')+' '+capText(r.market_cap)));

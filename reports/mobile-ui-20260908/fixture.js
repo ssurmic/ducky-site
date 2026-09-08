@@ -33,10 +33,11 @@ const store=await import('/js/app/store.js');if(!['login','register','forgot'].i
 // Measurements are exposed as DOM text so a browser audit can inspect the rendered
 // result without reading internal application state or issuing extra API requests.
 const ready=document.createElement('output');ready.id='qa-status';ready.hidden=true;document.body.append(ready);
+let lastPointer=null;document.addEventListener('pointerdown',e=>{lastPointer={type:e.pointerType,label:e.target.closest('button,a,summary')?.textContent.trim()};});
 const rect=e=>{if(!e)return null;const r=e.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height};};
 setInterval(()=>{
  const nav=[...document.querySelectorAll('.app-nav>a,.app-nav>.nav-more>summary')].filter(e=>e.getClientRects().length).map(e=>({label:e.textContent.trim(),...rect(e)}));
  const main=document.querySelector('.app-main'), content=[...document.querySelectorAll('#view .watch-row,#view .watch-tile,#view .evidence-node,#view .chart-host,#view .cal-bicell,#view .radar-row,#view .cr-post,#view .card')].filter(e=>e.getClientRects().length);
  const overflow=[...document.querySelectorAll('#view *')].filter(e=>{const r=e.getBoundingClientRect();return r.width&&r.height&&(r.right>innerWidth+1||r.left<-1)&&getComputedStyle(e).position!=='fixed';}).slice(0,12).map(e=>({tag:e.tagName,cls:typeof e.className==='string'?e.className:'svg',...rect(e)}));
- ready.textContent=JSON.stringify({route:location.hash.slice(2),lang:document.documentElement.lang,width:innerWidth,height:innerHeight,theme:matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light',nav,header:rect(document.querySelector('.app-top')),main:rect(main),firstContent:rect(content[0]),overflow,tiles:document.querySelectorAll('.watch-tile').length,canvases:[...document.querySelectorAll('canvas')].map(e=>rect(e)),calls:qaCalls,errors:qaErrors});
+ ready.textContent=JSON.stringify({route:location.hash.slice(2),lang:document.documentElement.lang,width:innerWidth,height:innerHeight,coarse:matchMedia('(pointer:coarse)').matches,touchPoints:navigator.maxTouchPoints,lastPointer,theme:matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light',nav,header:rect(document.querySelector('.app-top')),main:rect(main),firstContent:rect(content[0]),overflow,tiles:document.querySelectorAll('.watch-tile').length,canvases:[...document.querySelectorAll('canvas')].map(e=>rect(e)),calls:qaCalls,errors:qaErrors});
 },250);

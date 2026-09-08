@@ -242,8 +242,12 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .modal-body{padding:16px}
  .page-app .modal-actions{padding:12px 16px}
  .page-app .creators-view{padding:0}
+ .page-app .creators-view .evidence-page-head{margin-bottom:12px}
+ .page-app .creators-view .evidence-page-head p{font-size:13px;line-height:1.5}
+ .page-app .creators-controls{margin:8px 0}
+ .page-app .creator-directory-picker{margin-bottom:8px}
  .page-app .creators-view .evidence-page-head{flex-wrap:wrap;gap:12px}
- .page-app .creator-workspace-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible;gap:4px}
+ .page-app .creator-workspace-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible;gap:4px;margin:8px 0}
  .page-app .creator-workspace-tabs button{min-width:0;padding:8px;white-space:normal;line-height:1.4}
  .page-app .cr-post{padding-block:18px}
  .page-app .cr-post .evidence-controls{flex-wrap:wrap}
