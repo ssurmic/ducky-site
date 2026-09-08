@@ -80,7 +80,7 @@
     <details class="nav-more">
       <summary>{{ nav_icon('more') }}<span>{{ t('app.nav.more') }}</span></summary>
       <div class="nav-more-panel">
-        {% for route in ['briefing','chart','creators'] + navigation.discovery + navigation.research + navigation.account %}
+        {% for route in ['evidence','briefing','chart','creators'] + navigation.discovery + navigation.research + navigation.account %}
         <a href="#/{{ route }}" data-route="{{ route }}">{{ nav_icon(route) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
         {% endfor %}
         <details class="nav-radar"><summary>{{ nav_icon('boards') }}<span>{{ t('app.nav.radar_categories') }}</span></summary><div class="nav-radar-links">

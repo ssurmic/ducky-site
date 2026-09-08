@@ -72,7 +72,7 @@ export function reportCard(row,{onHistory,archive=false}={}){
   if(row.reused)card.append(el('p.small.muted',s('stockbrief.reused')));
   evidence.append(el('p.small.muted',s('stockbrief.generated',{date:time(row.generated_at)})));
   if(!archive&&ticker){
-    const links=el('div.stock-brief-links',el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+ticker},s('radar.chart')),
+    const links=el('div.stock-brief-links',el('a.btn.btn-ghost.btn-sm',{href:'#/evidence/'+ticker},s('evidence.title')),el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+ticker},s('radar.chart')),
       el('a.btn.btn-ghost.btn-sm',{href:'#/vibe?ticker='+ticker},'Vibe Check'));
     if(onHistory)links.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:e=>onHistory(ticker,card,e.currentTarget)},s('stockbrief.history')));
     card.append(links);

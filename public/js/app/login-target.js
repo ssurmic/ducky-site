@@ -54,7 +54,7 @@ export function safeTarget(hash) {
     return path+(target.size?'?'+target:'');
   }
   if (SIMPLE.has(path.slice(2)) && path.startsWith("#/")) return path;
-  const match = /^#\/(chart|research)(?:\/([A-Za-z0-9][A-Za-z0-9.-]{0,14}))?$/.exec(path);
+  const match = /^#\/(chart|research|evidence)(?:\/([A-Za-z0-9][A-Za-z0-9.-]{0,14}))?$/.exec(path);
   return match ? `#/${match[1]}${match[2] ? "/" + match[2].toUpperCase() : ""}` : null;
 }
 

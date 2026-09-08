@@ -61,6 +61,7 @@ export async function mount(root, params) {
   const showCompany=(p,rs)=>{companyHost.replaceChildren(companyContext(p,rs));companyName.textContent=p?.company||'';};
   if (ticker) api.company(ticker).then(p=>{if(alive) showCompany(p);}).catch(()=>{if(alive) showCompany(null);});
   if (ticker) companyHost.before(el('div.chips',
+    el('a.chip',{href:'#/evidence/'+encodeURIComponent(ticker)},s('evidence.title')),
     el('a.chip',{href:'#/creators?ticker='+encodeURIComponent(ticker)},s('watch.creator_mentions')),
     el('a.chip',{href:'#/boards?mode=archive&ticker='+encodeURIComponent(ticker)},s('watch.radar_records')),
     el('a.chip',{href:'#/calendar?ticker='+encodeURIComponent(ticker)},s('nav.calendar'))));

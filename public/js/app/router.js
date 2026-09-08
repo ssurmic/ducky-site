@@ -8,6 +8,7 @@ import { showModuleRecovery } from "./release-recovery.js";
 import { selectNavigation } from './navigation.js';
 
 const ROUTES = {
+  evidence: () => import('./views/evidence.js'),
   opportunities: () => import('./views/opportunities.js'),
   degen: () => import('./views/discovery.js'),
   vibe: () => import('./views/discovery.js'),
@@ -47,7 +48,7 @@ export function parse(hash) {
   try { query = new URLSearchParams(qi === -1 ? "" : raw.slice(qi + 1)); } catch (e) { query = new URLSearchParams(); }
   const parts = path.split("/").filter(Boolean);
   const name = parts[0] || "watchlist";
-  if (name === "chart" || name === "research") return { name, params: { ticker: (parts[1] || "").toUpperCase(), query } };
+  if (name === "chart" || name === "research" || name === "evidence") return { name, params: { ticker: (parts[1] || "").toUpperCase(), query } };
   if (ROUTES[name]) return { name, params: { query } };
   return { name: "watchlist", params: { query } };
 }

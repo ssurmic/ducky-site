@@ -1,5 +1,5 @@
 {
-  "primary": ["watchlist", "briefing", "chart", "calendar", "alerts", "creators"],
+  "primary": ["watchlist", "evidence", "briefing", "chart", "calendar", "alerts", "creators"],
   "discovery": ["opportunities", "vibe", "ducky"],
   "radar": [
     {"key": "all", "icon": "boards"},
@@ -20,7 +20,7 @@
   "public_groups": [
     {"key": "follow", "routes": ["watchlist", "chart", "calendar", "alerts"]},
     {"key": "discover", "routes": ["boards", "opportunities", "screens", "market"]},
-    {"key": "research", "routes": ["briefing", "creators", "vibe", "macro", "ducky"]}
+    {"key": "research", "routes": ["briefing", "evidence", "creators", "vibe", "macro", "ducky"]}
   ],
   "catalog": {
     "watchlist": {"access": "free"},
@@ -32,6 +32,7 @@
     "screens": {"access": "pro"},
     "market": {"access": "mixed"},
     "briefing": {"access": "pro"},
+    "evidence": {"access": "pro"},
     "creators": {"access": "pro"},
     "vibe": {"access": "pro"},
     "macro": {"access": "pro"},

@@ -148,7 +148,7 @@ test('both app shells carry every navigation icon locally, including briefing an
  for(const lang of ['', 'en/']) {
   const html=readFileSync(`dist/${lang}app/index.html`,'utf8');const page=new JSDOM(html).window.document;
   const links=[...page.querySelectorAll('.app-nav a')];
-  assert.equal(new Set(links.map(a=>a.dataset.route)).size,15);
+  assert.equal(new Set(links.map(a=>a.dataset.route)).size,16);
   assert.ok(page.querySelectorAll('.nav-more-panel a').length>=16);
   assert.equal(page.querySelectorAll('.nav-desktop-radar [data-board]').length,12);
   for(const a of links){assert.ok(a.textContent.trim());assert.ok(a.querySelector('svg[aria-hidden="true"] use'));}

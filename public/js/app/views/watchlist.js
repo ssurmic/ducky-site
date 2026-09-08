@@ -123,6 +123,7 @@ export async function mount(root) {
       el("a.btn.btn-ghost.btn-sm", { href: "#/chart/" + t }, s("watch.chart")),
       el("button.btn.btn-ghost.btn-sm.danger", { type: "button", "aria-label": s("watch.remove") + " " + t, onclick: () => onRemove(t) }, "✕"));
     c.appendChild(head);
+    c.append(el('a.btn.btn-ghost.btn-sm',{href:'#/evidence/'+encodeURIComponent(t)},s('evidence.title')));
     c.append(el('a.btn.btn-ghost.btn-sm.watch-research',{href:'#/research/'+encodeURIComponent(t)},s('watch.research_record')));
     if (!snap) { c.appendChild(spinner()); return c; }
     if (snap.pending) { c.appendChild(spinner(s("common.building"))); return c; }
