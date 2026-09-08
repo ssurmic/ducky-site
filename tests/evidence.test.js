@@ -59,6 +59,20 @@ test('unready snapshots never show an old analysis or invent an update time',()=
  assert.match(analysisPanel(d).textContent,/Orders remain unconfirmed/);
  d.analysis_status='source_changed';assert.ok(!analysisPanel(d).textContent.includes('Orders remain unconfirmed'));
 });
+test('reopening the selected ticker reads its latest snapshot instead of doing nothing',async()=>{
+ store.set('me',{tier:'pro'});let calls=0;
+ globalThis.fetch=async()=>{
+  const d=fixture();calls++;
+  if(calls===2){d.analysis_status='ready';d.analysis={overview:{en:'New saved analysis.',citations:['n1']},sections:[]};}
+  return response(d);
+ };
+ const root=document.createElement('div');document.body.append(root);
+ const cleanup=await mount(root,{ticker:'AVGO'});
+ root.querySelector('.evidence-ticker button').click();
+ await new Promise(resolve=>setTimeout(resolve,0));
+ assert.equal(calls,2);assert.match(root.querySelector('.evidence-analysis').textContent,/New saved analysis/);
+ cleanup();root.remove();
+});
 test('six balanced nodes, exact source passage and progressive disclosure',()=>{
  const root=mapView(fixture());document.body.append(root);
  assert.equal(root.querySelectorAll('.evidence-node').length,6);
