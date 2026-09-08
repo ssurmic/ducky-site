@@ -12,12 +12,12 @@ const calendar=await import('../public/js/app/views/calendar.js');
 const day=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const events=[{date:day,type:'earnings',tickers:['ORCL'],title:'ORCL earnings',title_en:'ORCL earnings'}];
 const response=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json'}});
-function fixture(read){
+function fixture(read,source={}){
  store.bumpEpoch();store.set('me',{tier:'pro'});store.set('watchlist',['NVDA']);
  const calls=[];globalThis.fetch=async(url,opts)=>{calls.push({url:String(url),method:opts?.method||'GET'});
   if(String(url)==='/watchlist')return read();
   if(String(url)==='/calendar.json')return response({events:[]});
-  if(String(url)==='/public/calendar.json')return response({events});
+  if(String(url)==='/public/calendar.json')return response({events,...source});
   return response({});
  };
  const root=document.createElement('main');document.body.append(root);return {root,calls};
@@ -65,4 +65,35 @@ test('navigation or logout before the shared list arrives cannot repopulate memb
   assert.deepEqual(store.get('watchlist'),mode==='navigation'?['NVDA']:[]);
   assert.equal(root.querySelectorAll('.cal-bicell').length,0);close();root.remove();
  }
+});
+
+
+test('calendar retains earnings and their acquisition clocks during a source failure, then clears the warning on recovery',async()=>{
+ const source={partial:true,earnings_source_status:'fetch_failed',earnings_source_coverage:{last_success_at:'2026-09-06T12:00:00Z',last_attempt_at:'2026-09-08T17:00:00Z'}};
+ const {root}=fixture(()=>response({items:['ORCL']}),source);let close=await calendar.mount(root);
+ const warning=root.querySelector('.calendar-source-warning');assert.ok(warning);
+ assert.match(warning.textContent,/Last successful retrieval: 2026-09-06 12:00 UTC/);
+ assert.match(warning.textContent,/Last attempt: 2026-09-08 17:00 UTC/);
+ assert.ok(root.querySelector(`[data-date="${day}"] .pill-tk`).textContent.includes('ORCL'));
+ close();root.replaceChildren();source.partial=false;source.earnings_source_status='ok';close=await calendar.mount(root);
+ assert.equal(root.querySelector('.calendar-source-warning'),null);close();root.remove();
+});
+
+test('calendar never substitutes generated time for missing source acquisition',async()=>{
+ const {root}=fixture(()=>response({items:['ORCL']}),{partial:true,earnings_source_status:'fetch_failed',as_of:'2026-09-08T17:00:00Z',earnings_source_coverage:{}});
+ const close=await calendar.mount(root),warning=root.querySelector('.calendar-source-warning');
+ assert.match(warning.textContent,/Last successful retrieval: Not recorded/);
+ assert.match(warning.textContent,/Last attempt: Not recorded/);close();root.remove();
+});
+
+test('merged and fallback calendars preserve source status while a fresh API recovery overrides an older failure',async()=>{
+ const {calendar:reader}=await import('../public/js/app/api.js');
+ const failed={events:[{date:day,type:'macro',title:'CPI'}],partial:true,earnings_source_status:'fetch_failed',earnings_source_coverage:{last_success_at:'2026-09-06T12:00:00Z'}};
+ let live={...failed,events},down=false;
+ globalThis.fetch=async url=>String(url)==='/calendar.json'?response(failed):down?response({},503):response(live);
+ let doc=await reader.feed();assert.equal(doc.source,'merged');assert.equal(doc.events.length,2);
+ assert.equal(doc.earnings_source_status,'fetch_failed');assert.equal(doc.earnings_source_coverage.last_success_at,'2026-09-06T12:00:00Z');
+ live={events,partial:false,earnings_source_status:'ok',earnings_source_coverage:{last_success_at:'2026-09-08T18:00:00Z'}};
+ doc=await reader.feed();assert.equal(doc.earnings_source_status,'ok');assert.equal(doc.partial,false);
+ down=true;doc=await reader.feed();assert.equal(doc.source,'static-fallback');assert.equal(doc.earnings_source_status,'fetch_failed');
 });

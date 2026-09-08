@@ -3458,5 +3458,10 @@
   "app.creators.caption_term_corrected": "字幕术语已校正：{terms}（远期市盈率）。",
   "app.creators.original_caption": "查看原始字幕",
   "desk.quote_unavailable": "暂时无法核对 · 保留已存收盘",
-  "desk.quote_checked": "核对时间：{time}"
+  "desk.quote_checked": "核对时间：{time}",
+  "app.calendar.earnings_source_failed": "财报来源更新失败",
+  "app.calendar.earnings_source_retained": "当前保留已保存事件；最新变动请核对公司公告。",
+  "app.calendar.source_last_success": "上次成功获取：{time}",
+  "app.calendar.source_last_attempt": "最近尝试：{time}",
+  "app.calendar.source_time_unknown": "未记录"
 }

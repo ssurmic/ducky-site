@@ -186,7 +186,23 @@ export async function mount(root, route={}) {
         el("a.btn.btn-primary.btn-sm", { href: "#/billing" }, s("calendar.upgrade"))));
     }
 
-    if (doc?.partial) card.appendChild(el("p.data-notice", { role: "status" }, s("calendar.partial")));
+    const earningsFailed=doc?.earnings_source_status==='fetch_failed';
+    const sourceNotice=(doc?.partial||earningsFailed)?el('div.data-notice',
+      el('p',{role:'status'},s('calendar.partial'))):null;
+    if(sourceNotice)card.append(sourceNotice);
+    if(earningsFailed){
+      const coverage=doc.earnings_source_coverage||{};
+      const stamp=value=>{
+        if(typeof value!=='string'||!/(Z|[+-]\d{2}:\d{2})$/.test(value))return s('calendar.source_time_unknown');
+        const date=new Date(value);return Number.isFinite(date.getTime())?date.toISOString().slice(0,16).replace('T',' ')+' UTC':s('calendar.source_time_unknown');
+      };
+      sourceNotice.append(el('details.calendar-source-warning',
+        el('summary',s('calendar.earnings_source_failed')),
+        el('p',s('calendar.earnings_source_retained')),
+        el('p.small',s('calendar.source_last_success',{time:stamp(coverage.last_success_at)})),
+        el('p.small',s('calendar.source_last_attempt',{time:stamp(coverage.last_attempt_at)}))));
+    }
+
 
     // filter chips + "my watchlist" toggle
     const bar = el("div.cal-bar");

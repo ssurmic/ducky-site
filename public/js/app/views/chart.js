@@ -146,7 +146,7 @@ export async function mount(root, params) {
     }
     if (!ovl.count) legendRow.appendChild(el('span.muted.small',s('chart.no_overlays')));
     optionNotes.append(el('p.small.muted.chart-scale-note',s(fitReferences?'chart.scale_all':'chart.scale_candles')),
-      // The header is the last completed daily bar; wall distances use the
+      // The header is the last recorded daily bar; wall distances use the
       // separately saved spot. Neither build time nor option retrieval is a
       // quote timestamp, and the snapshot contract does not retain one yet.
       typeof overlaySnapshot.spot==='number'&&Number.isFinite(overlaySnapshot.spot)&&overlaySnapshot.spot>0?

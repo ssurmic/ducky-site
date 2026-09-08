@@ -3458,5 +3458,10 @@
   "app.creators.caption_term_corrected": "Caption term corrected: {terms}.",
   "app.creators.original_caption": "View original captions",
   "desk.quote_unavailable": "Update check unavailable · saved close",
-  "desk.quote_checked": "Checked at {time}"
+  "desk.quote_checked": "Checked at {time}",
+  "app.calendar.earnings_source_failed": "Earnings source update failed",
+  "app.calendar.earnings_source_retained": "Saved events remain available. Check company announcements for the latest changes.",
+  "app.calendar.source_last_success": "Last successful retrieval: {time}",
+  "app.calendar.source_last_attempt": "Last attempt: {time}",
+  "app.calendar.source_time_unknown": "Not recorded"
 }

@@ -196,19 +196,24 @@ export const calendar = {
     // Fetch BOTH the live API and the static fallback, then MERGE — neither alone is complete:
     // the API has live earnings (and, once fully deployed, everything), the static fallback carries the
     // verified macro schedule (FOMC/CPI/NFP/PCE). Merging is correct whether the API is stale or fresh.
-    let apiEv = [], staticEv = [], apiDoc = null;
+    let apiEv = [], staticEv = [], apiDoc = null, staticDoc = null;
     try { apiDoc = await get("/public/calendar.json", { auth: false }); if (apiDoc && Array.isArray(apiDoc.events)) apiEv = apiDoc.events; } catch (e) { /* API down */ }
-    try { const r = await fetch("/calendar.json", { cache: "no-store" }); if (r.ok) { const j = await r.json(); if (j && Array.isArray(j.events)) staticEv = j.events; } } catch (e) { /* ignore */ }
-    if (!apiEv.length && !staticEv.length) return { events: [], partial: true, source: "empty" };
+    try { const r = await fetch("/calendar.json", { cache: "no-store" }); if (r.ok) { const j = await r.json(); if (j && Array.isArray(j.events)) { staticDoc=j; staticEv = j.events; } } } catch (e) { /* ignore */ }
+    // Retain source acquisition clocks through the event merge. The current
+    // API envelope wins even when its valid event set is empty or has recovered.
+    const sourceDoc=Array.isArray(apiDoc?.events)?apiDoc:staticDoc;
+    const sourceState={earnings_source_status:sourceDoc?.earnings_source_status,
+      earnings_source_coverage:sourceDoc?.earnings_source_coverage};
+    if (!apiEv.length && !staticEv.length) return { ...sourceState, events: [], partial: true, source: "empty" };
     if (!staticEv.length) return apiDoc;
-    if (!apiEv.length) return { events: staticEv, partial: true, source: "static-fallback" };
+    if (!apiEv.length) return { ...sourceState, events: staticEv, partial: true, source: "static-fallback" };
     const out = [], seen = new Set();
     for (const e of [...apiEv, ...staticEv]) {
       const key = calendarEventKey(e);
       if (!seen.has(key)) { out.push(e); seen.add(key); }
     }
     out.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
-    return { events: out, as_of: (apiDoc && apiDoc.as_of) || undefined, source: "merged", partial: !!apiDoc?.partial };
+    return { ...sourceState, events: out, as_of: (apiDoc && apiDoc.as_of) || undefined, source: "merged", partial: !!apiDoc?.partial };
   },
   _raw: () => get("/public/calendar.json", { auth: false }),
 };
