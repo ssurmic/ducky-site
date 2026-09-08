@@ -3448,5 +3448,8 @@
   "app.evidence.analysis_snapshot_citation": "查看上次分析的依据 {n}",
   "app.evidence.analysis_previous_as_of": "上次分析 · {at}",
   "app.evidence.analysis_refresh_pending": "新资料已到，先显示上次分析及当时依据。",
-  "app.evidence.analysis_snapshot_source": "这是 {at} 生成分析时使用的记录。最新资料见导图。"
+  "app.evidence.analysis_snapshot_source": "这是 {at} 生成分析时使用的记录。最新资料见导图。",
+  "app.creators.corrected_excerpt": "查看校正摘录",
+  "app.creators.caption_term_corrected": "字幕术语已校正：{terms}（远期市盈率）。",
+  "app.creators.original_caption": "查看原始字幕"
 }

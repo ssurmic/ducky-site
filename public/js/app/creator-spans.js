@@ -47,7 +47,7 @@ export function spanSection(rows,tickers=null,focus='',{inline=false}={}){
     }
     if(row.reason?.[lang])card.append(el('p.small',row.reason[lang]));
     const qualifications=claimQualifications(row);if(qualifications)card.append(qualifications);
-    if(row.evidence)card.append(el('details',{open:row.point_id===focus},el('summary',s('creators.evidence')),el('blockquote',row.evidence)));
+    if(row.evidence)card.append(sourceExcerpt(row,{open:row.point_id===focus}));
     try{const url=new URL(row.source_url);if(url.protocol==='https:'&&['youtube.com','www.youtube.com','youtu.be'].includes(url.hostname)&&!url.username&&!url.password){
       const seconds=Math.floor(row.start_seconds||0);card.append(el('a.small',{href:url.href,target:'_blank',rel:'noopener noreferrer'},Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0')+' · '+s('creatorpage.source')+' ↗'));
     }}catch{}
@@ -57,4 +57,16 @@ export function spanSection(rows,tickers=null,focus='',{inline=false}={}){
   }
   if(more)section.append(more);
   return section;
+}
+
+export function sourceExcerpt(row,{open=false}={}){
+  if(!row.evidence)return null;
+  const reading=row.evidence_reading;
+  const corrected=reading?.version==='creator-terminology/2' && typeof reading.text==='string' && reading.text && reading.terms?.length;
+  const details=el('details',{open},el('summary',s(corrected?'creators.corrected_excerpt':'creators.evidence')));
+  if(corrected){
+    details.append(el('p.small.muted',s('creators.caption_term_corrected',{terms:reading.terms.map(t=>t.term).join(', ')})),
+      el('blockquote',reading.text),el('details',el('summary',s('creators.original_caption')),el('blockquote',row.evidence)));
+  }else details.append(el('blockquote',row.evidence));
+  return details;
 }

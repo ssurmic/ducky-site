@@ -3448,5 +3448,8 @@
   "app.evidence.analysis_snapshot_citation": "Open original evidence {n} for the previous analysis",
   "app.evidence.analysis_previous_as_of": "Previous analysis · {at}",
   "app.evidence.analysis_refresh_pending": "New data has arrived. Showing the previous analysis with its original evidence.",
-  "app.evidence.analysis_snapshot_source": "This record was used in the analysis generated {at}. The map contains newer data."
+  "app.evidence.analysis_snapshot_source": "This record was used in the analysis generated {at}. The map contains newer data.",
+  "app.creators.corrected_excerpt": "Read corrected excerpt",
+  "app.creators.caption_term_corrected": "Caption term corrected: {terms}.",
+  "app.creators.original_caption": "View original captions"
 }

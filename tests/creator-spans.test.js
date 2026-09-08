@@ -59,3 +59,19 @@ test('a reviewed position statement remains reachable and supersedes its old neu
  assert.equal(card.querySelector('a[href^="https:"]').href,position.source_url);
  assert.equal(section.querySelectorAll('article').length,2);
 });
+
+test('caption correction is labelled and the exact original remains separately accessible',async()=>{
+ const {sourceExcerpt}=await import('../public/js/app/creator-spans.js');
+ const raw='FOOP ~12x. 3057 divided by 30.';
+ const row={evidence:raw,evidence_reading:{version:'creator-terminology/2',text:'Forward P/E ~12x. 3057 divided by 30.',terms:[{term:'Forward P/E'}]}};
+ const details=sourceExcerpt(row,{open:true});
+ assert.equal(details.open,true);
+ assert.equal(details.querySelector(':scope > summary').textContent,'Read corrected excerpt');
+ assert.match(details.querySelector(':scope > p').textContent,/Caption term corrected: Forward P\/E/);
+ assert.equal(details.querySelector(':scope > blockquote').textContent,row.evidence_reading.text);
+ const original=details.querySelector('details');assert.equal(original.open,false);
+ assert.equal(original.querySelector('blockquote').textContent,raw);
+ assert.equal(sourceExcerpt({...row,evidence:null}),null);
+ assert.equal(sourceExcerpt({evidence:raw}).querySelector('details'),null);
+ assert.equal(sourceExcerpt({...row,evidence_reading:{...row.evidence_reading,version:'unknown'}}).querySelector('blockquote').textContent,raw);
+});
