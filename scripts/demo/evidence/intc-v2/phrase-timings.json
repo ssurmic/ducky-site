@@ -1,0 +1,346 @@
+{
+  "zh": [
+    {
+      "scene": "01-overload",
+      "phrase": 0,
+      "start": 0.23,
+      "end": 1.67,
+      "text": {
+        "zh": "盯着几只股票，",
+        "en": "Following a few stocks,"
+      }
+    },
+    {
+      "scene": "01-overload",
+      "phrase": 1,
+      "start": 1.68,
+      "end": 3.555,
+      "text": {
+        "zh": "却看不过来那么多消息？",
+        "en": "but buried in updates?"
+      }
+    },
+    {
+      "scene": "02-map",
+      "phrase": 0,
+      "start": 4.31,
+      "end": 5.75,
+      "text": {
+        "zh": "在信息导图里，",
+        "en": "Find relevant views"
+      }
+    },
+    {
+      "scene": "02-map",
+      "phrase": 1,
+      "start": 5.76,
+      "end": 7.585,
+      "text": {
+        "zh": "找到和你有关的观点。",
+        "en": "in your Information Map."
+      }
+    },
+    {
+      "scene": "03-creator",
+      "phrase": 0,
+      "start": 8.350000000000001,
+      "end": 9.902500000000002,
+      "text": {
+        "zh": "这位博主当时说，",
+        "en": "Here, this creator says"
+      }
+    },
+    {
+      "scene": "03-creator",
+      "phrase": 1,
+      "start": 9.912500000000001,
+      "end": 11.500000000000002,
+      "text": {
+        "zh": "继续持有英特尔。",
+        "en": "he's holding Intel."
+      }
+    },
+    {
+      "scene": "04-source",
+      "phrase": 0,
+      "start": 12.950000000000001,
+      "end": 15.440000000000001,
+      "text": {
+        "zh": "原字幕里，4:09，",
+        "en": "His exact words"
+      }
+    },
+    {
+      "scene": "04-source",
+      "phrase": 1,
+      "start": 15.450000000000001,
+      "end": 17.2625,
+      "text": {
+        "zh": "就是英特尔的这句话。",
+        "en": "are in the transcript at 4:09."
+      }
+    },
+    {
+      "scene": "05-alert",
+      "phrase": 0,
+      "start": 18.03,
+      "end": 19.705,
+      "text": {
+        "zh": "想设价格提醒？",
+        "en": "For a price alert,"
+      }
+    },
+    {
+      "scene": "05-alert",
+      "phrase": 1,
+      "start": 20.03,
+      "end": 21.345000000000002,
+      "text": {
+        "zh": "先输入价位，",
+        "en": "choose a price"
+      }
+    },
+    {
+      "scene": "05-alert",
+      "phrase": 2,
+      "start": 21.355,
+      "end": 22.68,
+      "text": {
+        "zh": "再核对条件。",
+        "en": "and review the condition."
+      }
+    },
+    {
+      "scene": "06-channels",
+      "phrase": 0,
+      "start": 23.470000000000002,
+      "end": 24.6325,
+      "text": {
+        "zh": "接收方式，",
+        "en": "Choose and connect your"
+      }
+    },
+    {
+      "scene": "06-channels",
+      "phrase": 1,
+      "start": 24.645,
+      "end": 26.52,
+      "text": {
+        "zh": "在这里选择和连接。",
+        "en": "email or Telegram here."
+      }
+    },
+    {
+      "scene": "07-calendar",
+      "phrase": 0,
+      "start": 27.470000000000002,
+      "end": 28.672500000000003,
+      "text": {
+        "zh": "再看看日历，",
+        "en": "Check the calendar"
+      }
+    },
+    {
+      "scene": "07-calendar",
+      "phrase": 1,
+      "start": 28.6825,
+      "end": 30.5825,
+      "text": {
+        "zh": "重要事件提前了解。",
+        "en": "for the next events to watch."
+      }
+    },
+    {
+      "scene": "08-start",
+      "phrase": 0,
+      "start": 31.35,
+      "end": 32.165,
+      "text": {
+        "zh": "从你关注的",
+        "en": "Start with the stocks"
+      }
+    },
+    {
+      "scene": "08-start",
+      "phrase": 1,
+      "start": 32.175,
+      "end": 33.3625,
+      "text": {
+        "zh": "股票开始。",
+        "en": "you care about."
+      }
+    }
+  ],
+  "en": [
+    {
+      "scene": "01-overload",
+      "phrase": 0,
+      "start": 0.23,
+      "end": 1.8199999999999998,
+      "text": {
+        "zh": "盯着几只股票，",
+        "en": "Following a few stocks,"
+      }
+    },
+    {
+      "scene": "01-overload",
+      "phrase": 1,
+      "start": 1.8299999999999998,
+      "end": 3.4050000000000002,
+      "text": {
+        "zh": "却看不过来那么多消息？",
+        "en": "but buried in updates?"
+      }
+    },
+    {
+      "scene": "02-map",
+      "phrase": 0,
+      "start": 4.029999999999999,
+      "end": 5.132499999999999,
+      "text": {
+        "zh": "在信息导图里，",
+        "en": "Find relevant views"
+      }
+    },
+    {
+      "scene": "02-map",
+      "phrase": 1,
+      "start": 5.142499999999999,
+      "end": 6.517499999999999,
+      "text": {
+        "zh": "找到和你有关的观点。",
+        "en": "in your Information Map."
+      }
+    },
+    {
+      "scene": "03-creator",
+      "phrase": 0,
+      "start": 7.749999999999999,
+      "end": 9.290000000000001,
+      "text": {
+        "zh": "这位博主当时说，",
+        "en": "Here, this creator says"
+      }
+    },
+    {
+      "scene": "03-creator",
+      "phrase": 1,
+      "start": 9.3,
+      "end": 10.6125,
+      "text": {
+        "zh": "继续持有英特尔。",
+        "en": "he's holding Intel."
+      }
+    },
+    {
+      "scene": "04-source",
+      "phrase": 0,
+      "start": 12.35,
+      "end": 13.2775,
+      "text": {
+        "zh": "原字幕里，4:09，",
+        "en": "His exact words"
+      }
+    },
+    {
+      "scene": "04-source",
+      "phrase": 1,
+      "start": 13.2875,
+      "end": 15.512500000000001,
+      "text": {
+        "zh": "就是英特尔的这句话。",
+        "en": "are in the transcript at 4:09."
+      }
+    },
+    {
+      "scene": "05-alert",
+      "phrase": 0,
+      "start": 16.349999999999998,
+      "end": 17.562499999999996,
+      "text": {
+        "zh": "想设价格提醒？",
+        "en": "For a price alert,"
+      }
+    },
+    {
+      "scene": "05-alert",
+      "phrase": 1,
+      "start": 17.787499999999998,
+      "end": 18.5275,
+      "text": {
+        "zh": "先输入价位，",
+        "en": "choose a price"
+      }
+    },
+    {
+      "scene": "05-alert",
+      "phrase": 2,
+      "start": 18.537499999999998,
+      "end": 20.162499999999998,
+      "text": {
+        "zh": "再核对条件。",
+        "en": "and review the condition."
+      }
+    },
+    {
+      "scene": "06-channels",
+      "phrase": 0,
+      "start": 20.709999999999997,
+      "end": 21.8875,
+      "text": {
+        "zh": "接收方式，",
+        "en": "Choose and connect your"
+      }
+    },
+    {
+      "scene": "06-channels",
+      "phrase": 1,
+      "start": 21.897499999999997,
+      "end": 23.884999999999994,
+      "text": {
+        "zh": "在这里选择和连接。",
+        "en": "email or Telegram here."
+      }
+    },
+    {
+      "scene": "07-calendar",
+      "phrase": 0,
+      "start": 24.709999999999997,
+      "end": 25.612499999999997,
+      "text": {
+        "zh": "再看看日历，",
+        "en": "Check the calendar"
+      }
+    },
+    {
+      "scene": "07-calendar",
+      "phrase": 1,
+      "start": 25.622499999999995,
+      "end": 27.434999999999995,
+      "text": {
+        "zh": "重要事件提前了解。",
+        "en": "for the next events to watch."
+      }
+    },
+    {
+      "scene": "08-start",
+      "phrase": 0,
+      "start": 28.509999999999998,
+      "end": 29.537499999999998,
+      "text": {
+        "zh": "从你关注的",
+        "en": "Start with the stocks"
+      }
+    },
+    {
+      "scene": "08-start",
+      "phrase": 1,
+      "start": 29.547499999999996,
+      "end": 30.422499999999996,
+      "text": {
+        "zh": "股票开始。",
+        "en": "you care about."
+      }
+    }
+  ]
+}

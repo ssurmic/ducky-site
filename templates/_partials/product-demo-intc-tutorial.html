@@ -1,0 +1,20 @@
+<details class="product-demo-tutorial" id="intc-tutorial">
+ <summary id="intc-tutorial-title">{{ t('walkthrough.intc.title') }}</summary>
+ <div class="product-demo-tutorial-body">
+  <p>{{ t('walkthrough.intc.intro') }}</p>
+  {% set tutorial_asset = '/media/ducky-intc-tutorial-2026-09-08-v2.' ~ lang %}
+  <video id="intc-tutorial-video" class="product-demo-tutorial-player" data-demo-tutorial-video controls playsinline preload="none" width="1920" height="1080" poster="{{ tutorial_asset }}.jpg" aria-labelledby="intc-tutorial-title" aria-describedby="intc-tutorial-note">
+   <source src="{{ tutorial_asset }}.mp4" type="video/mp4">
+   <track kind="captions" src="{{ tutorial_asset }}.zh.vtt" srclang="zh" label="{{ t('walkthrough.captions_zh') }}"{% if lang == 'zh' %} default{% endif %}>
+   <track kind="captions" src="{{ tutorial_asset }}.en.vtt" srclang="en" label="{{ t('walkthrough.captions_en') }}"{% if lang == 'en' %} default{% endif %}>
+   <a href="{{ tutorial_asset }}.mp4">{{ t('walkthrough.intc.download') }}</a>
+  </video>
+  <p id="intc-tutorial-note" class="small muted">{{ t('walkthrough.intc.note') }}</p>
+  <a class="product-demo-tutorial-link" href="{{ url('/app/') }}#/creators?scope=discover&amp;creator=touzi-talk&amp;post=CEGiQA6CNd4&amp;point=claim%3A231a64321ade3830e177cc93">{{ t('walkthrough.intc.open') }} →</a>
+  <details class="product-demo-transcript">
+   <summary>{{ t('walkthrough.intc.transcript') }}</summary>
+   <ol>{% for i in range(1,9) %}<li>{{ t('walkthrough.intc.line.' ~ i) }}</li>{% endfor %}</ol>
+   <p class="small muted">{{ t('walkthrough.intc.source_note') }} <a href="https://www.youtube.com/watch?v=CEGiQA6CNd4&amp;t=249s" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.intc.source') }} ↗</a></p>
+  </details>
+ </div>
+</details>

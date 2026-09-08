@@ -1,0 +1,335 @@
+{
+  "checked_at": "2026-09-08T19:25:31.224Z",
+  "kind": "Browser viewport simulation; no touch emulation or physical device",
+  "after": "Expanded disclosure and one 0.35-page wheel scroll",
+  "cases": [
+    {
+      "featureLinks": 7,
+      "header": {
+        "bottom": 65,
+        "height": 65,
+        "left": 0,
+        "right": 320,
+        "top": 0,
+        "width": 320,
+        "x": 0,
+        "y": 0
+      },
+      "height": 600,
+      "mainChapters": 8,
+      "scrollWidth": 320,
+      "summary": {
+        "bottom": 131.6640625,
+        "height": 87.1875,
+        "left": 21,
+        "right": 299,
+        "top": 44.4765625,
+        "width": 278,
+        "x": 21,
+        "y": 44.4765625
+      },
+      "theme": "dark",
+      "video": {
+        "bottom": 415.75,
+        "height": 184.5,
+        "left": 37,
+        "right": 283,
+        "top": 231.25,
+        "width": 246,
+        "x": 37,
+        "y": 231.25
+      },
+      "videoReady": 0,
+      "width": 320,
+      "lang": "zh",
+      "screenshot": "zh-dark-320.png"
+    },
+    {
+      "featureLinks": 7,
+      "header": {
+        "bottom": 65,
+        "height": 65,
+        "left": 0,
+        "right": 320,
+        "top": 0,
+        "width": 320,
+        "x": 0,
+        "y": 0
+      },
+      "height": 600,
+      "mainChapters": 8,
+      "scrollWidth": 320,
+      "summary": {
+        "bottom": 127.1640625,
+        "height": 87.1875,
+        "left": 21,
+        "right": 299,
+        "top": 39.9765625,
+        "width": 278,
+        "x": 21,
+        "y": 39.9765625
+      },
+      "theme": "light",
+      "video": {
+        "bottom": 411.25,
+        "height": 184.5,
+        "left": 37,
+        "right": 283,
+        "top": 226.75,
+        "width": 246,
+        "x": 37,
+        "y": 226.75
+      },
+      "videoReady": 0,
+      "width": 320,
+      "lang": "zh",
+      "screenshot": "zh-light-320.png"
+    },
+    {
+      "featureLinks": 7,
+      "header": {
+        "bottom": 65,
+        "height": 65,
+        "left": 0,
+        "right": 320,
+        "top": 0,
+        "width": 320,
+        "x": 0,
+        "y": 0
+      },
+      "height": 600,
+      "mainChapters": 8,
+      "scrollWidth": 320,
+      "summary": {
+        "bottom": 129.0078125,
+        "height": 87.1875,
+        "left": 21,
+        "right": 299,
+        "top": 41.8203125,
+        "width": 278,
+        "x": 21,
+        "y": 41.8203125
+      },
+      "theme": "dark",
+      "video": {
+        "bottom": 440.2890625,
+        "height": 184.5,
+        "left": 37,
+        "right": 283,
+        "top": 255.7890625,
+        "width": 246,
+        "x": 37,
+        "y": 255.7890625
+      },
+      "videoReady": 0,
+      "width": 320,
+      "lang": "en",
+      "screenshot": "en-dark-320.png"
+    },
+    {
+      "featureLinks": 7,
+      "header": {
+        "bottom": 65,
+        "height": 65,
+        "left": 0,
+        "right": 320,
+        "top": 0,
+        "width": 320,
+        "x": 0,
+        "y": 0
+      },
+      "height": 600,
+      "mainChapters": 8,
+      "scrollWidth": 320,
+      "summary": {
+        "bottom": 130.5078125,
+        "height": 87.1875,
+        "left": 21,
+        "right": 299,
+        "top": 43.3203125,
+        "width": 278,
+        "x": 21,
+        "y": 43.3203125
+      },
+      "theme": "light",
+      "video": {
+        "bottom": 441.7890625,
+        "height": 184.5,
+        "left": 37,
+        "right": 283,
+        "top": 257.2890625,
+        "width": 246,
+        "x": 37,
+        "y": 257.2890625
+      },
+      "videoReady": 0,
+      "width": 320,
+      "lang": "en",
+      "screenshot": "en-light-320.png"
+    },
+    {
+      "featureLinks": 7,
+      "header": {
+        "bottom": 65,
+        "height": 65,
+        "left": 0,
+        "right": 390,
+        "top": 0,
+        "width": 390,
+        "x": 0,
+        "y": 0
+      },
+      "height": 650,
+      "mainChapters": 8,
+      "scrollWidth": 390,
+      "summary": {
+        "bottom": 121.015625,
+        "height": 61.59375,
+        "left": 21,
+        "right": 369,
+        "top": 59.421875,
+        "width": 348,
+        "x": 21,
+        "y": 59.421875
+      },
+      "theme": "dark",
+      "video": {
+        "bottom": 457.6015625,
+        "height": 237,
+        "left": 37,
+        "right": 353,
+        "top": 220.6015625,
+        "width": 316,
+        "x": 37,
+        "y": 220.6015625
+      },
+      "videoReady": 0,
+      "width": 390,
+      "lang": "zh",
+      "screenshot": "zh-dark-390.png"
+    },
+    {
+      "featureLinks": 7,
+      "header": {
+        "bottom": 65,
+        "height": 65,
+        "left": 0,
+        "right": 390,
+        "top": 0,
+        "width": 390,
+        "x": 0,
+        "y": 0
+      },
+      "height": 650,
+      "mainChapters": 8,
+      "scrollWidth": 390,
+      "summary": {
+        "bottom": 124.015625,
+        "height": 61.59375,
+        "left": 21,
+        "right": 369,
+        "top": 62.421875,
+        "width": 348,
+        "x": 21,
+        "y": 62.421875
+      },
+      "theme": "light",
+      "video": {
+        "bottom": 460.6015625,
+        "height": 237,
+        "left": 37,
+        "right": 353,
+        "top": 223.6015625,
+        "width": 316,
+        "x": 37,
+        "y": 223.6015625
+      },
+      "videoReady": 0,
+      "width": 390,
+      "lang": "zh",
+      "screenshot": "zh-light-390.png"
+    },
+    {
+      "featureLinks": 7,
+      "header": {
+        "bottom": 65,
+        "height": 65,
+        "left": 0,
+        "right": 390,
+        "top": 0,
+        "width": 390,
+        "x": 0,
+        "y": 0
+      },
+      "height": 650,
+      "mainChapters": 8,
+      "scrollWidth": 390,
+      "summary": {
+        "bottom": 137.3828125,
+        "height": 87.1875,
+        "left": 21,
+        "right": 369,
+        "top": 50.1953125,
+        "width": 348,
+        "x": 21,
+        "y": 50.1953125
+      },
+      "theme": "dark",
+      "video": {
+        "bottom": 473.96875,
+        "height": 237,
+        "left": 37,
+        "right": 353,
+        "top": 236.96875,
+        "width": 316,
+        "x": 37,
+        "y": 236.96875
+      },
+      "videoReady": 0,
+      "width": 390,
+      "lang": "en",
+      "screenshot": "en-dark-390.png"
+    },
+    {
+      "featureLinks": 7,
+      "header": {
+        "bottom": 65,
+        "height": 65,
+        "left": 0,
+        "right": 390,
+        "top": 0,
+        "width": 390,
+        "x": 0,
+        "y": 0
+      },
+      "height": 650,
+      "mainChapters": 8,
+      "scrollWidth": 390,
+      "summary": {
+        "bottom": 136.8828125,
+        "height": 87.1875,
+        "left": 21,
+        "right": 369,
+        "top": 49.6953125,
+        "width": 348,
+        "x": 21,
+        "y": 49.6953125
+      },
+      "theme": "light",
+      "video": {
+        "bottom": 473.46875,
+        "height": 237,
+        "left": 37,
+        "right": 353,
+        "top": 236.46875,
+        "width": 316,
+        "x": 37,
+        "y": 236.46875
+      },
+      "videoReady": 0,
+      "width": 390,
+      "lang": "en",
+      "screenshot": "en-light-390.png"
+    }
+  ]
+}

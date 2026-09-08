@@ -3472,5 +3472,21 @@
   "app.evidence.switch_stock": "Switch stock",
   "app.evidence.all_watchlist": "All {n} watchlist stocks",
   "app.evidence.other_stock": "Look up another stock",
-  "app.creators.research_scope": "Reviewed, recorded views are shown here, including those still waiting for price windows."
+  "app.creators.research_scope": "Reviewed, recorded views are shown here, including those still waiting for price windows.",
+  "walkthrough.intc.title": "A closer look: trace an Intel view to its source",
+  "walkthrough.intc.intro": "Open the Information Map, find TALK’s view on Intel and check his original words. Then explore price alerts and the calendar.",
+  "walkthrough.intc.download": "Download the Intel tutorial",
+  "walkthrough.intc.note": "Historical example: published August 24, 2026; recorded September 6. The price alert shown is not enabled.",
+  "walkthrough.intc.open": "Open this creator view",
+  "walkthrough.intc.transcript": "Read the transcript and source",
+  "walkthrough.intc.source_note": "The Intel statement starts at 4:09. The product’s 4:06 link includes the preceding context.",
+  "walkthrough.intc.source": "Watch the original at 4:09",
+  "walkthrough.intc.line.1": "Following a few stocks, but buried in updates?",
+  "walkthrough.intc.line.2": "Find relevant views in your Information Map.",
+  "walkthrough.intc.line.3": "Here, this creator says he's holding Intel.",
+  "walkthrough.intc.line.4": "His exact words are in the transcript at 4:09.",
+  "walkthrough.intc.line.5": "For a price alert, choose a price and review the condition.",
+  "walkthrough.intc.line.6": "Choose and connect your email or Telegram here.",
+  "walkthrough.intc.line.7": "Check the calendar for the next events to watch.",
+  "walkthrough.intc.line.8": "Start with the stocks you care about."
 }

@@ -1,0 +1,41 @@
+{
+  "checked_at": "2026-09-08T18:58:19.962061+00:00",
+  "video": "CEGiQA6CNd4",
+  "source_url": "https://www.youtube.com/watch?v=CEGiQA6CNd4&t=246s",
+  "access": "Browser native export of original YouTube transcript",
+  "language": "zh",
+  "caption_type": "authored or unspecified per source export; no stronger designation inferred",
+  "full_export_sha256": "e74e95be3b5fe4ac0598a0dd953aad9606f6dfed10e8211dc71f13e46bdb1d38",
+  "retained_excerpt": [
+    {
+      "start_seconds_display": 246,
+      "text": "如果说没有仓位的话"
+    },
+    {
+      "start_seconds_display": 248,
+      "text": "所以我个人硬件"
+    },
+    {
+      "start_seconds_display": 249,
+      "text": "包括英特尔这边肯定是继续持有"
+    },
+    {
+      "start_seconds_display": 251,
+      "text": "然后从交易这个角度"
+    },
+    {
+      "start_seconds_display": 253,
+      "text": "我反而会更加关注一些硬件有没有些机会"
+    }
+  ],
+  "clock_precision": "Displayed whole-second starts; cue-end boundaries not inferred",
+  "finding": "Product4:06 source link includes preceding context. Explicit Intel continuing-hold wording appears at4:09. NVIDIA product-price background is unsuitable as the Intel evidence shot.",
+  "new_visual": "Clearly labeled editorial quote from the independently exported original captions, above a screenshot of the actual Ducky source-excerpt UI. The native YouTube Show transcript panel remained loading and is not represented as captured.",
+  "not_claimed": [
+    "Independent listening acceptance",
+    "Current holdings",
+    "Historical real-time first capture",
+    "A new buy execution or future return"
+  ],
+  "price_alert_scene": "Explicitly price-condition example, not enabled; not a creator-mention subscription."
+}

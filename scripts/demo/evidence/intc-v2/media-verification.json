@@ -1,0 +1,123 @@
+{
+  "checked_at": "2026-09-08T19:17:13.453227+00:00",
+  "version": "2026-09-08-intc-draft-2",
+  "passed": true,
+  "checks": [
+    "ducky-intc-draft.zh: full decode, selected voice/text/hashes, word cue bounds, contiguous timeline, four caption tracks, 3.2-second CTA",
+    "ducky-intc-draft.en: full decode, selected voice/text/hashes, word cue bounds, contiguous timeline, four caption tracks, 3.2-second CTA",
+    "ducky-intc-tutorial.zh: full decode, selected voice/text/hashes, word cue bounds, contiguous timeline, four caption tracks, 3.2-second CTA",
+    "ducky-intc-tutorial.en: full decode, selected voice/text/hashes, word cue bounds, contiguous timeline, four caption tracks, 3.2-second CTA"
+  ],
+  "videos": {
+    "ducky-intc-draft.zh": {
+      "sha256": "bad49d33e6bd25d4a7913dae4c325fd92ebd509290f9a3d52bbc58a1e4149947",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "r_frame_rate": "25/1",
+            "nb_read_frames": "858"
+          },
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "r_frame_rate": "0/0",
+            "nb_read_frames": "1609"
+          }
+        ],
+        "format": {
+          "duration": "34.320000",
+          "size": "2179102"
+        }
+      },
+      "full_decode_error": null
+    },
+    "ducky-intc-draft.en": {
+      "sha256": "2ddafa80e275c3296fe3db9719d492ac12f41e0f98c84f5bdb7ce4762ac2c93a",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "r_frame_rate": "25/1",
+            "nb_read_frames": "787"
+          },
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "r_frame_rate": "0/0",
+            "nb_read_frames": "1476"
+          }
+        ],
+        "format": {
+          "duration": "31.480000",
+          "size": "2233150"
+        }
+      },
+      "full_decode_error": null
+    },
+    "ducky-intc-tutorial.zh": {
+      "sha256": "740906f749999d0f4797e9f00dc4c53b158ba7188638020c6f0dd892009d87c8",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "r_frame_rate": "25/1",
+            "nb_read_frames": "858"
+          },
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "r_frame_rate": "0/0",
+            "nb_read_frames": "1609"
+          }
+        ],
+        "format": {
+          "duration": "34.320000",
+          "size": "2047848"
+        }
+      },
+      "full_decode_error": null
+    },
+    "ducky-intc-tutorial.en": {
+      "sha256": "09c0cb8e96378d83b4ab98e31737a0505ea55060a0e5e394a94a4a9d2df31e48",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "r_frame_rate": "25/1",
+            "nb_read_frames": "787"
+          },
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "r_frame_rate": "0/0",
+            "nb_read_frames": "1476"
+          }
+        ],
+        "format": {
+          "duration": "31.480000",
+          "size": "2102608"
+        }
+      },
+      "full_decode_error": null
+    }
+  },
+  "native_speech_quality": "No independent human native-listening certification; source words and selected audio verified.",
+  "external_notifications_sent": false
+}

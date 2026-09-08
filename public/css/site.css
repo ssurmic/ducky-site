@@ -1116,6 +1116,17 @@ button.cr-chip[disabled] { opacity: .55; cursor: default; }
 @media(max-width:700px){.product-demo-heading,.product-demo-caption{display:block}.product-demo-heading .small{margin-top:12px}.product-demo-caption a{display:inline-block;margin-top:14px}.product-demo-player{border-radius:12px}}
 
 /* Product video guide: visible instructions with separate seek and dashboard actions. */
+.product-demo-tutorial { scroll-margin-top:85px; margin-top:16px; border:1px solid var(--border); border-radius:var(--r-lg); background:var(--surface); overflow:hidden; }
+.product-demo-tutorial > summary { cursor:pointer; padding:20px 24px; min-height:44px; font-weight:600; line-height:1.6; }
+.product-demo-tutorial > summary:focus-visible { outline:2px solid var(--orange); outline-offset:-4px; }
+.product-demo-tutorial-body { padding:0 24px 24px; }
+.product-demo-tutorial-body > p { margin:0 0 18px; line-height:1.7; }
+.product-demo-tutorial-body > video + p { margin-top:16px; }
+.product-demo-tutorial-player { display:block; width:100%; height:auto; aspect-ratio:16/9; border:1px solid var(--border); border-radius:12px; background:#090e15; }
+.product-demo-tutorial-player::cue { color:#fff; background:rgba(0,0,0,.86); font-size:clamp(14px,2vw,28px); line-height:1.3; }
+.product-demo-tutorial-link { display:inline-flex; align-items:center; min-height:44px; }
+@media(max-width:700px) and (orientation:portrait){.product-demo-tutorial-player{aspect-ratio:4/3;object-fit:contain}}
+@media(max-width:560px){.product-demo-tutorial > summary{padding:18px 16px}.product-demo-tutorial-body{padding:0 16px 18px}}
 .product-demo-guide { margin-top:28px; border:1px solid var(--border); border-radius:var(--r-lg); background:var(--surface); overflow:hidden; }
 .product-demo-guide-heading { display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:22px 24px 18px; }
 .product-demo-guide-heading h3 { margin:0; font-size:1.15rem; }

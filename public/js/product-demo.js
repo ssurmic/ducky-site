@@ -12,11 +12,13 @@ export function mountDemoCaptionLayout(video) {
   function position() {
     const box = video.getBoundingClientRect();
     if (!box.width || !box.height) return;
-    const line = box.height / box.width > .7 ? 78 : 84;
+    const tutorial = video.hasAttribute('data-demo-tutorial-video');
+    const line = box.height / box.width > .7 ? (tutorial ? 60 : 78) : 84;
     for (const track of video.textTracks || []) {
       for (const cue of track.cues || []) {
         cue.snapToLines = false;
         cue.line = line;
+        if (tutorial) cue.size = 90;
       }
     }
   }
@@ -27,6 +29,15 @@ export function mountDemoCaptionLayout(video) {
   listen(video.ownerDocument, 'fullscreenchange', position);
   position();
   return () => listeners.forEach(remove => remove());
+}
+
+export function mountDemoTutorial(details) {
+  const video = details?.querySelector('[data-demo-tutorial-video]');
+  if (!video) return () => {};
+  const disposeCaptions = mountDemoCaptionLayout(video);
+  const onToggle = () => { if (!details.open) video.pause(); };
+  details.addEventListener('toggle', onToggle);
+  return () => { details.removeEventListener('toggle', onToggle); disposeCaptions(); };
 }
 
 // Chapter navigation is a user-initiated enhancement; the guide works without video or JS.
@@ -154,4 +165,5 @@ export function mountProductDemo(root) {
 
 if (typeof document !== 'undefined') {
   document.querySelectorAll('.product-demo').forEach(mountProductDemo);
+  document.querySelectorAll('.product-demo-tutorial').forEach(mountDemoTutorial);
 }
