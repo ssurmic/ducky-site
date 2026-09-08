@@ -73,3 +73,41 @@ with validation, current-main checks and an off-by-default switch. No Cloudflare
 is configured in GitHub, so automatic publication is not activated. See
 [PAGES-AUTOMATIC-RELEASE-2026-09-08.md](PAGES-AUTOMATIC-RELEASE-2026-09-08.md). Existing local
 production deployment credentials are kept local; they were not copied to a new principal.
+
+## Final release receipts
+
+- Frontend code `8669e7d`, followed by successful real notary `3341ad9` at 17:34:15–17:34:18 UTC.
+  All three stored-price fallback records retained September 4 price sessions with September 8
+  17:34:16 retrieval timestamps. The backend's earlier 02:00 track-record generation timestamp
+  was correctly preserved rather than relabelled as this publication time.
+- Production Pages `c835c1bd` deployed build `3341ad9`. Both GitHub frontend check runs passed;
+  automatic deploy jobs were correctly skipped while the enable variable/credential is absent.
+  Local final frontend gate: 418 tests passed; export tests 3 passed; asset checks 4 passed,
+  1 existing skip; copy lint and 1,344 links passed. No test notifications or account mutations.
+- Backend `4722f3c` passed Linux CI 3,414 tests / 1 skip, selftest ALL GREEN and actual HTTP
+  14/14, then deployed with a verified recovery bundle and healthy API. Production isolated
+  targeted checks passed 112/112 after removing TEST_MODE from write-expecting test fixtures;
+  those were temporary test databases, not production records.
+- At 17:41:08, one existing Finnhub producer acquisition completed successfully. The public
+  calendar reported `status=ready`, true attempt/success times, `partial=false`, and retained
+  the September 10 ORCL earnings event. Existing source revisions remain available.
+- Upcoming earnings' five-day fetch eligibility was also too slow. `757fa03` changes only this
+  registry entry to daily, with the existing 300-second timer-jitter allowance. Local integrated
+  gate: 3,511 passed / 6 skipped; final Linux CI: 3,510 passed / 7 skipped, ALL GREEN, HTTP 14/14.
+  [Backend CI run](https://github.com/ssurmic/ducky-bot/actions/runs/34259664849).
+  Production advanced from the parallel source patch `f54f962` to `757fa03` at **17:58:31 UTC**;
+  the tested ref matched, recovery bundle `recovery-20260908T175814262578Z-521ae289` verified,
+  API health passed, and a read-only registry check confirmed `earnings: 1`.
+  No source/model/worker files or processes were changed by this daily-cadence follow-up.
+- Live browser after deployment: Chinese homepage `2026-09-04 收盘 / 已核对 · 最近收盘`,
+  English `2026-09-04 close / Verified · latest close`, with independent September 8 check times.
+  AVGO graph header showed an unfinished September 8 bar **recorded at 17:39 UTC**; option-wall
+  distance disclosed a separate saved quote and its missing quote time. Chinese and English
+  chart plus Chinese calendar were checked at actual 390 × 651 CSS pixels with document width
+  390 and no horizontal page overflow. Calendar matched the current 18-stock list and displayed
+  ORCL. Shared-data change notices were observed naturally while these pages stayed open.
+
+Remaining operator source reviews are still owned by the parallel creator task and can wait on
+shared model admission. Their delay is not reported as completed semantic review. Automatic
+Pages publishing still requires the scoped deployment credential described above. This report
+commit records the release; it does not change the deployed application build.
