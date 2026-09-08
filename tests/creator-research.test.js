@@ -169,3 +169,16 @@ test('exact point link opens its own group while keeping other creators collapse
  const groups=root.querySelectorAll('.study-group');assert.equal(groups[0].open,false);assert.equal(groups[1].open,true);
  assert.equal(groups[1].querySelector('.is-focused-study').dataset.pointId,'target');root.remove();
 });
+
+test('an unloaded exact point is acknowledged and expands only after its explicit next page arrives',async()=>{
+ store.set('me',{tier:'pro'});let calls=0;
+ globalThis.fetch=async()=>Response.json(++calls===1?{items:[groupedItem(1,'first','2026-09-03T00:00:00Z')],next_cursor:'older'}:
+  {items:[groupedItem(2,'target','2026-08-01T00:00:00Z')]});
+ const root=document.createElement('section');document.body.append(root);await mountResearch(root,{point:'target'});
+ assert.match(root.querySelector('[role=status]').textContent,/has not loaded yet/);
+ assert.equal(calls,1);assert.equal(root.querySelectorAll('.study-group[open]').length,0);
+ [...root.querySelectorAll('button')].find(b=>b.textContent==='Load more views').click();
+ await new Promise(resolve=>setTimeout(resolve,0));
+ assert.equal(calls,2);assert.equal(root.querySelector('[role=status]'),null);
+ assert.equal(root.querySelector('.study-group[open] .is-focused-study').dataset.pointId,'target');root.remove();
+});

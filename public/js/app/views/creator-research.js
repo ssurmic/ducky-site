@@ -92,6 +92,11 @@ export async function mountResearch(root, selection) {
     clear(root);
     root.append(el('p.muted.small',s('creators.study_intro')));
     const rows=researchRows(doc.items || [],{...selection}),groups=researchGroups(rows);
+    const targetLoaded=selection?.point&&rows.some(({post,call})=>[call.point_id,call.claim_id,post.study_key].includes(selection.point));
+    if(selection?.point&&!targetLoaded&&!loading&&!loadError){
+      root.append(el('p.small.muted',{role:'status'},s(doc.next_cursor?'creators.target_pending':'creators.target_missing')));
+      if(doc.next_cursor)root.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>loadPage(true)},s('creators.load_more_studies')));
+    }
     const complete=rows.filter(r=>r.call.price_context?.publication_20?.status==='ready');
     if(rows.length)root.append(el('p.muted.small',s('creators.study_count',{n:rows.length,completed:complete.length})));
     const counts={};for(const r of rows){const status=studyStatus(r.call);counts[status]=(counts[status]||0)+1;}
