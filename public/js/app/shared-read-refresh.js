@@ -21,7 +21,7 @@ export function material(value,path=''){
     if(evidence&&depth===0){
       // Queued/retrying/building all render the same saved-analysis placeholder.
       // Only a change in the displayed state constitutes new information.
-      const state=['ready','failed','insufficient','source_changed','withdrawn'].includes(v.analysis_status)?v.analysis_status:'pending';
+      const state=['ready','refresh_pending','failed','insufficient','source_changed','withdrawn'].includes(v.analysis_status)?v.analysis_status:'pending';
       v={...v,analysis_status:state};
     }
     return Object.fromEntries(Object.keys(v).sort().filter(key=>{

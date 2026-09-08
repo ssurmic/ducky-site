@@ -45,6 +45,45 @@ test('only one overview appears above the graph, with detailed analysis still av
  assert.equal(root.querySelector('.evidence-priority'),null);
  root.dispose();root.remove();
 });
+test('an earlier analysis keeps its dated evidence while the graph shows a newer observation',()=>{
+ let calls=0;globalThis.fetch=()=>{calls++;throw Error('snapshot interactions must stay local');};
+ const d=fixture();d.analysis_status='refresh_pending';d.analysis_generated_at=d.checked_at;d.analysis_snapshot_id='historical-snapshot';
+ const row=count=>({id:'attention',kind:'fact',stance:'context',title:{en:count+' recorded Reddit mentions'},
+   observed_at:'2026-09-07T12:00:00Z',evidence:[{kind:'fact',topic:'reddit_attention',data:{mentions:count,mentions_previous:13,index:null},observed_at:'2026-09-07T12:00:00Z'}]});
+ d.nodes=[row(4)];d.analysis_nodes=[row(3)];
+ d.analysis={overview:{en:'The saved analysis used three recorded mentions.',citations:['attention']},sections:[{kind:'watch',en:'A count alone does not establish sentiment.',citations:['attention']}]};
+ const root=mapView(d);document.body.append(root);
+ assert.match(root.querySelector('.evidence-analysis-time').textContent,/Previous analysis.*2026-09-07 12:00 UTC/);
+ assert.match(root.querySelector('.evidence-analysis [role=status]').textContent,/New data has arrived/);
+ assert.match(root.querySelector('.evidence-node').textContent,/4 recorded Reddit mentions/);
+ root.querySelector('.brief-citation').click();
+ assert.equal(document.querySelector('#modal-title').textContent,'3 recorded Reddit mentions');
+ assert.match(document.querySelector('.modal-body .data-notice').textContent,/2026-09-07 12:00 UTC/);
+ assert.equal(JSON.parse(document.querySelector('.evidence-facts').textContent).mentions,3);
+ closeModal();root.querySelector('.evidence-analysis-details summary').click();
+ root.querySelector('.evidence-analysis-body .brief-citation').click();
+ assert.equal(JSON.parse(document.querySelector('.evidence-facts').textContent).mentions,3);
+ closeModal();root.querySelector('.evidence-node').click();
+ assert.equal(document.querySelector('#modal-title').textContent,'4 recorded Reddit mentions');
+ assert.equal(document.querySelector('.evidence-detail > .data-notice'),null);
+ assert.equal(calls,0);closeModal();root.dispose();root.remove();
+});
+test('previous analysis fails closed without a complete original-evidence binding and after withdrawal',()=>{
+ const d=fixture();d.analysis_status='refresh_pending';d.analysis_generated_at=d.checked_at;d.analysis_snapshot_id='historical-snapshot';
+ d.analysis={overview:{en:'An earlier claim.',citations:['n9']},sections:[]};
+ for(const nodes of [undefined,[],[d.nodes[0]]]){
+   d.analysis_nodes=nodes;const root=analysisPanel(d);
+   assert.ok(!root.textContent.includes('An earlier claim.'));
+   assert.ok(!root.textContent.includes('Orders remain unconfirmed.'));
+   assert.equal(root.querySelector('.brief-citation'),null);
+ }
+ d.analysis_nodes=[d.nodes[9]];
+ for(const status of ['withdrawn','source_changed']){
+   d.analysis_status=status;const root=analysisPanel(d);
+   assert.ok(!root.textContent.includes('An earlier claim.'));
+   assert.equal(root.querySelector('.brief-citation'),null);
+ }
+});
 test('unready snapshots never show an old analysis or invent an update time',()=>{
  for(const state of ['pending','failed','source_changed','withdrawn','insufficient']){
   const d=fixture();d.analysis_status=state;d.summary=null;

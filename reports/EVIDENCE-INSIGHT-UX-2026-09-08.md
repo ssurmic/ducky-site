@@ -51,3 +51,11 @@ The actual production browser received the compact new-data notice and loaded th
 The overview attributes the 2028 EPS/forward-valuation view to the creator and separately identifies recorded relative performance. The RSI and mention-count sections describe separately versioned application interpretation limits, not additional statements by the source author. NVDA real-result acceptance remains separate until recorded below.
 
 English production acceptance also passed at actual 393px viewport / 393px document width. The same ready analysis and 10:48 UTC timestamp appeared immediately, with the creator identity retained verbatim and English source controls.
+
+### Preserve reviewed analysis during ordinary observations
+
+At 11:02 UTC, a real Reddit count update (3 to 4, with the corresponding rank and percentage change) invalidated AVGO's current analysis fingerprint and exposed a weakness in the two-hour snapshot workflow: readers lost the completed paragraph while waiting for the next attempt. The earlier ready result remained archived.
+
+The new consumer accepts the explicit `analysis_status=refresh_pending` contract only with `analysis_snapshot_id`, the actual `analysis_generated_at`, and complete `analysis_nodes` bindings for every citation. It labels the previous analysis and resolves its citations exclusively against those original nodes; the graph continues to use the latest `nodes`. Citation dialogs explicitly identify the analysis generation time. Older clients do not recognize the new status and continue to show a placeholder rather than mixing old analysis with new evidence. Withdrawal and source correction remain fail-closed; the frontend does not independently decide whether historical analysis is still usable.
+
+Mounted tests exercise the real failure pattern: the graph shows 4 mentions while both overview and expanded-analysis citations open the original 3-mention record, without any network request. Missing bindings and withdrawal hide the old analysis. Full suite after integrating the latest chart release: 399 passing tests; copy lint and 1,342 links pass. Production receipt follows after backend and frontend delivery are verified together.

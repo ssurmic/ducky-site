@@ -48,7 +48,7 @@ test('evidence signatures retain attribution, corrections, market state and save
   x=>x.nodes[0].evidence[0].title.zh='博主认为估值偏高',
   x=>x.market_context.price.data.price=0,x=>x.market_context.price.data.price=null,
   x=>x.market_context.price.data.price_session='2026-09-08:CLOSED',x=>x.market_context.price.freshness='stale',
-  x=>x.missing=[],x=>x.analysis_status='source_changed',x=>x.analysis_evidence_version='new-version',
+  x=>x.missing=[],x=>x.analysis_status='source_changed',x=>x.analysis_status='refresh_pending',x=>x.analysis_evidence_version='new-version',
   x=>{x.analysis_status='ready';x.analysis={overview:{zh:'有来源的已保存分析',citations:['point-1']}};},
  ];
  for(const edit of edits){const next=structuredClone(original);edit(next);assert.notEqual(material(next,'/evidence/AVGO'),signature);}

@@ -3444,5 +3444,9 @@
   "app.chart.candle_body_note": "色块连接开盘价和收盘价。颜色比较的是同一根 K 线的开盘与收盘，不是昨天的收盘价。",
   "app.chart.indicator_help": "下方指标怎么看",
   "app.chart.indicator_note": "RSI 和 MACD 根据当前选择的日、周或月 K 线计算。切换周期后数值会变化；数据不足时不会补成零。指标描述已有走势，不保证接下来的涨跌。",
-  "app.chart.wall_scope_single": "Gamma 墙 · 到期日：{dates}"
+  "app.chart.wall_scope_single": "Gamma 墙 · 到期日：{dates}",
+  "app.evidence.analysis_snapshot_citation": "查看上次分析的依据 {n}",
+  "app.evidence.analysis_previous_as_of": "上次分析 · {at}",
+  "app.evidence.analysis_refresh_pending": "新资料已到，先显示上次分析及当时依据。",
+  "app.evidence.analysis_snapshot_source": "这是 {at} 生成分析时使用的记录。最新资料见导图。"
 }

@@ -3444,5 +3444,9 @@
   "app.chart.candle_body_note": "The body connects the open and close. Its color compares these two prices, not the previous day’s close.",
   "app.chart.indicator_help": "Reading the lower panes",
   "app.chart.indicator_note": "RSI and MACD use the selected daily, weekly or monthly candles. Their values change with this interval. Missing history is not filled with zeros. These indicators describe past price action; they do not predict the next move.",
-  "app.chart.wall_scope_single": "Gamma walls · expiry: {dates}"
+  "app.chart.wall_scope_single": "Gamma walls · expiry: {dates}",
+  "app.evidence.analysis_snapshot_citation": "Open original evidence {n} for the previous analysis",
+  "app.evidence.analysis_previous_as_of": "Previous analysis · {at}",
+  "app.evidence.analysis_refresh_pending": "New data has arrived. Showing the previous analysis with its original evidence.",
+  "app.evidence.analysis_snapshot_source": "This record was used in the analysis generated {at}. The map contains newer data."
 }

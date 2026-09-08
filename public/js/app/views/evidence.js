@@ -20,8 +20,9 @@ const position=v=>{const n=Math.floor(v);return Number.isFinite(n)?Math.floor(n/
 const factDescription=e=>e.topic==='price_gaps'?(e.data?.gaps?.length?e.data.gaps.map(g=>`${g.date} · $${g.lower}–$${g.upper}`).join(' / '):s('evidence.no_gaps')):factText(e);
 const missingLabel=k=>k.startsWith('ytd_')?s('evidence.missing_ytd',{benchmark:k.slice(4)}):k==='price_gaps'?s('evidence.missing_gaps'):has('stockbrief.missing_'+k)?s('stockbrief.missing_'+k):s('evidence.missing_other');
 
-export function detail(node){
+export function detail(node,{analysisAt}={}){
   const body=el('div.evidence-detail',el('p.evidence-stance',{class:'is-'+node.stance},s('evidence.'+node.stance)),
+    analysisAt?el('p.data-notice',s('evidence.analysis_snapshot_source',{at:time(analysisAt)})):null,
     node.conditional?el('p.data-notice',s('evidence.conditional')):null,
     pick(node.reason)?el('p',pick(node.reason)):null);
   for(const e of node.evidence||[]){
@@ -53,16 +54,23 @@ export function detail(node){
 
 export function analysisPanel(doc){
   // A read of the saved snapshot: opening its reasons never requests inference.
-  const data=doc.analysis_status==='ready'&&pick(doc.analysis?.overview)?doc.analysis:null;
-  const summary=!['source_changed','withdrawn'].includes(doc.analysis_status)&&pick(doc.summary)?doc.summary:null;
+  const previous=doc.analysis_status==='refresh_pending';
+  // Never resolve an earlier analysis against the latest values for the same IDs.
+  const nodes=previous?(Array.isArray(doc.analysis_nodes)?doc.analysis_nodes:[]):doc.nodes||[];
+  const bound=!previous||(doc.analysis_snapshot_id&&doc.analysis_generated_at&&nodes.length&&
+    [doc.analysis?.overview,...(doc.analysis?.sections||[])].every(part=>
+      part?.citations?.length&&part.citations.every(id=>nodes.some(n=>n.id===id))));
+  const data=(doc.analysis_status==='ready'||previous&&bound)&&pick(doc.analysis?.overview)?doc.analysis:null;
+  const summary=!['source_changed','withdrawn','refresh_pending'].includes(doc.analysis_status)&&pick(doc.summary)?doc.summary:null;
   const panel=el('section.evidence-analysis',{class:data||summary?'':'is-pending','aria-label':s('evidence.analysis_title')});
   const heading=el('header.evidence-analysis-heading',el('h2',icon('briefing'),s('evidence.analysis_title')));
-  if(data&&doc.analysis_generated_at)heading.append(el('p.evidence-analysis-time',s('evidence.analysis_as_of',{at:time(doc.analysis_generated_at)})));
+  if(data&&doc.analysis_generated_at)heading.append(el('p.evidence-analysis-time',s(previous?'evidence.analysis_previous_as_of':'evidence.analysis_as_of',{at:time(doc.analysis_generated_at)})));
   panel.append(heading);
   const refs=part=>el('span.evidence-analysis-citations',...(part?.citations||[]).flatMap(id=>{
-    const i=(doc.nodes||[]).findIndex(n=>n.id===id);return i<0?[]:[el('button.brief-citation',{type:'button',onclick:()=>detail(doc.nodes[i]),'aria-label':s('evidence.citation',{n:i+1})},String(i+1))];
+    const i=nodes.findIndex(n=>n.id===id);return i<0?[]:[el('button.brief-citation',{type:'button',onclick:()=>detail(nodes[i],previous?{analysisAt:doc.analysis_generated_at}:{}),'aria-label':s(previous?'evidence.analysis_snapshot_citation':'evidence.citation',{n:i+1})},String(i+1))];
   }));
   if(data){
+    if(previous)panel.append(el('p.evidence-analysis-status',{role:'status'},s('evidence.analysis_refresh_pending')));
     panel.append(el('p.evidence-analysis-overview',pick(data.overview),refs(data.overview)));
     const body=el('div.evidence-analysis-body');
     for(const part of data.sections||[]){
