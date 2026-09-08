@@ -1681,6 +1681,7 @@
   "app.radar.kind_macro": "宏观",
   "app.radar.kind_digest": "每日摘要",
   "app.radar.kind_market": "市场摘要",
+  "app.radar.kind_weekpreview": "本周前瞻",
   "app.radar.kind_default": "综合消息",
   "app.boards.t_political": "议员交易",
   "app.boards.t_industry": "行业动态",

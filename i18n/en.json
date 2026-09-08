@@ -1681,6 +1681,7 @@
   "app.radar.kind_macro": "Macro",
   "app.radar.kind_digest": "Daily brief",
   "app.radar.kind_market": "Market brief",
+  "app.radar.kind_weekpreview": "Week ahead",
   "app.radar.kind_default": "General update",
   "app.boards.t_political": "Congressional trades",
   "app.boards.t_industry": "Industry news",

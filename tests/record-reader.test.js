@@ -55,3 +55,12 @@ test('presentation cleanup preserves standalone directional and risk symbols',()
  const doc=recordDocument({kind:'macro',extra:{message_text:'🌊 *宏观* · 2026-09-07\n\nUSD ↑ · breadth ↓ · 🔴 stress'}});
  assert.ok(doc.blocks[0].text.includes('↑'));assert.ok(doc.blocks[0].text.includes('↓'));assert.ok(doc.blocks[0].text.includes('🔴 stress'));
 });
+
+test('week range headers and stock section leads retain useful titles',()=>{
+ const week=recordDocument({kind:'weekpreview',extra:{message_text:'📅 *本周前瞻 Week Ahead* · 09/07–09/11\n\n【事件 Events】\nJobs data'}});
+ assert.equal(week.title,'本周前瞻');assert.ok(!week.lead.includes('📅'));
+ const vol=recordDocument({kind:'volscan',extra:{message_text:'📉 *IV/HV 扫描* · 2026-09-07\n🎯 *AMD* · IV/HV 0.736'}});
+ assert.ok(vol.lead.startsWith('$AMD'));assert.ok(vol.lead.includes('0.736'));
+ const body=recordDocument({kind:'news',summary:'[private reminder reference removed]'});
+ assert.ok(!body.lead.includes('private reminder'));
+});

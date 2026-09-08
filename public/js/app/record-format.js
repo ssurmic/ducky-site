@@ -4,7 +4,8 @@ import {s,LANG} from './strings.js';
 export const REPORT_KINDS=new Set(['digest','market','macro','liquidity','kindex','volscan','hiring','weekpreview','default']);
 export const recordHref=row=>'#/record/'+encodeURIComponent(String(row.id));
 export function cleanMessage(text){
- return String(text||'').replace(/[\p{Regional_Indicator}🧭🔔🌊📉🎯🔗🧑💻\uFE0F\u200D]/gu,'')
+ return String(text||'').replace(/[\p{Regional_Indicator}🧭🔔🌊📉📅🎯🔗🧑💻\uFE0F\u200D]/gu,'')
+  .replace(/\[private reminder reference removed\]/g,s('reader.saved_refs'))
   .replace(/\*{1,2}([^*\n]+)\*{1,2}/g,'$1').replace(/(^|\s)_([^_\n]+)_(?=\s|$)/g,'$1$2')
   .replace(/\(entry-[A-Za-z0-9-]+(?:,\s*entry-[A-Za-z0-9-]+)*\)/g,'').replace(/entry-[A-Za-z0-9-]+(?:[,、]\s*entry-[A-Za-z0-9-]+)*/g,s('reader.saved_refs'))
   .replace(/^\s*#{1,6}\s+/gm,'').replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'$1 ($2)').trim();
@@ -12,7 +13,7 @@ export function cleanMessage(text){
 export function recordDocument(row,language=LANG){
  const extra=row.extra||{}, raw=(language==='zh'?extra.message_zh:extra.message_en)||extra.message_text||row.summary||'';
  const lines=raw.split('\n'),header=lines[0]||'';
- const report=REPORT_KINDS.has(row.kind), datedHeader=report && /\d{4}-\d{2}-\d{2}/.test(header) && header.length<190;
+ const report=REPORT_KINDS.has(row.kind), datedHeader=report && /\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}[–-]\d{2}\/\d{2}/.test(header) && header.length<190;
  let title=datedHeader?cleanMessage(header).replace(/\s*[·—–-]?\s*\d{4}-\d{2}-\d{2}.*$/,'').trim():'';
  const known={digest:'digest',macro:'macro',volscan:'volscan',hiring:'hiring',weekpreview:'weekpreview'};
  if(datedHeader && known[row.kind])title=s('reader.title_'+known[row.kind]);
@@ -32,11 +33,11 @@ export function recordDocument(row,language=LANG){
   else if(markdown){heading=cleanMessage(markdown[1]);value=markdown[2];}
   blocks.push({heading,text:cleanMessage(value)});
  }
- const lead=blocks.find(b=>b.text)?.text||'';
  for(const block of blocks){
   const parts=block.heading.split(/\s+\/\s+/);
   if(parts.length===2 && parts.some(p=>/[\u3400-\u9fff]/.test(p))){block.heading=parts.find(p=>language==='zh'?/[\u3400-\u9fff]/.test(p):!/[\u3400-\u9fff]/.test(p))||block.heading;}
  }
+ const first=blocks.find(b=>b.text),lead=first?([first.heading,first.text].filter(Boolean).join(' · ')):'';
  return {title,raw,truncated:language==='zh'&&extra.message_zh?extra.translation_message_truncated:extra.message_truncated,hasBody:Boolean(extra.message_text||extra.message_en||extra.message_zh),blocks,lead:lead.length>170?lead.slice(0,170)+'…':lead,report,
   language:language==='zh'&&extra.message_zh?'zh':language==='en'&&extra.message_en?'en':null};
 }
