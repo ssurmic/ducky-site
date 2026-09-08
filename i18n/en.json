@@ -1909,6 +1909,7 @@
   "app.billing.currency_USD": "US dollars · monthly or annual",
   "app.billing.currency_CNY": "Chinese yuan · annual",
   "app.billing.currency_note": "USD offers monthly or annual access. CNY offers annual access.",
+  "app.billing.currency_unavailable": "Payments in this currency are not available yet. Choose another currency to see its payment options.",
   "demo.eyebrow": "Try it free",
   "demo.title": "Look up a stock",
   "demo.intro": "Browse public records, then explore charts, creator views and events.",

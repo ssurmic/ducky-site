@@ -1,10 +1,13 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {JSDOM} from 'jsdom';
+import {readFileSync} from 'node:fs';
 const dom=new JSDOM('<html data-lang="en"><body><script id="ducky-config" type="application/json">{"PRICES":{"signal":{"monthly_usd":15},"pro":{"monthly_usd":9,"annual_usd":90,"annual_cny":499}}}</script></body></html>', {url:'https://ducky.test/app/'});
 for(const k of ['window','document','Node'])globalThis[k]=dom.window[k];
 window.DUCKY={PRICES:{signal:{monthly_usd:15},pro:{monthly_usd:9,annual_usd:90,annual_cny:499}}};
-const {normalizePlans,planSelection}=await import('../public/js/app/views/billing.js');
+const strings=document.createElement('script');strings.id='ducky-strings';strings.type='application/json';
+strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(JSON.parse(readFileSync(new URL('../i18n/en.json',import.meta.url)))).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
+const {normalizePlans,planSelection,mount}=await import('../public/js/app/views/billing.js');
 test('authoritative catalog never resurrects a retired or disabled price',()=>{
  const p=normalizePlans({plans:[{tier:'pro',currency:'USD',months:1,amount:9}],rails:['stripe']});
  assert.equal(p.paid,null);assert.equal(p.pro.monthly_usd,9);assert.equal(p.pro.annual_cny,null);
@@ -31,4 +34,22 @@ test('sign-in preserves the public plan choice and discards arbitrary payment pa
  rememberTarget(target);assert.equal(takeTarget(),target);assert.equal(takeTarget(),'#/watchlist');
  assert.equal(signedInTarget({profile_complete:true,email_verified:true},target),target);
  assert.equal(signedInTarget({profile_complete:false},target),'#/profile?setup=email&next='+encodeURIComponent(target.slice(2)));
+});
+
+test('a currency without a payment method explains the gap and switching currency reveals available methods without an order',async()=>{
+ const priorFetch=globalThis.fetch,calls=[],root=document.createElement('main');document.body.append(root);
+ globalThis.fetch=async(url,opts)=>{calls.push({url,method:opts.method});return new Response(JSON.stringify(url.split('?')[0].endsWith('/billing/plans')?{plans:[{tier:'pro',currency:'CNY',months:12,amount:499},{tier:'pro',currency:'USD',months:12,amount:90},{tier:'pro',currency:'XTR',months:12,amount:900}],rails:['stars']}:{orders:[]}),{headers:{'content-type':'application/json'}});};
+ let cleanup;
+ try {
+  cleanup=await mount(root,{query:new URLSearchParams('currency=CNY&months=12')});
+  assert.match(root.querySelector('.billing-rail-empty').textContent,/Payments in this currency are not available/);
+  assert.equal(root.querySelector('.rails a'),null);
+  assert.doesNotMatch(root.querySelector('.rails').textContent,/Stars payments work inside Telegram/);
+  const select=root.querySelector('.billing-currency select');select.value='USD';select.dispatchEvent(new window.Event('change'));
+  assert.equal(root.querySelector('.billing-rail-empty'),null);
+  assert.match(root.querySelector('.rails a').textContent,/Telegram Stars/);
+  assert.match(root.querySelector('.rails').textContent,/Stars payments work inside Telegram/);
+  assert.equal(root.querySelector('.tier-card .price').textContent,'$90/yr');
+  assert.deepEqual(calls.map(c=>c.method),['GET','GET']);
+ } finally {cleanup?.();root.remove();globalThis.fetch=priorFetch;}
 });

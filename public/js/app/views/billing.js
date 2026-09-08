@@ -164,7 +164,8 @@ export async function mount(root, { query } = {}) {
     const stripeOk = railEnabled("stripe");
     row.appendChild(el("button.btn.btn-ghost", { type: "button", disabled: !stripeOk, "data-soon": stripeOk ? null : "", onclick: stripe }, stripeOk ? railLabel("billing.rail_stripe", "stripe") : s("billing.rail_stripe") + " · " + s("billing.soon")));
     rails.appendChild(row);
-    if (!tg.inTG) rails.appendChild(el("p.muted.small", s("billing.stars_only_tg")));
+    if (!row.querySelector('a, button:not(:disabled)')) rails.appendChild(el("p.muted.small.billing-rail-empty", {role:"status"}, s("billing.currency_unavailable")));
+    if (!tg.inTG && starsReady) rails.appendChild(el("p.muted.small", s("billing.stars_only_tg")));
   }
 
   async function order(rail) {

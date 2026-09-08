@@ -1909,6 +1909,7 @@
   "app.billing.currency_USD": "美元 USD · 月付或年付",
   "app.billing.currency_CNY": "人民币 CNY · 年付",
   "app.billing.currency_note": "美元可按月或按年付，人民币按年付。",
+  "app.billing.currency_unavailable": "所选币种暂时无法付款。可切换币种查看其他支付方式。",
   "demo.eyebrow": "免费体验",
   "demo.title": "先查一只股票",
   "demo.intro": "看公开记录，继续查图表、博主观点和事件。",
