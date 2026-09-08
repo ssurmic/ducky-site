@@ -237,7 +237,7 @@ export async function mount(root,route={}){
   if(!tickerOK(ticker))ticker=(store.get('watchlist')||[]).find(tickerOK)||'';
   function picker(){
     const field=el('input.input',{type:'search',value:ticker,placeholder:'AVGO / ORCL',maxlength:10,'aria-label':s('evidence.ticker')});
-    const form=el('form.add-row.evidence-picker-form',{onsubmit:e=>{e.preventDefault();const t=field.value.trim().toUpperCase().replace(/^\$/,'');if(tickerOK(t)){closeModal();location.hash='#/evidence/'+t;}}},field,el('button.btn.btn-primary',{type:'submit'},s('evidence.load')));
+    const form=el('form.add-row.evidence-picker-form',{onsubmit:e=>{e.preventDefault();const t=field.value.trim().toUpperCase().replace(/^\$/,'');if(tickerOK(t)){closeModal();if(t===ticker)load();else location.hash='#/evidence/'+t;}}},field,el('button.btn.btn-primary',{type:'submit'},s('evidence.load')));
     const list=el('div.evidence-picker-list');
     for(const t of(store.get('watchlist')||[]).filter(tickerOK))list.append(el('a.chip',{href:'#/evidence/'+t,'aria-current':t===ticker?'page':null,onclick:()=>closeModal()},t));
     modal(s('evidence.select_stock'),el('div',form,list));

@@ -112,6 +112,20 @@ test('reopening the selected ticker reads its latest snapshot instead of doing n
  assert.equal(calls,2);assert.match(root.querySelector('.evidence-analysis').textContent,/New saved analysis/);
  cleanup();root.remove();
 });
+test('mobile picker reopens the current ticker with a fresh read and closes the dialog',async()=>{
+ store.set('me',{tier:'pro'});store.set('watchlist',['AVGO']);location.hash='#/evidence/AVGO';
+ let calls=0;globalThis.fetch=async(url,options)=>{
+  assert.equal(url,'/evidence/AVGO');assert.equal(options.method,'GET');calls++;
+  const d=fixture();if(calls===2)d.nodes[0].title.en='A newly saved observation.';return response(d);
+ };
+ const root=document.createElement('div');document.body.append(root);const cleanup=await mount(root,{ticker:'AVGO'});
+ root.querySelector('.evidence-empty-picker').click();
+ const form=document.querySelector('.evidence-picker-form');assert.ok(form);assert.equal(form.querySelector('input').value,'AVGO');
+ form.dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));
+ await new Promise(resolve=>setTimeout(resolve,0));
+ assert.equal(calls,2);assert.equal(location.hash,'#/evidence/AVGO');assert.equal(document.querySelector('.evidence-picker-form'),null);
+ assert.match(root.querySelector('.evidence-branches').textContent,/A newly saved observation/);cleanup();root.remove();
+});
 test('six balanced nodes, exact source passage and progressive disclosure',()=>{
  const root=mapView(fixture());document.body.append(root);
  assert.equal(root.querySelectorAll('.evidence-node').length,6);
