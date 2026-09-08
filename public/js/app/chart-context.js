@@ -30,7 +30,7 @@ export function selectedSnapshot(snapshot,expiry='combined',extras=false){
 }
 export function optionScope(snap){
   const dates=snap?.gamma?.scope?.expiries?.filter(d=>dateLabel(d)!=='—')||[];
-  return dates.length?s('chart.wall_scope',{n:dates.length,dates:dates.join(' / ')}):s('chart.wall_scope_unknown');
+  return dates.length?s(dates.length===1?'chart.wall_scope_single':'chart.wall_scope',{n:dates.length,dates:dates.join(' / ')}):s('chart.wall_scope_unknown');
 }
 export function wallPosition(spot,gamma){
   const call=gamma?.call_wall,put=gamma?.put_wall;
