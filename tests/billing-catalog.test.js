@@ -4,7 +4,7 @@ import {JSDOM} from 'jsdom';
 const dom=new JSDOM('<html data-lang="en"><body><script id="ducky-config" type="application/json">{"PRICES":{"signal":{"monthly_usd":15},"pro":{"monthly_usd":9,"annual_usd":90,"annual_cny":499}}}</script></body></html>');
 for(const k of ['window','document','Node'])globalThis[k]=dom.window[k];
 window.DUCKY={PRICES:{signal:{monthly_usd:15},pro:{monthly_usd:9,annual_usd:90,annual_cny:499}}};
-const {normalizePlans}=await import('../public/js/app/views/billing.js');
+const {normalizePlans,planSelection}=await import('../public/js/app/views/billing.js');
 test('authoritative catalog never resurrects a retired or disabled price',()=>{
  const p=normalizePlans({plans:[{tier:'pro',currency:'USD',months:1,amount:9}],rails:['stripe']});
  assert.equal(p.paid,null);assert.equal(p.pro.monthly_usd,9);assert.equal(p.pro.annual_cny,null);
@@ -13,4 +13,12 @@ test('authoritative catalog never resurrects a retired or disabled price',()=>{
  assert.deepEqual(normalizePlans(null).rails,[]);
  assert.equal(normalizePlans(null).pro.monthly_usd,9);
  assert.equal(normalizePlans(null).paid,null);
+});
+test('a displayed plan carries its currency and term into billing without changing prices or placing an order',()=>{
+ const prior={tier:'pro',currency:'USD',months:1};
+ assert.deepEqual(planSelection(new URLSearchParams('currency=CNY&months=1'),prior),{tier:'pro',currency:'CNY',months:12});
+ assert.deepEqual(planSelection(new URLSearchParams('currency=USD&months=12'),prior),{tier:'pro',currency:'USD',months:12});
+ assert.deepEqual(planSelection(new URLSearchParams('currency=BTC&months=999'),prior),prior);
+ assert.deepEqual(planSelection(undefined,{tier:'pro',currency:'CNY',months:12}),{tier:'pro',currency:'CNY',months:12});
+ assert.deepEqual(prior,{tier:'pro',currency:'USD',months:1});
 });

@@ -1168,3 +1168,5 @@ details.product-demo-guide > summary { display:list-item; cursor:pointer; font-w
 .outcome-review[open] { min-width:240px; }
 .outcome-review summary { cursor:pointer; font-weight:650; }
 .outcome-review p { margin:6px 0; font-size:12px; overflow-wrap:anywhere; }
+
+@media(max-width:700px){.records-filter select{font-size:16px}}

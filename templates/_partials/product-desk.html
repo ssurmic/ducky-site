@@ -2,6 +2,7 @@
 <section class="section product-desk no-glossary" id="features"><div class="wrap">
  <div class="desk-section-head"><div><p class="eyebrow mono">{{ t('desk.catalog') }}</p><h2>{{ t('desk.map_title') }}</h2></div><p class="muted">{{ t('desk.map_sub') }}</p></div>
  <div class="desk-tour" data-product-tour>
+  <label class="desk-mobile-picker">{{ t('desk.choose_tool') }}<select data-tool-select>{% for route in tools %}<option value="{{ route }}">{{ t('desk.title.' ~ route) }}</option>{% endfor %}</select></label>
   <nav class="desk-tools" aria-label="{{ t('desk.catalog') }}">
    {% for route in tools %}<button type="button" data-tool="{{ route }}" aria-pressed="{{ 'true' if loop.first else 'false' }}" aria-controls="desk-feature-{{ route }}"><span class="mono desk-tool-number">{{ '%02d' % loop.index }}</span>{{ t('desk.title.' ~ route) }}<span class="desk-tool-arrow" aria-hidden="true">↗</span></button>{% endfor %}
   </nav>

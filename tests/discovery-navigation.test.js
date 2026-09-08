@@ -93,6 +93,12 @@ test('homepage tour opens each named tool and keeps pricing visible in both lang
    assert.ok(panel.querySelector(`a[href="/${prefix}app/#/${button.dataset.tool}"]`));
   }
   assert.equal(page.querySelectorAll('#features').length,1);
+  const picker=tour.querySelector('[data-tool-select]');
+  for(const option of picker.options){
+   picker.value=option.value;picker.dispatchEvent(new page.defaultView.Event('change'));
+   assert.equal(tour.querySelector('.desk-feature:not([hidden])').id,'desk-feature-'+option.value);
+   assert.equal(tour.querySelector('[aria-pressed=true]').dataset.tool,option.value);
+  }
   assert.equal(page.querySelector('#pricing').closest('details'),null);cleanup();
  }
 });

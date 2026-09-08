@@ -55,7 +55,7 @@
       <summary>{{ t('boards.2.name') }} — {{ t('track.col_summary') }}</summary>
       <p class="muted">{{ t('track.insider_note') }}</p>
     </details>
-    <div class="table-wrap ledger-wrap">
+    <div class="table-wrap ledger-wrap" tabindex="0" role="region" aria-label="{{ t('data.table_scroll') }}">
       <table class="data data-sortable" id="ledger">
         {% macro th(key, type, label, num=False) -%}
         <th class="th-s{{ ' num' if num else '' }}" data-key="{{ key }}" data-type="{{ type }}" aria-sort="none"><button type="button" class="th-sort" title="{{ t('track.sort_hint') }}">{{ label }}<span class="sort-ind dim" aria-hidden="true">⇅</span></button></th>
@@ -73,7 +73,7 @@
     <div class="subsection">
       <h2 class="mono-h2">{{ t('track.rates_h2') }}</h2>
       <p class="caption">{{ t('track.rates_note') }}</p>
-      <div class="table-wrap">
+      <div class="table-wrap" tabindex="0" role="region" aria-label="{{ t('data.table_scroll') }}">
         <table class="data" id="rates">
           <thead><tr>
             <th>{{ t('track.col_kind') }}</th><th>{{ t('track.col_mode') }}</th><th class="num">{{ t('track.col_n') }}</th>
@@ -96,7 +96,7 @@
       <h2 class="mono-h2">{{ t('track.score_h2') }}</h2>
       <p class="lead small">{{ t('track.score_lead') }}</p>
       <p class="muted small" id="score-regime"></p>
-      <div class="table-wrap">
+      <div class="table-wrap" tabindex="0" role="region" aria-label="{{ t('data.table_scroll') }}">
         <table class="data" id="scorecard-table">
           <thead><tr><th>{{ t('track.score_kind') }}</th><th class="num">{{ t('track.score_n') }}</th><th class="num">{{ t('track.score_hit') }}</th><th class="num">{{ t('track.score_excess') }}</th><th class="num">{{ t('track.score_win') }}</th><th>{{ t('track.score_aw') }}</th></tr></thead>
           <tbody><tr><td class="empty" colspan="6">{{ t('data.loading') }}</td></tr></tbody>
@@ -110,7 +110,7 @@
     <div class="subsection" id="liquidity">
       <h2 class="mono-h2">{{ t('track.liq_h2') }} <span class="badge badge-backtest badge-inline">{{ t('label.backtest') }}</span></h2>
       <p class="caption">{{ tf('track.liq_note', **liq.fmt) }}</p>
-      <div class="table-wrap">
+      <div class="table-wrap" tabindex="0" role="region" aria-label="{{ t('data.table_scroll') }}">
         <table class="data" id="liquidity-table">
           <thead><tr>
             <th>{{ t('track.col_asset') }}</th><th class="num">{{ tf('track.col_px', **liq.fmt) }}</th>

@@ -16,7 +16,7 @@
     <p class="lead">{{ t('trend.lead') }}</p>
     <div class="meta-row mono"><span id="trend-updated"></span></div>
     <div class="banner banner-error" id="trend-offline" role="status" hidden></div>
-    <div class="table-wrap">
+    <div class="table-wrap" tabindex="0" role="region" aria-label="{{ t('data.table_scroll') }}">
       <table class="data" id="trend-table">
         <thead><tr>
           <th>{{ t('trend.col_ticker') }}</th><th class="num">{{ t('trend.col_watchers') }}</th>

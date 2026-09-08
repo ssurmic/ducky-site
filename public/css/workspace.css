@@ -414,3 +414,5 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .opportunity-filters label{min-width:0;width:100%}
  .opportunity-filters .input{width:100%;min-width:0}
 }
+
+.page-app .billing-benefits{font-size:.875rem;line-height:1.65;color:var(--muted);margin:8px 0 16px}

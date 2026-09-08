@@ -1,0 +1,9 @@
+// Local QA instrumentation only. No production bundle imports this file.
+const errors=[];addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+addEventListener('DOMContentLoaded',()=>{const out=document.createElement('output');out.id='public-qa-status';out.hidden=true;document.body.append(out);
+setInterval(()=>{const rect=e=>e?{x:e.getBoundingClientRect().x,y:e.getBoundingClientRect().y,w:e.getBoundingClientRect().width,h:e.getBoundingClientRect().height}:null;
+const visible=e=>e.checkVisibility();
+const scrollParent=e=>{for(let a=e.parentElement;a&&a!==document.body;a=a.parentElement){if(['auto','scroll'].includes(getComputedStyle(a).overflowX)&&a.scrollWidth>a.clientWidth+1)return a;}return null;};
+const overflow=[...document.querySelectorAll('main *,header *')].filter(e=>visible(e)&&!e.closest('.home-logo-orbit,.home-input')&&!scrollParent(e)&&e.getBoundingClientRect().width&&(e.getBoundingClientRect().right>innerWidth+1||e.getBoundingClientRect().left < -1)&&!e.closest('dialog:not([open])')).slice(0,12).map(e=>({tag:e.tagName,cls:typeof e.className==='string'?e.className:'svg',...rect(e)}));
+out.textContent=JSON.stringify({width:innerWidth,height:innerHeight,scrollWidth:document.documentElement.scrollWidth,pricing:rect(document.querySelector('#pricing')),tour:rect(document.querySelector('.desk-tour')),header:rect(document.querySelector('header')),overflow,errors,horizontalTables:[...document.querySelectorAll('.table-wrap,.records-table-wrap')].filter(e=>visible(e)&&e.scrollWidth>e.clientWidth+1).map(e=>({width:e.clientWidth,content:e.scrollWidth,tabIndex:e.tabIndex,label:e.getAttribute('aria-label')})),language:[...document.querySelectorAll('[data-lang-toggle]')].filter(visible).map(e=>({label:e.textContent.trim(),...rect(e)})),main:rect(document.querySelector('main'))});},500);
+});

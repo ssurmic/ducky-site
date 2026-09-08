@@ -92,4 +92,11 @@ table.data.data-sortable th[aria-sort="descending"] .th-sort { color: var(--text
 .signals-list li { padding: 6px 0; border-bottom: 1px dashed var(--border); }
 .signals-list li:last-child { border-bottom: 0; }
 .idea-link { font-weight: 700; }
+.table-wrap:focus-visible{outline:2px solid var(--focus-ring);outline-offset:3px}
+@media(max-width:700px){
+ .page-data .chip-btn{min-height:44px}
+ .page-data .filter-input{font-size:16px;min-height:44px;box-sizing:border-box}
+ .page-data table.data:has(td.empty) thead{display:none}
+ .page-data table.data:has(td.empty){min-width:0;width:100%}
+}
 </style>

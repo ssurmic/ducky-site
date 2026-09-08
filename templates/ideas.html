@@ -20,7 +20,7 @@
     <p class="log-line">{{ t('data.log_not_call') }}</p>
     <div class="meta-row mono"><span id="ideas-generated"></span><span id="ideas-fixture"></span></div>
     <div class="banner banner-error" id="ideas-error" role="alert" hidden></div>
-    <div class="table-wrap">
+    <div class="table-wrap" tabindex="0" role="region" aria-label="{{ t('data.table_scroll') }}">
       <table class="data" id="ideas-table">
         <thead><tr>
           <th>{{ t('ideas.col_ticker') }}</th><th>{{ t('ideas.col_title') }}</th><th>{{ t('ideas.col_status') }}</th>

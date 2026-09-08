@@ -86,3 +86,12 @@ html.public-menu-open{overflow:hidden;scrollbar-gutter:stable}
 }
 @media(max-width:360px){.public-nav .public-nav-row{padding-inline:12px;gap:8px}.public-nav .public-brand{font-size:15px;gap:7px}.public-menu-panel{padding:12px}.public-menu-heading h2{font-size:.875rem}.public-menu-heading>a{font-size:.6875rem}.public-mobile-links{gap:0 14px}}
 @media(prefers-reduced-motion:reduce){.public-nav *{transition:none!important}}
+
+/* Language stays one tap away on phones; the menu remains for product discovery. */
+@media(max-width:700px){
+ .public-nav .public-nav-row{padding-inline:12px;gap:8px}
+ .public-nav-actions{gap:6px}
+ .public-nav-actions .public-language{display:inline-flex;min-width:44px;font-size:.75rem}
+ .public-mobile-account .lang-toggle{display:none}
+}
+@media(max-width:360px){.public-brand>span{display:none}.public-nav-actions .public-language{min-width:44px}}

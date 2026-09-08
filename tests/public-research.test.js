@@ -34,16 +34,19 @@ test('homepage previews all tools without private research and keeps sourced exa
   assert.deepEqual(links.map(a=>new URL(a.href).searchParams.get('t')),['3s','349s','700s']);
  }
 });
-test('storefront exposes actual plan prices and checkout without a collapsed comparison',()=>{
+test('storefront keeps core benefits and checkout visible with optional comparison details',()=>{
  const prices=json('site.config.json').prices.pro;
  for(const prefix of ['', 'en/']) {
   const d=new JSDOM(readFileSync(`dist/${prefix}index.html`,'utf8')).window.document,p=d.querySelector('#pricing');
   assert.equal(p.querySelectorAll('.desk-plan').length,2);
-  assert.equal(p.querySelector('details'),null);
+  assert.equal(p.closest('details'),null);
+  assert.equal(p.querySelector('.desk-plan-pro').closest('details'),null);
+  assert.equal(p.querySelector('.desk-plan-benefits').children.length,3);
+  assert.equal(p.querySelector('details').open,false);
   assert.ok(p.textContent.includes('$'+prices.monthly_usd));
   assert.ok(p.textContent.includes('$'+prices.annual_usd));
   assert.equal(p.textContent.includes('¥'+prices.annual_cny),prefix==='');
-  assert.ok(p.querySelector(`a[href="/${prefix}app/#/billing"]`));
+  assert.equal(p.querySelector(".desk-plan-actions a").getAttribute("href"), `/${prefix}app/#/billing?currency=${prefix?'USD':'CNY'}&months=${prefix?'1':'12'}`);
   assert.ok(p.querySelector(`a[href="/${prefix}app/#/register"]`));
  }
 });

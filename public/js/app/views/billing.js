@@ -89,16 +89,27 @@ export function normalizePlans(resp) {
   return out;
 }
 
-export async function mount(root) {
+export function planSelection(query, previous = selected) {
+  const currency = query?.get('currency');
+  const months = query?.get('months');
+  const next = { ...previous, tier: 'pro' };
+  if (['USD', 'CNY'].includes(currency)) next.currency = currency;
+  if (['1', '12'].includes(months)) next.months = Number(months);
+  if (next.currency === 'CNY') next.months = 12;
+  return next;
+}
+
+export async function mount(root, { query } = {}) {
   let plans = (Date.now() - plansCacheAt < PLANS_TTL_MS) ? plansCache : null, busy = false;   // finding billing.js:14
   const me = store.get("me") || {};
-  selected.tier = "pro";
+  selected = planSelection(query);
   // finding billing.js:76 — GET /me nests expiry under subscription.expires_at (app.py), not me.expires_at,
   // so a paying subscriber never saw their plan end date.
   const sub = me.subscription || {};
   const head = el("div.view-head", el("h1", s("billing.title")),
     el("span.muted.small", s("billing.current", { tier: tierName(me.tier) }) + (sub.expires_at ? " · " + s("tier.expires", { date: date(sub.expires_at) }) : "")));
-  const picker = el("div.picker", el("b", s("billing.pick_title")), el("p", s("billing.pick_pro")), el("p.muted.small", s("billing.legacy_preserved")));
+  const picker = el("p.billing-benefits", s("billing.pick_pro"));
+  const renewal = el("p.muted.small", s("billing.legacy_preserved"));
   const toggle = el("div.seg.mono", { role: "group" },
     ["monthly", "annual"].map((m) => el("button", { type: "button", "data-m": m, class: (m === "annual") === (selected.months === 12) ? "on" : "", onclick: () => { selected.months = m === "annual" ? 12 : 1; toggle.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.m === m)); renderTiers(); renderRails(); } }, s("billing." + m))));
   const currencySelect = el("select.input", {"aria-label":s("billing.currency"), onchange:()=>{
@@ -115,7 +126,7 @@ export async function mount(root) {
   const panel = el("section.pay-panel", { hidden: true });
   const ordersBox = el("section.orders", el("h2", s("billing.orders")), spinner());
   const foot = el("p.muted.small.billing-foot", s("billing.disclaimer") + " ", el("a", { href: (LANG === "zh" ? "" : "/en") + "/disclaimer/" }, s("billing.disclaimer_link")));
-  root.append(head, picker, currencyPicker, toggle, tiers, rails, panel, ordersBox, foot);
+  root.append(head, picker, currencyPicker, toggle, tiers, renewal, rails, panel, ordersBox, foot);
 
   function price(p) {
     return localizedPrice(p, selected.months, selected.currency);
@@ -124,13 +135,10 @@ export async function mount(root) {
     clear(tiers);
     for (const id of ["pro"]) {
       const p = plans && plans[id];
-      const on = selected.tier === id;
-      tiers.appendChild(el("article.card.tier-card", { class: on ? "on" : "", "data-tier": id },
+      tiers.appendChild(el("article.card.tier-card", { "data-tier": id },
         el("h3", tierName(id)),
         el("p.price.mono", price(p)),
-        el("p.muted.small", s("billing.desc_" + id)),
-        el("button.btn", { type: "button", class: on ? "btn-primary" : "btn-ghost", onclick: () => { selected.tier = id; renderTiers(); renderRails(); tg.haptic("light"); if (tg.inTG) { const mb = mainButton(); if (mb) tg.showMain(mb.text, mb.onClick); } } },
-          on ? "✓ " + tierName(id) : s("billing.choose", { tier: tierName(id) }))));
+        el("p.muted.small", s("billing.desc_" + id))));
     }
   }
   function railQuote(r) {

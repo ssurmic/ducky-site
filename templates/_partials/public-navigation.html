@@ -30,6 +30,6 @@
    <a class="public-top-link" href="{{ url('/') }}#home-dossier" data-home-open aria-haspopup="dialog">{{ t('nav.examples') }}</a>
    <a class="public-top-link public-pro-link" href="{{ url('/') }}#pricing">{{ t('nav.pro') }}</a>
   </nav>
-  <div class="public-nav-actions"><a class="lang-toggle mono public-desktop-action" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle aria-label="{{ t('nav.lang_toggle_aria') }}">{{ t('nav.lang_toggle') }}</a><a class="public-signin public-desktop-action" href="{{ url('/app/') }}">{{ t('nav.signin') }}</a><a class="btn btn-primary public-start" href="{{ url('/app/') }}#/register">{{ t('nav.cta_bot') }}</a></div>
+  <div class="public-nav-actions"><a class="lang-toggle mono public-language" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle aria-label="{{ t('nav.lang_toggle_aria') }}">{{ t('nav.lang_toggle') }}</a><a class="public-signin public-desktop-action" href="{{ url('/app/') }}">{{ t('nav.signin') }}</a><a class="btn btn-primary public-start" href="{{ url('/app/') }}#/register">{{ t('nav.cta_bot') }}</a></div>
  </div>
 </header>
