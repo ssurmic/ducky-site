@@ -148,3 +148,26 @@ The full suite passed 440 tests. The subsequent lookup-only poll change reads it
 queued result after one second; shared history polling stays at four seconds,
 with existing single-flight, visibility and backoff behavior. Thirty focused tests
 passed after that change. These entry corrections await coordinated deployment.
+
+Backend `5bc7714` and frontend `43b46ef`/Pages `5350daf0` subsequently went live.
+A fresh ordinary `/app/#/creators?tab=research&ticker=AVGO` page immediately shows
+one group and all three available AVGO views, with no false empty page or next-page
+requirement. Chinese and English 393-pixel views retain the ticker. Actual clicks
+from the AVGO chart to related creator content retain nine matching feed posts and
+an empty person-search input; switching to research keeps one group/three points
+and the language link. All measured mobile scroll widths equal 393 pixels.
+
+Additional production receipts in the same temporary validation directory:
+
+- `creator-avgo-generic-en-393-43b46ef.png`
+- `creator-avgo-generic-zh-393-43b46ef.png`
+- `creator-chart-related-avgo-zh-393-43b46ef.png`
+- `chart-entry-zh-393-production-20260908.png`
+- `chart-entry-zh-desktop-production-20260908.png`
+
+The chart entry uses the clearer Stock charts/股票图表 heading, shorter search hint
+and a responsive stock-button grid. The 393-pixel production view fits all 21 watched
+stocks, with 48-pixel-high buttons. The release's four modified JavaScript modules
+and the CSS URL actually referenced by HTML (`?v=43b46ef7`) match built file hashes.
+The previously open document retained its older JavaScript until navigation loaded
+a new document; final acceptance uses fresh, ordinary production URLs.
