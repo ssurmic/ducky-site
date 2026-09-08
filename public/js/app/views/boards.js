@@ -369,6 +369,7 @@ export function itemRow(it, {standalone=false, language=LANG}={}){
     if(it.archived)detail.append(el('p.radar-receipt-note',s('boards.history_note')));
     detail.append(renderDocument(doc));
     if(body)detail.append(el('details.record-original',el('summary',s('reader.original')),el('pre',body),it.extra?.translation_recorded_at?el('p.muted.small',s('reader.translation_time',{date:dateTime(it.extra.translation_recorded_at)})):null));
+    if(!it.provenance && body)detail.append(el('p.radar-time-note.muted',s('radar.receipt_basis')));
     if(eventMeaning)detail.append(el('p.radar-event-meaning',eventMeaning));
     if(it.identity_status==='sec_current')detail.append(el('p.radar-time-note.muted',s('radar.identity_repaired',{date:String(it.identity_as_of||'').slice(0,10)})));
     if(it.issuer_name || it.reporter_name || it.sector || it.market_cap){

@@ -29,3 +29,5 @@ Synthetic examples above are layout fixtures only and are not investment records
 ## Owner correction: direction takes color priority
 
 The owner rejected the pink YouTube accents on an explicitly bullish AVGO point. A scoped CSS correction gives existing support/counter nodes a directional border, tinted background, source-label emphasis and watermark color on desktop and phone; hovering preserves that direction. Source identity, mixed-source labeling and every data field remain unchanged. Context records are not promoted to bullish. The exact source point used for live acceptance is `claim:75b2c484c5bc6622e1a45ec5` from `3E-HXC2HUvg`, published September 3, 2026, at 16:13.
+
+Published `c5f2b24` (including `9bc7839`) to Pages `5eeee524`. Production measured 393/393 CSS px viewport/document width; the bullish border, source label and watermark all computed to `rgb(71, 223, 152)`. An independent 390px browser check confirmed the same presentation and exact source navigation, with screenshot `/tmp/ducky-evidence-validation-20260907/final-avgo-whole-green-390.png`. The prior platform-palette release above is historical; this whole-card direction rule is current.
