@@ -31,6 +31,10 @@ test('evidence rechecks and unrelated queue progress do not announce new researc
  value=structuredClone(value);value.checked_at='check-2';value.recorded_at='build-2';value.id='reprojected-graph';
  value.nodes[0].recorded_at='projection-2';value.coverage.jobs.pending=10;value.ticker_coverage.jobs.ready=4;
  await watch.check();assert.equal(root.querySelector('aside').hidden,true);
+ for(const state of ['retry','waiting','building','pending']){
+  value.analysis_status=state;value.summary_status=state;
+  await watch.check();assert.equal(root.querySelector('aside').hidden,true);
+ }
  // A source can be withdrawn at read time, even if no graph has been rebuilt.
  value.nodes=[];value.withheld=1;await watch.check();assert.equal(root.querySelector('aside').hidden,false);watch.stop();
 });

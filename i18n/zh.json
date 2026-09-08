@@ -3399,5 +3399,8 @@
   "desk.title.reports": "市场报告",
   "desk.preview_reports": "按日期阅读市场日报、宏观流动性与期权波动扫描，并查阅原始记录。",
   "desk.access.reports": "免费版可读延迟 5 天的记录，Pro 可读当前报告。",
-  "app.radar.receipt_basis": "这里展示当时保存的消息，私人提醒编号已移除。消息发表时间不代表文中价格的实际交易日。"
+  "app.radar.receipt_basis": "这里展示当时保存的消息，私人提醒编号已移除。消息发表时间不代表文中价格的实际交易日。",
+  "idea.illustration": "格式示例",
+  "idea.illustration_note": "用于展示格式的示例。原文中的历史数字未经核实，本示例不计算收益表现。",
+  "idea.source_language": "来源标题与笔记保留原文语言。"
 }

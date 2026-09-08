@@ -3399,5 +3399,8 @@
   "desk.title.reports": "Market reports",
   "desk.preview_reports": "Read dated market reports, macro briefs and volatility scans, with original records available.",
   "desk.access.reports": "Free reports are delayed by 5 days. Pro includes current reports.",
-  "app.radar.receipt_basis": "This is the saved message as presented at the time, with private reminder references removed. Its publication time does not establish the date of prices quoted inside it."
+  "app.radar.receipt_basis": "This is the saved message as presented at the time, with private reminder references removed. Its publication time does not establish the date of prices quoted inside it.",
+  "idea.illustration": "Format example",
+  "idea.illustration_note": "Format illustration. Historical figures in the original text are unverified; performance is not calculated for this example.",
+  "idea.source_language": "The source title and notes are preserved in their original language."
 }
