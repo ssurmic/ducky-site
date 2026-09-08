@@ -5,9 +5,10 @@ import { s } from "../strings.js";
 import * as api from "../api.js";
 import * as store from "../store.js";
 import * as overlays from "../overlays.js";
-import { el, clear, spinner, errorBox, lock, px, num } from "../ui.js";
+import { el, clear, spinner, errorBox, lock, px, num, modal } from "../ui.js";
 import { normalizeList } from "./watchlist.js";
 import { unpackSnapshot, reusableSnapshot } from "../snapshot-model.js";
+import {aggregateBars,selectedSnapshot,optionScope,wallPosition,optionHelp,expiryTable} from '../chart-context.js';
 import { observeTheme } from "../theme.js";
 
 const PERIODS = ["3mo", "6mo", "1y", "2y"];
@@ -43,7 +44,8 @@ export async function mount(root, params) {
   // finding chart.js:63 — drawSeq is a per-draw token; candles/rsiSeries are hoisted so a Telegram theme flip
   // can re-apply their colors without a full refetch (finding tg.js:65).
   let period = allowed("6mo") ? "6mo" : maxPeriod, chart = null, ro = null, ovl = null, alive = true, drawSeq = 0, candles = null, rsiSeries = null, macdHist = null, macdLineS = null, macdSig = null;
-  let histogram = [], referenceLines = [], overlaySnapshot = null;
+  let histogram = [], referenceLines = [], overlaySnapshot = null, interval='day', expiry='combined', extras=false;
+  const barCache=new Map();
 
   const input = el("input.input.mono", { type: "text", value: ticker, placeholder: s("chart.pick"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "80", "aria-label": s("chart.pick") });
   const picker = symbolPicker(input);
@@ -51,13 +53,22 @@ export async function mount(root, params) {
     picker.wrap, el("button.btn.btn-primary", { type: "submit" }, s("chart.go")));
   const periodRow = el("div.seg.mono", { role: "group", "aria-label": s("chart.period") },
     PERIODS.map((p) => { const lk = !allowed(p); return el("button", { type: "button", "data-period": p, disabled: lk ? "" : null, "data-locked": lk ? "" : null, "aria-disabled": lk ? "true" : null, title: lk ? s("chart.lock") : null, class: p === period ? "on" : "", onclick: lk ? null : () => { period = p; periodRow.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.period === p)); draw(); } }, s("chart.period_" + p) + (lk ? " 🔒" : "")); }));
+  const intervalSelect=el('select.input',{'aria-label':s('chart.interval'),onchange:()=>{interval=intervalSelect.value;draw();}},
+    ['day','week','month'].map(k=>el('option',{value:k},s('chart.'+k))));
+  const controls=el('div.chart-controls',el('div.chart-control',el('span.small.muted',s('chart.period')),periodRow),
+    el('label.chart-control',el('span.small.muted',s('chart.interval')),intervalSelect),
+    el('button.chart-help-button',{type:'button','aria-label':s('chart.range_help'),onclick:()=>modal(s('chart.range_help'),el('div',el('p',s('chart.axes')),el('p',s('chart.range_note'))))},'?'));
   const head = el("div.view-head", el("h1.mono", ticker ? "$" + ticker : s("chart.title")), el("span.spot.mono", { id: "chart-spot" }));
   const legendRow = el("div.legend", { id: "chart-legend" });
   const host = el("div.chart-host", { id: "chart-host" });
   const status = el("div", { id: "chart-status" });
+  const ohlc=el('div.chart-ohlc',{'aria-label':s('chart.candle_note')});
+  const optionControls=el('div.chart-option-controls');
+  const optionNotes=el('div.chart-option-notes');
+  const axes=el('p.chart-axes.small.muted',s('chart.axes'));
   const companyHost = el("div.company-host");
   const companyName=el('p.chart-company-name.muted.small');
-  root.append(head, companyName, form, periodRow, el('div.chart-workspace',legendRow,host), status, companyHost);
+  root.append(head, companyName, form, controls, el('div.chart-workspace',ohlc,host,axes,optionControls,legendRow,optionNotes), status, companyHost);
   const showCompany=(p,rs)=>{companyHost.replaceChildren(companyContext(p,rs));companyName.textContent=p?.company||'';};
   if (ticker) api.company(ticker).then(p=>{if(alive) showCompany(p);}).catch(()=>{if(alive) showCompany(null);});
   if (ticker) companyHost.before(el('div.chips',
@@ -67,7 +78,7 @@ export async function mount(root, params) {
     el('a.chip',{href:'#/calendar?ticker='+encodeURIComponent(ticker)},s('nav.calendar'))));
 
   if (!ticker) {
-    host.hidden = true; legendRow.hidden = true; periodRow.hidden = true;
+    host.hidden = true; legendRow.hidden = true; controls.hidden = true; axes.hidden = true;
     const wl = store.get("watchlist") || [];
     const chips = el("div.chips", wl.map((t) => el("a.chip.mono", { href: "#/chart/" + t }, "$" + t)));
     status.append(el("p.muted", s("chart.pick_hint")), chips);
@@ -80,16 +91,31 @@ export async function mount(root, params) {
 
   function paintOverlays() {
     if (!candles || !overlaySnapshot) return;
-    const colors = {call:cssVar('--green'),put:cssVar('--red'),flip:cssVar('--orange'),exp:cssVar('--blue'),band:cssVar('--muted')};
+    const colors = {call:cssVar('--orange'),put:cssVar('--green'),flip:cssVar('--muted'),exp:cssVar('--blue'),band:cssVar('--muted')};
     if (ovl) ovl.remove();
-    ovl = overlays.apply(candles, overlaySnapshot, colors);
-    clear(legendRow);
-    const built = new Date(overlaySnapshot.built_at || '');
-    if (Number.isFinite(built.getTime())) legendRow.append(el('span.small.muted.chart-snapshot-date',s('chart.snapshot_as_of',{date:built.toISOString().slice(0,16).replace('T',' ')})));
-    for (const it of overlays.legend(overlaySnapshot, colors)) {
+    const selected=selectedSnapshot(overlaySnapshot,expiry,extras);
+    ovl = overlays.apply(candles, selected, colors);
+    clear(legendRow);clear(optionControls);clear(optionNotes);
+    const built = new Date(overlaySnapshot.gamma?.scope?.retrieved_at || overlaySnapshot.built_at || '');
+    const expirySelect=el('select.input',{'aria-label':s('chart.option_expiry'),onchange:()=>{expiry=expirySelect.value;paintOverlays();}},
+      el('option',{value:'combined'},s('chart.combined')),
+      (overlaySnapshot.gamma?.by_expiry||[]).map(r=>el('option',{value:r.expiry},r.expiry)));
+    expirySelect.value=expiry;
+    optionControls.append(el('label',el('span.small.muted',s('chart.option_expiry')),expirySelect),
+      el('button.chart-help-button',{type:'button','aria-label':s('chart.help_title'),onclick:()=>optionHelp(overlaySnapshot)},'?'),
+      el('label.chart-extra-toggle',el('input',{type:'checkbox',checked:extras,onchange:e=>{extras=e.target.checked;paintOverlays();}}),s('chart.extra_lines')));
+    for (const it of overlays.legend(selected, colors)) {
       legendRow.appendChild(el('span.legend-item.mono',el('i',{style:{background:it.color}}),it.label+' ',el('b',typeof it.value==='number'?num(it.value,2):String(it.value))));
     }
     if (!ovl.count) legendRow.appendChild(el('span.muted.small',s('chart.no_overlays')));
+    optionNotes.append(el('p.chart-wall-position',wallPosition(overlaySnapshot.spot,selected.gamma)),
+      el('p.small.muted.chart-snapshot-date',optionScope(selected)),
+      Number.isFinite(built.getTime())?el('p.small.muted',s('chart.snapshot_as_of',{date:built.toISOString().slice(0,16).replace('T',' ')})):null,
+      expiryTable(overlaySnapshot,value=>{expiry=value;paintOverlays();}));
+    candles.applyOptions({autoscaleInfoProvider:orig=>{
+      const r=orig(),levels=overlays.levels(selected);if(!r?.priceRange||!levels.length)return r;
+      return {...r,priceRange:{minValue:Math.min(r.priceRange.minValue,...levels),maxValue:Math.max(r.priceRange.maxValue,...levels)}};
+    }});
   }
 
   async function draw(attempt = 0) {
@@ -99,12 +125,12 @@ export async function mount(root, params) {
     // re-checks (my !== drawSeq) and bails, so only the latest draw ever mutates the DOM/chart.
     const my = ++drawSeq;
     destroy();
-    clear(status); clear(legendRow);
+    clear(status); clear(legendRow); clear(optionControls); clear(optionNotes); clear(ohlc);
     status.appendChild(spinner());
     const LWC = window.LightweightCharts;
     if (!LWC) { clear(status); status.appendChild(errorBox(new Error("charts lib missing"))); return; }
     let bars, payload;
-    try { payload = await api.bars(ticker, period); bars = normalizeBars(payload); }
+    try { payload = attempt===0&&barCache.has(period)?barCache.get(period):await api.bars(ticker, period); if(!api.isAccepted(payload)&&!payload?.stale)barCache.set(period,payload); bars = normalizeBars(payload); }
     catch (err) { if (my !== drawSeq || !alive) return; clear(status); status.appendChild(errorBox(err, draw)); return; }
     if (my !== drawSeq || !alive) return;
     clear(status);
@@ -115,6 +141,8 @@ export async function mount(root, params) {
     if (api.isAccepted(payload)) { status.appendChild(el('p.muted', s('common.building'))); retry(); return; }
     if (!bars.length) { status.appendChild(el("p.muted", s("chart.no_bars"))); return; }
     const last=bars[bars.length-1];
+    bars=aggregateBars(bars,interval);
+    if(bars.length<35)status.append(el('p.small.muted',s('chart.indicators_short')));
     const spot = document.getElementById("chart-spot");
     if (spot) spot.replaceChildren(el('span',px(last.close)),el('time.small.muted',{datetime:String(last.time)},s('chart.last_bar',{date:String(last.time)})));
     if (payload?.stale) {
@@ -126,21 +154,24 @@ export async function mount(root, params) {
     chart = LWC.createChart(host, {
       autoSize: true,
       layout: { background: { type: "solid", color: "transparent" }, textColor: text, attributionLogo: false, panes: { separatorColor: grid, enableResize: false } },
-      grid: { vertLines: { color: grid }, horzLines: { color: grid } },
-      rightPriceScale: { borderColor: grid },
-      timeScale: { borderColor: grid, rightOffset: 4 },
-      crosshair: { mode: 0 },
+      grid: { vertLines: { visible:false }, horzLines: { color: grid,style:1 } },
+      rightPriceScale: { borderVisible:false,scaleMargins:{top:0.12,bottom:0.08} },
+      timeScale: { borderVisible:false, rightOffset: 3 },
+      crosshair: { mode: 0,vertLine:{color:text,width:1,style:2},horzLine:{color:text,width:1,style:2} },
       handleScroll: { vertTouchDrag: false },
     });
     let levels = []; // overlay prices folded into autoscale so walls outside the candle range stay visible
     candles = chart.addSeries(LWC.CandlestickSeries, { upColor: up, downColor: down, borderUpColor: up, borderDownColor: down, wickUpColor: up, wickDownColor: down,
       // the live price is the hero: a thick bright horizontal line + its up/down last-value badge, so it reads
       // clearly above the (now axis-label-free) overlay lines (owner: "最新价格被靠墙 overshadow 了").
-      priceLineVisible: true, priceLineWidth: 2, priceLineColor: cssVar("--text", "#e6edf3"), lastValueVisible: true,
+      priceLineVisible: true, priceLineWidth: 1, priceLineColor: cssVar("--text", "#e6edf3"), lastValueVisible: true,
       autoscaleInfoProvider: (orig) => { const r = orig(); if (!r || !r.priceRange || !levels.length) return r; const lo = Math.min(r.priceRange.minValue, ...levels), hi = Math.max(r.priceRange.maxValue, ...levels); return { priceRange: { minValue: lo, maxValue: hi }, margins: r.margins }; } });
     candles.setData(bars);
+    const showCandle=(bar,date)=>ohlc.replaceChildren(el('time.small.muted',String(date)),el('span.mono',s('chart.ohlc',{open:px(bar.open),high:px(bar.high),low:px(bar.low),close:px(bar.close)})));
+    showCandle(bars.at(-1),bars.at(-1).time);
+    chart.subscribeCrosshairMove?.(param=>{const bar=param.seriesData?.get(candles);showCandle(bar||bars.at(-1),bar?param.time:bars.at(-1).time);});
     // RSI(14) in its own pane
-    rsiSeries = chart.addSeries(LWC.LineSeries, { color: cssVar("--blue", "#58a6ff"), lineWidth: 1, priceLineVisible: false, lastValueVisible: true, title: s("chart.rsi") }, 1);
+    rsiSeries = chart.addSeries(LWC.LineSeries, { color: cssVar("--blue", "#58a6ff"), lineWidth: 2, priceLineVisible: false, lastValueVisible: true, title: s("chart.rsi") }, 1);
     rsiSeries.setData(overlays.rsi(bars, 14));
     referenceLines.push([rsiSeries.createPriceLine({ price: 70, color: down, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), '--red']);
     referenceLines.push([rsiSeries.createPriceLine({ price: 30, color: up, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), '--green']);
@@ -157,7 +188,7 @@ export async function mount(root, params) {
       referenceLines.push([macdLineS.createPriceLine({ price: 0, color: text, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), '--muted']);
     }
     // Size all panes together after creating them; adding MACD must not squeeze RSI.
-    chart.panes().forEach((pane,index)=>pane.setStretchFactor([3,1.2,1][index] || 1));
+    chart.panes().forEach((pane,index)=>pane.setStretchFactor([4,1,1][index] || 1));
     chart.timeScale().fitContent();
 
     // Overlays: Pro only. Free/paid see a lock strip instead.
@@ -175,7 +206,7 @@ export async function mount(root, params) {
           if(snap.company_context) showCompany(snap.company_context,snap.rs);
           overlaySnapshot = snap;
           paintOverlays();
-          levels = overlays.levels(snap); candles.applyOptions({});
+
         } else legendRow.appendChild(el("span.muted.small", s("common.building")));
       } catch (err) { if (my === drawSeq && alive) { clear(legendRow); legendRow.appendChild(el("span.muted.small", s("common.error", { msg: err.message }))); } }
     } else {
@@ -191,7 +222,7 @@ export async function mount(root, params) {
     if (!chart) return;
     const text = cssVar("--muted", "#9aa7b4"), grid = cssVar("--border", "#223041"), up = cssVar("--green", "#3fb950"), down = cssVar("--red", "#f85149");
     try {
-      chart.applyOptions({ layout: { textColor: text, panes: { separatorColor: grid } }, grid: { vertLines: { color: grid }, horzLines: { color: grid } }, rightPriceScale: { borderColor: grid }, timeScale: { borderColor: grid } });
+      chart.applyOptions({ layout: { textColor: text, panes: { separatorColor: grid } }, grid: { vertLines: { visible:false }, horzLines: { color: grid,style:1 } }, rightPriceScale: { borderVisible:false,scaleMargins:{top:0.12,bottom:0.08} }, timeScale: { borderColor: grid } });
       if (candles) candles.applyOptions({ upColor: up, downColor: down, borderUpColor: up, borderDownColor: down, wickUpColor: up, wickDownColor: down });
       if (rsiSeries) rsiSeries.applyOptions({ color: cssVar("--blue", "#58a6ff") });
       if (candles) candles.applyOptions({ priceLineColor: cssVar("--text", "#e6edf3") });

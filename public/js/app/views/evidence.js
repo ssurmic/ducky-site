@@ -3,6 +3,7 @@ import {s,LANG} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
 import {factText} from './stock-briefs.js';
+import {waterLevel,marketDetail,priceBadge} from '../evidence-context.js';
 import {icon} from '../icons.js';
 
 const pick=v=>v?.[LANG==='en'?'en':'zh']||'';
@@ -16,7 +17,7 @@ const missingLabel=k=>k.startsWith('ytd_')?s('evidence.missing_ytd',{benchmark:k
 const textIndex=n=>JSON.stringify([n.title,n.reason,n.intent,n.published_at,...(n.evidence||[]).map(e=>[e.author,e.title,e.reason,e.topic,e.data,e.published_at])]).toLowerCase();
 
 export function detail(node){
-  const body=el('div.evidence-detail',el('p.evidence-stance',{class:'is-'+node.stance},s('evidence.'+node.stance)),
+  const body=el('div.evidence-detail',node.priority?el('p.small.muted',s('evidence.priority_'+node.priority)):null,el('p.evidence-stance',{class:'is-'+node.stance},s('evidence.'+node.stance)),
     node.conditional?el('p.data-notice',s('evidence.conditional')):null,
     pick(node.reason)?el('p',pick(node.reason)):null);
   for(const e of node.evidence||[]){
@@ -126,11 +127,13 @@ export function mapView(doc,{archive=false,onPickTicker}={}){
   view.append(el('div.evidence-tools',search,filterSelect,filters));
   const reset=el('button.evidence-reset-filter',{type:'button',onclick:()=>{scope='all';query='';search.value='';limit=6;paint();}},s('evidence.clear_filter'));view.append(reset);
   const branches=el('div.evidence-branches');
-  const center=el('div.evidence-center',el('span.evidence-center-icon',icon('evidence')),el('span.mono',doc.ticker),
+  const level=waterLevel(doc),pending=Object.entries(doc.ticker_coverage?.jobs||{}).filter(([k])=>['pending','retry','waiting','building'].includes(k)).reduce((n,[,v])=>n+v,0);
+  const center=el('div.evidence-center',{class:level===null?'is-unmetered':'has-water',style:level===null?{}:{'--water-height':String(Math.round(level*100))+'%','--water-color':`hsl(${Math.round(35+level*125)} 40% 48%)`}},el('span.evidence-water',{'aria-hidden':'true'}),el('span.mono',doc.ticker),
     onPickTicker?el('button.evidence-stock-trigger',{type:'button',onclick:onPickTicker,'aria-label':s('evidence.change_ticker',{ticker:doc.ticker})},doc.ticker,el('span',{'aria-hidden':'true'},'⌄')):null,
-    el('strong',s('evidence.viewpoints')),
+    priceBadge(doc),el('button.evidence-water-caption',{type:'button',onclick:()=>marketDetail(doc)},s('evidence.water_short')),
     el('div.evidence-center-info',el('span.small.muted',s(nodes.length===1?'evidence.recorded_single':'evidence.recorded_count',{n:nodes.length})),
-      !doc.summary?el('span.evidence-mobile-state',sentence.textContent):null));
+      pending?el('span.evidence-mobile-state',s('evidence.queue_short',{n:pending})):!doc.summary?el('span.evidence-mobile-state',sentence.textContent):null));
+  if(level!==null){center.style.setProperty('--water-height',Math.round(level*100)+'%');center.style.setProperty('--water-color',`hsl(${Math.round(35+level*125)} 40% 48%)`);}
   const map=el('div.evidence-map',center,branches);view.append(map);
   const connections=connectMap(map,center,branches);view.dispose=()=>connections.dispose();
   const total=el('p.small.muted',{'aria-live':'polite'});
@@ -158,6 +161,7 @@ export function mapView(doc,{archive=false,onPickTicker}={}){
       const authors=[...new Set((node.evidence||[]).map(e=>e.author).filter(Boolean))];
       const card=el('button.evidence-node',{type:'button',class:'is-'+node.stance,style:{gridColumn:i%2===0?'1':'3',gridRow:String(Math.floor(i/2)+1)},onclick:()=>detail(node)},
         el('span.evidence-node-label',el('span.evidence-category',s('evidence.'+node.stance)),
+          node.priority?el('span.evidence-priority',s('evidence.priority_'+node.priority)):null,
           node.conditional?el('span.evidence-condition',s('evidence.condition_tag')):null,
           el('span.evidence-node-number',{'aria-hidden':'true'},String(nodes.indexOf(node)+1).padStart(2,'0'))),
         el('strong',pick(node.title)),
@@ -175,10 +179,13 @@ export function mapView(doc,{archive=false,onPickTicker}={}){
   }
   paint();
   const coverage=doc.coverage||{},jobs=coverage.jobs||{};
+  if(pending)view.append(el('p.evidence-queue-note.small.muted',s('evidence.queue_short',{n:pending})+' · '+s('evidence.queue_note')));
+  view.append(el('button.evidence-ordering',{type:'button',onclick:()=>modal(s('evidence.ordering'),el('p',s('evidence.ordering_note')))},s('evidence.ordering')));
   const details=el('details.evidence-coverage',el('summary',s('evidence.coverage')),
     el('p',s('evidence.count_basis')),el('p.small.muted',s('evidence.checked',{at:time(doc.checked_at)})),
     el('p',s('evidence.corpus',{n:coverage.corpus_documents??'—',pending:(jobs.pending||0)+(jobs.retry||0)+(jobs.waiting||0)+(jobs.building||0),failed:jobs.failed||0})),
     el('p.small.muted',s('evidence.coverage_basis')));
+  for(const author of doc.ticker_coverage?.authors||[]){if(author.pending||author.failed)details.append(el('p.small',s('evidence.queue_author',author)));}
   if(doc.missing?.length)details.append(el('p.data-notice',s('evidence.missing')+' '+doc.missing.map(missingLabel).join(' · ')));
   if(doc.omitted)details.append(el('p.data-notice',s('evidence.omitted',{n:doc.omitted})));
   details.append(el('a.btn.btn-ghost.btn-sm',{href:'#/research/'+doc.ticker},s('evidence.records')));view.append(details);

@@ -63,8 +63,8 @@ test('browser and explicit theme changes repaint every chart layer without refet
  assert.equal(series[2].sets.at(-1).find(p=>p.value<0).color,'#f85149');
  assert.deepEqual(series[2].sets.at(-1).map(({time,value})=>({time,value})),initialHist);
  assert.equal(series[3].options.color,'#f0883e');assert.equal(series[4].lines[0].color,'#9aa7b4');
- assert.equal(series[0].lines.find(p=>p.price===100).color,'#f0883e');assert.ok(removed.length>=5);
- assert.equal(r.querySelectorAll('.legend-item').length,4);assert.equal(r.querySelector('.legend-item i').style.background,'rgb(63, 185, 80)');
+ assert.equal(series[0].lines.find(p=>p.price===100).color,'#9aa7b4');assert.ok(removed.length>=3);
+ assert.equal(r.querySelectorAll('.legend-item').length,3);assert.equal(r.querySelector('.legend-item i').style.background,'rgb(240, 136, 62)');
  setPalette(palette);document.documentElement.dataset.theme='light';await flush();
  assert.equal(chartOptions.at(-1).layout.textColor,'#4d5966');assert.equal(fetches,initialFetches);assert.equal(series.length,chartCount);
  close();r.remove();const paints=chartOptions.length;

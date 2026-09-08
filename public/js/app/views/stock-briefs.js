@@ -16,7 +16,7 @@ export function factText(fact){
   if(fact.topic==='technicals')return s('stockbrief.fact_technical',{daily:n(d.rsi_d),weekly:n(d.rsi_w),monthly:n(d.rsi_m),drawdown:n(d.dd_pct)});
   if(fact.topic==='rsi_change')return s('stockbrief.fact_rsi',{before:n(d.previous),after:n(d.current),date:d.previous_session||'—'});
   if(fact.topic==='volatility')return 'IV '+n(d.iv)+'% · HV '+n(d.hv)+'% · IV/HV '+n(d.ratio,2);
-  if(fact.topic==='option_concentrations')return s('stockbrief.fact_options',{put:n(d.put_wall,2),call:n(d.call_wall,2),expiry:d.expiry||'—'});
+  if(fact.topic==='option_concentrations')return s('stockbrief.fact_options',{put:n(d.put_wall,2),call:n(d.call_wall,2),expiry:d.expiries?.join(' / ')||d.expiry||'—'});
   if(fact.topic==='reddit_attention')return s('stockbrief.fact_vibe',{mentions:n(d.mentions,0),prior:n(d.mentions_previous,0),score:n(d.index,0)});
   if(fact.topic==='reported_insider_purchase')return (d.owners||[]).map(o=>o.name).join(', ')+' · '+
     (d.transactions||[]).map(t=>`${t.date} · ${n(t.shares,0)} × $${n(t.price,2)}`).join(' / ');

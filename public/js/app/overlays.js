@@ -22,8 +22,8 @@ export function apply(series, snap, colors) {
   const st = Style();
   const g = snap && snap.gamma;
   if (g) {
-    lines.push(line(series, g.call_wall, c.call, s("chart.legend_call"), st.Solid, 2));
-    lines.push(line(series, g.put_wall, c.put, s("chart.legend_put"), st.Solid, 2));
+    lines.push(line(series, g.call_wall, c.call, s("chart.legend_call"), st.Dashed, 1));
+    lines.push(line(series, g.put_wall, c.put, s("chart.legend_put"), st.Dashed, 1));
     lines.push(line(series, g.flip, c.flip, s("chart.legend_flip"), st.LargeDashed, 1));
   }
   const e = snap && snap.expected;
