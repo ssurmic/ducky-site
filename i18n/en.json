@@ -3163,7 +3163,7 @@
   "app.evidence.title": "Supporting Evidence",
   "app.evidence.intro": "Explore each viewpoint, then open its sources, dates and conditions.",
   "app.evidence.takeaway": "IN ONE SENTENCE",
-  "app.evidence.summary_pending": "Summary under review. Explore the checked points below.",
+  "app.evidence.summary_pending": "Summary under review.",
   "app.evidence.summary_insufficient": "There is not enough evidence for a summary yet.",
   "app.evidence.support": "Supporting views",
   "app.evidence.counter": "Opposing views",

@@ -3163,7 +3163,7 @@
   "app.evidence.title": "证据导图",
   "app.evidence.intro": "先看观点，点开查看来源、日期与成立条件。",
   "app.evidence.takeaway": "一句话摘要",
-  "app.evidence.summary_pending": "摘要待审核，可先查看已核对的观点。",
+  "app.evidence.summary_pending": "摘要审核中。",
   "app.evidence.summary_insufficient": "现有证据不足以形成摘要。",
   "app.evidence.support": "支持观点",
   "app.evidence.counter": "反对观点",

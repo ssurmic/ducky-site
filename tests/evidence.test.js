@@ -7,7 +7,7 @@ for(const key of ['window','document','Node','location','history'])globalThis[ke
 const copy=JSON.parse(readFileSync('i18n/en.json'));
 const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
 const store=await import('../public/js/app/store.js');
-const {mount,mapView}=await import('../public/js/app/views/evidence.js');
+const {mount,mapView,connectMap}=await import('../public/js/app/views/evidence.js');
 const {safeTarget}=await import('../public/js/app/login-target.js');
 const {closeModal}=await import('../public/js/app/ui.js');
 const response=(d,status=200)=>new Response(JSON.stringify(d),{status,headers:{'content-type':'application/json'}});
@@ -55,4 +55,41 @@ test('direct route uses shared API, logout removes data and old responses cannot
 test('evidence deep links survive sign-in without arbitrary query data',()=>{
  assert.equal(safeTarget('#/evidence/avgo?token=secret'),'#/evidence/AVGO');
  assert.equal(safeTarget('#/evidence'),'#/evidence');
+});
+
+test('measured connectors follow the displayed cards and release their resize observer',()=>{
+ const previous=globalThis.ResizeObserver;let callback,disconnected=0,observed=[];
+ globalThis.ResizeObserver=class{constructor(fn){callback=fn;}observe(n){observed.push(n);}disconnect(){disconnected++;observed=[];}};
+ const map=document.createElement('div'),center=document.createElement('div'),branches=document.createElement('div');
+ map.append(center,branches);document.body.append(map);map.style.setProperty('--evidence-layout','radial');
+ const rect=(left,top,width,height)=>({left,top,width,height,right:left+width,bottom:top+height});
+ map.getBoundingClientRect=()=>rect(10,20,900,400);center.getBoundingClientRect=()=>rect(385,145,150,150);
+ for(const [tone,left]of [['support',30],['counter',590]]){
+  const card=document.createElement('button');card.className='evidence-node is-'+tone;card.getBoundingClientRect=()=>rect(left,50,300,120);branches.append(card);
+ }
+ const connections=connectMap(map,center,branches);connections.refresh();
+ assert.equal(observed.length,4);assert.equal(map.querySelectorAll('.evidence-wire').length,2);
+ assert.match(map.querySelector('.evidence-wire.is-support').getAttribute('d'),/320 90$/);
+ assert.match(map.querySelector('.evidence-wire.is-counter').getAttribute('d'),/580 90$/);
+ assert.equal(map.querySelector('svg').getAttribute('aria-hidden'),'true');
+ branches.lastChild.remove();callback();assert.equal(map.querySelectorAll('.evidence-wire').length,1);
+ map.style.setProperty('--evidence-layout','tree');callback();assert.equal(map.querySelectorAll('.evidence-trunk').length,1);
+ connections.dispose();assert.equal(observed.length,0);assert.ok(disconnected>=2);assert.equal(map.querySelectorAll('svg path').length,0);
+ map.remove();globalThis.ResizeObserver=previous;
+});
+test('point numbers keep matching summary citations after filtering',()=>{
+ const root=mapView(fixture());document.body.append(root);
+ const before=root.querySelector('.evidence-node.is-counter .evidence-node-number').textContent;
+ const input=root.querySelector('input');input.value='Counter Author';input.dispatchEvent(new window.Event('input'));
+ assert.equal(root.querySelector('.evidence-node-number').textContent,before);
+ root.querySelector('.evidence-node').click();assert.match(document.querySelector('.modal-body').textContent,/Counter Author/);
+ closeModal();root.dispose();root.remove();
+});
+
+test('source dialogs omit a repeated explanation while retaining author and dates',()=>{
+ const d=fixture();d.nodes[9].reason={en:'The order still needs confirmation.'};d.nodes[9].evidence[0].reason={en:'The order still needs confirmation.'};
+ const root=mapView(d);document.body.append(root);root.querySelector('.brief-citation').click();
+ const body=document.querySelector('.modal-body').textContent;
+ assert.equal(body.split('The order still needs confirmation.').length-1,1);assert.match(body,/Counter Author/);assert.match(body,/2026-09-04/);assert.match(body,/1:10–1:30/);
+ closeModal();root.dispose();root.remove();
 });
