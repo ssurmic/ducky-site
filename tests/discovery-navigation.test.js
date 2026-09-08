@@ -25,11 +25,11 @@ test('new destinations survive sign-in and radar links select one matching categ
  const shell=new JSDOM(readFileSync('dist/app/index.html','utf8')).window.document;
  const nav=document.importNode(shell.querySelector('.app-nav'),true);document.body.append(nav);
  selectNavigation('boards',new URLSearchParams('board=insider'));
- assert.ok(nav.querySelector('.nav-desktop-radar').open);
- assert.equal(nav.querySelector('.nav-desktop-radar [aria-current=page]').dataset.board,'insider');
+ assert.ok(nav.querySelector('.nav-desktop-tree[data-group=boards]').open);
+ assert.equal(nav.querySelector('.nav-desktop-tree[data-group=boards] [aria-current=page]').dataset.board,'insider');
  selectNavigation('degen');assert.equal(nav.querySelector('[data-route=degen]'),null);
  assert.ok(nav.querySelector('[data-route=vibe]').classList.contains('on'));
- assert.equal(nav.querySelector('.nav-desktop-radar [aria-current=page]'),null);nav.remove();
+ assert.equal(nav.querySelector('.nav-desktop-tree[data-group=boards] [aria-current=page]'),null);nav.remove();
 });
 test('discovery shows stocks outside the watchlist, preserving zero and unknown metrics',()=>{
  const rows=[{ticker:'OWN'},{ticker:'NEW'}];

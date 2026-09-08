@@ -133,7 +133,7 @@ test('radar preserves the delivered body, historical dates and incomplete archiv
  globalThis.fetch=async(url)=>{
   if(String(url).includes('radar-history'))return response({items:[{board:'insider',ticker:'TTMI',ts:'2026-08-26T07:42:00Z',summary:{zh:'Historical receipt',en:'Historical receipt'},body:{zh:'Identity not verified',en:'Identity not verified'}}]});
   if(String(url).includes('week-ahead'))return response({});
-  return response({items:[{kind:'volscan',ts:'2026-09-04T19:02:00Z',summary:'IV scan',extra:{message_text:'META\nHV252 39%'}},{kind:'insider',ts:'2026-09-04',summary:null}]});
+  return response({items:[{id:'s:1',kind:'insider',open_market_value:200000,ts:'2026-09-04T19:02:00Z',summary:'IV scan',extra:{message_text:'META\nHV252 39%'}},{kind:'insider',ts:'2026-09-04',summary:null}]});
  };
  const root=document.createElement('div');const cleanup=await boards.mount(root,{query:new URLSearchParams()});
  assert.ok(root.textContent.includes('HV252 39%'));
@@ -142,16 +142,16 @@ test('radar preserves the delivered body, historical dates and incomplete archiv
  assert.ok(root.textContent.includes('2026-08-26'));
  assert.ok(root.textContent.includes('Identity not verified'));
  assert.ok(root.querySelector('use[href="#ducky-icon-insider"]'));
- const button=root.querySelector('.radar-record-toggle');assert.equal(button.getAttribute('aria-expanded'),'false');button.click();assert.equal(button.getAttribute('aria-expanded'),'true');cleanup();history.replaceState(null,'','#/boards');
+ const link=root.querySelector('.radar-record-toggle');assert.ok(link.getAttribute('href').startsWith('#/record/'));assert.equal(root.querySelector('.radar-detail'),null);cleanup();history.replaceState(null,'','#/boards');
 });
 test('both app shells carry every navigation icon locally, including briefing and More',()=>{
  for(const lang of ['', 'en/']) {
   const html=readFileSync(`dist/${lang}app/index.html`,'utf8');const page=new JSDOM(html).window.document;
   const links=[...page.querySelectorAll('.app-nav a')];
-  assert.equal(new Set(links.map(a=>a.dataset.route)).size,15);
+  assert.equal(new Set(links.map(a=>a.dataset.route)).size,16);
   assert.ok(page.querySelectorAll('.nav-more-panel a').length>=16);
-  assert.equal(page.querySelectorAll('.nav-desktop-radar [data-board]').length,12);
-  for(const a of links){assert.ok(a.textContent.trim());assert.ok(a.querySelector('svg[aria-hidden="true"] use'));}
+  assert.equal(page.querySelectorAll('.nav-desktop-tree[data-group=boards] .nav-tree-links a').length,7);
+  for(const a of links){assert.ok(a.textContent.trim());if(!a.closest('.nav-tree-links'))assert.ok(a.querySelector('svg[aria-hidden="true"] use'));}
   for(const use of page.querySelectorAll('.app-nav use')) {
    const ref=use.getAttribute('href');
    assert.ok(ref.startsWith('#ducky-icon-'),'navigation must not depend on an external sprite cache');

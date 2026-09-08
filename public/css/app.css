@@ -66,7 +66,7 @@ body.page-app { overflow: hidden; overscroll-behavior: none; font-size: 15px; }
 .app-nav > a span, .nav-more summary span { white-space: nowrap; }
 .app-nav > a:hover, .nav-more > summary:hover, .nav-more-panel a:hover { color: var(--text); background: var(--surface-2); }
 .app-nav > a.on, .nav-more.on > summary { color: var(--text); background: color-mix(in srgb, var(--accent) 12%, var(--surface)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 26%, transparent); }
-.app-nav .on .app-icon, .nav-more.on > summary .app-icon { color:var(--accent-text, var(--accent)); }
+.app-nav a.on > .app-icon, .nav-more.on > summary .app-icon { color:var(--accent-text, var(--accent)); }
 .app-nav > .nav-secondary { display: none; }
 .nav-more { min-width: 0; }
 .nav-more summary { list-style: none; }

@@ -1,4 +1,4 @@
-{% set tools = navigation.discovery + navigation.primary + ['boards'] + navigation.research %}
+{% set tools = navigation.discovery + navigation.primary + ['boards','reports'] + navigation.research %}
 <section class="section product-desk no-glossary" id="features"><div class="wrap">
  <div class="desk-section-head"><div><p class="eyebrow mono">{{ t('desk.catalog') }}</p><h2>{{ t('desk.map_title') }}</h2></div><p class="muted">{{ t('desk.map_sub') }}</p></div>
  <div class="desk-tour" data-product-tour>
@@ -11,7 +11,7 @@
     <p class="eyebrow mono">{{ t('desk.preview_label') }} / {{ '%02d' % loop.index }}</p>
     <div class="desk-feature-heading"><h3 id="desk-title-{{ route }}">{{ t('desk.title.' ~ route) }}</h3><span class="feature-access feature-access-{{ navigation.catalog[route].access }}">{{ t('nav.access.' ~ navigation.catalog[route].access) }}</span></div><p class="desk-feature-copy">{{ t('desk.preview_' ~ route) }}</p>
     <div class="desk-feature-tags">
-     {% if route == 'boards' %}{% for board in navigation.radar %}<a href="{{ url('/app/') }}#/boards?board={{ board.key }}">{{ t('app.radar.all') if board.key == 'all' else t('app.boards.t_' ~ board.key) }} ↗</a>{% endfor %}
+     {% if route in ['boards','reports'] %}{% for group in navigation.tree if group.route == route %}{% for child in group.children %}<a href="{{ url('/app/') }}#/{{ child.route }}{{ '?board=' ~ child.get('board') if child.get('board') else '' }}">{{ t('app.boards.t_' ~ child.board) if child.get('board') else t('app.nav.' ~ child.route) }} ↗</a>{% endfor %}{% endfor %}
      {% elif route in ['opportunities','chart','screens'] %}<span>RSI</span><span>IV / HV</span><span>20D</span>
      {% elif route in ['degen','vibe'] %}<span>Reddit</span><span>{{ t('app.social.history') }}</span>
      {% endif %}

@@ -1,3 +1,4 @@
+import {recordDocument, renderDocument, recordHref, REPORT_KINDS} from '../record-format.js';
 import {evidenceLink} from '../evidence-link.js';
 // Radar reads the shared public ledger. Filters never fetch quotes or run research.
 import { s, LANG } from "../strings.js";
@@ -13,7 +14,7 @@ import {isIndexChange, sourceEventHint, effectiveDate, effectiveTiming} from '..
 
 export const BOARDS = [
   {key:'liquidity', kinds:'liquidity,kindex,macro'},
-  {key:'digest', kinds:'digest,market,default'},
+  {key:'digest', kinds:'digest,market,default,weekpreview'},
   {key:'insider', kinds:'insider,cluster'},
   {key:'partner', kinds:'partner,stake,13f'},
   {key:'political', kinds:'political', icon:'insider'},
@@ -25,7 +26,9 @@ export const BOARDS = [
   {key:'industry', kinds:'nvdev', icon:'partner'},
   {key:'social', kinds:'social', icon:'boards'},
 ];
-const ALL_KINDS = BOARDS.filter(b=>b.key!=='social').map(b=>b.kinds).join(',');
+const EVENT_BOARDS=BOARDS.filter(b=>!['liquidity','digest','hiring','volscan','social'].includes(b.key));
+const REPORT_BOARDS=BOARDS.filter(b=>['liquidity','digest','hiring','volscan'].includes(b.key));
+const ALL_KINDS = EVENT_BOARDS.map(b=>b.kinds).join(',');
 export const CAP_BANDS={micro:[0,3e8],small:[3e8,2e9],mid:[2e9,1e10],large:[1e10,2e11],mega:[2e11,Infinity]};
 const sectorLabel=value=>{const label=s('radar.sector_'+value);return label==='radar.sector_'+value?value:label;};
 const boardOf = row => row.board || BOARDS.find(b=>b.kinds.split(',').includes(row.kind))?.key;
@@ -45,9 +48,10 @@ export function filterRecords(rows, state, now=Date.now()) {
   const query=(state.q || '').trim().toLocaleLowerCase();
   const ticker=(state.ticker || '').trim().replace(/^\$/,'').toUpperCase();
   return rows.filter(row=> {
+    if(typeof state.reports==='boolean' && state.board==='all' && (REPORT_KINDS.has(row.kind)||['liquidity','digest','hiring','volscan'].includes(row.board))!==state.reports)return false;
     if(state.board && state.board!=='all' && boardOf(row)!==state.board)return false;
     if(ticker && String(row.ticker || '').toUpperCase()!==ticker)return false;
-    if(query && ![row.ticker,row.issuer_name,row.reporter_name,row.company,row.reporter_name?.includes('Oaktree')?'橡树资本':'',row.summary,row.extra?.message_text,row.extra?.message_en,row.extra?.summary_en].join(' ').toLocaleLowerCase().includes(query))return false;
+    if(query && ![row.ticker,row.issuer_name,row.reporter_name,row.company,row.reporter_name?.includes('Oaktree')?'橡树资本':'',row.summary,row.extra?.message_text,row.extra?.message_en,row.extra?.message_zh,row.extra?.summary_en].join(' ').toLocaleLowerCase().includes(query))return false;
     if(state.sector && row.sector!==state.sector)return false;
     if(state.cap==='unknown' && row.market_cap!=null)return false;
     if(CAP_BANDS[state.cap] && !(row.market_cap!=null && row.market_cap>=CAP_BANDS[state.cap][0] && row.market_cap<CAP_BANDS[state.cap][1]))return false;
@@ -64,7 +68,7 @@ export function filterRecords(rows, state, now=Date.now()) {
   }).sort((a,b)=>Date.parse(b.ts)-Date.parse(a.ts) || Number(b.id || 0)-Number(a.id || 0));
 }
 export function archivePath(state, cursor, current=false) {
-  const params=new URLSearchParams({kind:BOARDS.find(b=>b.key===state.board)?.kinds || ALL_KINDS,limit:'40',content:state.content || 'all'});
+  const params=new URLSearchParams({kind:BOARDS.find(b=>b.key===state.board)?.kinds || (state.reports?'digest,market,macro,liquidity,kindex,volscan,hiring,weekpreview,default':ALL_KINDS),limit:'40',content:state.content || 'all'});
   for(const key of ['ticker','q','start','end','direction','sector','cap','purchases'])if(state[key])params.set(key,state[key]);
   if(cursor)params.set('before',cursor);
   return (current?'/radar/archive.json?':'/public/radar/archive.json?')+params;
@@ -115,10 +119,12 @@ export function waMacroLabel(name, isZh) {
 export async function mount(root, route={}) {
   const epoch=store.epoch(), params=route.query || new URLSearchParams(location.hash.split('?')[1]);
   if(params.get('board')==='social')return mountSocial(root,{...route,query:params});
+  const reports=store.get('route')?.name==='reports';
+  const availableBoards=reports?REPORT_BOARDS:EVENT_BOARDS;
   const currentAccess=store.isPro();
   const readingNow=()=>Date.now()-(currentAccess?0:5*86400000);
   let accessInfo=null;
-  const state={mode:['archive','excerpts'].includes(params.get('mode'))?params.get('mode'):'recent',
+  const state={reports,mode:['archive','excerpts'].includes(params.get('mode'))?params.get('mode'):'recent',
     board:BOARDS.some(b=>b.key===params.get('board'))?params.get('board'):'all',
     q:params.get('q') || '',ticker:params.get('ticker') || '',
     content:['all','missing'].includes(params.get('content'))?params.get('content'):'readable',
@@ -129,16 +135,16 @@ export async function mount(root, route={}) {
   let coverageDoc=null;
   let recent=[], excerpts=[], archived=[], cursor=null, pending=false, failed=false, recentFailed=false, historyFailed=false;
   let recentDebounce=null;
-  let alive=true, requestId=0, archiveCtl=null, detailId=0, recentReady=false;
+  let alive=true, requestId=0, archiveCtl=null, recentReady=false;
   const staticCtl=new AbortController(), timer=setTimeout(()=>staticCtl.abort(),15000);
   const card=el('section.boards-view.radar-workspace');root.append(card);
-  const header=el('header.radar-heading',el('div',el('h1',s('boards.h1')),el('p.muted',s('radar.subtitle'))),
+  const header=el('header.radar-heading',el('div',el('h1',s(reports?'nav.reports':'boards.h1')),el('p.muted',s(reports?'reader.library_hint':'radar.subtitle'))),
     el('a.btn.btn-ghost.btn-sm',{href:'#/calendar'},icon('calendar'),s('watch.events')));
   const accessNote=el('div.radar-access-note',el('p',s(currentAccess?'radar.access_current':'radar.access_delayed')),
     currentAccess?null:el('a.btn.btn-ghost.btn-sm',{href:'#/billing'},s('radar.access_upgrade')));
   const screenPanel=el('div.radar-screen-panel');
   const screenEntry=Boolean(params.get('screen') || params.get('screening'));
-  const disposeScreen=mountScreen(screenPanel,{signal:route.signal,query:params});
+  const disposeScreen=screenEntry?mountScreen(screenPanel,{signal:route.signal,query:params}):()=>{};
   const starters=el('div.radar-starters',...['liquidity','partner','volscan'].map(key=>el('button.radar-starter',
     {type:'button',onclick:()=>selectBoard(key)},icon(BOARDS.find(b=>b.key===key).icon || key),
     el('span',el('strong.starter-desktop',s('radar.start_'+key)),el('strong.starter-mobile',s('radar.short_'+key)),el('span.muted',s('radar.start_'+key+'_hint'))),el('span',{'aria-hidden':'true'},'↗'))));
@@ -180,14 +186,14 @@ export async function mount(root, route={}) {
     el('div.radar-filter-actions',el('button.btn.btn-primary',{type:'submit'},s('radar.apply')),
     el('button.btn.btn-ghost',{type:'button',onclick:reset},s('radar.reset'))));
   const guide=el('div.radar-guide');
-  const advancedActive=['sector','cap','direction','start','end'].some(key=>state[key]) || state.purchases!=='open_market' || state.content!=='readable' || state.days!=='7';
+  const advancedActive=['ticker','sector','cap','direction','start','end'].some(key=>state[key]) || state.purchases!=='open_market' || state.content!=='readable' || state.days!=='7';
   filter.classList.toggle('filters-expanded',advancedActive);
   filterToggle.setAttribute('aria-expanded',String(advancedActive));
   const summary=el('div.radar-result-summary',{role:'status','aria-live':'polite'});
   const note=el('p.radar-scope-note.muted');
   const rows=el('div.radar-records');
   const more=el('button.btn.btn-ghost.radar-more',{type:'button',onclick:()=>loadArchive(false)},s('creators.load_more'));
-  const main=el('section.radar-main',tabs,guide,filter,summary,note,rows,more);
+  const main=el('section.radar-main',tabs,guide,filter,summary,rows,more,note);
   // Explicit screening links lead with their destination. Market data arriving later
   // stays below it, so it cannot push the focused form out of the viewport.
   card.append(header,...(currentAccess?[]:[accessNote]),...(screenEntry?[screenPanel]:[]),el('div.radar-layout',sidebar,main),
@@ -208,7 +214,7 @@ export async function mount(root, route={}) {
   }).catch(()=>{recentFailed=true;});
   const historyTask=fetch('/radar-history.json',{signal:staticCtl.signal}).then(r=>{if(!r.ok)throw new Error('unavailable');return r.json();}).then(doc=>{
     if(!Array.isArray(doc?.items))throw new Error('invalid_response');
-    excerpts=doc.items.map(r=>({...r,archived:true,summary:r.summary?.[LANG] || '',extra:{message_text:r.body?.[LANG] || ''}}));
+    excerpts=doc.items.map(r=>({...r,id:'example:'+r.id,archived:true,summary:r.summary?.[LANG] || '',extra:{message_text:r.body?.[LANG] || ''}}));
   }).catch(()=>{historyFailed=true;});
   const coverageTask=api.get((currentAccess?'':'/public')+'/radar/coverage.json',{auth:currentAccess,signal:staticCtl.signal}).then(doc=>{coverageDoc=doc;}).catch(()=>{});
   const facetsTask=api.get((currentAccess?'':'/public')+'/radar/facets.json',{auth:currentAccess,signal:staticCtl.signal}).then(doc=>{
@@ -222,7 +228,7 @@ export async function mount(root, route={}) {
   return cleanup;
 
   function cleanup(){disposeScreen();clearTimeout(recentDebounce);alive=false;requestId++;archiveCtl?.abort();staticCtl.abort();clearTimeout(timer);}
-  function persist(){const p=new URLSearchParams();for(const [k,v] of Object.entries(state))if(v)p.set(k,v);history.replaceState(null,'','#/boards?'+p);selectNavigation('boards',p);}
+  function persist(){const p=new URLSearchParams();for(const [k,v] of Object.entries(state))if(v && k!=='reports')p.set(k,v);history.replaceState(null,'','#/'+(reports?'reports':'boards')+'?'+p);selectNavigation(reports?'reports':'boards',p);}
   function readFilters(){state.q=query.value.trim();state.ticker=ticker.value.trim().toUpperCase().replace(/^\$/,'');state.content=content.value;state.direction=direction.value;state.sector=sector.value;state.cap=cap.value;state.purchases=purchases.value;state.days=days.value;state.start=start.value;state.end=end.value;}
   function apply(){
     readFilters();end.setCustomValidity(state.start && state.end && state.start>state.end?s('radar.date_error'):'');
@@ -230,7 +236,8 @@ export async function mount(root, route={}) {
     if(state.mode==='archive')loadArchive(true);else{requestId++;archiveCtl?.abort();pending=false;failed=false;render();
       clearTimeout(recentDebounce);if(state.mode==='recent' && recentReady)recentDebounce=setTimeout(loadRecent,180);}
   }
-  function selectBoard(key){if(key==='social'){location.hash='#/boards?board=social';return;}state.board=key;apply();}
+  function selectBoard(key){
+    if(!availableBoards.some(b=>b.key===key) && key!=='all'){location.hash='#/'+(['liquidity','digest','hiring','volscan'].includes(key)?'reports':'boards')+'?board='+key;return;}if(key==='social'){location.hash='#/boards?board=social';return;}state.board=key;apply();}
   function reset(){state.board='all';query.value='';ticker.value='';content.value='readable';direction.value='';sector.value='';cap.value='';purchases.value='open_market';days.value='7';start.value='';end.value='';apply();}
   async function loadRecent(){
     const token=++requestId;archiveCtl?.abort();archiveCtl=new AbortController();
@@ -267,7 +274,7 @@ export async function mount(root, route={}) {
     const hasError=state.mode==='recent'?recentFailed:state.mode==='excerpts'?historyFailed:failed;
     const focusedBoard=nav.contains(document.activeElement)?document.activeElement.dataset.board:null;
     clear(nav);
-    for(const board of [{key:'all'},...BOARDS]){
+    for(const board of [{key:'all'},...availableBoards]){
       const count=board.key==='all'?available.length:available.filter(r=>boardOf(r)===board.key).length;
       nav.append(el('button.radar-category',{type:'button','aria-pressed':String(board.key===state.board),'data-board':board.key,onclick:()=>chooseCategory(board.key)},
         icon(board.icon || (board.key==='all'?'boards':board.key)),el('span',s(board.key==='all'?'radar.all':'boards.t_'+board.key)),
@@ -286,7 +293,7 @@ export async function mount(root, route={}) {
     if(['all','insider'].includes(state.board))guide.append(el('details.radar-purchase-rule',el('summary',s('market.details')),el('p',s('radar.purchase_rule'))));
     guide.hidden=state.board==='all' && state.purchases==='all';
     const stocks=new Set(shown.filter(r=>r.kind!=='nvdev').map(r=>r.ticker).filter(Boolean)).size;
-    summary.textContent=pending?s('common.loading'):s('radar.result_count',{n:shown.length,stocks});
+    summary.textContent=pending?s('common.loading'):s(reports?'reader.report_count':'radar.result_count',{n:shown.length,stocks});
     accessNote.querySelector('p').textContent=s(currentAccess?'radar.access_current':'radar.access_delayed')+
       (!currentAccess && accessInfo?.available_before?' '+s('radar.access_cutoff',{date:dateTime(accessInfo.available_before)}):'');
     note.textContent=s(state.mode==='recent'?(recent.length>=200?'radar.recent_capped':'radar.recent_scope'):
@@ -333,31 +340,35 @@ export async function mount(root, route={}) {
     coverage.append(el('p.muted',s('radar.coverage_note')),grid);
   }
   function showPelosi(){state.mode='archive';state.board='political';query.value='Pelosi';ticker.value='';direction.value='';start.value='';end.value='';apply();}
-  function itemRow(it){
+}
+
+export function itemRow(it, {standalone=false, language=LANG}={}){
+
     const board=boardOf(it), tk=String(it.ticker || '').toUpperCase();
     const sourceEvent=it.extra || {}, indexChange=isIndexChange(sourceEvent), eventMeaning=sourceEventHint(sourceEvent);
     const provenance=String(it.provenance || '').toLowerCase();
     const timeNote=provenance==='live'?'radar.observation_note':provenance==='source_revision'?'radar.revision_note':
       provenance==='source_corroboration'?'radar.corroboration_note':provenance?'radar.backfill_note':'boards.timestamp_note';
     const kind=it.archived?s('boards.t_'+board):s('radar.kind_'+it.kind);
-    const body=(LANG==='en'?it.extra?.message_en:null) || it.extra?.message_text || '';
-    const label=String((LANG==='en'?it.extra?.summary_en:null) || it.summary || body || s('radar.body_missing')).trim();
+    const doc=recordDocument(it,language), body=doc.hasBody?doc.raw:'';
+    const label=doc.lead || s('radar.body_missing');
     const wrap=el('article.radar-record',{'data-record-id':it.id || '',class:!readable(it)?'radar-record-missing':''});
-    const detail=el('div.radar-detail',{id:'radar-detail-'+(++detailId),hidden:true});
-    const disclosure=el('span.radar-disclosure',s('boards.expand'));
-    const title=el('button.radar-record-toggle',{type:'button','aria-expanded':'false','aria-controls':detail.id},
-      el('span.radar-record-meta',el('strong.radar-ticker',it.kind==='nvdev'?s('radar.industry_label'):tk?'$'+tk:s(['liquidity','digest'].includes(board)?'radar.market_wide':it.issuer_name?'radar.identity_pending':'radar.no_ticker')),
-        el('span.radar-kind',kind),el('time.muted',{datetime:it.ts},it.extra?.date_precision==='day'?String(it.ts || '').slice(0,10):String(it.ts || '').slice(11,16)+' UTC')),
+    const detail=el('div.radar-detail');
+    const disclosure=el('span.radar-disclosure',s('reader.open')+' ↗');
+    const title=el(standalone?'header.record-heading':'a.radar-record-toggle',standalone?{}:{href:recordHref(it)},
+      el('span.radar-record-meta',el(standalone?'h1.radar-ticker':'strong.radar-ticker',doc.title),
+        el('span.radar-kind',kind),el('time.muted',{datetime:it.ts},it.extra?.date_precision==='day'?String(it.ts || '').slice(0,10):standalone?dateTime(it.ts):String(it.ts || '').slice(11,16)+' UTC')),
       (it.issuer_name || it.company)?el('span.radar-company-name',it.issuer_name || it.company):null,
       it.reporter_name?el('span.radar-reporter',s('radar.reporter')+' · '+it.reporter_name):null,
-      el('span.radar-record-title',label),
+      standalone?null:el('span.radar-record-title',label),
       indexChange?el('span.radar-company-meta',s('event.effective_date')+' · '+effectiveTiming(sourceEvent)):null,
       (it.sector || it.market_cap)?el('span.radar-company-meta',[it.sector?sectorLabel(it.sector):'',it.market_cap?s('radar.cap_value',{value:new Intl.NumberFormat(LANG==='en'?'en-US':'zh-CN',{notation:'compact',maximumFractionDigits:1,style:'currency',currency:'USD'}).format(it.market_cap)}):''].filter(Boolean).join(' · ')):null,
-      el('span.radar-record-footer',el('span.radar-status',s(it.provenance?'radar.source_archive':it.kind==='nvdev'?'radar.mapping_unverified':it.archived?'boards.history':body?'radar.body_available':readable(it)?'radar.summary_only':'radar.body_missing')),disclosure));
-    title.addEventListener('click',()=>{const open=detail.hidden;detail.hidden=!open;title.setAttribute('aria-expanded',String(open));disclosure.textContent=s(open?'boards.collapse':'boards.expand');wrap.classList.toggle('open',open);});
+      standalone?null:el('span.radar-record-footer',disclosure));
+    if(!standalone){wrap.append(title);return wrap;}
     if(it.kind==='nvdev')detail.append(el('p.radar-receipt-note',s('radar.mapping_note',{ticker:tk || '—'})));
     if(it.archived)detail.append(el('p.radar-receipt-note',s('boards.history_note')));
-    detail.append(el('h4',s(it.provenance?'radar.source_summary':it.archived?'boards.history':body?'radar.original_message':'radar.saved_summary')),el('div.radar-message',body || label));
+    detail.append(renderDocument(doc));
+    if(body)detail.append(el('details.record-original',el('summary',s('reader.original')),el('pre',body),it.extra?.translation_recorded_at?el('p.muted.small',s('reader.translation_time',{date:dateTime(it.extra.translation_recorded_at)})):null));
     if(eventMeaning)detail.append(el('p.radar-event-meaning',eventMeaning));
     if(it.identity_status==='sec_current')detail.append(el('p.radar-time-note.muted',s('radar.identity_repaired',{date:String(it.identity_as_of||'').slice(0,10)})));
     if(it.issuer_name || it.reporter_name || it.sector || it.market_cap){
@@ -384,7 +395,7 @@ export async function mount(root, route={}) {
       detail.append(el('h4',s('radar.follow_up')));
       if(it.base_d)detail.append(el('p.muted',s('creators.base_close')+' '+it.base_d+' · '+px(it.base_px)),
         el('div.study-results',...[1,5,20].map(n=>metric(s('creators.trading_days',{n}),pct(it['ret_'+n+'d']),it['ret_'+n+'d']))),el('p.radar-time-note.muted',s('boards.outcome_method')));
-      else detail.append(el('p.muted',s(state.mode==='recent'?'radar.outcome_history':'radar.outcome_missing')));
+      else detail.append(el('p.muted',s('radar.outcome_missing')));
     }
     const actions=el('div.radar-record-actions');
     if(tk && it.kind!=='nvdev'){actions.append(evidenceLink(tk,it.id),el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+encodeURIComponent(tk)},s('radar.chart')),
@@ -402,13 +413,5 @@ export async function mount(root, route={}) {
       source=true;actions.append(el('a.btn.btn-ghost.btn-sm',{href:url.href,target:'_blank',rel:'noopener noreferrer'},s(it.archived?'radar.reference_link':'boards.source')+' ↗'));}}
     catch{}
     if(!source)detail.append(el('p.radar-time-note.muted',s('radar.source_missing')));
-    if(state.mode==='recent')actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{
-      state.mode='archive';state.board=board || 'all';ticker.value=tk;query.value='';start.value='';end.value='';apply();
-    }},s('radar.related_history')));
-    const quick=el('div.radar-quick-links');
-    if(tk && it.kind!=='nvdev')quick.append(el('a',{href:'#/chart/'+encodeURIComponent(tk)},s('radar.chart')+' ↗'));
-    const direct=it.source_url || it.extra?.source_url || it.extra?.url;
-    try{const u=new URL(direct);if(u.protocol==='https:')quick.append(el('a',{href:u.href,target:'_blank',rel:'noopener noreferrer'},s('boards.source')+' ↗'));}catch{}
-    detail.append(actions);wrap.append(title,quick,detail);return wrap;
+    detail.append(actions);wrap.append(title,detail);return wrap;
   }
-}

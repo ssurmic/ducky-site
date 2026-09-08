@@ -24,7 +24,7 @@ function fixture({lang='zh',phone=false,query=''}={}){
 }
 for(const lang of ['zh','en']){
  test(`all public tools have one preview, clear access and a safe post-sign-in destination: ${lang}`,()=>{
-  const f=fixture({lang});assert.equal(new Set(routes).size,13);
+  const f=fixture({lang});assert.equal(new Set(routes).size,14);
   const links=[...f.doc.querySelectorAll('[data-feature-link]')];assert.equal(links.length,routes.length);
   assert.equal(f.doc.querySelectorAll('.public-top-link[href*="track-record"]').length,0);
   assert.ok(f.doc.querySelector('.public-menu-footer a[href*="track-record"]'));
@@ -85,7 +85,7 @@ test('shared public navigation is present on secondary pages and does not enter 
  for(const prefix of ['','en/']){
   for(const route of ['track-record','privacy','disclaimer']){
    const doc=new JSDOM(readFileSync(`dist/${prefix}${route}/index.html`,'utf8')).window.document;
-   assert.equal(doc.querySelectorAll('[data-feature-link]').length,13);
+   assert.equal(doc.querySelectorAll('[data-feature-link]').length,14);
    assert.equal(doc.querySelector('.public-top-link').getAttribute('href'),`/${prefix}#desk-feature-creators`);
   }
   const app=new JSDOM(readFileSync(`dist/${prefix}app/index.html`,'utf8')).window.document;

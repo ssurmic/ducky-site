@@ -68,7 +68,7 @@ export async function mountSocial(root,route={}) {
   route.signal?.addEventListener('abort',cleanup,{once:true});
   const valid=()=>alive&&!ctl.signal.aborted&&epoch===store.epoch();
   const page=el('section.radar-workspace.social-workspace');root.append(page);
-  page.append(el('header.radar-heading',el('div',el('p.social-eyebrow',s('boards.h1')+' / '+s('boards.t_social')),
+  page.append(el('header.radar-heading',el('div',el('p.social-eyebrow',el('a',{href:'#/opportunities'},s('nav.opportunities')),' / '+s('boards.t_social')),
     el('h1',s('social.title')),el('p.muted',s('social.description')))));
   const method=el('details.social-method',el('summary',s('social.method')),
     el('div.social-platforms',el('span',s('social.reddit_source')),el('span.muted',s('social.x_unavailable'))),
