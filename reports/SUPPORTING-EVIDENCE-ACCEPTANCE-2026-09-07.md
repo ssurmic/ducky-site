@@ -101,3 +101,12 @@ source dialogs, exact video link, Escape / focus restoration, author search, emp
 opposition filter, and expansion from six to twelve matching connectors were checked.
 These are desktop browser viewport simulations, not physical-device or touch tests.
 Styles are scoped to this feature; shared navigation was not edited.
+
+The final visual release is code `4f2e912` / Pages `8f5a7a28`, live at duckybot.app.
+The signed-in Pro ORCL page loaded six nodes with six measured connectors, the twelve
+recorded-point count, the actual author/video passage link, and the shortened source
+dialog. Initial production review found that system dark mode (no data-theme attribute)
+needed the same light branch labels as explicit dark mode; this was fixed and verified
+on the final site (support color rgb(105, 196, 165)). The CSS URL reports `4f2e9121`;
+the app graph is `5b508bb50f92409979d3` and prior graphs remain retained. Final rerun:
+331 tests passed. Live review was desktop; the phone matrix above used the local preview.
