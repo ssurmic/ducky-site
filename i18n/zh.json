@@ -3373,7 +3373,7 @@
   "app.stockbrief.creator_selected": "本次简报选用了 {n} 条已核对的博主观点。",
   "app.stockbrief.creator_partial": "部分观点未纳入本次简报。更多观点、原始片段和资料覆盖情况可在信息导图查看。",
   "app.updates.resume": "恢复主题",
-  "app.refresh.changed": "本页所用资料已有更新，当前仍显示先前载入的版本。",
+  "app.refresh.changed": "有新资料，当前显示旧版。",
   "app.refresh.load": "载入更新",
   "app.refresh.access_changed": "账户权限已有变化，请重新载入页面查看当前可用内容。",
   "app.nav.reports": "市场报告",

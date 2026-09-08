@@ -3373,7 +3373,7 @@
   "app.stockbrief.creator_selected": "This report includes {n} reviewed creator viewpoints.",
   "app.stockbrief.creator_partial": "Some viewpoints are outside this report. Open the Information Map for more views, source segments and coverage details.",
   "app.updates.resume": "Resume topic",
-  "app.refresh.changed": "Data used on this page has changed. You are still viewing the earlier loaded version.",
+  "app.refresh.changed": "New data is available. Viewing the earlier version.",
   "app.refresh.load": "Load updates",
   "app.refresh.access_changed": "Your access has changed. Reload to view the content currently available to your account.",
   "app.nav.reports": "Market reports",
