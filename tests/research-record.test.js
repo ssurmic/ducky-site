@@ -26,6 +26,17 @@ test('legacy heat is not relabeled as a historical bull/bear balance',()=>{
  assert.match(card.querySelector('.vibe-attention-history').textContent,/2000|2,000/);
  assert.equal(card.querySelector('.vibe-attention-history').open,false);
 });
+test('current reviewed points appear before full-video notification readiness and keep qualification links',()=>{
+ const point={id:'creator:shared',source_at:'2026-09-03T12:00:00Z',observed_at:'2026-09-08T09:00:00Z',source_url:'https://www.youtube.com/watch?v=video',
+   data:{title:{en:'Conditional revenue view',zh:'有条件的营收观点'},author:'Author',creator_id:'creator',post_id:'video',point_id:'claim:one',condition_text:'If capacity expands',horizon_text:'Next 12 months'}};
+ const card=renderRecord({ticker:'NVDA',items:[],creator_points:{items:[point],coverage:{status:'ready',selected:1,omitted:2}}});
+ assert.equal(card.querySelectorAll('.research-stream').length,8);
+ assert.match(card.textContent,/Conditional revenue view|If capacity expands/);
+ assert.match(card.textContent,/Next 12 months/);assert.match(card.textContent,/Author/);
+ assert.ok([...card.querySelectorAll('a')].some(a=>a.getAttribute('href')?.includes('point=claim%3Aone')));
+ assert.match(card.textContent,/2026-09-03/);assert.match(card.textContent,/2026-09-08/);
+ assert.ok(card.textContent.includes(copy['app.stockbrief.creator_partial']));
+});
 test('correction status never displays withdrawn title or facts',()=>{
  const card=recordCard({...row,payload:{content_status:'superseded',title:'obsolete',index:99}});
  assert.match(card.textContent,/corrected/);assert.doesNotMatch(card.textContent,/obsolete|99/);

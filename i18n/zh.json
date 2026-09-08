@@ -3077,7 +3077,7 @@
   "app.stockbrief.status_ready": "已更新",
   "app.stockbrief.topic_sector_etf_vs_nasdaq100": "板块 ETF 与 Nasdaq-100",
   "app.stockbrief.missing_reddit_attention": "Reddit 讨论热度",
-  "app.stockbrief.cadence": "美东 08:00、20:00 起依次更新；来源有变化时后台补更，同一只股票两次生成至少间隔 30 分钟。资料时间见报告。",
+  "app.stockbrief.cadence": "美东 08:00、20:00 起依次更新；同一批次中，来源变化可触发后台修订，修订补更有 30 分钟冷却。资料时间见报告。",
   "app.stockbrief.reused": "依据未变，沿用上次判断。",
   "app.stockbrief.state_hold_watch": "持有观察",
   "app.stockbrief.missing_stock_vs_sector_etf": "个股与板块 ETF",
@@ -3370,7 +3370,7 @@
   "app.evidence.source_mixed": "多种来源",
   "app.stockbrief.topic_creator_view": "已核对的博主观点",
   "app.stockbrief.creator_dated": "这是作者当时的观点；所述条件与期限保留原文，不代表当前持仓或整个市场的多空倾向。",
-  "app.stockbrief.creator_selected": "本次简报选用了 {n} 条已核对的博主观点。",
+  "app.stockbrief.creator_selected": "此处选取 {n} 条已复核博主观点。",
   "app.stockbrief.creator_partial": "部分观点未纳入本次简报。更多观点、原始片段和资料覆盖情况可在信息导图查看。",
   "app.updates.resume": "恢复主题",
   "app.refresh.changed": "有新资料，当前显示旧版。",
@@ -3384,7 +3384,7 @@
   "app.reader.record": "内容详情",
   "app.reader.title_digest": "向上引力日报",
   "app.reader.title_macro": "大盘水位与宏观",
-  "app.reader.title_market": "收盘市场摘要",
+  "app.reader.title_market": "市场报告",
   "app.reader.title_weekly": "每周市场总结",
   "app.reader.title_volscan": "期权波动扫描",
   "app.reader.title_hiring": "公司招聘观察",
@@ -3395,5 +3395,6 @@
   "app.reader.report_count": "{n} 份报告",
   "desk.title.reports": "市场报告",
   "desk.preview_reports": "按日期阅读市场日报、宏观流动性与期权波动扫描，并查阅原始记录。",
-  "desk.access.reports": "免费版可读延迟 5 天的记录，Pro 可读当前报告。"
+  "desk.access.reports": "免费版可读延迟 5 天的记录，Pro 可读当前报告。",
+  "app.radar.receipt_basis": "这里展示当时保存的消息，私人提醒编号已移除。消息发表时间不代表文中价格的实际交易日。"
 }
