@@ -7,6 +7,7 @@ import {waterLevel,marketDetail,priceBadge} from '../evidence-context.js';
 import {icon} from '../icons.js';
 
 const pick=v=>v?.[LANG==='en'?'en':'zh']||'';
+const original=v=>pick(v)||v?.en||v?.zh||'';
 const tickerOK=v=>/^[A-Z][A-Z0-9.\-]{0,9}$/.test(v||'');
 const time=v=>{const d=new Date(v);return v&&Number.isFinite(d.getTime())?d.toISOString().replace('T',' ').slice(0,16)+' UTC':'—';};
 const date=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}/.test(v)?v.slice(0,10):'—';
@@ -14,7 +15,6 @@ function source(v){try{const u=new URL(v);return u.protocol==='https:'&&!u.usern
 const position=v=>{const n=Math.floor(v);return Number.isFinite(n)?Math.floor(n/60)+':'+String(n%60).padStart(2,'0'):'';};
 const factDescription=e=>e.topic==='price_gaps'?(e.data?.gaps?.length?e.data.gaps.map(g=>`${g.date} · $${g.lower}–$${g.upper}`).join(' / '):s('evidence.no_gaps')):factText(e);
 const missingLabel=k=>k.startsWith('ytd_')?s('evidence.missing_ytd',{benchmark:k.slice(4)}):k==='price_gaps'?s('evidence.missing_gaps'):s('stockbrief.missing_'+k);
-const textIndex=n=>JSON.stringify([n.title,n.reason,n.intent,n.published_at,...(n.evidence||[]).map(e=>[e.author,e.title,e.reason,e.topic,e.data,e.published_at])]).toLowerCase();
 
 export function detail(node){
   const body=el('div.evidence-detail',node.priority?el('p.small.muted',s('evidence.priority_'+node.priority)):null,el('p.evidence-stance',{class:'is-'+node.stance},s('evidence.'+node.stance)),
@@ -23,6 +23,7 @@ export function detail(node){
   for(const e of node.evidence||[]){
     const explanation=e.kind==='fact'?factDescription(e):pick(e.reason)||pick(e.title);
     const item=el('article.evidence-source',el('h3',e.author||s('evidence.recorded_data')),
+      original(e.original_title)?el('div.evidence-original',el('span.small.muted',s('evidence.original_only')),el('p',original(e.original_title))):null,
       explanation&&explanation!==pick(node.reason)?el('p',explanation):null,
       e.published_at?el('p.small.muted',s('evidence.published',{at:date(e.published_at)})):null,
       el('p.small.muted',s('evidence.observed',{at:time(e.observed_at)})),
@@ -113,8 +114,7 @@ export function mapView(doc,{archive=false,onPickTicker}={}){
   if(doc.status==='stale')view.append(el('p.data-notice',s('evidence.stale')));
   if(doc.withdrawn)view.append(el('p.data-notice',s('evidence.withdrawn',{n:doc.withdrawn})));
   if(!nodes.length){view.append(el('p.empty',s('evidence.empty')),el('a.btn.btn-ghost',{href:'#/research/'+doc.ticker},s('evidence.records')));return view;}
-  let scope='all',query='',limit=6;
-  const search=el('input.input',{type:'search',placeholder:s('evidence.find'),maxlength:120,'aria-label':s('evidence.find'),oninput:()=>{query=search.value.toLowerCase().trim();limit=6;paint();}});
+  let scope='all',limit=6;
   const filters=el('div.evidence-filters',{'aria-label':s('evidence.filter')});
   const controls=[];
   const filterSelect=el('select.input.evidence-filter-select',{'aria-label':s('evidence.filter'),onchange:()=>{scope=filterSelect.value;limit=6;paint();}});
@@ -124,8 +124,8 @@ export function mapView(doc,{archive=false,onPickTicker}={}){
     controls.push([key,button]);filters.append(button);
     filterSelect.append(el('option',{value:key},s('evidence.filter_'+key)+' · '+count));
   }
-  view.append(el('div.evidence-tools',search,filterSelect,filters));
-  const reset=el('button.evidence-reset-filter',{type:'button',onclick:()=>{scope='all';query='';search.value='';limit=6;paint();}},s('evidence.clear_filter'));view.append(reset);
+  view.append(el('div.evidence-tools',filterSelect,filters));
+  const reset=el('button.evidence-reset-filter',{type:'button',onclick:()=>{scope='all';limit=6;paint();}},s('evidence.clear_filter'));view.append(reset);
   const branches=el('div.evidence-branches');
   const level=waterLevel(doc),pending=Object.entries(doc.ticker_coverage?.jobs||{}).filter(([k])=>['pending','retry','waiting','building'].includes(k)).reduce((n,[,v])=>n+v,0);
   const center=el('div.evidence-center',{class:level===null?'is-unmetered':'has-water',style:level===null?{}:{'--water-height':String(Math.round(level*100))+'%','--water-color':`hsl(${Math.round(35+level*125)} 40% 48%)`}},el('span.evidence-water',{'aria-hidden':'true'}),el('span.mono',doc.ticker),
@@ -137,14 +137,14 @@ export function mapView(doc,{archive=false,onPickTicker}={}){
   const map=el('div.evidence-map',center,branches);view.append(map);
   const connections=connectMap(map,center,branches);view.dispose=()=>connections.dispose();
   const total=el('p.small.muted',{'aria-live':'polite'});
-  const more=el('button.btn.btn-ghost',{type:'button',onclick:()=>{limit+=12;paint();}},s('evidence.more'));
+  const more=el('button.btn.btn-ghost',{type:'button',onclick:()=>{limit=nodes.length;paint();}},s('evidence.show_all'));
   view.append(el('div.evidence-map-footer',total,more));
   function paint(){
     controls.forEach(([key,b])=>b.setAttribute('aria-pressed',String(key===scope)));filterSelect.value=scope;
-    const filtered=nodes.filter(n=>(scope==='all'||n.stance===scope)&&(!query||textIndex(n).includes(query)));
+    const filtered=nodes.filter(n=>scope==='all'||n.stance===scope);
     // Balanced first screen; selecting All never silently buries opposition.
     const first=[];
-    if(scope==='all'&&!query){for(const stance of ['support','counter','context'])first.push(...filtered.filter(n=>n.stance===stance).slice(0,2));}
+    if(scope==='all'){for(const stance of ['support','counter','context'])first.push(...filtered.filter(n=>n.stance===stance).slice(0,2));}
     const ordered=[...first,...filtered.filter(n=>!first.includes(n))];
     clear(branches);
     const groups=new Map();
@@ -165,6 +165,7 @@ export function mapView(doc,{archive=false,onPickTicker}={}){
           node.conditional?el('span.evidence-condition',s('evidence.condition_tag')):null,
           el('span.evidence-node-number',{'aria-hidden':'true'},String(nodes.indexOf(node)+1).padStart(2,'0'))),
         el('strong',pick(node.title)),
+        original(node.original_title)?el('span.evidence-original-title',original(node.original_title)):null,
         el('span.evidence-node-author',icon(authors.length?'creators':'briefing'),el('span',authors.join(' · ')||s('evidence.recorded_data'))),
         el('span.evidence-node-mobile-meta',authors.length?el('span.evidence-mobile-author',authors.join(' · ')):null,el('span',date(node.published_at||node.observed_at)),!authors.length?el('span.evidence-mobile-count',s((node.evidence||[]).length===1?'evidence.source_single':'evidence.sources',{n:(node.evidence||[]).length})):null,node.conditional?el('span.evidence-condition',s('evidence.condition_tag')):null),
         el('span.evidence-node-footer',el('span',date(node.published_at||node.observed_at)),
@@ -172,7 +173,7 @@ export function mapView(doc,{archive=false,onPickTicker}={}){
       groups.get(node.stance)?.list.append(card);
     }
     for(const {group,list}of groups.values()){if(list.childElementCount)branches.append(group);}
-    reset.hidden=!query&&scope==='all';
+    reset.hidden=scope==='all';
     if(!filtered.length)branches.append(el('p.empty',s('evidence.no_match')));
     total.textContent=s('evidence.showing',{shown:Math.min(limit,filtered.length),total:filtered.length});
     more.hidden=filtered.length<=limit;connections.refresh();
@@ -205,17 +206,13 @@ export async function mount(root,route={}){
     for(const t of(store.get('watchlist')||[]).filter(tickerOK))list.append(el('a.chip',{href:'#/evidence/'+t,'aria-current':t===ticker?'page':null,onclick:()=>closeModal()},t));
     modal(s('evidence.select_stock'),el('div',form,list));
   }
-  const findButton=el('button.evidence-search-toggle',{type:'button','aria-label':s('evidence.search_action'),'aria-expanded':'false',onclick:()=>{
-    const open=root.classList.toggle('evidence-search-open');findButton.setAttribute('aria-expanded',String(open));if(open)root.querySelector('.evidence-tools input')?.focus();
-  }},el('span.evidence-search-glyph',{'aria-hidden':'true'}));
   const heading=el('header.evidence-heading',el('div.view-head',el('h1',s('evidence.title'))),
-    el('div.evidence-mobile-actions',el('button.evidence-empty-picker',{type:'button',onclick:picker},ticker||s('evidence.select_stock'),' ⌄'),findButton));root.append(heading);
-  root.addEventListener('keydown',event=>{if(event.key==='Escape'&&root.classList.contains('evidence-search-open')){root.classList.remove('evidence-search-open');findButton.setAttribute('aria-expanded','false');findButton.focus();}});
+    el('div.evidence-mobile-actions',el('button.evidence-empty-picker',{type:'button',onclick:picker},ticker||s('evidence.select_stock'),' ⌄')));root.append(heading);
   const input=el('input.input',{type:'search',value:ticker,placeholder:'AVGO / ORCL','aria-label':s('evidence.ticker'),maxlength:10});
   heading.append(el('form.add-row.evidence-ticker',{onsubmit:e=>{e.preventDefault();const t=input.value.trim().toUpperCase().replace(/^\$/,'');if(tickerOK(t))location.hash='#/evidence/'+t;}},input,
     el('button.btn.btn-ghost',{type:'submit'},s('evidence.load'))));
   const favorites=el('div.evidence-watchlist');
-  for(const t of (store.get('watchlist')||[]).filter(tickerOK).slice(0,20))favorites.append(el('a.chip',{href:'#/evidence/'+t,'aria-current':t===ticker?'page':null},t));
+  for(const t of (store.get('watchlist')||[]).filter(tickerOK))favorites.append(el('a.chip',{href:'#/evidence/'+t,'aria-current':t===ticker?'page':null},t));
   root.append(favorites);
   const host=el('div');root.append(host);
   async function load(version=null){
@@ -239,7 +236,7 @@ export async function mount(root,route={}){
           const archive=await api.get('/evidence/'+ticker+'/history?'+q,{signal:ctl.signal,silent402:true});
           if(!valid(id)||!store.isPro())return;
           for(const row of archive.items||[])historyPanel.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>load(row.id)},time(row.recorded_at)));
-          cursor=archive.next_cursor;historyButton.hidden=!cursor;historyButton.textContent=s('evidence.more');
+          cursor=archive.next_cursor;historyButton.hidden=!cursor;historyButton.textContent=s('evidence.show_all');
         }catch(error){if(valid(id))historyPanel.append(errorBox(error));}
         finally{historyButton.disabled=false;}
       }},s('evidence.history'));

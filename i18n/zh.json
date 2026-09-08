@@ -2612,8 +2612,8 @@
   "app.watch.details": "股票详情",
   "app.watch.display": "显示方式",
   "app.watch.view_list": "列表",
-  "app.watch.view_heatmap": "市值热力图",
-  "app.watch.filter": "筛选我的股票",
+  "app.watch.view_heatmap": "涨跌热力图",
+  "app.watch.filter": "搜索股票代码或公司名称",
   "app.watch.sort": "排序",
   "app.watch.sort_market_cap": "市值从大到小",
   "app.watch.sort_change_pct": "涨幅从高到低",
@@ -3305,5 +3305,15 @@
   "app.chart.expiry_week": "一周内到期",
   "app.chart.expiry_later": "较远到期日",
   "app.chart.expiry_missing": "{date} · 期权链资料不完整，暂不能完整比较。",
-  "app.chart.expiry_monthly_note": "月度标签按第三个周五标注；具体以合约到期日为准。“两周”是采集时距到期的天数，不是 K 线显示范围。"
+  "app.chart.expiry_monthly_note": "月度标签按第三个周五标注；具体以合约到期日为准。“两周”是采集时距到期的天数，不是 K 线显示范围。",
+  "app.watch.area": "热力图面积",
+  "app.watch.area_equal": "等大小",
+  "app.watch.area_cap": "按市值",
+  "app.watch.equal_legend": "等大小，便于比较 · 颜色＝日涨跌",
+  "app.watch.not_followed": "还没关注这只股票？",
+  "app.watch.add_to_watchlist": "加入自选股",
+  "app.watch.adding": "添加中…",
+  "app.evidence.show_all": "展开全部观点",
+  "app.evidence.original_only": "原文内容 · 暂无翻译",
+  "app.watch.quote_session": "{date} 收盘"
 }

@@ -52,6 +52,7 @@ export function treemap(rows, width=1000, height=600) {
 const mapRows=new WeakMap(),mapSizes=new WeakMap(),mapInspectors=new WeakMap();
 export function layoutOverview(root, force=false) {
   const map=root.querySelector('.watch-treemap');if(!map)return;
+  if(map.classList.contains('is-equal')){mapInspectors.get(map)?.resize();return;}
   const {width,height}=map.getBoundingClientRect();if(!width||!height)return;
   if(!force&&mapSizes.get(map)===width+':'+height)return;
   mapSizes.set(map,width+':'+height);
@@ -93,7 +94,7 @@ function mapInspector(frame, label, session) {
 }
 
 export function overviewView(rows, options) {
-  const {view,query='',sort='market_cap',selected,session,previous,onSelect}=options;
+  const {view,query='',sort='market_cap',selected,session,previous,onSelect,area='cap',onAreaChange}=options;
   const root=el('div.watch-summary');
   const filtered=rows.filter(r=>[r.ticker,r.company,r.label_zh,r.label_en,r.industry].some(x=>String(x || '').toLowerCase().includes(query.trim().toLowerCase())));
   const label=r=>(LANG==='zh'?r.label_zh:r.label_en) || r.industry || (LANG==='zh'?r.sector_zh:r.sector) || s('company.unknown');
@@ -109,35 +110,37 @@ export function overviewView(rows, options) {
   if(view==='heatmap') {
     const panel=el('section.watch-map-panel'),frame=el('div.watch-map-frame');
     panel.append(el('div.watch-map-heading',el('div',el('h2',s('watch.map_title')),
-      el('p.muted.small.watch-session',session?s('watch.map_session',{date:session}):s('watch.summary_pending'))),breadth(filtered)));
-    const map=el('div.watch-treemap',{'aria-label':s('watch.view_heatmap')});
+      el('p.muted.small.watch-session',session?s('watch.quote_session',{date:session}):s('watch.summary_pending'))),breadth(filtered)));
+    if(onAreaChange)panel.append(el('div.watch-map-scale',{role:'group','aria-label':s('watch.area')},
+      ...['equal','cap'].map(mode=>el('button.btn.btn-ghost.btn-sm',{type:'button','data-area':mode,'aria-pressed':String(area===mode),onclick:()=>onAreaChange(mode)},s('watch.area_'+mode)))));
+    const map=el('div.watch-treemap',{'aria-label':s('watch.view_heatmap'),class:area==='equal'?'is-equal':''});
     const inspector=mapInspector(frame,label,session);
     mapInspectors.set(map,inspector);
     mapRows.set(map,filtered);
-    const tiles=treemap(filtered);
+    const tiles=area==='equal'?[...filtered].sort((a,b)=>a.ticker.localeCompare(b.ticker)):treemap(filtered);
     for(const r of tiles) {
       const tile=el('button.watch-tile',{type:'button','data-open':r.ticker, 'aria-label':title(r),
         'aria-pressed':String(selected===r.ticker),class:'watch-'+changeClass(r.change_pct),
-        style:{left:r.x/10+'%',top:r.y/6+'%',width:r.w/10+'%',height:r.h/6+'%'},onclick:()=>onSelect(r.ticker),
+        style:area==='equal'?{}:{left:r.x/10+'%',top:r.y/6+'%',width:r.w/10+'%',height:r.h/6+'%'},onclick:()=>onSelect(r.ticker),
         onpointerenter:event=>inspector.show(r,tile,event),onfocus:()=>inspector.show(r,tile),onblur:inspector.blur},
         el('span.watch-tile-sector',label(r)),el('strong',r.ticker),
-        el('span.mono.watch-tile-change',pct(r.change_pct,2)),el('span.watch-tile-company',r.company || ''),
+        el('span.mono.watch-tile-change',pct(r.change_pct,2)),el('span.mono.watch-tile-price',px(r.price)),el('span.watch-tile-company',r.company || ''),
         el('span.watch-tile-cap',s('watch.cap')+' '+capText(r.market_cap)));
       tile.style.setProperty('--tile-color',heatColor(r.change_pct));
       map.append(tile);
     }
     if(tiles.length){frame.append(map,inspector.tip);panel.append(frame);}
-    panel.append(el('div.watch-legend',el('span.small',s('watch.map_legend')),
+    panel.append(el('div.watch-legend',el('span.small',s(area==='equal'?'watch.equal_legend':'watch.map_legend')),
       el('div.watch-color-scale',...[-5,-2,0,2,5].map(n=>el('span.mono',{style:{background:heatColor(n)}},`${n>0?'+':''}${n}%`))),
       filtered.some(r=>!finite(r.change_pct))?el('span.small.watch-legend-missing',s('watch.missing_price')):null));
     // Every small cell also has an accessible, minimum-size text target.
-    if(tiles.length) panel.append(el('details.watch-small-tiles',{open:tiles.length<=12},el('summary',s('watch.small_tiles'),' ',el('span.watch-small-count.mono')),
+    if(tiles.length&&area!=='equal') panel.append(el('details.watch-small-tiles',{open:true},el('summary',s('watch.small_tiles'),' ',el('span.watch-small-count.mono')),
       el('div.watch-small-list',...tiles.map(r=>el('button.watch-small-stock',{type:'button','data-open':r.ticker,
         'aria-pressed':String(selected===r.ticker),'aria-label':title(r),onclick:()=>onSelect(r.ticker)},
         el('span.watch-small-dot',{'aria-hidden':'true',style:{background:heatColor(r.change_pct)}}),
         el('strong',r.ticker),el('span.mono',{class:'watch-'+changeClass(r.change_pct)},pct(r.change_pct,2)))))));
     root.append(panel);
-    const omitted=filtered.filter(r=>!weighted(r));
+    const omitted=area==='equal'?[]:filtered.filter(r=>!weighted(r));
     if(omitted.length) root.append(el('section.watch-unweighted',el('h2',s('watch.unweighted')),
       el('p.muted.small',s('watch.unweighted_note')),...omitted.map(r=>button(r,true))));
   } else {

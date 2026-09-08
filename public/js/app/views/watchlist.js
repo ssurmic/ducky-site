@@ -21,8 +21,9 @@ export async function mount(root) {
   const unsubs = [];
   root.classList.add("watchlist-view");
   let overview = null, selected = null, disposed = false, loading = true;
-  let view = "list", query = "", sort = "market_cap";
+  let view = "list", query = "", sort = "market_cap", area = 'equal', candidate = null, adding = false;
   try { view = localStorage.getItem("ducky-watch-view") === "heatmap" ? "heatmap" : "list"; } catch {}
+  try { area = localStorage.getItem('ducky-watch-area') === 'cap' ? 'cap' : 'equal'; } catch {}
   const inflight = new Map();   // finding watchlist.js:118 — ticker -> in-flight fetch promise (dedup)
   const head = el("div.view-head", el("h1", s("watch.title")), el("span.count.mono", { id: "watch-count" }));
   const input = el("input.input.mono", { type: "text", placeholder: s("watch.placeholder"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "80", "aria-label": s("watch.placeholder") });
@@ -44,11 +45,26 @@ export async function mount(root) {
     'data-mode':mode, 'aria-pressed':String(view===mode), onclick:()=>{
       view=mode; try { localStorage.setItem('ducky-watch-view',view); } catch {} render();
     }},s('watch.view_'+mode)));
-  const filter = el('input.input.watch-filter',{type:'search',placeholder:s('watch.filter'), 'aria-label':s('watch.filter'),
-    oninput:()=>{query=filter.value;render();}});
+  const offer = el('div.watch-search-offer',{hidden:true,'aria-live':'polite'});
+  const filter = el('input.input.watch-filter',{type:'search',placeholder:s('watch.filter'), 'aria-label':s('watch.filter'),autocomplete:'off',spellcheck:'false',
+    oninput:()=>{query=filter.value;candidate=null;render();}});
+  const filterPicker = symbolPicker(filter,()=>store.get('watchlist')||[],{
+    allowWatched:true,
+    onSelect:row=>{candidate=row;query=filter.value;render();},
+    onResults:rows=>{candidate=rows.find(row=>row.ticker===filter.value.trim().toUpperCase().replace(/^\$/,''))||null;renderOffer();}
+  });
+  filterPicker.wrap.classList.add('watch-search');unsubs.push(filterPicker.dispose);
   const sorting = el('select.input',{'aria-label':s('watch.sort'),onchange:()=>{sort=sorting.value;render();}},
     ...['market_cap','change_pct','ticker'].map(key=>el('option',{value:key},s('watch.sort_'+key))));
-  const controls = el('div.watch-controls',modes,filter,sorting,el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:load},s('watch.refresh')));
+  const controls = el('div.watch-controls',modes,filterPicker.wrap,sorting,el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:load},s('watch.refresh')));
+  function renderOffer() {
+    clear(offer);
+    offer.hidden=!candidate||(store.get('watchlist')||[]).includes(candidate.ticker);
+    if(offer.hidden)return;
+    const row=candidate;
+    offer.append(el('div',el('strong',row.ticker),el('span.muted',row.name||row.company||''),el('p',s('watch.not_followed'))),
+      el('button.btn.btn-primary.btn-sm',{type:'button',disabled:adding,onclick:()=>addTicker(row.ticker,false)},s(adding?'watch.adding':'watch.add_to_watchlist')));
+  }
   function selectTicker(t) {
     selected=t;render();renderDetail();loadSnapshot(t,false);
     detail.querySelector('button')?.focus();
@@ -64,25 +80,34 @@ export async function mount(root) {
     detail.append(el('button.btn.btn-ghost.btn-sm.watch-close',{type:'button',onclick:closeDetail},s('watch.close_details')),
       card(selected,(store.get('snapshots') || {})[selected]));
   }
-  root.append(head, addOptions, controls, layout,
+  head.append(addOptions);
+  root.append(head, controls, offer, layout,
     el('div.chips',el('a.chip',{href:'#/updates'},s('updates.entry_title'))));
 
   async function onAdd(e) {
     e.preventDefault();
     const t = input.value.trim().toUpperCase().replace(/^\$/, "");
     if (!TICKER_RE.test(t)) { toast(s("watch.select_result")); input.focus(); return; }
+    await addTicker(t,true);
+  }
+  async function addTicker(t,fromForm) {
+    if(adding||disposed)return;
     if ((store.get("watchlist") || []).includes(t)) { toast(s("watch.following")); return; }
-    addBtn.disabled = true;
+    const epoch=store.epoch();adding=true;addBtn.disabled=true;renderOffer();
     try {
       const result = await api.watchlist.add(t);
-      input.value = ""; picker.reset();
+      if(disposed||store.epoch()!==epoch)return;
+      if(fromForm){input.value = ""; picker.reset();}
+      filterPicker.reset();
+      store.set('watchlist',[...new Set([...(store.get('watchlist')||[]),result?.ticker||t])]);
       toast(result?.added === false ? s("watch.following") : s("watch.added", { t:result?.ticker || t }), "ok");
       tg.haptic("success");
       await load();
 
     } catch (err) {
+      if(disposed||store.epoch()!==epoch)return;
       if (err.status !== 402) toast(s("common.error", { msg: err.message }), "err");
-    } finally { addBtn.disabled = false; }
+    } finally { adding=false;if(!disposed){addBtn.disabled=false;renderOffer();} }
   }
 
   async function onRemove(t) {
@@ -95,6 +120,7 @@ export async function mount(root) {
   }
 
   function render() {
+    renderOffer();list.classList.toggle('is-filtered',!!query.trim());
     const items = store.get("watchlist") || [];
     const me = store.get("me") || {};
     // finding watchlist.js:54 — GET /me serves the cap top-level as watch_cap (app.py), never me.caps.watches.
@@ -109,7 +135,7 @@ export async function mount(root) {
     if (!items.length) {list.append(empty(s('watch.empty')));return;}
     const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
     list.append(overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
-      {view,query,sort,selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
+      {view,query,sort,area,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
     layoutOverview(list);
   }
 

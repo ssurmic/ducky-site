@@ -2612,8 +2612,8 @@
   "app.watch.details": "Stock details",
   "app.watch.display": "Display",
   "app.watch.view_list": "List",
-  "app.watch.view_heatmap": "Market-cap map",
-  "app.watch.filter": "Filter my stocks",
+  "app.watch.view_heatmap": "Heatmap",
+  "app.watch.filter": "Search symbol or company",
   "app.watch.sort": "Sort",
   "app.watch.sort_market_cap": "Market cap: largest first",
   "app.watch.sort_change_pct": "Change: highest first",
@@ -3305,5 +3305,15 @@
   "app.chart.expiry_week": "Within one week",
   "app.chart.expiry_later": "Later expiry",
   "app.chart.expiry_missing": "{date} · Incomplete option-chain data; comparison is limited.",
-  "app.chart.expiry_monthly_note": "Monthly labels mark the third Friday; the actual contract expiry takes precedence. “Two weeks” measures time to expiry at collection, independently of the price-history range."
+  "app.chart.expiry_monthly_note": "Monthly labels mark the third Friday; the actual contract expiry takes precedence. “Two weeks” measures time to expiry at collection, independently of the price-history range.",
+  "app.watch.area": "Tile size",
+  "app.watch.area_equal": "Equal size",
+  "app.watch.area_cap": "Market cap",
+  "app.watch.equal_legend": "Equal size for comparison · Colour = daily change",
+  "app.watch.not_followed": "Not on your watchlist yet?",
+  "app.watch.add_to_watchlist": "Add to watchlist",
+  "app.watch.adding": "Adding…",
+  "app.evidence.show_all": "Show all viewpoints",
+  "app.evidence.original_only": "Original source text · Translation unavailable",
+  "app.watch.quote_session": "{date} close"
 }

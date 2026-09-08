@@ -337,8 +337,9 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 }
 @media(max-width:360px){
  .page-app .watch-controls{display:grid;grid-template-columns:minmax(0,1fr) auto}
- .page-app .watch-controls .watch-modes{grid-column:1/-1;justify-self:start}
+ .page-app .watch-controls .watch-modes{grid-column:1;justify-self:start}
  .page-app .watch-controls .watch-filter{grid-column:1/-1}
+ .page-app .watch-controls .watch-search{grid-column:1/-1;order:3;width:100%}
  .page-app .watch-controls>select{min-width:0;width:100%}
 }
 @media(prefers-reduced-motion:reduce){.page-app *, .page-app *:before{scroll-behavior:auto!important;animation:none!important;transition:none!important}}

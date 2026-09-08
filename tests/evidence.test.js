@@ -26,14 +26,16 @@ test('six balanced nodes, exact source passage and progressive disclosure',()=>{
  assert.match(document.querySelector('.modal-body').textContent,/conditional/);
  closeModal();root.remove();
 });
-test('search indexes authors and evidence, filters show full opposition and more retains all points',()=>{
+test('no opinion search; stance filters and one expansion retain every viewpoint',()=>{
  const root=mapView(fixture());document.body.append(root);
- const input=root.querySelector('input');input.value='Counter Author';input.dispatchEvent(new window.Event('input'));
+ assert.equal(root.querySelector('input'),null);
+ root.querySelector('.evidence-filters .is-counter').click();
  assert.equal(root.querySelectorAll('.evidence-node').length,1);
  assert.match(root.querySelector('.evidence-node').textContent,/Point 9/);
- input.value='';input.dispatchEvent(new window.Event('input'));
- [...root.querySelectorAll('button')].find(b=>b.textContent==='Show more').click();
- assert.equal(root.querySelectorAll('.evidence-node').length,10);root.remove();
+ root.querySelector('.evidence-reset-filter').click();
+ root.querySelector('.evidence-map-footer button').click();
+ assert.equal(root.querySelectorAll('.evidence-node').length,10);
+ assert.equal(root.querySelector('.evidence-map-footer button').hidden,true);root.dispose();root.remove();
 });
 test('untrusted captions stay text and unsafe source links are rejected',()=>{
  const d=fixture();d.nodes[9].title.en='<img src=x onerror=alert(1)>';d.nodes[9].evidence[0].source_url='javascript:alert(1)';
@@ -80,7 +82,7 @@ test('measured connectors follow the displayed cards and release their resize ob
 test('point numbers keep matching summary citations after filtering',()=>{
  const root=mapView(fixture());document.body.append(root);
  const before=root.querySelector('.evidence-node.is-counter .evidence-node-number').textContent;
- const input=root.querySelector('input');input.value='Counter Author';input.dispatchEvent(new window.Event('input'));
+ root.querySelector('.evidence-filters .is-counter').click();
  assert.equal(root.querySelector('.evidence-node-number').textContent,before);
  root.querySelector('.evidence-node').click();assert.match(document.querySelector('.modal-body').textContent,/Counter Author/);
  closeModal();root.dispose();root.remove();
@@ -101,11 +103,11 @@ test('one shared set of points forms support, opposition and context branches',(
  assert.equal(root.querySelector('.evidence-group.is-support .evidence-group-count').textContent,'5');
  assert.equal(root.querySelector('.evidence-group.is-context .evidence-group-count').textContent,'4');
  assert.equal(root.querySelector('.evidence-group.is-counter .evidence-node-mobile-meta .evidence-condition').textContent,'Conditional');
- [...root.querySelectorAll('button')].find(b=>b.textContent==='Show more').click();
+ [...root.querySelectorAll('button')].find(b=>b.textContent==='Show all viewpoints').click();
  const numbers=[...root.querySelectorAll('.evidence-node-number')].map(n=>n.textContent);
  assert.equal(numbers.length,10);assert.equal(new Set(numbers).size,10);root.dispose();root.remove();
 });
-test('phone stock picker and search disclosure reuse the loaded graph without watchlist writes',async()=>{
+test('phone stock picker and stance filters reuse the loaded graph without watchlist writes',async()=>{
  store.set('me',{tier:'pro'});store.set('watchlist',['AVGO','ORCL']);let calls=[];
  globalThis.fetch=async url=>{calls.push(String(url));return response(fixture());};
  const root=document.createElement('div');document.body.append(root);const cleanup=await mount(root,{ticker:'AVGO'});
@@ -113,11 +115,20 @@ test('phone stock picker and search disclosure reuse the loaded graph without wa
  assert.equal(document.querySelectorAll('.evidence-picker-list a').length,2);
  assert.equal(document.querySelector('.evidence-picker-form input').value,'AVGO');closeModal();
  assert.equal(document.activeElement,root.querySelector('.evidence-stock-trigger'));
- const toggle=root.querySelector('.evidence-search-toggle');toggle.click();const input=root.querySelector('.evidence-tools input');
- assert.equal(document.activeElement,input);assert.equal(toggle.getAttribute('aria-expanded'),'true');
- input.value='Counter Author';input.dispatchEvent(new window.Event('input'));input.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
- assert.equal(toggle.getAttribute('aria-expanded'),'false');assert.equal(document.activeElement,toggle);
+ assert.equal(root.querySelector('.evidence-search-toggle'),null);
+ root.querySelector('.evidence-filters .is-counter').click();
  assert.equal(root.querySelectorAll('.evidence-node').length,1);assert.equal(root.querySelector('.evidence-reset-filter').hidden,false);
  root.querySelector('.evidence-reset-filter').click();assert.equal(root.querySelectorAll('.evidence-node').length,6);assert.equal(root.querySelector('.evidence-reset-filter').hidden,true);
  assert.deepEqual(store.get('watchlist'),['AVGO','ORCL']);assert.equal(calls.length,before);cleanup();root.remove();
+});
+
+test('untranslated source entries show original text without inventing a translation',()=>{
+ const doc=fixture();doc.nodes[0].title={zh:'公司事件原文',en:'Company event source'};
+ doc.nodes[0].original_title={zh:'原始公告内容'};doc.nodes[0].evidence[0].original_title={zh:'原始公告内容'};
+ const root=mapView(doc);document.body.append(root);
+ assert.equal(root.querySelector('.evidence-original-title').textContent,'原始公告内容');
+ root.querySelector('.evidence-node.is-support').click();
+ assert.match(document.querySelector('.modal-body').textContent,/Original source text · Translation unavailable/);
+ assert.match(document.querySelector('.modal-body').textContent,/原始公告内容/);
+ closeModal();root.dispose();root.remove();
 });

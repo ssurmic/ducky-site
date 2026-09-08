@@ -4,6 +4,7 @@ import {JSDOM} from 'jsdom';
 import {readFileSync} from 'node:fs';
 const dom=new JSDOM('<html lang="en"><body><main id="view"></main></body></html>',{url:'https://ducky.test/app/#/watchlist'});
 for(const k of ['window','document','Node','location','history','localStorage'])globalThis[k]=dom.window[k];
+globalThis.requestAnimationFrame=fn=>{fn();return 0;};
 const copy=JSON.parse(readFileSync('i18n/en.json'));const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
 const {treemap,weighted,changeClass,heatColor,overviewView,layoutOverview}=await import('../public/js/app/watchlist-overview.js');
 const store=await import('../public/js/app/store.js');
@@ -108,4 +109,36 @@ test('resizing repositions existing heatmap controls, preserves focus and never 
   assert.notDeepEqual([first.style.left,first.style.top,first.style.width,first.style.height],small);
   assert.equal(map.children.length,50);assert.equal(view.querySelectorAll('.watch-small-tiles button').length,50);
  }finally{globalThis.getComputedStyle=original;globalThis.fetch=originalFetch;view.remove();}
+});
+
+test('equal tiles include tiny issuers, ETFs and missing caps with dated prices',()=>{
+ const rows=[row('NVDA',5.6e12,0.84),row('AVGO',1.7e12,.21),row('SMALL',1e7,-4),{...row('ETF',null,0),security_type:'ETF'}];
+ const view=overviewView(rows,{view:'heatmap',area:'equal',onSelect:()=>{},session:'2026-09-04'});
+ assert.equal(view.querySelectorAll('.watch-tile').length,4);
+ assert.equal(view.querySelectorAll('.watch-tile-price').length,4);
+ assert.equal(view.querySelector('.watch-tile').style.width,'');
+ assert.match(view.textContent,/2026-09-04/);assert.match(view.textContent,/Equal size for comparison/);
+});
+
+test('filter autocomplete requires an explicit add and retains the selected stock after success',async()=>{
+ const items=[row('NVDA',5.6e12,.84)],requests=[];
+ globalThis.fetch=async(url,opts={})=>{requests.push([String(url),opts.method||'GET']);
+  if(String(url).startsWith('/public/symbols?'))return Response.json({items:[{ticker:'CEG',name:'Constellation Energy',exchange:'NASDAQ'}]});
+  if(opts.method==='POST'){items.push(row('CEG',1e11,0));return Response.json({added:true,ticker:'CEG'});}
+  return Response.json({items,overview:{items,session:'2026-09-04'}});
+ };
+ store.set('me',{tier:'pro',watch_cap:50});store.set('watchlist',['NVDA']);store.set('snapshots',{});
+ const root=document.querySelector('main'),dispose=await mount(root),filter=root.querySelector('.watch-filter');
+ filter.value='ceg';filter.dispatchEvent(new window.Event('input'));
+ await new Promise(r=>setTimeout(r,220));
+ assert.equal(root.querySelector('.watch-search-offer').hidden,false);
+ assert.match(root.querySelector('.watch-search-offer').textContent,/CEG.*Constellation Energy/);
+ root.querySelector('.watch-search [role="option"]').click();
+ assert.equal(filter.value,'CEG');assert.equal(requests.filter(([,m])=>m==='POST').length,0);
+ root.querySelector('.watch-search-offer button').click();await new Promise(r=>setTimeout(r,0));
+ assert.equal(requests.filter(([,m])=>m==='POST').length,1);
+ assert.deepEqual(store.get('watchlist'),['NVDA','CEG']);
+ assert.equal(root.querySelector('.watch-search-offer').hidden,true);
+ assert.ok(root.querySelector('[data-open="CEG"]'));assert.equal(filter.value,'CEG');
+ dispose();root.replaceChildren();
 });

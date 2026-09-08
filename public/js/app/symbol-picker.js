@@ -4,7 +4,7 @@ import { s } from './strings.js';
 import * as api from './api.js';
 let sequence = 0;
 
-export function symbolPicker(input, watched = () => []) {
+export function symbolPicker(input, watched = () => [], options = {}) {
   const id = 'symbol-options-' + (++sequence);
   const list = el('div.symbol-options', { id, role:'listbox', hidden:true });
   const status = el('div.symbol-status.muted.small', { role:'status', 'aria-live':'polite' });
@@ -16,8 +16,8 @@ export function symbolPicker(input, watched = () => []) {
   function cancel() { clearTimeout(timer); ctl?.abort(); ++generation; }
   function reset() { cancel(); close(); clear(list); status.textContent=''; rows=[]; }
   function select(i) {
-    if (!rows[i] || watched().includes(rows[i].ticker)) return;
-    input.value=rows[i].ticker; reset(); input.focus();
+    if (!rows[i] || (!options.allowWatched && watched().includes(rows[i].ticker))) return;
+    const row=rows[i];input.value=row.ticker; reset(); input.focus();options.onSelect?.(row);
   }
   function highlight(i) {
     active=i;
@@ -37,7 +37,7 @@ export function symbolPicker(input, watched = () => []) {
         rows=Array.isArray(doc?.items)?doc.items:[]; clear(list);
         rows.forEach((r,i)=>{
           const exists=watched().includes(r.ticker);
-          const item=el('div.symbol-option',{id:id+'-'+i,role:'option','aria-selected':'false','aria-disabled':String(exists)},
+          const item=el('div.symbol-option',{id:id+'-'+i,role:'option','aria-selected':'false','aria-disabled':String(exists&&!options.allowWatched)},
             el('strong.mono',r.ticker), el('span.symbol-name',r.name, r.industry || r.sector ? el('small.muted',r.industry || r.sector) : null),
             el('span.symbol-exchange.muted.small',exists?s('watch.following'):r.exchange||r.kind||''));
           item.addEventListener('pointerdown',e=>e.preventDefault());
@@ -46,6 +46,7 @@ export function symbolPicker(input, watched = () => []) {
         status.textContent=rows.length?s('watch.search_count',{n:rows.length,total:doc.total_count ?? rows.length}):s('watch.search_empty');
         if(doc?.status==='limited') status.textContent+=' '+s('watch.search_limited');
         list.hidden=!rows.length; input.setAttribute('aria-expanded',String(!!rows.length));
+        options.onResults?.(rows);
       } catch(e) {
         if(disposed||gen!==generation) return;
         close(); status.textContent=s('watch.search_unavailable');
@@ -59,7 +60,7 @@ export function symbolPicker(input, watched = () => []) {
     if(e.key==='ArrowDown'||e.key==='ArrowUp') {
       e.preventDefault(); const dir=e.key==='ArrowDown'?1:-1;
       let i=active;
-      for(let n=0;n<rows.length;n++) { i=(i+dir+rows.length)%rows.length; if(!watched().includes(rows[i].ticker)) break; }
+      for(let n=0;n<rows.length;n++) { i=(i+dir+rows.length)%rows.length; if(options.allowWatched||!watched().includes(rows[i].ticker)) break; }
       highlight(i);
     } else if(e.key==='Enter'&&active>=0) { e.preventDefault();e.stopPropagation();select(active); }
   }
