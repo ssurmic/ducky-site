@@ -1,5 +1,5 @@
 // Local browser layout sweep. Synthetic data never reaches the live API.
-const routes=['watchlist','evidence/NVDA','briefing','chart/NVDA','calendar','boards','alerts','creators','profile','billing','opportunities','vibe','market','macro','screens','updates','research/NVDA','login','register','forgot'];
+const routes=['watchlist','evidence/NVDA','briefing','chart/NVDA','calendar','boards','alerts','creators','profile','billing','opportunities','vibe','market','macro','screens','updates','research/NVDA','login','register','forgot','reports','record/s%3A10'];
 const jobs=['zh','en'].flatMap(lang=>routes.map(route=>({lang,route}))),results=[];
 const output=document.createElement('pre');output.id='qa-results';document.body.prepend(output);
 let job=null,started=0,timer;

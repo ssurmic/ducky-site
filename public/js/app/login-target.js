@@ -1,5 +1,5 @@
 // Preserve the page requested before sign-in, including a round trip to Google.
-// Only a canonical app route and allowlisted public creator choices are stored.
+// Only canonical routes and allowlisted public navigation choices are stored.
 // Never store arbitrary queries, credentials or private draft data.
 import { creatorRoute, creatorTarget } from './creator-route.js';
 import { evidenceHref } from './evidence-route.js';
@@ -11,6 +11,13 @@ export function safeTarget(hash) {
   if (typeof hash !== "string" || hash.length > 2048) return null;
   const path = hash.split("?")[0];
   if(path==="#/ducky")return "#/evidence";
+  if (path === '#/billing') {
+    const q = new URLSearchParams(hash.split('?')[1] || ''), target = new URLSearchParams();
+    if (['USD', 'CNY'].includes(q.get('currency'))) target.set('currency', q.get('currency'));
+    if (['1', '12'].includes(q.get('months'))) target.set('months', q.get('months'));
+    if (target.get('currency') === 'CNY') target.set('months', '12');
+    return path + (target.size ? '?' + target : '');
+  }
   if (path === '#/updates') {
     const q = new URLSearchParams(hash.split('?')[1] || ''), target = new URLSearchParams();
     const ticker = (q.get('ticker') || '').toUpperCase(), item = q.get('item') || '';
