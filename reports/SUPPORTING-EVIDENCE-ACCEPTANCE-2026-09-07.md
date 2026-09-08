@@ -40,3 +40,34 @@ No actual account, trade, subscription or notification was changed during these 
 - No physical iPhone/Safari or touch emulation claimed. These are viewport simulations.
 
 Production deployment and real-source summary/extraction acceptance are recorded below.
+
+## Production release
+
+Code `0e76ddc` deployed to Cloudflare Pages `4c54422f` and `duckybot.app`.
+Final frontend validation: 328 passed, 20 bilingual pages, copy lint clean,
+1,332 internal links, asset isolation 4 passed / 1 existing fixture skip.
+
+The existing signed-in Chrome Pro session successfully read real ORCL/AVGO graphs.
+The ORCL creator card showed 投资TALK君, 2026-09-07, separate observation/acquisition
+times, and video 19:21–19:32 with the actual `Y1XBxQ90bxY&t=1161s` source link.
+No holdings, watchlist, subscription or notification preference was changed.
+
+A real twelve-stock watchlist revealed a three-row phone chip bar; it now scrolls
+horizontally in one row. On the released English 320×600 page, the first point spans
+y=389.4–516.9, fully above the bottom navigation. Page scrollWidth is 320 and both
+search inputs use 16px. Chinese source dialogs and the English history selector work.
+The saved 01:28 UTC AVGO version shows its accepted real-model sentence and two clickable
+point references, explicitly labeled as a historical map.
+
+Production also exposed a backend price-provenance read timeout. The backend retained
+the correction checks and added a batched query plus the price owner's receipt index;
+post-fix real projections measured 2–89 ms and the same browser retry succeeded.
+Source changes withhold affected readings immediately on the next read.
+
+Current summaries can show a pending state while shared local inference is busy.
+An early ORCL sentence omitted creator attribution and mixed Chinese into English;
+the backend now requires the author, publication date and explicit opinion wording
+for cited creator views and validates language again on read. The source corpus and
+its translation quality are still being processed; no broad extraction-accuracy or
+complete historical-coverage claim is made. The backend release report contains the
+retained failures, scheduler receipt and remaining coverage boundaries.
