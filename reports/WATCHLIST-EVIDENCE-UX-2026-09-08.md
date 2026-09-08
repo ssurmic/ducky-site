@@ -72,3 +72,22 @@ passage containing the adjective “bullish” was attributed to BLSH. It was es
 the shared evidence producer for correction and publication-gate regression coverage.
 UI consistency alone does not establish issuer or claim accuracy; final backend
 correction acceptance belongs in the central evidence audit.
+
+### Final source-navigation acceptance
+
+Frontend `32a785c` / Pages `33c27ec3` with backend `8010822` and its subsequent graph
+refresh was checked independently in Chrome. Release gates report 344 frontend and
+2,034 backend tests passing. The wrongly attributed BLSH material is absent from both
+current views, while legitimate AVGO mentions remain.
+
+Clicking the August 5 AVGO node opens creator `touzi-talk`, post `eMXOSnMyk0o`, point
+`mention:3e806d42b4ac71101596542f`; the matching 22:20 passage receives visible focus.
+Returning to all creators restores the 30-post page, and selecting Financial Education
+displays its posts without retaining the old source filter. At 393×650, clicking the
+July 20 node opens post `dAkVdEmVUP0`, point `mention:c97d537d64290db0a4bd5d4e`, highlights
+7:09 and reveals its short source excerpt. The focused card fits between y=186 and
+y=456; there is no page overflow. The browser viewport was restored after testing.
+
+The first release check caught an old saved graph lacking new source-link fields.
+It was refreshed through the normal graph producer before the above click-through
+checks passed; merely deploying the frontend was not treated as sufficient acceptance.
