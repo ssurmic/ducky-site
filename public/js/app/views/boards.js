@@ -1,3 +1,4 @@
+import {evidenceLink} from '../evidence-link.js';
 // Radar reads the shared public ledger. Filters never fetch quotes or run research.
 import { s, LANG } from "../strings.js";
 import * as api from "../api.js";
@@ -386,7 +387,7 @@ export async function mount(root, route={}) {
       else detail.append(el('p.muted',s(state.mode==='recent'?'radar.outcome_history':'radar.outcome_missing')));
     }
     const actions=el('div.radar-record-actions');
-    if(tk && it.kind!=='nvdev'){actions.append(el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+encodeURIComponent(tk)},s('radar.chart')),
+    if(tk && it.kind!=='nvdev'){actions.append(evidenceLink(tk,it.id),el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+encodeURIComponent(tk)},s('radar.chart')),
       el('a.btn.btn-ghost.btn-sm',{href:'#/alerts?ticker='+encodeURIComponent(tk)},s('boards.set_alert')));}
     if(tk && ['index','news'].includes(it.kind)){
       const query=new URLSearchParams({ticker:tk}),day=effectiveDate(sourceEvent);

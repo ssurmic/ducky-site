@@ -12,6 +12,7 @@ export function marketDetail(doc){
   modal(s('evidence.market_title'),el('div.evidence-market-detail',
     el('p.evidence-market-price',finite(quote?.data?.price)?px(quote.data.price):'—'),
     el('p.small.muted',s('evidence.price_date',{date:date(quote?.data?.price_session)})),
+    el('p.small.muted',s('evidence.quote_note')),
     el('p.small.muted',s('evidence.observed',{at:quote?.observed_at||'—'})),
     el('h3',s('evidence.water_title')),
     band?el('p',s('evidence.range_values',{low:px(band.low),high:px(band.high)})):null,
@@ -24,7 +25,9 @@ export function marketDetail(doc){
 }
 export function priceBadge(doc){
   const q=doc.market_context?.price;
+  const status=doc.price_session_context?.status;
+  const label=status==='current'?'evidence.quote_current':status==='stale'?'evidence.quote_stale':status==='missing'||status==='invalid'?'evidence.quote_missing':'evidence.price_date';
   return el('button.evidence-price',{type:'button',onclick:()=>marketDetail(doc),'aria-label':s('evidence.market_title')},
     el('strong.mono',finite(q?.data?.price)?px(q.data.price):'—'),
-    el('span',s('evidence.price_date',{date:date(q?.data?.price_session)})));
+    el('span',s(label,{date:date(q?.data?.price_session)})));
 }

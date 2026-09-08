@@ -14,7 +14,6 @@
      {% if route == 'boards' %}{% for board in navigation.radar %}<a href="{{ url('/app/') }}#/boards?board={{ board.key }}">{{ t('app.radar.all') if board.key == 'all' else t('app.boards.t_' ~ board.key) }} ↗</a>{% endfor %}
      {% elif route in ['opportunities','chart','screens'] %}<span>RSI</span><span>IV / HV</span><span>20D</span>
      {% elif route in ['degen','vibe'] %}<span>Reddit</span><span>{{ t('app.social.history') }}</span>
-     {% elif route == 'ducky' %}<span>{{ t('ideas.book_live') }}</span><span>{{ t('ideas.book_paper') }}</span>
      {% endif %}
     </div>
     <div class="desk-feature-access"><span>{{ t('desk.access_title') }}</span><p>{{ t('desk.access.' ~ route) }}</p></div>

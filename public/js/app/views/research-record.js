@@ -3,6 +3,7 @@ import {el, clear, num, px, errorBox} from '../ui.js';
 import * as api from '../api.js';
 import {dateTime} from './creator-research.js';
 import {directionReading} from './vibe-direction.js';
+import {evidenceLink} from '../evidence-link.js';
 
 const tr=k=>s('record.'+k);
 const streams=['price','technical','options','vibe','radar','creator','calendar','digest'];
@@ -46,7 +47,7 @@ export function recordCard(item) {
     el('code.social-record-id',item.id));
   if(p.relation_basis)details.append(el('p.small',tr('relation')+' '+value(p.relation_basis)));
   try {const u=new URL(p.source_url);if(u.protocol==='https:'&&!u.username&&!u.password)details.append(link(u.href,tr('source')));}catch{}
-  card.append(details);return card;
+  card.append(details,evidenceLink(item.ticker,['radar','calendar','digest'].includes(item.stream)?item.id:''));return card;
 }
 
 export function renderRecord(doc) {

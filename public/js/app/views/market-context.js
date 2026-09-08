@@ -1,5 +1,6 @@
+import {evidenceLink} from '../evidence-link.js';
 import { el, clear, modal } from '../ui.js';
-import { s, LANG } from '../strings.js';
+import { s, LANG, has } from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
 import { readableDate as marketDate } from '../date-format.js';
@@ -41,7 +42,7 @@ export function renderMarketContext(doc,{preview=false,watches=[],compact=false}
         el('h4',s('market.next_check')),el('p.small',localized(synthesis,'next_check')));
       for(const item of refs) {
         const url=source(item.source_url);const row=el('article.market-evidence-item',
-          el('span.event-eyebrow',s('market.kind_'+item.kind)),
+          el('span.event-eyebrow',has('market.kind_'+item.kind)?s('market.kind_'+item.kind):s('market.title')),
           el('p.small.muted',item.publisher+' · '+marketDate(item.published_at)),
           url?el('a',{href:url,target:'_blank',rel:'noopener noreferrer'},item.title+' ↗'):el('p',item.title));
         if(item.kind==='creator_view')row.append(el('p.small',localized(item,'summary')),
@@ -57,7 +58,7 @@ export function renderMarketContext(doc,{preview=false,watches=[],compact=false}
       card.append(details);
     }
     const tickers=el('div.event-related-chips');
-    for(const ticker of topic.tickers||[])tickers.append(el('a.event-related',{href:'#/chart/'+encodeURIComponent(ticker)},ticker));
+    for(const ticker of topic.tickers||[])tickers.append(evidenceLink(ticker),el('a.event-related',{href:'#/chart/'+encodeURIComponent(ticker)},ticker));
     if(tickers.childElementCount)card.append(tickers);
     if(compact) {
       const trigger=el('button.market-topic-trigger',{type:'button','aria-haspopup':'dialog',onclick:()=>{

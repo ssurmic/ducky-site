@@ -9,7 +9,10 @@ export function quoteModel(doc,ticker) {
     !Number.isFinite(r.c)||r.c<=0||(i&&rows[i-1].t>=r.t)))return null;
   const last=rows.at(-1);if(doc.last_d!==last.t)return null;
   const lo=Math.min(...rows.map(r=>r.c)),hi=Math.max(...rows.map(r=>r.c));
-  return {price:last.c.toFixed(2),date:last.t,
+  const context=doc.session_context;
+  const checked=Date.parse(context?.checked_at),age=Date.now()-checked;
+  const status=context?.price_session===last.t&&Number.isFinite(age)&&age>=0&&age<30*60*1000?context.status:'unchecked';
+  return {price:last.c.toFixed(2),date:last.t,status,expected:context?.expected_session,
     points:rows.map((r,i)=>`${(i/(rows.length-1||1)*140).toFixed(1)},${(28-(r.c-lo)/(hi-lo||1)*24).toFixed(1)}`).join(' ')};
 }
 
@@ -82,6 +85,8 @@ export function mountDuck(root,{fetcher=fetch}={}) {
     if(!model)return;
     card.querySelector('[data-quote-price]').textContent='$'+model.price;
     card.querySelector('[data-quote-date]').textContent=model.date;
+    const label=card.querySelector('[data-quote-status]');
+    if(label)label.textContent=(label.dataset[model.status==='current'?'current':model.status==='stale'?'stale':'unchecked']||'').replace('{date}',model.expected||'');
     card.querySelector('polyline').setAttribute('points',model.points);
   }
   // Public daily-price cache only; never request a snapshot build or member research.

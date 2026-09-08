@@ -1,5 +1,5 @@
 import {el,clear,spinner,errorBox,modal,closeModal} from '../ui.js';
-import {s,LANG} from '../strings.js';
+import {s,LANG,has} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
 import {factText} from './stock-briefs.js';
@@ -16,7 +16,7 @@ const date=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}/.test(v)?v.slice(0,10):'�
 function source(v){try{const u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch{return null;}}
 const position=v=>{const n=Math.floor(v);return Number.isFinite(n)?Math.floor(n/60)+':'+String(n%60).padStart(2,'0'):'';};
 const factDescription=e=>e.topic==='price_gaps'?(e.data?.gaps?.length?e.data.gaps.map(g=>`${g.date} · $${g.lower}–$${g.upper}`).join(' / '):s('evidence.no_gaps')):factText(e);
-const missingLabel=k=>k.startsWith('ytd_')?s('evidence.missing_ytd',{benchmark:k.slice(4)}):k==='price_gaps'?s('evidence.missing_gaps'):s('stockbrief.missing_'+k);
+const missingLabel=k=>k.startsWith('ytd_')?s('evidence.missing_ytd',{benchmark:k.slice(4)}):k==='price_gaps'?s('evidence.missing_gaps'):has('stockbrief.missing_'+k)?s('stockbrief.missing_'+k):s('evidence.missing_other');
 
 export function detail(node){
   const body=el('div.evidence-detail',node.priority?el('p.small.muted',s('evidence.priority_'+node.priority)):null,el('p.evidence-stance',{class:'is-'+node.stance},s('evidence.'+node.stance)),
@@ -46,6 +46,28 @@ export function detail(node){
   }
   if(node.evidence_omitted)body.append(el('p.small.muted',s('evidence.more_sources',{n:node.evidence_omitted})));
   modal(pick(node.title),body);
+}
+
+export function analysisPanel(doc){
+  const panel=el('section.card.evidence-analysis');
+  const body=el('div.evidence-analysis-body',{hidden:true});
+  const button=el('button.btn.btn-primary',{type:'button','aria-expanded':'false',onclick:()=>{
+    body.hidden=!body.hidden;button.setAttribute('aria-expanded',String(!body.hidden));
+  }},s('evidence.analysis_button'));
+  const data=doc.analysis_status==='ready'?doc.analysis:null;
+  const refs=part=>el('span',...(part?.citations||[]).flatMap(id=>{
+    const i=doc.nodes.findIndex(n=>n.id===id);return i<0?[]:[el('button.brief-citation',{type:'button',onclick:()=>detail(doc.nodes[i]),'aria-label':s('evidence.citation',{n:i+1})},String(i+1))];
+  }));
+  if(data){
+    body.append(el('h2',s('evidence.analysis_title')),el('p',pick(data.overview),refs(data.overview)));
+    for(const part of data.sections||[]){
+      if(['key_points','risks','watch'].includes(part.kind))body.append(el('h3',s('evidence.analysis_'+part.kind)),el('p',pick(part),refs(part)));
+    }
+    body.append(el('p.small.muted',s('evidence.analysis_as_of',{at:time(doc.analysis_generated_at)})));
+  }else if(doc.summary){
+    body.append(el('p',pick(doc.summary),refs(doc.summary)),el('p.small.muted',s('evidence.analysis_pending')));
+  }else body.append(el('p',{role:'status'},s(doc.analysis_status==='failed'?'evidence.analysis_failed':'evidence.analysis_pending')));
+  panel.append(button,body);return panel;
 }
 
 // Layout is native CSS; the light SVG layer only connects the actual rendered nodes.
@@ -114,7 +136,7 @@ export function mapView(doc,{archive=false,onPickTicker}={}){
       sentence.append(el('button.brief-citation',{type:'button',onclick:()=>detail(nodes[index]),'aria-label':s('evidence.citation',{n:index+1})},String(index+1)));
     }
   }
-  view.append(summary);
+  if(doc.summary)view.append(summary);
   if(archive)view.append(el('p.data-notice',s('evidence.archive',{at:time(doc.recorded_at)})));
   if(doc.status==='stale')view.append(el('p.data-notice',s('evidence.stale')));
   if(doc.withdrawn)view.append(el('p.data-notice',s('evidence.withdrawn',{n:doc.withdrawn})));
@@ -196,7 +218,7 @@ export function mapView(doc,{archive=false,onPickTicker}={}){
   for(const author of doc.ticker_coverage?.authors||[]){if(author.pending||author.failed)details.append(el('p.small',s('evidence.queue_author',author)));}
   if(doc.missing?.length)details.append(el('p.data-notice',s('evidence.missing')+' '+doc.missing.map(missingLabel).join(' · ')));
   if(doc.omitted)details.append(el('p.data-notice',s('evidence.omitted',{n:doc.omitted})));
-  details.append(el('a.btn.btn-ghost.btn-sm',{href:'#/research/'+doc.ticker},s('evidence.records')));view.append(details);
+  details.append(el('a.btn.btn-ghost.btn-sm',{href:'#/research/'+doc.ticker},s('evidence.records')));view.append(details,analysisPanel(doc));
   return view;
 }
 
@@ -235,6 +257,11 @@ export async function mount(root,route={}){
       if(!valid(id)||!store.isPro())return;
       if(!doc||doc.ticker!==ticker||!Array.isArray(doc.nodes))throw Error('invalid_response');
       clear(host);currentMap=mapView(doc,{archive:!!version,onPickTicker:picker});host.append(currentMap);
+      const sourceId=!version?route.query?.get('source'):null;
+      if(sourceId){
+        const target=doc.nodes.find(n=>n.id===sourceId||(n.evidence||[]).some(e=>[e.id,e.point_id,e.legacy_claim_id,e.source_record_id].includes(sourceId)));
+        if(target)detail(target);else host.prepend(el('p.data-notice',s('evidence.linked_missing')));
+      }
       const historyPanel=el('div.evidence-history');let cursor=null;
       const historyButton=el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:async()=>{
         historyButton.disabled=true;

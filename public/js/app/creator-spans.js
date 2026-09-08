@@ -1,4 +1,5 @@
 import {el} from './ui.js';
+import {evidenceLink} from './evidence-link.js';
 import {s} from './strings.js';
 
 export function verifiedSpans(post){
@@ -35,7 +36,7 @@ export function spanSection(rows,tickers=null,focus='',{inline=false}={}){
     try{const url=new URL(row.source_url);if(url.protocol==='https:'&&['youtube.com','www.youtube.com','youtu.be'].includes(url.hostname)&&!url.username&&!url.password){
       const seconds=Math.floor(row.start_seconds||0);card.append(el('a.small',{href:url.href,target:'_blank',rel:'noopener noreferrer'},Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0')+' · '+s('creatorpage.source')+' ↗'));
     }}catch{}
-    card.append(el('a.small',{href:'#/evidence/'+encodeURIComponent(row.ticker)},s('evidence.title')));
+    card.append(evidenceLink(row.ticker,row.point_id));
     (i>=6?more:section).append(card);
     if(i>=6&&row.point_id===focus)more.open=true;
   }

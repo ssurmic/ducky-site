@@ -1,3 +1,4 @@
+import {evidenceLink} from '../evidence-link.js';
 import { el, clear, spinner, num, pct, errorBox } from '../ui.js';
 import { s, LANG } from '../strings.js';
 import * as api from '../api.js';
@@ -31,7 +32,7 @@ export function candidateCard(row,watches=[]) {
     el('p',s('opportunities.peer_returns',{stock:pct(rel.stock_return,1),peer:pct(rel.peer_return,1)})));
   else details.append(el('p.data-notice',s('opportunities.peer_missing')));
   details.append(el('p.small.muted',s('opportunities.risk')));
-  card.append(details,el('div.opportunity-actions',link('#/chart/'+tk,'nav.chart'),
+  card.append(details,el('div.opportunity-actions',evidenceLink(row.ticker),link('#/chart/'+tk,'nav.chart'),
     link('#/research/'+tk,'opportunities.research'),link('#/alerts?ticker='+tk,'boards.set_alert')));
   return card;
 }
