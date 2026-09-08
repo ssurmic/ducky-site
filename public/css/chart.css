@@ -150,3 +150,18 @@
  .chart-main .chart-tools{flex-wrap:wrap;gap:4px}
  .chart-main .chart-zoom{margin-left:auto}
 }
+
+/* The empty chart entry is a stock selector, with the same type as the chart. */
+.chart-picker-page{max-width:960px;margin-inline:auto}
+.chart-picker-page .chart-heading{display:block;margin:12px 0 28px}
+.chart-picker-note{color:var(--muted);font:400 14px/1.7 var(--font);margin:8px 0 0}
+.chart-picker-label{display:block;font:600 13px/1.5 var(--font);color:var(--muted);margin:0 0 10px}
+.chart-picker-page .chart-search{margin:0 0 28px;gap:10px}
+.chart-picker-page .chart-search input{font:400 14px/1.5 var(--font);min-height:48px}
+.chart-picker-page .chart-search button{font-size:14px;min-height:48px}
+.chart-picker-stocks{display:grid;grid-template-columns:repeat(auto-fill,minmax(116px,1fr));gap:10px}
+.chart-picker-stock{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:48px;padding:11px 14px;border:1px solid var(--border);border-radius:9px;background:var(--surface);color:var(--text);font:650 14px/1.5 var(--font);text-decoration:none}
+.chart-picker-stock span{font-size:13px;font-weight:400;color:var(--muted)}
+.chart-picker-stock:hover{background:var(--surface-2);border-color:var(--muted)}
+.chart-picker-stock:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media(max-width:600px){.chart-picker-page .chart-heading{margin:8px 0 22px}.chart-picker-note{font-size:12px}.chart-picker-page .chart-search{gap:8px}.chart-picker-page .chart-search input{font-size:13px}.chart-picker-page .chart-search button{font-size:12px;padding-inline:12px}.chart-picker-stocks{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.chart-picker-stock{padding:10px;font-size:12px}}

@@ -127,11 +127,16 @@ export async function mount(root, params) {
     el('a.chip',{href:'#/calendar?ticker='+encodeURIComponent(ticker)},s('nav.calendar'))));
 
   if (!ticker) {
+    root.classList.add('chart-picker-page');
+    head.append(el('p.chart-picker-note',s('chart.pick_intro')));
+    input.id='chart-ticker';input.placeholder=s('chart.pick_short');
+    form.before(el('label.chart-picker-label',{for:input.id},s('chart.search_label')));
     host.hidden = true; zoomControls.hidden = true; legendRow.hidden = true; controls.hidden = true; axes.hidden = true;
     const wl = store.get("watchlist") || [];
-    const chips = el("div.chips", wl.map((t) => el("a.chip.mono", { href: "#/chart/" + t }, "$" + t)));
-    status.append(el("p.muted", s("chart.pick_hint")), chips);
-    if (!wl.length) { try { store.set("watchlist", normalizeList(await api.watchlist.list())); clear(chips); for (const t of store.get("watchlist")) chips.appendChild(el("a.chip.mono", { href: "#/chart/" + t }, "$" + t)); } catch (e) { /* ignore */ } }
+    const stockLink=t=>el('a.chart-picker-stock',{href:'#/chart/'+encodeURIComponent(t)},t,el('span',{'aria-hidden':'true'},'↗'));
+    const chips = el("div.chart-picker-stocks", wl.map(stockLink));
+    status.append(el("h2.chart-picker-label", s("chart.watchlist_label")), chips);
+    if (!wl.length) { try { store.set("watchlist", normalizeList(await api.watchlist.list())); clear(chips); for (const t of store.get("watchlist")) chips.appendChild(stockLink(t)); } catch (e) { /* ignore */ } }
     return () => { picker.dispose(); alive = false; compactLayout?.removeEventListener?.('change',onLayout); };
   }
 

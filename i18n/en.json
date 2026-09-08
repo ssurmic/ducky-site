@@ -652,7 +652,7 @@
   "app.chart.zoom_in": "Zoom in",
   "app.chart.zoom_out": "Zoom out",
   "app.chart.zoom_reset": "Reset view",
-  "app.chart.title": "Chart",
+  "app.chart.title": "Stock charts",
   "app.chart.pick": "Ticker, company or business, e.g. VST, Vistra, power",
   "app.chart.pick_hint": "Or pick from your watchlist:",
   "app.chart.go": "View chart",
@@ -3537,5 +3537,9 @@
   "app.chart.level_help": "Explain {level}",
   "app.evidence.quote_time_unknown": "Price time needs checking",
   "app.evidence.quote_saved": "Saved quote · {date}",
-  "app.evidence.saved_quote_note": "This is a saved provider quote, not a live tick or a verified closing price. The recording time below is when Ducky saved it; the provider quote timestamp is not available."
+  "app.evidence.saved_quote_note": "This is a saved provider quote, not a live tick or a verified closing price. The recording time below is when Ducky saved it; the provider quote timestamp is not available.",
+  "app.chart.pick_intro": "Explore price history, indicators and option reference levels.",
+  "app.chart.pick_short": "Ticker, company or business",
+  "app.chart.search_label": "Find a stock",
+  "app.chart.watchlist_label": "Your watchlist"
 }

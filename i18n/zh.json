@@ -652,7 +652,7 @@
   "app.chart.zoom_in": "放大K线",
   "app.chart.zoom_out": "缩小K线",
   "app.chart.zoom_reset": "复位",
-  "app.chart.title": "K 线",
+  "app.chart.title": "股票图表",
   "app.chart.pick": "代码、公司或业务，如 VST、Vistra、电力",
   "app.chart.pick_hint": "也可以从自选股里选：",
   "app.chart.go": "查看图表",
@@ -3537,5 +3537,9 @@
   "app.chart.level_help": "{level}是什么意思",
   "app.evidence.quote_time_unknown": "报价时间待核对",
   "app.evidence.quote_saved": "已记录报价 · {date}",
-  "app.evidence.saved_quote_note": "这是已保存的供应商报价，不是逐笔实时行情或已核实的收盘价。下方记录时间是 Ducky 保存数据的时间；供应商的实际报价时点未提供。"
+  "app.evidence.saved_quote_note": "这是已保存的供应商报价，不是逐笔实时行情或已核实的收盘价。下方记录时间是 Ducky 保存数据的时间；供应商的实际报价时点未提供。",
+  "app.chart.pick_intro": "查看走势、技术指标与期权参考价位。",
+  "app.chart.pick_short": "代码、公司名或业务",
+  "app.chart.search_label": "搜索股票",
+  "app.chart.watchlist_label": "从自选股中选择"
 }
