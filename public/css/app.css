@@ -1213,7 +1213,7 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 .stock-brief-actions h3,.stock-brief-reasoning h3{font-size:.84rem;color:var(--muted,#9ca9b6);margin:0 0 7px}
 .stock-brief-actions p{margin:0;line-height:1.65}.stock-brief-reasoning>section{padding:14px 0;border-bottom:1px solid var(--line,#27323e)}
 .stock-brief-reasoning summary,.stock-brief-evidence summary,.stock-brief-more>summary{cursor:pointer;padding:12px 0;font-weight:600}
-.stock-brief-fact{border-top:1px solid var(--line,#27323e);padding:12px 0;overflow-wrap:anywhere}.stock-brief-fact h4{margin:0}.stock-brief-fact p{margin:8px 0}
+.stock-brief-fact{border-top:1px solid var(--line,#27323e);padding:12px 0;overflow-wrap:anywhere;scroll-margin-top:12px}.stock-brief-fact h4{margin:0}.stock-brief-fact p{margin:8px 0}
 .stock-brief-fact:focus{outline:2px solid var(--accent,#ff9700);outline-offset:4px}
 .brief-citation{font:inherit;font-size:.7rem;vertical-align:super;border:0;background:transparent;color:var(--accent,#ff9700);padding:4px 6px;cursor:pointer;min-width:24px;min-height:24px}
 .stock-brief-history{display:grid;gap:12px;margin-top:18px}.stock-brief-history .stock-brief{border-left-width:1px}
@@ -1266,6 +1266,10 @@ html[data-theme=dark] .evidence-view,html[data-theme=dark] .evidence-detail{--ev
 .evidence-node:hover,.evidence-node:focus-visible{border-color:var(--branch);box-shadow:0 4px 20px color-mix(in srgb,var(--branch) 12%,transparent)}
 .evidence-node:focus-visible{outline:2px solid var(--branch);outline-offset:3px}
 .evidence-node>strong{font-size:.9375rem;font-weight:650;line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.comparison-label{display:block;color:var(--muted);font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.comparison-context{border-left:2px solid var(--border);padding-left:12px;margin:12px 0;overflow-wrap:anywhere}
+.comparison-context p{margin:6px 0;line-height:1.6}.comparison-context .comparison-label{font-weight:600;color:var(--text)}
+.comparison-source{display:flex;align-items:center;min-height:44px;width:fit-content;max-width:100%;font-size:13px}
 .evidence-node-label{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:550;line-height:1.5;color:var(--branch)}
 .evidence-category{display:flex;align-items:center;gap:6px}.evidence-category::before{content:'';width:6px;height:6px;flex-shrink:0;border-radius:50%;background:currentColor}
 .evidence-condition{font-size:9px;color:var(--muted);padding:1px 5px;border:1px solid var(--border);border-radius:4px}
