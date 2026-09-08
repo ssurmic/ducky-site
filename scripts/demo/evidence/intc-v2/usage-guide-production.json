@@ -1,0 +1,44 @@
+{
+  "checked_at": "2026-09-08T19:48:43.424Z",
+  "code": "102d1bab",
+  "deployment": "41b4fc53",
+  "zh": {
+    "mainChapters": 8,
+    "mainLinks": 7,
+    "media": [
+      "/media/ducky-walkthrough-2026-09-07-watchlist-v9.zh.mp4",
+      "/media/ducky-intc-tutorial-2026-09-08-v2.zh.mp4"
+    ],
+    "rows": [
+      "00:00.00 · 自选股名单查看已关注股票的价格和变化，选定接下来要研究的公司。",
+      "00:04.08 · INTC 信息导图打开 INTC 的信息导图，查看公司披露和博主观点；点选 TALK 君的观点，进入详情。",
+      "00:08.12 · 博主观点核对作者、发表日期和观点类型。本例为 TALK 君于 2026 年 8 月 24 日自述继续持有英特尔。",
+      "00:12.72 · 原文摘录展开原文摘录核对上下文。原视频 4:09 是英特尔持有原句，产品的 4:06 入口保留前一句。",
+      "00:17.80 · 价格提醒打开条件提醒，输入股票和触发价位，先核对条件，再启用。片中配置仍未启用。",
+      "00:23.24 · 接收设置在“我的”查看邮箱和 Telegram 的连接状态，完成所需关联，再选择可用的接收方式。",
+      "00:27.24 · 投资日历查看财报、宏观数据和交易安排；点开日期，核对事件时间和主要影响。"
+    ],
+    "source": "https://www.youtube.com/watch?v=CEGiQA6CNd4&t=249s",
+    "summary": "按步骤使用这些功能"
+  },
+  "en": {
+    "mainChapters": 8,
+    "mainLinks": 7,
+    "media": [
+      "/media/ducky-walkthrough-2026-09-07-watchlist-v9.en.mp4",
+      "/media/ducky-intc-tutorial-2026-09-08-v2.en.mp4"
+    ],
+    "rows": [
+      "00:00.00 · WatchlistReview prices and changes in your watchlist, then choose a company to research.",
+      "00:03.80 · INTC Information MapOpen Intel’s Information Map to see company filings and creator views. Select TALK’s view to open its details.",
+      "00:07.52 · Creator viewCheck the author, publication date and statement type. Here, TALK reported continuing to hold Intel on August 24, 2026.",
+      "00:12.12 · Source excerptExpand the source excerpt to check the context. The Intel statement starts at 4:09 in the original video; the product’s 4:06 link includes the preceding sentence.",
+      "00:16.12 · Price alertOpen Alerts, enter the stock and trigger price, then review the condition before enabling it. The configuration shown is not enabled.",
+      "00:20.48 · Delivery settingsIn Me, check the connection status of your email and Telegram, complete any needed linking, then select an available delivery channel.",
+      "00:24.48 · CalendarBrowse earnings, economic releases and market sessions. Open a date to check event times and their main implications."
+    ],
+    "source": "https://www.youtube.com/watch?v=CEGiQA6CNd4&t=249s",
+    "summary": "How to use the features"
+  },
+  "scope": "Text-only correction; no additional playback or media rendering performed"
+}
