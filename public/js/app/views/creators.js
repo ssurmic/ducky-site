@@ -2,6 +2,7 @@
 // has Follow toggles (POST/DELETE /kol/{id}/sub); below it, the recent summary feed. The feed is a RECORD of
 // the creator's view (attributed, tickers, bull/bear), never our advice.
 import { s } from "../strings.js";
+import {verifiedSpans,spanSection} from '../creator-spans.js';
 import * as api from "../api.js";
 import * as store from "../store.js";
 import * as router from "../router.js";
@@ -60,7 +61,7 @@ function atTime(url, seconds) {
 }
 export function filterPosts(posts, { following, mine, archive, query = "", tickers=null }) {
   const needle = query.trim().toLocaleLowerCase();
-  return posts.filter(p => (!mine || following.has(p.kol_id)) && matchesStocks(p,tickers) && (archive || hasReviewedSummary(p)) &&
+  return posts.filter(p => (!mine || following.has(p.kol_id)) && matchesStocks(p,tickers) && (archive || hasReviewedSummary(p) || verifiedSpans(p).length) &&
     (!needle || [p.kol_name, p.title, ...(p.tickers || []), pickSummary(p.summary,true), pickSummary(p.summary,false)].join(" ").toLocaleLowerCase().includes(needle)))
     .sort((a,b)=>(Date.parse(b.published_at)||0)-(Date.parse(a.published_at)||0));
 }
@@ -296,6 +297,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
         art.appendChild(el("p.muted.small", s('creators.'+statusKey)));
       }
 
+      const spans=spanSection(p.reviewed_spans);if(spans)art.append(spans);
       const audit=el('details.creator-audit',el('summary',s('creators.source_details')),
         el('p.muted.small',s('creators.first_seen')+' '+dateTime(p.first_seen_at)),
         el('p.muted.small',s('creators.analysis_updated')+' '+dateTime(p.fetched_at)));

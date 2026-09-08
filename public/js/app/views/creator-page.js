@@ -2,6 +2,7 @@ import {s} from '../strings.js';
 import {el,pct} from '../ui.js';
 import {avatar} from './creator-setup.js';
 import {dateTime,safeSource,metric} from './creator-research.js';
+import {spanSection} from '../creator-spans.js';
 
 const language=()=>document.documentElement.lang?.startsWith('en')?'en':'zh';
 const summary=row=>row?.[language()] || row?.zh || row?.en || '';
@@ -55,6 +56,7 @@ export function renderCreatorPage(root,{creator,page={},onTab=()=>{},tickers=nul
       el('p.small.muted',s('creatorpage.no_price')));
   }
   if(figure)root.append(visual);
+  const spans=spanSection(page.reviewed_spans,tickers);if(spans)root.append(spans);
   const highlights=(page.highlights||[]).filter(p=>!tickers||p.tickers?.some(t=>tickers.includes(t)));
   const highlightsNode=el('section.creator-highlights',el('h3',s('creatorpage.highlights')));
   for(const p of highlights){
