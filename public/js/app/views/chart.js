@@ -5,19 +5,18 @@ import { s } from "../strings.js";
 import * as api from "../api.js";
 import * as store from "../store.js";
 import * as overlays from "../overlays.js";
-import { el, clear, spinner, errorBox, lock, px, num, modal } from "../ui.js";
+import { el, clear, spinner, errorBox, lock, px, num } from "../ui.js";
 import { normalizeList } from "./watchlist.js";
 import { unpackSnapshot, reusableSnapshot } from "../snapshot-model.js";
-import {aggregateBars,selectedSnapshot,optionScope,wallPosition,optionHelp,expiryTable,expiryKind} from '../chart-context.js';
+import {aggregateBars,selectedSnapshot,optionScope,wallPosition,optionHelp,candleHelp,expiryTable,expiryKind} from '../chart-context.js';
 import { observeTheme } from "../theme.js";
+import {chartPalette,candleStyle,referenceScale} from '../chart-style.js';
 
 const PERIODS = ["3mo", "6mo", "1y", "2y"];
 // server truth (app.py PERIOD_BARS / BARS_PERIOD): free→6mo, paid→1y, pro→2y. Used to gate the period
 // buttons to the viewer's tier so the UI can't show '2y' selected over 6mo of clamped data (finding chart.js:364).
 const PERIOD_BARS = { "1mo": 22, "3mo": 66, "6mo": 126, "1y": 252, "2y": 504 };
 const TICKER_RE = /^[A-Z][A-Z0-9.\-]{0,9}$/;
-
-function cssVar(name, fallback) { const v = getComputedStyle(document.body).getPropertyValue(name).trim(); return v || fallback; }
 
 export function normalizeBars(resp) {
   const arr = Array.isArray(resp) ? resp : (resp && (resp.bars || resp.items)) || [];
@@ -44,21 +43,27 @@ export async function mount(root, params) {
   // finding chart.js:63 — drawSeq is a per-draw token; candles/rsiSeries are hoisted so a Telegram theme flip
   // can re-apply their colors without a full refetch (finding tg.js:65).
   let period = allowed("6mo") ? "6mo" : maxPeriod, chart = null, ro = null, ovl = null, alive = true, drawSeq = 0, candles = null, rsiSeries = null, macdHist = null, macdLineS = null, macdSig = null;
-  let histogram = [], referenceLines = [], overlaySnapshot = null, interval='day', expiry='combined', extras=false;
+  let histogram = [], referenceLines = [], overlaySnapshot = null, interval='day', expiry='combined', extras=false, fitReferences=false;
   const barCache=new Map();
 
   const input = el("input.input.mono", { type: "text", value: ticker, placeholder: s("chart.pick"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "80", "aria-label": s("chart.pick") });
   const picker = symbolPicker(input);
-  const form = el("form.add-row", { onsubmit: (e) => { e.preventDefault(); const t = input.value.trim().toUpperCase().replace(/^\$/, ""); if (TICKER_RE.test(t)) location.hash = "#/chart/" + t; } },
+  const form = el("form.add-row.chart-search", { id:'chart-search',hidden:!!ticker, onsubmit: (e) => { e.preventDefault(); const t = input.value.trim().toUpperCase().replace(/^\$/, ""); if (TICKER_RE.test(t)) location.hash = "#/chart/" + t; } },
     picker.wrap, el("button.btn.btn-primary", { type: "submit" }, s("chart.go")));
   const periodRow = el("div.seg.mono", { role: "group", "aria-label": s("chart.period") },
-    PERIODS.map((p) => { const lk = !allowed(p); return el("button", { type: "button", "data-period": p, disabled: lk ? "" : null, "data-locked": lk ? "" : null, "aria-disabled": lk ? "true" : null, title: lk ? s("chart.lock") : null, class: p === period ? "on" : "", onclick: lk ? null : () => { period = p; periodRow.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.period === p)); draw(); } }, s("chart.period_" + p) + (lk ? " 🔒" : "")); }));
-  const intervalSelect=el('select.input',{'aria-label':s('chart.interval'),onchange:()=>{interval=intervalSelect.value;draw();}},
-    ['day','week','month'].map(k=>el('option',{value:k},s('chart.'+k))));
+    PERIODS.map((p) => { const lk = !allowed(p); return el("button", { type: "button", "data-period": p, disabled: lk ? "" : null, "data-locked": lk ? "" : null, "aria-disabled": lk ? "true" : null, 'aria-pressed':String(p===period),'aria-label':s('chart.period_'+p), title: lk ? s("chart.lock") : s('chart.period_'+p), class: p === period ? "on" : "", onclick: lk ? null : () => { period = p; periodRow.querySelectorAll("button").forEach((b) => {b.classList.toggle("on", b.dataset.period === p);b.setAttribute('aria-pressed',String(b.dataset.period===p));}); draw(); } }, s("chart.period_short_" + p) + (lk ? " 🔒" : "")); }));
+  const intervalRow=el('div.seg.chart-interval',{role:'group','aria-label':s('chart.interval')},
+    ['day','week','month'].map(k=>el('button',{type:'button','data-interval':k,'aria-label':s('chart.'+k),'aria-pressed':String(k===interval),class:k===interval?'on':'',onclick:()=>{
+      interval=k;intervalRow.querySelectorAll('button').forEach(b=>{b.classList.toggle('on',b.dataset.interval===k);b.setAttribute('aria-pressed',String(b.dataset.interval===k));});draw();
+    }},s('chart.short_'+k))));
   const controls=el('div.chart-controls',el('div.chart-control',el('span.small.muted',s('chart.period')),periodRow),
-    el('label.chart-control',el('span.small.muted',s('chart.interval')),intervalSelect),
-    el('button.chart-help-button',{type:'button','aria-label':s('chart.range_help'),onclick:()=>modal(s('chart.range_help'),el('div',el('p',s('chart.axes')),el('p',s('chart.range_note'))))},'?'));
-  const head = el("div.view-head", el("h1.mono", ticker ? "$" + ticker : s("chart.title")), el("span.spot.mono", { id: "chart-spot" }));
+    el('div.chart-control',el('span.small.muted',s('chart.interval')),intervalRow),
+    el('button.chart-help-button.chart-reading-help',{type:'button','aria-label':s('chart.range_help'),onclick:candleHelp},s('chart.guide')));
+  const companyName=el('p.chart-company-name.muted.small');
+  const changeSymbol=el('button.btn.btn-ghost.chart-change',{type:'button','aria-expanded':'false','aria-controls':'chart-search',onclick:()=>{
+    form.hidden=!form.hidden;changeSymbol.setAttribute('aria-expanded',String(!form.hidden));if(!form.hidden)input.focus();
+  }},s('chart.change'));
+  const head = el("div.view-head.chart-heading", el('div.chart-identity',el("h1", ticker || s("chart.title"))), el("span.spot", { id: "chart-spot" }),ticker?changeSymbol:null,companyName);
   const legendRow = el("div.legend", { id: "chart-legend" });
   const host = el("div.chart-host", { id: "chart-host" });
   const status = el("div", { id: "chart-status" });
@@ -68,7 +73,7 @@ export async function mount(root, params) {
     onclick:()=>{
       if(!chart)return;
       const scale=chart.timeScale();
-      if(action==='reset'){scale.fitContent();chart.applyOptions({rightPriceScale:{autoScale:true}});return;}
+      if(action==='reset'){fitReferences=false;paintOverlays();scale.fitContent();chart.applyOptions({rightPriceScale:{autoScale:true}});return;}
       const range=scale.getVisibleLogicalRange();
       if(!range||!Number.isFinite(range.from)||!Number.isFinite(range.to))return;
       const center=(range.from+range.to)/2,span=Math.max(5,Math.min(10000,(range.to-range.from)*(action==='in'?.75:4/3)));
@@ -78,10 +83,9 @@ export async function mount(root, params) {
   const zoomControls=el('div.chart-zoom',{role:'group','aria-label':s('chart.zoom')},zoomButtons);
   const optionControls=el('div.chart-option-controls');
   const optionNotes=el('div.chart-option-notes');
-  const axes=el('p.chart-axes.small.muted',s('chart.axes'));
+  const axes=el('p.chart-axes.small.muted',s('chart.axes'),el('span',s('chart.close_note')));
   const companyHost = el("div.company-host");
-  const companyName=el('p.chart-company-name.muted.small');
-  root.append(head, companyName, form, controls, el('div.chart-workspace',ohlc,host,zoomControls,axes,optionControls,legendRow,optionNotes), status, companyHost);
+  root.append(head, form, controls, el('div.chart-workspace',ohlc,host,el('div.chart-tools',axes,zoomControls),optionControls,legendRow,optionNotes), status, companyHost);
   const showCompany=(p,rs)=>{companyHost.replaceChildren(companyContext(p,rs));companyName.textContent=p?.company||'';};
   if (ticker) api.company(ticker).then(p=>{if(alive) showCompany(p);}).catch(()=>{if(alive) showCompany(null);});
   if (ticker) companyHost.before(el('div.chips',
@@ -104,31 +108,32 @@ export async function mount(root, params) {
 
   function paintOverlays() {
     if (!candles || !overlaySnapshot) return;
-    const colors = {call:cssVar('--orange'),put:cssVar('--green'),flip:cssVar('--muted'),exp:cssVar('--blue'),band:cssVar('--muted')};
+    const p=chartPalette(),colors = {call:p.amber,put:p.up,flip:p.text,exp:p.blue,band:p.text};
+    const focused=optionControls.contains(document.activeElement)?document.activeElement.dataset.chartControl:null;
     if (ovl) ovl.remove();
     const selected=selectedSnapshot(overlaySnapshot,expiry,extras);
     ovl = overlays.apply(candles, selected, colors);
     clear(legendRow);clear(optionControls);clear(optionNotes);
     const built = new Date(overlaySnapshot.gamma?.scope?.retrieved_at || overlaySnapshot.built_at || '');
-    const expirySelect=el('select.input',{'aria-label':s('chart.option_expiry'),onchange:()=>{expiry=expirySelect.value;paintOverlays();}},
+    const expirySelect=el('select.input',{'data-chart-control':'expiry','aria-label':s('chart.option_expiry'),onchange:()=>{expiry=expirySelect.value;paintOverlays();}},
       el('option',{value:'combined'},s('chart.combined')),
       (overlaySnapshot.gamma?.by_expiry||[]).map(r=>el('option',{value:r.expiry},r.expiry+' · '+expiryKind(r))));
     expirySelect.value=expiry;
     optionControls.append(el('label',el('span.small.muted',s('chart.option_expiry')),expirySelect),
-      el('button.chart-help-button',{type:'button','aria-label':s('chart.help_title'),onclick:()=>optionHelp(overlaySnapshot)},'?'),
-      el('label.chart-extra-toggle',el('input',{type:'checkbox',checked:extras,onchange:e=>{extras=e.target.checked;paintOverlays();}}),s('chart.extra_lines')));
+      el('button.chart-help-button',{type:'button','aria-label':s('chart.help_title'),onclick:()=>optionHelp(overlaySnapshot)},s('chart.guide')),
+      el('label.chart-extra-toggle',el('input',{type:'checkbox','data-chart-control':'extras',checked:extras,onchange:e=>{extras=e.target.checked;paintOverlays();}}),s('chart.extra_lines')),
+      el('label.chart-extra-toggle',el('input',{type:'checkbox','data-chart-control':'fit',checked:fitReferences,onchange:e=>{fitReferences=e.target.checked;paintOverlays();chart.applyOptions({rightPriceScale:{autoScale:true}});}}),s('chart.fit_references')));
     for (const it of overlays.legend(selected, colors)) {
       legendRow.appendChild(el('span.legend-item.mono',el('i',{style:{background:it.color}}),it.label+' ',el('b',typeof it.value==='number'?num(it.value,2):String(it.value))));
     }
     if (!ovl.count) legendRow.appendChild(el('span.muted.small',s('chart.no_overlays')));
-    optionNotes.append(el('p.chart-wall-position',wallPosition(overlaySnapshot.spot,selected.gamma)),
+    optionNotes.append(el('p.small.muted.chart-scale-note',s(fitReferences?'chart.scale_all':'chart.scale_candles')),
+      el('p.chart-wall-position',wallPosition(overlaySnapshot.spot,selected.gamma)),
       el('p.small.muted.chart-snapshot-date',optionScope(selected)),
       Number.isFinite(built.getTime())?el('p.small.muted',s('chart.snapshot_as_of',{date:built.toISOString().slice(0,16).replace('T',' ')})):null,
       expiryTable(overlaySnapshot,value=>{expiry=value;paintOverlays();}));
-    candles.applyOptions({autoscaleInfoProvider:orig=>{
-      const r=orig(),levels=overlays.levels(selected);if(!r?.priceRange||!levels.length)return r;
-      return {...r,priceRange:{minValue:Math.min(r.priceRange.minValue,...levels),maxValue:Math.max(r.priceRange.maxValue,...levels)}};
-    }});
+    candles.applyOptions({autoscaleInfoProvider:referenceScale(fitReferences,overlays.levels(selected))});
+    if(focused)optionControls.querySelector(`[data-chart-control="${focused}"]`)?.focus({preventScroll:true});
   }
 
   async function draw(attempt = 0) {
@@ -157,48 +162,48 @@ export async function mount(root, params) {
     bars=aggregateBars(bars,interval);
     if(bars.length<35)status.append(el('p.small.muted',s('chart.indicators_short')));
     const spot = document.getElementById("chart-spot");
-    if (spot) spot.replaceChildren(el('span',px(last.close)),el('time.small.muted',{datetime:String(last.time)},s('chart.last_bar',{date:String(last.time)})));
+    if (spot) spot.replaceChildren(el('span',px(last.close)),el('time.small.muted',{datetime:String(last.time),title:s('chart.last_bar',{date:String(last.time)})},s('chart.close_as_of',{date:String(last.time)})));
     if (payload?.stale) {
       status.appendChild(el('p.data-notice', s('chart.stale_bars', { date: payload.expected_last_d || '—' })));
       retry();
     }
 
-    const text = cssVar("--muted", "#9aa7b4"), grid = cssVar("--border", "#223041"), up = cssVar("--green", "#3fb950"), down = cssVar("--red", "#f85149");
+    const palette=chartPalette(),{text,grid,up,down}=palette;
     chart = LWC.createChart(host, {
       autoSize: true,
-      layout: { background: { type: "solid", color: "transparent" }, textColor: text, attributionLogo: false, panes: { separatorColor: grid, enableResize: false } },
-      grid: { vertLines: { visible:false }, horzLines: { color: grid,style:1 } },
+      layout: { background: { type: "solid", color: "transparent" }, textColor: text,fontFamily:palette.font,fontSize:12, attributionLogo: false, panes: { separatorColor: grid, enableResize: false } },
+      grid: { vertLines: { visible:false }, horzLines: { color: grid,style:0 } },
       rightPriceScale: { borderVisible:false,scaleMargins:{top:0.12,bottom:0.08} },
       timeScale: { borderVisible:false, rightOffset: 3 },
-      crosshair: { mode: 0,vertLine:{color:text,width:1,style:2},horzLine:{color:text,width:1,style:2} },
+      crosshair: { mode: 0,vertLine:{color:text,width:1,style:2,labelBackgroundColor:palette.ink},horzLine:{color:text,width:1,style:2,labelBackgroundColor:palette.ink} },
       handleScroll: { vertTouchDrag: false },
     });
-    let levels = []; // overlay prices folded into autoscale so walls outside the candle range stay visible
-    candles = chart.addSeries(LWC.CandlestickSeries, { upColor: up, downColor: down, borderUpColor: up, borderDownColor: down, wickUpColor: up, wickDownColor: down,
-      // the live price is the hero: a thick bright horizontal line + its up/down last-value badge, so it reads
-      // clearly above the (now axis-label-free) overlay lines (owner: "最新价格被靠墙 overshadow 了").
-      priceLineVisible: true, priceLineWidth: 1, priceLineColor: cssVar("--text", "#e6edf3"), lastValueVisible: true,
-      autoscaleInfoProvider: (orig) => { const r = orig(); if (!r || !r.priceRange || !levels.length) return r; const lo = Math.min(r.priceRange.minValue, ...levels), hi = Math.max(r.priceRange.maxValue, ...levels); return { priceRange: { minValue: lo, maxValue: hi }, margins: r.margins }; } });
+    candles = chart.addSeries(LWC.CandlestickSeries, { ...candleStyle(palette),
+      priceLineVisible: true, priceLineWidth: 1,lastValueVisible: true });
     candles.setData(bars);
-    const showCandle=(bar,date)=>ohlc.replaceChildren(el('time.small.muted',String(date)),el('span.mono',s('chart.ohlc',{open:px(bar.open),high:px(bar.high),low:px(bar.low),close:px(bar.close)})));
+    const showCandle=(bar,date)=>ohlc.replaceChildren(el('time.small.muted',String(date)),
+      el('dl.chart-ohlc-values',['open','high','low','close'].map(key=>el('div',el('dt',s('chart.'+key)),el('dd',px(bar[key]))))));
     showCandle(bars.at(-1),bars.at(-1).time);
     chart.subscribeCrosshairMove?.(param=>{const bar=param.seriesData?.get(candles);showCandle(bar||bars.at(-1),bar?param.time:bars.at(-1).time);});
     // RSI(14) in its own pane
-    rsiSeries = chart.addSeries(LWC.LineSeries, { color: cssVar("--blue", "#58a6ff"), lineWidth: 2, priceLineVisible: false, lastValueVisible: true, title: s("chart.rsi") }, 1);
-    rsiSeries.setData(overlays.rsi(bars, 14));
-    referenceLines.push([rsiSeries.createPriceLine({ price: 70, color: down, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), '--red']);
-    referenceLines.push([rsiSeries.createPriceLine({ price: 30, color: up, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), '--green']);
+    const rsiData=overlays.rsi(bars,14);
+    if(rsiData.length){
+      rsiSeries = chart.addSeries(LWC.LineSeries, { color: palette.blue, lineWidth: 2, priceLineVisible: false, lastValueVisible: true, title: s("chart.rsi") }, 1);
+      rsiSeries.setData(rsiData);
+      referenceLines.push([rsiSeries.createPriceLine({ price: 70, color: down, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), 'down']);
+      referenceLines.push([rsiSeries.createPriceLine({ price: 30, color: up, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), 'up']);
+    }
     // MACD(12,26,9) in its own pane: histogram (green above / red below) + MACD line + signal, zero line marked.
     const m = overlays.macd(bars, 12, 26, 9);
     if (m.macd.length) {
       macdHist = chart.addSeries(LWC.HistogramSeries, { priceLineVisible: false, lastValueVisible: false, priceFormat: { type: "price", precision: 2, minMove: 0.01 } }, 2);
       histogram = m.hist;
-      macdHist.setData(histogram.map((p) => ({ time: p.time, value: p.value, color: p.value >= 0 ? up : down })));
-      macdSig = chart.addSeries(LWC.LineSeries, { color: cssVar("--orange", "#f0883e"), lineWidth: 1, priceLineVisible: false, lastValueVisible: false }, 2);
+      macdHist.setData(histogram.map((p) => ({ time: p.time, value: p.value, color: p.value >= 0 ? palette.histUp : palette.histDown })));
+      macdSig = chart.addSeries(LWC.LineSeries, { color: palette.amber, lineWidth: 1, priceLineVisible: false, lastValueVisible: false }, 2);
       macdSig.setData(m.signal);
-      macdLineS = chart.addSeries(LWC.LineSeries, { color: cssVar("--blue", "#58a6ff"), lineWidth: 1, priceLineVisible: false, lastValueVisible: true, title: s("chart.macd") }, 2);
+      macdLineS = chart.addSeries(LWC.LineSeries, { color: palette.blue, lineWidth: 1, priceLineVisible: false, lastValueVisible: true, title: s("chart.macd") }, 2);
       macdLineS.setData(m.macd);
-      referenceLines.push([macdLineS.createPriceLine({ price: 0, color: text, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), '--muted']);
+      referenceLines.push([macdLineS.createPriceLine({ price: 0, color: text, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), 'text']);
     }
     // Size all panes together after creating them; adding MACD must not squeeze RSI.
     chart.panes().forEach((pane,index)=>pane.setStretchFactor([4,1,1][index] || 1));
@@ -234,21 +239,21 @@ export async function mount(root, params) {
   // the listener is removed in cleanup so it can't outlive the view.
   function retheme() {
     if (!chart) return;
-    const text = cssVar("--muted", "#9aa7b4"), grid = cssVar("--border", "#223041"), up = cssVar("--green", "#3fb950"), down = cssVar("--red", "#f85149");
+    const palette=chartPalette(),{text,grid}=palette;
     try {
-      chart.applyOptions({ layout: { textColor: text, panes: { separatorColor: grid } }, grid: { vertLines: { visible:false }, horzLines: { color: grid,style:1 } }, rightPriceScale: { borderVisible:false,scaleMargins:{top:0.12,bottom:0.08} }, timeScale: { borderColor: grid } });
-      if (candles) candles.applyOptions({ upColor: up, downColor: down, borderUpColor: up, borderDownColor: down, wickUpColor: up, wickDownColor: down });
-      if (rsiSeries) rsiSeries.applyOptions({ color: cssVar("--blue", "#58a6ff") });
-      if (candles) candles.applyOptions({ priceLineColor: cssVar("--text", "#e6edf3") });
-      if (macdLineS) macdLineS.applyOptions({ color: cssVar("--blue", "#58a6ff") });
-      if (macdSig) macdSig.applyOptions({ color: cssVar("--orange", "#f0883e") });
-      if (macdHist) macdHist.setData(histogram.map(p => ({...p,color:p.value >= 0 ? up : down})));
-      for (const [line, variable] of referenceLines) line?.applyOptions({color:cssVar(variable)});
+      chart.applyOptions({ layout: { textColor: text,fontFamily:palette.font, panes: { separatorColor: grid } }, grid: { vertLines: { visible:false }, horzLines: { color: grid,style:0 } },crosshair:{vertLine:{color:text,labelBackgroundColor:palette.ink},horzLine:{color:text,labelBackgroundColor:palette.ink}} });
+      if (candles) candles.applyOptions(candleStyle(palette));
+      if (rsiSeries) rsiSeries.applyOptions({ color: palette.blue });
+      if (macdLineS) macdLineS.applyOptions({ color: palette.blue });
+      if (macdSig) macdSig.applyOptions({ color: palette.amber });
+      if (macdHist) macdHist.setData(histogram.map(p => ({...p,color:p.value >= 0 ? palette.histUp : palette.histDown})));
+      for (const [line, variable] of referenceLines) line?.applyOptions({color:palette[variable]});
       paintOverlays();
     } catch (e) { /* ignore */ }
   }
   const stopTheme = observeTheme(retheme);
 
   await draw();
+  document.fonts?.ready.then(()=>{if(alive)retheme();});
   return () => { picker.dispose(); alive = false; stopTheme(); destroy(); };
 }

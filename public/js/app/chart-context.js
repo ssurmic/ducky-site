@@ -41,13 +41,25 @@ export function wallPosition(spot,gamma){
 }
 export function optionHelp(snap){
   modal(s('chart.help_title'),el('div.chart-help',
-    el('h3',s('chart.legend_call')),el('p',s('chart.help_call')),
-    el('h3',s('chart.legend_put')),el('p',s('chart.help_put')),
-    el('h3',s('chart.help_break_title')),el('p',s('chart.help_break')),
-    el('h3',s('chart.help_scope_title')),el('p',optionScope(snap)),el('p',s('chart.help_scope')),
-    el('p.small.muted',s('chart.help_oi')),
-    el('h3',s('chart.help_other_title')),el('p',s('chart.help_other',{expiry:dateLabel(snap?.expected?.expiry)})),
+    el('div.chart-help-pair',
+      el('section.chart-help-card',el('h3',s('chart.legend_call')),el('p',s('chart.help_call'))),
+      el('section.chart-help-card',el('h3',s('chart.legend_put')),el('p',s('chart.help_put')))),
+    el('section.chart-help-section',el('h3',s('chart.help_break_title')),el('p',s('chart.help_break'))),
+    el('section.chart-help-section',el('h3',s('chart.help_scope_title')),el('p.chart-help-fact',optionScope(snap)),el('p',s('chart.help_scope')),el('p.small.muted',s('chart.help_oi'))),
+    el('section.chart-help-section',el('h3',s('chart.help_other_title')),el('p',s('chart.help_other',{expiry:dateLabel(snap?.expected?.expiry)}))),
     el('a',{href:'https://www.optionseducation.org/referencelibrary/faq/general-information',target:'_blank',rel:'noopener noreferrer'},s('chart.help_source')+' ↗')));
+}
+export function candleHelp(){
+  const example=direction=>el('section.chart-help-card.chart-candle-example',
+    el('div.chart-candle-art.'+direction,{'aria-hidden':'true'},el('i')),
+    el('div',el('h3',s('chart.candle_'+direction)),el('p',s('chart.candle_'+direction+'_note'))));
+  modal(s('chart.range_help'),el('div.chart-help',
+    el('p.chart-help-intro',s('chart.candle_intro')),
+    el('div.chart-help-pair',example('up'),example('down')),
+    el('dl.chart-candle-key',['wick','body'].map(key=>el('div',el('dt',s('chart.candle_'+key)),el('dd',s('chart.candle_'+key+'_note'))))),
+    el('section.chart-help-section',el('h3',s('chart.period')),el('p',s('chart.range_note'))),
+    el('section.chart-help-section',el('h3',s('chart.indicator_help')),el('p',s('chart.indicator_note'))),
+    el('p.small.muted',s('chart.axes'))));
 }
 export function expiryTable(snap,onSelect){
   const rows=snap?.gamma?.by_expiry||[];

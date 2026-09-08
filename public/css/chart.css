@@ -1,0 +1,106 @@
+/* Chart palette is independent of the market-wide gain/loss colors. */
+.page-app{--chart-up:#16836f;--chart-down:#bb556a;--chart-grid:#e5eaf0;--chart-indicator:#6477bc;--chart-reference:#a46b24;--chart-hist-up:#8ac9bd;--chart-hist-down:#dfabb7}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .page-app{--chart-up:#55b6a4;--chart-down:#d68093;--chart-grid:#202c39;--chart-indicator:#9aa7d6;--chart-reference:#c7a16e;--chart-hist-up:#34695f;--chart-hist-down:#805363}}
+:root[data-theme=dark] .page-app{--chart-up:#55b6a4;--chart-down:#d68093;--chart-grid:#202c39;--chart-indicator:#9aa7d6;--chart-reference:#c7a16e;--chart-hist-up:#34695f;--chart-hist-down:#805363}
+.chart-heading{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:4px 16px;margin-bottom:18px}
+.chart-identity{min-width:0;flex:1}
+.page-app .chart-heading h1{font-size:28px;font-weight:750;letter-spacing:-.035em;margin:0;overflow-wrap:anywhere}
+.chart-heading .chart-company-name{grid-column:1/-1;font-size:13px;line-height:1.5;margin:3px 0 0;overflow-wrap:anywhere}
+.chart-company-name:empty{display:none}
+.chart-heading #chart-spot{margin-left:auto;font-size:26px;letter-spacing:-.035em;flex-shrink:0;line-height:1.25}
+.chart-heading #chart-spot time{font:400 12px/1.5 var(--font);letter-spacing:0;max-width:none;white-space:nowrap}
+.page-app .chart-change{min-height:44px;min-width:44px;padding:8px 10px;font-size:12px}
+.chart-search[hidden]{display:none}
+.chart-controls{gap:16px;margin:0 0 16px}
+.chart-controls .chart-control{gap:5px}
+.chart-control>.small{font-size:11px}
+.chart-controls .seg{padding:3px;gap:3px;border-radius:10px;background:var(--surface-2);border-color:transparent}
+.chart-controls .seg button{border-radius:7px;min-height:44px;min-width:48px;padding:8px 17px;font-family:var(--font);font-size:13px;font-weight:550;transition:background .12s,color .12s}
+.chart-controls .seg button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 4px rgb(0 0 0 / .09);font-weight:750}
+.chart-controls .seg button:not(:disabled):hover{color:var(--text);background:var(--surface)}
+.chart-controls .seg button:disabled{opacity:.5;cursor:not-allowed}
+.page-app .chart-help-button{width:auto;min-width:44px;height:44px;padding:0 12px;border-radius:8px;font:600 12px/1.4 var(--font)}
+.chart-controls>.chart-help-button{margin-bottom:3px;margin-left:auto}
+.chart-workspace{background:var(--surface);border-radius:16px;padding:16px 20px}
+.chart-workspace .chart-host{height:470px}
+.chart-ohlc{gap:8px 24px;margin-bottom:14px;align-items:center}
+.chart-ohlc time{font-size:12px}
+.chart-ohlc-values{display:flex;gap:24px;margin:0;font-size:12px;line-height:1.5}
+.chart-ohlc-values>div{display:flex;gap:7px}
+.chart-ohlc-values dt{color:var(--muted);font-weight:400}
+.chart-ohlc-values dd{margin:0;font-weight:650}
+.chart-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0 14px}
+.chart-tools .chart-axes{margin:0;font-size:11px;line-height:1.6}
+.chart-axes>span{display:block}
+.chart-tools .chart-zoom{flex-shrink:0;margin:0}
+.page-app .chart-zoom .btn{height:44px;min-width:44px;font-size:14px}
+.chart-option-controls{align-items:center;gap:8px 14px;padding-top:14px;margin-bottom:12px}
+.chart-option-controls>label:first-child{gap:8px}
+.chart-option-controls>label:first-child>span{font-size:12px}
+.chart-extra-toggle{margin:0;min-height:44px;gap:8px;font-size:12px}
+.chart-extra-toggle input{width:16px;height:16px;accent-color:var(--chart-up);flex-shrink:0}
+.page-app .chart-workspace>.legend{order:0;gap:8px;margin:0 0 12px}
+.chart-workspace .legend-item{padding:7px 10px;background:var(--surface-2);border-radius:7px;font-size:12px}
+.chart-workspace .legend-item i{border-radius:2px;width:3px;height:14px}
+.chart-workspace .legend-item b{font-weight:650}
+.chart-option-notes>.small{font-size:12px;line-height:1.6}
+.chart-expiries summary{min-height:44px;align-content:center;font-size:12px}
+.chart-help-intro{margin:0 0 18px}
+.chart-help-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chart-help-card{padding:16px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;min-width:0}
+.chart-help .chart-help-card h3{margin:0 0 7px;font-size:14px;line-height:1.5}
+.chart-help .chart-help-card p{margin:0;font-size:13px;line-height:1.7}
+.chart-help-section{padding:20px 0 0;margin:20px 0 0;border-top:1px solid var(--border)}
+.chart-help .chart-help-section h3{margin:0 0 8px;font-size:14px}
+.chart-help-section p{margin:0 0 12px}
+.chart-help-fact{font-weight:600;overflow-wrap:anywhere}
+.chart-help>a{display:inline-block;padding:10px 0;font-size:13px;min-height:44px}
+.chart-candle-example{display:flex;align-items:center;gap:14px}
+.chart-candle-art{position:relative;width:24px;height:74px;flex-shrink:0;color:var(--chart-up)}
+.chart-candle-art.down{color:var(--chart-down)}
+.chart-candle-art:before{content:'';position:absolute;width:2px;top:0;bottom:0;left:11px;background:currentColor}
+.chart-candle-art i{position:absolute;inset:17px 0 17px;background:currentColor;border-radius:2px}
+.chart-candle-key{margin:20px 0 0;display:grid;gap:14px;font-size:13px;line-height:1.7}
+.chart-candle-key>div{display:grid;grid-template-columns:52px 1fr;gap:12px}
+.chart-candle-key dt{font-weight:650}.chart-candle-key dd{margin:0;color:var(--muted)}
+@media(max-width:600px){
+ .chart-heading{gap:4px 10px;margin-bottom:12px;align-items:center}
+ .page-app .chart-heading h1{font-size:22px;line-height:1.4}
+ .chart-heading .chart-company-name{font-size:11px;line-height:1.4}
+ .chart-heading #chart-spot{font-size:22px;padding-top:2px}
+ .chart-heading #chart-spot time{font-size:10px}
+ .page-app .chart-change{padding:7px;font-size:11px}
+ .chart-controls{gap:8px 12px;margin:10px 0 12px}
+ .chart-controls .chart-control:first-child{flex-basis:100%}
+ .chart-controls .chart-control:first-child>span{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+ .chart-controls .chart-control:nth-child(2){flex-direction:row;gap:10px}
+ .chart-controls .seg button{min-width:44px;padding:7px 10px;font-size:12px}
+ .chart-controls .chart-interval{width:auto}
+ .chart-controls>.chart-help-button{margin:0 0 0 auto}
+ .chart-workspace{padding:12px 10px;border-radius:12px}
+ .chart-workspace .chart-host{height:380px}
+ .chart-ohlc{gap:6px;margin:0 2px 12px}
+ .chart-ohlc time{flex-basis:100%;font-size:11px}
+ .chart-ohlc-values{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%;font-size:11px}
+ .chart-ohlc-values>div{display:flex;flex-direction:column;gap:1px;min-width:0}
+ .chart-ohlc-values dd{font-size:12px;overflow-wrap:anywhere}
+ .chart-tools{align-items:start;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
+ .chart-tools .chart-axes{font-size:10px;flex:1;min-width:125px;align-self:center}
+ .chart-tools .chart-zoom{margin-left:auto;gap:4px}
+ .chart-option-controls{gap:4px 8px}
+ .chart-option-controls>label:first-child{flex:1;min-width:0}
+ .chart-option-controls .input{max-width:100%;min-width:0;flex:1}
+ .chart-extra-toggle{flex-basis:100%;min-height:44px}
+ .page-app .chart-workspace>.legend{order:0;gap:6px;margin:0 0 12px}
+ .chart-workspace .legend-item{font-size:11px;padding:6px 8px}
+ .chart-option-notes>.small{font-size:11px}
+ .chart-help-pair{grid-template-columns:1fr}
+ .chart-help-card{padding:14px}
+ .chart-candle-art{height:60px}
+ .chart-help-section{padding-top:16px;margin-top:16px}
+ .chart-expiry-row{grid-template-columns:1fr 1fr;gap:10px 14px;padding:12px 4px}
+ .chart-expiry-row span{font-size:12px}.chart-expiry-row small{font-size:11px}
+}
+@media(max-width:360px){
+ .chart-controls .chart-control:nth-child(2)>span{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+}
