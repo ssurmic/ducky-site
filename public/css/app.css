@@ -1340,8 +1340,7 @@ html[data-theme=dark] .evidence-view,html[data-theme=dark] .evidence-detail{--ev
 }
 @media(prefers-reduced-motion:reduce){.evidence-node{transition:none}}
 
-/* Source identity and viewpoint are separate: platform edge / watermark,
-   stance in the small outlined chip. Source colors never change a point's meaning. */
+/* Platform icons identify the source; a verified direction takes color priority. */
 :is(.evidence-view,.evidence-detail){--source-youtube:#bd3040;--source-macro:#936300;--source-mono:#343c47}
 html[data-theme=dark] :is(.evidence-view,.evidence-detail){--source-youtube:#f18f99;--source-macro:#e6bf67;--source-mono:#c3cbd5}
 @media(prefers-color-scheme:dark){html:not([data-theme=light]) :is(.evidence-view,.evidence-detail){--source-youtube:#f18f99;--source-macro:#e6bf67;--source-mono:#c3cbd5}}
@@ -1478,6 +1477,11 @@ html[data-theme=dark] :is(.evidence-view,.evidence-detail){--source-youtube:#f18
 .evidence-analysis-status{font-size:13px;line-height:1.7;color:var(--muted);margin:8px 0 12px}
 .evidence-analysis.is-pending{padding:14px 18px 2px;border-color:var(--border);background:var(--surface)}
 /* Direction remains source-owned. Color and text make it legible together. */
+.evidence-node:is(.is-support,.is-counter){--source-tone:var(--branch);border-color:color-mix(in srgb,var(--branch) 60%,var(--border));border-inline-start:3px solid var(--branch);background:linear-gradient(125deg,color-mix(in srgb,var(--branch) 18%,var(--surface)),color-mix(in srgb,var(--branch) 7%,var(--surface)))}
+.evidence-node:is(.is-support,.is-counter):is(:hover,:focus-visible){border-color:var(--branch);background:linear-gradient(125deg,color-mix(in srgb,var(--branch) 23%,var(--surface)),color-mix(in srgb,var(--branch) 10%,var(--surface)));box-shadow:0 4px 18px color-mix(in srgb,var(--branch) 10%,transparent)}
+.evidence-node:is(.is-support,.is-counter) .evidence-source-badge{color:var(--branch)}
+.evidence-node:is(.is-support,.is-counter) .evidence-source-badge.source-x .evidence-brand-mark{color:var(--branch);background:color-mix(in srgb,var(--branch) 12%,var(--surface));border-color:color-mix(in srgb,var(--branch) 50%,var(--border))}
+.evidence-node:is(.is-support,.is-counter) .evidence-source-watermark{color:var(--branch);opacity:.1}
 .evidence-node:is(.is-support,.is-counter) .evidence-category{padding:3px 7px;border-radius:5px;background:color-mix(in srgb,var(--branch) 15%,transparent);font-size:11px;font-weight:700}
 .evidence-wire:is(.is-support,.is-counter){stroke-width:2;opacity:.9}
 .evidence-filters :is(.is-support,.is-counter){color:var(--branch)}
