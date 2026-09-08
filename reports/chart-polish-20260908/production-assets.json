@@ -1,0 +1,12 @@
+[
+  {
+    "url": "/app-assets/e49c78e8f98103545a57/main.js",
+    "matches_build": true,
+    "sha256": "a780cbb4a1a07b4e88eba6e95ad2bfe0d1287179901635303c68ab47429db23e"
+  },
+  {
+    "url": "/css/chart.css?v=e70534c0",
+    "matches_build": true,
+    "sha256": "f54809a9f4796774681181054855f3069a0a36f7810e1cda080f84a71d6fa2fd"
+  }
+]

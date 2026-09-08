@@ -1,0 +1,239 @@
+{
+  "note": "Synthetic fixture. The unchanged shared-read-refresh worker revalidates one cached endpoint every 60 seconds, independently of view controls.",
+  "steps": [
+    {
+      "step": "zoom-in + fit + October expiry",
+      "calls": [
+        {
+          "method": "GET",
+          "path": "/qa-api/public/company/NVDA"
+        },
+        {
+          "method": "GET",
+          "path": "/qa-api/bars/NVDA"
+        },
+        {
+          "method": "GET",
+          "path": "/qa-api/snapshot/NVDA"
+        },
+        {
+          "method": "GET",
+          "path": "/qa-api/bars/NVDA"
+        }
+      ],
+      "chart": {
+        "font": "Manrope, -apple-system, \"system-ui\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"Noto Sans SC\", sans-serif",
+        "pixels": [
+          8960,
+          0,
+          7406,
+          0,
+          7700,
+          3194,
+          3806,
+          0,
+          9219,
+          3035,
+          3149,
+          0,
+          756,
+          0,
+          0
+        ],
+        "range": {
+          "from": 10.25,
+          "to": 71.75
+        },
+        "referenceY": 35.761666666666684,
+        "series": [
+          {
+            "count": 80,
+            "down": "#bb556a",
+            "type": "Candlestick",
+            "up": "#16836f"
+          },
+          {
+            "color": "#6477bc",
+            "count": 66,
+            "type": "Line"
+          },
+          {
+            "color": "#26a69a",
+            "count": 54,
+            "type": "Histogram"
+          },
+          {
+            "color": "#a46b24",
+            "count": 54,
+            "type": "Line"
+          },
+          {
+            "color": "#6477bc",
+            "count": 54,
+            "type": "Line"
+          }
+        ]
+      },
+      "errors": []
+    },
+    {
+      "step": "theme changed in place",
+      "calls": [
+        {
+          "method": "GET",
+          "path": "/qa-api/public/company/NVDA"
+        },
+        {
+          "method": "GET",
+          "path": "/qa-api/bars/NVDA"
+        },
+        {
+          "method": "GET",
+          "path": "/qa-api/snapshot/NVDA"
+        },
+        {
+          "method": "GET",
+          "path": "/qa-api/bars/NVDA"
+        },
+        {
+          "method": "GET",
+          "path": "/qa-api/snapshot/NVDA"
+        }
+      ],
+      "chart": {
+        "font": "Manrope, -apple-system, \"system-ui\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"Noto Sans SC\", sans-serif",
+        "pixels": [
+          8960,
+          0,
+          7406,
+          0,
+          7700,
+          3194,
+          3806,
+          0,
+          9219,
+          3035,
+          3149,
+          0,
+          756,
+          0,
+          0
+        ],
+        "range": {
+          "from": 10.25,
+          "to": 71.75
+        },
+        "referenceY": 35.761666666666684,
+        "series": [
+          {
+            "count": 80,
+            "down": "#d68093",
+            "type": "Candlestick",
+            "up": "#55b6a4"
+          },
+          {
+            "color": "#9aa7d6",
+            "count": 66,
+            "type": "Line"
+          },
+          {
+            "color": "#26a69a",
+            "count": 54,
+            "type": "Histogram"
+          },
+          {
+            "color": "#c7a16e",
+            "count": 54,
+            "type": "Line"
+          },
+          {
+            "color": "#9aa7d6",
+            "count": 54,
+            "type": "Line"
+          }
+        ]
+      },
+      "errors": [],
+      "theme": "dark"
+    },
+    {
+      "step": "reset",
+      "calls": [
+        {
+          "method": "GET",
+          "path": "/qa-api/public/company/NVDA"
+        },
+        {
+          "method": "GET",
+          "path": "/qa-api/bars/NVDA"
+        },
+        {
+          "method": "GET",
+          "path": "/qa-api/snapshot/NVDA"
+        },
+        {
+          "method": "GET",
+          "path": "/qa-api/bars/NVDA"
+        },
+        {
+          "method": "GET",
+          "path": "/qa-api/snapshot/NVDA"
+        }
+      ],
+      "chart": {
+        "font": "Manrope, -apple-system, \"system-ui\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"Noto Sans SC\", sans-serif",
+        "pixels": [
+          19968,
+          0,
+          5668,
+          0,
+          7967,
+          3194,
+          3845,
+          0,
+          7472,
+          3126,
+          3135,
+          0,
+          652,
+          0,
+          0
+        ],
+        "range": {
+          "from": 0,
+          "to": 82
+        },
+        "referenceY": -935.3737408747728,
+        "series": [
+          {
+            "count": 80,
+            "down": "#bb556a",
+            "type": "Candlestick",
+            "up": "#16836f"
+          },
+          {
+            "color": "#6477bc",
+            "count": 66,
+            "type": "Line"
+          },
+          {
+            "color": "#26a69a",
+            "count": 54,
+            "type": "Histogram"
+          },
+          {
+            "color": "#a46b24",
+            "count": 54,
+            "type": "Line"
+          },
+          {
+            "color": "#6477bc",
+            "count": 54,
+            "type": "Line"
+          }
+        ]
+      },
+      "errors": []
+    }
+  ]
+}
