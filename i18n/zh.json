@@ -3299,7 +3299,7 @@
   "app.evidence.priority_market": "入场参考",
   "app.evidence.priority_context": "辅助背景",
   "app.evidence.ordering": "为什么这样排序？",
-  "app.evidence.ordering_note": "先看可追溯的一手披露和博主直接论点，再看价格、IV、期权和相对表现，最后看提及热度与宏观背景。支持与反证各自保留位置；重复来源不叠加。排序表示阅读优先级，不代表作者胜率或买入权重。",
+  "app.evidence.ordering_note": "先看可追溯的一手披露与博主明确的看多、看空论点，普通提及排在论点之后；再看价格、IV、期权和相对表现。支持与反证各自保留位置，重复来源不叠加。排序表示阅读优先级，不代表作者胜率或买入权重。",
   "app.chart.expiry_monthly": "月度到期日",
   "app.chart.expiry_fortnight": "约两周到期",
   "app.chart.expiry_week": "一周内到期",
@@ -3321,5 +3321,10 @@
   "app.creators.mention_only": "提及，未确认方向",
   "app.creators.verified_view": "已核对观点",
   "app.creators.more_spans": "展开其余 {n} 条片段",
-  "app.chart.expiry_not_collected": "提供方列出但本轮未采集：{dates}。"
+  "app.chart.expiry_not_collected": "提供方列出但本轮未采集：{dates}。",
+  "app.evidence.creator_context": "博主观点与原文",
+  "app.evidence.source_located": "已定位到这条观点对应的视频。",
+  "app.evidence.source_unavailable": "这条原帖暂时不可用，可能已被撤回。",
+  "app.evidence.point_changed": "这一观点已更新或撤回。下面保留当前已核对的内容。",
+  "app.evidence.creator_all_posts": "查看这位博主的全部视频"
 }

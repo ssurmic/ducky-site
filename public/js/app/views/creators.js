@@ -103,9 +103,14 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
   card.append(el("h1", s("creators.h1")), el("p.muted", s("creators.sub")));
   card.appendChild(spinner());
 
-  let doc, subs, watches;
+  const initial=creatorRoute(routeQuery);
+  let doc, subs, watches,linkedSource=null,linkFailed=false;
   try {
     [doc, subs, watches] = await Promise.all([api.kol.feed(), api.kol.mine(), api.watchlist.list().catch(()=>null)]);
+    if(initial.post&&initial.selected){
+      try{linkedSource=await api.get('/kol/'+encodeURIComponent(initial.selected)+'/posts/'+encodeURIComponent(initial.post));}
+      catch{linkFailed=true;}
+    }
   } catch (e) {
     clear(card); card.append(el("h1", s("creators.h1")), el("p.err", s("creators.load_error")));
     return () => {};
@@ -114,10 +119,10 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
   if (epoch !== store.epoch()) return () => {};
   const kols = (doc && doc.kols) || [];
   for(const c of subs?.creators || [])if(!kols.some(k=>k.id===c.kol_id))kols.push({...c,id:c.kol_id});
-  const initial=creatorRoute(routeQuery);
+  if(linkedSource?.creator&&!kols.some(k=>k.id===linkedSource.creator.id))kols.push(linkedSource.creator);
   const watchRows=Array.isArray(watches)?watches:(watches?.items || watches?.tickers || watches?.watchlist || []);
   const watchedTickers=watchRows.map(t=>typeof t==='string'?t:t?.ticker || t?.symbol).filter(t=>typeof t==='string').map(t=>t.toUpperCase());
-  let analysis=subs?.analysis || {},setupCleanup=()=>{},showSetup=!following.size&&initial.tab==='feed'&&!initial.ticker&&!initial.watched,disposed=false,notice='',refreshing=false;
+  let analysis=subs?.analysis || {},setupCleanup=()=>{},showSetup=!following.size&&initial.tab==='feed'&&!initial.ticker&&!initial.watched&&!initial.post,disposed=false,notice='',refreshing=false;
   const setupState={};
   const pending=()=>Object.values(analysis).some(x=>['queued','running'].includes(x.status));
   const progress=progressPoll({active:()=>!disposed&&epoch===store.epoch()&&root.isConnected&&pending(),read:()=>api.kol.mine(),
@@ -130,6 +135,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       if(completed)refresh({automatic:true});else if(changed)renderContent();
     },onError:()=>{const node=card.querySelector('.creator-sync-note');if(node)node.textContent=s('creatorflow.reconnecting');}});
   const posts = (doc && doc.posts) || [];
+  if(linkedSource?.post){const i=posts.findIndex(p=>p.kol_id===initial.selected&&p.platform_post_id===initial.post);if(i<0)posts.push(linkedSource.post);else posts[i]=linkedSource.post;}
+  let focusedPost=initial.post,focusedPoint=initial.point;
   let archive = false;
   // Legacy stock-entry URLs must not hide creators. A stock can still locate a
   // particular selected creator's research claim, after their identity is selected.
@@ -176,6 +183,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
   }
 
   function renderContent() {
+    if(focusedPost&&(selected!==initial.selected||tab!=='feed')){focusedPost='';focusedPoint='';linkFailed=false;}
     if(selected&&!kols.some(k=>k.id===selected))selected='';
     syncRoute();pageProgress.schedule();
     const content = card.querySelector(".creators-content");
@@ -255,7 +263,12 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
     if(history?.loading)feedContent.append(el('p.small.muted',{role:'status'},s('common.loading')));
     if(history?.error)feedContent.append(el('p.err',s('creators.load_error')));
     if(history&&!history.loading&&(history.error||history.next_cursor))feedContent.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>loadHistory(selected)},s(history.error?'creatorflow.refresh':'creators.load_more')));
-    const visiblePosts = filterPosts(history?.items || posts, {following,mine,archive,query:'',tickers:null}).filter(p=>!selected || p.kol_id===selected);
+    if(focusedPost){
+      feedContent.append(el('p.small.muted',{role:'status'},s(linkFailed?'evidence.source_unavailable':'evidence.source_located')),
+        el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{focusedPost='';focusedPoint='';linkFailed=false;renderContent();}},s('evidence.creator_all_posts')));
+    }
+    const candidates=focusedPost?posts.filter(p=>p.kol_id===initial.selected&&p.platform_post_id===focusedPost):(history?.items||posts);
+    const visiblePosts = filterPosts(candidates, {following,mine:focusedPost?false:mine,archive:archive||!!focusedPost,query:'',tickers:null}).filter(p=>!selected || p.kol_id===selected);
     if (!visiblePosts.length) { feedContent.appendChild(empty(s("creators.feed_empty"))); return; }
     const feed = el("div.cr-feed");
     for (const p of visiblePosts.slice(0, history?.items?visiblePosts.length:shown)) {
@@ -264,6 +277,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       const meta = evidenceMeta(p);
       const stance = grounded && ["bull", "bear"].includes(p.take) ? p.take : "neutral";
       const art = el("article.cr-post");
+      if(focusedPost)art.classList.add('is-focused-source');
       const head = el("div.cr-post-head",
         el("b.cr-who", (p.kol_name || p.kol_id || "")),
         el("span.cr-take." + TAKE_CLS[stance], grounded ? s("creators.take_" + stance) : s(reviewed ? "creators.summary_ready" : "creators.unverified")));
@@ -285,6 +299,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
         const fullSummary = pickSummary(p.summary,isZh) || pickSummary(sections[0],isZh);
         art.appendChild(el("p.cr-sum", conciseSummary(fullSummary,isZh)));
         const detail = el("details.cr-sections",el("summary",s("creators.read_summary")),el("p.cr-attribution.muted.small", s("creators.attribution", { name: p.kol_name || p.kol_id || "—" })),el("p",fullSummary));
+        if(focusedPost)detail.open=true;
         if (grounded && p.calls?.length) detail.append(callChips(p.calls,isZh,p.url,p.kol_id));
         if (sections.length) {
 
@@ -297,7 +312,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
         art.appendChild(el("p.muted.small", s('creators.'+statusKey)));
       }
 
-      const spans=spanSection(p.reviewed_spans);if(spans)art.append(spans);
+      const spans=spanSection(p.reviewed_spans,null,focusedPoint);if(spans)art.append(spans);
+      if(focusedPost&&focusedPoint&&!p.reviewed_spans?.some(v=>v.point_id===focusedPoint))art.append(el('p.data-notice',s('evidence.point_changed')));
       const audit=el('details.creator-audit',el('summary',s('creators.source_details')),
         el('p.muted.small',s('creators.first_seen')+' '+dateTime(p.first_seen_at)),
         el('p.muted.small',s('creators.analysis_updated')+' '+dateTime(p.fetched_at)));
@@ -310,6 +326,12 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       feed.appendChild(art);
     }
     feedContent.appendChild(feed);
+    if(focusedPost)requestAnimationFrame(()=>{
+      if(disposed||!root.isConnected)return;
+      const target=[...feed.querySelectorAll('[data-point-id]')].find(n=>n.dataset.pointId===focusedPoint)||feed.querySelector('.cr-post');
+      target?.scrollIntoView({block:'center',behavior:'instant'});
+      if(target?.hasAttribute('tabindex'))target.focus({preventScroll:true});
+    });
     if(!history?.items&&visiblePosts.length>shown) feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{shown+=30;renderContent();}},s('creators.load_more')));
     feedContent.append(el('p.muted.small',s('creators.feed_limit',{n:history?.items?.length ?? posts.length})));
   }
@@ -327,7 +349,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
 
   function syncRoute() {
     if(!disposed&&epoch===store.epoch()&&location.hash.split('?')[0]==='#/creators') {
-      const target=creatorTarget({tab,mine,watched,ticker:stockTicker,selected,demo:labState.demo});
+      const target=creatorTarget({tab,mine,watched,ticker:stockTicker,selected,demo:labState.demo,post:focusedPost,point:focusedPoint});
       if(location.hash!==target)history.replaceState(null,'',location.pathname+location.search+target);
       document.querySelectorAll('[data-lang-toggle], [data-lang-toggle-footer]').forEach(link=>link.setAttribute('href',link.getAttribute('href').split('#')[0]+target));
     }

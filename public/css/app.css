@@ -1403,3 +1403,10 @@ html[data-theme=dark] .evidence-view,html[data-theme=dark] .evidence-detail{--ev
 .creator-reviewed-spans article>a{display:inline-flex;align-items:center;min-height:44px;margin-right:16px}
 
 .creator-spans-more>summary{min-height:44px;align-content:center;cursor:pointer;color:var(--accent-text);font-size:13px}
+
+/* Exact evidence links retain a readable source context on narrow screens. */
+.creator-reviewed-spans article.is-focused{outline:2px solid var(--accent);outline-offset:3px;scroll-margin:100px 0 100px}
+.creator-reviewed-spans article.is-support{border-left:3px solid var(--green)}
+.creator-reviewed-spans article.is-counter{border-left:3px solid var(--red)}
+.creator-reviewed-spans blockquote{margin:12px 0;padding-left:12px;border-left:2px solid var(--border);overflow-wrap:anywhere}
+.cr-post.is-focused-source{scroll-margin-top:90px}

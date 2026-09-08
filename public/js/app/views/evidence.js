@@ -5,6 +5,7 @@ import * as store from '../store.js';
 import {factText} from './stock-briefs.js';
 import {waterLevel,marketDetail,priceBadge} from '../evidence-context.js';
 import {icon} from '../icons.js';
+import {evidenceTarget} from '../creator-route.js';
 
 const pick=v=>v?.[LANG==='en'?'en':'zh']||'';
 const original=v=>pick(v)||v?.en||v?.zh||'';
@@ -31,6 +32,8 @@ export function detail(node){
       Number.isFinite(e.start_seconds)?el('p.small.muted',s('evidence.segment',{start:position(e.start_seconds),end:position(e.end_seconds)})):null);
     if(e.freshness==='stale')item.append(el('p.data-notice',s('evidence.stale_source')));
     const href=source(e.source_url);
+    const internal=evidenceTarget(e);
+    if(internal)item.append(el('a.btn.btn-primary.btn-sm',{href:internal,onclick:()=>closeModal()},s('evidence.creator_context')));
     if(href)item.append(el('a.btn.btn-ghost.btn-sm',{href,target:'_blank',rel:'noopener noreferrer'},s('evidence.open_source')+' ↗'));
     else item.append(el('p.small.muted',s(e.kind==='fact'?'evidence.saved_calculation':'evidence.no_source_link')));
     const audit=el('details',el('summary',s('evidence.record_details')),
@@ -159,7 +162,8 @@ export function mapView(doc,{archive=false,onPickTicker}={}){
     map.classList.toggle('is-empty',!visible.length);
     for(const [i,node] of visible.entries()){
       const authors=[...new Set((node.evidence||[]).map(e=>e.author).filter(Boolean))];
-      const card=el('button.evidence-node',{type:'button',class:'is-'+node.stance,style:{gridColumn:i%2===0?'1':'3',gridRow:String(Math.floor(i/2)+1)},onclick:()=>detail(node)},
+      const linked=node.kind==='creator'&&node.evidence?.length===1?evidenceTarget(node.evidence[0]):null;
+      const card=el('button.evidence-node',{type:'button',class:'is-'+node.stance,style:{gridColumn:i%2===0?'1':'3',gridRow:String(Math.floor(i/2)+1)},onclick:()=>{if(linked)location.hash=linked;else detail(node);}},
         el('span.evidence-node-label',el('span.evidence-category',s('evidence.'+node.stance)),
           node.priority?el('span.evidence-priority',s('evidence.priority_'+node.priority)):null,
           node.conditional?el('span.evidence-condition',s('evidence.condition_tag')):null,

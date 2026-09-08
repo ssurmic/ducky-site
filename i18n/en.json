@@ -3299,7 +3299,7 @@
   "app.evidence.priority_market": "Entry context",
   "app.evidence.priority_context": "Background",
   "app.evidence.ordering": "Why this order?",
-  "app.evidence.ordering_note": "Read attributable primary disclosures and direct creator arguments first, then price, IV, options and relative performance, followed by discussion activity and macro context. Support and opposition retain separate places; repeated sources do not add weight. This is reading priority, not creator performance or a trading weight.",
+  "app.evidence.ordering_note": "Read attributable disclosures and explicit bullish or bearish arguments first, then plain mentions, price, IV, options and relative performance. Support and opposition retain separate places; repeated sources do not add weight. This is reading priority, not creator performance or a trading weight.",
   "app.chart.expiry_monthly": "Monthly expiry date",
   "app.chart.expiry_fortnight": "About two weeks",
   "app.chart.expiry_week": "Within one week",
@@ -3321,5 +3321,10 @@
   "app.creators.mention_only": "Mention; no verified direction",
   "app.creators.verified_view": "Verified view",
   "app.creators.more_spans": "Show {n} more passages",
-  "app.chart.expiry_not_collected": "Listed by the provider but not collected in this pass: {dates}."
+  "app.chart.expiry_not_collected": "Listed by the provider but not collected in this pass: {dates}.",
+  "app.evidence.creator_context": "View creator context",
+  "app.evidence.source_located": "Showing the video behind this evidence.",
+  "app.evidence.source_unavailable": "This source is unavailable or has been withdrawn.",
+  "app.evidence.point_changed": "This point has changed or been withdrawn. Current verified content appears below.",
+  "app.evidence.creator_all_posts": "View all videos from this creator"
 }
