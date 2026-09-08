@@ -171,3 +171,17 @@ stocks, with 48-pixel-high buttons. The release's four modified JavaScript modul
 and the CSS URL actually referenced by HTML (`?v=43b46ef7`) match built file hashes.
 The previously open document retained its older JavaScript until navigation loaded
 a new document; final acceptance uses fresh, ordinary production URLs.
+
+### Small recorded price changes
+
+Final production inspection after the shared price worker caught up exposed a
+formatting issue: GOOGL's actual -0.0295% change rounded to -0.0%. The event price
+snapshot now adds decimal places only when a nonzero recorded move would round
+to zero, up to the backend's four decimal places. GOOGL displays -0.03%; ordinary
+moves keep one decimal place and actual zero stays neutral at 0.0%. The shared
+formatter and return calculations are unchanged. This applies to both creator and
+social event snapshots, including their completed 20-session comparison.
+
+Regression checks cover positive and negative small moves, the smallest recorded
+precision, ordinary moves, actual zero and unavailable data. All 442 frontend tests,
+copy lint and 1,352 internal links pass. Live verification follows deployment.
