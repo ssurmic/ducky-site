@@ -1412,5 +1412,10 @@ html[data-theme=dark] .evidence-view,html[data-theme=dark] .evidence-detail{--ev
 .creator-reviewed-spans article.is-focused{outline:2px solid var(--accent);outline-offset:3px;scroll-margin:100px 0 100px}
 .creator-reviewed-spans article.is-support{border-left:3px solid var(--green)}
 .creator-reviewed-spans article.is-counter{border-left:3px solid var(--red)}
+.creator-reviewed-spans.is-inline{border:0;background:transparent;padding:0;margin:16px 0}
+.creator-reviewed-spans.is-inline article{padding:14px;border:1px solid var(--border);border-radius:12px;margin:12px 0;background:var(--bg)}
+.creator-reviewed-spans.is-inline article.is-support{border-left:3px solid var(--green)}
+.creator-reviewed-spans.is-inline article.is-counter{border-left:3px solid var(--red)}
+.creator-reviewed-spans article>.cr-take{display:inline-flex;margin:0 8px 6px 0}
 .creator-reviewed-spans blockquote{margin:12px 0;padding-left:12px;border-left:2px solid var(--border);overflow-wrap:anywhere}
 .cr-post.is-focused-source{scroll-margin-top:90px}
