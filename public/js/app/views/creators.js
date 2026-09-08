@@ -100,7 +100,7 @@ function callChips(calls, isZh, url,kolId) {
   return wrap;
 }
 
-export async function mount(root, {query:routeQuery=new URLSearchParams()} = {}) {
+export async function mount(root, {query:routeQuery=new URLSearchParams(),signal} = {}) {
   const epoch = store.epoch();
   const isZh = (document.documentElement.lang || "zh").slice(0, 2) !== "en";
   const card = el("section.card.creators-view");
@@ -117,11 +117,16 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       catch{linkFailed=true;}
     }
   } catch (e) {
-    clear(card); card.append(el("h1", s("creators.h1")), el("p.err", s("creators.load_error")));
+    if (epoch !== store.epoch() || signal?.aborted) return () => {};
+    const retry=el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{
+      if(retry.disabled || !root.isConnected || epoch!==store.epoch() || signal?.aborted)return;
+      retry.disabled=true;router.go(location.hash);
+    }},s('common.retry'));
+    clear(card); card.append(el("h1", s("creators.h1")), el("p.err", {role:'alert'},s("creators.load_error")),retry);
     return () => {};
   }
   const following = new Set((subs && subs.subs) || []);
-  if (epoch !== store.epoch()) return () => {};
+  if (epoch !== store.epoch() || signal?.aborted) return () => {};
   const kols = (doc && doc.kols) || [];
   for(const c of subs?.creators || [])if(!kols.some(k=>k.id===c.kol_id))kols.push({...c,id:c.kol_id});
   if(linkedSource?.creator&&!kols.some(k=>k.id===linkedSource.creator.id))kols.push(linkedSource.creator);
