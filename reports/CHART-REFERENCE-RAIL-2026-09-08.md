@@ -28,4 +28,10 @@ Production Pro acceptance used AVGO: Chinese dark 390×750 and English dark 1200
 
 The fixture uses the actual application and vendored chart library, served by `reports/chart-polish-20260908/serve.py` after building. Its data is synthetic and is not investment evidence. Browser viewport and mouse/keyboard checks do not certify physical iPhone/Safari or physical pinch gestures.
 
+## Option-data coverage boundary
+
+The production AVGO dropdown in this acceptance contained only September 9, 11, 14 and 16. This release does **not** certify monthly-expiry coverage. The view displays every returned `gamma.by_expiry` row without truncation. The coverage disclosure lists failed attempts and available-but-uncollected expiries when the producer supplies that metadata.
+
+A follow-up source audit of backend `45d1ab4` found that the standard gamma calculation selects the first four expiries within 45 days. A separate `ensure_option_scope` warmup extends display-only details to at most eight chains, prioritizing monthly and roughly two-week dates; it leaves the combined calculation unchanged. Regular snapshot builds do not call that extension, so they can replace an extended snapshot with four-expiry detail again. The supporting worker's warmup attempt also has a six-hour cooldown. This is a producer-continuity finding handed to the coordinating backend task; it was not changed or presented as resolved by this frontend release. Missing monthly levels must not be fabricated or inferred from the existing four rows.
+
 Implementation references: the library's [price-line options](https://tradingview.github.io/lightweight-charts/docs/api/interfaces/PriceLineOptions) distinguish pane titles from axis tags; [time-scale options](https://tradingview.github.io/lightweight-charts/docs/api/interfaces/TimeScaleOptions#lockvisibletimerangeonresize) support retaining the visible range during resize. The existing dependency version is unchanged.
