@@ -76,3 +76,12 @@ receipt is `/tmp/ducky-stock-navigation-qa/production-delivery-20260908.json`.
 Some older legacy research snapshots initially lacked the new price context; their
 views remained visible with “awaiting calculation”. The natural producer subsequently
 populated the third legacy AVGO row without a manual source review or record rewrite.
+
+Follow-up entry audit found that chart/watchlist `#/creators?ticker=AVGO` links lost
+their ticker during initial state setup. Explicit stock links now filter the existing
+related-content feed across creators and preserve the stock in language and research
+navigation. The legacy implicit watchlist scope still shows the full people-first
+feed, and name lookup clears the stock tag. Exact-source links keep their source.
+Seventeen focused navigation, people-search and research tests pass, including a
+real mount regression that retains an unfollowed AVGO creator and excludes TSLA.
+This follow-up is queued for the next coordinated frontend release.

@@ -60,6 +60,32 @@ test('creator feed retains unrelated posts and marks watched stocks only on revi
   dispose();root.remove();
 });
 
+test('explicit stock links filter related content across creators and retain the language URL',async()=>{
+  store.set('me',{tier:'pro',user_id:1});
+  const related={...post(1,'AVGO'),kol_id:'unfollowed',kol_name:'Unfollowed Creator'};
+  globalThis.fetch=async url=>Response.json(url==='/kol/feed'?{
+    kols:[{id:'known',name:'Other Creator',profile:{}},{id:'unfollowed',name:'Unfollowed Creator',profile:{}}],
+    posts:[related,post(2,'TSLA')]}:url==='/me/kols'?{subs:['known'],analysis:{}}:
+    url==='/watchlist'?{items:[{ticker:'TSLA'}]}:String(url).startsWith('/kol/research')?{items:[
+      {id:1,revision_id:1,kol_id:'unfollowed',published_at:related.published_at,calls:[{sym:'AVGO',stance:'bull'}]},
+      {id:2,revision_id:2,kol_id:'known',published_at:related.published_at,calls:[{sym:'TSLA',stance:'bull'}]}]}:{items:[]});
+  const language=document.createElement('a');language.dataset.langToggle='';language.href='/en/app/#/creators';document.body.append(language);
+  const root=document.createElement('main');document.body.append(root);
+  const dispose=await mount(root,{query:new URLSearchParams('ticker=avgo')});await tick();
+  assert.equal(root.querySelectorAll('.cr-post').length,1);
+  assert.ok(root.querySelector('.cr-post').textContent.includes('AVGO'));
+  assert.ok(root.querySelector('.cr-post').textContent.includes('Unfollowed Creator'));
+  assert.ok(root.querySelector('.creator-stock-context').textContent.includes('$AVGO'));
+  assert.equal(location.hash,'#/creators?scope=discover&ticker=AVGO');
+  assert.equal(language.getAttribute('href'),'/en/app/#/creators?scope=discover&ticker=AVGO');
+  [...root.querySelectorAll('.creator-workspace-tabs button')].find(b=>b.textContent===copy['app.creators.research']).click();
+  await tick();await tick();
+  assert.ok(root.querySelector('.creator-workspace').textContent.includes('$AVGO'));
+  assert.ok(!root.querySelector('.creator-workspace').textContent.includes('$TSLA'));
+  assert.equal(location.hash,'#/creators?tab=research&scope=discover&ticker=AVGO');
+  dispose();root.remove();language.remove();
+});
+
 test('restored lookup keeps the visible name and discovery results in sync without replacing Following',async()=>{
  store.set('me',{tier:'pro',user_id:1});const calls=[];
  globalThis.fetch=async url=>{calls.push(url);return Response.json(url==='/kol/feed'?{kols:[{id:'known',name:'Other Creator',profile:{}}],posts:[post(1,'NVDA')]}:
