@@ -3472,5 +3472,21 @@
   "app.evidence.switch_stock": "切换股票",
   "app.evidence.all_watchlist": "全部自选股 · {n}",
   "app.evidence.other_stock": "查看其他股票",
-  "app.creators.research_scope": "展示已审核、已收录的观点；未完成的价格窗口会保留在这里。"
+  "app.creators.research_scope": "展示已审核、已收录的观点；未完成的价格窗口会保留在这里。",
+  "walkthrough.intc.title": "补充教程：从英特尔的相关观点找到原话",
+  "walkthrough.intc.intro": "打开信息导图，找到投资 TALK 君对英特尔的观点，核对原话，再看看价格提醒和日历怎么用。",
+  "walkthrough.intc.download": "下载英特尔操作教程",
+  "walkthrough.intc.note": "历史内容示例：观点发表于 2026 年 8 月 24 日，9 月 6 日收录。片中价格提醒尚未启用。",
+  "walkthrough.intc.open": "打开这条观点",
+  "walkthrough.intc.transcript": "查看文字版与原始来源",
+  "walkthrough.intc.source_note": "博主原句从 4:09 开始，产品的 4:06 链接保留前一句的上下文。",
+  "walkthrough.intc.source": "查看原视频 4:09",
+  "walkthrough.intc.line.1": "盯着几只股票，却看不过来那么多消息？",
+  "walkthrough.intc.line.2": "在信息导图里，找到和你有关的观点。",
+  "walkthrough.intc.line.3": "这位博主当时说，继续持有英特尔。",
+  "walkthrough.intc.line.4": "原字幕里，4:09，就是英特尔的这句话。",
+  "walkthrough.intc.line.5": "想设价格提醒？先输入价位，再核对条件。",
+  "walkthrough.intc.line.6": "接收方式，在这里选择和连接。",
+  "walkthrough.intc.line.7": "再看看日历，重要事件提前了解。",
+  "walkthrough.intc.line.8": "从你关注的股票开始。"
 }

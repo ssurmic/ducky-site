@@ -1,0 +1,200 @@
+{
+  "version": "2026-09-08-intc-draft-2",
+  "status": "production_capture_draft_not_for_publication",
+  "render_languages": [
+    "zh",
+    "en"
+  ],
+  "speakers": {
+    "zh": "zh-CN-XiaoxiaoNeural",
+    "en": "en-US-AvaNeural"
+  },
+  "synthesis": {
+    "provider": "Microsoft online speech service",
+    "client": "edge-tts",
+    "client_version": "7.2.8",
+    "rate": "+0%",
+    "pitch": "+0Hz",
+    "boundary": "WordBoundary",
+    "model_revision": "not exposed by provider"
+  },
+  "resource_plan": {
+    "dgx_memory_bytes": 0,
+    "dgx_gpu_memory_bytes": 0,
+    "model_downloads": false,
+    "local_neural_model_loaded": false,
+    "encoding": "CPU ffmpeg, maximum 2 threads"
+  },
+  "scenes": [
+    {
+      "name": "01-overload",
+      "zh": "盯着几只股票，却看不过来那么多消息？",
+      "en": "Following a few stocks, but buried in updates?",
+      "title_zh": "从自选出发",
+      "title_en": "Start with your stocks",
+      "minimum_seconds": 3.8
+    },
+    {
+      "name": "02-map",
+      "zh": "在信息导图里，找到和你有关的观点。",
+      "en": "Find relevant views in your Information Map.",
+      "title_zh": "相关观点，汇在一起",
+      "title_en": "Relevant views, together",
+      "minimum_seconds": 3.7
+    },
+    {
+      "name": "03-creator",
+      "zh": "这位博主当时说，继续持有英特尔。",
+      "en": "Here, this creator says he's holding Intel.",
+      "title_zh": "投资 TALK 君 · 2026-08-24",
+      "title_en": "TALK · August 24, 2026",
+      "minimum_seconds": 4.6
+    },
+    {
+      "name": "04-source",
+      "zh": "原字幕里，4:09，就是英特尔的这句话。",
+      "en": "His exact words are in the transcript at 4:09.",
+      "title_zh": "原字幕 · 04:09",
+      "title_en": "Original captions · 04:09",
+      "minimum_seconds": 4.0,
+      "spoken_zh": "原字幕里，四分零九秒，就是英特尔的这句话。",
+      "spoken_en": "His exact words are in the transcript at four oh nine."
+    },
+    {
+      "name": "05-alert",
+      "zh": "想设价格提醒？先输入价位，再核对条件。",
+      "en": "For a price alert, choose a price and review the condition.",
+      "title_zh": "价格提醒示例",
+      "title_en": "Price alert example",
+      "minimum_seconds": 4.2
+    },
+    {
+      "name": "06-channels",
+      "zh": "接收方式，在这里选择和连接。",
+      "en": "Choose and connect your email or Telegram here.",
+      "title_zh": "选择接收方式",
+      "title_en": "Choose how to stay updated",
+      "minimum_seconds": 4.0
+    },
+    {
+      "name": "07-calendar",
+      "zh": "再看看日历，重要事件提前了解。",
+      "en": "Check the calendar for the next events to watch.",
+      "title_zh": "接下来，关注什么",
+      "title_en": "What to watch next",
+      "minimum_seconds": 3.8
+    },
+    {
+      "name": "08-start",
+      "zh": "从你关注的股票开始。",
+      "en": "Start with the stocks you care about.",
+      "title_zh": "从你关注的股票开始",
+      "title_en": "Start with the stocks you care about",
+      "minimum_seconds": 3.2
+    }
+  ],
+  "source": {
+    "point": "claim:231a64321ade3830e177cc93",
+    "video": "CEGiQA6CNd4",
+    "url": "https://www.youtube.com/watch?v=CEGiQA6CNd4&t=246s",
+    "publication_display_utc": "2026-08-24 04:34",
+    "first_recorded_display_utc": "2026-09-06 22:36",
+    "last_updated_display_utc": "2026-09-07 02:26",
+    "clock_precision": "UI minute labels",
+    "meaning": "author reported holding Intel at the time; original neutral stance retained; no current holding or return forecast inferred",
+    "explicit_intel_caption_start_seconds": 249,
+    "context_link_start_seconds": 246,
+    "transcript_receipt": "reports/demo-case-review-20260908/intc-original-transcript-check-20260908.json"
+  },
+  "limitations": [
+    "Edited cuts from actual live UI captures, not a continuous latency measurement.",
+    "INTC overview pending; not narrated or shown as ready.",
+    "No alert saved, no external delivery sent, no email/TG receipt implied.",
+    "No historical performance or first-capture claim.",
+    "Voice and subtitles remain a review draft; final listening acceptance required.",
+    "Scene04 uses independently checked original transcript text and actual product source excerpt; the NVIDIA product-price background is removed."
+  ],
+  "caption_font_size": 82,
+  "capture_files": {
+    "04-source": {
+      "zh": "04-source-excerpt.zh.png",
+      "en": "04-source-excerpt.en.png"
+    }
+  },
+  "capture_crops": {
+    "04-source": {
+      "zh": [
+        865,
+        743,
+        1080,
+        149
+      ],
+      "en": [
+        865,
+        748,
+        1080,
+        155
+      ]
+    }
+  },
+  "source_quote": {
+    "scene": "04-source",
+    "text": "包括英特尔这边肯定是继续持有",
+    "display_lines": [
+      "包括英特尔这边",
+      "肯定是继续持有"
+    ],
+    "timestamp": "04:09",
+    "translation": "He says he will continue holding Intel.",
+    "style": "Clearly labeled editorial source quotation above an actual product excerpt screenshot; not a fabricated YouTube panel."
+  },
+  "editorial_overrides": {
+    "04-source": {
+      "zh": {
+        "labels": [
+          "核对原字幕",
+          "04:09"
+        ],
+        "details": [
+          "投资 TALK 君 · 英特尔",
+          "原句与时间点一起看"
+        ]
+      },
+      "en": {
+        "labels": [
+          "Check his words.",
+          "04:09"
+        ],
+        "details": [
+          "TALK · Intel",
+          "Original words, with a timestamp"
+        ]
+      }
+    },
+    "05-alert": {
+      "zh": {
+        "labels": [
+          "设置价格提醒"
+        ],
+        "details": [
+          "输入价位，核对条件后启用"
+        ],
+        "footer": "演示配置 · 尚未启用"
+      },
+      "en": {
+        "labels": [
+          "Set a price alert."
+        ],
+        "details": [
+          "Choose a price, then",
+          "review the condition."
+        ],
+        "footer": "Example configuration · not enabled"
+      }
+    }
+  },
+  "review_label": {
+    "zh": "操作示例",
+    "en": "Workflow example"
+  }
+}
