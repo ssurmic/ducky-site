@@ -50,3 +50,8 @@ test('translation truncation is disclosed only for the selected source body',()=
  const translated={...row,extra:{...row.extra,translation_message_truncated:true}};
  assert.equal(recordDocument(translated,'zh').truncated,true);assert.ok(!recordDocument(translated,'en').truncated);
 });
+
+test('presentation cleanup preserves standalone directional and risk symbols',()=>{
+ const doc=recordDocument({kind:'macro',extra:{message_text:'🌊 *宏观* · 2026-09-07\n\nUSD ↑ · breadth ↓ · 🔴 stress'}});
+ assert.ok(doc.blocks[0].text.includes('↑'));assert.ok(doc.blocks[0].text.includes('↓'));assert.ok(doc.blocks[0].text.includes('🔴 stress'));
+});

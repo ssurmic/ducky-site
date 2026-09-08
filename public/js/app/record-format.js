@@ -4,7 +4,7 @@ import {s,LANG} from './strings.js';
 export const REPORT_KINDS=new Set(['digest','market','macro','liquidity','kindex','volscan','hiring','weekpreview','default']);
 export const recordHref=row=>'#/record/'+encodeURIComponent(String(row.id));
 export function cleanMessage(text){
- return String(text||'').replace(/[\p{Extended_Pictographic}\p{Regional_Indicator}\uFE0F\u200D]/gu,'')
+ return String(text||'').replace(/[\p{Regional_Indicator}🧭🔔🌊📉🎯🔗🧑💻\uFE0F\u200D]/gu,'')
   .replace(/\*{1,2}([^*\n]+)\*{1,2}/g,'$1').replace(/(^|\s)_([^_\n]+)_(?=\s|$)/g,'$1$2')
   .replace(/\(entry-[A-Za-z0-9-]+(?:,\s*entry-[A-Za-z0-9-]+)*\)/g,'').replace(/entry-[A-Za-z0-9-]+(?:[,、]\s*entry-[A-Za-z0-9-]+)*/g,s('reader.saved_refs'))
   .replace(/^\s*#{1,6}\s+/gm,'').replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'$1 ($2)').trim();
@@ -17,7 +17,7 @@ export function recordDocument(row,language=LANG){
  const known={digest:'digest',macro:'macro',volscan:'volscan',hiring:'hiring',weekpreview:'weekpreview'};
  if(datedHeader && known[row.kind])title=s('reader.title_'+known[row.kind]);
  if(datedHeader && row.kind==='market')title=s(/Weekly|每周/.test(header)?'reader.title_weekly':'reader.title_market');
- if(!title)title=row.ticker?'$'+row.ticker+(row.issuer_name?' · '+row.issuer_name:''):row.issuer_name||s(row.archived?'boards.t_'+row.board:'radar.kind_'+row.kind);
+ if(!title)title=row.ticker?'$'+row.ticker:row.issuer_name||s(row.archived?'boards.t_'+row.board:'radar.kind_'+row.kind);
  const text=(datedHeader?lines.slice(1).join('\n'):raw).trim();
  const blocks=[];
  const separated=text.replace(/\s*(\[[A-F]\]\s+)/g,'\n\n$1').replace(/\s*(【[^】\n]{2,80}】)/g,'\n\n$1\n')
