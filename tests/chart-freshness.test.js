@@ -9,7 +9,7 @@ const strings=document.createElement('script'); strings.id='ducky-strings';
 strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(JSON.parse(readFileSync('i18n/en.json'))).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));
 document.body.append(strings);
 const store=await import('../public/js/app/store.js');
-const {mount,normalizeBars}=await import('../public/js/app/views/chart.js');
+const {mount,normalizeBars,lastBarState}=await import('../public/js/app/views/chart.js');
 const bar={t:'2026-09-04',o:286,h:321.65,l:285.84,c:310.4,v:10};
 const response=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json'}});
 const flush=async()=>{for(let i=0;i<20;i++)await Promise.resolve();};
@@ -178,4 +178,51 @@ test('missing or invalid snapshot spot never falls back to the candle close for 
   assert.equal(r.querySelector('.chart-wall-basis'),null);assert.match(r.querySelector('.chart-wall-position').textContent,/incomplete/);
   assert.match(r.querySelector('#chart-spot').textContent,/310.40/);close();r.remove();
  }}finally{window.LightweightCharts.createChart=previous;}
+});
+
+
+test('bar completion follows the API session facts rather than the browser date or latest bar date',()=>{
+ const intraday={market_epoch:'2026-09-08:RTH',expected_last_d:'2026-09-04'};
+ assert.equal(lastBarState(intraday,'2026-09-08'),'in_progress');
+ assert.equal(lastBarState(intraday,'2026-09-04'),'unverified');
+ assert.equal(lastBarState(intraday,'2026-09-03'),'complete');
+ assert.equal(lastBarState(intraday,'2026-09-09'),'unverified');
+ assert.equal(lastBarState({market_epoch:'2026-09-08:CLOSED',expected_last_d:'2026-09-08'},'2026-09-08'),'unverified');
+ assert.equal(lastBarState({market_epoch:'2026-11-27:CLOSED',expected_last_d:'2026-11-27',last_d:'2026-11-27',last_bar_state:'complete'},'2026-11-27'),'complete','server owns early-close schedules');
+ assert.equal(lastBarState({},'2026-09-08'),'unverified');
+ assert.equal(lastBarState({expected_last_d:'not-a-date'},'2026-09-08'),'unverified');
+ assert.equal(lastBarState(intraday,Date.parse('2026-09-08T00:00:00Z')/1000),'in_progress');
+ const closed={last_d:'2026-09-08',market_epoch:'2026-09-08:CLOSED',expected_last_d:'2026-09-08'};
+ for(const last_bar_state of ['complete','in_progress','unverified'])assert.equal(lastBarState({...closed,last_bar_state},closed.last_d),last_bar_state,'producer state survives a later server clock');
+});
+
+test('an intraday candle is never labelled a completed close, while its OHLC remains intact',async()=>{
+ const payload={bars:[{...bar,t:'2026-09-08',c:366.43,h:370}],market_epoch:'2026-09-08:RTH',expected_last_d:'2026-09-04',stale:false};
+ globalThis.fetch=async url=>String(url).includes('/bars/')?response(payload):response({status:'unavailable'});
+ const r=root(),close=await mount(r,{ticker:'AVGO'});
+ try{
+  assert.equal(r.querySelector('#chart-spot').textContent,'$366.43Unfinished daily bar · 2026-09-08');
+  assert.doesNotMatch(r.querySelector('#chart-spot').textContent,/Close/);
+  assert.match(r.querySelector('.chart-axes').textContent,/Daily price bars/);
+  assert.doesNotMatch(r.querySelector('.chart-axes').textContent,/Daily closing/);
+  assert.match(r.querySelector('.chart-ohlc').textContent,/366.43/);
+ }finally{close();r.remove();}
+});
+
+
+test('a saved intraday bar stays unfinished after the close and shows its actual observation time',async()=>{
+ const payload={bars:[{...bar,t:'2026-09-08',c:366.43,h:370}],last_d:'2026-09-08',market_epoch:'2026-09-08:CLOSED',expected_last_d:'2026-09-08',
+  last_bar_state:'in_progress',last_bar_source:'chart_cache',last_bar_observed_at:'2026-09-08T17:09:00Z'};
+ globalThis.fetch=async url=>String(url).includes('/bars/')?response(payload):response({status:'unavailable'});
+ const r=root(),close=await mount(r,{ticker:'AVGO'});
+ try{
+  assert.match(r.querySelector('#chart-spot').textContent,/Unfinished daily bar/);
+  assert.equal(r.querySelector('.chart-bar-recorded').textContent,'Recorded 2026-09-08 17:09 UTC');
+  assert.doesNotMatch(r.querySelector('#chart-spot').textContent,/Close|Quote time/);
+ }finally{close();r.remove();}
+ // Missing metadata cannot turn the same saved value into a confirmed close.
+ delete payload.last_bar_state;delete payload.last_bar_observed_at;
+ const legacy=root(),dispose=await mount(legacy,{ticker:'AVGO'});
+ assert.match(legacy.querySelector('#chart-spot').textContent,/completion unverified/);
+ assert.equal(legacy.querySelector('.chart-bar-recorded'),null);dispose();legacy.remove();
 });

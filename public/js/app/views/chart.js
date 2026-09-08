@@ -35,6 +35,23 @@ export function normalizeBars(resp) {
   return out.filter((b, i) => i === 0 || b.time !== out[i - 1].time);
 }
 
+// API expected_last_d is the last completed session, not the latest bar date.
+// Prefer the producer-bound state: advancing the clock cannot finalize an
+// older intraday cache. Legacy rows equal to the last completed session remain
+// unverified, since the response does not say when those values were collected.
+export function lastBarState(payload, time) {
+  let day=time;
+  if(typeof time==='number'){
+    const date=new Date(time*1000);day=Number.isFinite(date.getTime())?date.toISOString().slice(0,10):'';
+  }
+  const dateOnly=value=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)&&Number.isFinite(Date.parse(value+'T00:00:00Z'));
+  if(!dateOnly(day))return 'unverified';
+  if(payload?.last_d===day&&['complete','in_progress','unverified'].includes(payload?.last_bar_state))return payload.last_bar_state;
+  const market=/^(\d{4}-\d{2}-\d{2}):(RTH|CLOSED)$/.exec(payload?.market_epoch||'');
+  if(market?.[2]==='RTH'&&market[1]===day)return 'in_progress';
+  return dateOnly(payload?.expected_last_d)&&day<payload.expected_last_d?'complete':'unverified';
+}
+
 export async function mount(root, params) {
   let ticker = (params && params.ticker) || "";
   // finding chart.js:364 — gate periods to the tier the server enforces (me.gates.bars_period).
@@ -168,7 +185,15 @@ export async function mount(root, params) {
     bars=aggregateBars(bars,interval);
     if(bars.length<35)status.append(el('p.small.muted',s('chart.indicators_short')));
     const spot = document.getElementById("chart-spot");
-    if (spot) spot.replaceChildren(el('span',px(last.close)),el('time.small.muted',{datetime:String(last.time),title:s('chart.last_bar',{date:String(last.time)})},s('chart.close_as_of',{date:String(last.time)})));
+    if (spot) {
+      const state=lastBarState(payload,last.time);
+      spot.replaceChildren(el('span',px(last.close)),el('time.small.muted',{datetime:String(last.time),title:s('chart.last_bar',{date:String(last.time)})},
+        s(state==='complete'?'chart.close_as_of':state==='in_progress'?'chart.bar_in_progress':'chart.bar_completion_unknown',{date:String(last.time)})));
+      const recorded=payload?.last_bar_observed_at;
+      const stamp=typeof recorded==='string'&&/(Z|[+-]\d{2}:\d{2})$/.test(recorded)?new Date(recorded):null;
+      if(payload?.last_d===String(last.time)&&stamp&&Number.isFinite(stamp.getTime()))spot.append(
+        el('time.small.muted.chart-bar-recorded',{datetime:stamp.toISOString()},s('chart.bar_recorded_at',{date:stamp.toISOString().slice(0,16).replace('T',' ')})));
+    }
     if (payload?.stale) {
       status.appendChild(el('p.data-notice', s('chart.stale_bars', { date: payload.expected_last_d || '—' })));
       retry();
