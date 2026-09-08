@@ -1,0 +1,170 @@
+{
+  "version": "2026-09-08-creator-workflow-v1",
+  "checks": {
+    "zh": {
+      "duration": 46.08,
+      "decode": "complete without errors",
+      "loudness": {
+        "input_i": "-16.00",
+        "input_tp": "-1.98",
+        "input_lra": "2.10",
+        "input_thresh": "-26.25",
+        "output_i": "-15.91",
+        "output_tp": "-2.00",
+        "output_lra": "2.10",
+        "output_thresh": "-26.14",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.09"
+      },
+      "audio": [
+        {
+          "scene": "01-watchlist",
+          "rms": 0.09167,
+          "peak": 0.56232
+        },
+        {
+          "scene": "02-map-chart",
+          "rms": 0.08961,
+          "peak": 0.62
+        },
+        {
+          "scene": "03-creator",
+          "rms": 0.09275,
+          "peak": 0.64615
+        },
+        {
+          "scene": "04-original",
+          "rms": 0.09366,
+          "peak": 0.51068
+        },
+        {
+          "scene": "05-research",
+          "rms": 0.0929,
+          "peak": 0.54266
+        },
+        {
+          "scene": "06-opportunities",
+          "rms": 0.08806,
+          "peak": 0.5834
+        },
+        {
+          "scene": "07-filings",
+          "rms": 0.10492,
+          "peak": 0.66406
+        },
+        {
+          "scene": "08-daily",
+          "rms": 0.09747,
+          "peak": 0.65527
+        },
+        {
+          "scene": "09-start",
+          "rms": 0.10188,
+          "peak": 0.64304
+        }
+      ],
+      "captions": "Both language tracks cover every authored word, ordered without overlap, final tail >=0.6 seconds.",
+      "assets": {
+        "ducky-walkthrough-2026-09-08-creator-workflow-v1.zh.en.vtt": {
+          "bytes": 2356,
+          "sha256": "f7ce46c894a622b699cfbf66d3626583bcd909d246852c1557083f58ba718459"
+        },
+        "ducky-walkthrough-2026-09-08-creator-workflow-v1.zh.jpg": {
+          "bytes": 163670,
+          "sha256": "5ac22c2671899d805951508f50f7986440af6588be2e1157cbac3f00c4ebb1fc"
+        },
+        "ducky-walkthrough-2026-09-08-creator-workflow-v1.zh.mp4": {
+          "bytes": 4021334,
+          "sha256": "871766847cfd5f2bd8354bfd925a9a925579c281cab4d764a7c81d92e8f4e398"
+        },
+        "ducky-walkthrough-2026-09-08-creator-workflow-v1.zh.zh.vtt": {
+          "bytes": 2308,
+          "sha256": "0cc3df61e97c258fd6596a2bbeef6d81b974dd9525723107eef527d34c924034"
+        }
+      }
+    },
+    "en": {
+      "duration": 43.48,
+      "decode": "complete without errors",
+      "loudness": {
+        "input_i": "-16.22",
+        "input_tp": "-1.97",
+        "input_lra": "3.10",
+        "input_thresh": "-26.88",
+        "output_i": "-16.06",
+        "output_tp": "-2.00",
+        "output_lra": "2.50",
+        "output_thresh": "-26.68",
+        "normalization_type": "dynamic",
+        "target_offset": "0.06"
+      },
+      "audio": [
+        {
+          "scene": "01-watchlist",
+          "rms": 0.09189,
+          "peak": 0.65518
+        },
+        {
+          "scene": "02-map-chart",
+          "rms": 0.0788,
+          "peak": 0.68225
+        },
+        {
+          "scene": "03-creator",
+          "rms": 0.08588,
+          "peak": 0.6228
+        },
+        {
+          "scene": "04-original",
+          "rms": 0.09062,
+          "peak": 0.6416
+        },
+        {
+          "scene": "05-research",
+          "rms": 0.08244,
+          "peak": 0.64359
+        },
+        {
+          "scene": "06-opportunities",
+          "rms": 0.10688,
+          "peak": 0.67639
+        },
+        {
+          "scene": "07-filings",
+          "rms": 0.09116,
+          "peak": 0.63736
+        },
+        {
+          "scene": "08-daily",
+          "rms": 0.09049,
+          "peak": 0.60226
+        },
+        {
+          "scene": "09-start",
+          "rms": 0.09615,
+          "peak": 0.69025
+        }
+      ],
+      "captions": "Both language tracks cover every authored word, ordered without overlap, final tail >=0.6 seconds.",
+      "assets": {
+        "ducky-walkthrough-2026-09-08-creator-workflow-v1.en.en.vtt": {
+          "bytes": 2356,
+          "sha256": "96f322ad6e803a7a2e6dad82470c94d4da2fd3113d1e6811a9abf97e43c1b2f6"
+        },
+        "ducky-walkthrough-2026-09-08-creator-workflow-v1.en.jpg": {
+          "bytes": 170699,
+          "sha256": "defa0f21448dfeecfee238e70ac6368270f8ba4a81694c198305439628bb24ea"
+        },
+        "ducky-walkthrough-2026-09-08-creator-workflow-v1.en.mp4": {
+          "bytes": 3756516,
+          "sha256": "af0df72744ffb33611a715867cef208f1624daf5eeefc219fba62fb7edcd614c"
+        },
+        "ducky-walkthrough-2026-09-08-creator-workflow-v1.en.zh.vtt": {
+          "bytes": 2308,
+          "sha256": "fa68cc28dd44c6408521ae3a758d05434668adae8e4cce29ab19f68dc71b848f"
+        }
+      }
+    }
+  },
+  "scope": "Technical media and authored-script verification. No independent ASR or human listening certification."
+}

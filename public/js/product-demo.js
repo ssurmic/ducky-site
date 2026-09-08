@@ -13,7 +13,8 @@ export function mountDemoCaptionLayout(video) {
     const box = video.getBoundingClientRect();
     if (!box.width || !box.height) return;
     const tutorial = video.hasAttribute('data-demo-tutorial-video');
-    const line = box.height / box.width > .7 ? (tutorial ? 60 : 78) : 84;
+    // Reserve room for two caption lines above persistent mobile controls.
+    const line = box.height / box.width > .7 ? 60 : 84;
     for (const track of video.textTracks || []) {
       for (const cue of track.cues || []) {
         cue.snapToLines = false;

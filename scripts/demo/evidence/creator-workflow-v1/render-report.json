@@ -1,0 +1,796 @@
+{
+  "version": "2026-09-08-creator-workflow-v1",
+  "capture_provenance": [
+    {
+      "language": "zh",
+      "scene": "01-watchlist",
+      "file": "01-add-form.zh.png",
+      "sha256": "a4dd305d3509d18f3c4ae3aa45e59ce3df4d759313ecd320c6c0b4b6f945a1bb",
+      "crop": [
+        410,
+        85,
+        1125,
+        480
+      ],
+      "at_fraction": 0
+    },
+    {
+      "language": "zh",
+      "scene": "01-watchlist",
+      "file": "01-added.zh.png",
+      "sha256": "b7ebfe3dd82f6c85db4171d110762f7ff063c861caa70a180751bd129aa46e6d",
+      "crop": [
+        410,
+        85,
+        1125,
+        580
+      ],
+      "at_fraction": 0.46
+    },
+    {
+      "language": "zh",
+      "scene": "02-map-chart",
+      "file": "02-map.zh.png",
+      "sha256": "9d8d4c5268622dc64ce0dcb5647300153575cb9ad9ab16ea8e8f27856b778e64",
+      "crop": [
+        410,
+        365,
+        1125,
+        500
+      ],
+      "at_fraction": 0
+    },
+    {
+      "language": "zh",
+      "scene": "02-map-chart",
+      "file": "02-price-modal-fixed.zh.png",
+      "sha256": "76d2b30ba5bda63f42209b874ef839e2b2835f648382684adbdea96540e4ca74",
+      "crop": [
+        544,
+        82,
+        640,
+        740
+      ],
+      "at_fraction": 0.31
+    },
+    {
+      "language": "zh",
+      "scene": "02-map-chart",
+      "file": "02-chart.zh.png",
+      "sha256": "00de373520367855e55f2ab55db80dcf85324de5a0eaa0a8ecacb55e15a2e1b4",
+      "crop": [
+        410,
+        83,
+        1125,
+        650
+      ],
+      "at_fraction": 0.52
+    },
+    {
+      "language": "zh",
+      "scene": "03-creator",
+      "file": "03-creator.zh.png",
+      "sha256": "288975824371d62f73b2bd3c0aa8757f8262437bb3d1479ee661633f2f39f4c5",
+      "crop": [
+        427,
+        321,
+        1094,
+        345
+      ],
+      "at_fraction": 0
+    },
+    {
+      "language": "zh",
+      "scene": "04-original",
+      "file": "04-original.zh.png",
+      "sha256": "f3717c8120d103a9cf32f6ed6558c2b9bc7db24d38d63abb838ff26b0f4620f3",
+      "crop": [
+        16,
+        68,
+        1205,
+        670
+      ],
+      "at_fraction": 0
+    },
+    {
+      "language": "zh",
+      "scene": "05-research",
+      "file": "05-research-source.zh.png",
+      "sha256": "1a591a79604b38becf9501c3ba2acb0b42be3dd340f46817bd7fd8a24781e57b",
+      "crop": [
+        430,
+        180,
+        518,
+        710
+      ],
+      "at_fraction": 0
+    },
+    {
+      "language": "zh",
+      "scene": "06-opportunities",
+      "file": "06-opportunities.zh.png",
+      "sha256": "55646f0ead8608e834c8d8ef577b9c9b1b9705afb8f4c914cad78eea9a8c4581",
+      "crop": [
+        410,
+        82,
+        1125,
+        650
+      ],
+      "at_fraction": 0
+    },
+    {
+      "language": "zh",
+      "scene": "06-opportunities",
+      "file": "06-index.zh.png",
+      "sha256": "d1399843d1931f104a839825319c72f3fd08e5e451dd489414f74e1ef5ffb817",
+      "crop": [
+        410,
+        83,
+        1125,
+        780
+      ],
+      "at_fraction": 0.46
+    },
+    {
+      "language": "zh",
+      "scene": "07-filings",
+      "file": "07-insider-cards.zh.png",
+      "sha256": "31c6d04b9b35dcd809e0be78983b585a5a525e4f9db796e0490edfc25fbbebea",
+      "crop": [
+        393,
+        486,
+        1160,
+        227
+      ],
+      "at_fraction": 0
+    },
+    {
+      "language": "zh",
+      "scene": "07-filings",
+      "file": "07-holdings-cards.zh.png",
+      "sha256": "76e5b8f624ba5cd95a4ad17b9106b877b941a64b125169683718878359088310",
+      "crop": [
+        393,
+        450,
+        1160,
+        245
+      ],
+      "at_fraction": 0.48
+    },
+    {
+      "language": "zh",
+      "scene": "08-daily",
+      "file": "08-daily-events.zh.png",
+      "sha256": "7da35140840e6eb80e5062e71d2c5a8d1fd91e771cf5aafad2e54be9e1da2047",
+      "crop": [
+        410,
+        80,
+        1125,
+        670
+      ],
+      "at_fraction": 0
+    },
+    {
+      "language": "en",
+      "scene": "01-watchlist",
+      "file": "01-add-form.en.png",
+      "sha256": "adca9908405e9a802368d53733dfb773617ab7d2351f0e2b631f74840101c495",
+      "crop": [
+        410,
+        85,
+        1125,
+        480
+      ],
+      "at_fraction": 0
+    },
+    {
+      "language": "en",
+      "scene": "01-watchlist",
+      "file": "01-added.en.png",
+      "sha256": "1f9012dd844b5f6d26157b8d381138a88801fc4bd021c6a0aeae60e7726cf95a",
+      "crop": [
+        410,
+        85,
+        1125,
+        580
+      ],
+      "at_fraction": 0.46
+    },
+    {
+      "language": "en",
+      "scene": "02-map-chart",
+      "file": "02-map.en.png",
+      "sha256": "05227b07728d3b53695576e1406e74c8ef1bb9a50be6fce7bb6f7f4f103803c0",
+      "crop": [
+        410,
+        365,
+        1125,
+        500
+      ],
+      "at_fraction": 0
+    },
+    {
+      "language": "en",
+      "scene": "02-map-chart",
+      "file": "02-price-modal-fixed.en.png",
+      "sha256": "a431eb94602751ac750ed5cb6fc70b1dd00c0f90fc6044e5dada673aa115d181",
+      "crop": [
+        544,
+        41,
+        640,
+        821
+      ],
+      "at_fraction": 0.31
+    },
+    {
+      "language": "en",
+      "scene": "02-map-chart",
+      "file": "02-chart.en.png",
+      "sha256": "89d06154d6d80371e080c2ae1b0da5754fac4a356076d1d16a80c6afb99a0fed",
+      "crop": [
+        410,
+        83,
+        1125,
+        650
+      ],
+      "at_fraction": 0.52
+    },
+    {
+      "language": "en",
+      "scene": "03-creator",
+      "file": "03-creator.en.png",
+      "sha256": "0249ed92b4e2336a4f804f9fe7b7d743f08dd8b64a3a50c9455d6be229ad7f6d",
+      "crop": [
+        427,
+        439,
+        1094,
+        248
+      ],
+      "at_fraction": 0
+    },
+    {
+      "language": "en",
+      "scene": "04-original",
+      "file": "04-source-capture.en.png",
+      "sha256": "e585da3a1fa9bc84988f7a7b858bfa6e5faf372d0b0b74ca13129e4ee18fb0b3",
+      "crop": [
+        16,
+        56,
+        1205,
+        550
+      ],
+      "at_fraction": 0
+    },
+    {
+      "language": "en",
+      "scene": "05-research",
+      "file": "05-research-source.en.png",
+      "sha256": "ae4b16a612ad67c9b56caf380ddd4910696dc72fa516f13b24075ca02594065e",
+      "crop": [
+        430,
+        180,
+        518,
+        710
+      ],
+      "at_fraction": 0
+    },
+    {
+      "language": "en",
+      "scene": "06-opportunities",
+      "file": "06-opportunities-ready.en.png",
+      "sha256": "751b1c7e1636c93cb4592bafec5fd89119e61a4feccf697ef1a611edde6c1b80",
+      "crop": [
+        410,
+        82,
+        1125,
+        650
+      ],
+      "at_fraction": 0
+    },
+    {
+      "language": "en",
+      "scene": "06-opportunities",
+      "file": "06-index.en.png",
+      "sha256": "73c8bdb288800ae0c5b6e5fb257be3e92ac6da50d39bbe09b9a18edbc85ab58e",
+      "crop": [
+        410,
+        83,
+        1125,
+        780
+      ],
+      "at_fraction": 0.46
+    },
+    {
+      "language": "en",
+      "scene": "07-filings",
+      "file": "07-insider-cards.en.png",
+      "sha256": "9b74989a5ecf3d96f3c9d7742672e962110becfd0f7e9b0cf550795a489d998a",
+      "crop": [
+        393,
+        486,
+        1160,
+        227
+      ],
+      "at_fraction": 0
+    },
+    {
+      "language": "en",
+      "scene": "07-filings",
+      "file": "07-holdings-cards.en.png",
+      "sha256": "ff8860fbeaea5bc4c79f008bbcd1595ab28d287d35cbd07dd6a257a41079681b",
+      "crop": [
+        393,
+        450,
+        1160,
+        245
+      ],
+      "at_fraction": 0.48
+    },
+    {
+      "language": "en",
+      "scene": "08-daily",
+      "file": "08-daily-events.en.png",
+      "sha256": "198199f2f7d2c4e77c684d76dc088e5d6842e38303c2bd7cdd1a0343e55ecc12",
+      "crop": [
+        410,
+        80,
+        1125,
+        670
+      ],
+      "at_fraction": 0
+    }
+  ],
+  "videos": {
+    "zh": {
+      "path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/render/ducky-walkthrough-2026-09-08-creator-workflow-v1.zh.mp4",
+      "seconds": 46.08,
+      "sha256": "871766847cfd5f2bd8354bfd925a9a925579c281cab4d764a7c81d92e8f4e398",
+      "timeline": [
+        {
+          "scene": "01-watchlist",
+          "start": 0.0,
+          "seconds": 5.16,
+          "speech_seconds": 4.8,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/01-watchlist.zh.wav",
+          "audio_sha256": "27567a90766924899ec5eaa49ff60204bce87eba6aba12f53437cf1576698615",
+          "captions": [
+            {
+              "text": "关注几只股票，",
+              "start": 0.218083,
+              "end": 1.4539160000000002
+            },
+            {
+              "text": "消息却看不完？",
+              "start": 1.624333,
+              "end": 2.7520409999999997
+            },
+            {
+              "text": "先加入自选。",
+              "start": 3.220958,
+              "end": 4.420749000000001
+            }
+          ]
+        },
+        {
+          "scene": "02-map-chart",
+          "start": 5.16,
+          "seconds": 4.96,
+          "speech_seconds": 4.584,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/02-map-chart.zh.wav",
+          "audio_sha256": "63b68347fc54c05a7a1c2fdfb2c753510c1c565f413602c25c46c05a39e3d7ba",
+          "captions": [
+            {
+              "text": "打开信息导图。",
+              "start": 0.218083,
+              "end": 1.5981660000000002
+            },
+            {
+              "text": "点中心图标，",
+              "start": 2.067125,
+              "end": 3.194833
+            },
+            {
+              "text": "再看K线。",
+              "start": 3.3411660000000003,
+              "end": 4.2285
+            }
+          ]
+        },
+        {
+          "scene": "03-creator",
+          "start": 10.120000000000001,
+          "seconds": 4.4,
+          "speech_seconds": 4.032,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/03-creator.zh.wav",
+          "audio_sha256": "17c1c445bf0252e4dedd2e98d720274c15314a0746f1dee967f00946f52c7d5a",
+          "captions": [
+            {
+              "text": "回到观点，",
+              "start": 0.218083,
+              "end": 1.105374
+            },
+            {
+              "text": "看看投资TALK君当时怎么说。",
+              "start": 1.27575,
+              "end": 3.665458
+            }
+          ]
+        },
+        {
+          "scene": "04-original",
+          "start": 14.520000000000001,
+          "seconds": 3.64,
+          "speech_seconds": 3.288,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/04-original.zh.wav",
+          "audio_sha256": "e6105898d13fde15b23366da011c3c666d66370c27dd1958e65637c47ae72af9",
+          "captions": [
+            {
+              "text": "点开原文，",
+              "start": 0.218083,
+              "end": 1.1174160000000002
+            },
+            {
+              "text": "直接跳到视频这一刻。",
+              "start": 1.2397079999999998,
+              "end": 2.9202909999999997
+            }
+          ]
+        },
+        {
+          "scene": "05-research",
+          "start": 18.16,
+          "seconds": 6.08,
+          "speech_seconds": 5.712,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/05-research.zh.wav",
+          "audio_sha256": "0dee318b6e38284920aa83dddbcaac666181264b6e27da11d5ab1957f11a1e18",
+          "captions": [
+            {
+              "text": "再看历史观点：",
+              "start": 0.218083,
+              "end": 1.4539160000000002
+            },
+            {
+              "text": "发表时什么价，",
+              "start": 1.6724160000000001,
+              "end": 2.776082
+            },
+            {
+              "text": "二十个交易日后，涨跌多少。",
+              "start": 3.018541,
+              "end": 5.348166
+            }
+          ]
+        },
+        {
+          "scene": "06-opportunities",
+          "start": 24.240000000000002,
+          "seconds": 4.04,
+          "speech_seconds": 3.696,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/06-opportunities.zh.wav",
+          "audio_sha256": "792895fce85677f8394ce5110619a3dd6ede3c15373f324a716326de1e348656",
+          "captions": [
+            {
+              "text": "超跌机会、指数分析，",
+              "start": 0.218083,
+              "end": 2.235166
+            },
+            {
+              "text": "也能一起看。",
+              "start": 2.381541,
+              "end": 3.340958
+            }
+          ]
+        },
+        {
+          "scene": "07-filings",
+          "start": 28.28,
+          "seconds": 5.32,
+          "speech_seconds": 4.968,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio-revision/07-filings.zh.wav",
+          "audio_sha256": "fac13180f372b0765d35df3b622685fae635ec653a79fb7deaad2e90a111cf51",
+          "captions": [
+            {
+              "text": "高管掏钱买入，",
+              "start": 0.218083,
+              "end": 1.538083
+            },
+            {
+              "text": "机构持仓变化，",
+              "start": 1.7445,
+              "end": 3.016416
+            },
+            {
+              "text": "都能查原始披露。",
+              "start": 3.15075,
+              "end": 4.603000000000001
+            }
+          ]
+        },
+        {
+          "scene": "08-daily",
+          "start": 33.6,
+          "seconds": 6.72,
+          "speech_seconds": 6.36,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/08-daily.zh.wav",
+          "audio_sha256": "457156ddb6a8ac226c5eea50b2a92f1e997ebc65a2c487bc5e332e477dd521a7",
+          "captions": [
+            {
+              "text": "你关心的股票，\n每天汇总相关消息。",
+              "start": 0.218083,
+              "end": 3.172708
+            },
+            {
+              "text": "少刷一会儿，",
+              "start": 3.641625,
+              "end": 4.552957
+            },
+            {
+              "text": "多一点判断依据。",
+              "start": 4.711333,
+              "end": 5.983291
+            }
+          ]
+        },
+        {
+          "scene": "09-start",
+          "start": 40.32,
+          "seconds": 5.76,
+          "speech_seconds": 5.04,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/09-start.zh.wav",
+          "audio_sha256": "96f78df1c4848fec0aef2a2add94438793433af7f60e03231575d9067426e8de",
+          "captions": [
+            {
+              "text": "X和Reddit正在接入。",
+              "start": 0.218083,
+              "end": 2.331333
+            },
+            {
+              "text": "先把你的自选股加进来。",
+              "start": 2.812291,
+              "end": 4.661166000000001
+            }
+          ]
+        }
+      ],
+      "input_loudness": {
+        "input_i": "-20.04",
+        "input_tp": "-3.51",
+        "input_lra": "2.30",
+        "input_thresh": "-30.27",
+        "output_i": "-16.11",
+        "output_tp": "-2.00",
+        "output_lra": "2.10",
+        "output_thresh": "-26.34",
+        "normalization_type": "dynamic",
+        "target_offset": "0.11"
+      }
+    },
+    "en": {
+      "path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/render/ducky-walkthrough-2026-09-08-creator-workflow-v1.en.mp4",
+      "seconds": 43.480000000000004,
+      "sha256": "af0df72744ffb33611a715867cef208f1624daf5eeefc219fba62fb7edcd614c",
+      "timeline": [
+        {
+          "scene": "01-watchlist",
+          "start": 0.0,
+          "seconds": 5.36,
+          "speech_seconds": 5.016,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/01-watchlist.en.wav",
+          "audio_sha256": "6f91088270bc44d352ece0c073dda6a0a4e33a2c258222fd37fbe34c08aa04b9",
+          "captions": [
+            {
+              "text": "Following a few stocks,",
+              "start": 0.22,
+              "end": 1.684207
+            },
+            {
+              "text": "but buried in updates?",
+              "start": 1.758458,
+              "end": 3.102499
+            },
+            {
+              "text": "Start with your watchlist.",
+              "start": 3.379125,
+              "end": 4.843375
+            }
+          ]
+        },
+        {
+          "scene": "02-map-chart",
+          "start": 5.36,
+          "seconds": 4.6,
+          "speech_seconds": 4.248,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/02-map-chart.en.wav",
+          "audio_sha256": "13e22f1926f7c1953c2a2961cf6bb4f0e595ddb7627ad27edfd8683bbc1a6138",
+          "captions": [
+            {
+              "text": "Open the Information Map.",
+              "start": 0.22,
+              "end": 1.660166
+            },
+            {
+              "text": "Tap the center,",
+              "start": 1.936833,
+              "end": 2.860208
+            },
+            {
+              "text": "then view the chart.",
+              "start": 3.042583,
+              "end": 4.098166
+            }
+          ]
+        },
+        {
+          "scene": "03-creator",
+          "start": 9.96,
+          "seconds": 3.64,
+          "speech_seconds": 3.264,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/03-creator.en.wav",
+          "audio_sha256": "553be59e3d44262a04a9eda7d5b5a47f72576022cb2f347489e282582a6fc350",
+          "captions": [
+            {
+              "text": "Back in Views,",
+              "start": 0.22,
+              "end": 1.155416
+            },
+            {
+              "text": "here's Parkev's take on Nvidia.",
+              "start": 1.421916,
+              "end": 3.102499
+            }
+          ]
+        },
+        {
+          "scene": "04-original",
+          "start": 13.600000000000001,
+          "seconds": 3.28,
+          "speech_seconds": 2.928,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/04-original.en.wav",
+          "audio_sha256": "44576965addfcd153bf344726d4711b723d9564b6399017a760d6bc3de403852",
+          "captions": [
+            {
+              "text": "Open the source,",
+              "start": 0.22,
+              "end": 1.143375
+            },
+            {
+              "text": "right at the words\nyou're checking.",
+              "start": 1.3618329999999998,
+              "end": 2.7659569999999998
+            }
+          ]
+        },
+        {
+          "scene": "05-research",
+          "start": 16.880000000000003,
+          "seconds": 5.92,
+          "speech_seconds": 5.568,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/05-research.en.wav",
+          "audio_sha256": "b70fed8b01b96ff60a56853a0682542fa2e5e3ed206b6033e3498dc78de2f968",
+          "captions": [
+            {
+              "text": "Review past views:",
+              "start": 0.22,
+              "end": 1.455874
+            },
+            {
+              "text": "the publication reference price,",
+              "start": 1.6863329999999999,
+              "end": 3.18875
+            },
+            {
+              "text": "and the change\ntwenty trading days later.",
+              "start": 3.18875,
+              "end": 5.398166000000001
+            }
+          ]
+        },
+        {
+          "scene": "06-opportunities",
+          "start": 22.800000000000004,
+          "seconds": 3.48,
+          "speech_seconds": 3.12,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/06-opportunities.en.wav",
+          "audio_sha256": "f081cace71379a5862519db66945e02d9790cf5556da6e6b5b4a2b743e3a42a8",
+          "captions": [
+            {
+              "text": "Explore oversold stocks",
+              "start": 0.22,
+              "end": 1.8425829999999999
+            },
+            {
+              "text": "and the wider market.",
+              "start": 1.8425829999999999,
+              "end": 2.970291
+            }
+          ]
+        },
+        {
+          "scene": "07-filings",
+          "start": 26.280000000000005,
+          "seconds": 5.24,
+          "speech_seconds": 4.896,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/07-filings.en.wav",
+          "audio_sha256": "9cc4c29f1f629a11fd36f39349653245e0f85e1020cba085484d2d3b2ed80396",
+          "captions": [
+            {
+              "text": "Check executives'",
+              "start": 0.22,
+              "end": 1.2055829999999998
+            },
+            {
+              "text": "open-market purchases",
+              "start": 1.2055829999999998,
+              "end": 2.383458
+            },
+            {
+              "text": "and changes in\ninstitutional holdings.",
+              "start": 2.383458,
+              "end": 4.725124
+            }
+          ]
+        },
+        {
+          "scene": "08-daily",
+          "start": 31.520000000000003,
+          "seconds": 6.4,
+          "speech_seconds": 6.048,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/08-daily.en.wav",
+          "audio_sha256": "768f7446942e76ded74f1f0c736e7009d34aa01f75bc70a402a0f05117fdf2a5",
+          "captions": [
+            {
+              "text": "Get a daily summary\nfocused on your stocks.",
+              "start": 0.22,
+              "end": 2.633749
+            },
+            {
+              "text": "Less scrolling.",
+              "start": 2.910375,
+              "end": 3.893874
+            },
+            {
+              "text": "More context for your decisions.",
+              "start": 4.172416,
+              "end": 5.889041000000001
+            }
+          ]
+        },
+        {
+          "scene": "09-start",
+          "start": 37.92,
+          "seconds": 5.56,
+          "speech_seconds": 4.824,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/audio/09-start.en.wav",
+          "audio_sha256": "042349a66d0e3479ab3cbf3963603f4c7650b7ad83c43e3c5cd2c0959320b47f",
+          "captions": [
+            {
+              "text": "X and Reddit integrations\nare in progress.",
+              "start": 0.22,
+              "end": 2.741958
+            },
+            {
+              "text": "Add your stocks to get started.",
+              "start": 3.018541,
+              "end": 4.651041
+            }
+          ]
+        }
+      ],
+      "input_loudness": {
+        "input_i": "-20.29",
+        "input_tp": "-3.22",
+        "input_lra": "3.40",
+        "input_thresh": "-30.91",
+        "output_i": "-16.50",
+        "output_tp": "-2.00",
+        "output_lra": "2.70",
+        "output_thresh": "-27.10",
+        "normalization_type": "dynamic",
+        "target_offset": "0.50"
+      }
+    }
+  },
+  "editing": "Edited actual UI actions, with editorial camera movement; no application-latency claim.",
+  "audio": "No time stretching. Two-pass loudnorm -16 LUFS / -2 dBTP; 48 kHz AAC.",
+  "caption_method": "Authored short semantic phrases, aligned to native-language provider word boundaries."
+}

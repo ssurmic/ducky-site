@@ -1,0 +1,218 @@
+{
+  "version": "2026-09-08-creator-workflow-v1",
+  "status": "local_production_in_progress",
+  "render_languages": [
+    "zh",
+    "en"
+  ],
+  "speakers": {
+    "zh": "zh-CN-XiaoxiaoNeural",
+    "en": "en-US-AvaNeural"
+  },
+  "synthesis": {
+    "provider": "Microsoft online speech service",
+    "client": "edge-tts",
+    "rate": "+4%",
+    "pitch": "+0Hz",
+    "boundary": "WordBoundary"
+  },
+  "scenes": [
+    {
+      "name": "01-watchlist",
+      "zh": "关注几只股票，消息却看不完？先加入自选。",
+      "en": "Following a few stocks, but buried in updates? Start with your watchlist.",
+      "title_zh": "先加入自选股",
+      "title_en": "Start with your stocks",
+      "caption_groups": {
+        "zh": [
+          "关注几只股票，",
+          "消息却看不完？",
+          "先加入自选。"
+        ],
+        "en": [
+          "Following a few stocks,",
+          "but buried in updates?",
+          "Start with your watchlist."
+        ]
+      }
+    },
+    {
+      "name": "02-map-chart",
+      "zh": "打开信息导图。点中心图标，再看K线。",
+      "spoken_zh": "打开信息导图。点中心图标，再看 K 线。",
+      "en": "Open the Information Map. Tap the center, then view the chart.",
+      "title_zh": "信息导图 → K线",
+      "title_en": "Information Map → Chart",
+      "caption_groups": {
+        "zh": [
+          "打开信息导图。",
+          "点中心图标，",
+          "再看K线。"
+        ],
+        "en": [
+          "Open the Information Map.",
+          "Tap the center,",
+          "then view the chart."
+        ]
+      }
+    },
+    {
+      "name": "03-creator",
+      "zh": "回到观点，看看投资TALK君当时怎么说。",
+      "spoken_zh": "回到观点，看看投资 Talk 君当时怎么说。",
+      "en": "Back in Views, here's Parkev's take on Nvidia.",
+      "title_zh": "投资TALK君 · 博通",
+      "title_en": "Parkev Tatevosian, CFA · Nvidia",
+      "caption_groups": {
+        "zh": [
+          "回到观点，",
+          "看看投资TALK君当时怎么说。"
+        ],
+        "en": [
+          "Back in Views,",
+          "here's Parkev's take on Nvidia."
+        ]
+      }
+    },
+    {
+      "name": "04-original",
+      "zh": "点开原文，直接跳到视频这一刻。",
+      "en": "Open the source, right at the words you're checking.",
+      "title_zh": "原话就在 16:13",
+      "title_en": "Straight to 9:45",
+      "caption_groups": {
+        "zh": [
+          "点开原文，",
+          "直接跳到视频这一刻。"
+        ],
+        "en": [
+          "Open the source,",
+          "right at the words\nyou're checking."
+        ]
+      }
+    },
+    {
+      "name": "05-research",
+      "zh": "再看历史观点：发表时什么价，二十个交易日后，涨跌多少。",
+      "en": "Review past views: the publication reference price, and the change twenty trading days later.",
+      "title_zh": "观点发表后的表现",
+      "title_en": "What happened after the view?",
+      "caption_groups": {
+        "zh": [
+          "再看历史观点：",
+          "发表时什么价，",
+          "二十个交易日后，涨跌多少。"
+        ],
+        "en": [
+          "Review past views:",
+          "the publication reference price,",
+          "and the change\ntwenty trading days later."
+        ]
+      }
+    },
+    {
+      "name": "06-opportunities",
+      "zh": "超跌机会、指数分析，也能一起看。",
+      "en": "Explore oversold stocks and the wider market.",
+      "title_zh": "超跌机会 · 指数分析",
+      "title_en": "Oversold stocks · Market context",
+      "caption_groups": {
+        "zh": [
+          "超跌机会、指数分析，",
+          "也能一起看。"
+        ],
+        "en": [
+          "Explore oversold stocks",
+          "and the wider market."
+        ]
+      }
+    },
+    {
+      "name": "07-filings",
+      "zh": "高管掏钱买入，机构持仓变化，都能查原始披露。",
+      "en": "Check executives' open-market purchases and changes in institutional holdings.",
+      "title_zh": "高管买入 · 机构持仓",
+      "title_en": "Insider buying · Institutional holdings",
+      "caption_groups": {
+        "zh": [
+          "高管掏钱买入，",
+          "机构持仓变化，",
+          "都能查原始披露。"
+        ],
+        "en": [
+          "Check executives'",
+          "open-market purchases",
+          "and changes in\ninstitutional holdings."
+        ]
+      }
+    },
+    {
+      "name": "08-daily",
+      "zh": "你关心的股票，每天汇总相关消息。少刷一会儿，多一点判断依据。",
+      "en": "Get a daily summary focused on your stocks. Less scrolling. More context for your decisions.",
+      "title_zh": "每天，汇总与你有关的信息",
+      "title_en": "Daily updates for your stocks",
+      "caption_groups": {
+        "zh": [
+          "你关心的股票，\n每天汇总相关消息。",
+          "少刷一会儿，",
+          "多一点判断依据。"
+        ],
+        "en": [
+          "Get a daily summary\nfocused on your stocks.",
+          "Less scrolling.",
+          "More context for your decisions."
+        ]
+      }
+    },
+    {
+      "name": "09-start",
+      "zh": "X和Reddit正在接入。先把你的自选股加进来。",
+      "spoken_zh": "X 和 Reddit 正在接入。先把你的自选股加进来。",
+      "en": "X and Reddit integrations are in progress. Add your stocks to get started.",
+      "title_zh": "从你的自选股开始",
+      "title_en": "Add your stocks. Get started.",
+      "caption_groups": {
+        "zh": [
+          "X和Reddit正在接入。",
+          "先把你的自选股加进来。"
+        ],
+        "en": [
+          "X and Reddit integrations\nare in progress.",
+          "Add your stocks to get started."
+        ]
+      }
+    }
+  ],
+  "source_cases": {
+    "zh": {
+      "creator": "投资TALK君",
+      "ticker": "AVGO",
+      "video": "3E-HXC2HUvg",
+      "point": "claim:75b2c484c5bc6622e1a45ec5",
+      "source_seconds": 973,
+      "publication": "2026-09-03T03:29:00Z",
+      "publication_precision": "minute UI label",
+      "twenty_sessions": "pending"
+    },
+    "en": {
+      "creator": "Parkev Tatevosian, CFA",
+      "ticker": "NVDA",
+      "video": "qleHy1oNdjU",
+      "point": "claim:7ce209bd72de40349998fe26",
+      "source_seconds": 585,
+      "publication": "2026-09-07T13:45:00Z",
+      "publication_precision": "minute UI label",
+      "twenty_sessions": "pending"
+    }
+  },
+  "constraints": [
+    "Edited captures of actual UI actions; not a latency measurement.",
+    "Historical views retain source dates, direction, price basis, losses and incomplete windows.",
+    "No historical notification or first-capture claim.",
+    "No outbound notification or account channel setting change.",
+    "No production model call, model download or DGX encoding.",
+    "Native same-language captions in short phrase groups; translations separately reviewed.",
+    "Usage instructions describe controls and results, not the narration transcript."
+  ]
+}
