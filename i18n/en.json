@@ -3278,7 +3278,7 @@
   "app.chart.between_walls": "About +{call}% to the call wall and −{put}% to the put wall. This describes price room; an entry still needs price-action and risk checks.",
   "app.chart.all_expiries": "All collected expiries ({n})",
   "app.chart.expiry_dte": "{n} days to expiry at retrieval",
-  "app.chart.expiry_coverage": "Successfully collected expiries within {days} days. Select a row to draw its levels. Uncollected expiries are not estimated.",
+  "app.chart.expiry_coverage": "Up to the nearest {n} expiries within {days} days. Select a row to draw its levels. Missing expiries are not estimated.",
   "app.chart.expiries_unavailable": "This older record has combined walls only. Individual expiries will appear after a data refresh.",
   "app.stockbrief.missing_option_expiry_scope": "Option-wall expiries were not recorded",
   "app.evidence.market_title": "Price and entry context",
@@ -3299,5 +3299,11 @@
   "app.evidence.priority_market": "Entry context",
   "app.evidence.priority_context": "Background",
   "app.evidence.ordering": "Why this order?",
-  "app.evidence.ordering_note": "Read attributable primary disclosures and direct creator arguments first, then price, IV, options and relative performance, followed by discussion activity and macro context. Support and opposition retain separate places; repeated sources do not add weight. This is reading priority, not creator performance or a trading weight."
+  "app.evidence.ordering_note": "Read attributable primary disclosures and direct creator arguments first, then price, IV, options and relative performance, followed by discussion activity and macro context. Support and opposition retain separate places; repeated sources do not add weight. This is reading priority, not creator performance or a trading weight.",
+  "app.chart.expiry_monthly": "Monthly expiry date",
+  "app.chart.expiry_fortnight": "About two weeks",
+  "app.chart.expiry_week": "Within one week",
+  "app.chart.expiry_later": "Later expiry",
+  "app.chart.expiry_missing": "{date} · Incomplete option-chain data; comparison is limited.",
+  "app.chart.expiry_monthly_note": "Monthly labels mark the third Friday; the actual contract expiry takes precedence. “Two weeks” measures time to expiry at collection, independently of the price-history range."
 }

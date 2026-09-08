@@ -8,7 +8,7 @@ import * as overlays from "../overlays.js";
 import { el, clear, spinner, errorBox, lock, px, num, modal } from "../ui.js";
 import { normalizeList } from "./watchlist.js";
 import { unpackSnapshot, reusableSnapshot } from "../snapshot-model.js";
-import {aggregateBars,selectedSnapshot,optionScope,wallPosition,optionHelp,expiryTable} from '../chart-context.js';
+import {aggregateBars,selectedSnapshot,optionScope,wallPosition,optionHelp,expiryTable,expiryKind} from '../chart-context.js';
 import { observeTheme } from "../theme.js";
 
 const PERIODS = ["3mo", "6mo", "1y", "2y"];
@@ -99,7 +99,7 @@ export async function mount(root, params) {
     const built = new Date(overlaySnapshot.gamma?.scope?.retrieved_at || overlaySnapshot.built_at || '');
     const expirySelect=el('select.input',{'aria-label':s('chart.option_expiry'),onchange:()=>{expiry=expirySelect.value;paintOverlays();}},
       el('option',{value:'combined'},s('chart.combined')),
-      (overlaySnapshot.gamma?.by_expiry||[]).map(r=>el('option',{value:r.expiry},r.expiry)));
+      (overlaySnapshot.gamma?.by_expiry||[]).map(r=>el('option',{value:r.expiry},r.expiry+' · '+expiryKind(r))));
     expirySelect.value=expiry;
     optionControls.append(el('label',el('span.small.muted',s('chart.option_expiry')),expirySelect),
       el('button.chart-help-button',{type:'button','aria-label':s('chart.help_title'),onclick:()=>optionHelp(overlaySnapshot)},'?'),

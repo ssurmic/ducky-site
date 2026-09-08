@@ -3,6 +3,13 @@ import {el,modal,num,px} from './ui.js';
 
 export const finite=n=>typeof n==='number'&&Number.isFinite(n);
 export const dateLabel=d=>typeof d==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d)?d:'—';
+export function expiryKind(row){
+  const date=new Date(row.expiry+'T00:00:00Z');
+  if(date.getUTCDay()===5&&date.getUTCDate()>=15&&date.getUTCDate()<=21)return s('chart.expiry_monthly');
+  if(finite(row.dte)&&row.dte>=8&&row.dte<=14)return s('chart.expiry_fortnight');
+  if(finite(row.dte)&&row.dte>=0&&row.dte<=7)return s('chart.expiry_week');
+  return s('chart.expiry_later');
+}
 export function aggregateBars(bars,interval='day'){
   if(interval==='day')return bars;
   const groups=new Map();
@@ -44,12 +51,16 @@ export function optionHelp(snap){
 }
 export function expiryTable(snap,onSelect){
   const rows=snap?.gamma?.by_expiry||[];
+  const attempts=snap?.gamma?.scope?.attempts||[];
+  const missing=attempts.filter(a=>a.status!=='ready');
   if(!rows.length)return el('p.small.muted',s('chart.expiries_unavailable'));
   return el('details.chart-expiries',el('summary',s('chart.all_expiries',{n:rows.length})),
-    el('p.small.muted',s('chart.expiry_coverage',{days:snap?.gamma?.scope?.dte_max??'—'})),
+    el('p.small.muted',s('chart.expiry_coverage',{days:snap?.gamma?.scope?.dte_max??'—',n:snap?.gamma?.scope?.max_expiries??'—'})),
     el('div.chart-expiry-rows',rows.map(row=>el('button.chart-expiry-row',{type:'button',onclick:()=>onSelect(row.expiry)},
-      el('span',el('strong',dateLabel(row.expiry)),el('small',s('chart.expiry_dte',{n:row.dte}))),
+      el('span',el('strong',dateLabel(row.expiry)),el('small',expiryKind(row)),el('small',s('chart.expiry_dte',{n:row.dte}))),
       el('span',el('small',s('chart.legend_call')),el('strong',finite(row.call_wall)?px(row.call_wall):'—')),
       el('span',el('small',s('chart.legend_put')),el('strong',finite(row.put_wall)?px(row.put_wall):'—')),
-      el('span',el('small',s('chart.legend_flip')),el('strong',finite(row.flip)?px(row.flip):'—'))))));
+      el('span',el('small',s('chart.legend_flip')),el('strong',finite(row.flip)?px(row.flip):'—'))))),
+    missing.map(row=>el('p.small.muted',s('chart.expiry_missing',{date:dateLabel(row.expiry)}))),
+    el('p.small.muted',s('chart.expiry_monthly_note')));
 }
