@@ -1,0 +1,9 @@
+# Pages release connection — prepared, not activated
+
+Production inspection found that `ducky-site` uses Cloudflare Pages Direct Upload (Git Provider: No). The nightly DGX notary commits static data to GitHub, but that does not publish a Pages deployment. The current repository had only the `check` workflow. Repository secret/variable listings were empty; the DGX had no existing Wrangler credential. We did not copy the local operator OAuth credential to GitHub or create new access.
+
+The committed `deploy-pages.yml` is a concrete release path: successful same-repository main checks → exact commit checkout → tests/copy/links → reject a superseded main commit → deploy the built artifact. It is serialized, reads no user accounts or models, and uses a production environment. It can also be triggered manually on main. Automatic execution is **disabled** until `PAGES_AUTO_DEPLOY=enabled` is supplied.
+
+To activate, an operator must authorize and configure a Cloudflare token restricted to Pages deployment for the existing account as production environment secret `CLOUDFLARE_API_TOKEN`, set environment variable `CLOUDFLARE_ACCOUNT_ID`, and set repository variable `PAGES_AUTO_DEPLOY=enabled`. Do not supply the token in chat. Once connected, run the workflow against the current main commit and verify the deployed assets and source dates. No new domain, user data permissions or analytics are requested.
+
+The existing `ducky-site-push.timer` runs at 02:15 UTC, after daily prices/outcomes. It now also produces `public/desk-prices.json` through the public stored-price API, atomically preserving the last-good data on failure. Git retains prior versions and the old dated demo artifact is untouched. Until the workflow is activated, this is **daily Git notarization plus manual Pages deployment**, not automatic end-to-end publishing.

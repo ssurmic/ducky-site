@@ -1,0 +1,60 @@
+name: deploy-pages
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [check]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Automatic publishing is off until an operator supplies a scoped Pages token
+    # and enables PAGES_AUTO_DEPLOY. A notary git push alone is not publication.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (vars.PAGES_AUTO_DEPLOY == 'enabled' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Require the existing production branch and scoped credentials
+        env:
+          RUN_BRANCH: ${{ github.event.workflow_run.head_branch || github.ref_name }}
+        run: |
+          test "$RUN_BRANCH" = main
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo 'Production Pages token is not configured.'; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'Production account ID is not configured.'; exit 1; }
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: pip install -r requirements.txt
+      - run: npm ci
+      - run: npm test
+      - run: python3 -m unittest discover -s tests -p 'test_export_desk_prices.py'
+      - run: python3 scripts/lint_copy.py
+      - run: python3 scripts/check_links.py
+      - name: Confirm that this is still the latest main commit
+        run: |
+          git fetch origin main
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
+      - name: Publish the verified build
+        run: npx --yes wrangler@4.129.1 pages deploy dist --project-name ducky-site --branch main --commit-hash "$(git rev-parse HEAD)" --commit-dirty=true
