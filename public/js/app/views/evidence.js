@@ -238,17 +238,21 @@ export async function mount(root,route={}){
   function picker(){
     const field=el('input.input',{type:'search',value:ticker,placeholder:'AVGO / ORCL',maxlength:10,'aria-label':s('evidence.ticker')});
     const form=el('form.add-row.evidence-picker-form',{onsubmit:e=>{e.preventDefault();const t=field.value.trim().toUpperCase().replace(/^\$/,'');if(tickerOK(t)){closeModal();if(t===ticker)load();else location.hash='#/evidence/'+t;}}},field,el('button.btn.btn-primary',{type:'submit'},s('evidence.load')));
-    const list=el('div.evidence-picker-list');
-    for(const t of(store.get('watchlist')||[]).filter(tickerOK))list.append(el('a.chip',{href:'#/evidence/'+t,'aria-current':t===ticker?'page':null,onclick:()=>closeModal()},t));
-    modal(s('evidence.select_stock'),el('div',form,list));
+    const stocks=[...new Set((store.get('watchlist')||[]).filter(tickerOK))].sort();
+    const list=el('div.evidence-picker-list',{'aria-label':s('watch.title')});
+    for(const t of stocks)list.append(el('a.chip',{href:'#/evidence/'+t,'aria-current':t===ticker?'page':null,onclick:e=>{closeModal();if(t===ticker){e.preventDefault();load();}}},t));
+    modal(s('evidence.select_stock'),el('div.evidence-stock-picker',
+      el('p.evidence-picker-caption',s('evidence.all_watchlist',{n:stocks.length})),list,
+      el('p.evidence-picker-caption',s('evidence.other_stock')),form));
   }
   const heading=el('header.evidence-heading',el('div.view-head',el('h1',s('evidence.title'))),
-    el('div.evidence-mobile-actions',el('button.evidence-empty-picker',{type:'button',onclick:picker},ticker||s('evidence.select_stock'),' ⌄')));root.append(heading);
-  const input=el('input.input',{type:'search',value:ticker,placeholder:'AVGO / ORCL','aria-label':s('evidence.ticker'),maxlength:10});
-  heading.append(el('form.add-row.evidence-ticker',{onsubmit:e=>{e.preventDefault();const t=input.value.trim().toUpperCase().replace(/^\$/,'');if(tickerOK(t)){if(t===ticker)load();else location.hash='#/evidence/'+t;}}},input,
-    el('button.btn.btn-ghost',{type:'submit'},s('evidence.load'))));
+    el('button.evidence-switch-stock',{type:'button',onclick:picker,'aria-haspopup':'dialog'},
+      ticker?el('strong.mono',ticker):null,el('span',s('evidence.switch_stock')),el('span',{'aria-hidden':'true'},'⌄')));root.append(heading);
   const favorites=el('div.evidence-watchlist');
-  for(const t of (store.get('watchlist')||[]).filter(tickerOK))favorites.append(el('a.chip',{href:'#/evidence/'+t,'aria-current':t===ticker?'page':null},t));
+  const stocks=[...new Set((store.get('watchlist')||[]).filter(tickerOK))].sort();
+  const preview=[...(stocks.includes(ticker)?[ticker]:[]),...stocks.filter(t=>t!==ticker)].slice(0,7);
+  for(const t of preview)favorites.append(el('a.chip',{href:'#/evidence/'+t,'aria-current':t===ticker?'page':null},t));
+  if(stocks.length)favorites.append(el('button.evidence-all-stocks',{type:'button',onclick:picker,'aria-haspopup':'dialog'},s('evidence.all_watchlist',{n:stocks.length}),' ⌄'));
   root.append(favorites);
   const host=el('div');root.append(host);
   async function load(version=null){
