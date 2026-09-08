@@ -85,7 +85,8 @@ export async function mount(root, params) {
   const optionNotes=el('div.chart-option-notes');
   const axes=el('p.chart-axes.small.muted',s('chart.axes'),el('span',s('chart.close_note')));
   const companyHost = el("div.company-host");
-  root.append(head, form, controls, el('div.chart-workspace',ohlc,host,el('div.chart-tools',axes,zoomControls),optionControls,legendRow,optionNotes), status, companyHost);
+  const workspace=el('div.chart-workspace',{hidden:!ticker},ohlc,host,el('div.chart-tools',axes,zoomControls),optionControls,legendRow,optionNotes);
+  root.append(head, form, controls, workspace, status, companyHost);
   const showCompany=(p,rs)=>{companyHost.replaceChildren(companyContext(p,rs));companyName.textContent=p?.company||'';};
   if (ticker) api.company(ticker).then(p=>{if(alive) showCompany(p);}).catch(()=>{if(alive) showCompany(null);});
   if (ticker) companyHost.before(el('div.chips',
@@ -120,7 +121,7 @@ export async function mount(root, params) {
       (overlaySnapshot.gamma?.by_expiry||[]).map(r=>el('option',{value:r.expiry},r.expiry+' · '+expiryKind(r))));
     expirySelect.value=expiry;
     optionControls.append(el('label',el('span.small.muted',s('chart.option_expiry')),expirySelect),
-      el('button.chart-help-button',{type:'button','aria-label':s('chart.help_title'),onclick:()=>optionHelp(overlaySnapshot)},s('chart.guide')),
+      el('button.chart-help-button',{type:'button','aria-label':s('chart.help_title'),onclick:()=>optionHelp({...overlaySnapshot,gamma:selected.gamma})},s('chart.guide')),
       el('label.chart-extra-toggle',el('input',{type:'checkbox','data-chart-control':'extras',checked:extras,onchange:e=>{extras=e.target.checked;paintOverlays();}}),s('chart.extra_lines')),
       el('label.chart-extra-toggle',el('input',{type:'checkbox','data-chart-control':'fit',checked:fitReferences,onchange:e=>{fitReferences=e.target.checked;paintOverlays();chart.applyOptions({rightPriceScale:{autoScale:true}});}}),s('chart.fit_references')));
     for (const it of overlays.legend(selected, colors)) {

@@ -22,6 +22,7 @@
 .page-app .chart-help-button{width:auto;min-width:44px;height:44px;padding:0 12px;border-radius:8px;font:600 12px/1.4 var(--font)}
 .chart-controls>.chart-help-button{margin-bottom:3px;margin-left:auto}
 .chart-workspace{background:var(--surface);border-radius:16px;padding:16px 20px}
+.page-app .chart-workspace[hidden]{display:none}
 .chart-workspace .chart-host{height:470px}
 .chart-ohlc{gap:8px 24px;margin-bottom:14px;align-items:center}
 .chart-ohlc time{font-size:12px}
