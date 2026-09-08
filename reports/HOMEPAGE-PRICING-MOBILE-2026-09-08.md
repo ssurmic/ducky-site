@@ -40,6 +40,10 @@ Pro is USD 9/month, USD 90/year, CNY 499/year, with 100 alerts. At the inspectio
 time the global available-rails response exposed Stars only; configured per-plan
 rail names do not prove that every checkout method is currently available. The
 subscription UI continues to use the live catalogue and available methods.
+When the chosen currency has no available method, it now says so explicitly and
+points users back to the currency selector. Telegram-only instructions appear
+only when Stars is available for that selection. CNY and USD switching is tested
+against an actual-shaped Stars-only catalogue without placing an order.
 
 ## Browser evidence
 
@@ -88,9 +92,43 @@ watchlist, alert, notification or payment submission was used for acceptance.
 
 ## Validation and release
 
-Implementation and login-choice regression: **387 frontend tests passed**.
+Final merged implementation, login-choice and currency-availability regressions:
+**393 frontend tests passed**.
 Asset isolation: four passed, one existing optional fixture skipped. Copy and
-internal-link checks passed. Clean backend `2df7346` selftest: **2405 passed**, five
+internal-link checks passed: 2594 files and 1342 links. Clean backend `2df7346`
+selftest: **2405 passed**, five
 warnings, ALL GREEN; no backend implementation changed in this work.
 
-Release identifiers and production acceptance are appended after deployment.
+Released frontend `1c66a753a91152065cb9ab381fd2bcb67ac2c6f6`, Cloudflare Pages
+`b19f8300`, to https://duckybot.app. This supersedes the initial layout release
+`51d4f09` / `6eb502a4` and the terminology follow-up `46de12d` / `b0184a71`.
+
+Production acceptance at an actual 390×649 CSS viewport used the existing Pro
+session: the real 17-stock heatmap, equal/cap modes, CIEN details and optical
+description, all 15 CIEN chart canvases, zoom in/out/reset, the third Information
+Map destination and More → Alerts. No account data was added or removed. Live
+source-analysis pending states remain pending; layout acceptance is not proof
+that every stock has a completed brief.
+
+The public Chinese and English plan links opened the corresponding CNY annual
+and USD monthly selections. Language switching preserved the dark theme and
+pricing anchor. Full Chinese benefits expanded/collapsed. The final CNY gap
+message additionally passed 390px Chinese and 320px English × light/dark at
+600px available height, with zero overflow/errors and 470px content space.
+
+An older Chrome DevTools session timed out during synthetic touch clicks; it
+was not treated as a successful interaction. A fresh browser tab completed the
+production checks above. The previous separate touch-emulation evidence remains
+in the mobile interaction report; no new physical-device claim is made.
+
+Live HTML, application module entry and versioned page styles were compared with
+the deployed build. Versioned styles matter: an unversioned workspace.css URL
+still served an older cached copy, while the URL actually used by the app matched.
+Final live module graph is `84171085ac0a31679b74`. Both homepage languages,
+both app shells, the module entry and all four versioned app styles matched
+the final build byte for byte. Production CNY billing shows the explicit gap
+message and ¥499/year with no runtime warnings/errors.
+
+[Release CI](https://github.com/ssurmic/ducky-site/actions/runs/34215684067)
+completed successfully. The final backend tracker is documentation only; no
+backend services needed a restart.
