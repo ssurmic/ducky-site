@@ -1,0 +1,83 @@
+{
+  "created_at": "2026-09-08T12:08:03.967579+00:00",
+  "kind": "private_silent_interactive_storyboard_not_final_media",
+  "url": "http://127.0.0.1:8807/",
+  "estimated_seconds": 38.6,
+  "audio_generated": false,
+  "homepage_changed": false,
+  "files": [
+    {
+      "path": "scripts/demo/recording/information-map/README.md",
+      "sha256": "f444afacdadaa8a9d98039c5af0e302a1eedacd8eabb611c5f343ede5b406f9d"
+    },
+    {
+      "path": "scripts/demo/recording/information-map/index.html",
+      "sha256": "7043e6bb32b877359d358973d119a600c92c425c5089e8369849bcce99cb6c63"
+    },
+    {
+      "path": "scripts/demo/recording/information-map/serve.py",
+      "sha256": "13bebdee977e2ec44db4beb8b3d62a5f3b143f0ccacee8725c75e3edb42967a5"
+    },
+    {
+      "path": "scripts/demo/recording/information-map/stage.css",
+      "sha256": "35ab02838b45f7843783dbee2985d3613e58ec7e321e8e9cb0e0760fc407fe9a"
+    },
+    {
+      "path": "scripts/demo/recording/information-map/stage.js",
+      "sha256": "a60482e9b62ea690403677e78e0d1c113ce0a92702d1514b9e678ff70ce31ffd"
+    }
+  ],
+  "captures": [
+    {
+      "file": "screenshots/coin-map-stage-prep-zh.png",
+      "sha256": "4f353e68a96cc82109456d87cc26803bd212bcb29f5b00c296a32ed8ce1bd9e2"
+    },
+    {
+      "file": "screenshots/storyboard-price-zh.png",
+      "sha256": "ec2f447b516371b395af9d0b613bb161daea1cb6f5e1653142c3106fbc3c0598"
+    }
+  ],
+  "coin_map_capture": {
+    "url": "https://duckybot.app/app/#/evidence/COIN",
+    "real_production": true,
+    "date": "2026-09-08",
+    "frontend_latest_reported_by_owner": "ab05ec3",
+    "overview_visible": "pending",
+    "source_point_visible": "claim:376ccef604efec29b1330bab",
+    "original_frame_dimensions": [
+      2592,
+      1353
+    ]
+  },
+  "verification": {
+    "static_exact_routes": 10,
+    "unlisted_routes": "404",
+    "write_methods": "405",
+    "price_initial_points": 1,
+    "initial_final_gain_visible": false,
+    "price_end_points": 21,
+    "price_end_close": 184.64,
+    "end_gain_percent": 20.2,
+    "largest_recorded_close_drawdown_percent": 8.3,
+    "fixed_window": "2026-08-07 through 2026-09-04",
+    "english_caption_checked": "Then follow the price, including the pullbacks.",
+    "cta_at_progress_zero": "Start free →",
+    "cta_minimum_scene_seconds": 3.2,
+    "syntax_checks": [
+      "node --check stage.js",
+      "python3 -m py_compile serve.py"
+    ],
+    "browser": "In-app browser desktop, 1280x720; preview stage observed 887x498 CSS px",
+    "live_playback_check": "Playback advanced through scenes. A time-limited automation wait missed the short complete-price interval; paused deterministic seeking was used to inspect the full 21-point frame. No final audio timing or video-encoding acceptance claimed.",
+    "all_nine_scene_controls": "passed; all screenshot/brand image assets loaded, no console errors or warnings",
+    "mobile_preview": "390px English ending and 320px English ending / Chinese source scene checked; viewport equals document width in both sizes. Overlapping heading/mascot corrected; temporary override reset."
+  },
+  "limitations": [
+    "Private authoring storyboard; source screenshot crops are editorial and unchanged inside each frame",
+    "Source crops still use dated QA captures, including Chinese UI under English narration; bilingual final capture remains pending",
+    "Reddit and real receiver scenes remain explicit placeholders",
+    "Historical curve is an edited source-backed graphic, not a new control represented as present in the app",
+    "Final audio audition, source language copy, subtitles, media encoding and coordinated publication are not completed",
+    "Narrow preview controls and closing layout checked; screenshot text in the private source scene is not final mobile-video readability acceptance."
+  ]
+}

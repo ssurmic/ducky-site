@@ -61,3 +61,9 @@ At 11:06:31 UTC, a later live Chinese AVGO read displayed “综合分析整理�
 5. Freeze the current frontend/backend and evidence versions, record the deployed UI, then generate and listen through both female-voice versions. Align captions to final word timings, keep phone captions to two lines, verify prices/attribution/scene transitions and play through the completed CTA before coordinated homepage publication.
 
 The capture workspace starts from current frontend `1106a86`, which includes production UI `c9c9e7b` / Pages `131610b5` and its acceptance report. No old recording branch is merged over the current application. This preparation changes no runtime code, trading rules, production evidence, prices, subscriptions or timers. The existing demo heartbeat remains paused.
+
+## Silent storyboard prepared
+
+The local [storyboard server](../scripts/demo/recording/information-map/README.md) now rehearses all nine scenes at the 38.6-second budget. Duck cards move around the two-stock watchlist; unchanged source screenshots focus on the reviewed point; all 21 COIN closes appear in order, with final gain held back until the endpoint. The full closing CTA exists at scene progress zero and has a 3.2-second budget. Reddit and delivery remain explicit pending placeholders. This is an editable silent rehearsal, not recorded final media.
+
+Desktop scene controls and assets passed in both narration languages; 320/390px preview checks corrected a heading/mascot overlap. The screenshot text still needs final-language capture and final video readability review. Static exact-route reads pass, unlisted paths return404, and writes405; no product API, inference or delivery is called. Source provenance and the limitations of the playback timing check are retained in [preparation acceptance](demo-case-review-20260908/storyboard-preparation-20260908.json). The local-only server can be started with the README command; its tab is shown as a review artifact.

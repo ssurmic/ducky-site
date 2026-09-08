@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ducky · 信息导图分镜预演</title>
+  <link rel="stylesheet" href="/stage.css">
+</head>
+<body>
+  <header class="toolbar">
+    <strong>分镜预演 · 尚非最终视频</strong>
+    <span id="status">读取本地素材…</span>
+    <button id="language" type="button">EN</button>
+    <button id="play" type="button" disabled>播放</button>
+  </header>
+  <main id="stage" aria-label="Demo storyboard">
+    <div class="brand"><img src="/avatar.jpg" alt=""> Ducky Bot</div>
+    <span id="scene-count"></span>
+    <p id="eyebrow"></p>
+    <h1 id="headline"></h1>
+    <div id="visual"></div>
+    <p id="subtitle"></p>
+    <p id="basis"></p>
+  </main>
+  <nav id="scenes" aria-label="分镜"></nav>
+  <label class="scrubber">时间 <input id="seek" type="range" min="0" step="0.02" value="0"><output id="clock"></output></label>
+  <p class="editor-note">只读本地分镜：使用带日期的正式站验收截图与完整历史价格。待验收场景显示占位，未生成配音，也未模拟通知送达。</p>
+  <script type="module" src="/stage.js"></script>
+</body>
+</html>
