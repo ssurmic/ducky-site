@@ -54,7 +54,7 @@ test('expanded video history fetches that channel and continues beyond the globa
   const root=document.querySelector('main');root.textContent='';
   const dispose=await mount(root,{query:new URLSearchParams('creator=creator')});
   assert.ok(!requests.some(([url])=>url.includes('/history')));
-  [...root.querySelectorAll('.creator-video-archive button')].find(b=>b.textContent===copy['app.creatorpage.all_videos'].replace('{n}','2')).click();
+  [...root.querySelectorAll('.creator-video-archive button')].find(b=>b.textContent===copy['app.creatorpage.video_archive']).click();
   await new Promise(r=>setImmediate(r));await new Promise(r=>setImmediate(r));
   assert.ok(root.textContent.includes('First historical video'));
   [...root.querySelectorAll('.creator-video-archive button')].find(b=>b.textContent===copy['app.creators.load_more']).click();
@@ -66,4 +66,12 @@ test('expanded video history fetches that channel and continues beyond the globa
   assert.ok(root.querySelector('.creator-audit').textContent.includes('2026'));
   assert.ok(root.querySelector('.cr-orig[href="https://www.youtube.com/watch?v=abcdefghijk"]'));
   assert.ok(requests.every(([,method])=>method==='GET'));dispose();
+});
+
+test('bounded channel counts disclose their sample and retain a path to older records',()=>{
+ const root=document.createElement('section');
+ renderCreatorPage(root,{creator:{name:'Creator'},page:{coverage:{indexed:1000,reviewed:45,posts_truncated:true,studies_truncated:true}}});
+ assert.match(root.textContent,/Current sample: 45 summarized · 1000 videos/);
+ assert.match(root.textContent,/not the complete channel/);
+ assert.match(root.textContent,/Earlier records/);
 });

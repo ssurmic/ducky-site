@@ -162,9 +162,10 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   if(linkedSource?.post){const i=posts.findIndex(p=>p.kol_id===initial.selected&&p.platform_post_id===initial.post);if(i<0)posts.push(linkedSource.post);else posts[i]=linkedSource.post;}
   let focusedPost=initial.post,focusedPoint=initial.point;
   let archive = false;
-  // Legacy stock-entry URLs must not hide creators. A stock can still locate a
-  // particular selected creator's research claim, after their identity is selected.
-  let mine = initial.mine, watched=false, stockTicker=initial.selected&&initial.tab==='research'?initial.ticker:'';
+  // An explicit stock link locates its content across creators. The old implicit
+  // watchlist scope remains a people-first feed; name search also clears this tag.
+  let stockTicker=initial.watched?'':initial.ticker;
+  let mine = stockTicker?false:initial.mine, watched=false;
   let query = "";
   let selected=kols.some(k=>k.id===initial.selected)?initial.selected:'', tab=initial.tab, shown=30;
   const labState={demo:initial.demo}, histories={}, archiveOpen=new Set();
@@ -224,7 +225,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     card.querySelector('.evidence-page-head').hidden=!!selected&&tab==='feed';
     card.querySelector('.creator-page-actions').hidden=!!selected&&tab==='feed';
     const isPro = store.isPro();
-    const stockFilter=selected&&tab==='research'&&stockTicker?[stockTicker]:null;
+    const stockFilter=tab!=='rank'&&stockTicker?[stockTicker]:null;
     const stockPosts=posts.filter(p=>matchesStocks(p,stockFilter));
     const available=kols.filter(k=>(!mine || following.has(k.id)));
     const tabs=el('nav.creator-workspace-tabs',{'aria-label':s('creatorflow.workspace')});
@@ -290,7 +291,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     const archiveBtn = el("button.btn.btn-ghost.btn-sm", { type: "button", "aria-pressed": String(archive), onclick: () => { archive = !archive; render(); } }, s(archive ? "creators.only_grounded" : "creators.show_archive"));
     if(!selected)feedContent.append(el('header.creator-feed-heading',el('h2.creator-latest-title',s('creators.latest')),archiveBtn));
     else feedContent.appendChild(archiveBtn);
-    if(selected&&!focusedPost&&!histories[selected])feedContent.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>loadHistory(selected)},s('creatorpage.all_videos',{n:doc.pages?.[selected]?.coverage?.indexed ?? stats.length})));
+    if(selected&&!focusedPost&&!histories[selected])feedContent.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>loadHistory(selected)},s('creatorpage.video_archive')));
     if (mine && !following.size) {feedContent.appendChild(empty(s("creators.no_following")));feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{mine=false;render();}},s('creators.discover')));return;}
     const history=selected?histories[selected]:null;
     if(history?.loading)feedContent.append(el('p.small.muted',{role:'status'},s('common.loading')));
@@ -301,7 +302,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{focusedPost='';focusedPoint='';linkFailed=false;renderContent();}},s('evidence.creator_all_posts')));
     }
     const candidates=focusedPost?posts.filter(p=>p.kol_id===initial.selected&&p.platform_post_id===focusedPost):(history?.items||posts);
-    const visiblePosts = filterPosts(candidates, {following,mine:focusedPost?false:mine,archive:archive||!!focusedPost,query:'',tickers:null}).filter(p=>!selected || p.kol_id===selected);
+    const visiblePosts = filterPosts(candidates, {following,mine:focusedPost?false:mine,archive:archive||!!focusedPost,query:'',tickers:focusedPost?null:stockFilter}).filter(p=>!selected || p.kol_id===selected);
     if (!visiblePosts.length) { feedContent.appendChild(empty(s("creators.feed_empty"))); return; }
     const feed = el("div.cr-feed");
     for (const p of visiblePosts.slice(0, history?.items?visiblePosts.length:shown)) {

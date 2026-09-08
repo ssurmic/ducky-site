@@ -49,7 +49,7 @@ export function renderCreatorPage(root,{creator,page={},onTab=()=>{},tickers=nul
       el('p.small.muted',s('creatorpage.price_scope',{n:chart.horizon})),figure,
       el('div.creator-page-metrics',metric('$'+chart.ticker,pct(chart.ret),chart.ret),metric('SPY',pct(chart.spy_ret),chart.spy_ret),metric(s('creatorpage.excess'),pct(chart.excess),chart.excess)));
     visual.append(el('details.creator-page-method',el('summary',s('creators.source_details')),el('p.small',s('creatorpage.price_method')),
-      el('p.small.muted',s('creators.published')+' '+dateTime(chart.published_at)),el('p.small.muted',s('creators.first_seen')+' '+dateTime(chart.recorded_at)),
+      el('p.small.muted',s('creators.published')+' '+dateTime(chart.published_at)),el('p.small.muted',s('creators.version_recorded')+' '+dateTime(chart.recorded_at)),
       chart.evidence?el('blockquote',chart.evidence):null,safeSource(chart.url)?el('a',{href:chart.url,target:'_blank',rel:'noopener noreferrer'},s('creators.orig')+' ↗'):null));
   }else{
     visual.append(el('h3',s('creatorpage.coverage_title')),activityChart(page.activity||[]),
@@ -72,6 +72,8 @@ export function renderCreatorPage(root,{creator,page={},onTab=()=>{},tickers=nul
     el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>onTab('research')},s('creators.research'))));
   const detail=el('details.creator-page-about',el('summary',s('creators.about')),el('p.small',creator.profile?.description||creator.descr||s('creators.profile_pending')));
   detail.append(el('p.small.muted',s('creatorpage.coverage',{ready:coverage.reviewed??'—',total:coverage.indexed??'—'})));
+  detail.append(el('p.small.muted',s('creatorpage.coverage_scope')));
+  if(coverage.posts_truncated||coverage.studies_truncated)detail.append(el('p.small.muted',s('creatorpage.coverage_more')));
   if(!figure){visual.classList.add('creator-page-coverage-mini');detail.append(visual);}
   if(safeSource(creator.url))detail.append(el('a',{href:creator.url,target:'_blank',rel:'noopener noreferrer'},s('creators.channel')+' ↗'));
   if(page.as_of)detail.append(el('p.small.muted',s('creatorpage.updated')+' '+dateTime(page.as_of)));

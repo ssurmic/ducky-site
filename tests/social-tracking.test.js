@@ -81,3 +81,14 @@ test('social search and scope survive language navigation without an extra snaps
  assert.equal(root.querySelectorAll('.social-card').length,1);assert.match(root.querySelector('.social-card').textContent,/MU/);
  clean();root.remove();lang.remove();
 });
+
+test('detection price snapshots keep real zero and do not turn overheating into bearish sentiment',()=>{
+ const card=socialCard({...row,price_snapshot:{publication_reference:{status:'ready',price:100,d:'2026-09-04'},
+ latest_close:{status:'ready',price:100,d:'2026-09-08'},since_publication:{status:'ready',ret:0},
+ publication_20:{status:'pending'}}});
+ assert.match(card.textContent,/Detection reference/);assert.match(card.textContent,/\$100\.00/);assert.match(card.textContent,/0\.0%/);
+ assert.equal(card.querySelector('.social-risk').textContent,'Overheating risk');
+ assert.match(card.querySelector('.vibe-direction').textContent,/Bulls—Bears—/);
+ assert.doesNotMatch(card.textContent,/Publication reference/);
+ assert.match(card.textContent,/20-session window after detection/);
+});

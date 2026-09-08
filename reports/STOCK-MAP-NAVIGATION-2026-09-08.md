@@ -22,3 +22,9 @@ point on its map. The extra 60-session selector does not remove immature views.
 Validation before release: build plus 421 tests; copy lint and 1,344 internal links pass.
 Backend integration and production receipts are recorded in ducky-bot's
 reports/CREATOR-STUDY-DELIVERY-2026-09-08.md. Production release remains pending here.
+
+Production receipt: 76367dc / Pages dec321d4 published on 2026-09-08. In a separate
+Chrome QA tab, the authenticated 18-stock account exposed 18 direct map links; SBET
+opened directly, then the full-stock selector showed all 18 and selected NKE. At
+measured 393x852 CSS pixels the modal and page had no horizontal overflow. Window
+size was restored; no account or watchlist mutations were made.

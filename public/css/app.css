@@ -1538,3 +1538,26 @@ html[data-theme=dark] :is(.evidence-view,.evidence-detail){--source-youtube:#f18
  .evidence-stock-picker .evidence-picker-list{grid-template-columns:repeat(3,minmax(0,1fr));max-height:36dvh;margin-bottom:14px}
  .watch-evidence-entry{min-height:76px;padding:14px;gap:12px}.watch-evidence-entry>span>span{font-size:12px}
 }
+
+/* Creator studies: published-price snapshot stays visible before +20 matures. */
+.study-row{--study-bull:#107348;--study-bear:#b53c52}
+html[data-theme=dark] .study-row{--study-bull:#47df98;--study-bear:#f18b9b}
+.study-row.study-bull{border-top:3px solid var(--study-bull)}
+.study-row.study-bear{border-top:3px solid var(--study-bear)}
+.study-row .cr-bull{color:var(--study-bull);background:color-mix(in srgb,var(--study-bull) 12%,transparent)}
+.study-row .cr-bear{color:var(--study-bear);background:color-mix(in srgb,var(--study-bear) 12%,transparent)}
+.study-row .cr-take{font-size:12px;padding:4px 9px}
+.study-row .cr-neutral{color:var(--text);border-color:var(--border)}
+.study-price-snapshot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:16px 0;margin-top:8px;border-block:1px solid var(--border)}
+.study-price-snapshot>div{display:flex;flex-direction:column;gap:5px;min-width:0}
+.study-price-snapshot strong{font-size:clamp(16px,2vw,22px);overflow-wrap:anywhere}
+.study-price-snapshot .small{font-size:11px;line-height:1.4}
+.study-condition{font-size:13px;line-height:1.7;color:var(--text)}
+.study-window{font-size:13px;margin:14px 0}
+@media(max-width:480px){.study-row{padding:16px}.study-price-snapshot{gap:8px}.study-heading{gap:8px}}
+
+.social-risk{display:inline-flex;width:fit-content;justify-self:start;color:var(--red);font-size:12px;border:1px solid currentColor;border-radius:6px;padding:4px 7px;line-height:1.4}
+.social-history-row>.event-price-comparison{grid-column:1 / -1;width:100%}
+.social-card .event-price-comparison{margin-top:12px}
+
+html[lang^=en] .study-price-snapshot>div>.small:first-child{min-height:2.8em}

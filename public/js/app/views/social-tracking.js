@@ -4,6 +4,7 @@ import { s } from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
 import { dateTime } from './creator-research.js';
+import {eventPriceSnapshot} from './event-price-snapshot.js';
 import { socialHistoryChart } from './social-history-chart.js';
 import { directionReading, generalVibe } from './vibe-direction.js';
 
@@ -26,7 +27,8 @@ export function socialCard(row,{stale=false,onHistory}={}) {
   const card=el('article.social-card',{'data-state':stale?'stale':'unavailable','data-record-id':row.id},
     el('div.social-card-heading',el('div',el('a.social-ticker',{href:'#/chart/'+encodeURIComponent(row.ticker)},'$'+row.ticker),
       el('span.social-company',row.company)),stale?el('span.social-state',s('social.saved_state')):null));
-  card.append(directionReading(),
+  if(state==='overheated')card.querySelector('.social-card-heading').append(el('span.social-risk',s('social.overheated_risk')));
+  card.append(directionReading(),eventPriceSnapshot(row.price_snapshot,{basis:'detection',showWindow:true}),
     el('a.btn.btn-ghost.btn-sm',{href:'#/briefing?ticker='+encodeURIComponent(row.ticker)},s('stockbrief.open')));
   const details=el('details.social-evidence',el('summary',s('social.details')),
     el('p.social-meaning',s('social.state_'+state)),
@@ -166,9 +168,9 @@ export async function mountSocial(root,route={}) {
       host._historyRows=[...(host._historyRows||[]),...data.items];
       host.querySelector('.social-history-plot')?.remove();host.prepend(socialHistoryChart(host._historyRows));
       for(const row of data.items)host.append(el('div.social-history-row',el('time',{datetime:row.collected_at},dateTime(row.collected_at)),
-        el('strong',(row.index??'—')+' / 100'),el('span',s('social.state_'+row.state)),
+        el('strong',(row.index??'—')+' / 100'),el('span',{class:row.state==='overheated'?'social-risk':''},s(row.state==='overheated'?'social.overheated_risk':'social.state_'+row.state)),
         el('span',num(row.mentions,0)+' · '+pct(row.change_pct,0)),el('code.social-record-id',row.id),
-        el('small.muted',row.version||'')));
+        el('small.muted',row.version||''),eventPriceSnapshot(row.price_snapshot,{basis:'detection',showWindow:true})));
       host.dataset.cursor=data.next_cursor||'';button.hidden=!data.next_cursor;button.textContent=s('creators.load_more');
     } catch {
       if(valid()) { host.querySelector('.social-history-error')?.remove();host.append(el('p.social-history-error',s('social.history_error'))); }
