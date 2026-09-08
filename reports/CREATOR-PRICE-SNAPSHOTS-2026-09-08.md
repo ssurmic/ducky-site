@@ -185,3 +185,24 @@ social event snapshots, including their completed 20-session comparison.
 Regression checks cover positive and negative small moves, the smallest recorded
 precision, ordinary moves, actual zero and unavailable data. All 442 frontend tests,
 copy lint and 1,352 internal links pass. Live verification follows deployment.
+
+Released as `8de5232` / Pages `9c317a50`, after exact-commit CI
+`34281897694` passed. Fresh ordinary Chinese and English production URLs at
+393px show GOOGL's TALK group with six views: September 4 reference $338.46,
+September 8 close $338.36, -0.03%. The separate New Money group retains its own
+August 14 reference $345.90, the same latest close and -2.2%. Both document widths
+match 393px. The HTML's actual module graph `10f8ae45e6eca60daff8` main/snapshot
+module and referenced CSS match the deployed build byte-for-byte.
+
+Screenshots: `googl-price-393-8de5232-production.png` and
+`googl-price-en-393-8de5232-production.png`; static receipt:
+`frontend-8de5232-static-receipt.json`, in the existing temporary validation folder.
+
+NKE's research page separately retains conditional point
+`claim:88a3ba071448d10f116eb4d1`, including the post-earnings decline **and**
+continued new-product demand conditions. Its reference is September 4 $38.40 and
+latest close September 8 $38.10 (-0.8%); the erroneous percentage interpretation
+was withdrawn. This research receipt alone is not three-surface acceptance:
+at this check the legacy point still lacked a source binding and was absent from
+the current source page and information map. Backend binding verification remains
+open until a separate receipt closes it.
