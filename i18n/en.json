@@ -3225,5 +3225,9 @@
   "app.evidence.no_source_link": "An original link is not available for this record.",
   "app.evidence.more_sources": "Another {n} older sources repeating this thesis remain in the source archive.",
   "app.evidence.recorded_single": "{n} recorded point",
-  "app.evidence.source_single": "{n} source"
+  "app.evidence.source_single": "{n} source",
+  "app.evidence.select_stock": "Choose a stock",
+  "app.evidence.change_ticker": "Change stock, currently {ticker}",
+  "app.evidence.search_action": "Search and filter",
+  "app.evidence.clear_filter": "Clear filters"
 }

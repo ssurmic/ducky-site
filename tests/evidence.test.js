@@ -93,3 +93,31 @@ test('source dialogs omit a repeated explanation while retaining author and date
  assert.equal(body.split('The order still needs confirmation.').length-1,1);assert.match(body,/Counter Author/);assert.match(body,/2026-09-04/);assert.match(body,/1:10–1:30/);
  closeModal();root.dispose();root.remove();
 });
+
+test('one shared set of points forms support, opposition and context branches',()=>{
+ const root=mapView(fixture());document.body.append(root);
+ assert.equal(root.querySelectorAll('.evidence-group').length,3);
+ assert.equal(root.querySelector('.evidence-group.is-counter .evidence-node strong').textContent,'Point 9');
+ assert.equal(root.querySelector('.evidence-group.is-support .evidence-group-count').textContent,'5');
+ assert.equal(root.querySelector('.evidence-group.is-context .evidence-group-count').textContent,'4');
+ assert.equal(root.querySelector('.evidence-group.is-counter .evidence-node-mobile-meta .evidence-condition').textContent,'Conditional');
+ [...root.querySelectorAll('button')].find(b=>b.textContent==='Show more').click();
+ const numbers=[...root.querySelectorAll('.evidence-node-number')].map(n=>n.textContent);
+ assert.equal(numbers.length,10);assert.equal(new Set(numbers).size,10);root.dispose();root.remove();
+});
+test('phone stock picker and search disclosure reuse the loaded graph without watchlist writes',async()=>{
+ store.set('me',{tier:'pro'});store.set('watchlist',['AVGO','ORCL']);let calls=[];
+ globalThis.fetch=async url=>{calls.push(String(url));return response(fixture());};
+ const root=document.createElement('div');document.body.append(root);const cleanup=await mount(root,{ticker:'AVGO'});
+ const before=calls.length;root.querySelector('.evidence-stock-trigger').focus();root.querySelector('.evidence-stock-trigger').click();
+ assert.equal(document.querySelectorAll('.evidence-picker-list a').length,2);
+ assert.equal(document.querySelector('.evidence-picker-form input').value,'AVGO');closeModal();
+ assert.equal(document.activeElement,root.querySelector('.evidence-stock-trigger'));
+ const toggle=root.querySelector('.evidence-search-toggle');toggle.click();const input=root.querySelector('.evidence-tools input');
+ assert.equal(document.activeElement,input);assert.equal(toggle.getAttribute('aria-expanded'),'true');
+ input.value='Counter Author';input.dispatchEvent(new window.Event('input'));input.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+ assert.equal(toggle.getAttribute('aria-expanded'),'false');assert.equal(document.activeElement,toggle);
+ assert.equal(root.querySelectorAll('.evidence-node').length,1);assert.equal(root.querySelector('.evidence-reset-filter').hidden,false);
+ root.querySelector('.evidence-reset-filter').click();assert.equal(root.querySelectorAll('.evidence-node').length,6);assert.equal(root.querySelector('.evidence-reset-filter').hidden,true);
+ assert.deepEqual(store.get('watchlist'),['AVGO','ORCL']);assert.equal(calls.length,before);cleanup();root.remove();
+});

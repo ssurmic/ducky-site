@@ -3225,5 +3225,9 @@
   "app.evidence.no_source_link": "此记录暂未附原文链接。",
   "app.evidence.more_sources": "另有 {n} 份较早的重复论点来源保留在历史语料中。",
   "app.evidence.recorded_single": "{n} 条已记录观点",
-  "app.evidence.source_single": "{n} 份来源"
+  "app.evidence.source_single": "{n} 份来源",
+  "app.evidence.select_stock": "切换股票",
+  "app.evidence.change_ticker": "切换股票，目前为 {ticker}",
+  "app.evidence.search_action": "搜索与筛选",
+  "app.evidence.clear_filter": "清除筛选"
 }
