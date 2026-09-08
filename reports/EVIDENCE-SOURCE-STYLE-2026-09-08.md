@@ -16,4 +16,12 @@ The owner asked for recognizable YouTube source cards with a translucent logo, m
 - Phone badge rows remain visible; source and stance do not overlap or overflow. At the sampled 650px phone viewport, 520px remains after header/navigation and two complete first-group cards are visible. The source dialog fits at 390px, its close target is 44px and closing restores the source-card focus.
 - Watermarks are `aria-hidden` with `pointer-events:none`; source text remains visible without relying on color. Small-screen labels and long English titles were independently reviewed by the UI audit agent.
 
-Production release verification will be recorded after publication. Synthetic examples above are layout fixtures only and are not investment records.
+## Release receipt
+
+Published frontend `99ef6d2` to Pages `5495287e` on 2026-09-08. Production Chrome displayed real AVGO data: 18 points, one bullish and 17 context records at observation. The Sept 3 Investment TALK YouTube point has the explicit YouTube badge and watermark plus a green Bullish badge; other source records retain Context. The saved-analysis pending state remains truthful.
+
+Actual production viewport measured 390 × 651 CSS px after compensating for the existing browser zoom; scrollWidth was 390. The long real bullish title wrapped within its card and the two badge labels remained separate. This real-data view contains one complete first-group card and part of the next group in the short viewport; the two-card count above applies to the synthetic fixture only. No physical iOS/Safari claim is made.
+
+Production CSS, evidence source module and evidence view module exactly match the release build. Both localized app shells match after excluding the platform-injected Cloudflare beacon; no beacon was added by this change. Independent final UI review passed after removing the conflicting full-card directional tint. The agent exercised click/dialog/close flows; native Tab traversal was not separately exercised.
+
+Synthetic examples above are layout fixtures only and are not investment records.
