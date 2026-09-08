@@ -3,11 +3,12 @@ import {el} from './ui.js';
 import {s,LANG} from './strings.js';
 export const REPORT_KINDS=new Set(['digest','market','macro','liquidity','kindex','volscan','hiring','weekpreview','default']);
 export const recordHref=row=>'#/record/'+encodeURIComponent(String(row.id));
-export function cleanMessage(text){
+export function cleanMessage(text,language=LANG){
+ const reference=s('reader.saved_refs_'+(language==='en'?'en':'zh'));
  return String(text||'').replace(/[\p{Regional_Indicator}🧭🔔🌊📉📅🎯🔗🧑💻\uFE0F\u200D]/gu,'')
-  .replace(/\[private reminder reference removed\]/g,s('reader.saved_refs'))
+  .replace(/\[private reminder reference removed\]/g,reference)
   .replace(/\*{1,2}([^*\n]+)\*{1,2}/g,'$1').replace(/(^|\s)_([^_\n]+)_(?=\s|$)/g,'$1$2')
-  .replace(/\(entry-[A-Za-z0-9-]+(?:,\s*entry-[A-Za-z0-9-]+)*\)/g,'').replace(/entry-[A-Za-z0-9-]+(?:[,、]\s*entry-[A-Za-z0-9-]+)*/g,s('reader.saved_refs'))
+  .replace(/\(entry-[A-Za-z0-9-]+(?:,\s*entry-[A-Za-z0-9-]+)*\)/g,'').replace(/entry-[A-Za-z0-9-]+(?:[,、]\s*entry-[A-Za-z0-9-]+)*/g,reference)
   .replace(/^\s*#{1,6}\s+/gm,'').replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'$1 ($2)').trim();
 }
 export function recordDocument(row,language=LANG){
@@ -30,8 +31,8 @@ export function recordDocument(row,language=LANG){
   const markdown=value.match(/^###\s*([^\n]+)\n([\s\S]*)$/);
   if(labeled){heading=cleanMessage(labeled[2]);value=labeled[3];}
   else if(bracket){heading=cleanMessage(bracket[1]);value=bracket[2];}
-  else if(markdown){heading=cleanMessage(markdown[1]);value=markdown[2];}
-  blocks.push({heading,text:cleanMessage(value)});
+  else if(markdown){heading=cleanMessage(markdown[1]);value=markdown[2].replace(/^\s*[·•]\s*/,'');}
+  blocks.push({heading,text:cleanMessage(value,language)});
  }
  for(const block of blocks){
   const parts=block.heading.split(/\s+\/\s+/);

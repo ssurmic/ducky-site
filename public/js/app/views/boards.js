@@ -357,7 +357,7 @@ export function itemRow(it, {standalone=false, language=LANG}={}){
     const disclosure=el('span.radar-disclosure',s('reader.open')+' ↗');
     const title=el(standalone?'header.record-heading':'a.radar-record-toggle',standalone?{}:{href:recordHref(it)},
       el(standalone?'div.radar-record-meta':'span.radar-record-meta',el(standalone?'h1.radar-ticker':'strong.radar-ticker',doc.title),
-        el('span.radar-kind',kind),el('time.muted',{datetime:it.ts},it.extra?.date_precision==='day'?String(it.ts || '').slice(0,10):standalone?dateTime(it.ts):String(it.ts || '').slice(11,16)+' UTC')),
+        kind===doc.title?null:el('span.radar-kind',kind),el('time.muted',{datetime:it.ts},it.extra?.date_precision==='day'?String(it.ts || '').slice(0,10):standalone?dateTime(it.ts):String(it.ts || '').slice(11,16)+' UTC')),
       (it.issuer_name || it.company)?el('span.radar-company-name',it.issuer_name || it.company):null,
       it.reporter_name?el('span.radar-reporter',s('radar.reporter')+' · '+it.reporter_name):null,
       standalone?null:el('span.radar-record-title',label),

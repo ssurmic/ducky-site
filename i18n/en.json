@@ -3392,6 +3392,8 @@
   "app.reader.title_weekpreview": "Week ahead",
   "app.reader.translation_time": "Chinese version recorded at {date}",
   "app.reader.unavailable": "This record is unavailable. Return to the list to browse other records.",
+  "app.reader.saved_refs_zh": "对应的入场记录",
+  "app.reader.saved_refs_en": "the recorded entries",
   "app.reader.saved_refs": "the recorded entries",
   "app.reader.report_count": "{n} reports",
   "desk.title.reports": "Market reports",

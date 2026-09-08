@@ -3392,6 +3392,8 @@
   "app.reader.title_weekpreview": "本周前瞻",
   "app.reader.translation_time": "中文版本记录于 {date}",
   "app.reader.unavailable": "这条记录暂不可用，请返回列表查看。",
+  "app.reader.saved_refs_zh": "对应的入场记录",
+  "app.reader.saved_refs_en": "the recorded entries",
   "app.reader.saved_refs": "对应的入场记录",
   "app.reader.report_count": "{n} 份报告",
   "desk.title.reports": "市场报告",
