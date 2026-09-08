@@ -1,0 +1,57 @@
+{
+  "release": "0f2ce97c4be9b6c69239ed61a50b95cc1b325576",
+  "deployment": "8199f11c",
+  "ticker": "AVGO",
+  "theme": "dark",
+  "phoneZh": {
+    "canvasCount": 15,
+    "details": false,
+    "documentWidth": 390,
+    "height": 750,
+    "host": {
+      "h": 379.9921875,
+      "w": 258.515625,
+      "x": 22.74609375,
+      "y": 379.3828125
+    },
+    "rail": {
+      "h": 479.94140625,
+      "w": 75.99609375,
+      "x": 291.2578125,
+      "y": 379.3828125
+    },
+    "width": 390
+  },
+  "desktopEn": {
+    "canvasCount": 15,
+    "details": true,
+    "documentWidth": 1200,
+    "heading": "Reference levels",
+    "height": 900,
+    "host": {
+      "h": 469.9921875,
+      "w": 628.5234375,
+      "x": 274.734375,
+      "y": 363.78515625
+    },
+    "rail": {
+      "h": 242.625,
+      "w": 195.2578125,
+      "x": 948,
+      "y": 365.77734375
+    },
+    "width": 1200
+  },
+  "actions": [
+    "zoom in",
+    "zoom out",
+    "reset",
+    "expand level details",
+    "select 2026-09-11 expiry",
+    "verify guide expiry",
+    "show optional ranges",
+    "fit all references",
+    "reset clears fit"
+  ],
+  "consoleErrors": []
+}

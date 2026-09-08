@@ -1,0 +1,27 @@
+[
+  {
+    "path": "/app-assets/c6b541516a303f45603e/main.js",
+    "matches_local": true,
+    "sha256": "a780cbb4a1a07b4e88eba6e95ad2bfe0d1287179901635303c68ab47429db23e"
+  },
+  {
+    "path": "/css/workspace.css?v=0f2ce97c",
+    "matches_local": true,
+    "sha256": "b79f363b56d6ad3a7dee5a0c54a137231086cbd86a176f2704069ff9a6020233"
+  },
+  {
+    "path": "/css/chart.css?v=0f2ce97c",
+    "matches_local": true,
+    "sha256": "844fd8e70ca847ddd3c1dc0f6209388868c57431c9939e8e2c9fbec02155e010"
+  },
+  {
+    "path": "/app-assets/c6b541516a303f45603e/views/chart.js",
+    "matches_local": true,
+    "sha256": "7fc8f1ebd54cc734ffa32bfeb9aaca21d15c66525aaf01b52374565c63f087dc"
+  },
+  {
+    "path": "/app-assets/c6b541516a303f45603e/overlays.js",
+    "matches_local": true,
+    "sha256": "8c30d5db5c4f4474705738401905f8c703798efee386a2dd794216fae70088cc"
+  }
+]

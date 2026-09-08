@@ -1,5 +1,7 @@
 # Chart reference rail — 2026-09-08
 
+Released to duckybot.app: frontend `0f2ce97c4be9b6c69239ed61a50b95cc1b325576`, Pages `8199f11c`, module graph `c6b541516a303f45603e`. [Exact release CI](https://github.com/ssurmic/ducky-site/actions/runs/34265597027) passed. The release includes the latest Information Map navigation changes from `76367dc`.
+
 Reference names, values and the saved-price explanation now sit beside the chart on desktop. On screens up to 900px, a 76px right column retains the prices and a full-width disclosure below the plot holds the longer explanation. The OHLC readout and option-expiry controls retain the full workspace width. A loading, missing or gated snapshot uses a full-width status instead of an empty reference column.
 
 The horizontal reference lines remain on the plot. Their pane titles and axis tags are suppressed, so clustered option levels cannot obscure the candles or latest recorded bar price. Names, colors and numbers remain readable in the rail, including levels outside the visible price range. Range endpoints wrap as complete numbers. Expiry selection, optional ranges, fit-all, reset, theme changes and the explanatory dialog continue to use the same snapshot and calculations. The saved spot used for wall distances remains explicitly separate from the dated bar in the header.
@@ -8,13 +10,17 @@ Browser inspection caught a resize issue: inserting the rail after the snapshot 
 
 ## Verification
 
-- Initial full frontend suite: 419 passed. Build, copy lint and 1,344 internal links passed; Python asset/export checks: 7 passed, 1 existing optional skip. Final integration and production acceptance are recorded below after release.
+- Final integrated frontend suite: **422 passed** (419 before merging the independent navigation update). Build, copy lint and 1,344 internal links passed; Python asset/export checks: 7 passed, 1 existing optional skip.
 - 32 layouts: EN/ZH × light/dark × 320/390/600/900/901/1024/1200/1440px, height 650. Every chart painted, with no horizontal overflow or page errors. All 80 synthetic bars remained in the initial logical range (0–82 including the right margin).
 - Browser interactions: 320px English light zoom in/out/reset, expiry change, optional ranges, fit-all and guide; week aggregation and resize to 1200px retained the visible range. The guide reflected the selected expiry and kept the expected-range expiry separate. No requests occurred for zoom, expiry, fit or disclosure actions.
 - Final range-endpoint formatting was checked separately at 320px, with optional ranges enabled: no overflow or split numeric endpoints. Desktop host and rail occupied separate boxes (628px host, 45px separation including padding, 195px reference content at 1200px).
 - Regression coverage checks overlay values and hidden chart labels, latest-price visibility, selected-expiry changes, disclosure state across redraw/theme changes and resize-listener cleanup. Existing freshness, scaling, keyboard focus and API-tier tests remain in the full gate.
 
 [Layout measurements](chart-reference-rail-20260908/layout-matrix.json)
+
+Final additional checks: six failed-snapshot layouts (320/390/1200px × both themes) still painted candles with no overflow/errors; a 390px pending snapshot retained a full-width 344px chart and no empty rail. Switching an existing 390px chart from dark to light updated candle/indicator colors while preserving its range and the same three initial API reads. [Additional measurements](chart-reference-rail-20260908/additional-checks.json).
+
+Production Pro acceptance used AVGO: Chinese dark 390×750 and English dark 1200×900, with document width matching the viewport and the rail wholly outside the chart host. Zoom in/out/reset, selected-expiry guide, optional ranges and fit-all/reset passed. The source's expected-range expiry remained separately labelled. No browser console errors appeared. Five deployed assets (entry module, chart view, overlays and both changed stylesheets) match the verified build byte for byte. [Production layout checks](chart-reference-rail-20260908/production-checks.json) · [Asset hashes](chart-reference-rail-20260908/production-assets.json). Paid source data and production screenshots were not added to the public repository. Temporary tabs and viewport overrides were removed and Chinese restored.
 
 ![Desktop light — synthetic layout fixture](chart-reference-rail-20260908/desktop-light.png)
 

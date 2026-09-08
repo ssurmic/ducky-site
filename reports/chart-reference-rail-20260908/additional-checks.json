@@ -1,0 +1,192 @@
+{
+  "errorLayouts": [
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 1200
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 1200
+    }
+  ],
+  "loading": {
+    "width": 390,
+    "documentWidth": 390,
+    "canvasWidth": 344,
+    "hasRail": false,
+    "railHidden": true
+  },
+  "theme": {
+    "before": [
+      {
+        "calls": 3,
+        "errors": [],
+        "overflow": [],
+        "range": {
+          "from": 0,
+          "to": 82
+        },
+        "series": [
+          {
+            "count": 80,
+            "down": "#d68093",
+            "type": "Candlestick",
+            "up": "#55b6a4"
+          },
+          {
+            "color": "#9aa7d6",
+            "count": 66,
+            "type": "Line"
+          },
+          {
+            "color": "#26a69a",
+            "count": 54,
+            "type": "Histogram"
+          },
+          {
+            "color": "#c7a16e",
+            "count": 54,
+            "type": "Line"
+          },
+          {
+            "color": "#9aa7d6",
+            "count": 54,
+            "type": "Line"
+          }
+        ],
+        "theme": "dark",
+        "width": 390
+      }
+    ],
+    "after": [
+      {
+        "calls": 3,
+        "errors": [],
+        "overflow": [],
+        "range": {
+          "from": 0,
+          "to": 82
+        },
+        "series": [
+          {
+            "count": 80,
+            "down": "#bb556a",
+            "type": "Candlestick",
+            "up": "#16836f"
+          },
+          {
+            "color": "#6477bc",
+            "count": 66,
+            "type": "Line"
+          },
+          {
+            "color": "#26a69a",
+            "count": 54,
+            "type": "Histogram"
+          },
+          {
+            "color": "#a46b24",
+            "count": 54,
+            "type": "Line"
+          },
+          {
+            "color": "#6477bc",
+            "count": 54,
+            "type": "Line"
+          }
+        ],
+        "theme": "light",
+        "width": 390
+      }
+    ]
+  },
+  "interactions": {
+    "zoomIn": {
+      "from": 10.25,
+      "to": 71.75
+    },
+    "reset": {
+      "from": 0,
+      "to": 82
+    },
+    "selectedExpiry": "2026-10-16",
+    "selectedWallValues": [
+      320,
+      80,
+      110
+    ],
+    "expectedExpiry": "2026-09-18",
+    "afterWeekResize": {
+      "from": 0,
+      "to": 14
+    },
+    "desktop": {
+      "width": 1200,
+      "chartWidth": 628,
+      "railContentWidth": 195,
+      "gap": 45
+    },
+    "optionalRangesAt320": {
+      "overflow": [],
+      "numericEndpointsIntact": true
+    }
+  }
+}
