@@ -1,0 +1,65 @@
+{
+  "version": "2026-09-08-creator-workflow-v1",
+  "pages": {
+    "zh": {
+      "url": "https://duckybot.app/#product-demo",
+      "chapters": 9,
+      "feature_links": 8,
+      "intel_tutorial": "preserved",
+      "page_sha256": "165dc05dd1ebfb214c47f6add1f5e08f20e1b1f83d79219f279a59b20ccfa963"
+    },
+    "en": {
+      "url": "https://duckybot.app/en/#product-demo",
+      "chapters": 9,
+      "feature_links": 8,
+      "intel_tutorial": "preserved",
+      "page_sha256": "27d12ed7bb31625128d5fd40349dd4c41a5ffcd1ce1b2ec8fe52c88a76e0b6bc"
+    }
+  },
+  "assets": {
+    "ducky-walkthrough-2026-09-08-creator-workflow-v1.en.en.vtt": {
+      "bytes": 2356,
+      "sha256": "96f322ad6e803a7a2e6dad82470c94d4da2fd3113d1e6811a9abf97e43c1b2f6",
+      "type": "text/vtt; charset=utf-8"
+    },
+    "ducky-walkthrough-2026-09-08-creator-workflow-v1.en.jpg": {
+      "bytes": 170699,
+      "sha256": "defa0f21448dfeecfee238e70ac6368270f8ba4a81694c198305439628bb24ea",
+      "type": "image/jpeg"
+    },
+    "ducky-walkthrough-2026-09-08-creator-workflow-v1.en.mp4": {
+      "bytes": 3756516,
+      "sha256": "af0df72744ffb33611a715867cef208f1624daf5eeefc219fba62fb7edcd614c",
+      "type": "video/mp4",
+      "range_status": 206,
+      "content_range": "bytes 1000-2023/3756516"
+    },
+    "ducky-walkthrough-2026-09-08-creator-workflow-v1.en.zh.vtt": {
+      "bytes": 2308,
+      "sha256": "fa68cc28dd44c6408521ae3a758d05434668adae8e4cce29ab19f68dc71b848f",
+      "type": "text/vtt; charset=utf-8"
+    },
+    "ducky-walkthrough-2026-09-08-creator-workflow-v1.zh.en.vtt": {
+      "bytes": 2356,
+      "sha256": "f7ce46c894a622b699cfbf66d3626583bcd909d246852c1557083f58ba718459",
+      "type": "text/vtt; charset=utf-8"
+    },
+    "ducky-walkthrough-2026-09-08-creator-workflow-v1.zh.jpg": {
+      "bytes": 163670,
+      "sha256": "5ac22c2671899d805951508f50f7986440af6588be2e1157cbac3f00c4ebb1fc",
+      "type": "image/jpeg"
+    },
+    "ducky-walkthrough-2026-09-08-creator-workflow-v1.zh.mp4": {
+      "bytes": 4021334,
+      "sha256": "871766847cfd5f2bd8354bfd925a9a925579c281cab4d764a7c81d92e8f4e398",
+      "type": "video/mp4",
+      "range_status": 206,
+      "content_range": "bytes 1000-2023/4021334"
+    },
+    "ducky-walkthrough-2026-09-08-creator-workflow-v1.zh.zh.vtt": {
+      "bytes": 2308,
+      "sha256": "0cc3df61e97c258fd6596a2bbeef6d81b974dd9525723107eef527d34c924034",
+      "type": "text/vtt; charset=utf-8"
+    }
+  }
+}

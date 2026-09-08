@@ -33,3 +33,14 @@ The remaining scenes show current product screens for oversold candidates, QQQ/S
 - Only the demo task's temporary INTC/MSFT watchlist additions were removed after filming. Other concurrent watchlist additions were retained. No notifications were sent, and account delivery settings and research/source records were not changed by the video work.
 
 Private capture originals and source transcripts are retained in the task artifact directory; only selected cropped frames inside the videos, posters, and captions are published. No DGX model work, TTS job or backend deployment was used.
+
+## Published release
+
+- Code `07e79408f30d23376318d0099cc277f4a83b1b7b`, exact CI [34286810837](https://github.com/ssurmic/ducky-site/actions/runs/34286810837) successful. The final combined frontend passed 447 JavaScript tests locally.
+- Cloudflare Pages `e857aa67`, published September 8 at approximately 22:39 UTC. Both public homepage versions select the new film. All eight published media assets match local hashes; both MP4s serve correct HTTP 206 byte ranges.
+- The production English player completed 43.48 seconds with `ended=true` and no media error. The production final chapter correctly seeks to 38.08 seconds. Chinese technical/media and local-browser checks passed; a production tab property read timed out, so no extra production Chinese completion claim is made.
+- Source release owner confirmed the two disputed points were withdrawn/corrected in live backend `ae72824`; neither is used in the demo.
+- This release retains the Free experience changes in `54464cf`. No app/creator JavaScript or product navigation changed relative to that commit; app graph `80df34793728c1ab0b28`.
+- The Pages lock was released to the Free experience owner for its next coordinated release. No further Pages deployment is required for these documentation receipts.
+
+Live entry points: [Chinese demo](https://duckybot.app/#product-demo), [English demo](https://duckybot.app/en/#product-demo).

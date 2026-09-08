@@ -1,0 +1,31 @@
+{
+  "build": "07e79408",
+  "deployment": "e857aa67",
+  "en": {
+    "duration": 43.48,
+    "ended": true,
+    "error": null,
+    "observed": "Native browser media state after complete playback",
+    "chapterStatus": "At 0:38 · X and Reddit preview. Press Play in the video to watch."
+  },
+  "zh": {
+    "validation": "Complete decode, identical published asset hash, native-language default caption track and local browser playback; production tab property read timed out"
+  },
+  "responsive": {
+    "viewports": [
+      [
+        390,
+        650
+      ],
+      [
+        320,
+        600
+      ]
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "result": "Explicit caption line breaks and portrait line60 clear persistent controls; screenshots retained."
+  }
+}
