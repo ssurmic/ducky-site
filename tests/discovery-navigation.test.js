@@ -31,6 +31,21 @@ test('new destinations survive sign-in and radar links select one matching categ
  assert.ok(nav.querySelector('[data-route=vibe]').classList.contains('on'));
  assert.equal(nav.querySelector('.nav-desktop-radar [aria-current=page]'),null);nav.remove();
 });
+test('phone navigation promotes the information map and keeps alerts reachable in More',()=>{
+ for(const prefix of ['', 'en/']){
+  const shell=new JSDOM(readFileSync(`dist/${prefix}app/index.html`,'utf8')).window.document;
+  const nav=document.importNode(shell.querySelector('.app-nav'),true);document.body.append(nav);
+  const primary=[...nav.querySelectorAll(':scope > [data-mobile-primary]')];
+  assert.deepEqual(primary.map(a=>a.dataset.route),['watchlist','calendar','evidence','boards']);
+  assert.ok(nav.querySelector('.nav-more-panel [data-route=alerts]'));
+  assert.equal(nav.querySelector('.nav-more-panel [data-route=evidence]'),null);
+  for(const route of ['evidence','watchlist','calendar','boards']){selectNavigation(route);assert.equal(nav.querySelector('.nav-more').classList.contains('on'),false,route);}
+  for(const route of ['alerts','updates','chart','vibe']){selectNavigation(route);assert.ok(nav.querySelector('.nav-more').classList.contains('on'),route);}
+  const more=nav.querySelector('.nav-more');more.open=true;more.querySelector('[data-route=alerts]').focus();
+  selectNavigation('evidence');assert.equal(more.open,false);assert.equal(document.activeElement,more.querySelector('summary'));
+  nav.remove();
+ }
+});
 test('discovery shows stocks outside the watchlist, preserving zero and unknown metrics',()=>{
  const rows=[{ticker:'OWN'},{ticker:'NEW'}];
  assert.equal(opportunities.selectCandidates(rows,'all',['OWN']).length,2);

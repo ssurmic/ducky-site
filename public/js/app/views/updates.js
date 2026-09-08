@@ -118,6 +118,7 @@ export async function mount(root,route={}){
         box.append(el('div.updates-topic',el('div.updates-topic-head',el('strong',topicLabel(topic)),el('span.small.muted',s(topic.enabled?'updates.inapp_on':'updates.paused'))),
           el('p.small.muted',s('updates.notify_from',{date:updateDate(topic.notify_from)})),
           el('div.updates-topic-actions',el('label.updates-check',push,s('updates.push_topic')),
+            topic.watched_stock?el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:mutation||!!flight,onclick:()=>changeTopic({...topic,enabled:!topic.enabled,web_push:false})},s(topic.enabled?'updates.pause':'updates.resume')):
             el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:mutation||!!flight,'aria-label':s('updates.remove')+' '+topicLabel(topic),onclick:()=>removeTopic(topic)},s('updates.remove')))));
     }
     target.append(box);
@@ -219,7 +220,8 @@ export async function mount(root,route={}){
     if(payload.web_push&&!topics.find(t=>topicId(t)===topicId(topic))?.web_push&&!deviceReady)return;
     return mutate(()=>api.creatorNotifications.save(payload,opts),response=>{
       if(!validTopic(response?.topic))throw Error('invalid_response');
-      topics=topics.filter(t=>topicId(t)!==topicId(response.topic));topics.push(response.topic);
+      const prior=topics.find(t=>topicId(t)===topicId(response.topic));
+      topics=topics.filter(t=>topicId(t)!==topicId(response.topic));topics.push({...response.topic,watched_stock:prior?.watched_stock===true});
     },!payload.enabled);
   }
   function removeTopic(topic){return mutate(()=>api.creatorNotifications.remove(topic.topic_type,topic.topic_key,opts),()=>{topics=topics.filter(t=>topicId(t)!==topicId(topic));},true);}

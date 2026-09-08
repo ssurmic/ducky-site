@@ -8,6 +8,7 @@ import {icon} from '../icons.js';
 import {evidenceTarget} from '../creator-route.js';
 import {comparisonBadge,comparisonDetails} from '../comparison-context.js';
 import {sourceIdentity,nodeSourceIdentity,sourceBadge,sourceMark} from '../evidence-source.js';
+import {claimQualifications} from './creator-claim.js';
 
 const pick=v=>v?.[LANG==='en'?'en':'zh']||'';
 const original=v=>pick(v)||v?.en||v?.zh||'';
@@ -28,6 +29,7 @@ export function detail(node){
     const item=el('article.evidence-source',sourceBadge(sourceIdentity(e)),el('h3',e.author||s('evidence.recorded_data')),
       original(e.original_title)?el('div.evidence-original',el('span.small.muted',s('evidence.original_only')),el('p',original(e.original_title))):null,
       explanation&&explanation!==pick(node.reason)?el('p',explanation):null,
+      e.kind==='creator'?claimQualifications(e):null,
       e.kind==='fact'?comparisonDetails(e):null,
       e.published_at?el('p.small.muted',s('evidence.published',{at:date(e.published_at)})):null,
       el('p.small.muted',s('evidence.observed',{at:time(e.observed_at)})),

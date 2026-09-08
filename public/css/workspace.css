@@ -8,6 +8,9 @@ body.page-app{--font:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFa
 @media(prefers-color-scheme:dark){:root:is(:not([data-tg]),[data-tg=web]):not([data-theme=light]) .page-app{--bg:#0b1017;--bg-2:#101720;--surface:#121a24;--surface-2:#1a2431;--border:#263240}}
 :root:is(:not([data-tg]),[data-tg=web])[data-theme=dark] .page-app{--bg:#0b1017;--bg-2:#101720;--surface:#121a24;--surface-2:#1a2431;--border:#263240}
 .page-app .app-main{scrollbar-gutter:stable;scroll-padding-top:24px}
+.chart-zoom{display:flex;justify-content:flex-end;gap:6px;margin-top:8px}
+.chart-zoom .btn{min-width:44px;min-height:44px}
+.chart-zoom[hidden]{display:none}
 .page-app .app-top{order:1}.page-app .app-main{order:2}.page-app .app-nav{order:3}
 .page-app .app-view{max-width:1120px}
 .page-app h1{font-size:1.75rem;letter-spacing:-.035em;line-height:1.3}
@@ -239,9 +242,13 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .modal-body{padding:16px}
  .page-app .modal-actions{padding:12px 16px}
  .page-app .creators-view{padding:0}
+ .page-app .creators-view .evidence-page-head{margin-bottom:12px}
+ .page-app .creators-view .evidence-page-head p{font-size:13px;line-height:1.5}
+ .page-app .creators-controls{margin:8px 0}
+ .page-app .creator-directory-picker{margin-bottom:8px}
  .page-app .creators-view .evidence-page-head{flex-wrap:wrap;gap:12px}
- .page-app .creator-workspace-tabs{display:flex;overflow-x:auto;justify-content:start;gap:6px}
- .page-app .creator-workspace-tabs button{padding:10px 12px;white-space:nowrap}
+ .page-app .creator-workspace-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible;gap:4px;margin:8px 0}
+ .page-app .creator-workspace-tabs button{min-width:0;padding:8px;white-space:normal;line-height:1.4}
  .page-app .cr-post{padding-block:18px}
  .page-app .cr-post .evidence-controls{flex-wrap:wrap}
  .page-app .cr-sections[open]{padding:12px}
@@ -310,6 +317,11 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .route-page>.chips>a{display:flex;align-items:center;justify-content:center;flex:1 1 120px;min-height:44px;font-size:.75rem;line-height:1.4;white-space:normal;text-align:center}
  .page-app .chart-workspace{display:flex;flex-direction:column;min-width:0}
  .page-app .chart-workspace>.legend{order:1;margin:12px 0}
+ .page-app[data-route=chart] .view-head{margin-bottom:8px}
+ .page-app .chart-company-name{margin:0 0 8px;font-size:12px;line-height:1.5}
+ .page-app[data-route=chart] .add-row{margin:8px 0 12px}
+ .page-app .chart-controls{gap:8px;margin-bottom:10px}
+ .page-app .chart-control>.small{font-size:12px}
  .page-app :is(.btn,.btn-sm,.lang-toggle,.cal-mnav,.cal-today,.cal-mode,.radar-category,.radar-filter-toggle,.radar-starter,.radar-tabs button,.seg button,.creator-workspace-tabs button,summary){min-height:44px}
  .page-app .profile .pwsec .btn,.page-app .calendar-heading .btn,.page-app .calendar-view .cal-mode,.page-app .radar-guide summary{min-height:44px}
  .page-app .modal-close{width:44px;height:44px}
@@ -337,10 +349,19 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 }
 @media(max-width:360px){
  .page-app .watch-controls{display:grid;grid-template-columns:minmax(0,1fr) auto}
- .page-app .watch-controls .watch-modes{grid-column:1;justify-self:start}
+ .page-app .watch-controls .watch-modes{grid-column:1;grid-row:1;justify-self:start}
+ .page-app .watch-controls .watch-modes .btn{white-space:nowrap;padding-inline:9px}
+ .page-app .watch-controls>button{grid-column:2;grid-row:1}
  .page-app .watch-controls .watch-filter{grid-column:1/-1}
- .page-app .watch-controls .watch-search{grid-column:1/-1;order:3;width:100%}
- .page-app .watch-controls>select{min-width:0;width:100%}
+ .page-app .watch-controls .watch-search{grid-column:1/-1;grid-row:2;width:100%}
+ .page-app .watch-controls>select{grid-column:1/-1;grid-row:3;min-width:0;width:100%}
+}
+@media(max-width:580px){
+ .page-app .watch-map-heading,.page-app .watch-map-heading>div:first-child{display:contents}
+ .page-app .watch-map-heading .watch-session{grid-column:1;grid-row:1;align-self:center;margin:0}
+ .page-app .watch-map-panel .watch-map-scale{grid-column:2;grid-row:1}
+ .page-app .watch-map-heading .watch-breadth{grid-column:1/-1;grid-row:2;margin:0}
+ .page-app .watch-small-stock{min-height:44px}
 }
 @media(prefers-reduced-motion:reduce){.page-app *, .page-app *:before{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 
@@ -364,7 +385,7 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .app-nav{padding:16px 12px;gap:3px;scrollbar-width:thin}
  .page-app .app-nav>a{min-height:40px;padding:8px 12px;font-size:.875rem}
  .page-app .app-nav>a[data-route=opportunities]{margin-top:15px}
- .page-app .app-nav>.nav-mobile-radar{display:none}
+ .page-app .app-nav>.nav-mobile-primary{display:none}
  .nav-desktop-radar{display:block;flex:none;margin-top:15px}
  .page-app .app-nav>a[data-route=profile]{margin-top:auto}
  .page-app .radar-sidebar{display:none}

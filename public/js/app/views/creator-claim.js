@@ -17,6 +17,15 @@ export function sourceAt(url, seconds) {
 }
 const pick=value=>typeof value==='object'&&value?value[document.documentElement.lang?.startsWith('en')?'en':'zh']||value.en||value.zh:typeof value==='string'?value:'';
 
+// Preserve the source's own qualification across creator, map and stock readers.
+export function claimQualifications(call) {
+  const rows=el('dl.creator-claim-facts');
+  for(const [key,value] of [['creators.stated_condition',call.condition_text],['creators.stated_horizon',call.horizon_text]]){
+    if(typeof value==='string'&&value.trim())rows.append(el('div',el('dt',s(key)),el('dd',value)));
+  }
+  return rows.children.length?rows:null;
+}
+
 export function claimDetails(call) {
   const facts=el('dl.creator-claim-facts');
   const stated=(key,value)=>facts.append(el('div',el('dt',s(key)),el('dd',value||s('creators.not_stated'))));

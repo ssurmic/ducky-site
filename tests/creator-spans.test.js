@@ -26,7 +26,7 @@ test('one presentation replaces only covered legacy stocks and retains opposing 
  const nvda={sym:'NVDA',stance:'bull',evidence:'The creator gives a supported opinion.'};
  const post={calls:[{sym:'AVGO',stance:'bear'},nvda],reviewed_spans:[
   {ticker:'AVGO',basis:'attributed_opinion',intent:'opinion',stance:'support',point_id:'one'},
-  {ticker:'AVGO',basis:'attributed_opinion',intent:'conditional',stance:'counter',point_id:'two'}]};
+  {ticker:'AVGO',basis:'attributed_opinion',intent:'conditional',stance:'counter',point_id:'two',condition_text:'if orders slow',horizon_text:'this year'}]};
  assert.deepEqual(legacyCalls(post),[nvda]);
  assert.equal(viewpointTake(post),'neutral');
  assert.equal(viewpointTake(post,'one'),'bull');
@@ -35,5 +35,6 @@ test('one presentation replaces only covered legacy stocks and retains opposing 
  assert.equal(section.querySelectorAll('article').length,2);
  assert.equal(section.querySelector('h3'),null);
  assert.ok(section.querySelector('[data-point-id="two"].is-focused.is-counter'));
+ assert.match(section.textContent,/if orders slow/);assert.match(section.textContent,/this year/);
  assert.deepEqual(tickerViews(post).map(row=>[row.ticker,row.stance]),[['AVGO','mixed'],['NVDA','bull']]);
 });
