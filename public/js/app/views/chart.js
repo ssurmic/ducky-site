@@ -100,9 +100,22 @@ export async function mount(root, params) {
   const zoomControls=el('div.chart-zoom',{role:'group','aria-label':s('chart.zoom')},zoomButtons);
   const optionControls=el('div.chart-option-controls');
   const optionNotes=el('div.chart-option-notes');
+  const wallNotes=el('div.chart-wall-notes');
+  const compactLayout=window.matchMedia?.('(max-width: 900px)');
+  const referenceDetails=el('details.chart-reference-details',{open:!compactLayout?.matches},
+    el('summary',s('chart.reference_details')),wallNotes);
+  const references=el('aside.chart-references',{hidden:true,'aria-label':s('chart.reference_levels')},
+    el('div.chart-reference-values',el('h2',s('chart.reference_levels')),legendRow),referenceDetails);
+  // Resize only changes the disclosure's default; repainting levels preserves
+  // the reader's open/closed choice and never reconstructs the chart.
+  const onLayout=()=>{referenceDetails.open=!compactLayout.matches;};
+  compactLayout?.addEventListener?.('change',onLayout);
   const axes=el('p.chart-axes.small.muted',s('chart.axes'),el('span',s('chart.close_note')));
   const companyHost = el("div.company-host");
-  const workspace=el('div.chart-workspace',{hidden:!ticker},ohlc,host,el('div.chart-tools',axes,zoomControls),optionControls,legendRow,optionNotes);
+  const overlayStatus=el('div.chart-overlay-status');
+  const workspace=el('div.chart-workspace',{hidden:!ticker},ohlc,
+    el('div.chart-main',host,el('div.chart-tools',axes,zoomControls)),references,
+    el('div.chart-reference-settings',optionControls,optionNotes),overlayStatus);
   root.append(head, form, controls, workspace, status, companyHost);
   const showCompany=(p,rs)=>{companyHost.replaceChildren(companyContext(p,rs));companyName.textContent=p?.company||'';};
   if (ticker) api.company(ticker).then(p=>{if(alive) showCompany(p);}).catch(()=>{if(alive) showCompany(null);});
@@ -118,7 +131,7 @@ export async function mount(root, params) {
     const chips = el("div.chips", wl.map((t) => el("a.chip.mono", { href: "#/chart/" + t }, "$" + t)));
     status.append(el("p.muted", s("chart.pick_hint")), chips);
     if (!wl.length) { try { store.set("watchlist", normalizeList(await api.watchlist.list())); clear(chips); for (const t of store.get("watchlist")) chips.appendChild(el("a.chip.mono", { href: "#/chart/" + t }, "$" + t)); } catch (e) { /* ignore */ } }
-    return () => { picker.dispose(); alive = false; };
+    return () => { picker.dispose(); alive = false; compactLayout?.removeEventListener?.('change',onLayout); };
   }
 
   let refreshTimer = null;
@@ -131,7 +144,10 @@ export async function mount(root, params) {
     if (ovl) ovl.remove();
     const selected=selectedSnapshot(overlaySnapshot,expiry,extras);
     ovl = overlays.apply(candles, selected, colors);
-    clear(legendRow);clear(optionControls);clear(optionNotes);
+    clear(legendRow);clear(optionControls);clear(optionNotes);clear(wallNotes);
+    const entries=overlays.legend(selected,colors);
+    references.hidden=!entries.length;workspace.classList.toggle('has-references',!!entries.length);
+    clear(overlayStatus);
     const built = new Date(overlaySnapshot.gamma?.scope?.retrieved_at || overlaySnapshot.built_at || '');
     const expirySelect=el('select.input',{'data-chart-control':'expiry','aria-label':s('chart.option_expiry'),onchange:()=>{expiry=expirySelect.value;paintOverlays();}},
       el('option',{value:'combined'},s('chart.combined')),
@@ -141,17 +157,22 @@ export async function mount(root, params) {
       el('button.chart-help-button',{type:'button','aria-label':s('chart.help_title'),onclick:()=>optionHelp({...overlaySnapshot,gamma:selected.gamma})},s('chart.guide')),
       el('label.chart-extra-toggle',el('input',{type:'checkbox','data-chart-control':'extras',checked:extras,onchange:e=>{extras=e.target.checked;paintOverlays();}}),s('chart.extra_lines')),
       el('label.chart-extra-toggle',el('input',{type:'checkbox','data-chart-control':'fit',checked:fitReferences,onchange:e=>{fitReferences=e.target.checked;paintOverlays();chart.applyOptions({rightPriceScale:{autoScale:true}});}}),s('chart.fit_references')));
-    for (const it of overlays.legend(selected, colors)) {
-      legendRow.appendChild(el('span.legend-item.mono',el('i',{style:{background:it.color}}),it.label+' ',el('b',typeof it.value==='number'?num(it.value,2):String(it.value))));
+    for (const it of entries) {
+      const range=typeof it.value==='string'?it.value.split('–'):[];
+      const value=range.length===2?el('b.chart-reference-range',el('span',range[0]+'–'),el('span',range[1])):
+        el('b',typeof it.value==='number'?num(it.value,2):String(it.value));
+      legendRow.appendChild(el('div.legend-item',el('i',{'aria-hidden':'true',style:{background:it.color}}),
+        el('span.chart-reference-label',it.label+' '),value));
     }
-    if (!ovl.count) legendRow.appendChild(el('span.muted.small',s('chart.no_overlays')));
-    optionNotes.append(el('p.small.muted.chart-scale-note',s(fitReferences?'chart.scale_all':'chart.scale_candles')),
+    if (!entries.length) overlayStatus.appendChild(el('span.muted.small',s('chart.no_overlays')));
+    wallNotes.append(
       // The header is the last recorded daily bar; wall distances use the
       // separately saved spot. Neither build time nor option retrieval is a
       // quote timestamp, and the snapshot contract does not retain one yet.
       typeof overlaySnapshot.spot==='number'&&Number.isFinite(overlaySnapshot.spot)&&overlaySnapshot.spot>0?
         el('p.small.muted.chart-wall-basis',s('chart.wall_price_basis',{price:px(overlaySnapshot.spot)})):null,
-      el('p.chart-wall-position',wallPosition(overlaySnapshot.spot,selected.gamma)),
+      el('p.chart-wall-position',wallPosition(overlaySnapshot.spot,selected.gamma)));
+    optionNotes.append(el('p.small.muted.chart-scale-note',s(fitReferences?'chart.scale_all':'chart.scale_candles')),
       el('p.small.muted.chart-snapshot-date',optionScope(selected)),
       Number.isFinite(built.getTime())?el('p.small.muted',s('chart.snapshot_as_of',{date:built.toISOString().slice(0,16).replace('T',' ')})):null,
       expiryTable(overlaySnapshot,value=>{expiry=value;paintOverlays();}));
@@ -166,7 +187,8 @@ export async function mount(root, params) {
     // re-checks (my !== drawSeq) and bails, so only the latest draw ever mutates the DOM/chart.
     const my = ++drawSeq;
     destroy();zoomButtons.forEach(b=>b.disabled=true);
-    clear(status); clear(legendRow); clear(optionControls); clear(optionNotes); clear(ohlc);
+    clear(status); clear(legendRow); clear(optionControls); clear(optionNotes); clear(wallNotes); clear(overlayStatus); clear(ohlc);
+    references.hidden=true;workspace.classList.remove('has-references');
     status.appendChild(spinner());
     const LWC = window.LightweightCharts;
     if (!LWC) { clear(status); status.appendChild(errorBox(new Error("charts lib missing"))); return; }
@@ -205,7 +227,7 @@ export async function mount(root, params) {
       layout: { background: { type: "solid", color: "transparent" }, textColor: text,fontFamily:palette.font,fontSize:12, attributionLogo: false, panes: { separatorColor: grid, enableResize: false } },
       grid: { vertLines: { visible:false }, horzLines: { color: grid,style:0 } },
       rightPriceScale: { borderVisible:false,scaleMargins:{top:0.12,bottom:0.08} },
-      timeScale: { borderVisible:false, rightOffset: 3 },
+      timeScale: { borderVisible:false, rightOffset: 3, lockVisibleTimeRangeOnResize:true },
       crosshair: { mode: 0,vertLine:{color:text,width:1,style:2,labelBackgroundColor:palette.ink},horzLine:{color:text,width:1,style:2,labelBackgroundColor:palette.ink} },
       handleScroll: { vertTouchDrag: false },
     });
@@ -243,7 +265,7 @@ export async function mount(root, params) {
 
     // Overlays: Pro only. Free/paid see a lock strip instead.
     if (store.isPro()) {
-      legendRow.appendChild(spinner(s("chart.loading_snapshot")));
+      overlayStatus.appendChild(spinner(s("chart.loading_snapshot")));
       try {
         const snaps = store.get("snapshots") || {};
         let snap = reusableSnapshot(snaps[ticker]) ? snaps[ticker] : null;
@@ -251,17 +273,17 @@ export async function mount(root, params) {
         // (same class as the watchlist bug) so the .ok/overlays fields exist and the store isn't poisoned.
         if (!snap) { const r = await api.snapshot(ticker, { tries: 6 }); if (!api.isAccepted(r)) { snap = unpackSnapshot(r); store.patch("snapshots", { [ticker]: snap }); } }
         if (my !== drawSeq || !alive || !chart) return;   // finding chart.js:63 — recheck before applying overlays
-        clear(legendRow);
+        clear(overlayStatus);
         if (snap && snap.ok) {
           if(snap.company_context) showCompany(snap.company_context,snap.rs);
           overlaySnapshot = snap;
           paintOverlays();
 
-        } else legendRow.appendChild(el("span.muted.small", s("common.building")));
-      } catch (err) { if (my === drawSeq && alive) { clear(legendRow); legendRow.appendChild(el("span.muted.small", s("common.error", { msg: err.message }))); } }
+        } else overlayStatus.appendChild(el("span.muted.small", s("common.building")));
+      } catch (err) { if (my === drawSeq && alive) { clear(overlayStatus); overlayStatus.appendChild(el("span.muted.small", s("common.error", { msg: err.message }))); } }
     } else {
       const fake = el("div.legend-fake.mono", s("chart.overlays"));
-      legendRow.appendChild(lock(fake, s("chart.lock")));
+      overlayStatus.appendChild(lock(fake, s("chart.lock")));
     }
   }
 
@@ -286,5 +308,5 @@ export async function mount(root, params) {
 
   await draw();
   document.fonts?.ready.then(()=>{if(alive)retheme();});
-  return () => { picker.dispose(); alive = false; stopTheme(); destroy(); };
+  return () => { picker.dispose(); alive = false; compactLayout?.removeEventListener?.('change',onLayout); stopTheme(); destroy(); };
 }

@@ -1,0 +1,360 @@
+{
+  "fixture": "reports/chart-polish-20260908/serve.py",
+  "height": 650,
+  "en": [
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": -1.4210854715202004e-14,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 600
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": -1.4210854715202004e-14,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 600
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 900
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 900
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 901
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 901
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 1.4210854715202004e-14,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 1024
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 1.4210854715202004e-14,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 1024
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 1200
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 1200
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": -1.4210854715202004e-14,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 1440
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": -1.4210854715202004e-14,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 1440
+    }
+  ],
+  "zh": [
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": -1.4210854715202004e-14,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 600
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": -1.4210854715202004e-14,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 600
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 900
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 900
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 901
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 901
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 1.4210854715202004e-14,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 1024
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 1.4210854715202004e-14,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 1024
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 1200
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": 0,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 1200
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": -1.4210854715202004e-14,
+        "to": 82
+      },
+      "theme": "light",
+      "width": 1440
+    },
+    {
+      "errors": [],
+      "overflow": [],
+      "painted": true,
+      "range": {
+        "from": -1.4210854715202004e-14,
+        "to": 82
+      },
+      "theme": "dark",
+      "width": 1440
+    }
+  ]
+}

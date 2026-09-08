@@ -315,8 +315,6 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .alert-example-options .alert-examples{margin:4px 0 8px}
  .page-app .route-page>.chips{gap:6px;margin:8px 0 12px}
  .page-app .route-page>.chips>a{display:flex;align-items:center;justify-content:center;flex:1 1 120px;min-height:44px;font-size:.75rem;line-height:1.4;white-space:normal;text-align:center}
- .page-app .chart-workspace{display:flex;flex-direction:column;min-width:0}
- .page-app .chart-workspace>.legend{order:1;margin:12px 0}
  .page-app[data-route=chart] .view-head{margin-bottom:8px}
  .page-app .chart-company-name{margin:0 0 8px;font-size:12px;line-height:1.5}
  .page-app[data-route=chart] .add-row{margin:8px 0 12px}

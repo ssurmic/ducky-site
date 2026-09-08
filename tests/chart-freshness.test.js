@@ -165,6 +165,47 @@ test('wall distances name their saved spot separately from the dated candle clos
  }finally{close();r.remove();window.LightweightCharts.createChart=previous;}
 });
 
+test('reference rail stays outside the plot and follows expiry, theme and responsive disclosure without refetching',async()=>{
+ const previous=window.LightweightCharts.createChart,previousMedia=window.matchMedia;
+ const layout=new window.EventTarget();layout.matches=true;
+ window.matchMedia=query=>query.includes('900px')?layout:new window.EventTarget();
+ let candle,requests=0;
+ window.LightweightCharts.createChart=()=>({
+  addSeries(type,options){const series={options,lines:[],applyOptions(v){Object.assign(options,v);},setData(v){this.data=v;},
+   createPriceLine(value){const line={...value,applyOptions(v){Object.assign(this,v);}};this.lines.push(line);return line;},
+   removePriceLine(value){this.lines.splice(this.lines.indexOf(value),1);}};if(type===1)candle=series;return series;},
+  panes:()=>[],timeScale:()=>({fitContent(){}}),remove(){},applyOptions(){}
+ });
+ const snapshot={ok:true,spot:375,gamma:{call_wall:370,put_wall:365,flip:347.98,
+  by_expiry:[{expiry:'2026-09-18',call_wall:380,put_wall:360,flip:350}]},
+  expected:{low:355,high:390},retrace:{d20:{lo:340,hi:395}}};
+ globalThis.fetch=async url=>{requests++;return String(url).includes('/bars/')?response({bars:[bar]}):String(url).includes('/snapshot/')?response(snapshot):response({status:'unavailable'});};
+ const r=root();store.set('me',{tier:'pro'});store.set('snapshots',{});const close=await mount(r,{ticker:'AVGO'}),initialRequests=requests;
+ try{
+  const detail=r.querySelector('.chart-reference-details'),rail=r.querySelector('.chart-references'),host=r.querySelector('#chart-host');
+  assert.equal(detail.open,false);assert.equal(rail.hidden,false);assert.equal(host.contains(rail),false);
+  assert.equal(rail.contains(r.querySelector('#chart-legend')),true);
+  assert.match(r.querySelector('.chart-wall-position').textContent,/above.*370.00/);
+  assert.deepEqual(candle.lines.map(l=>l.price),[370,365,347.98]);
+  assert.ok(candle.lines.every(l=>l.axisLabelVisible===false&&l.title===''));
+  assert.equal(candle.options.lastValueVisible,true);assert.equal(candle.options.priceLineVisible,true);
+  detail.open=true;
+  const select=r.querySelector('[data-chart-control=expiry]');select.focus();select.value='2026-09-18';select.dispatchEvent(new window.Event('change'));
+  assert.equal(detail.open,true);assert.equal(document.activeElement,r.querySelector('[data-chart-control=expiry]'));
+  assert.deepEqual(candle.lines.map(l=>l.price),[380,360,350]);
+  assert.match(r.querySelector('#chart-legend').textContent,/380.00.*360.00.*350.00/);
+  assert.doesNotMatch(r.querySelector('.chart-wall-position').textContent,/above/);
+  r.querySelector('[data-chart-control=extras]').click();
+  assert.equal(candle.lines.length,7);assert.equal(r.querySelectorAll('.legend-item').length,5);
+  assert.ok(candle.lines.every(l=>l.axisLabelVisible===false&&l.title===''));
+  detail.open=false;window.dispatchEvent(new window.Event('ducky:themechange'));await flush();assert.equal(detail.open,false);
+  layout.matches=false;layout.dispatchEvent(new window.Event('change'));assert.equal(detail.open,true);
+  layout.matches=true;layout.dispatchEvent(new window.Event('change'));assert.equal(detail.open,false);
+  assert.equal(requests,initialRequests);assert.deepEqual(candle.data,normalizeBars([bar]));
+  close();layout.matches=false;layout.dispatchEvent(new window.Event('change'));assert.equal(detail.open,false,'resize listener is removed');
+ }finally{close();r.remove();window.LightweightCharts.createChart=previous;window.matchMedia=previousMedia;}
+});
+
 test('missing or invalid snapshot spot never falls back to the candle close for wall comparison',async()=>{
  const previous=window.LightweightCharts.createChart;
  window.LightweightCharts.createChart=()=>({

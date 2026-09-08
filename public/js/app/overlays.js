@@ -5,13 +5,13 @@ import { s } from "./strings.js";
 const LWC = () => window.LightweightCharts;
 const Style = () => (LWC() && LWC().LineStyle) || { Solid: 0, Dotted: 1, Dashed: 2, LargeDashed: 3 };
 
-function line(series, price, color, title, style, width) {
+function line(series, price, color, style, width) {
   if (price === null || price === undefined || Number.isNaN(Number(price))) return null;
   return series.createPriceLine({
-    // axisLabelVisible:false on purpose — the wall/range values live in the top legend, and stacking 8 colored
-    // price tags on the right axis used to bury the ONE tag that matters: the live price (owner: "靠墙把最新价格
-    // overshadow 了"). The line + its on-chart title still show where each level sits.
-    price: Number(price), color, lineWidth: width || 1, lineStyle: style, axisLabelVisible: false, title,
+    // Names and values live in a separate right rail. Keep both pane titles
+    // and axis tags off so clustered references cannot cover the candles or
+    // the latest recorded price. The horizontal reference line remains.
+    price: Number(price), color, lineWidth: width || 1, lineStyle: style, axisLabelVisible: false, title: "",
   });
 }
 
@@ -22,19 +22,19 @@ export function apply(series, snap, colors) {
   const st = Style();
   const g = snap && snap.gamma;
   if (g) {
-    lines.push(line(series, g.call_wall, c.call, s("chart.legend_call"), st.Dashed, 1));
-    lines.push(line(series, g.put_wall, c.put, s("chart.legend_put"), st.Dashed, 1));
-    lines.push(line(series, g.flip, c.flip, s("chart.legend_flip"), st.LargeDashed, 1));
+    lines.push(line(series, g.call_wall, c.call, st.Dashed, 1));
+    lines.push(line(series, g.put_wall, c.put, st.Dashed, 1));
+    lines.push(line(series, g.flip, c.flip, st.LargeDashed, 1));
   }
   const e = snap && snap.expected;
   if (e) {
-    lines.push(line(series, e.high, c.exp, s("chart.legend_exp") + " ▲", st.Dashed, 1));
-    lines.push(line(series, e.low, c.exp, s("chart.legend_exp") + " ▼", st.Dashed, 1));
+    lines.push(line(series, e.high, c.exp, st.Dashed, 1));
+    lines.push(line(series, e.low, c.exp, st.Dashed, 1));
   }
   const d20 = snap && snap.retrace && snap.retrace.d20;
   if (d20) {
-    lines.push(line(series, d20.hi, c.band, s("chart.legend_d20") + " ↑", st.Dotted, 1));
-    lines.push(line(series, d20.lo, c.band, s("chart.legend_d20") + " ↓", st.Dotted, 1));
+    lines.push(line(series, d20.hi, c.band, st.Dotted, 1));
+    lines.push(line(series, d20.lo, c.band, st.Dotted, 1));
   }
   return {
     remove() { for (const l of lines) if (l) { try { series.removePriceLine(l); } catch (err) { /* ignore */ } } lines.length = 0; },
