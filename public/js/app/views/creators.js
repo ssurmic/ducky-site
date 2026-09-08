@@ -12,7 +12,7 @@ import { el, clear, toast, spinner, empty } from "../ui.js";
 import { mountResearch, safeSource, dateTime, metric } from './creator-research.js';
 
 import {mountSetup,confirmCreator,avatar} from './creator-setup.js';
-import {progressPoll} from './creator-progress.js';
+import {progressPoll,renderProgress} from './creator-progress.js';
 import {mountSimulation} from './creator-simulation.js';
 import {mountLeaderboard} from './creator-leaderboard.js';
 import {groundedClaim,claimDetails} from './creator-claim.js';
@@ -290,6 +290,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         return;
       }
       if(!sourceOnly){
+        const delivery=renderProgress(analysis[selected]?.progress);if(delivery)content.append(delivery);
         const overview=el('section.creator-page');content.append(el('details.creator-overview',el('summary',s('creators.overview_short')),overview));
         renderCreatorPage(overview,{creator,page:doc.pages?.[selected]||{},tickers:stockFilter,onTab:value=>{tab=value;renderContent();}});
       }

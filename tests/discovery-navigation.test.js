@@ -64,7 +64,7 @@ test('free visitors do not fetch current candidates and stale results are not pr
  store.set('me',{tier:'pro'});
  globalThis.fetch=async(url,opts)=>{
   calls.push(String(url));
-  if(String(url).endsWith('/screens/preview')){assert.equal(JSON.parse(opts.body).config.scope,'covered');return response({status:'stale',items:[{ticker:'STALE'}]});}
+  if(String(url).includes('/opportunities?')){assert.equal(opts.method,'GET');return response({version:'oversold-discovery-v1',status:'stale',items:[{ticker:'STALE'}]});}
   return response({items:[],sectors:[]});
  };
  root=document.createElement('div');cleanup=await opportunities.mount(root);
@@ -72,7 +72,7 @@ test('free visitors do not fetch current candidates and stale results are not pr
 });
 test('a late discovery result cannot populate a new session',async()=>{
  store.set('me',{tier:'pro'});let resolve;
- globalThis.fetch=async url=>String(url).endsWith('/screens/preview')?new Promise(r=>resolve=r):response({items:[],sectors:[]});
+ globalThis.fetch=async url=>String(url).includes('/opportunities?')?new Promise(r=>resolve=r):response({items:[],sectors:[]});
  const root=document.createElement('div'),pending=opportunities.mount(root);await flush();
  store.bumpEpoch();resolve(response({status:'ready',items:[{ticker:'PRIVATE'}]}));const cleanup=await pending;
  assert.ok(!root.textContent.includes('PRIVATE'));cleanup();

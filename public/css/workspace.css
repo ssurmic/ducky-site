@@ -473,3 +473,103 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 @media (max-width:360px) {
  .page-app .app-top { padding-inline:10px; gap:6px; }
 }
+/* Daily discovery owns its compact evidence cards and accessible close-price plots. */
+.opportunities-view .view-head p{max-width:760px}
+.opportunities-view .opportunity-filter-panel{padding:16px;margin:12px 0}
+.opportunities-view .opportunity-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin:0;gap:12px}
+.opportunities-view .opportunity-filters label{min-width:0;gap:5px}
+.opportunities-view .opportunity-filters .input{width:100%;min-width:0;min-height:44px;font-size:16px}
+.opportunity-filter-footer{display:flex;gap:12px;align-items:start;justify-content:space-between;margin-top:10px}
+.opportunity-more-filters{flex:1;min-width:0}
+.opportunity-more-filters>summary{cursor:pointer;min-height:44px;align-content:center;font-size:.875rem}
+.opportunity-more-filters[open] .opportunity-filters{margin:10px 0 0;grid-template-columns:repeat(2,minmax(0,1fr))}
+
+.opportunity-filter-footer .btn{min-height:44px;flex:none}
+.opportunity-feedback{margin:14px 0}
+.opportunity-feedback p{margin:5px 0}
+.opportunities-view .opportunity-grid{align-items:start}
+.opportunities-view .opportunity-card{border-top:2px solid var(--border);padding:20px}
+.opportunity-identity{min-width:0}
+.opportunity-identity p{overflow-wrap:anywhere}
+.opportunity-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.opportunity-recovery{font-size:.6875rem;line-height:1.5;color:var(--accent-text);border:1px solid var(--border);border-radius:6px;padding:2px 6px}
+.opportunity-priority{display:grid;text-align:right;gap:5px;flex:0 0 auto;max-width:145px}
+.opportunity-priority .small{font-size:.75rem}
+.opportunity-stars{white-space:nowrap;color:var(--accent-text);font-size:1.125rem;letter-spacing:2px}
+.opportunity-stars-empty{color:var(--muted)}
+.opportunity-price{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:18px}
+.opportunity-price strong{font-size:1.65rem;letter-spacing:-.025em}
+.opportunity-price span{font-size:.75rem;text-align:right}
+.opportunity-plot{margin:16px 0 0;min-width:0}
+.opportunity-plot-heading{display:flex;gap:8px;justify-content:space-between;font-size:.75rem;color:var(--muted)}
+.opportunity-plot-reading{font-variant-numeric:tabular-nums;text-align:right;color:var(--text)}
+.opportunity-plot svg{display:block;width:100%;height:auto;overflow:visible}
+.opportunity-plot-axis{font-size:11px;fill:var(--muted)}
+.opportunity-plot-grid{stroke:var(--border);stroke-width:.7}
+.opportunity-plot-price{stroke:var(--green);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.opportunity-plot-price[data-direction=down]{stroke:var(--red)}
+.opportunity-plot-cursor{fill:var(--text);stroke:var(--bg);stroke-width:2}
+.opportunity-plot-reference{stroke:var(--muted);stroke-width:1.2}
+.opportunity-plot-slider{display:block;width:100%;margin:0;min-height:30px;accent-color:var(--accent);cursor:ew-resize}
+.opportunity-plot-slider:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.opportunity-plot-legend,.opportunity-plot-basis{font-size:.6875rem;line-height:1.5;color:var(--muted);margin:3px 0}
+.opportunity-plot-legend span{font-size:1rem;margin-right:6px}
+.opportunities-view .opportunity-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 12px;padding:18px 0}
+.opportunities-view .opportunity-metrics>div:last-child{grid-column:auto}
+.opportunities-view .opportunity-metrics dt{font-size:.75rem;line-height:1.4}
+.opportunities-view .opportunity-metrics dd{font-size:1rem;line-height:1.35;overflow-wrap:anywhere}
+.opportunity-context h3,.opportunity-evidence h3{font-size:.8125rem;margin:0 0 6px;font-weight:650}
+.opportunity-context{margin:18px 0 12px}
+.opportunity-context p,.opportunity-risk{font-size:.875rem;line-height:1.65;margin:0}
+.opportunity-risk{padding:10px 12px;border-radius:8px;background:var(--surface-2,var(--bg));color:var(--muted)}
+.opportunity-risk strong{color:var(--text);font-weight:500}
+.opportunity-gaps{font-size:.75rem;line-height:1.6;margin:10px 0}
+.opportunity-evidence{border-top:1px solid var(--border);margin-top:14px}
+.opportunities-view .opportunity-evidence>summary,.opportunities-view .opportunity-method>summary,.opportunity-coverage summary{min-height:44px;cursor:pointer;align-content:center}
+.opportunity-evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 16px;padding:12px 0}
+.opportunity-evidence-grid section{min-width:0}
+.opportunity-evidence-grid p{font-size:.75rem;line-height:1.6;margin:6px 0;overflow-wrap:anywhere}
+.opportunity-fundamentals,.opportunity-factors{display:grid;gap:8px;margin:10px 0;font-size:.75rem}
+.opportunity-fundamentals>div,.opportunity-factors>div{display:flex;justify-content:space-between;gap:10px}
+.opportunity-fundamentals dt,.opportunity-factors dt{color:var(--muted)}
+.opportunity-fundamentals dd,.opportunity-factors dd{margin:0;white-space:nowrap}
+.opportunity-source{display:grid;gap:3px}
+.opportunity-actions .btn{min-height:44px}
+.opportunity-paging{display:flex;justify-content:center;margin:18px 0}
+.opportunity-coverage{margin:20px 0 12px}
+.opportunity-method{font-size:.875rem;line-height:1.7}
+.opportunity-customize{margin:12px 0 24px}
+@media(max-width:1000px){.opportunities-view .opportunity-card{padding:16px}.opportunity-priority{max-width:120px}.opportunity-evidence-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){
+ .opportunities-view .opportunity-filters{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .opportunity-more-filters[open] .opportunity-filters{grid-template-columns:minmax(0,1fr)}
+ .opportunity-plot-slider{min-height:44px}
+ .opportunities-view .opportunity-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 10px}
+ .opportunity-priority{max-width:110px}
+ .opportunity-plot-heading{font-size:.6875rem}
+ .opportunity-plot-reading{max-width:65%}
+ .opportunity-price strong{font-size:1.5rem}
+ .opportunities-view .opportunity-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .opportunity-actions .btn{text-align:center;justify-content:center;white-space:normal}
+}
+
+.opportunities-view .view-head p{margin-top:6px;margin-bottom:6px}
+.opportunities-view .opportunity-filter-panel{margin-top:10px}
+
+.creator-delivery-progress{border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin:12px 0}
+.creator-delivery-progress dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 8px}
+.creator-delivery-progress dt{font-size:.75rem;color:var(--muted)}
+.creator-delivery-progress dd{margin:3px 0 0;font-size:1.125rem}
+.creator-delivery-progress p{margin:4px 0;font-size:.75rem;line-height:1.5}
+.creator-delivery-paused{color:var(--accent-text)}
+.opportunity-plot-dates{display:flex;justify-content:space-between;padding-left:8%;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+@media(max-width:600px){
+ .opportunities-view .opportunity-heading{position:relative}
+ .opportunities-view .opportunity-identity{width:100%}
+ .opportunities-view .opportunity-identity>.ticker{display:block;padding-right:122px;min-height:48px}
+ .opportunities-view .opportunity-priority{position:absolute;right:0;top:0}
+}
+
+.creator-delivery-progress dt{min-height:2.8em}
+.creator-delivery-progress dd{font-size:1rem}
+@media(max-width:600px){.opportunity-plot svg{height:130px}.opportunity-plot-axis{display:none}}
