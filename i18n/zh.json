@@ -3333,7 +3333,7 @@
   "app.evidence.analysis_as_of": "分析更新于 {at}",
   "app.evidence.analysis_watch": "后续关注",
   "desk.quote_note": "日收盘价按交易日更新；周末、休市日及今日收盘前沿用上次收盘。",
-  "app.evidence.quote_current": "最近收盘 · {date}",
+  "app.evidence.quote_current": "最近交易日 · {date}",
   "app.evidence.analysis_risks": "反对意见与局限",
   "app.evidence.linked_missing": "这条来源尚未进入当前导图，或已因修订而撤回。",
   "desk.quote_current": "最近已完成交易日",

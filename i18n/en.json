@@ -3333,7 +3333,7 @@
   "app.evidence.analysis_as_of": "Analysis updated {at}",
   "app.evidence.analysis_watch": "What to watch",
   "desk.quote_note": "Daily closes follow trading sessions; weekends, holidays and unfinished sessions retain the prior close.",
-  "app.evidence.quote_current": "Latest close · {date}",
+  "app.evidence.quote_current": "Latest session · {date}",
   "app.evidence.analysis_risks": "Counterarguments and limits",
   "app.evidence.linked_missing": "This source is not in the current map yet, or has been withdrawn after a revision.",
   "desk.quote_current": "Latest completed session",
