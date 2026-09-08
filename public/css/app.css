@@ -1176,6 +1176,8 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 .evidence-ticker {max-width:440px;margin-bottom:12px}
 .evidence-watchlist,.evidence-filters,.evidence-links,.evidence-history {display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
 .evidence-watchlist a {text-decoration:none}
+.evidence-watchlist{flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding-bottom:2px}
+.evidence-watchlist .chip{flex-shrink:0}
 .evidence-watchlist [aria-current=page] {border-color:var(--accent)}
 .evidence-takeaway {border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin:24px 0;max-width:900px}
 .evidence-takeaway p {font-size:1.1rem;line-height:1.7;margin:6px 0;overflow-wrap:anywhere}
