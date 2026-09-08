@@ -1,7 +1,7 @@
 {
   "video_id": "3E-HXC2HUvg",
   "point_id": "claim:75b2c484c5bc6622e1a45ec5",
-  "creator": "投资 TALK 君",
+  "creator": "投资TALK君",
   "ticker": "AVGO",
   "source_url": "https://www.youtube.com/watch?v=3E-HXC2HUvg&t=973s",
   "independent_caption_checked_at": "2026-09-08T09:12:30+00:00",
@@ -13,7 +13,10 @@
   "first_observed_at": null,
   "source_acquired_at": null,
   "source_reviewed_at": null,
-  "exact_span": null,
+  "exact_span": {
+    "start_seconds": 973.42,
+    "end_seconds": 992.44
+  },
   "player_target_label": "16:13",
   "caption_checkpoints": [
     "16:11 valuation discussion begins",
@@ -24,14 +27,13 @@
     "16:31 positive valuation opinion",
     "16:38 and 16:39 transition to the next company"
   ],
-  "recording_status": "not_ready",
+  "recording_status": "earlier_analysis_functional_QA_passed_current_live_analysis_pending",
   "open_items": [
-    "Obtain exact source and observation clocks plus precise span from the producer",
-    "Independently confirm the released normalized term; keep the original numeric conflict visible in source details and out of price calculations",
-    "Keep creator assumptions and management attribution explicit",
-    "Await ready current analysis rather than stale or pending prose",
-    "Use the complete available price history; the 20-session post-publication window is unfinished",
-    "No historical delivery receipt has been verified"
+    "Retain unresolved exact source clocks; minute-level UI labels do not supply exact timestamps",
+    "Await current ready analysis after the later 11:06 UTC pending state, including reviewed complete-sentence English",
+    "Keep creator estimates explicitly attributed and the numerical caption conflict excluded from price calculations",
+    "Do not use the September 3 point as a completed twenty-session subsequent-performance example",
+    "Final media awaits remaining feature and designated-receiver delivery acceptance"
   ],
   "source_owner_followup": {
     "display_term": "远期市盈率",
@@ -39,6 +41,18 @@
     "numeric_discrepancy": "Retained in the original; not silently corrected, used to recompute a ratio, or extracted as an executable entry price.",
     "attribution": "Creator valuation opinion; not an independently verified management forecast.",
     "comparison_eligible": false,
-    "allowed_use": "Source navigation only; no first-capture or mature-performance claim."
-  }
+    "allowed_use": "Source navigation and current accepted overview; no first-capture or mature-performance claim. Independent comparison dates remain separate."
+  },
+  "source_publication_date": "2026-09-03",
+  "source_acquisition_date": "2026-09-08",
+  "source_owner_acceptance": {
+    "backend": "a840195",
+    "frontend": "f66bd72",
+    "report_commit": "f6c7b109f678228062274c2ee2f876e5a9f0a01f",
+    "report": "reports/DATA-CORE-AND-RECOVERY-2026-09-07.md",
+    "original_excerpt_characters": 137,
+    "navigation": "Owner verified map → canonical point in the single interpretation → YouTube 16:13",
+    "analysis": "Independent combined review still pending; navigation acceptance is not analysis readiness."
+  },
+  "current_production_qa_receipt": "production-workflow-qa-20260908.json"
 }

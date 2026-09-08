@@ -1,0 +1,104 @@
+{
+  "checked_at": "2026-09-08T11:02:36.999774+00:00",
+  "environment": "Actual signed-in production Chrome, existing profile; read-only navigation. No viewport override or account changes.",
+  "ui_frontend": "c9c9e7b",
+  "pages": "131610b5",
+  "base_for_preparation": "1106a86",
+  "avgo": {
+    "status": "earlier_ready_functional_QA_passed_later_live_recheck_pending",
+    "analysis_version": "evidence-analysis/16",
+    "generated_at": "2026-09-08T10:48:35.357192+00:00",
+    "graph_id": "se-graph:d3292f03eeb46272d5556c63a4b49e55",
+    "evidence_version": "be665269756f6ffe4c9a6b35038a2aa13a784b89905a3f5863daad850e680989",
+    "review_reported_by_owner": {
+      "six_checks_passed": true,
+      "issues": []
+    },
+    "independent_browser_checks": [
+      "Ready paragraph and actual 10:48 UTC timestamp visible in both languages",
+      "Citation 1 opens the creator opinion and original 16:13 to 16:32 video interval",
+      "Citation 15 opens the independent August 7 to September 4 AVGO/XLK comparison",
+      "No console warning or error in the checked tab"
+    ],
+    "source_node": "se-node:00da7d404d018f2dde784214",
+    "comparison_node": "se-node:a4a6a675fe940d9e9762d221",
+    "ui_source_clocks": {
+      "published_date": "2026-09-03",
+      "observed_display": "2026-09-08 07:16 UTC",
+      "acquired_display": "2026-09-08 07:16 UTC",
+      "precision": "minute-level UI labels; no exact timestamp inferred"
+    },
+    "comparison": {
+      "from": "2026-08-07",
+      "to": "2026-09-04",
+      "avgo_percent": -16.33,
+      "xlk_percent": -0.37,
+      "excess_percentage_points": -15.96,
+      "basis": "adjusted_close_price_return_not_total_return",
+      "is_after_creator_publication_window": false
+    },
+    "copy_followup": "UI owner forwarded complete-sentence, explicit-estimate English wording to the shared analysis producer; no frontend prose override."
+  },
+  "coin": {
+    "map_to_creator": "passed; directional card opens exact creator/video/point directly, without an intermediate dialog",
+    "source_point": "claim:376ccef604efec29b1330bab",
+    "source_url": "https://www.youtube.com/watch?v=0tTj4dtJDyM&t=1462s",
+    "focused_interpretation": "passed; actual bullish reason and 24:22 link retained; no false horizon or invented inline original quote",
+    "chart_navigation": "passed from COIN link in the same creator page",
+    "chart_latest_close": 184.64,
+    "chart_latest_session": "2026-09-04",
+    "all_21_product_bars": {
+      "status": "passed_by_source_owner_read_only_comparison",
+      "matched": 21,
+      "expected": 21,
+      "differences": [],
+      "tolerance": 0.0001,
+      "source": "snapcache",
+      "receipt": "coin-product-bars-comparison-20260908.json",
+      "method": "Product _bars newest-complete-source rule; snapcache.bars(COIN,6mo,allow_build=False), compared final date with prices_daily before selection. No price acquisition, model or cache write."
+    },
+    "current_overview": "pending; not replaced by another ticker overview"
+  },
+  "investigated_label_difference": {
+    "status": "not_a_bug",
+    "detail": "NET/AMZN top bullish chips correspond to distinct supported passages inside the collapsed remaining section; the initially visible neutral mentions are different passages. UI owner opened and checked both. No direction was inferred from neutral mentions."
+  },
+  "screenshots": [
+    {
+      "file": "screenshots/avgo-later-pending-zh.png",
+      "sha256": "e92dcb5ea60b920b4bacbfb0465c91af591933332635b0108b11069fcf0d4cd4",
+      "purpose": "Dated production QA reference, not final approved media"
+    },
+    {
+      "file": "screenshots/avgo-ready-en.png",
+      "sha256": "afb1a3af8e5cc881ff0e678d356ac237b47c5accea4ddfeca8885a560be66990",
+      "purpose": "Dated production QA reference, not final approved media"
+    },
+    {
+      "file": "screenshots/avgo-ready-zh.png",
+      "sha256": "54d40c6512257405c314ff8d1c61f452df91aaedff29e062f34d00c5dd03689c",
+      "purpose": "Dated production QA reference, not final approved media"
+    },
+    {
+      "file": "screenshots/coin-chart-zh.png",
+      "sha256": "7ab5a8e8f64a0eaa58ade6f50bdaebc8f25c1136388aa37ba662a034d96f8ea4",
+      "purpose": "Dated production QA reference, not final approved media"
+    },
+    {
+      "file": "screenshots/coin-creator-source-zh.png",
+      "sha256": "accbfcdbfb60bba593fb4b4e75eaa663e742de1ce2a9f8918a458c5263251eb4",
+      "purpose": "Dated production QA reference, not final approved media"
+    }
+  ],
+  "real_notifications_sent": false,
+  "final_media_generated": false,
+  "latest_browser_recheck": {
+    "checked_at": "2026-09-08T11:06:31Z",
+    "route": "https://duckybot.app/app/#/evidence/AVGO",
+    "language": "zh",
+    "visible_state": "综合分析整理中，可先查看下方观点。",
+    "status": "pending",
+    "root_cause": "not independently established; source owner is updating source attribution and backfill",
+    "recording_consequence": "The earlier ready v16 screenshot is a dated functional acceptance record, not the current ready state. Final recording remains deferred."
+  }
+}

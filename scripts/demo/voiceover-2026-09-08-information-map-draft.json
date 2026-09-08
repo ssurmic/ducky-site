@@ -1,0 +1,111 @@
+{
+  "version": "2026-09-08-information-map-draft-1",
+  "status": "script_preparation_only_not_recorded_not_published",
+  "render_languages": [
+    "zh",
+    "en"
+  ],
+  "target_seconds": 39,
+  "maximum_seconds": 42,
+  "estimated_scene_budget_seconds": 38.6,
+  "duration_is_measured": false,
+  "source_base_frontend": "1106a86",
+  "production_ui_frontend": "c9c9e7b",
+  "production_pages": "131610b5",
+  "speech_direction": {
+    "zh": "Professional, conversational female Mandarin; short thought groups. Brand names checked separately; natural voice speed.",
+    "en": "Native US English female delivery; Coinbase and Broadcom spoken as company names. Natural sentence stress and endings.",
+    "provider_selection": "Keep earlier media immutable. Audition the final text after feature acceptance; do not equate ASR agreement with natural pronunciation.",
+    "subtitle_rule": "Independent natural translations; synchronize every caption to final generated word boundaries, at most two lines on a phone."
+  },
+  "scenes": [
+    {
+      "name": "01-overload",
+      "budget_seconds": 4.0,
+      "zh": "盯着几只股票，哪些消息值得看？",
+      "en": "Following a few stocks, but drowning in updates?",
+      "dependency": "intro",
+      "capture_notes": "Use the existing duck brand; COIN and AVGO remain visible. Any incoming headline animation is illustrative, without arrival timestamps.",
+      "recording_status": "not_captured"
+    },
+    {
+      "name": "02-map",
+      "budget_seconds": 4.2,
+      "zh": "Ducky 把相关信息，汇到信息导图。",
+      "en": "Ducky connects the relevant updates in an Information Map.",
+      "dependency": "map",
+      "capture_notes": "Use the current COIN map and its actual pending overview state; do not substitute AVGO prose into COIN.",
+      "recording_status": "not_captured"
+    },
+    {
+      "name": "03-original",
+      "budget_seconds": 7.5,
+      "zh": "AI 支付，为什么可能利好这家公司？点开博主观点，直接看原视频。",
+      "en": "Why might AI payments help Coinbase? Check this creator's reasoning and original video.",
+      "dependency": "creator",
+      "capture_notes": "COIN map point opens the exact TALK video and focused claim directly; open 24:22. Keep historical replay label. No invented inline excerpt or purchase.",
+      "recording_status": "not_captured"
+    },
+    {
+      "name": "04-price",
+      "budget_seconds": 4.5,
+      "zh": "后来涨了多少，途中跌过多少，都能回看。",
+      "en": "Then follow the price, including the pullbacks.",
+      "dependency": "price",
+      "capture_notes": "Use all 21 dated bars from the immutable COIN window. Keep the August 7 pre-publication baseline and September 4 endpoint. Do not call the percentage a strategy return.",
+      "recording_status": "not_captured"
+    },
+    {
+      "name": "05-filings",
+      "budget_seconds": 3.0,
+      "zh": "公司披露，也能一起查。",
+      "en": "Check company filings, too.",
+      "dependency": "filing",
+      "capture_notes": "Clearly switch to AVGO as a second followed stock and use its actual company-filing node; source dates stay visible.",
+      "recording_status": "not_captured"
+    },
+    {
+      "name": "06-reddit",
+      "budget_seconds": 3.2,
+      "zh": "Reddit 上，讨论变多了吗？",
+      "en": "Is Reddit attention rising?",
+      "dependency": "degen",
+      "capture_notes": "Await a current source-backed Reddit example from the Degen owner. Counts are attention, not bullish sentiment. X is not represented as connected.",
+      "recording_status": "not_captured"
+    },
+    {
+      "name": "07-overview",
+      "budget_seconds": 4.5,
+      "zh": "AI 帮你概括重要变化，依据点开就能查。",
+      "en": "Get an AI overview, with sources you can open.",
+      "dependency": "overview",
+      "capture_notes": "Use actual ready AVGO overview and its citations. The August 7 to September 4 XLK comparison is separate from the September 3 creator opinion. English copy review is pending. Later production recheck at 11:06 UTC was pending; the earlier v16 screenshot is QA evidence only.",
+      "recording_status": "not_captured"
+    },
+    {
+      "name": "08-delivery",
+      "budget_seconds": 4.5,
+      "zh": "重要更新，发到你选的邮箱或 Telegram。",
+      "en": "Important updates reach your email or Telegram.",
+      "dependency": "delivery",
+      "capture_notes": "Record only after designated-receiver account link, verified email, channel preferences and separate real receipts pass. No fabricated inbox.",
+      "recording_status": "not_captured"
+    },
+    {
+      "name": "09-start",
+      "budget_seconds": 3.2,
+      "zh": "从你关注的股票开始。",
+      "en": "Start with the stocks you care about.",
+      "dependency": "cta",
+      "capture_notes": "The full CTA is visible before narration starts and remains for at least 3 seconds; no typewriter animation.",
+      "recording_status": "not_captured"
+    }
+  ],
+  "pending_acceptance": [
+    "Current Reddit example and source/coverage receipts",
+    "Current AVGO overview after 11:06 UTC pending recheck, with reviewed natural English",
+    "Designated Telegram and email receiver plus separate real delivery receipts",
+    "Final bilingual audio listening, word timing, captions, end-card playback and coordinated media publication"
+  ],
+  "price_acceptance_receipt": "../../reports/demo-case-review-20260908/coin-product-bars-comparison-20260908.json"
+}

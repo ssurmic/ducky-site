@@ -1,0 +1,50 @@
+{
+  "creator_id": "touzi-talk",
+  "creator": "投资 TALK 君",
+  "video_id": "0tTj4dtJDyM",
+  "point_id": "claim:376ccef604efec29b1330bab",
+  "ticker": "COIN",
+  "stance": "support",
+  "published_at": "2026-08-08T00:25:38Z",
+  "source_retrieved_at": "2026-09-07T08:30:47Z",
+  "source_hash": "4524b50b01cba2426b22eb5addfe4f5e501362f8152e41015472940f984dc39b",
+  "span": {
+    "start_seconds": 1462.36,
+    "end_seconds": 1509.28
+  },
+  "source_url": "https://www.youtube.com/watch?v=0tTj4dtJDyM&t=1462s",
+  "independent_caption_checked_at": "2026-09-08T09:45:36+00:00",
+  "caption_export_sha256": "5aad8444915f28ab54c6cdc95cecaf436a3968ef0c59af407ffa037428cf017b",
+  "audio_reviewed": false,
+  "paraphrase_en": "The creator argues that frequent, tiny payments between AI agents could benefit stablecoin businesses including Coinbase and Circle.",
+  "paraphrase_zh": "博主认为，AI智能体之间高频、小额的支付需求，可能利好Coinbase与Circle等稳定币相关公司。",
+  "claim_scope": "Creator thesis; not an independently confirmed adoption event, trade or Ducky notification.",
+  "explicit_condition_text": null,
+  "explicit_time_horizon": null,
+  "producer_horizon_issue": "Resolved in the current shared reader: horizon is null, the payment-rails rationale remains a reason, and the original erroneous field stays in the audit archive.",
+  "source_gate": "Owner reports valid in a bounded read of 17 pre-August-11 directional points; no return-based filter was used for that query. Other sampled identities failed, so this case was independently checked.",
+  "selected_before_price_fetch": true,
+  "historical_replay": true,
+  "actual_historical_delivery_verified": false,
+  "ready_for_recording": false,
+  "price_window_file": "coin-20260808-price-window-20260908.json",
+  "remaining": [
+    "Verify exact map → creator → original navigation for this candidate on the final release",
+    "Match the recorded product chart to the complete saved price window and date basis",
+    "Await a current reviewed AI overview and the designated-receiver delivery acceptance"
+  ],
+  "observed_at": "2026-09-07T08:30:47.623759Z",
+  "first_observed_at": null,
+  "observation_scope": "Source observation time supplied by the producer; earliest system discovery and historical delivery are not verified.",
+  "qualification_fix_acceptance": {
+    "runtime_reported": "5c93d19",
+    "source_owner_reports_live": true,
+    "independently_inspected": "Owner-provided production phone screenshot; current creator reader applies creator_qualifiers.horizon",
+    "screenshot": "/tmp/ducky-evidence-validation-20260907/final-coin-source-390.png",
+    "point_id_unchanged": true,
+    "stance_unchanged": "support",
+    "source_link_label": "24:22",
+    "inline_excerpt_visible": false,
+    "recording_action": "Focus the single interpretation point, read the attributed reason, then open the original-video timestamp. Do not invent an inline quotation."
+  }
+}
