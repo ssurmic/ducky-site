@@ -182,3 +182,28 @@ test('an unloaded exact point is acknowledged and expands only after its explici
  assert.equal(calls,2);assert.equal(root.querySelector('[role=status]'),null);
  assert.equal(root.querySelector('.study-group[open] .is-focused-study').dataset.pointId,'target');root.remove();
 });
+
+test('stock entry filters on the server before pagination and keeps the filter on later pages',async()=>{
+ store.set('me',{tier:'pro'});const requests=[];
+ globalThis.fetch=async url=>{const u=new URL(url,'https://ducky.test');requests.push(u);
+  assert.equal(u.searchParams.get('ticker'),'AVGO');assert.equal(u.searchParams.get('kol_id'),'talk');
+  return Response.json(requests.length===1?{items:[groupedItem(1,'first','2026-09-03T00:00:00Z')],next_cursor:'avgo-older'}:
+   {items:[groupedItem(2,'older','2026-08-01T00:00:00Z')]});};
+ const root=document.createElement('section');document.body.append(root);await mountResearch(root,{kolId:'talk',tickers:['AVGO']});
+ assert.equal(requests.length,1);assert.equal(root.querySelectorAll('.study-row').length,1);
+ [...root.querySelectorAll('button')].find(b=>b.textContent==='Load more views').click();
+ await new Promise(resolve=>setTimeout(resolve,0));
+ assert.equal(requests.length,2);assert.equal(requests[1].searchParams.get('before'),'avgo-older');
+ assert.equal(root.querySelectorAll('.study-row').length,2);root.remove();
+});
+
+test('an unmatched partial page does not claim that no stock views exist or load pages automatically',async()=>{
+ store.set('me',{tier:'pro'});let requests=0;
+ globalThis.fetch=async url=>{requests++;assert.equal(new URL(url,'https://ducky.test').searchParams.has('ticker'),false);
+  return Response.json({items:[groupedItem(1,'unmatched','2026-09-03T00:00:00Z',{ticker:'TSLA'})],next_cursor:'older'});};
+ const root=document.createElement('section');document.body.append(root);await mountResearch(root,{tickers:['AVGO','NKE']});
+ assert.match(root.querySelector('.empty').textContent,/No matches in this batch/);
+ assert.ok(!root.textContent.includes('No stock views are ready'));
+ assert.ok([...root.querySelectorAll('button')].some(b=>b.textContent==='Load more views'));
+ assert.equal(requests,1);root.remove();
+});

@@ -77,6 +77,7 @@ export async function mountResearch(root, selection) {
     render();
     const params=new URLSearchParams();
     if(selection?.kolId)params.set('kol_id',selection.kolId);
+    if(selection?.tickers?.length===1)params.set('ticker',selection.tickers[0]);
     if(append && doc.next_cursor)params.set('before',doc.next_cursor);
     try {
       const next=await api.get('/kol/research'+(params.size?'?'+params.toString():''));
@@ -102,7 +103,7 @@ export async function mountResearch(root, selection) {
     const counts={};for(const r of rows){const status=studyStatus(r.call);counts[status]=(counts[status]||0)+1;}
     if(rows.length)root.append(el('p.small.muted.study-coverage',{ 'data-scope':'loaded_views' },
       Object.entries(counts).map(([status,n])=>s('creators.coverage_'+status,{n})).join(' · ')));
-    if(!rows.length && !loading && !loadError)root.append(el('p.empty',s(doc.status==='collecting'?'creators.status_processing':'creators.no_studies')));
+    if(!rows.length && !loading && !loadError)root.append(el('p.empty',s(doc.next_cursor?'creators.no_matching_page':doc.status==='collecting'?'creators.status_processing':'creators.no_studies')));
     if(groups.length)root.append(el('p.small.muted.study-group-count',s('creators.group_count',{n:groups.length})));
     const list=el('div.study-list.study-groups');
     for(const group of groups) {

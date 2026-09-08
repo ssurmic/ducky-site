@@ -97,7 +97,8 @@ test('lookup resumes after returning, polls automatically, and ignores results a
  };
  const cleanup=mountSetup(root,{onFollow:()=>{}});await tick();
  assert.ok(root.textContent.includes('Results update automatically'));assert.equal(root.querySelector('input').value,'@creator');
- t.mock.timers.tick(4000);await tick();assert.equal(reads,1);assert.ok(root.textContent.includes('Channel found'));
+ t.mock.timers.tick(999);await tick();assert.equal(reads,0);
+ t.mock.timers.tick(1);await tick();assert.equal(reads,1);assert.ok(root.textContent.includes('Channel found'));
  cleanup();t.mock.timers.tick(30000);await tick();assert.equal(reads,1);root.remove();
 });
 

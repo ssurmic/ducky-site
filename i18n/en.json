@@ -3549,5 +3549,6 @@
   "app.creators.source_position": "Video {time}",
   "app.creators.group_count": "{n} creator–stock groups loaded · Expand to read each view",
   "app.creators.target_pending": "The linked view has not loaded yet. Load more to open it.",
-  "app.creators.target_missing": "The linked view was not found in the loaded records."
+  "app.creators.target_missing": "The linked view was not found in the loaded records.",
+  "app.creators.no_matching_page": "No matches in this batch. Earlier records are available to load."
 }

@@ -60,13 +60,13 @@ test('creator feed retains unrelated posts and marks watched stocks only on revi
   dispose();root.remove();
 });
 
-test('explicit stock links filter related content across creators and retain the language URL',async()=>{
+test('explicit stock links retain related content and language URL despite a saved person lookup',async()=>{
   store.set('me',{tier:'pro',user_id:1});
   const related={...post(1,'AVGO'),kol_id:'unfollowed',kol_name:'Unfollowed Creator'};
   globalThis.fetch=async url=>Response.json(url==='/kol/feed'?{
     kols:[{id:'known',name:'Other Creator',profile:{}},{id:'unfollowed',name:'Unfollowed Creator',profile:{}}],
     posts:[related,post(2,'TSLA')]}:url==='/me/kols'?{subs:['known'],analysis:{}}:
-    url==='/watchlist'?{items:[{ticker:'TSLA'}]}:String(url).startsWith('/kol/research')?{items:[
+    url==='/watchlist'?{items:[{ticker:'TSLA'}]}:url==='/kol/lookups'?{items:[{id:'old',input:candidate.name,status:'ready',candidates:[candidate]}]}:String(url).startsWith('/kol/research')?{items:[
       {id:1,revision_id:1,kol_id:'unfollowed',published_at:related.published_at,calls:[{sym:'AVGO',stance:'bull'}]},
       {id:2,revision_id:2,kol_id:'known',published_at:related.published_at,calls:[{sym:'TSLA',stance:'bull'}]}]}:{items:[]});
   const language=document.createElement('a');language.dataset.langToggle='';language.href='/en/app/#/creators';document.body.append(language);

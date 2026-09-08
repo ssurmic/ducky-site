@@ -116,3 +116,35 @@ $368.56, ORCL $162.52, NKE $38.10, MU $1,000.26 and SPY $765.96. Four-post
 canonical warm remained 9/9 delivered; map receipt remained 22 points/11 symbols
 without missing or mismatched content. AVGO's unchanged September 2 reference
 $367.24 now compares to $368.56, +0.3594%. No source/model call was made.
+
+## Production grouping and entry correction
+
+Pages `41cfa73e` serves `666ee9f`. The actual TALK/AVGO view has one collapsed
+group with three distinct views. Its latest source position is 16:13 at publication
+2026-09-03 03:29 UTC, claim `75b2c484c5bc6622e1a45ec5`: green bullish stance,
+September 2 reference $367.24, September 8 recorded close $368.56 and +0.4%.
+Opening the group retains each view's separate condition, date and prices.
+393-pixel and 1440-pixel viewports have equal document and viewport widths.
+
+Production screenshots in `/tmp/ducky-evidence-validation-20260907/`:
+
+- `creator-group-zh-393-collapsed-production-20260908.png`
+- `creator-group-zh-393-expanded-production-20260908.png`
+- `creator-group-zh-desktop-production-20260908.png`
+
+That acceptance covers the selected creator's group. A separate all-creator entry
+check found that the API paginated before the browser filtered the stock. The
+frontend now sends a single selected ticker to `/kol/research?ticker=AVGO` on the
+first and every subsequent page, alongside `kol_id` when selected. The API owner
+is adding filtering before keyset pagination. Until all pages are exhausted, an
+empty filtered page says that this batch has no matches and offers existing manual
+pagination; it does not claim there are no opinions or fetch the entire archive.
+
+A second real chart-to-creator reproduction restored an old person lookup and
+overwrote the explicit stock context. Stock entries now skip that restoration;
+normal person lookup restoration is retained. A mounted regression includes an
+old saved lookup and verifies the stock in the feed, language link and research tab.
+The full suite passed 440 tests. The subsequent lookup-only poll change reads its
+queued result after one second; shared history polling stays at four seconds,
+with existing single-flight, visibility and backoff behavior. Thirty focused tests
+passed after that change. These entry corrections await coordinated deployment.

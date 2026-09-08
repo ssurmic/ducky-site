@@ -40,7 +40,7 @@ export function mountSetup(root,{onFollow,initial='',state={},compact=false,rest
   wrap.append(results);
   function live(){return !stopped && epoch===store.epoch() && root.isConnected;}
   function failure(err){clear(results);results.append(el('p.err',{role:'alert'},s('creatorflow.error_'+err.message)===('creatorflow.error_'+err.message)?s('creatorflow.error'):s('creatorflow.error_'+err.message)));}
-  const poll=progressPoll({active:()=>live()&&['queued','running'].includes(state.doc?.status),
+  const poll=progressPoll({interval:1000,active:()=>live()&&['queued','running'].includes(state.doc?.status),
     read:async()=>{const version=generation;const doc=await api.get('/kol/resolve/'+state.doc.id,{signal:ctl.signal});return {version,doc};},
     onValue:({version,doc})=>{if(version===generation)show(doc);},
     onError:()=>{const note=results.querySelector('.creator-progress-note');if(note)note.textContent=s('creatorflow.reconnecting');}});

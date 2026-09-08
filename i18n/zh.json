@@ -3549,5 +3549,6 @@
   "app.creators.source_position": "视频 {time}",
   "app.creators.group_count": "已加载 {n} 个博主与股票组合 · 点开看各条观点",
   "app.creators.target_pending": "目标观点尚未载入，加载更多后会自动展开。",
-  "app.creators.target_missing": "当前已载入内容中未找到这条观点。"
+  "app.creators.target_missing": "当前已载入内容中未找到这条观点。",
+  "app.creators.no_matching_page": "当前这批观点没有匹配项，可继续加载更早的记录。"
 }
