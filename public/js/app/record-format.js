@@ -45,7 +45,9 @@ function paragraph(text){
  for(const match of text.matchAll(/https:\/\/[^\s<>]+/g)){
   node.append(document.createTextNode(text.slice(last,match.index)));
   const url=match[0].replace(/[)）。，,;；]+$/,'');
-  node.append(el('a',{href:url,target:'_blank',rel:'noopener noreferrer'},new URL(url).hostname));
+  let parsed;try{parsed=new URL(url);}catch{}
+  if(parsed?.protocol==='https:' && !parsed.username && !parsed.password)node.append(el('a',{href:parsed.href,target:'_blank',rel:'noopener noreferrer'},parsed.hostname));
+  else node.append(document.createTextNode(url));
   node.append(document.createTextNode(match[0].slice(url.length)));last=match.index+match[0].length;
  }
  node.append(document.createTextNode(text.slice(last)));return node;

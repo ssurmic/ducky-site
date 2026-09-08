@@ -40,3 +40,8 @@ test('record login targets keep opaque identity and discard arbitrary query data
  assert.ok(new URL(archivePath({reports:true,board:'all'}),'https://test').searchParams.get('kind').includes('digest'));
  assert.ok(!new URL(archivePath({board:'all'}),'https://test').searchParams.get('kind').includes('digest'));
 });
+
+test('malformed source links remain literal text and do not break a report',()=>{
+ const body=renderDocument({blocks:[{text:'Read https://[invalid and https://example.com/source. <img src=x onerror=alert(1)>'}]});
+ assert.ok(body.textContent.includes('https://[invalid'));assert.equal(body.querySelector('img'),null);assert.equal(body.querySelectorAll('a').length,1);
+});
