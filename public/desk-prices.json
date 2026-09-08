@@ -257,12 +257,12 @@
             "name": "Labor Day"
           }
         ],
-        "checked_at": "2026-09-08T17:13:29.722051+00:00",
+        "checked_at": "2026-09-08T17:34:16.691803+00:00",
         "basis": "completed_regular_session",
         "calendar_source": "https://www.nyse.com/markets/hours-calendars"
       },
       "source_url": "https://api.duckybot.app/public/prices/NVDA.json?limit=30",
-      "retrieved_at": "2026-09-08T17:13:29+00:00"
+      "retrieved_at": "2026-09-08T17:34:16+00:00"
     },
     {
       "ticker": "SPY",
@@ -520,12 +520,12 @@
             "name": "Labor Day"
           }
         ],
-        "checked_at": "2026-09-08T17:13:29.786498+00:00",
+        "checked_at": "2026-09-08T17:34:16.767088+00:00",
         "basis": "completed_regular_session",
         "calendar_source": "https://www.nyse.com/markets/hours-calendars"
       },
       "source_url": "https://api.duckybot.app/public/prices/SPY.json?limit=30",
-      "retrieved_at": "2026-09-08T17:13:29+00:00"
+      "retrieved_at": "2026-09-08T17:34:16+00:00"
     },
     {
       "ticker": "NOK",
@@ -783,12 +783,12 @@
             "name": "Labor Day"
           }
         ],
-        "checked_at": "2026-09-08T17:13:29.846426+00:00",
+        "checked_at": "2026-09-08T17:34:16.835661+00:00",
         "basis": "completed_regular_session",
         "calendar_source": "https://www.nyse.com/markets/hours-calendars"
       },
       "source_url": "https://api.duckybot.app/public/prices/NOK.json?limit=30",
-      "retrieved_at": "2026-09-08T17:13:29+00:00"
+      "retrieved_at": "2026-09-08T17:34:16+00:00"
     }
   ]
 }

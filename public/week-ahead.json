@@ -1,9 +1,18 @@
 {
  "schema": "week-ahead/1",
- "generated_at": "2026-09-07T21:00:45+00:00",
- "as_of": "2026-09-07T21:00:45+00:00",
+ "generated_at": "2026-09-08T17:00:42+00:00",
+ "as_of": "2026-09-08T17:00:42+00:00",
  "week_of": "09/07–09/11",
  "events": [
+  {
+   "dow": "周三",
+   "dow_en": "Wed",
+   "date": "09/09",
+   "et": "6:00am et",
+   "name": "NFIB Small Business Optimism",
+   "kind": "macro",
+   "tier": "high"
+  },
   {
    "dow": "周四",
    "dow_en": "Thu",
@@ -29,7 +38,7 @@
    "dow_en": "Fri",
    "date": "09/11",
    "et": "8:30am et",
-   "name": "Continuing Jobless Claims",
+   "name": "Core CPI",
    "kind": "macro",
    "tier": "high"
   },
@@ -38,7 +47,7 @@
    "dow_en": "Fri",
    "date": "09/11",
    "et": "8:30am et",
-   "name": "Core PPI",
+   "name": "Core CPI Index",
    "kind": "macro",
    "tier": "high"
   },
@@ -47,7 +56,7 @@
    "dow_en": "Fri",
    "date": "09/11",
    "et": "8:30am et",
-   "name": "Initial Jobless Claims",
+   "name": "CPI",
    "kind": "macro",
    "tier": "high"
   },
@@ -56,7 +65,7 @@
    "dow_en": "Fri",
    "date": "09/11",
    "et": "8:30am et",
-   "name": "Jobless Claims 4-Week Avg.",
+   "name": "CPI Index, n.s.a.",
    "kind": "macro",
    "tier": "high"
   },
@@ -65,7 +74,7 @@
    "dow_en": "Fri",
    "date": "09/11",
    "et": "8:30am et",
-   "name": "PPI",
+   "name": "CPI Index, s.a",
    "kind": "macro",
    "tier": "high"
   },
@@ -74,7 +83,7 @@
    "dow_en": "Fri",
    "date": "09/11",
    "et": "8:30am et",
-   "name": "PPI ex. Food/Energy/Transport",
+   "name": "CPI, n.s.a",
    "kind": "macro",
    "tier": "high"
   },
@@ -82,8 +91,53 @@
    "dow": "周五",
    "dow_en": "Fri",
    "date": "09/11",
-   "et": "11:30am et",
-   "name": "Atlanta Fed GDPNow",
+   "et": "10:00am et",
+   "name": "Michigan 1-Year Inflation Expectations",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/11",
+   "et": "10:00am et",
+   "name": "Michigan 5-Year Inflation Expectations",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/11",
+   "et": "10:00am et",
+   "name": "Michigan Consumer Expectations",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/11",
+   "et": "10:00am et",
+   "name": "Michigan Consumer Sentiment",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/11",
+   "et": "10:00am et",
+   "name": "Michigan Current Conditions",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/11",
+   "et": "11:00am et",
+   "name": "Cleveland CPI",
    "kind": "macro",
    "tier": "high"
   }
