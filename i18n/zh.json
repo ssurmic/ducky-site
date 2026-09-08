@@ -2459,6 +2459,7 @@
   "app.updates.push_topic_for": "为 {topic} 开启浏览器通知",
   "app.creatorclaim.action": "作者表述的动作",
   "app.creatorclaim.intent": "表述类型",
+  "app.creatorclaim.original_stance": "原观点标签",
   "app.creatorclaim.action_view": "表达观点",
   "app.creatorclaim.action_open": "建仓",
   "app.creatorclaim.action_add": "加仓",

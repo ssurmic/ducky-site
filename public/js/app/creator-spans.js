@@ -4,7 +4,7 @@ import {s} from './strings.js';
 import {groundedClaim,claimQualifications} from './views/creator-claim.js';
 
 export function verifiedSpans(post){
-  return (post.reviewed_spans||[]).filter(row=>['attributed_opinion','verified_mention_no_direction'].includes(row.basis));
+  return (post.reviewed_spans||[]).filter(row=>['attributed_opinion','verified_mention_no_direction','self_reported_position_behavior'].includes(row.basis));
 }
 // The API retains extraction revisions separately. Readers see one set of
 // viewpoints; the current source projection supersedes legacy calls per ticker.

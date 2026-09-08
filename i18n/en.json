@@ -2459,6 +2459,7 @@
   "app.updates.push_topic_for": "Browser notifications for {topic}",
   "app.creatorclaim.action": "Stated action",
   "app.creatorclaim.intent": "Statement type",
+  "app.creatorclaim.original_stance": "Original outlook label",
   "app.creatorclaim.action_view": "Investment view",
   "app.creatorclaim.action_open": "Open a position",
   "app.creatorclaim.action_add": "Add",
