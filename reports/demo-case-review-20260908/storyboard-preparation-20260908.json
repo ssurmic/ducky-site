@@ -8,7 +8,7 @@
   "files": [
     {
       "path": "scripts/demo/recording/information-map/README.md",
-      "sha256": "f444afacdadaa8a9d98039c5af0e302a1eedacd8eabb611c5f343ede5b406f9d"
+      "sha256": "5f1c36b90b54b7d038bf7bc53a8367269c89fb233a2addbf1de8e80b70d133cb"
     },
     {
       "path": "scripts/demo/recording/information-map/index.html",
@@ -16,7 +16,7 @@
     },
     {
       "path": "scripts/demo/recording/information-map/serve.py",
-      "sha256": "13bebdee977e2ec44db4beb8b3d62a5f3b143f0ccacee8725c75e3edb42967a5"
+      "sha256": "bc4f74503c3b6e33afda08858b752b5d534394bbbbc0080eb4516964206428a7"
     },
     {
       "path": "scripts/demo/recording/information-map/stage.css",
@@ -24,7 +24,7 @@
     },
     {
       "path": "scripts/demo/recording/information-map/stage.js",
-      "sha256": "a60482e9b62ea690403677e78e0d1c113ce0a92702d1514b9e678ff70ce31ffd"
+      "sha256": "46242965c49a662412dae3877591dae643f6bf72d45f02305ef7f86286c96501"
     }
   ],
   "captures": [
@@ -35,6 +35,10 @@
     {
       "file": "screenshots/storyboard-price-zh.png",
       "sha256": "ec2f447b516371b395af9d0b613bb161daea1cb6f5e1653142c3106fbc3c0598"
+    },
+    {
+      "file": "screenshots/storyboard-price-v2-zh.png",
+      "sha256": "b3b23b1c4dc00ac7a0be498da5514f9330e1ee047864dbf68ce42f9af5806ef1"
     }
   ],
   "coin_map_capture": {
@@ -50,7 +54,7 @@
     ]
   },
   "verification": {
-    "static_exact_routes": 10,
+    "static_exact_routes": 11,
     "unlisted_routes": "404",
     "write_methods": "405",
     "price_initial_points": 1,
@@ -70,12 +74,14 @@
     "browser": "In-app browser desktop, 1280x720; preview stage observed 887x498 CSS px",
     "live_playback_check": "Playback advanced through scenes. A time-limited automation wait missed the short complete-price interval; paused deterministic seeking was used to inspect the full 21-point frame. No final audio timing or video-encoding acceptance claimed.",
     "all_nine_scene_controls": "passed; all screenshot/brand image assets loaded, no console errors or warnings",
-    "mobile_preview": "390px English ending and 320px English ending / Chinese source scene checked; viewport equals document width in both sizes. Overlapping heading/mascot corrected; temporary override reset."
+    "mobile_preview": "390px English ending and 320px English ending / Chinese source scene checked; viewport equals document width in both sizes. Overlapping heading/mascot corrected; temporary override reset.",
+    "reddit_followup": "Real AVGO counts/details/history independently accepted; placeholder replaced with its unchanged dated screenshot and insufficient-sample statement.",
+    "reddit_crop": "Actual sample-insufficient and recorded-count labels retained; cropped unfinished heat-score fragment removed. Final screenshot inspected."
   },
   "limitations": [
     "Private authoring storyboard; source screenshot crops are editorial and unchanged inside each frame",
     "Source crops still use dated QA captures, including Chinese UI under English narration; bilingual final capture remains pending",
-    "Reddit and real receiver scenes remain explicit placeholders",
+    "The real receiver scene remains an explicit placeholder; Reddit uses the separately accepted limited counts record",
     "Historical curve is an edited source-backed graphic, not a new control represented as present in the app",
     "Final audio audition, source language copy, subtitles, media encoding and coordinated publication are not completed",
     "Narrow preview controls and closing layout checked; screenshot text in the private source scene is not final mobile-video readability acceptance."

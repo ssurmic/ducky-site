@@ -67,10 +67,10 @@
     {
       "name": "06-reddit",
       "budget_seconds": 3.2,
-      "zh": "Reddit 上，讨论变多了吗？",
-      "en": "Is Reddit attention rising?",
+      "zh": "Reddit 提及次数，也有记录。",
+      "en": "See how often Reddit mentions it.",
       "dependency": "degen",
-      "capture_notes": "Await a current source-backed Reddit example from the Degen owner. Counts are attention, not bullish sentiment. X is not represented as connected.",
+      "capture_notes": "Use only recorded AVGO Reddit mentions with the actual insufficient-sample/coverage state. Current provider count 4 versus comparison value 13 does not support an increase or bullish sentiment. COIN is outside the captured top 100, not zero. Exact provider window endpoints are unknown; capture time is separate.",
       "recording_status": "not_captured"
     },
     {
@@ -102,11 +102,11 @@
     }
   ],
   "pending_acceptance": [
-    "Current Reddit example and source/coverage receipts",
     "Reviewed natural English overview prose; normal-refresh behavior has separately passed and may be shown as explicitly dated previous analysis",
     "Designated Telegram and email receiver plus separate real delivery receipts",
     "Final bilingual audio listening, word timing, captions, end-card playback and coordinated media publication"
   ],
   "price_acceptance_receipt": "../../reports/demo-case-review-20260908/coin-product-bars-comparison-20260908.json",
-  "refresh_acceptance_receipt": "../../reports/demo-case-review-20260908/production-refresh-qa-20260908.json"
+  "refresh_acceptance_receipt": "../../reports/demo-case-review-20260908/production-refresh-qa-20260908.json",
+  "reddit_acceptance_receipt": "../../reports/demo-case-review-20260908/avgo-reddit-demo-acceptance-20260908.json"
 }

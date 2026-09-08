@@ -1,0 +1,53 @@
+{
+  "checked_at": "2026-09-08T12:19:33.289001+00:00",
+  "owner_acceptance": "Degen owner completed its main-task acceptance; bounded existing-storage read supplied this limited example. No new acquisition/model work.",
+  "ticker": "AVGO",
+  "platform": "Reddit",
+  "provider": "ApeWisdom",
+  "source_url": "https://apewisdom.io/stocks/AVGO/",
+  "product_route": "https://duckybot.app/app/#/boards?board=social&ticker=AVGO",
+  "snapshot_id": "social:8885f885004e275c68d4a7d8",
+  "captured_at": "2026-09-08T12:00:19Z",
+  "provider_updated_at": null,
+  "exact_provider_window_endpoints": null,
+  "current_reported_rolling_24h_mentions": 4,
+  "provider_mentions_24h_ago_comparison_value": 13,
+  "display_change_percent": -69.2,
+  "period_semantics": "Provider rolling 24h count compared with its reported comparison count from 24h earlier; not two independently verified complete calendar days.",
+  "sample_status": "insufficient",
+  "index": null,
+  "sentiment": "unavailable",
+  "captured_coverage": {
+    "scope": "all-stocks",
+    "ranked_items": 100,
+    "provider_reported_total": 669,
+    "independent_authors": null,
+    "post_ids": null,
+    "bot_filtering": null
+  },
+  "coin_status": "Not present in the captured top 100; not zero mentions.",
+  "independent_browser_acceptance": [
+    "Exact AVGO route loaded",
+    "Expanded discussion/source/history details: 4 current, 13 comparison, -69%, insufficient, unscored, sentiment unknown",
+    "Source collection date shown as 12:00 UTC; unknown provider cutoff explicitly shown",
+    "History expanded inline with saved 00:00 through 12:00 UTC observations, including 2,3,4 counts and retained insufficient/unscored states",
+    "History explains gaps are missing/unscored, not zero; no missing value changed",
+    "No console errors or warnings"
+  ],
+  "narration": {
+    "zh": "Reddit 提及次数，也有记录。",
+    "en": "See how often Reddit mentions it."
+  },
+  "not_supported": [
+    "Discussion-growth marketing claim for this example",
+    "Bulls/Bears or a market-direction claim",
+    "Complete coverage or independently checked original posts",
+    "Treating COIN coverage absence as zero",
+    "X ingestion or X-based counts"
+  ],
+  "screenshot": {
+    "file": "screenshots/avgo-reddit-counts-zh.png",
+    "sha256": "428a56723988c972105f9a832223fa518930e8512d623447e61fb87d5c4fd439"
+  },
+  "recording_use": "A limited recorded-mentions view with insufficient-sample and cutoff limitations retained. The private storyboard now uses a dated actual screenshot; final bilingual recording remains pending."
+}

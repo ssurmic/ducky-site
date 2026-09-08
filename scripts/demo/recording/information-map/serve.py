@@ -23,6 +23,7 @@ FILES = {
     "/frames/coin-map.png": CASES / "screenshots/coin-map-stage-prep-zh.png",
     "/frames/coin-source.png": CASES / "screenshots/coin-creator-source-zh.png",
     "/frames/overview.png": CASES / "screenshots/avgo-refresh-retains-analysis-en.png",
+    "/frames/reddit.png": CASES / "screenshots/avgo-reddit-counts-zh.png",
 }
 
 

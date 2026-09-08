@@ -36,7 +36,7 @@ try {
       ['历史回放 · 2026-08-08', '为什么看好 Coinbase？'],
       ['COIN · 完整观察区间', '后来的走势，也能回看'],
       ['另一只自选股 · AVGO', '博主之外，还有公司披露'],
-      ['Reddit', '讨论热度，有什么变化？'],
+      ['Reddit · AVGO', '提及次数，也有记录'],
       ['AI 观点速读', '先读概述，再查依据'],
       ['你选择的通知渠道', '重要更新，送到你这里'],
       ['Ducky Bot', '从你关注的股票开始'],
@@ -47,7 +47,7 @@ try {
       ['Historical replay · Aug 8, 2026', 'Why might Coinbase benefit?'],
       ['COIN · Full observation window', 'Follow what happened next'],
       ['Another watched stock · AVGO', 'Look at company filings, too'],
-      ['Reddit', 'What has changed in the discussion?'],
+      ['Reddit · AVGO', 'See the recorded mentions'],
       ['AI perspective', 'Read the overview. Check the sources.'],
       ['Your chosen channels', 'Important updates, delivered to you'],
       ['Ducky Bot', 'Start with the stocks you care about'],
@@ -158,7 +158,10 @@ try {
     if (index === 2) return shot('/frames/coin-source.png', {x: .329, y: .64, w: .43, h: .15}, cn ? '投资TALK君 · 24:22 原视频' : '投资TALK君 · original video at 24:22');
     if (index === 3) return chart();
     if (index === 4) return shot('/frames/avgo.png', {x: .327, y: .34, w: .435}, cn ? 'AVGO · 公司披露与作者观点' : 'AVGO · filing and creator view');
-    if (index === 5) return pending(cn ? '待录制：Reddit 实例' : 'Pending: Reddit capture', cn ? '等待当前讨论区间与覆盖范围验收。这里不填演示数字。' : 'Awaiting the accepted discussion window and coverage. No invented counts.');
+    if (index === 5) {
+      $('basis').textContent = cn ? 'ApeWisdom · 2026-09-08 12:00 UTC 收录 · 精确统计截止未提供 · 样本不足，不能判断多空' : 'ApeWisdom · Captured Sep 8, 2026 at 12:00 UTC · Exact provider cutoff unknown · Insufficient sample; sentiment unavailable';
+      return shot('/frames/reddit.png', {x: .338, y: .66, w: .205, h: .12}, cn ? 'AVGO · 已记录提及 · 样本不足' : 'AVGO · Recorded mentions · Insufficient sample');
+    }
     if (index === 6) return shot('/frames/overview.png', {x: .324, y: .132, w: .44}, cn ? '上次分析 · 原始依据随引用保留' : 'Previous analysis · original evidence retained');
     if (index === 7) return pending(cn ? '待录制：真实收件' : 'Pending: real delivery receipts', cn ? '邮箱与 Telegram 分别验收后再录制。' : 'Capture after the designated email and Telegram receivers pass.');
     const end = text('div', '', 'end-card'); const img = document.createElement('img'); img.src = '/avatar.jpg'; img.alt = 'Ducky Bot';
@@ -187,7 +190,7 @@ try {
   $('seek').oninput = e => { playing = false; time = Number(e.target.value); paint(); };
   $('play').disabled = false;
   $('play').onclick = () => { if (time >= total) time = 0; playing = !playing; previousTick = null; paint(); };
-  $('status').textContent = '38.6 秒镜头预算 · 无配音 · 两场待验收';
+  $('status').textContent = '38.6 秒镜头预算 · 无配音 · 通知场景待验收';
   paint();
   function tick(now) {
     if (playing && previousTick !== null) { time = Math.min(total, time + Math.min(.15, (now - previousTick) / 1000)); if (time >= total) playing = false; paint(); }

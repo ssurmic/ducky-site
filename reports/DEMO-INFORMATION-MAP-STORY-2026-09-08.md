@@ -13,7 +13,7 @@ A viewer follows COIN and AVGO but cannot keep up with every update. Relevant in
 | 3 | AI 支付，为什么可能利好这家公司？点开博主观点，直接看原视频。 | Why might AI payments help Coinbase? Check this creator's reasoning and original video. | 7.5 |
 | 4 | 后来涨了多少，途中跌过多少，都能回看。 | Then follow the price, including the pullbacks. | 4.5 |
 | 5 | 公司披露，也能一起查。 | Check company filings, too. | 3.0 |
-| 6 | Reddit 上，讨论变多了吗？ | Is Reddit attention rising? | 3.2 |
+| 6 | Reddit 提及次数，也有记录。 | See how often Reddit mentions it. | 3.2 |
 | 7 | AI 帮你概括重要变化，依据点开就能查。 | Get an AI overview, with sources you can open. | 4.5 |
 | 8 | 重要更新，发到你选的邮箱或 Telegram。 | Important updates reach your email or Telegram. | 4.5 |
 | 9 | 从你关注的股票开始。 | Start with the stocks you care about. | 3.2 |
@@ -54,7 +54,7 @@ At 11:06:31 UTC, a later live Chinese AVGO read displayed “综合分析整理�
 
 ## Remaining acceptance before recording
 
-1. Finish the current source/creator and Degen feature acceptance. Use a current attributed Reddit attention example, its actual window and coverage state. Mention counts are not market direction. The video's discussion of Reddit as a company is not Reddit-platform ingestion. X remains coming soon.
+1. Finish current source/creator acceptance and preserve the accepted limited Reddit record. The Degen owner has completed its task; this task verified the actual AVGO counts/history view. Mention counts are not market direction. The video's discussion of Reddit as a company is not Reddit-platform ingestion. X remains coming soon.
 2. Record the actual COIN chart using the accepted complete stored window and preserve its date range; any separate edited historical graphic must be labeled as such, not presented as a control the app does not have.
 3. Accept a current ready overview, including the revised English, from the existing shared producer. Any stock brief used in the final cut must be current and ready. A displayed 08:00/20:00 Eastern schedule is not proof of twice-daily completed output. Do not start a demo-specific analysis job.
 4. Complete Telegram identity linking, email verification, preferences, one idempotent test and separate real receiver receipts. No test receivers have been designated in this task. The earlier nonce create/poll/cancel test does not prove inbox delivery; the existing question remains unanswered. No messages or account changes occurred during this QA.
@@ -64,6 +64,8 @@ The capture workspace starts from current frontend `1106a86`, which includes pro
 
 ## Silent storyboard prepared
 
-The local [storyboard server](../scripts/demo/recording/information-map/README.md) now rehearses all nine scenes at the 38.6-second budget. Duck cards move around the two-stock watchlist; unchanged source screenshots focus on the reviewed point; all 21 COIN closes appear in order, with final gain held back until the endpoint. The full closing CTA exists at scene progress zero and has a 3.2-second budget. Reddit and delivery remain explicit pending placeholders. This is an editable silent rehearsal, not recorded final media.
+The local [storyboard server](../scripts/demo/recording/information-map/README.md) now rehearses all nine scenes at the 38.6-second budget. Duck cards move around the two-stock watchlist; unchanged source screenshots focus on the reviewed point; all 21 COIN closes appear in order, with final gain held back until the endpoint. The full closing CTA exists at scene progress zero and has a 3.2-second budget. Delivery remains an explicit pending placeholder. The Reddit scene now shows the accepted limited AVGO record, with insufficient-sample and coverage limitations. This is an editable silent rehearsal, not recorded final media.
 
 Desktop scene controls and assets passed in both narration languages; 320/390px preview checks corrected a heading/mascot overlap. The screenshot text still needs final-language capture and final video readability review. Static exact-route reads pass, unlisted paths return404, and writes405; no product API, inference or delivery is called. Source provenance and the limitations of the playback timing check are retained in [preparation acceptance](demo-case-review-20260908/storyboard-preparation-20260908.json). The local-only server can be started with the README command; its tab is shown as a review artifact.
+
+The [Reddit acceptance](demo-case-review-20260908/avgo-reddit-demo-acceptance-20260908.json) closes the Degen dependency for a limited recorded-mentions scene: AVGO4, provider comparison13, insufficient sample, no sentiment/index. Exact provider window endpoints are unknown, capture was12:00UTC; COIN is outside captured coverage, not zero. Actual history preserves the missing/unscored states. The narration is “Reddit提及次数，也有记录。 / See how often Reddit mentions it.” It makes no growth claim, adds no model/acquisition task, and retains X as unconnected.

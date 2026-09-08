@@ -25,8 +25,10 @@ COIN point and 24:22 link, excluding unrelated collection counts and controls.
 These are authoring crops, not new app behavior. The curve is an edited historical
 graphic, not a fabricated app control.
 
-Reddit and email/Telegram scenes remain explicit placeholders. Replace them only
-with accepted source windows and designated-receiver receipts. Dated screenshots
+The Reddit scene uses an actual AVGO count record with its insufficient-sample state.
+It does not imply increasing discussion or known sentiment; the provider did not
+supply exact window endpoints. Email/Telegram remains an explicit placeholder until
+the designated-receiver receipts pass. Dated screenshots
 are temporary composition inputs; English playback still shares some Chinese
 source captures. Recapture each final-language application view on the accepted
 release. Do not publish this rehearsal or claim its estimated timing as measured
