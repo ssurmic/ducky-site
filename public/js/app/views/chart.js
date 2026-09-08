@@ -78,8 +78,7 @@ export async function mount(root, params) {
   const chartWorkspace=el('div.chart-workspace',ohlc,host,legendRow);
   if(compact)head.prepend(companyName);
   root.append(head);
-  if(!compact)root.append(companyName);
-  if(!compact)root.append(searchControl);
+  if(!compact)root.append(ticker?el('div.chart-identity',companyName,searchControl):el('div',companyName,searchControl));
   root.append(el('div.chart-time-controls',el('div.chart-period-controls',el('span.small.muted',s('chart.history_range')),periodRow),optionControls),chartWorkspace,status,toggles,optionHost);
   if(!compact)root.append(el('details.chart-company-details',el('summary',s('chart.company_details')),companyHost));
   if(compact)head.querySelector('h1').hidden=true;
@@ -146,7 +145,7 @@ export async function mount(root, params) {
     if (!bars.length) { status.appendChild(el("p.muted", s("chart.no_bars"))); return; }
     const last=bars[bars.length-1];
     const spot = root.querySelector('#chart-spot');
-    if (spot) spot.replaceChildren(el('span',px(last.close)),el('time.small.muted',{datetime:String(last.time)},s(compact?'chart.compact_bar':'chart.last_bar',{date:String(last.time)})));
+    if (spot) spot.replaceChildren(el('span',px(last.close)),el('time.small.muted',{datetime:String(last.time),title:s('chart.last_bar',{date:String(last.time)})},s('chart.compact_bar',{date:String(last.time)})));
     if (payload?.stale) {
       status.appendChild(el('p.data-notice', s('chart.stale_bars', { date: payload.expected_last_d || '—' })));
       retry();
@@ -158,7 +157,7 @@ export async function mount(root, params) {
       layout: { background: { type: "solid", color: "transparent" }, fontFamily:'Manrope, sans-serif',fontSize:11,textColor: text, attributionLogo: false, panes: { separatorColor: grid, enableResize: false } },
       grid: { vertLines: { visible:false }, horzLines: { color: grid,style:1 } },
       rightPriceScale: { borderVisible:false,scaleMargins:{top:.1,bottom:.2} },
-      timeScale: { borderVisible:false,rightOffset:6,barSpacing:8,minBarSpacing:2 },
+      timeScale: { borderVisible:false,rightOffset:6,barSpacing:8,minBarSpacing:.25,lockVisibleTimeRangeOnResize:true },
       crosshair: { mode: 0 },
       handleScroll: { vertTouchDrag: false },
     });
