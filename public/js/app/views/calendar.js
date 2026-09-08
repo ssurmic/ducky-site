@@ -76,13 +76,13 @@ function ymd(d) { const z = (n) => String(n).padStart(2, "0"); return `${d.getFu
 function weekSunday(d) { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() - x.getDay()); return x; }
 function addDays(d, n) { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() + n); return x; }
 
-export async function mount(root) {
+export async function mount(root, route={}) {
   const isZh = (document.documentElement.lang || "zh").slice(0, 2) !== "en";
   const isPro = store.isPro();
   const query = new URLSearchParams((location.hash.split("?")[1] || ""));
   const scopeTicker = calendarTicker(query.get("ticker"));
-  const research = eventResearchSession((store.get("watchlist") || []).includes(scopeTicker) ? scopeTicker : "");
-  let disposed = false;
+  const epoch=store.epoch();
+  let research=null, disposed = false;
   const WD = isZh ? ["日", "一", "二", "三", "四", "五", "六"] : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const MON = isZh
     ? (y, m) => `${y} 年 ${m + 1} 月`
@@ -93,19 +93,32 @@ export async function mount(root) {
   const historyCard = el("section.card.seasonality-view", {id:"seasonality-history",tabindex:-1});
   root.appendChild(historyCard);
   const disposeHistory = mountSeasonality(historyCard);
+  const cleanup=()=>{if(disposed)return;disposed=true;closeModal();research?.dispose();disposeHistory();};
+  route.signal?.addEventListener('abort',cleanup,{once:true});
+  const active=()=>!disposed&&!route.signal?.aborted&&epoch===store.epoch();
+  if(!active()){cleanup();return cleanup;}
   card.append(el("h1", s("calendar.h1")), el("p.muted", s("calendar.sub")));
   card.appendChild(spinner());
 
-  let doc, watch = [], links = {};
+  let doc, watch = (store.get("watchlist") || []).map(t=>String(t).toUpperCase()), links = {}, watchError=false;
   try {
-    const loaded = await Promise.all([api.calendar.feed(), isPro ? api.calendar.links().catch(() => ({})) : Promise.resolve({})]);
+    // The in-memory list can predate a change made in another tab/device. Read
+    // the shared list once per visit, including an explicit shared-data reload.
+    const watches=api.watchlist.list().then(doc=>{
+      const rows=Array.isArray(doc)?doc:doc?.items??doc?.watchlist??doc?.tickers;
+      if(!Array.isArray(rows))throw new Error('watchlist_unavailable');
+      return rows.map(row=>typeof row==='string'?row:row?.ticker||row?.symbol).filter(Boolean).map(t=>String(t).toUpperCase());
+    }).catch(()=>{watchError=true;return null;});
+    const loaded = await Promise.all([api.calendar.feed(), isPro ? api.calendar.links().catch(() => ({})) : Promise.resolve({}),watches]);
+    if(!active()){cleanup();return cleanup;}
     doc=loaded[0]; links=loaded[1]?.issuers || {};
-    watch = (store.get("watchlist") || []).map((t) => String(t).toUpperCase());
-    if (!watch.length) { try { const w = await api.watchlist.list(); watch = (w.items || []).map((x) => String(x.ticker || x).toUpperCase()); } catch (e) { /* ignore */ } }
+    if(loaded[2]!==null){watch=loaded[2];store.set('watchlist',watch);}
   } catch (e) {
+    if(!active()){cleanup();return cleanup;}
     clear(card); card.append(el("h1", s("calendar.h1")), el("p.err", s("calendar.load_error")));
-    return () => { disposed=true; closeModal(); research.dispose(); disposeHistory(); };
+    return cleanup;
   }
+  research=eventResearchSession(watch.includes(scopeTicker)?scopeTicker:'');
   const watchSet = new Set(watch);
   const evHasMine = (e) => (e.tickers || []).some((t) => watchSet.has(String(t).toUpperCase()) || (e.type === "earnings" && (links[String(t).toUpperCase()] || []).some(w => watchSet.has(w))));
   const events = orderCalendarEvents((doc && doc.events) || [], {scopeTicker,isWatched:evHasMine});
@@ -162,7 +175,10 @@ export async function mount(root) {
     clear(card);
     card.append(el("header.calendar-heading", el("div", el("h1", s("calendar.h1")), el("p.muted", s("calendar.sub"))),
       el("button.btn.btn-ghost.btn-sm.cal-history-link", {type:"button", "aria-controls":"seasonality-history", onclick:()=>{historyCard.scrollIntoView({block:"start"});historyCard.focus({preventScroll:true});}}, s("calendar.history_short") + " ↓")));
-    if(isPro) card.appendChild(el("p.event-scope-note.muted.small",s("event.scope_note",{n:watch.length})));
+    if(watchError)card.append(el('div.data-notice.calendar-watch-warning',{role:'status'},
+      el('p',s('calendar.watchlist_unavailable',{n:watch.length})),
+      el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>router.go(location.hash)},s('common.retry'))));
+    else if(isPro) card.appendChild(el("p.event-scope-note.muted.small",s("event.scope_note",{n:watch.length})));
     if (!isPro) {
       card.appendChild(el("div.cr-pro-banner",
         el("span.cr-pro-badge", s("calendar.pro_badge")),
@@ -416,5 +432,5 @@ export async function mount(root) {
     return detail;
   }
 
-  return () => { disposed=true; closeModal(); research.dispose(); disposeHistory(); };
+  return cleanup;
 }

@@ -994,6 +994,7 @@
   "app.calendar.mine_only": "财报：自选股及同行",
   "app.calendar.mine_badge": "我的名单",
   "app.calendar.empty": "所选时段暂无已收录事件。",
+  "app.calendar.watchlist_unavailable": "自选股名单未能更新，当前按此浏览器已保存的 {n} 只股票匹配事件。",
   "app.calendar.load_error": "日历加载失败",
   "app.calendar.today": "今天",
   "app.calendar.tomorrow": "明天",
