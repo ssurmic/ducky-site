@@ -3276,9 +3276,9 @@
   "app.chart.above_call": "The recorded price of {price} is above the {call} call wall. Check whether the close holds and review updated positioning.",
   "app.chart.below_put": "The recorded price of {price} is below the {put} put wall. The former support reference may no longer apply.",
   "app.chart.between_walls": "About +{call}% to the call wall and −{put}% to the put wall. This describes price room; an entry still needs price-action and risk checks.",
-  "app.chart.all_expiries": "All collected expiries ({n})",
+  "app.chart.all_expiries": "Expiry dates and data coverage ({n})",
   "app.chart.expiry_dte": "{n} days to expiry at retrieval",
-  "app.chart.expiry_coverage": "Up to the nearest {n} expiries within {days} days. Select a row to draw its levels. Missing expiries are not estimated.",
+  "app.chart.expiry_coverage": "Up to {n} individual expiries within {days} days, prioritizing monthly and roughly two-week dates. Combined walls retain their original front-expiry scope. Select a row to view it; missing levels are not estimated.",
   "app.chart.expiries_unavailable": "This older record has combined walls only. Individual expiries will appear after a data refresh.",
   "app.stockbrief.missing_option_expiry_scope": "Option-wall expiries were not recorded",
   "app.evidence.market_title": "Price and entry context",
@@ -3320,5 +3320,6 @@
   "app.creators.shared_spans_note": "These use the same evidence as the map. Span review and full-video summary review have separate progress.",
   "app.creators.mention_only": "Mention; no verified direction",
   "app.creators.verified_view": "Verified view",
-  "app.creators.more_spans": "Show {n} more passages"
+  "app.creators.more_spans": "Show {n} more passages",
+  "app.chart.expiry_not_collected": "Listed by the provider but not collected in this pass: {dates}."
 }

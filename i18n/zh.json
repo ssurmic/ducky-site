@@ -3276,9 +3276,9 @@
   "app.chart.above_call": "已记录股价 {price} 高于 Call 墙 {call}；查看收盘能否站稳，并核对更新后的持仓。",
   "app.chart.below_put": "已记录股价 {price} 低于 Put 墙 {put}；原支撑参考可能失效。",
   "app.chart.between_walls": "距 Call 墙约 +{call}%，距 Put 墙约 −{put}%。这是价格空间参考，买点仍需结合走势和风险。",
-  "app.chart.all_expiries": "查看全部已采集到期日（{n}）",
+  "app.chart.all_expiries": "查看到期日与数据覆盖（{n}）",
   "app.chart.expiry_dte": "采集时距到期 {n} 天",
-  "app.chart.expiry_coverage": "未来 {days} 天内，最多采集最近 {n} 个到期日。点击一行查看对应的线；缺少的期限不会推算。",
+  "app.chart.expiry_coverage": "未来 {days} 天内，单独期限最多采集 {n} 期，优先保留月度与约两周到期日。合并墙仍沿用最近期限的原计算范围。点击一行查看；缺项不推算。",
   "app.chart.expiries_unavailable": "这份旧记录只有合并墙；分到期日数据更新后会显示。",
   "app.stockbrief.missing_option_expiry_scope": "期权墙到期日未记录",
   "app.evidence.market_title": "价格与入场参考",
@@ -3320,5 +3320,6 @@
   "app.creators.shared_spans_note": "与证据导图使用同一份证据。片段审核与完整视频摘要的进度分别记录。",
   "app.creators.mention_only": "提及，未确认方向",
   "app.creators.verified_view": "已核对观点",
-  "app.creators.more_spans": "展开其余 {n} 条片段"
+  "app.creators.more_spans": "展开其余 {n} 条片段",
+  "app.chart.expiry_not_collected": "提供方列出但本轮未采集：{dates}。"
 }

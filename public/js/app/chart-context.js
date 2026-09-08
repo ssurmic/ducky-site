@@ -53,14 +53,17 @@ export function expiryTable(snap,onSelect){
   const rows=snap?.gamma?.by_expiry||[];
   const attempts=snap?.gamma?.scope?.attempts||[];
   const missing=attempts.filter(a=>a.status!=='ready');
+  const available=snap?.gamma?.scope?.available_expiries||[];
+  const uncollected=available.filter(date=>!attempts.some(a=>a.expiry===date));
   if(!rows.length)return el('p.small.muted',s('chart.expiries_unavailable'));
-  return el('details.chart-expiries',el('summary',s('chart.all_expiries',{n:rows.length})),
-    el('p.small.muted',s('chart.expiry_coverage',{days:snap?.gamma?.scope?.dte_max??'—',n:snap?.gamma?.scope?.max_expiries??'—'})),
+  return el('details.chart-expiries',el('summary',s('chart.all_expiries',{n:available.length||rows.length})),
+    el('p.small.muted',s('chart.expiry_coverage',{days:snap?.gamma?.scope?.dte_max??'—',n:snap?.gamma?.scope?.detail_max_expiries??snap?.gamma?.scope?.max_expiries??'—'})),
     el('div.chart-expiry-rows',rows.map(row=>el('button.chart-expiry-row',{type:'button',onclick:()=>onSelect(row.expiry)},
       el('span',el('strong',dateLabel(row.expiry)),el('small',expiryKind(row)),el('small',s('chart.expiry_dte',{n:row.dte}))),
       el('span',el('small',s('chart.legend_call')),el('strong',finite(row.call_wall)?px(row.call_wall):'—')),
       el('span',el('small',s('chart.legend_put')),el('strong',finite(row.put_wall)?px(row.put_wall):'—')),
       el('span',el('small',s('chart.legend_flip')),el('strong',finite(row.flip)?px(row.flip):'—'))))),
-    missing.map(row=>el('p.small.muted',s('chart.expiry_missing',{date:dateLabel(row.expiry)}))),
+    missing.map(row=>el('p.small.muted',s('chart.expiry_missing',{date:dateLabel(row.expiry)+' · '+expiryKind(row)}))),
+    uncollected.length?el('p.small.muted',s('chart.expiry_not_collected',{dates:uncollected.join(' / ')})):null,
     el('p.small.muted',s('chart.expiry_monthly_note')));
 }
