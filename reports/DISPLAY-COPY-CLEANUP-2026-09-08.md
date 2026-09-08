@@ -10,4 +10,18 @@ price-session validity, saved-quote labels and the refresh schedule are unchange
 The existing saved-quote test covers the actual six-digit fractional timestamp and
 keeps quote validity distinct from display formatting. Thirty-three focused checks,
 all 442 frontend tests, bilingual build, copy lint and 1,352 internal links pass.
-Production deployment and actual-page receipts follow below.
+Production commit `1df5c7b2fdf0d31d4aadef6eca99059244a5f1d9` passed
+CI `34284083777` and was published as Pages deployment `c89d07d0`.
+At 22:11 UTC, the public HTML's exact main/UI/context module URLs and versioned
+stylesheet matched the validated build byte for byte. A fresh authenticated
+document showed the shortened update copy in Chinese and English at 393 px.
+The real AMKR saved quote displayed its observed time as `2026-09-08 20:40 UTC`
+in both languages, preserving the separate quote date and missing provider-time
+disclosure. The Chinese desktop dialog was also visually checked at 1728 px.
+The temporary viewport override was reset after verification.
+
+Local acceptance artifacts are under
+`/tmp/ducky-evidence-validation-20260907/`: `frontend-1df5c7b2-static-receipt.json`,
+`briefing-{zh-desktop,zh-393,en-393}-1df5c7b2.png`, and
+`price-context-{zh-desktop,zh-393,en-393}-1df5c7b2.png`.
+No account settings, watchlist membership or backend source records were changed.
