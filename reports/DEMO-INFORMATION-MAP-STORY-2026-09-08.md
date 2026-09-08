@@ -1,0 +1,43 @@
+# Demo refresh: from a watched stock to the original statement
+
+Status: script and capture plan; not recorded, not published. Supersedes the nine-feature v11 narrative draft. Keep earlier encoded clips and v10 media checkpoints immutable. Capture the final deployed application after the information-map, creator, comparison and shared-brief owners return their acceptance results. Do not merge the old recording branch over current UI.
+
+## Story
+
+A viewer follows a few stocks but cannot keep up with every headline and creator. One watched stock stays in view as scattered information becomes an Information Map. The viewer opens a creator point, sees the actual words and their conditions, and opens the original video at the correct moment. Price history then answers what happened afterward. The closing brief collects changes that matter to the same watchlist and links back to the sources. The benefit is less searching and a clearer basis for the viewer's decision.
+
+Aim for 35–42 seconds, including a 3-second completed closing frame. This is a timing budget, not measured speech duration. Use one primary creator example and one short additional source example; do not squeeze all historical cases into voiceover. Company filings, insider transactions, macro events and Reddit can appear as concise source labels when that exact stock has validated records. X retains its actual coming-soon state and cannot appear as an ingested or delivered item.
+
+| Budget | Chinese narration draft | English narration draft | Capture and motion |
+|---|---|---|---|
+| 0–4s | 关注的股票不少，新闻和博主的消息却看不过来？ | Following a few stocks, but buried in news and creator posts? | Three actual sample tickers. Short headline cards cross the screen, then matching cards settle around one ticker. Motion must not imply a historical item just arrived. |
+| 4–9s | Ducky 把跟你有关的信息，汇到一张信息导图。 | Ducky brings the relevant updates together in an Information Map. | Open the current stock map. Preserve support, opposing views and context labels. Keep the chosen stock visually continuous through the next scenes. |
+| 9–17s | 博主当时怎么说？点进去，直接看原话，还有他判断的条件。 | What did a creator actually say? Open the original passage, including any conditions. | Tap a verified creator point, then the exact creator/post/point destination. Expand the passage and its timestamp; open the original-video link. Show the real creator name and publication date. |
+| 17–23s | 再对照后来的股价，看看这个观点经没经得住检验。 | Compare it with the full price history to see how the view held up. | Only use a reviewed, directional or conditional opinion for this line. Plot the fixed complete observation window, including pullbacks. Separate publication time from actual first observation. |
+| 23–30s | 公司公告、市场变化、Reddit 讨论，有什么值得再看一眼？ | Company filings, market moves, Reddit discussions. What needs another look? | Return to the same ticker. One source point changes into its attributed dated summary; a second valid source appears beside it. Do not infer a stock relationship merely from a common theme. |
+| 30–36s | 个股简报帮你汇总。重要更新，发到你选的邮箱或 Telegram。 | Get a brief for your stocks, with important updates by email or Telegram. | Use a real ready stock brief with clickable citations. Show receipt-backed enabled channels only after the actual sender and designated inboxes pass. No fabricated notification. |
+| 36–40s | 从你关注的股票开始。 | Start with the stocks you care about. | Render the full CTA before the line starts; hold for at least 3 seconds. No delayed typewriter characters or late button animation. |
+
+Each language is an independent script. A native English voice reads company names naturally (Broadcom, not a forced A-V-G-O spelling); Chinese reads 博通 when the ticker shown is AVGO. The creator's displayed name stays exact; the voice can say “这位博主 / this creator” if the brand name pronunciation is distracting. Short thought groups, original speech speed, and concise subtitles take priority over cramming the timing budget. Re-time every caption after the final audio. Verify complete words, two-line mobile limits, original-source quote attribution and the final CTA timing. ASR checks do not establish native listening quality.
+
+## Case selection and current evidence
+
+The owner prefers 投资 TALK 君, but preference is not a verified bullish call. Do not choose a positive chart first and then recast a neutral mention as a prediction. If the eligible case has a loss, retain that outcome and explain the workflow honestly. A selected positive example must link to the complete record and is not overall performance or proof of causation.
+
+| Candidate | Known source facts | Recording decision |
+|---|---|---|
+| TALK 君 · AVGO · eMXOSnMyk0o | Published 2026-08-05T03:15:26Z. Passage 1340.45–1351.87 seconds (22:20). First observed 2026-09-07T10:44:23.623275Z. The source-bound review confirms a valuation/context mention, not a directional call. | Valid for demonstrating navigation to an original passage, explicitly a later-collected historical source. Cannot support “first captured,” “called the rise,” or the opinion-performance narration in scene 4. |
+| TALK 君 · AVGO · dAkVdEmVUP0 | Published 2026-07-20; passage 429.949–435.049 seconds (7:10). Reviewed as context. Exact first-observation receipt still needed for a capture manifest. | Same limitations as above. |
+| TALK 君 · AVGO · 3E-HXC2HUvg | Published 2026-09-03. The old summary lacked retained original text. The source owner has now acquired 558 subtitle rows with the actual new retrieval time; new source-bound review remains pending. | Do not pre-record as a bullish call or use the old summary's direction. Await reviewed proposition, conditions, exact span, actual observation/acquisition/review times and complete dated price window. |
+
+If only the context case is ready, replace scene 4 with “再把消息日期和股价放在一起看。 / Put the source date alongside the price history.” This demonstrates exploration without inventing a prediction. Prefer a different creator with a complete attributed record if that makes a stronger true example. No invented quote, gain percentage, delivery timestamp or historical price baseline is reserved in this script.
+
+## Freeze and acceptance
+
+1. Information-map owner: current production frontend/backend SHA, completed map and summary quality, exact creator/post/point deep link, original text and any qualifying conditions. Discovery cadence is not end-to-end notification latency.
+2. Creator/comparison owner: final relevant-company mapping and source details. Wrong company matches, mention-only background records and pending summaries cannot be dressed as recommendations.
+3. Brief/Degen owner: an actual ready report, publication/checked times, citations, schedule receipts and the verified notification producer. The displayed 08:00/20:00 Eastern schedule is not proof of twice-daily completed output. Do not add an additional summarization job for the demo.
+4. Delivery: Telegram identity and email belong to the designated test receiver; email verification, preferences, one idempotent test and separate real receipt status pass. No receiver has been designated in this task yet. The earlier production nonce-create/poll/cancel check does not demonstrate inbox delivery.
+5. Freeze actual source records, complete price sessions/basis and retrieval times in the capture manifest. Historical publication, first observation, model review and receipt times remain separate. Then record current UI, render new audio and subtitles, inspect encoded frames and play both versions through the ending before replacing the homepage media.
+
+Current coordination: naming commit 089af7e (信息导图 / Information Map) is handed to the information-map owner for a single coordinated Pages release. Source owner reports backend b9a5d4a with creator/post/point links and shared summary updates, but the preferred September 3 case is still under review. No new notification sends, subscriptions, inference jobs, recurring automations or media publication were performed by this change.
