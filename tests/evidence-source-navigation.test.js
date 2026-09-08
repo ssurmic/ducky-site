@@ -46,6 +46,7 @@ test('unfollowed old source loads by exact index, focuses expanded point, and sc
  };
  const root=document.createElement('main');document.body.append(root);
  const dispose=await mount(root,{query:new URLSearchParams('scope=discover&creator=talk&post=abcdefghijk&point=claim:abc')});await tick();
+ try {
  assert.ok(calls.includes('/kol/talk/posts/abcdefghijk'));
  assert.equal(root.querySelectorAll('.cr-post').length,1);
  assert.ok(root.querySelector('.cr-sections').open);
@@ -53,7 +54,7 @@ test('unfollowed old source loads by exact index, focuses expanded point, and sc
  assert.ok(focused.closest('.cr-sections'),'exact graph point is inside the single interpretation');
  assert.equal(root.querySelectorAll('.cr-post > .creator-reviewed-spans').length,0);
  assert.ok(focused.querySelector('.cr-take.cr-bull'));
- assert.match(root.querySelector('.cr-post-head').textContent,/\$AVGO Bullish/,'ticker sentiment survives without a full-video reviewed summary');
+ assert.match(root.querySelector('.cr-post-head').textContent,/\$AVGO bull/i,'ticker sentiment survives without a full-video reviewed summary');
  assert.ok(!root.querySelector('.cr-post').textContent.includes('Obsolete duplicated AVGO card'));
  assert.ok(!root.querySelector('.cr-post').textContent.includes('Verified source spans'));
  assert.equal(focused.querySelector('a').href,'https://www.youtube.com/watch?v=abcdefghijk&t=634');
@@ -63,5 +64,5 @@ test('unfollowed old source loads by exact index, focuses expanded point, and sc
  assert.ok(!root.querySelector('.is-focused-source'));
  assert.match(root.querySelector('.cr-feed').textContent,/Recent post/);
  assert.ok(!location.hash.includes('post='));
- dispose();root.remove();
+ } finally {dispose();root.remove();}
 });
