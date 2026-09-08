@@ -7,7 +7,7 @@ The owner asked for recognizable YouTube source cards with a translucent logo, m
 - Every card has a visible source name and local SVG icon. YouTube, X and macro also have faint decorative watermarks. Source names, accents and watermarks identify provenance; the separate right-hand badge expresses the stored bullish, bearish or context classification.
 - Domain matching uses parsed HTTPS URLs and exact domain boundaries. Names and titles do not guess platforms. Explicit platform metadata is a fallback only when the source URL is absent. Macro is identified by its stored kind/topic. Mixed sources have a neutral label and no single-platform watermark; their expanded records retain individual labels.
 - Existing point IDs, counts, quotations, dates, ordering, source navigation and access checks are unchanged. No new request, model inference or trade calculation is introduced.
-- The concurrent AI perspective, bullish/bearish copy and same-ticker refresh changes through `01113b8` are included. Directional card tints remain; each mobile card has one stance badge and one source badge. Removed priority jargon is not reintroduced.
+- The concurrent AI perspective, bullish/bearish copy and same-ticker refresh changes through `01113b8` are included. Directional colors remain in the outlined badge, connectors and filters; each mobile card has one stance badge and one source badge. Full-card directional tints were removed after the independent reviewer found they overrode the requested source palette. Removed priority jargon is not reintroduced.
 
 ## Verification
 
