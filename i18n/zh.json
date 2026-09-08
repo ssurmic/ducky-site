@@ -3326,5 +3326,6 @@
   "app.evidence.source_located": "已定位到这条观点对应的视频。",
   "app.evidence.source_unavailable": "这条原帖暂时不可用，可能已被撤回。",
   "app.evidence.point_changed": "这一观点已更新或撤回。下面保留当前已核对的内容。",
-  "app.evidence.creator_all_posts": "查看这位博主的全部视频"
+  "app.evidence.creator_all_posts": "查看这位博主的全部视频",
+  "app.creators.new_source_pending": "{date} 新视频已发现，原文与观点正在后台处理。"
 }

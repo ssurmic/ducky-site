@@ -3326,5 +3326,6 @@
   "app.evidence.source_located": "Showing the video behind this evidence.",
   "app.evidence.source_unavailable": "This source is unavailable or has been withdrawn.",
   "app.evidence.point_changed": "This point has changed or been withdrawn. Current verified content appears below.",
-  "app.evidence.creator_all_posts": "View all videos from this creator"
+  "app.evidence.creator_all_posts": "View all videos from this creator",
+  "app.creators.new_source_pending": "New video found on {date}. Source and opinion review are processing in the background."
 }
