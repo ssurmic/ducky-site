@@ -39,3 +39,15 @@ Released `74f8d9b944529a632de7e97bbe1f6d4500bc0ce3`, Pages `e0b6d287`; **392 fro
 ### Creator source read recovery
 
 An intermittent failed initial `/kol/feed` read previously left only “加载失败” on the creator source route. A compact retry now reopens the same route, retaining creator, video and point parameters. It disables on click to avoid duplicate attempts and ignores stale session/aborted-route callbacks. The existing GET-only data and authorization flow is unchanged. Mounted route tests cover a failed feed followed by a successful exact-source retry and an aborted route; the full suite passes 395 tests after integrating the latest homepage and billing changes, copy lint and 1,342 links.
+
+Production acceptance: `c9c9e7b` / Pages `131610b5`. The COIN source route actually failed on its initial read in Chrome. Clicking the new retry button recovered the same creator/video/point route, focused `claim:376ccef604efec29b1330bab`, preserved the 24:22 YouTube source, and measured 393px viewport / 393px document width. No fixture was used for this recovery receipt.
+
+### Real AVGO analysis accepted
+
+Production `evidence-analysis/16` completed at **2026-09-08 10:48:35.357192 UTC**, with independent review approved, all six checks true and no issues. Saved graph `se-graph:d3292f03eeb46272d5556c63a4b49e55`; analysis evidence version `be665269756f6ffe4c9a6b35038a2aa13a784b89905a3f5863daad850e680989`. This is a real local-model result, not the earlier layout fixture.
+
+The actual production browser received the compact new-data notice and loaded the ready analysis. The top paragraph showed the actual 10:48 UTC generation time immediately. Default reasons/risks remained collapsed; expansion exposed the saved three sections. Citation 1 opened the attributed TALK point and original video 16:13–16:32; citation 15 opened the historical AVGO versus XLK comparison even though the corresponding node was outside the initial six visible cards. That comparison is 2026-08-07 through 2026-09-04, **not** performance twenty sessions after the September 3 video. Recorded prices and evidence dates remained visible. Actual Chrome widths 393 and 2592 matched document widths, with no horizontal overflow.
+
+The overview attributes the 2028 EPS/forward-valuation view to the creator and separately identifies recorded relative performance. The RSI and mention-count sections describe separately versioned application interpretation limits, not additional statements by the source author. NVDA real-result acceptance remains separate until recorded below.
+
+English production acceptance also passed at actual 393px viewport / 393px document width. The same ready analysis and 10:48 UTC timestamp appeared immediately, with the creator identity retained verbatim and English source controls.
