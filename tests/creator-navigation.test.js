@@ -89,3 +89,11 @@ test('simulation deep links, tab navigation and ranking preserve settings withou
   assert.equal(location.hash,'#/creators?tab=lab&preview=fictional');
   dispose();
 });
+
+test('an exact research point remains shareable through login and language route serialization',()=>{
+ const route='#/creators?tab=research&scope=discover&ticker=AVGO&creator=talk&point=claim:accepted';
+ const safe=safeTarget(route);
+ assert.match(safe,/point=claim%3Aaccepted/);
+ assert.equal(creatorRoute(new URLSearchParams(safe.split('?')[1])).point,'claim:accepted');
+ assert.ok(!safeTarget(route+'&token=secret').includes('secret'));
+});

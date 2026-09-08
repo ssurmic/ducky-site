@@ -3541,5 +3541,11 @@
   "app.chart.pick_intro": "Explore price history, indicators and option reference levels.",
   "app.chart.pick_short": "Ticker, company or business",
   "app.chart.search_label": "Find a stock",
-  "app.chart.watchlist_label": "Your watchlist"
+  "app.chart.watchlist_label": "Your watchlist",
+  "app.creators.latest_publication": "Latest publication",
+  "app.creators.group_views": "View history ({n})",
+  "app.creators.same_time_mixed": "This publication has differing views. Prices refer to the view above.",
+  "app.creators.conditional_view": "Conditional view · Expand for conditions",
+  "app.creators.source_position": "Video {time}",
+  "app.creators.group_count": "{n} creator–stock groups loaded · Expand to read each view"
 }

@@ -113,3 +113,59 @@ test('coverage is for loaded views and an older mature view arrives on the next 
  assert.match(root.textContent,/-10.0%/);assert.equal(root.querySelectorAll('.study-row').length,2);
  assert.match(root.textContent,/not the creator’s complete history/);root.remove();
 });
+
+const groupedItem=(id,point,date,{creator='talk',ticker='AVGO',start=0,stance='bull',reference=100,latest=90,ret=-10,...extra}={})=>({
+ id,revision_id:'point:'+point,canonical:true,study_key:'version:'+point,cluster_key:'same-topic',kol_id:creator,kol_name:creator,published_at:date,
+ calls:[{sym:ticker,point_id:point,stance,start_seconds:start,note:point,price_context:{publication_reference:{status:'ready',price:reference,d:'2026-09-02'},
+  latest_close:{status:'ready',price:latest,d:'2026-09-08'},since_publication:{status:'ready',ret},publication_20:{status:'pending'}},...extra}]});
+
+test('groups order by publication then same-video source position, never processing time or topic text',async()=>{
+ const {researchGroups}=await import('../public/js/app/views/creator-research.js');
+ const items=[groupedItem(1,'early-2028','2026-09-03T03:00:00Z',{start:606,stance:'neutral'}),
+  groupedItem(1,'late','2026-09-03T03:00:00Z',{start:973,reference:200,latest:190,ret:-5}),
+  groupedItem(2,'new-stock','2026-09-05T04:00:00Z',{ticker:'NKE'}),
+  groupedItem(3,'other-author','2026-09-01T03:00:00Z',{creator:'other'}),
+  {...groupedItem(4,'old','2026-08-01T03:00:00Z'),recorded_at:'2027-01-01T00:00:00Z'}];
+ const groups=researchGroups(researchRows(items));
+ assert.deepEqual(groups.map(g=>[g.latest.post.kol_id,g.latest.call.sym]),[['talk','NKE'],['talk','AVGO'],['other','AVGO']]);
+ assert.deepEqual(groups[1].rows.map(r=>r.call.point_id),['late','early-2028','old']);
+ assert.equal(groups[1].latest.call.price_context.since_publication.ret,-5);
+ assert.equal(groups[1].rows[2].call.price_context.since_publication.ret,-10);
+});
+
+test('deduplication uses exact point identity and retains different conditions in one source topic',()=>{
+ const a=groupedItem(1,'a','2026-09-03T03:00:00Z',{condition_text:'Add if demand grows.'});
+ const b=groupedItem(1,'b','2026-09-03T03:00:00Z',{condition_text:'Hold if demand weakens.'});
+ assert.equal(researchRows([a,a,b,b]).length,2);
+ const legacy={id:2,revision_id:7,kol_id:'talk',calls:[{sym:'NKE',condition_text:'One condition'},{sym:'NKE',condition_text:'Another condition'}]};
+ assert.equal(researchRows([legacy,legacy]).length,2);
+});
+
+test('groups default closed, keep distinct returns and stay open when another page merges',async()=>{
+ store.set('me',{tier:'pro'});
+ const latest=groupedItem(1,'latest','2026-09-03T03:00:00Z',{start:973,reference:200,latest:200,ret:0});
+ const earlier=groupedItem(1,'earlier','2026-09-03T03:00:00Z',{start:606,stance:'neutral',condition_text:'Only after earnings.'});
+ const missing=groupedItem(2,'missing','2026-08-01T00:00:00Z',{creator:'other',price_context:{publication_20:{status:'missing_price'}}});
+ let calls=0;globalThis.fetch=async()=>Response.json(++calls===1?{items:[latest],next_cursor:'next'}:{items:[latest,earlier,missing]});
+ const root=document.createElement('section');document.body.append(root);await mountResearch(root,{});
+ let group=root.querySelector('.study-group');assert.equal(group.open,false);
+ assert.match(group.querySelector('summary').textContent,/\$200.00/);assert.match(group.querySelector('summary').textContent,/0.0%/);
+ group.open=true;[...root.querySelectorAll('button')].find(b=>b.textContent==='Load more views').click();
+ await new Promise(resolve=>setTimeout(resolve,0));
+ assert.equal(root.querySelectorAll('.study-group').length,2);assert.equal(root.querySelectorAll('.study-row').length,3);
+ group=root.querySelector('.study-group');assert.equal(group.open,true);assert.equal(group.querySelectorAll('.study-row').length,2);
+ assert.match(group.querySelector('summary').textContent,/differing views/);
+ assert.match(group.querySelector('.study-group-views').textContent,/-10.0%/);
+ assert.match(group.querySelector('.study-group-views').textContent,/Only after earnings/);
+ assert.match(root.querySelectorAll('.study-group')[1].querySelector('summary').textContent,/—/);
+ assert.match(root.textContent,/3 views loaded/);assert.match(root.textContent,/2 creator–stock groups/);
+ root.remove();
+});
+
+test('exact point link opens its own group while keeping other creators collapsed',async()=>{
+ store.set('me',{tier:'pro'});
+ globalThis.fetch=async()=>Response.json({items:[groupedItem(1,'a','2026-09-03T00:00:00Z'),groupedItem(2,'target','2026-09-01T00:00:00Z',{creator:'other'})]});
+ const root=document.createElement('section');document.body.append(root);await mountResearch(root,{point:'target'});
+ const groups=root.querySelectorAll('.study-group');assert.equal(groups[0].open,false);assert.equal(groups[1].open,true);
+ assert.equal(groups[1].querySelector('.is-focused-study').dataset.pointId,'target');root.remove();
+});

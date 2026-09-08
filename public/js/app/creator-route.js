@@ -27,6 +27,7 @@ export function creatorTarget(state) {
     query.set('post',state.post);
     if(/^[A-Za-z0-9:_-]{1,100}$/.test(state.point||''))query.set('point',state.point);
   }
+  if(state.tab==='research' && /^[A-Za-z0-9:_-]{1,100}$/.test(state.point||''))query.set('point',state.point);
   return '#/creators' + (query.size ? '?' + query : '');
 }
 

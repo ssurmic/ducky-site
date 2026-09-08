@@ -94,7 +94,7 @@ function callChips(calls, isZh, url,kolId) {
     const sourceSeconds=c.action_start_seconds??c.start_seconds;
     if (safeSource(url) && Number.isFinite(sourceSeconds)) chip.appendChild(el("a", {href:atTime(url,sourceSeconds),target:"_blank",rel:"noopener noreferrer"}, `${Math.floor(sourceSeconds/60)}:${String(Math.floor(sourceSeconds)%60).padStart(2,"0")} ↗`));
     chip.append(evidenceLink(c.sym,c.point_id||c.claim_id),el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+encodeURIComponent(c.sym)},s('creators.chart')));
-    chip.append(el('a.btn.btn-ghost.btn-sm',{href:creatorTarget({tab:'research',selected:kolId,ticker:c.sym,mine:false})},s('creatorclaim.price_title')));
+    chip.append(el('a.btn.btn-ghost.btn-sm',{href:creatorTarget({tab:'research',selected:kolId,ticker:c.sym,point:c.point_id||c.claim_id,mine:false})},s('creatorclaim.price_title')));
     wrap.appendChild(chip);
   }
   return wrap;
@@ -241,7 +241,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         selector.addEventListener('change',()=>{selected=selector.value;renderContent();});content.append(el('div.evidence-controls',selector));
       }
       const target=el('section.creator-workspace');content.append(target);
-      if(tab==='research')mountResearch(target,{kolId:selected,query,tickers:stockFilter,allowedIds:mine?[...following]:null});
+      if(tab==='research')mountResearch(target,{kolId:selected,query,tickers:stockFilter,allowedIds:mine?[...following]:null,point:initial.tab==='research'?initial.point:''});
       if(tab==='lab')mountSimulation(target,{kolId:selected,tickers:stockFilter,allowedIds:mine?[...following]:null,state:labState,onStateChange:syncRoute});
       if(tab==='rank')mountLeaderboard(target,{onSelect:id=>{selected=id;mine=false;watched=false;stockTicker='';tab='research';render();}});
       return;
@@ -391,7 +391,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
 
   function syncRoute() {
     if(!disposed&&epoch===store.epoch()&&location.hash.split('?')[0]==='#/creators') {
-      const target=creatorTarget({tab,mine,watched,ticker:stockTicker,selected,demo:labState.demo,post:focusedPost,point:focusedPoint});
+      const target=creatorTarget({tab,mine,watched,ticker:stockTicker,selected,demo:labState.demo,post:focusedPost,point:tab==='research'&&initial.tab==='research'?initial.point:focusedPoint});
       if(location.hash!==target)history.replaceState(null,'',location.pathname+location.search+target);
       document.querySelectorAll('[data-lang-toggle], [data-lang-toggle-footer]').forEach(link=>link.setAttribute('href',link.getAttribute('href').split('#')[0]+target));
     }

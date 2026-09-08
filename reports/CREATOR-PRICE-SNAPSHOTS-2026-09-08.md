@@ -85,3 +85,34 @@ feed, and name lookup clears the stock tag. Exact-source links keep their source
 Seventeen focused navigation, people-search and research tests pass, including a
 real mount regression that retains an unfollowed AVGO creator and excludes TSLA.
 This follow-up is queued for the next coordinated frontend release.
+
+## Grouped research view
+
+The owner requested one collapsed card per creator and stock. Its header uses the
+newest publication; within one video at the same publication time, later source
+seconds come first, followed by stable point identity. It shows that exact view's
+stance, short text and price context, without averaging returns or voting on direction.
+Different stances at the same publication time are explicitly flagged. Conditional
+views have a visible condition marker and retain their full condition inside.
+
+Expansion lists every distinct current view with its own publication, source point,
+reference and result. Only matching source-point/study identities collapse; the old
+topic-cluster fallback no longer swallows different points or conditions. Repeated
+keyset rows do not duplicate cards, additional pages merge into existing groups,
+and opened groups stay open. A point link opens its matching group when that point
+is loaded; it does not trigger an unbounded search through all pages.
+
+Full suite: 435 passed; a subsequent focused route regression verifies preservation
+of the exact research point through login/language serialization. Local 393-pixel
+Chinese dark and English light screenshots show compact closed cards with no
+horizontal overflow. Actual production collapsed/expanded and desktop acceptance
+is required after the coordinated release.
+
+At 20:38 UTC, after the existing producer's 16:30 New York finalization boundary,
+the five required symbols still ended on September 4. One existing `prices.run`
+with those five symbols and period=5d accepted 25/25 rows, none quarantined, receipt
+`price-run:28ac63a809d74b31a3cef7bad6e4f0eb`. New September 8 closes are AVGO
+$368.56, ORCL $162.52, NKE $38.10, MU $1,000.26 and SPY $765.96. Four-post
+canonical warm remained 9/9 delivered; map receipt remained 22 points/11 symbols
+without missing or mismatched content. AVGO's unchanged September 2 reference
+$367.24 now compares to $368.56, +0.3594%. No source/model call was made.

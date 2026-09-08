@@ -3541,5 +3541,11 @@
   "app.chart.pick_intro": "查看走势、技术指标与期权参考价位。",
   "app.chart.pick_short": "代码、公司名或业务",
   "app.chart.search_label": "搜索股票",
-  "app.chart.watchlist_label": "从自选股中选择"
+  "app.chart.watchlist_label": "从自选股中选择",
+  "app.creators.latest_publication": "最新发表",
+  "app.creators.group_views": "查看观点（{n}）",
+  "app.creators.same_time_mixed": "同次发表包含不同立场，以下价格对应上方观点",
+  "app.creators.conditional_view": "有条件观点 · 展开查看条件",
+  "app.creators.source_position": "视频 {time}",
+  "app.creators.group_count": "已加载 {n} 个博主与股票组合 · 点开看各条观点"
 }
