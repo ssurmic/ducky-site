@@ -1,6 +1,7 @@
 # Creator and detection price snapshots — 2026-09-08
 
-Status: local candidate; awaiting coordinated backend publication.
+Status: frontend published as d498cd66; Pages b618a4d7. Backend 9946396 is live.
+Source-specific NKE correction remains a separate unfinished acceptance item.
 
 The owner narrowed creator research to publication time and twenty sessions. The main
 card now shows publication reference, latest recorded close with dates, change to date,
@@ -36,5 +37,42 @@ The creator overview also labels its bounded channel sample and signals earlier
 records when the backend reports truncation. The archive entry says “Browse indexed
 videos” instead of suggesting a partial count is all channel videos. Chart evidence
 labels recorded_at as the opinion-version timestamp, not first_seen_at.
-Final local frontend suite: 428 passed; publication/detection semantics and older-page
-coverage regressions included. Production release and saved mobile receipts pending.
+Final local frontend suite after merging the tutorial release: 430 passed.
+Exact-head CI run 34273615424 passed. The final two label changes explicitly say
+“最新已记录收盘” / “Latest recorded close”. Pages was deployed manually after a normal
+push to main; the repository's automatic Pages job is intentionally skipped.
+
+## Actual production acceptance, 2026-09-08 20:14–20:23 UTC
+
+The existing backend producer warmed canonical studies for posts 127, 166, 211 and
+462 with no model/provider call. Nine accepted points were delivered to nine studies
+with zero missing or mismatched records. The same four posts' map delivery checked
+22 points across 11 tickers with zero missing or mismatched records. This measures
+accepted-point delivery, not complete source extraction: NKE has no newly accepted
+canonical opinion yet and its conditional source repair remains open.
+
+Actual Chrome viewport width and document scroll width both measured 393 pixels
+for Chinese and English creator-price and social-history screens. AVGO's accepted
+bullish point claim:75b2c484c5bc6622e1a45ec5 displays the green stance separately
+from the red -2.5% price change: publication reference $367.24 on September 2,
+latest recorded close $357.90 on September 4. Its 20-session window is pending.
+The main UI has no recorded-time, history-version or alternative-window selectors.
+
+MU's saved social reading at 19:00 UTC displays detection reference and latest close
+from September 4 ($1,016.59, compactly formatted $1,017), actual 0.0% change and a
+separate red overheating-risk badge. The 20:00 reading has a September 8 reference
+awaiting finalized prices. It remains missing; no earlier date is substituted.
+The backend release coordinator owns the separate preceding-close context fix.
+
+Saved production PNGs under `/tmp/ducky-evidence-validation-20260907/`:
+
+- `creator-price-zh-393-production-20260908.png`
+- `creator-price-en-393-production-20260908.png`
+- `social-price-zh-393-production-20260908.png`
+- `social-price-en-393-production-20260908.png`
+
+The release coordinator receives these for independent OCR. The source-bound JSON
+receipt is `/tmp/ducky-stock-navigation-qa/production-delivery-20260908.json`.
+Some older legacy research snapshots initially lacked the new price context; their
+views remained visible with “awaiting calculation”. The natural producer subsequently
+populated the third legacy AVGO row without a manual source review or record rewrite.
