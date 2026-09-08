@@ -44,6 +44,15 @@ function mockPush(permission='granted'){
  return {get requests(){return requests;},get registrations(){return registrations;},get subscriptions(){return subscriptions;}};
 }
 
+test('inherited watch updates pause explicitly and do not grant external permission',async()=>{
+ const f=setup({topics:[{...topic,inherited_watch:true,watched_stock:true}]});const push=mockPush();await f.mount();
+ assert.match(f.root.textContent,/Watched stocks receive new video updates/);
+ const pause=[...f.root.querySelectorAll('.updates-saved button')].find(b=>b.textContent==='Pause topic');assert.ok(pause);pause.click();await flush();
+ const mutation=f.calls.find(c=>c.method==='PUT');assert.equal(mutation.body.enabled,false);assert.equal(mutation.body.web_push,false);
+ assert.equal(push.requests,0);assert.ok([...f.root.querySelectorAll('.updates-saved button')].some(b=>b.textContent==='Resume topic'));
+ f.close();
+});
+
 
 test('saved topics and device settings precede a collapsed watchlist without enabling push',async()=>{
  const tickers=['INTC','NVDA','AMD','MU','TSM','AVGO','AMKR','ON'].map(ticker=>({ticker,name:ticker}));

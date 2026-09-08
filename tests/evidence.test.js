@@ -15,19 +15,63 @@ function fixture(){return {ticker:'AVGO',status:'ready',checked_at:'2026-09-07T1
  nodes:Array.from({length:10},(_,i)=>({id:'n'+i,title:{en:'Point '+i,zh:'观点 '+i},kind:'creator',stance:i===9?'counter':i<5?'support':'context',conditional:i===9,
  published_at:'2026-09-04',evidence:[{id:'e'+i,kind:'creator',author:i===9?'Counter Author':'Source Author',source_url:'https://example.com/source',title:{en:'Source '+i,zh:'来源 '+i},
  start_seconds:70,end_seconds:90,published_at:'2026-09-04',observed_at:'2026-09-07T12:00:00Z'}]})),coverage:{corpus_documents:12,jobs:{pending:2}},missing:['price_gaps']};}
-test('saved analysis expands locally and citations open the exact evidence',()=>{
+test('saved overview is visible on arrival; reasons and exact citations require no network',()=>{
  let calls=0;globalThis.fetch=()=>{calls++;throw Error('must not infer on click');};
  const d=fixture();d.analysis_status='ready';d.analysis_generated_at=d.checked_at;
  d.analysis={overview:d.summary,sections:[{kind:'risks',...d.summary}]};
  const root=analysisPanel(d);document.body.append(root);
- assert.equal(root.querySelector('.evidence-analysis-body').hidden,true);
- root.querySelector('.btn-primary').click();assert.equal(calls,0);
- assert.equal(root.querySelector('.evidence-analysis-body').hidden,false);
+ assert.equal(root.querySelector('.evidence-analysis-overview').textContent,'Orders remain unconfirmed.10');
+ assert.equal(root.querySelector('.evidence-analysis-details').open,false);
+ assert.match(root.querySelector('.evidence-analysis-time').textContent,/2026-09-07 12:00 UTC/);
+ assert.equal(root.querySelector('.btn-primary'),null);
+ root.querySelector('summary').click();assert.equal(calls,0);
+ assert.equal(root.querySelector('.evidence-analysis-details').open,true);
  root.querySelector('.brief-citation').click();assert.match(document.querySelector('.modal-body').textContent,/Counter Author/);
  closeModal();root.remove();
  d.analysis_status='source_changed';d.summary=null;
  assert.ok(!analysisPanel(d).textContent.includes('Orders remain unconfirmed'));
  assert.equal(safeTarget('#/evidence/avgo?source=claim:abc&token=secret'),'#/evidence/AVGO?source=claim%3Aabc');
+});
+test('only one overview appears above the graph, with detailed analysis still available',()=>{
+ const d=fixture();d.analysis_status='ready';d.analysis_generated_at=d.checked_at;
+ d.analysis={overview:{en:'The saved overview.',citations:['n9']},sections:[{kind:'risks',en:'A separately cited risk.',citations:['n9']}]};
+ const root=mapView(d);document.body.append(root);
+ assert.ok(root.firstElementChild.classList.contains('evidence-analysis'));
+ assert.equal(root.querySelectorAll('.evidence-analysis').length,1);
+ assert.ok(!root.textContent.includes('Orders remain unconfirmed.'));
+ assert.match(root.querySelector('details.evidence-analysis-details').textContent,/A separately cited risk/);
+ assert.equal(root.querySelector('.evidence-filters .is-support span').textContent,'Bullish');
+ assert.equal(root.querySelector('.evidence-node.is-counter .evidence-category').textContent,'Bearish');
+ assert.equal(root.querySelector('.evidence-priority'),null);
+ root.dispose();root.remove();
+});
+test('unready snapshots never show an old analysis or invent an update time',()=>{
+ for(const state of ['pending','failed','source_changed','withdrawn','insufficient']){
+  const d=fixture();d.analysis_status=state;d.summary=null;
+  d.analysis={overview:{en:'An invalidated conclusion.'}};d.analysis_generated_at=d.checked_at;
+  const root=analysisPanel(d);
+  assert.ok(!root.textContent.includes('An invalidated conclusion'));
+  assert.equal(root.querySelector('.evidence-analysis-time'),null);
+  assert.equal(root.querySelector('summary'),null);
+  assert.ok(root.querySelector('[role=status]').textContent.length>10);
+ }
+ const d=fixture();d.analysis_status='pending';
+ assert.match(analysisPanel(d).textContent,/Orders remain unconfirmed/);
+ d.analysis_status='source_changed';assert.ok(!analysisPanel(d).textContent.includes('Orders remain unconfirmed'));
+});
+test('reopening the selected ticker reads its latest snapshot instead of doing nothing',async()=>{
+ store.set('me',{tier:'pro'});let calls=0;
+ globalThis.fetch=async()=>{
+  const d=fixture();calls++;
+  if(calls===2){d.analysis_status='ready';d.analysis={overview:{en:'New saved analysis.',citations:['n1']},sections:[]};}
+  return response(d);
+ };
+ const root=document.createElement('div');document.body.append(root);
+ const cleanup=await mount(root,{ticker:'AVGO'});
+ root.querySelector('.evidence-ticker button').click();
+ await new Promise(resolve=>setTimeout(resolve,0));
+ assert.equal(calls,2);assert.match(root.querySelector('.evidence-analysis').textContent,/New saved analysis/);
+ cleanup();root.remove();
 });
 test('six balanced nodes, exact source passage and progressive disclosure',()=>{
  const root=mapView(fixture());document.body.append(root);
@@ -145,4 +189,35 @@ test('untranslated source entries show original text without inventing a transla
  assert.match(document.querySelector('.modal-body').textContent,/Original source text · Translation unavailable/);
  assert.match(document.querySelector('.modal-body').textContent,/原始公告内容/);
  closeModal();root.dispose();root.remove();
+});
+
+test('platform identity uses source domains and structured metadata, never author names or stance',async()=>{
+ const {sourceIdentity,nodeSourceIdentity}=await import('../public/js/app/evidence-source.js');
+ for(const url of ['https://www.youtube.com/watch?v=abc','https://youtu.be/abc','https://www.youtube-nocookie.com/embed/abc'])assert.equal(sourceIdentity({source_url:url}),'youtube');
+ for(const url of ['https://youtube.com.evil.test/watch','https://evil.test/?url=youtube.com','javascript:alert(1)','https://youtube.com@evil.test/'])assert.notEqual(sourceIdentity({source_url:url,platform:'youtube'}),'youtube');
+ assert.equal(sourceIdentity({source_url:'https://x.com/author/status/123'}),'x');
+ assert.equal(sourceIdentity({source_url:'https://twitter.com/author/status/123'}),'x');
+ assert.equal(sourceIdentity({kind:'creator',author:'YouTube Analyst'}),'creator');
+ assert.equal(sourceIdentity({kind:'creator',platform:'youtube'}),'youtube');
+ assert.equal(sourceIdentity({kind:'fact',topic:'macro_background'}),'macro');
+ assert.equal(sourceIdentity({kind:'fact',topic:'technicals'}),'data');
+ assert.equal(sourceIdentity({source_url:'https://www.sec.gov/Archives/doc.htm'}),'filing');
+ assert.equal(nodeSourceIdentity({evidence:[{source_url:'https://youtu.be/a'},{source_url:'https://x.com/a/status/1'}]}),'mixed');
+});
+
+test('source branding preserves viewpoint, exact links, counts and source-dialog attribution',()=>{
+ const doc=fixture();doc.summary=null;
+ doc.nodes=doc.nodes.slice(0,4).map((node,i)=>({...node,stance:['support','counter','context','context'][i],evidence:[{...node.evidence[0],source_url:['https://youtu.be/a','https://x.com/a/status/1','https://fred.stlouisfed.org/series/CPIAUCSL','https://example.com/data'][i],kind:i===2?'fact':'creator',topic:i===2?'macro_background':undefined}]}));
+ const original=JSON.stringify(doc),root=mapView(doc);document.body.append(root);
+ for(const [identity,stance]of [['youtube','support'],['x','counter'],['macro','context']]){
+  const card=root.querySelector('.evidence-node.source-'+identity);assert.ok(card.classList.contains('is-'+stance));
+  assert.equal(card.querySelector('.evidence-category').textContent,copy['app.evidence.'+stance]);
+  assert.equal(card.querySelector('.evidence-source-badge').textContent,copy['app.evidence.source_'+identity]);
+  assert.equal(card.querySelector('.evidence-source-watermark').getAttribute('aria-hidden'),'true');
+ }
+ assert.equal(root.querySelectorAll('.evidence-node').length,4);
+ root.querySelector('.evidence-node.source-youtube').click();
+ assert.equal(document.querySelector('.evidence-source>.evidence-source-badge').textContent,'YouTube');
+ assert.equal(document.querySelector('.evidence-source a[target="_blank"]').href,'https://youtu.be/a');
+ assert.equal(JSON.stringify(doc),original);closeModal();root.dispose();root.remove();
 });

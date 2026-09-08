@@ -3,6 +3,9 @@ import {s,LANG} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
 import {comparisonLabel,comparisonDetails} from '../comparison-context.js';
+import {claimQualifications} from './creator-claim.js';
+import {evidenceLink} from '../evidence-link.js';
+import {evidenceTarget} from '../creator-route.js';
 
 const pick=value=>value?.[LANG==='en'?'en':'zh']||'';
 const time=value=>{const d=new Date(value);return value&&Number.isFinite(d.getTime())?d.toISOString().replace('T',' ').slice(0,16)+' UTC':'—';};
@@ -19,6 +22,7 @@ export function factText(fact){
   if(fact.topic==='volatility')return 'IV '+n(d.iv)+'% · HV '+n(d.hv)+'% · IV/HV '+n(d.ratio,2);
   if(fact.topic==='option_concentrations')return s('stockbrief.fact_options',{put:n(d.put_wall,2),call:n(d.call_wall,2),expiry:d.expiries?.join(' / ')||d.expiry||'—'});
   if(fact.topic==='reddit_attention')return s('stockbrief.fact_vibe',{mentions:n(d.mentions,0),prior:n(d.mentions_previous,0),score:n(d.index,0)});
+  if(fact.topic==='creator_view')return [d.author,sessionDate(d.published_at),pick(d.title)||d.title?.en||d.title?.zh].filter(Boolean).join(' · ');
   if(fact.topic==='reported_insider_purchase')return (d.owners||[]).map(o=>o.name).join(', ')+' · '+
     (d.transactions||[]).map(t=>`${t.date} · ${n(t.shares,0)} × $${n(t.price,2)}`).join(' / ');
   if(fact.topic==='business_peer_comparison')return (d.benchmark||'')+' · '+n(d.excess20)+' pp';
@@ -46,8 +50,18 @@ export function reportCard(row,{onHistory,archive=false}={}){
       fact.source_at?el('p.small.muted',s('stockbrief.source_date',{date:fact.source_at})):null,
       fact.freshness==='stale'?el('p.data-notice',s('stockbrief.fact_stale')):null);
     if(fact.topic==='reported_insider_purchase')node.append(el('p.small.muted',s('stockbrief.insider_basis')));
+    if(fact.topic==='creator_view'){
+      node.append(...[el('p.small.muted',s('stockbrief.creator_dated')),claimQualifications(fact.data),evidenceLink(ticker,fact.data?.point_id)].filter(Boolean));
+      const target=evidenceTarget(fact.data);if(target)node.append(el('a.btn.btn-ghost.btn-sm',{href:target},s('evidence.creator_context')));
+    }
     const href=source(fact.source_url);if(href)node.append(el('a',{href,target:'_blank',rel:'noopener noreferrer'},s('stockbrief.source')+' ↗'));
     nodes.set(fact.id,node);evidence.append(node);
+  }
+  const coverage=row.retrieval_coverage?.creator;
+  if(coverage){
+    evidence.append(el('p.small.muted',s('stockbrief.creator_selected',{n:coverage.selected??0})));
+    if(coverage.status!=='ready'||coverage.omitted>0)evidence.append(el('p.data-notice',s('stockbrief.creator_partial')));
+    evidence.append(evidenceLink(ticker));
   }
   const paragraph=(item,className='')=>{
     const p=el('p'+className,pick(item));

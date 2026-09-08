@@ -6,6 +6,7 @@ import { clear, errorBox, spinner, closeModal } from "./ui.js";
 import { rememberTarget, takeTarget } from "./login-target.js";
 import { showModuleRecovery } from "./release-recovery.js";
 import { selectNavigation } from './navigation.js';
+import {sharedReadRefresh} from './shared-read-refresh.js';
 
 const ROUTES = {
   reports: () => import('./views/boards.js'),
@@ -100,6 +101,10 @@ export async function render() {
   if (my !== seq) return;
   current = route;
   clear(page);
+  if(!PUBLIC.has(route.name)&&!['profile','billing','alerts'].includes(route.name)){
+    // Keep this outside the view's DOM so its local render cannot erase the notice.
+    sharedReadRefresh(root,{signal:controller.signal,reload:()=>{store.set('snapshots',{});render();}});
+  }
   let ret;
   try { ret = await mod.mount(page, route.params); }
   catch (e) {

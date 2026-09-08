@@ -18,6 +18,18 @@ const fixture=()=>({ticker:'NVDA',id:'brief-1',status:'ready',checked_at:'2026-0
  dimensions:['flows','vibe','technical','context'].map(d=>({dimension:d,...text}))},
  evidence:[{id:'one',topic:'price',observed_at:'2026-09-07T11:00:00Z',data:{price:10,price_session:'2026-09-04:CLOSED'},source_url:'https://example.com/source'}],missing:['volatility']});
 
+test('creator citations retain author, original qualifications, source point and selection limits',()=>{
+ const row=fixture();row.evidence=[{id:'one',topic:'creator_view',observed_at:'2026-09-07T11:00:00Z',source_at:'2026-08-05T12:00:00Z',
+  data:{author:'Research author',published_at:'2026-08-05T12:00:00Z',title:{en:'A conditional view'},condition_text:'if demand recovers',horizon_text:'next quarter',creator_id:'author',post_id:'abcdefghijk',point_id:'claim:one'}}];
+ row.retrieval_coverage={creator:{status:'partial',selected:1,omitted:3}};
+ const root=reportCard(row);assert.match(root.textContent,/Research author.*2026-08-05.*A conditional view/);
+ assert.match(root.textContent,/if demand recovers/);assert.match(root.textContent,/next quarter/);
+ assert.match(root.textContent,/Some viewpoints are outside this report/);
+ assert.ok(root.querySelector('a[href="#/evidence/NVDA?source=claim%3Aone"]'));
+ assert.ok([...root.querySelectorAll('a')].some(a=>a.getAttribute('href')==='#/creators?scope=discover&creator=author&post=abcdefghijk&point=claim%3Aone'));
+ assert.ok(!root.textContent.includes('[object Object]')&&!root.textContent.includes('null'));
+});
+
 test('default report is concise with conditional actions and citations opening the exact evidence',()=>{
  const root=reportCard(fixture());document.body.append(root);
  assert.equal(root.querySelector('.stock-brief-reasoning').open,false);
