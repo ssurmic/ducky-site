@@ -3502,7 +3502,7 @@
   "app.creators.twenty_day_result": "20 sessions after publication",
   "app.creators.twenty_day_pending": "The 20-session window is still open. Available prices are shown above.",
   "app.creators.publication_reference": "Publication reference",
-  "app.creators.latest_close": "Latest close",
+  "app.creators.latest_close": "Latest recorded close",
   "app.creators.since_publication": "Change to date",
   "app.creators.price_waiting": "Awaiting price data",
   "app.creators.raw_price_change": "Raw price change",

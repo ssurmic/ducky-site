@@ -3502,7 +3502,7 @@
   "app.creators.twenty_day_result": "发表后 20 交易日",
   "app.creators.twenty_day_pending": "尚未满 20 个交易日；已有价格显示在上方。",
   "app.creators.publication_reference": "发表参考价",
-  "app.creators.latest_close": "最新收盘价",
+  "app.creators.latest_close": "最新已记录收盘",
   "app.creators.since_publication": "至今涨跌",
   "app.creators.price_waiting": "等待价格数据",
   "app.creators.raw_price_change": "原始股价变化",
