@@ -12,8 +12,8 @@ const {refreshable,material,sharedReadRefresh}=await import('../public/js/app/sh
 const response=(d,status=200)=>new Response(JSON.stringify(d),{status,headers:{'content-type':'application/json'}});
 
 test('only shared read endpoints qualify; history, settings, search and mutations never replay',()=>{
- for(const path of ['/evidence/AVGO','/briefing/stocks?ticker=NVDA','/kol/talk/page','/kol/touzi-talk/posts/3E-HXC2HUvg','/public/calendar.json','/watchlist'])assert.ok(refreshable(path));
- for(const path of ['/evidence/AVGO?version=old','/kol/talk/history','/kol/talk/posts','/kol/talk/posts/abc?version=old','/kol/talk/posts/abc/review','/me/profile','/auth/poll?nonce=secret','/public/symbols?q=AVGO','//external/path','/screens/preview','/radar/social/history.json'])assert.ok(!refreshable(path));
+ for(const path of ['/evidence/AVGO','/briefing/stocks?ticker=NVDA','/kol/talk/page','/kol/touzi-talk/posts/3E-HXC2HUvg','/public/calendar.json','/watchlist','/public/radar/archive.json?start=2026-09-01&limit=200','/public/radar/coverage.json','/public/radar/facets.json'])assert.ok(refreshable(path));
+ for(const path of ['/evidence/AVGO?version=old','/kol/talk/history','/kol/talk/posts','/kol/talk/posts/abc?version=old','/kol/talk/posts/abc/review','/me/profile','/auth/poll?nonce=secret','/public/symbols?q=AVGO','//external/path','/screens/preview','/radar/social/history.json','/public/radar/archive.json?before=record-1','/public/radar/archive.json?cursor=old','/public/radar/archive.json?version=old','/public/radar/archive.json?offset=20','/public/radar/archive.json?before_id=1','/public/radar/social.json','/public/radar/history.json'])assert.ok(!refreshable(path));
 });
 
 const evidence=()=>({id:'stored-graph',ticker:'AVGO',checked_at:'check-1',recorded_at:'build-1',
@@ -91,4 +91,19 @@ test('failed permission revalidation withholds the prior private page',async()=>
  const watch=sharedReadRefresh(root,{reload:()=>{}});globalThis.fetch=async()=>response({id:'one'});
  await api.get('/briefing/stocks');globalThis.fetch=async()=>response({error:'pro_required'},402);await watch.check();
  assert.ok(root.querySelector('.route-page').hidden);assert.match(root.querySelector('aside').textContent,/Your access has changed/);watch.stop();
+});
+
+
+test('delayed public Radar data is revalidated without bearer credentials or mutations',async()=>{
+ store.bumpEpoch();store.set('me',{tier:'free'});store.set('token','private-session');hidden=false;
+ const ctl=new AbortController(),root=document.createElement('main'),watch=sharedReadRefresh(root,{signal:ctl.signal,reload:()=>{}});
+ let value={items:[{id:1,title:'Previously released source'}],access:{mode:'delayed',delay_days:5}},requests=[];
+ globalThis.fetch=async(url,options)=>{requests.push({url,options});return response(value);};
+ const path='/public/radar/archive.json?start=2026-09-01&limit=200';
+ await api.get(path,{auth:false});hidden=true;await watch.check();assert.equal(requests.length,1);
+ hidden=false;await watch.check();assert.equal(root.querySelector('aside').hidden,true);
+ value={...value,items:[...value.items,{id:2,title:'Newly released source'}]};
+ await watch.check();assert.equal(root.querySelector('aside').hidden,false);
+ assert.equal(requests.length,3);assert.ok(requests.every(({url,options})=>url===path&&options.method==='GET'&&!options.headers.Authorization));
+ ctl.abort();await watch.check();assert.equal(requests.length,3);store.set('token',null);
 });
