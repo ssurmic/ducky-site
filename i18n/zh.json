@@ -3319,5 +3319,6 @@
   "app.creators.shared_spans": "已核对的片段",
   "app.creators.shared_spans_note": "与证据导图使用同一份证据。片段审核与完整视频摘要的进度分别记录。",
   "app.creators.mention_only": "提及，未确认方向",
-  "app.creators.verified_view": "已核对观点"
+  "app.creators.verified_view": "已核对观点",
+  "app.creators.more_spans": "展开其余 {n} 条片段"
 }

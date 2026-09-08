@@ -3319,5 +3319,6 @@
   "app.creators.shared_spans": "Verified source spans",
   "app.creators.shared_spans_note": "These use the same evidence as the map. Span review and full-video summary review have separate progress.",
   "app.creators.mention_only": "Mention; no verified direction",
-  "app.creators.verified_view": "Verified view"
+  "app.creators.verified_view": "Verified view",
+  "app.creators.more_spans": "Show {n} more passages"
 }

@@ -1,0 +1,23 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {JSDOM} from 'jsdom';
+import {readFileSync} from 'node:fs';
+const dom=new JSDOM('<html lang="en"><body></body></html>');
+for(const k of ['window','document','Node'])globalThis[k]=dom.window[k];
+const copy=JSON.parse(readFileSync('i18n/en.json')),strings=document.createElement('script');
+strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
+const {spanSection}=await import('../public/js/app/creator-spans.js');
+test('verified mentions remain explicit, every passage is reachable and links are constrained',()=>{
+ const rows=Array.from({length:9},(_,i)=>({ticker:'AVGO',basis:'verified_mention_no_direction',intent:'mention',published_at:'2026-08-05',start_seconds:1340,title:{en:'Broadcom valuation discussion '+i},source_url:'https://www.youtube.com/watch?v=eMXOSnMyk0o&t=1340'}));
+ rows.push({...rows[0],basis:'unreviewed',title:{en:'Must not publish'}});
+ rows[0].source_url='javascript:alert(1)';
+ const section=spanSection(rows);
+ assert.equal(section.querySelectorAll('article').length,9);
+ assert.equal(section.querySelectorAll(':scope > article').length,6);
+ assert.equal(section.querySelectorAll('details article').length,3);
+ assert.equal(section.querySelector('details').open,false);
+ assert.match(section.textContent,/Mention; no verified direction/);
+ assert.ok(!section.textContent.includes('Must not publish'));
+ assert.equal(section.querySelectorAll('a[href^="javascript:"]').length,0);
+ assert.equal(spanSection(rows,['ORCL']),null);
+});
