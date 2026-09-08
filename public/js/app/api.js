@@ -12,6 +12,8 @@ export class ApiError extends Error {
 }
 
 let onUnauthorized = null, onPaymentRequired = null;
+const readObservers=new Set();
+export function observeReads(fn){readObservers.add(fn);return()=>readObservers.delete(fn);}
 export function setUnauthorizedHandler(fn) { onUnauthorized = fn; }
 export function setPaymentRequiredHandler(fn) { onPaymentRequired = fn; }
 
@@ -32,6 +34,9 @@ export async function request(method, path, opts) {
   if (opts.idempotencyKey) headers['Idempotency-Key'] = opts.idempotencyKey;
   const token = store.get("token");
   const epoch = store.epoch();
+  // Bind reads to the page that started them, never the next route's observer.
+  const observers=method==='GET'&&opts.observe!==false?[...readObservers]:[];
+  const observed=value=>{for(const fn of observers){try{fn(path,value,{auth:opts.auth!==false});}catch{}}return value;};
   const sessionChanged = () => opts.auth !== false && (token !== store.get("token") || epoch !== store.epoch());
   if (opts.auth !== false && token) headers.Authorization = "Bearer " + token;
   let body;
@@ -69,10 +74,10 @@ export async function request(method, path, opts) {
   }
   if (res.status === 202) {
     const r = data || {};
-    return { __accepted: true, retry_after: Number(r.retry_after || res.headers.get("Retry-After") || 5), body: r };
+    return observed({ __accepted: true, retry_after: Number(r.retry_after || res.headers.get("Retry-After") || 5), body: r });
   }
   if (!res.ok) throw new ApiError(res.status, data, path);
-  return data;
+  return observed(data);
 }
 
 export const get = (p, o) => request("GET", p, o);

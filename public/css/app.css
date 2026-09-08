@@ -491,6 +491,8 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 .recovery > a { display: inline-block; margin: 12px 16px 0 0; }
 .login .login-block { border: 0; padding-top: 8px; }
 .data-notice { font-size: 14px; line-height: 1.6; padding: 12px 14px; border-left: 3px solid var(--accent); background: var(--surface-2); border-radius: 0 10px 10px 0; }
+.shared-read-update { margin: 0 0 16px; padding: 12px 14px; background: var(--surface-2); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; overflow-wrap: anywhere; }
+.shared-read-update p { margin: 0 0 8px; }
 .page-app :is(a, button, summary):focus-visible { outline: 2px solid var(--focus-ring, var(--accent)); outline-offset: 3px; }
 .page-app .input, .page-app .btn { transition: border-color .15s, background-color .15s, box-shadow .15s; }
 @media (max-width: 799px) {

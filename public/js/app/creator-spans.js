@@ -1,7 +1,7 @@
 import {el} from './ui.js';
 import {evidenceLink} from './evidence-link.js';
 import {s} from './strings.js';
-import {groundedClaim} from './views/creator-claim.js';
+import {groundedClaim,claimQualifications} from './views/creator-claim.js';
 
 export function verifiedSpans(post){
   return (post.reviewed_spans||[]).filter(row=>['attributed_opinion','verified_mention_no_direction'].includes(row.basis));
@@ -46,6 +46,7 @@ export function spanSection(rows,tickers=null,focus='',{inline=false}={}){
       card.prepend(el('span.cr-take',{class:row.stance==='support'?'cr-bull':'cr-bear'},s('creators.take_'+(row.stance==='support'?'bull':'bear'))));
     }
     if(row.reason?.[lang])card.append(el('p.small',row.reason[lang]));
+    const qualifications=claimQualifications(row);if(qualifications)card.append(qualifications);
     if(row.evidence)card.append(el('details',{open:row.point_id===focus},el('summary',s('creators.evidence')),el('blockquote',row.evidence)));
     try{const url=new URL(row.source_url);if(url.protocol==='https:'&&['youtube.com','www.youtube.com','youtu.be'].includes(url.hostname)&&!url.username&&!url.password){
       const seconds=Math.floor(row.start_seconds||0);card.append(el('a.small',{href:url.href,target:'_blank',rel:'noopener noreferrer'},Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0')+' · '+s('creatorpage.source')+' ↗'));

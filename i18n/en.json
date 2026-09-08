@@ -2311,7 +2311,7 @@
   "app.updates.upgrade": "View Pro features",
   "app.updates.browse_creators": "Browse creators",
   "app.updates.topics": "Choose your topics",
-  "app.updates.topics_hint": "Save topics. Enable browser push separately.",
+  "app.updates.topics_hint": "Watched stocks receive new video updates in your inbox automatically. Pause them below, or add other stocks and industries. Browser and other external notifications require separate preferences.",
   "app.updates.ticker_placeholder": "For example INTC, or search a company",
   "app.updates.ticker_label": "Search for a stock to follow",
   "app.updates.add": "Follow stock",
@@ -3073,7 +3073,7 @@
   "app.stockbrief.status_ready": "Updated",
   "app.stockbrief.topic_sector_etf_vs_nasdaq100": "Sector ETF versus Nasdaq-100",
   "app.stockbrief.missing_reddit_attention": "Reddit attention",
-  "app.stockbrief.cadence": "Updates begin at 08:00 and 20:00 Eastern. Each report shows when its evidence was checked.",
+  "app.stockbrief.cadence": "Scheduled refreshes begin at 08:00 and 20:00 ET. Changed evidence also triggers a background refresh, at least 30 minutes apart per stock. Each report shows its source dates.",
   "app.stockbrief.reused": "Evidence is unchanged; the previous assessment is retained.",
   "app.stockbrief.state_hold_watch": "Monitor an existing position",
   "app.stockbrief.missing_stock_vs_sector_etf": "Stock versus sector ETF",
@@ -3362,5 +3362,13 @@
   "app.evidence.source_filing": "Company filing",
   "app.evidence.source_creator": "Creator",
   "app.evidence.source_data": "Data & records",
-  "app.evidence.source_mixed": "Mixed sources"
+  "app.evidence.source_mixed": "Mixed sources",
+  "app.stockbrief.topic_creator_view": "Reviewed creator viewpoint",
+  "app.stockbrief.creator_dated": "A view from its publication date. Conditions and horizons retain the source wording; this does not establish current holdings or overall market sentiment.",
+  "app.stockbrief.creator_selected": "This report includes {n} reviewed creator viewpoints.",
+  "app.stockbrief.creator_partial": "Some viewpoints are outside this report. Open the Information Map for more views, source segments and coverage details.",
+  "app.updates.resume": "Resume topic",
+  "app.refresh.changed": "Data used on this page has changed. You are still viewing the earlier loaded version.",
+  "app.refresh.load": "Load updates",
+  "app.refresh.access_changed": "Your access has changed. Reload to view the content currently available to your account."
 }
