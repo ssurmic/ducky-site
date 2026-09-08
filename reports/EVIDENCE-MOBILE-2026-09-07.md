@@ -45,3 +45,14 @@ restored that document or retained it in memory. A release-specific page query p
 full-page navigation, without changing sign-in or private API authorization.
 
 Final production release and signed-in checks are recorded below after deployment.
+
+## Production receipt
+
+Code `2edbb01` is deployed to Pages `f48861a3` and duckybot.app. Public feature CSS and
+`app-assets/aae7ac97d54b3f650f49/views/evidence.js` match the release build byte for byte.
+The actual signed-in Pro page was opened at
+`/app/?release=2edbb01#/evidence/AVGO` in a 320×600 viewport. It reports CSS `2edbb010`
+and the new module graph, has no always-visible ticker form/watchlist bar/search input,
+and renders the stock picker, twelve recorded points and the grouped background branch.
+Real first point y=235, content height 470px, three points fully visible, page width 320.
+The dated Reddit source dialog opens and closes correctly. No user settings were changed.

@@ -110,3 +110,6 @@ needed the same light branch labels as explicit dark mode; this was fixed and ve
 on the final site (support color rgb(105, 196, 165)). The CSS URL reports `4f2e9121`;
 the app graph is `5b508bb50f92409979d3` and prior graphs remain retained. Final rerun:
 331 tests passed. Live review was desktop; the phone matrix above used the local preview.
+
+The owner subsequently rejected this first phone layout. The replacement phone tree and
+its live 320px acceptance are documented in [EVIDENCE-MOBILE-2026-09-07.md](EVIDENCE-MOBILE-2026-09-07.md).
