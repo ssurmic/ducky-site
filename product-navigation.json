@@ -1,4 +1,5 @@
 {
+  "mobile": ["watchlist", "calendar", "evidence", "boards"],
   "primary": [
     "watchlist",
     "evidence",

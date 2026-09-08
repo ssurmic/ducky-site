@@ -63,12 +63,25 @@ export async function mount(root, params) {
   const host = el("div.chart-host", { id: "chart-host" });
   const status = el("div", { id: "chart-status" });
   const ohlc=el('div.chart-ohlc',{'aria-label':s('chart.candle_note')});
+  const zoomButtons = ['out','in','reset'].map(action=>el('button.btn.btn-ghost.btn-sm',{
+    type:'button',disabled:true,'data-chart-zoom':action,'aria-label':s('chart.zoom_'+action),title:s('chart.zoom_'+action),
+    onclick:()=>{
+      if(!chart)return;
+      const scale=chart.timeScale();
+      if(action==='reset'){scale.fitContent();chart.applyOptions({rightPriceScale:{autoScale:true}});return;}
+      const range=scale.getVisibleLogicalRange();
+      if(!range||!Number.isFinite(range.from)||!Number.isFinite(range.to))return;
+      const center=(range.from+range.to)/2,span=Math.max(5,Math.min(10000,(range.to-range.from)*(action==='in'?.75:4/3)));
+      scale.setVisibleLogicalRange({from:center-span/2,to:center+span/2});
+    }
+  },action==='in'?'+':action==='out'?'−':s('chart.zoom_reset')));
+  const zoomControls=el('div.chart-zoom',{role:'group','aria-label':s('chart.zoom')},zoomButtons);
   const optionControls=el('div.chart-option-controls');
   const optionNotes=el('div.chart-option-notes');
   const axes=el('p.chart-axes.small.muted',s('chart.axes'));
   const companyHost = el("div.company-host");
   const companyName=el('p.chart-company-name.muted.small');
-  root.append(head, companyName, form, controls, el('div.chart-workspace',ohlc,host,axes,optionControls,legendRow,optionNotes), status, companyHost);
+  root.append(head, companyName, form, controls, el('div.chart-workspace',ohlc,host,zoomControls,axes,optionControls,legendRow,optionNotes), status, companyHost);
   const showCompany=(p,rs)=>{companyHost.replaceChildren(companyContext(p,rs));companyName.textContent=p?.company||'';};
   if (ticker) api.company(ticker).then(p=>{if(alive) showCompany(p);}).catch(()=>{if(alive) showCompany(null);});
   if (ticker) companyHost.before(el('div.chips',
@@ -78,7 +91,7 @@ export async function mount(root, params) {
     el('a.chip',{href:'#/calendar?ticker='+encodeURIComponent(ticker)},s('nav.calendar'))));
 
   if (!ticker) {
-    host.hidden = true; legendRow.hidden = true; controls.hidden = true; axes.hidden = true;
+    host.hidden = true; zoomControls.hidden = true; legendRow.hidden = true; controls.hidden = true; axes.hidden = true;
     const wl = store.get("watchlist") || [];
     const chips = el("div.chips", wl.map((t) => el("a.chip.mono", { href: "#/chart/" + t }, "$" + t)));
     status.append(el("p.muted", s("chart.pick_hint")), chips);
@@ -124,7 +137,7 @@ export async function mount(root, params) {
     // leaked ResizeObserver/canvas, and the slower response could win with the WRONG period). Every await below
     // re-checks (my !== drawSeq) and bails, so only the latest draw ever mutates the DOM/chart.
     const my = ++drawSeq;
-    destroy();
+    destroy();zoomButtons.forEach(b=>b.disabled=true);
     clear(status); clear(legendRow); clear(optionControls); clear(optionNotes); clear(ohlc);
     status.appendChild(spinner());
     const LWC = window.LightweightCharts;
@@ -190,6 +203,7 @@ export async function mount(root, params) {
     // Size all panes together after creating them; adding MACD must not squeeze RSI.
     chart.panes().forEach((pane,index)=>pane.setStretchFactor([4,1,1][index] || 1));
     chart.timeScale().fitContent();
+    zoomButtons.forEach(b=>b.disabled=false);
 
     // Overlays: Pro only. Free/paid see a lock strip instead.
     if (store.isPro()) {

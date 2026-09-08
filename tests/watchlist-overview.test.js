@@ -59,6 +59,17 @@ test('map inspector works with focus, Escape and hover without fetching or selec
  }finally{globalThis.fetch=oldFetch;view.remove();}
 });
 
+test('touch focus does not open a hover layer before the first tap selects a stock',()=>{
+ let selected;const view=overviewView([row('ONE',10),row('TWO',20)],{view:'heatmap',onSelect:t=>selected=t});document.body.append(view);
+ try{
+  const tile=view.querySelector('[data-open=ONE]'),other=view.querySelector('[data-open=TWO]'),tip=view.querySelector('[role=tooltip]');
+  const touch=target=>{const e=new window.Event('pointerdown',{bubbles:true});Object.defineProperty(e,'pointerType',{value:'touch'});target.dispatchEvent(e);target.focus();};
+  touch(tile);assert.equal(tip.hidden,true);tile.click();assert.equal(selected,'ONE');
+  touch(other);assert.equal(tip.hidden,true);other.click();assert.equal(selected,'TWO');
+  other.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Tab',bubbles:true}));tile.focus();assert.equal(tip.hidden,false);
+ }finally{view.remove();}
+});
+
 test('initial watchlist loading is not rendered as missing market data',async()=>{
  let complete;const pending=new Promise(resolve=>complete=resolve);
  globalThis.fetch=async()=>{await pending;return new Response(JSON.stringify({items:[row('ONE',10)],overview:{items:[row('ONE',10)],session:'2026-09-04'}}),{headers:{'content-type':'application/json'}});};

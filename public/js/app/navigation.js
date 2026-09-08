@@ -15,5 +15,5 @@ export function selectNavigation(name, query=new URLSearchParams()) {
     group.open=active;
   });
   const more=document.querySelector('.nav-more');
-  if(more){if(more.open&&more.querySelector('.nav-more-panel')?.contains(document.activeElement))more.querySelector('summary')?.focus({preventScroll:true});more.open=false;more.classList.toggle('on',!['watchlist','calendar','alerts','boards'].includes(name));}
+  if(more){if(more.open&&more.querySelector('.nav-more-panel')?.contains(document.activeElement))more.querySelector('summary')?.focus({preventScroll:true});more.open=false;more.classList.toggle('on',![...document.querySelectorAll('.app-nav > [data-mobile-primary]')].some(link=>link.dataset.route===name));}
 }
