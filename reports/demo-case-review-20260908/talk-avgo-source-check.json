@@ -27,10 +27,18 @@
   "recording_status": "not_ready",
   "open_items": [
     "Obtain exact source and observation clocks plus precise span from the producer",
-    "Review valuation acronym and conflicting numeric transcription without changing retained original text",
+    "Independently confirm the released normalized term; keep the original numeric conflict visible in source details and out of price calculations",
     "Keep creator assumptions and management attribution explicit",
     "Await ready current analysis rather than stale or pending prose",
     "Use the complete available price history; the 20-session post-publication window is unfinished",
     "No historical delivery receipt has been verified"
-  ]
+  ],
+  "source_owner_followup": {
+    "display_term": "远期市盈率",
+    "normalization_basis": "The retained passage includes price, EPS, division and a future fiscal period. Original captions and point ID are unchanged.",
+    "numeric_discrepancy": "Retained in the original; not silently corrected, used to recompute a ratio, or extracted as an executable entry price.",
+    "attribution": "Creator valuation opinion; not an independently verified management forecast.",
+    "comparison_eligible": false,
+    "allowed_use": "Source navigation only; no first-capture or mature-performance claim."
+  }
 }
