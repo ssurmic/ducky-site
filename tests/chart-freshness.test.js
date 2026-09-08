@@ -137,3 +137,45 @@ test('compact candle controls preserve tier gates, cached aggregation and keyboa
   assert.equal(barsRequests,1);assert.deepEqual(candle.data,normalizeBars(bars));
  }finally{close();r.remove();window.LightweightCharts.createChart=previous;}
 });
+
+
+test('wall distances name their saved spot separately from the dated candle close and never invent quote time',async()=>{
+ const previous=window.LightweightCharts.createChart;
+ window.LightweightCharts.createChart=()=>({
+  addSeries:()=>({setData(){},createPriceLine(){return {};},removePriceLine(){},applyOptions(){}}),
+  panes:()=>[],timeScale:()=>({fitContent(){}}),remove(){},applyOptions(){}
+ });
+ const snapshot={ok:true,spot:365.44,gamma:{call_wall:370,put_wall:365,scope:{retrieved_at:'2026-09-08T14:11:00Z',expiries:['2026-09-11']},
+  by_expiry:[{expiry:'2026-09-18',call_wall:380,put_wall:360}]}};
+ const original=structuredClone(snapshot);let requests=0;
+ globalThis.fetch=async url=>{requests++;return String(url).includes('/bars/')?response({bars:[{...bar,c:357.9,h:370}]}):
+  String(url).includes('/snapshot/')?response({built_at:'2026-09-08T14:12:00Z',snapshot}):response({status:'unavailable'});};
+ const r=root();store.set('me',{tier:'pro'});store.set('snapshots',{});const close=await mount(r,{ticker:'AVGO'}),initialRequests=requests;
+ try{
+  assert.match(r.querySelector('#chart-spot').textContent,/357.90.*2026-09-04/);
+  assert.equal(r.querySelector('.chart-wall-basis').textContent,'Distances use the recorded price $365.44. Quote time was not saved.');
+  assert.match(r.querySelector('.chart-wall-position').textContent,/\+1.2%.*−0.1%/);
+  assert.equal(r.querySelector('.chart-wall-basis').nextElementSibling.className,'chart-wall-position');
+  assert.doesNotMatch(r.querySelector('.chart-wall-basis').textContent,/2026-09-08|14:1[12]|357.90/);
+  const select=r.querySelector('[data-chart-control=expiry]');select.value='2026-09-18';select.dispatchEvent(new window.Event('change'));
+  assert.match(r.querySelector('.chart-wall-basis').textContent,/365.44/);
+  assert.match(r.querySelector('.chart-wall-position').textContent,/\+4.0%.*−1.5%/);
+  assert.match(r.querySelector('#chart-legend').textContent,/380.00.*360.00/);
+  assert.equal(requests,initialRequests);assert.deepEqual(snapshot,original);
+ }finally{close();r.remove();window.LightweightCharts.createChart=previous;}
+});
+
+test('missing or invalid snapshot spot never falls back to the candle close for wall comparison',async()=>{
+ const previous=window.LightweightCharts.createChart;
+ window.LightweightCharts.createChart=()=>({
+  addSeries:()=>({setData(){},createPriceLine(){return {};},removePriceLine(){},applyOptions(){}}),
+  panes:()=>[],timeScale:()=>({fitContent(){}}),remove(){},applyOptions(){}
+ });
+ try{for(const spot of [null,0]){
+  globalThis.fetch=async url=>String(url).includes('/bars/')?response({bars:[bar]}):String(url).includes('/snapshot/')?
+   response({built_at:'2026-09-08T14:12:00Z',snapshot:{ok:true,spot,gamma:{call_wall:370,put_wall:365}}}):response({status:'unavailable'});
+  const r=root();store.set('me',{tier:'pro'});store.set('snapshots',{});const close=await mount(r,{ticker:'AVGO'});
+  assert.equal(r.querySelector('.chart-wall-basis'),null);assert.match(r.querySelector('.chart-wall-position').textContent,/incomplete/);
+  assert.match(r.querySelector('#chart-spot').textContent,/310.40/);close();r.remove();
+ }}finally{window.LightweightCharts.createChart=previous;}
+});

@@ -3263,6 +3263,7 @@
   "app.chart.help_other_title": "Other reference lines",
   "app.chart.help_other": "The expected range uses options expiring {expiry}; prices can move outside this model range. The 20-day range uses the last 20 daily closes. The flip is the modelled price where net gamma changes sign.",
   "app.chart.help_source": "OIC: understanding open interest",
+  "app.chart.wall_price_basis": "Distances use the recorded price {price}. Quote time was not saved.",
   "app.chart.position_unknown": "Price or option-wall data is incomplete, so their relative position is unavailable.",
   "app.chart.above_call": "The recorded price of {price} is above the {call} call wall. Check whether the close holds and review updated positioning.",
   "app.chart.below_put": "The recorded price of {price} is below the {put} put wall. The former support reference may no longer apply.",

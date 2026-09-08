@@ -3263,6 +3263,7 @@
   "app.chart.help_other_title": "其他辅助线",
   "app.chart.help_other": "预期区间对应 {expiry} 到期的期权，是模型波动范围，价格可以越界。20 日区间是过去 20 个交易日的收盘价范围。翻转位是模型估算的净 Gamma 变号位置。",
   "app.chart.help_source": "OIC：未平仓量的含义",
+  "app.chart.wall_price_basis": "距离按已记录股价 {price} 计算；报价时点未记录。",
   "app.chart.position_unknown": "价格或期权墙资料不全，暂无法比较位置。",
   "app.chart.above_call": "已记录股价 {price} 高于 Call 墙 {call}；查看收盘能否站稳，并核对更新后的持仓。",
   "app.chart.below_put": "已记录股价 {price} 低于 Put 墙 {put}；原支撑参考可能失效。",
