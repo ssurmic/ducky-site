@@ -46,11 +46,11 @@ test('late shared reports are discarded after logout',async()=>{
  const root=document.createElement('div');const task=mountStockBriefs(root);store.bumpEpoch();resolve(response({items:[fixture()]}));
  const cleanup=await task;assert.equal(root.querySelectorAll('.stock-brief').length,0);cleanup();
 });
-test('Degen legacy link uses one Vibe Check heading, action first, score in details',async()=>{
+test('Degen legacy link uses one Vibe Check heading, direction first, attention in details',async()=>{
  store.set('me',{tier:'pro'});globalThis.fetch=async()=>response({status:'ready',items:[{ticker:'NVDA',company:'NVIDIA',id:'one',state:'overheated',index:90,mentions:500,rank:1,overheated:true}],coverage:{}});
  const root=document.createElement('div');const cleanup=await mountSocial(root,{view:'degen',query:new URLSearchParams()});
  assert.equal(root.querySelector('h1').textContent,'Vibe Check');assert.equal(root.querySelector('a[href="#/degen"]'),null);
- const card=root.querySelector('.social-card');assert.ok(card.querySelector('.vibe-action'));assert.equal(card.querySelector('meter').closest('details').open,false);
+ const card=root.querySelector('.social-card');assert.ok(card.querySelector('.vibe-direction'));assert.equal(card.querySelector('meter').closest('details').open,false);
  assert.ok(card.querySelector('a[href="#/briefing?ticker=NVDA"]'));cleanup();
 });
 test('stock notification and Vibe targets survive sign-in without retaining arbitrary query data',()=>{

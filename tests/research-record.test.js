@@ -13,11 +13,18 @@ const row={id:'research:1',ticker:'NVDA',stream:'vibe',observed_at:'2026-09-07T0
 const response=body=>new Response(JSON.stringify(body),{status:200,headers:{'content-type':'application/json'}});
 test('records retain actual zero, missing scores, full dates and safe links',()=>{
  const card=recordCard(row);assert.match(card.textContent,/0/);assert.match(card.textContent,/—/);assert.match(card.textContent,/Not provided/);
- assert.equal(card.querySelector('a'),null);assert.match(card.textContent,/not been validated/);
+ assert.equal(card.querySelector('a'),null);assert.match(card.textContent,/captured discussion volume, not bullish or bearish/);
  assert.match(recordCard({...row,payload:{index:42.5,mentions:30}}).textContent,/42.5 \/ 100/);
  const doc=renderRecord({ticker:'NVDA',items:[row],streams:[]});assert.equal(doc.querySelectorAll('.research-stream').length,8);
  assert.ok([...doc.getElementsByTagName('a')].some(a=>a.getAttribute('href')==='#/boards?board=social&ticker=NVDA'));
  assert.match(doc.textContent,/No record yet/);assert.doesNotMatch(doc.textContent,/undefined|null|record\./);
+});
+test('legacy heat is not relabeled as a historical bull/bear balance',()=>{
+ const card=recordCard({...row,payload:{mentions:2000,index:100,state:'overheated'}});
+ assert.match(card.querySelector('.vibe-direction').textContent,/Bulls—Bears—/);
+ assert.doesNotMatch(card.querySelector('.vibe-direction').textContent,/100|2000|0%|neutral/i);
+ assert.match(card.querySelector('.vibe-attention-history').textContent,/2000|2,000/);
+ assert.equal(card.querySelector('.vibe-attention-history').open,false);
 });
 test('correction status never displays withdrawn title or facts',()=>{
  const card=recordCard({...row,payload:{content_status:'superseded',title:'obsolete',index:99}});

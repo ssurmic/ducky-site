@@ -4,6 +4,7 @@ import * as api from '../api.js';
 import * as store from '../store.js';
 import { dateTime } from './creator-research.js';
 import { socialHistoryChart } from './social-history-chart.js';
+import { directionReading, generalVibe } from './vibe-direction.js';
 
 export function filterSocial(items, query='', scope='all', watches=[]) {
   const q=query.trim().replace(/^\$/,'').toLowerCase();
@@ -21,14 +22,14 @@ function source(url,label) {
 export function socialCard(row,{stale=false,onHistory}={}) {
   const state=['normal','elevated','overheated','insufficient'].includes(row.state)?row.state:'insufficient';
   const score=Number.isFinite(row.index)?row.index:null;
-  const card=el('article.social-card',{'data-state':stale?'stale':state,'data-record-id':row.id},
+  const card=el('article.social-card',{'data-state':stale?'stale':'unavailable','data-record-id':row.id},
     el('div.social-card-heading',el('div',el('a.social-ticker',{href:'#/chart/'+encodeURIComponent(row.ticker)},'$'+row.ticker),
-      el('span.social-company',row.company)),el('span.social-state',s(stale?'social.saved_state':'social.state_'+state))));
-  card.append(el('p.vibe-action',s('social.action_'+(stale?'stale':state))),
-    el('dl.social-metrics',fact('mentions',num(row.mentions,0)),fact('change',row.change_pct==null?s('social.no_base'):pct(row.change_pct,0)),
-      fact('rsi',row.technical?.status==='current'?num(row.technical.rsi_d,1):'—')),
+      el('span.social-company',row.company)),stale?el('span.social-state',s('social.saved_state')):null));
+  card.append(directionReading(),
     el('a.btn.btn-ghost.btn-sm',{href:'#/briefing?ticker='+encodeURIComponent(row.ticker)},s('stockbrief.open')));
   const details=el('details.social-evidence',el('summary',s('social.details')),
+    el('p.social-meaning',s('social.state_'+state)),
+    el('dl.social-metrics',fact('mentions',num(row.mentions,0)),fact('change',row.change_pct==null?s('social.no_base'):pct(row.change_pct,0))),
     el('div.social-index',el('strong',score===null?'—':String(score)),el('span',s('social.index_scale')),
       score===null?null:el('meter',{min:0,max:100,value:score,'aria-label':s('social.index')})),
     el('p.social-meaning',s('social.meaning_'+state)),
@@ -101,6 +102,7 @@ export async function mountSocial(root,route={}) {
   }
   function render() {
     clear(content);
+    content.append(generalVibe());
     const stale=doc.status==='stale';
     if(doc.status==='unavailable') {
       content.append(el('section.card.social-empty',el('h2',s('social.unavailable')),el('p',s('social.unavailable_note')),
@@ -112,8 +114,7 @@ export async function mountSocial(root,route={}) {
     method.querySelector('.social-observed')?.remove();
     method.append(el('p.small.muted.social-observed',s('social.collected',{date:dateTime(doc.collected_at)})));
     if(stale)content.append(el('p.social-stale',{role:'status'},s('social.stale')));
-    content.append(el('div.social-summary',el('strong',s(stale?'social.saved_count':'social.hot_count',{n:doc.items.filter(r=>r.overheated).length})),
-        el('span.muted',s('social.window'))));
+    content.append(el('h2.vibe-stocks-title',s('social.stock_vibe')));
     const query=el('input.input',{type:'search','aria-label':s('social.search'),placeholder:s('social.search')});
     query.value=viewQuery;
     const scope=el('select.input',{'aria-label':s('social.filter')},...['all','hot','watchlist'].map(v=>el('option',{value:v},s('social.filter_'+v))));

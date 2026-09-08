@@ -28,6 +28,13 @@ test('evidence keeps missing post IDs, signed votes and unsafe provider text exp
  assert.equal(small.querySelector('meter'),null);assert.match(small.textContent,/No score/);
  const stale=socialCard(row,{stale:true});assert.equal(stale.dataset.state,'stale');assert.match(stale.textContent,/Saved observation/);
 });
+test('even a maximum attention score leaves Bulls and Bears unknown',()=>{
+ const card=socialCard(row);
+ assert.equal(card.dataset.state,'unavailable');
+ assert.match(card.querySelector('.vibe-direction').textContent,/Bulls—Bears—/);
+ assert.doesNotMatch(card.querySelector('.vibe-direction').textContent,/100|bullish views dominate|bearish views dominate/);
+ assert.equal(card.querySelector('.social-evidence').open,false);
+});
 test('radar social category mounts its own section and free access never fetches private rows',async()=>{
  store.set('me',{tier:'free'});let requests=0;globalThis.fetch=()=>{requests++;throw new Error('unexpected');};
  const root=document.createElement('div');const cleanup=await mount(root,{query:new URLSearchParams('board=social')});
@@ -40,6 +47,9 @@ test('current rows, search, history retry and cursor are usable without duplicat
    if(count===2)throw new Error('offline');return response({items:[{...row,id:'history:'+count}],next_cursor:count===1?'next':null});};
  const root=document.createElement('div');document.body.append(root);const cleanup=await mountSocial(root);
  assert.equal(root.querySelectorAll('.social-card').length,2);
+ assert.match(root.querySelector('.vibe-general').textContent,/General Vibe|Semiconductors/);
+ assert.equal(root.querySelectorAll('[data-vibe-scope]').length,2);
+ assert.match(root.querySelector('.vibe-general').textContent,/not connected/);
  assert.doesNotMatch(root.textContent,/null|undefined/);
  const search=root.querySelector('input');search.value='NVDA';search.dispatchEvent(new window.Event('input'));
  assert.equal(root.querySelectorAll('.social-card').length,1);

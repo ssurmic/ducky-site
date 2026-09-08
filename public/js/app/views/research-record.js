@@ -2,6 +2,7 @@ import {s, LANG} from '../strings.js';
 import {el, clear, num, px, errorBox} from '../ui.js';
 import * as api from '../api.js';
 import {dateTime} from './creator-research.js';
+import {directionReading} from './vibe-direction.js';
 
 const tr=k=>s('record.'+k);
 const streams=['price','technical','options','vibe','radar','creator','calendar','digest'];
@@ -26,11 +27,15 @@ export function recordCard(item) {
   if(item.stream==='price')fields=[['spot',px(p.spot)]];
   if(item.stream==='technical')fields=[['rsi',num(p.rsi_d,1)],['drawdown',p.dd_pct==null?'—':num(p.dd_pct,1)+'%']];
   if(item.stream==='options')fields=[['iv',p.iv==null?'—':num(p.iv,1)+'%'],['hv',p.hv==null?'—':num(p.hv,1)+'%'],['call_wall',px(p.call_wall)],['put_wall',px(p.put_wall)]];
-  if(item.stream==='vibe')fields=[['mentions',num(p.mentions,0)],['heat',p.index==null?'—':num(p.index,1)+' / 100']];
+  if(item.stream==='vibe') {
+    card.append(directionReading({historical:true}),el('details.vibe-attention-history',
+      el('summary',tr('attention_record')),
+      el('dl.research-facts',el('div',el('dt',tr('mentions')),el('dd.mono',num(p.mentions,0))),
+        el('div',el('dt',tr('heat')),el('dd.mono',p.index==null?'—':num(p.index,1)+' / 100')))));
+  }
   if(item.stream==='calendar')fields=[['event_date',value(p.date)],['event_time',value((LANG==='en'&&p.time_en)||p.time_et||p.time)]];
   if(p.effective_at)fields.push(['effective_at',value(p.effective_at)]);
   if(fields.length)card.append(el('dl.research-facts',...fields.map(([k,v])=>el('div',el('dt',tr(k)),el('dd.mono',v)))));
-  if(item.stream==='vibe')card.append(el('p.small.muted',tr('vibe_limit')));
   const precision=p.publication_precision??p.date_precision;
   const published=item.source_at ? (precision==='day'||item.source_at.length===10 ? item.source_at.slice(0,10)+' · '+tr('unknown_time') : dateTime(item.source_at)) : tr('unknown');
   if(item.source_at)card.append(el('p.small.muted',tr('published')+' '+published));
