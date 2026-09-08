@@ -1221,10 +1221,10 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 @media(max-width:600px){.stock-brief-actions{grid-template-columns:1fr;gap:16px}.stock-brief-summary{font-size:1rem}.stock-brief-links{gap:8px}.stock-brief .btn{white-space:normal}.stock-brief-history .stock-brief{padding:12px}.brief-citation{min-height:32px;min-width:28px}}
 
 /* Evidence map — a compact canvas with a stock at the centre and dated, openable branches. */
-.evidence-view{--evidence-support:#1b7558;--evidence-counter:#b53c52;--evidence-context:#3d6e9c}
-html[data-theme=dark] .evidence-view,html[data-theme=dark] .evidence-detail{--evidence-support:#69c4a5;--evidence-counter:#f18b9b;--evidence-context:#8cb6e7}
-@media(prefers-color-scheme:dark){html:not([data-theme=light]) :is(.evidence-view,.evidence-detail){--evidence-support:#69c4a5;--evidence-counter:#f18b9b;--evidence-context:#8cb6e7}}
-.evidence-detail{--evidence-support:#1b7558;--evidence-counter:#b53c52;--evidence-context:#3d6e9c}
+.evidence-view{--evidence-support:#107348;--evidence-counter:#b53c52;--evidence-context:#3d6e9c}
+html[data-theme=dark] .evidence-view,html[data-theme=dark] .evidence-detail{--evidence-support:#47df98;--evidence-counter:#f18b9b;--evidence-context:#8cb6e7}
+@media(prefers-color-scheme:dark){html:not([data-theme=light]) :is(.evidence-view,.evidence-detail){--evidence-support:#47df98;--evidence-counter:#f18b9b;--evidence-context:#8cb6e7}}
+.evidence-detail{--evidence-support:#107348;--evidence-counter:#b53c52;--evidence-context:#3d6e9c}
 .evidence-heading{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:12px}
 .evidence-heading .view-head{margin:0}
 .evidence-ticker{flex:0 1 310px;min-width:0;margin:0;gap:8px}
@@ -1423,7 +1423,39 @@ html[data-theme=dark] .evidence-view,html[data-theme=dark] .evidence-detail{--ev
 .cr-post.is-focused-source{scroll-margin-top:90px}
 
 /* Saved analysis is a local disclosure; citations use the existing source dialog. */
-.evidence-analysis{margin-top:20px;max-width:100%;overflow-wrap:anywhere}
-.evidence-analysis-body{max-width:78ch;margin-top:20px}
-.evidence-analysis-body h2{font-size:1.25rem}.evidence-analysis-body h3{font-size:1rem;margin:22px 0 8px}
-.evidence-analysis-body p{line-height:1.75}.evidence-analysis .btn{min-height:44px}
+/* Saved analysis is readable on arrival; only its supporting detail is collapsed. */
+.evidence-analysis{margin:0 0 20px;padding:18px 20px 6px;border:1px solid color-mix(in srgb,var(--accent) 24%,var(--border));border-radius:16px;background:linear-gradient(110deg,color-mix(in srgb,var(--accent) 4%,var(--surface)),var(--surface) 65%);max-width:100%;overflow-wrap:anywhere}
+.evidence-analysis-heading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 16px}
+.evidence-analysis-heading h2{display:flex;align-items:center;gap:8px;margin:0;font-size:13px;font-weight:650;letter-spacing:.01em}
+.evidence-analysis-heading .app-icon{width:16px;height:16px;color:var(--accent-text,var(--accent))}
+.evidence-analysis-time{margin:0;font-size:11px;line-height:1.6;color:var(--muted)}
+.evidence-analysis-overview{margin:10px 0 8px;max-width:90ch;font-size:16px;line-height:1.8;color:var(--text)}
+.evidence-analysis-citations{display:inline-flex;gap:3px;vertical-align:baseline;margin-left:4px}
+.page-app .evidence-analysis .brief-citation{display:inline-grid;place-items:center;min-width:28px;min-height:28px;padding:2px 5px;margin:0;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--muted);font-size:11px;line-height:1.4;cursor:pointer}
+.evidence-analysis .brief-citation:hover,.evidence-analysis .brief-citation:focus-visible{color:var(--accent-text,var(--accent));border-color:var(--accent)}
+.evidence-analysis-details>summary{width:fit-content;min-height:44px;align-content:center;cursor:pointer;font-size:12px;color:var(--muted);padding:10px 0}
+.evidence-analysis-details>summary:hover,.evidence-analysis-details>summary:focus-visible{color:var(--text)}
+.evidence-analysis-details[open]>summary{color:var(--text)}
+.evidence-analysis-body{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;padding:16px 0;border-top:1px solid var(--border)}
+.evidence-analysis-body h3{font-size:12px;font-weight:650;margin:0 0 6px;color:var(--muted)}
+.evidence-analysis-body p{font-size:13px;line-height:1.8;margin:0}
+.evidence-analysis-body .is-risks h3{color:var(--evidence-counter)}
+.evidence-analysis-status{font-size:13px;line-height:1.7;color:var(--muted);margin:8px 0 12px}
+.evidence-analysis.is-pending{padding:14px 18px 2px;border-color:var(--border);background:var(--surface)}
+/* Direction remains source-owned. Color and text make it legible together. */
+.evidence-node:is(.is-support,.is-counter){border-left:3px solid var(--branch);background:linear-gradient(115deg,color-mix(in srgb,var(--branch) 13%,var(--surface)),color-mix(in srgb,var(--branch) 4%,var(--surface)))}
+.evidence-node:is(.is-support,.is-counter) .evidence-category{padding:3px 7px;border-radius:5px;background:color-mix(in srgb,var(--branch) 15%,transparent);font-size:11px;font-weight:700}
+.evidence-wire:is(.is-support,.is-counter){stroke-width:2;opacity:.9}
+.evidence-filters :is(.is-support,.is-counter){color:var(--branch)}
+.evidence-filters :is(.is-support,.is-counter)[aria-pressed=true]{border-color:var(--branch);background:color-mix(in srgb,var(--branch) 12%,var(--surface))}
+@media(max-width:700px){
+ .evidence-analysis{padding:14px 14px 4px;border-radius:12px;margin-bottom:16px}
+ .evidence-analysis-heading{align-items:flex-start;flex-direction:column;gap:4px}
+ .evidence-analysis-overview{font-size:15px;line-height:1.7;margin:8px 0 2px}
+ .evidence-analysis-body{grid-template-columns:1fr;gap:16px;padding:12px 0 16px}
+ .page-app .evidence-analysis .brief-citation{min-width:36px;min-height:36px}
+ .evidence-analysis.is-pending{padding:12px 14px 2px}
+ .evidence-node:is(.is-support,.is-counter){border-left:3px solid var(--branch);background:color-mix(in srgb,var(--branch) 12%,var(--surface))}
+ .evidence-node:is(.is-support,.is-counter) .evidence-node-label{display:flex}
+ .evidence-node:is(.is-support,.is-counter) .evidence-node-label :is(.evidence-node-number,.evidence-condition){display:none}
+}

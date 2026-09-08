@@ -19,7 +19,7 @@ const factDescription=e=>e.topic==='price_gaps'?(e.data?.gaps?.length?e.data.gap
 const missingLabel=k=>k.startsWith('ytd_')?s('evidence.missing_ytd',{benchmark:k.slice(4)}):k==='price_gaps'?s('evidence.missing_gaps'):has('stockbrief.missing_'+k)?s('stockbrief.missing_'+k):s('evidence.missing_other');
 
 export function detail(node){
-  const body=el('div.evidence-detail',node.priority?el('p.small.muted',s('evidence.priority_'+node.priority)):null,el('p.evidence-stance',{class:'is-'+node.stance},s('evidence.'+node.stance)),
+  const body=el('div.evidence-detail',el('p.evidence-stance',{class:'is-'+node.stance},s('evidence.'+node.stance)),
     node.conditional?el('p.data-notice',s('evidence.conditional')):null,
     pick(node.reason)?el('p',pick(node.reason)):null);
   for(const e of node.evidence||[]){
@@ -49,25 +49,29 @@ export function detail(node){
 }
 
 export function analysisPanel(doc){
-  const panel=el('section.card.evidence-analysis');
-  const body=el('div.evidence-analysis-body',{hidden:true});
-  const button=el('button.btn.btn-primary',{type:'button','aria-expanded':'false',onclick:()=>{
-    body.hidden=!body.hidden;button.setAttribute('aria-expanded',String(!body.hidden));
-  }},s('evidence.analysis_button'));
-  const data=doc.analysis_status==='ready'?doc.analysis:null;
-  const refs=part=>el('span',...(part?.citations||[]).flatMap(id=>{
-    const i=doc.nodes.findIndex(n=>n.id===id);return i<0?[]:[el('button.brief-citation',{type:'button',onclick:()=>detail(doc.nodes[i]),'aria-label':s('evidence.citation',{n:i+1})},String(i+1))];
+  // A read of the saved snapshot: opening its reasons never requests inference.
+  const data=doc.analysis_status==='ready'&&pick(doc.analysis?.overview)?doc.analysis:null;
+  const summary=!['source_changed','withdrawn'].includes(doc.analysis_status)&&pick(doc.summary)?doc.summary:null;
+  const panel=el('section.evidence-analysis',{class:data||summary?'':'is-pending','aria-label':s('evidence.analysis_title')});
+  const heading=el('header.evidence-analysis-heading',el('h2',icon('briefing'),s('evidence.analysis_title')));
+  if(data&&doc.analysis_generated_at)heading.append(el('p.evidence-analysis-time',s('evidence.analysis_as_of',{at:time(doc.analysis_generated_at)})));
+  panel.append(heading);
+  const refs=part=>el('span.evidence-analysis-citations',...(part?.citations||[]).flatMap(id=>{
+    const i=(doc.nodes||[]).findIndex(n=>n.id===id);return i<0?[]:[el('button.brief-citation',{type:'button',onclick:()=>detail(doc.nodes[i]),'aria-label':s('evidence.citation',{n:i+1})},String(i+1))];
   }));
   if(data){
-    body.append(el('h2',s('evidence.analysis_title')),el('p',pick(data.overview),refs(data.overview)));
+    panel.append(el('p.evidence-analysis-overview',pick(data.overview),refs(data.overview)));
+    const body=el('div.evidence-analysis-body');
     for(const part of data.sections||[]){
-      if(['key_points','risks','watch'].includes(part.kind))body.append(el('h3',s('evidence.analysis_'+part.kind)),el('p',pick(part),refs(part)));
+      if(['key_points','risks','watch'].includes(part.kind)&&pick(part))body.append(el('section',{class:'is-'+part.kind},el('h3',s('evidence.analysis_'+part.kind)),el('p',pick(part),refs(part))));
     }
-    body.append(el('p.small.muted',s('evidence.analysis_as_of',{at:time(doc.analysis_generated_at)})));
-  }else if(doc.summary){
-    body.append(el('p',pick(doc.summary),refs(doc.summary)),el('p.small.muted',s('evidence.analysis_pending')));
-  }else body.append(el('p',{role:'status'},s(doc.analysis_status==='failed'?'evidence.analysis_failed':'evidence.analysis_pending')));
-  panel.append(button,body);return panel;
+    if(body.childElementCount)panel.append(el('details.evidence-analysis-details',el('summary',s('evidence.analysis_button')),body));
+  }else{
+    if(summary)panel.append(el('p.evidence-analysis-overview',pick(summary),refs(summary)));
+    const state=['failed','insufficient','source_changed','withdrawn'].includes(doc.analysis_status)?doc.analysis_status:'pending';
+    panel.append(el('p.evidence-analysis-status',{role:'status'},s('evidence.analysis_'+state)));
+  }
+  return panel;
 }
 
 // Layout is native CSS; the light SVG layer only connects the actual rendered nodes.
@@ -127,19 +131,10 @@ export function connectMap(map,center,branches){
 
 export function mapView(doc,{archive=false,onPickTicker}={}){
   const nodes=Array.isArray(doc.nodes)?doc.nodes:[],view=el('section.evidence-workspace');
-  const sentence=el('p',pick(doc.summary)||s('evidence.summary_'+(doc.summary_status==='insufficient'?'insufficient':'pending')));
-  const summary=el('div.evidence-takeaway',{class:doc.summary?'':'is-pending'},el('span.evidence-summary-icon',icon('briefing')),
-    el('div.evidence-summary-copy',el('span.eyebrow',s('evidence.takeaway')),sentence));
-  if(doc.summary){
-    for(const ref of doc.summary.citations||[]){
-      const index=nodes.findIndex(n=>n.id===ref);if(index<0)continue;
-      sentence.append(el('button.brief-citation',{type:'button',onclick:()=>detail(nodes[index]),'aria-label':s('evidence.citation',{n:index+1})},String(index+1)));
-    }
-  }
-  if(doc.summary)view.append(summary);
   if(archive)view.append(el('p.data-notice',s('evidence.archive',{at:time(doc.recorded_at)})));
   if(doc.status==='stale')view.append(el('p.data-notice',s('evidence.stale')));
   if(doc.withdrawn)view.append(el('p.data-notice',s('evidence.withdrawn',{n:doc.withdrawn})));
+  view.append(analysisPanel(doc));
   if(!nodes.length){view.append(el('p.empty',s('evidence.empty')),el('a.btn.btn-ghost',{href:'#/research/'+doc.ticker},s('evidence.records')));return view;}
   let scope='all',limit=6;
   const filters=el('div.evidence-filters',{'aria-label':s('evidence.filter')});
@@ -159,7 +154,7 @@ export function mapView(doc,{archive=false,onPickTicker}={}){
     onPickTicker?el('button.evidence-stock-trigger',{type:'button',onclick:onPickTicker,'aria-label':s('evidence.change_ticker',{ticker:doc.ticker})},doc.ticker,el('span',{'aria-hidden':'true'},'⌄')):null,
     priceBadge(doc),el('button.evidence-water-caption',{type:'button',onclick:()=>marketDetail(doc)},s('evidence.water_short')),
     el('div.evidence-center-info',el('span.small.muted',s(nodes.length===1?'evidence.recorded_single':'evidence.recorded_count',{n:nodes.length})),
-      pending?el('span.evidence-mobile-state',s('evidence.queue_short',{n:pending})):!doc.summary?el('span.evidence-mobile-state',sentence.textContent):null));
+      pending?el('span.evidence-mobile-state',s('evidence.queue_short',{n:pending})):null));
   if(level!==null){center.style.setProperty('--water-height',Math.round(level*100)+'%');center.style.setProperty('--water-color',`hsl(${Math.round(35+level*125)} 40% 48%)`);}
   const map=el('div.evidence-map',center,branches);view.append(map);
   const connections=connectMap(map,center,branches);view.dispose=()=>connections.dispose();
@@ -189,7 +184,6 @@ export function mapView(doc,{archive=false,onPickTicker}={}){
       const linked=node.kind==='creator'&&node.evidence?.length===1?evidenceTarget(node.evidence[0]):null;
       const card=el('button.evidence-node',{type:'button',class:'is-'+node.stance,style:{gridColumn:i%2===0?'1':'3',gridRow:String(Math.floor(i/2)+1)},onclick:()=>{if(linked)location.hash=linked;else detail(node);}},
         el('span.evidence-node-label',el('span.evidence-category',s('evidence.'+node.stance)),
-          node.priority?el('span.evidence-priority',s('evidence.priority_'+node.priority)):null,
           node.conditional?el('span.evidence-condition',s('evidence.condition_tag')):null,
           el('span.evidence-node-number',{'aria-hidden':'true'},String(nodes.indexOf(node)+1).padStart(2,'0'))),
         el('strong',pick(node.title)),
@@ -218,7 +212,7 @@ export function mapView(doc,{archive=false,onPickTicker}={}){
   for(const author of doc.ticker_coverage?.authors||[]){if(author.pending||author.failed)details.append(el('p.small',s('evidence.queue_author',author)));}
   if(doc.missing?.length)details.append(el('p.data-notice',s('evidence.missing')+' '+doc.missing.map(missingLabel).join(' · ')));
   if(doc.omitted)details.append(el('p.data-notice',s('evidence.omitted',{n:doc.omitted})));
-  details.append(el('a.btn.btn-ghost.btn-sm',{href:'#/research/'+doc.ticker},s('evidence.records')));view.append(details,analysisPanel(doc));
+  details.append(el('a.btn.btn-ghost.btn-sm',{href:'#/research/'+doc.ticker},s('evidence.records')));view.append(details);
   return view;
 }
 

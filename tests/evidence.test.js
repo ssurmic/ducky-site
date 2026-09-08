@@ -15,19 +15,49 @@ function fixture(){return {ticker:'AVGO',status:'ready',checked_at:'2026-09-07T1
  nodes:Array.from({length:10},(_,i)=>({id:'n'+i,title:{en:'Point '+i,zh:'观点 '+i},kind:'creator',stance:i===9?'counter':i<5?'support':'context',conditional:i===9,
  published_at:'2026-09-04',evidence:[{id:'e'+i,kind:'creator',author:i===9?'Counter Author':'Source Author',source_url:'https://example.com/source',title:{en:'Source '+i,zh:'来源 '+i},
  start_seconds:70,end_seconds:90,published_at:'2026-09-04',observed_at:'2026-09-07T12:00:00Z'}]})),coverage:{corpus_documents:12,jobs:{pending:2}},missing:['price_gaps']};}
-test('saved analysis expands locally and citations open the exact evidence',()=>{
+test('saved overview is visible on arrival; reasons and exact citations require no network',()=>{
  let calls=0;globalThis.fetch=()=>{calls++;throw Error('must not infer on click');};
  const d=fixture();d.analysis_status='ready';d.analysis_generated_at=d.checked_at;
  d.analysis={overview:d.summary,sections:[{kind:'risks',...d.summary}]};
  const root=analysisPanel(d);document.body.append(root);
- assert.equal(root.querySelector('.evidence-analysis-body').hidden,true);
- root.querySelector('.btn-primary').click();assert.equal(calls,0);
- assert.equal(root.querySelector('.evidence-analysis-body').hidden,false);
+ assert.equal(root.querySelector('.evidence-analysis-overview').textContent,'Orders remain unconfirmed.10');
+ assert.equal(root.querySelector('.evidence-analysis-details').open,false);
+ assert.match(root.querySelector('.evidence-analysis-time').textContent,/2026-09-07 12:00 UTC/);
+ assert.equal(root.querySelector('.btn-primary'),null);
+ root.querySelector('summary').click();assert.equal(calls,0);
+ assert.equal(root.querySelector('.evidence-analysis-details').open,true);
  root.querySelector('.brief-citation').click();assert.match(document.querySelector('.modal-body').textContent,/Counter Author/);
  closeModal();root.remove();
  d.analysis_status='source_changed';d.summary=null;
  assert.ok(!analysisPanel(d).textContent.includes('Orders remain unconfirmed'));
  assert.equal(safeTarget('#/evidence/avgo?source=claim:abc&token=secret'),'#/evidence/AVGO?source=claim%3Aabc');
+});
+test('only one overview appears above the graph, with detailed analysis still available',()=>{
+ const d=fixture();d.analysis_status='ready';d.analysis_generated_at=d.checked_at;
+ d.analysis={overview:{en:'The saved overview.',citations:['n9']},sections:[{kind:'risks',en:'A separately cited risk.',citations:['n9']}]};
+ const root=mapView(d);document.body.append(root);
+ assert.ok(root.firstElementChild.classList.contains('evidence-analysis'));
+ assert.equal(root.querySelectorAll('.evidence-analysis').length,1);
+ assert.ok(!root.textContent.includes('Orders remain unconfirmed.'));
+ assert.match(root.querySelector('details.evidence-analysis-details').textContent,/A separately cited risk/);
+ assert.equal(root.querySelector('.evidence-filters .is-support span').textContent,'Bullish');
+ assert.equal(root.querySelector('.evidence-node.is-counter .evidence-category').textContent,'Bearish');
+ assert.equal(root.querySelector('.evidence-priority'),null);
+ root.dispose();root.remove();
+});
+test('unready snapshots never show an old analysis or invent an update time',()=>{
+ for(const state of ['pending','failed','source_changed','withdrawn','insufficient']){
+  const d=fixture();d.analysis_status=state;d.summary=null;
+  d.analysis={overview:{en:'An invalidated conclusion.'}};d.analysis_generated_at=d.checked_at;
+  const root=analysisPanel(d);
+  assert.ok(!root.textContent.includes('An invalidated conclusion'));
+  assert.equal(root.querySelector('.evidence-analysis-time'),null);
+  assert.equal(root.querySelector('summary'),null);
+  assert.ok(root.querySelector('[role=status]').textContent.length>10);
+ }
+ const d=fixture();d.analysis_status='pending';
+ assert.match(analysisPanel(d).textContent,/Orders remain unconfirmed/);
+ d.analysis_status='source_changed';assert.ok(!analysisPanel(d).textContent.includes('Orders remain unconfirmed'));
 });
 test('six balanced nodes, exact source passage and progressive disclosure',()=>{
  const root=mapView(fixture());document.body.append(root);
