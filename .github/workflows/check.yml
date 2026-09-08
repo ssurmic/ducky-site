@@ -23,6 +23,8 @@ jobs:
         with:
           node-version: 24
       - run: npm ci
+      - name: public close export preserves last-good data
+        run: python3 -m unittest discover -s tests -p 'test_export_desk_prices.py'
       - name: app module release isolation
         run: python3 -m unittest discover -s tests -p 'test_build_assets.py'
       - name: build (zh + en, i18n key parity)

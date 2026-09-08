@@ -1,18 +1,21 @@
 const day=value=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)&&
   Number.isFinite(Date.parse(value))&&new Date(value).toISOString().slice(0,10)===value;
 
-export function quoteModel(doc,ticker) {
+export function quoteModel(doc,ticker,{now=Date.now()}={}) {
   if(doc?.ticker!==ticker||!Array.isArray(doc.bars)||!doc.bars.length)return null;
   // Reject partial/bad sequences instead of drawing over gaps or substituting zero.
   const rows=doc.bars.slice(-30);
-  if(rows.some((r,i)=>!day(r.t)||r.t>new Date().toISOString().slice(0,10)||
+  if(rows.some((r,i)=>!day(r.t)||r.t>new Date(now).toISOString().slice(0,10)||
     !Number.isFinite(r.c)||r.c<=0||(i&&rows[i-1].t>=r.t)))return null;
   const last=rows.at(-1);if(doc.last_d!==last.t)return null;
   const lo=Math.min(...rows.map(r=>r.c)),hi=Math.max(...rows.map(r=>r.c));
   const context=doc.session_context;
-  const checked=Date.parse(context?.checked_at),age=Date.now()-checked;
-  const status=context?.price_session===last.t&&Number.isFinite(age)&&age>=0&&age<30*60*1000?context.status:'unchecked';
-  return {price:last.c.toFixed(2),date:last.t,status,expected:context?.expected_session,
+  const checked=Date.parse(context?.checked_at),age=now-checked;
+  const valid=context?.basis==='completed_regular_session'&&context?.price_session===last.t&&
+    day(context.expected_session)&&Number.isFinite(age)&&age>=-5000&&age<30*60*1000;
+  const status=valid&&context.status==='current'&&context.expected_session===last.t?'current':
+    valid&&context.status==='stale'&&context.expected_session>last.t?'stale':'unchecked';
+  return {price:last.c.toFixed(2),date:last.t,status,checkedAt:context?.checked_at,expected:context?.expected_session,
     points:rows.map((r,i)=>`${(i/(rows.length-1||1)*140).toFixed(1)},${(28-(r.c-lo)/(hi-lo||1)*24).toFixed(1)}`).join(' ')};
 }
 
@@ -52,12 +55,61 @@ export function mountTour(root) {
   return()=>remove.forEach(fn=>fn());
 }
 
+// Refresh only public stored closes. A failed initial request must not freeze an
+// open homepage for the rest of the day; returning online/visible retries it.
+export function mountQuotes(root,{fetcher=fetch,now=Date.now,intervalMs=5*60*1000}={}) {
+  const doc=root.ownerDocument,win=doc.defaultView,cards=[...root.querySelectorAll('[data-quote]')];
+  let saved={};try{saved=JSON.parse(root.querySelector('[data-desk-quotes]')?.textContent||'{}');}catch{}
+  let alive=true,running=false,controller=null,lastAttempt=-Infinity;
+  const formatStamp=value=>{const d=new Date(value);if(!Number.isFinite(d.getTime()))return '';
+    return new Intl.DateTimeFormat(doc.documentElement.lang==='zh-CN'?'zh-CN':'en-US',
+      {timeZone:'America/New_York',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(d)+' ET';};
+  function draw(card,model,{failed=false}={}){
+    if(!model)return;
+    card.querySelector('[data-quote-price]').textContent='$'+model.price;
+    const dateLabel=card.querySelector('[data-quote-date]');
+    dateLabel.textContent=(dateLabel.dataset.close||'{date}').replace('{date}',model.date);
+    const label=card.querySelector('[data-quote-status]');
+    if(label){label.dataset.state=failed?'unavailable':model.status;
+      label.textContent=(label.dataset[failed?'unavailable':model.status==='current'?'current':model.status==='stale'?'stale':'unchecked']||'').replace('{date}',model.expected||'');
+      label.title=model.checkedAt?(label.dataset.checked||'{time}').replace('{time}',formatStamp(model.checkedAt)):'';}
+    card.querySelector('polyline').setAttribute('points',model.points);
+  }
+  const paint=()=>cards.forEach(card=>draw(card,quoteModel(saved[card.dataset.quote],card.dataset.quote,{now:now()})));
+  async function refresh(force=false){
+    if(!alive||running||doc.hidden||(!force&&now()-lastAttempt<60*1000))return;
+    running=true;lastAttempt=now();paint();controller=new AbortController();
+    const timeout=win.setTimeout(()=>controller?.abort(),8000);
+    try{await Promise.allSettled(cards.map(async card=>{
+      const ticker=card.dataset.quote;
+      try{
+        const response=await fetcher(root.dataset.api.replace(/\/$/,'')+'/public/prices/'+encodeURIComponent(ticker)+'.json?limit=30',
+          {credentials:'omit',signal:controller.signal});
+        if(!response.ok)throw new Error('unavailable');
+        const value=await response.json(),model=quoteModel(value,ticker,{now:now()});
+        if(!model)throw new Error('invalid');
+        if(!alive)return;
+        // A late/stale replica cannot replace a newer accepted session.
+        if(saved[ticker]?.last_d>value.last_d)throw new Error('older_session');
+        saved[ticker]=value;draw(card,model);
+      }catch{if(alive)draw(card,quoteModel(saved[ticker],ticker,{now:now()}),{failed:true});}
+    }));}finally{win.clearTimeout(timeout);running=false;controller=null;}
+  }
+  const resume=()=>{if(!doc.hidden)refresh();};
+  const online=()=>refresh(true);
+  const period=win.setInterval(()=>refresh(true),intervalMs);
+  doc.addEventListener('visibilitychange',resume);win.addEventListener('focus',resume);win.addEventListener('online',online);
+  paint();refresh(true);
+  return()=>{alive=false;controller?.abort();win.clearInterval(period);
+    doc.removeEventListener('visibilitychange',resume);win.removeEventListener('focus',resume);win.removeEventListener('online',online);};
+}
+
 export function mountDuck(root,{fetcher=fetch}={}) {
   const duck=root.querySelector('.desk-duck'),anchor=root.querySelector('.duck-anchor');
   const message=root.querySelector('[data-duck-message]'),toggle=root.querySelector('[data-motion-toggle]');
   const sharedToggle=root.closest('[data-home-hero]')?.querySelector('[data-home-motion]');
   const fine=window.matchMedia('(min-width: 761px) and (hover: hover) and (pointer: fine)'),reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
-  const ctl=new AbortController();let alive=true,paused=false,visible=true,frame=0,timer=0;
+  let alive=true,paused=false,visible=true,frame=0,timer=0;
   const reset=()=>{root.style.setProperty('--duck-x','0px');root.style.setProperty('--duck-y','0px');};
   function apply(){
     const enabled=fine.matches&&!reduce.matches;
@@ -83,28 +135,8 @@ export function mountDuck(root,{fetcher=fetch}={}) {
   duck.addEventListener('click',hello);toggle.addEventListener('click',pause);fine.addEventListener('change',apply);reduce.addEventListener('change',apply);
   const observer=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{visible=entries[0]?.isIntersecting!==false;apply();}):null;
   observer?.observe(root);apply();
-  const timeout=setTimeout(()=>ctl.abort(),8000);
-  let saved={};try{saved=JSON.parse(root.querySelector('[data-desk-quotes]')?.textContent||'{}');}catch{}
-  function draw(card,model){
-    if(!model)return;
-    card.querySelector('[data-quote-price]').textContent='$'+model.price;
-    card.querySelector('[data-quote-date]').textContent=model.date;
-    const label=card.querySelector('[data-quote-status]');
-    if(label)label.textContent=(label.dataset[model.status==='current'?'current':model.status==='stale'?'stale':'unchecked']||'').replace('{date}',model.expected||'');
-    card.querySelector('polyline').setAttribute('points',model.points);
-  }
-  // Public daily-price cache only; never request a snapshot build or member research.
-  const jobs=[...root.querySelectorAll('[data-quote]')].map(async card=>{
-    draw(card,quoteModel(saved[card.dataset.quote],card.dataset.quote));
-    try {
-      const ticker=card.dataset.quote,url=root.dataset.api.replace(/\/$/,'')+'/public/prices/'+encodeURIComponent(ticker)+'.json?limit=30';
-      const response=await fetcher(url,{credentials:'omit',signal:ctl.signal});if(!response.ok)return;
-      const model=quoteModel(await response.json(),ticker);if(!alive||!model)return;
-      draw(card,model);
-    }catch{/* The rest of the homepage works without the data origin. */}
-  });
-  Promise.allSettled(jobs).then(()=>clearTimeout(timeout));
-  return()=>{alive=false;ctl.abort();clearTimeout(timeout);clearTimeout(timer);cancelAnimationFrame(frame);observer?.disconnect();
+  const stopQuotes=mountQuotes(root,{fetcher});
+  return()=>{alive=false;stopQuotes();clearTimeout(timer);cancelAnimationFrame(frame);observer?.disconnect();
     sharedToggle?.removeEventListener('click',sharedPause);
     root.removeEventListener('pointermove',move);root.removeEventListener('pointerleave',reset);duck.removeEventListener('focus',reset);
     duck.removeEventListener('click',hello);toggle.removeEventListener('click',pause);fine.removeEventListener('change',apply);reduce.removeEventListener('change',apply);};

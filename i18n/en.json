@@ -3344,12 +3344,12 @@
   "app.evidence.quote_current": "Latest session · {date}",
   "app.evidence.analysis_risks": "Risks & disagreements",
   "app.evidence.linked_missing": "This source is not in the current map yet, or has been withdrawn after a revision.",
-  "desk.quote_current": "Latest completed session",
+  "desk.quote_current": "Verified · latest close",
   "app.evidence.missing_other": "Some evidence has not been acquired",
   "desk.quote_stale": "Awaiting the {date} close",
   "app.evidence.analysis_button": "Reasons & risks",
   "app.radar.guide_index": "Index additions, removals and effective dates.",
-  "desk.quote_unchecked": "Saved close · freshness unverified",
+  "desk.quote_unchecked": "Saved close · checking for updates",
   "app.evidence.analysis_title": "AI perspective",
   "app.radar.guide_news": "Company announcements and news, with sources and publication dates.",
   "app.evidence.analysis_key_points": "Main reasons",
@@ -3451,5 +3451,7 @@
   "app.evidence.analysis_snapshot_source": "This record was used in the analysis generated {at}. The map contains newer data.",
   "app.creators.corrected_excerpt": "Read corrected excerpt",
   "app.creators.caption_term_corrected": "Caption term corrected: {terms}.",
-  "app.creators.original_caption": "View original captions"
+  "app.creators.original_caption": "View original captions",
+  "desk.quote_unavailable": "Update check unavailable · saved close",
+  "desk.quote_checked": "Checked at {time}"
 }

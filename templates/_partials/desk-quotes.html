@@ -6,8 +6,8 @@
    <a class="desk-quote desk-quote-{{ loop.index }}" href="{{ url('/app/') }}#/chart/{{ ticker }}" data-quote="{{ ticker }}">
     <span class="quote-top"><b class="mono">{{ ticker }}</b><span aria-hidden="true">↗</span></span><strong class="quote-price mono" data-quote-price>{{ '$%.2f' % quote.bars[-1].c if quote else '—' }}</strong>
     <svg class="quote-spark" viewBox="0 0 140 32" aria-hidden="true"><polyline points=""/></svg>
-    <small data-quote-date>{{ t('desk.quote_close').replace('{date}',quote.last_d) if quote else t('desk.quote_missing') }}</small>
-    <small data-quote-status data-current="{{ t('desk.quote_current') }}" data-stale="{{ t('desk.quote_stale') }}" data-unchecked="{{ t('desk.quote_unchecked') }}">{{ t('desk.quote_unchecked') }}</small>
+    <small data-quote-date data-close="{{ t('desk.quote_close') }}">{{ t('desk.quote_close').replace('{date}',quote.last_d) if quote else t('desk.quote_missing') }}</small>
+    <small data-quote-status data-unavailable="{{ t('desk.quote_unavailable') }}" data-checked="{{ t('desk.quote_checked') }}" data-current="{{ t('desk.quote_current') }}" data-stale="{{ t('desk.quote_stale') }}" data-unchecked="{{ t('desk.quote_unchecked') }}">{{ t('desk.quote_unchecked') }}</small>
    </a>
    {% endfor %}
    <script type="application/json" data-desk-quotes>{{ desk_quotes|tojson }}</script>

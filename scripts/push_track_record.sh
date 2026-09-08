@@ -21,6 +21,7 @@ KEY="${DUCKY_SITE_DEPLOY_KEY:-$HOME/.ssh/ducky-site-deploy}"
 BRANCH="${DUCKY_SITE_BRANCH:-main}"
 EXPORT="$DUCKY_ROOT/.signals/export"
 FILES=(track-record.json feed.json ideas.json week-ahead.json)
+QUOTE_FAILED=0
 
 log() { printf '%s push_track_record: %s\n' "$(date -u +%FT%TZ)" "$*" >&2; }
 
@@ -78,11 +79,18 @@ PYEOF
   install -m 0644 "$EXPORT/$f" "public/$f"
 done
 
+# Maintain the homepage fallback from the same public stored-close API. Failure
+# retains the last-good file and is reported after the other notary files push.
+if ! "$PY" scripts/export_desk_prices.py --current --output public/desk-prices.json; then
+  log "homepage close refresh failed; retained last-good prices"
+  QUOTE_FAILED=1
+fi
+
 # 3. commit only on diff
-git add -- public/track-record.json public/feed.json public/ideas.json public/week-ahead.json 2>/dev/null || true
+git add -- public/track-record.json public/feed.json public/ideas.json public/week-ahead.json public/desk-prices.json 2>/dev/null || true
 if git diff --cached --quiet; then
   log "no change — nothing to notarize"
-  exit 0
+  exit "$QUOTE_FAILED"
 fi
 GEN="$("$PY" -c 'import json,sys;print(json.load(open(sys.argv[1])).get("generated_at",""))' public/track-record.json)"
 git -c user.name="ducky-notary" -c user.email="notary@duckybot.app" \
@@ -90,3 +98,7 @@ git -c user.name="ducky-notary" -c user.email="notary@duckybot.app" \
   -m "Nightly export from outcomes.py. Append-only; losers included; BACKTEST/LIVE labeled."
 git push --quiet origin "$BRANCH"
 log "pushed $(git rev-parse --short=8 HEAD) to $BRANCH"
+
+# A git notary push does not deploy a Direct Upload Pages project.
+# The release workflow must publish this commit separately.
+exit "$QUOTE_FAILED"

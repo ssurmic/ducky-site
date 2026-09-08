@@ -26,5 +26,5 @@
     "note": "Every Telegram CTA carries an attribution payload: t.me/<bot>?start=src_<slug>. Slugs used on the landing: web, free, signal, pro, cn, dm, feed, band, sticky, nav, footer. /go/<slug> (Pages Function, later pack) 302s to the same URL. When `channel` is null every 'join the free channel' CTA falls back to the bot deep link."
   },
   "og_image": "/og.png",
-  "desk_prices": "public/examples/desk-prices-2026-09-07.json"
+  "desk_prices": "public/desk-prices.json"
 }

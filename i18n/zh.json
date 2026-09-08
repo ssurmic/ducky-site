@@ -3344,12 +3344,12 @@
   "app.evidence.quote_current": "最近交易日 · {date}",
   "app.evidence.analysis_risks": "风险与分歧",
   "app.evidence.linked_missing": "这条来源尚未进入当前导图，或已因修订而撤回。",
-  "desk.quote_current": "最近已完成交易日",
+  "desk.quote_current": "已核对 · 最近收盘",
   "app.evidence.missing_other": "部分资料尚未取得",
   "desk.quote_stale": "等待更新至 {date} 收盘",
   "app.evidence.analysis_button": "看理由与风险",
   "app.radar.guide_index": "指数成分股的纳入、剔除与生效日期。",
-  "desk.quote_unchecked": "已存价格 · 更新状态待核对",
+  "desk.quote_unchecked": "已存收盘 · 正在核对",
   "app.evidence.analysis_title": "AI 观点速读",
   "app.radar.guide_news": "公司公告与新闻，附原文和发布时间。",
   "app.evidence.analysis_key_points": "主要理由",
@@ -3451,5 +3451,7 @@
   "app.evidence.analysis_snapshot_source": "这是 {at} 生成分析时使用的记录。最新资料见导图。",
   "app.creators.corrected_excerpt": "查看校正摘录",
   "app.creators.caption_term_corrected": "字幕术语已校正：{terms}（远期市盈率）。",
-  "app.creators.original_caption": "查看原始字幕"
+  "app.creators.original_caption": "查看原始字幕",
+  "desk.quote_unavailable": "暂时无法核对 · 保留已存收盘",
+  "desk.quote_checked": "核对时间：{time}"
 }
