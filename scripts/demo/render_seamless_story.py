@@ -210,7 +210,7 @@ def canvas(lang,i,fraction):
     elif i==1:
         base,key,local=sequence(base,lang,p,[(0,'creator'),(.33,'source'),(.82,'chart')])
         label=('投资 TALK 君 · 原话 16:13' if lang=='zh' else 'Parkev · Original words at 9:45') if key!='chart' else ('习惯看 K 线？也在这里' if lang=='zh' else 'Prefer charts? They’re here too.')
-        if key=='creator':focus(base,1576,707,local*2)
+        if key=='creator':focus(base,215,780 if lang=='zh' else 692,local*2)
         callout(base,label,lang)
     elif i==2:
         # The actual record stays beside the official filing, preserving actor/date.
@@ -233,16 +233,16 @@ def canvas(lang,i,fraction):
         # The same duck asset and stock chips move into the user's final timeline.
         labels=['NVDA','AVGO','INTC','HOOD','NOK']
         for j,label in enumerate(labels):
-            x=195+j*308+round(90*(1-ease(min(1,p*3)))*(1 if j%2 else -1))
-            y=295+round(18*math.sin(p*3+j))
+            x=195+j*308+round(30*(1-ease(min(1,p*3)))*(1 if j%2 else -1))
+            y=260+round(18*math.sin(p*3+j))
             d.rounded_rectangle((x,y,x+230,y+91),33,fill='#192b2a',outline='#476359',width=2)
             ico=duck.resize((54,54),Image.Resampling.LANCZOS);base.paste(ico,(x+17,y+17),ico)
             text(d,x+89,y+27,label,36,color=GREEN)
-        icon=duck.resize((133,133),Image.Resampling.LANCZOS);base.paste(icon,(893,459),icon)
-        d.rounded_rectangle((698,660,1222,761),30,fill=ORANGE)
-        centered(d,686,'免费关注一只  →' if lang=='zh' else 'Start free  →',44,lang,BG)
-        centered(d,809,'duckybot.app',38,color=MUTED)
-        centered(d,890,'X / Reddit · 接入进行中' if lang=='zh' else 'X / Reddit integrations in progress',30,lang,MUTED)
+        icon=duck.resize((133,133),Image.Resampling.LANCZOS);base.paste(icon,(893,382),icon)
+        d.rounded_rectangle((698,525,1222,626),30,fill=ORANGE)
+        centered(d,551,'免费关注一只  →' if lang=='zh' else 'Start free  →',44,lang,BG)
+        centered(d,785,'duckybot.app',38,color=MUTED)
+        centered(d,840,'X / Reddit · 接入进行中' if lang=='zh' else 'X / Reddit integrations in progress',30,lang,MUTED)
     return base
 
 report = {'version': m['version'], 'capture_provenance': proof, 'videos': {},

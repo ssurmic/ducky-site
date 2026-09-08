@@ -246,7 +246,7 @@
     "zh": {
       "path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/render/ducky-walkthrough-2026-09-08-seamless-story-v2.zh.mp4",
       "seconds": 40.56666666666666,
-      "sha256": "2831ab49790734eb4fc0ae5e7d80ad22821566c7d63be333d66b682544a2378e",
+      "sha256": "2540c79946a316ec4040b5715eb916b1b50e0b773c8cdbd6caecc28c2de2bb61",
       "timeline": [
         {
           "scene": "01-focus",
@@ -485,7 +485,7 @@
     "en": {
       "path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/render/ducky-walkthrough-2026-09-08-seamless-story-v2.en.mp4",
       "seconds": 42.6,
-      "sha256": "ee835725eb3c85034bc9cb20aef5f3e8b85cf8bce6d6b4380744e120940f76f9",
+      "sha256": "cf569606ea583f25dea7bb865e43da99471349a988d296e04a10898e353d844f",
       "timeline": [
         {
           "scene": "01-focus",
