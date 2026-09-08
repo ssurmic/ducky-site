@@ -40,14 +40,23 @@ export function wallPosition(spot,gamma){
   return s('chart.between_walls',{call:num((call/spot-1)*100,1),put:num((1-put/spot)*100,1)});
 }
 export function optionHelp(snap){
+  const topic=(title,...content)=>el('details.chart-help-topic',el('summary',s(title)),content);
+  const source=(key,url)=>el('a',{href:url,target:'_blank',rel:'noopener noreferrer'},s(key)+' ↗');
   modal(s('chart.help_title'),el('div.chart-help',
+    el('p.chart-help-fact.small.muted',optionScope(snap)),
     el('div.chart-help-pair',
       el('section.chart-help-card',el('h3',s('chart.legend_call')),el('p',s('chart.help_call'))),
       el('section.chart-help-card',el('h3',s('chart.legend_put')),el('p',s('chart.help_put')))),
-    el('section.chart-help-section',el('h3',s('chart.help_break_title')),el('p',s('chart.help_break'))),
-    el('section.chart-help-section',el('h3',s('chart.help_scope_title')),el('p.chart-help-fact',optionScope(snap)),el('p',s('chart.help_scope')),el('p.small.muted',s('chart.help_oi'))),
-    el('section.chart-help-section',el('h3',s('chart.help_other_title')),el('p',s('chart.help_other',{expiry:dateLabel(snap?.expected?.expiry)}))),
-    el('a',{href:'https://www.optionseducation.org/referencelibrary/faq/general-information',target:'_blank',rel:'noopener noreferrer'},s('chart.help_source')+' ↗')));
+    el('section.chart-help-section.chart-help-flip',el('h3',s('chart.help_flip_title')),el('p',s('chart.help_flip'))),
+    topic('chart.help_break_title',el('p',s('chart.help_break'))),
+    topic('chart.help_pinning_title',el('p',s('chart.help_pinning'))),
+    topic('chart.help_scope_title',el('p',s('chart.help_scope')),el('p.small.muted',s('chart.help_oi'))),
+    topic('chart.help_other_title',el('p',s('chart.help_other',{expiry:dateLabel(snap?.expected?.expiry)}))),
+    topic('chart.help_sources',el('div.chart-help-sources',
+      source('chart.help_source','https://www.optionseducation.org/referencelibrary/faq/general-information'),
+      source('chart.help_gamma_source','https://www.optionseducation.org/advancedconcepts/gamma'),
+      source('chart.help_break_source','https://www.cmegroup.com/education/courses/technical-analysis/support-and-resistance'),
+      source('chart.help_pinning_source','https://support.spotgamma.com/hc/en-us/articles/15249421888787-Pin-Pinning-Effect-from-Gamma')))));
 }
 export function candleHelp(){
   const example=direction=>el('section.chart-help-card.chart-candle-example',

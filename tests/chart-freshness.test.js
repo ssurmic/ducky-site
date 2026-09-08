@@ -195,6 +195,16 @@ test('reference rail stays outside the plot and follows expiry, theme and respon
   assert.deepEqual(candle.lines.map(l=>l.price),[380,360,350]);
   assert.match(r.querySelector('#chart-legend').textContent,/380.00.*360.00.*350.00/);
   assert.doesNotMatch(r.querySelector('.chart-wall-position').textContent,/above/);
+  const help=r.querySelector('.legend-item button');help.focus();help.click();await flush();
+  const dialog=document.querySelector('[role=dialog]');assert.ok(dialog);
+  assert.match(dialog.textContent,/2026-09-18/);assert.doesNotMatch(dialog.textContent,/2026-09-11/);
+  assert.match(dialog.textContent,/potential resistance|potential support/);
+  assert.match(dialog.textContent,/not a prediction.*reverse/);
+  assert.ok([...dialog.querySelectorAll('details summary')].some(n=>/magnet/.test(n.textContent)));
+  assert.equal(requests,initialRequests,'help is local and uses the selected saved expiry');
+  document.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+  assert.equal(document.querySelector('[role=dialog]'),null);assert.equal(document.activeElement,help);
+
   r.querySelector('[data-chart-control=extras]').click();
   assert.equal(candle.lines.length,7);assert.equal(r.querySelectorAll('.legend-item').length,5);
   assert.ok(candle.lines.every(l=>l.axisLabelVisible===false&&l.title===''));

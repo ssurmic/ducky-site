@@ -101,6 +101,7 @@ export async function mount(root, params) {
   const optionControls=el('div.chart-option-controls');
   const optionNotes=el('div.chart-option-notes');
   const wallNotes=el('div.chart-wall-notes');
+  const showOptionHelp=()=>{if(overlaySnapshot)optionHelp({...overlaySnapshot,gamma:selectedSnapshot(overlaySnapshot,expiry,true).gamma});};
   const compactLayout=window.matchMedia?.('(max-width: 900px)');
   const referenceDetails=el('details.chart-reference-details',{open:!compactLayout?.matches},
     el('summary',s('chart.reference_details')),wallNotes);
@@ -154,7 +155,7 @@ export async function mount(root, params) {
       (overlaySnapshot.gamma?.by_expiry||[]).map(r=>el('option',{value:r.expiry},r.expiry+' · '+expiryKind(r))));
     expirySelect.value=expiry;
     optionControls.append(el('label',el('span.small.muted',s('chart.option_expiry')),expirySelect),
-      el('button.chart-help-button',{type:'button','aria-label':s('chart.help_title'),onclick:()=>optionHelp({...overlaySnapshot,gamma:selected.gamma})},s('chart.guide')),
+      el('button.chart-help-button',{type:'button','aria-label':s('chart.help_title'),'aria-haspopup':'dialog',onclick:showOptionHelp},s('chart.guide')),
       el('label.chart-extra-toggle',el('input',{type:'checkbox','data-chart-control':'extras',checked:extras,onchange:e=>{extras=e.target.checked;paintOverlays();}}),s('chart.extra_lines')),
       el('label.chart-extra-toggle',el('input',{type:'checkbox','data-chart-control':'fit',checked:fitReferences,onchange:e=>{fitReferences=e.target.checked;paintOverlays();chart.applyOptions({rightPriceScale:{autoScale:true}});}}),s('chart.fit_references')));
     for (const it of entries) {
@@ -162,7 +163,9 @@ export async function mount(root, params) {
       const value=range.length===2?el('b.chart-reference-range',el('span',range[0]+'–'),el('span',range[1])):
         el('b',typeof it.value==='number'?num(it.value,2):String(it.value));
       legendRow.appendChild(el('div.legend-item',el('i',{'aria-hidden':'true',style:{background:it.color}}),
-        el('span.chart-reference-label',it.label+' '),value));
+        el('button.chart-reference-label.chart-reference-help',{type:'button',
+          'aria-label':s('chart.level_help',{level:it.label}),'aria-haspopup':'dialog',onclick:showOptionHelp},
+          el('span',it.label),el('span.chart-question',{'aria-hidden':'true'},'?')),value));
     }
     if (!entries.length) overlayStatus.appendChild(el('span.muted.small',s('chart.no_overlays')));
     wallNotes.append(

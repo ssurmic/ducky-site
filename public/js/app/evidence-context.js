@@ -2,6 +2,16 @@ import {el,modal,px,num} from './ui.js';
 import {s} from './strings.js';
 const finite=n=>typeof n==='number'&&Number.isFinite(n);
 const date=v=>typeof v==='string'?v.slice(0,10):'—';
+const savedQuote=q=>q?.data?.basis==='saved_provider_quote_not_live_tick'||/:(RTH|CLOSED)$/.test(q?.data?.price_session||'');
+const hasPrice=q=>finite(q?.data?.price)&&q.data.price>0;
+function priceLabel(doc){
+  const q=doc.market_context?.price,status=doc.price_session_context?.status;
+  if(!hasPrice(q))return 'evidence.quote_missing';
+  if(status==='missing'||status==='invalid')return 'evidence.quote_time_unknown';
+  if(status==='stale')return 'evidence.quote_stale';
+  if(savedQuote(q))return 'evidence.quote_saved';
+  return status==='current'?'evidence.quote_current':'evidence.price_date';
+}
 export function waterLevel(doc){
   const d=doc.market_context?.price_position?.data;
   if(doc.status==='stale'||!d||!finite(d.position)||d.position<0||d.position>1||!finite(d.low)||!finite(d.high)||d.high<=d.low)return null;
@@ -10,9 +20,9 @@ export function waterLevel(doc){
 export function marketDetail(doc){
   const m=doc.market_context||{},quote=m.price,vol=m.volatility?.data||{},band=m.price_position?.data,level=waterLevel(doc);
   modal(s('evidence.market_title'),el('div.evidence-market-detail',
-    el('p.evidence-market-price',finite(quote?.data?.price)?px(quote.data.price):'—'),
-    el('p.small.muted',s('evidence.price_date',{date:date(quote?.data?.price_session)})),
-    el('p.small.muted',s('evidence.quote_note')),
+    el('p.evidence-market-price',hasPrice(quote)?px(quote.data.price):'—'),
+    el('p.small.muted',s(priceLabel(doc),{date:date(quote?.data?.price_session)})),
+    el('p.small.muted',s(savedQuote(quote)?'evidence.saved_quote_note':'evidence.quote_note')),
     el('p.small.muted',s('evidence.observed',{at:quote?.observed_at||'—'})),
     el('h3',s('evidence.water_title')),
     band?el('p',s('evidence.range_values',{low:px(band.low),high:px(band.high)})):null,
@@ -25,9 +35,7 @@ export function marketDetail(doc){
 }
 export function priceBadge(doc){
   const q=doc.market_context?.price;
-  const status=doc.price_session_context?.status;
-  const label=status==='current'?'evidence.quote_current':status==='stale'?'evidence.quote_stale':status==='missing'||status==='invalid'?'evidence.quote_missing':'evidence.price_date';
   return el('button.evidence-price',{type:'button',onclick:()=>marketDetail(doc),'aria-label':s('evidence.market_title')},
-    el('strong.mono',finite(q?.data?.price)?px(q.data.price):'—'),
-    el('span',s(label,{date:date(q?.data?.price_session)})));
+    el('strong.mono',hasPrice(q)?px(q.data.price):'—'),
+    el('span',s(priceLabel(doc),{date:date(q?.data?.price_session)})));
 }

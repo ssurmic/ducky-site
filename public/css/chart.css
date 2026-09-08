@@ -107,6 +107,18 @@
 .chart-main{min-width:0}
 .chart-references{min-width:0;border-left:1px solid var(--border);padding-left:20px}
 .chart-reference-values h2{font-size:11px;color:var(--muted);font-weight:600;margin:2px 0 12px}
+.chart-reference-help{display:flex;align-items:center;justify-content:space-between;gap:4px;min-width:44px;min-height:44px;width:100%;padding:0;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.chart-reference-help>span:first-child{min-width:0;overflow-wrap:anywhere}
+.chart-question{display:inline-grid;place-items:center;flex:0 0 14px;width:14px;height:14px;border:1px solid currentColor;border-radius:50%;font-size:10px;line-height:1}
+.chart-reference-help:hover{color:var(--text)}
+.chart-reference-help:focus-visible,.chart-help-topic>summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.chart-help .chart-help-fact{margin:0 0 16px;font-size:12px;line-height:1.6}
+.chart-help-flip{margin:16px 0;padding:16px 0 0}
+.chart-help-topic{border-top:1px solid var(--border)}
+.chart-help-topic>summary{min-height:44px;align-content:center;cursor:pointer;padding:10px 0;font-size:13px;line-height:1.6;font-weight:600}
+.chart-help .chart-help-topic p{font-size:13px;line-height:1.8;margin:0 0 16px}
+.chart-help-sources{display:grid;padding-bottom:12px}
+.chart-help-sources a{display:flex;align-items:center;min-height:44px;font-size:12px;line-height:1.6}
 .chart-references .legend{display:grid;gap:0;margin:0}
 .chart-references .legend-item{display:grid;grid-template-columns:3px minmax(0,1fr);gap:4px 10px;border-radius:0;background:none;padding:12px 0;border-bottom:1px solid var(--border);white-space:normal;min-width:0}
 .chart-references .legend-item i{grid-row:1/3;width:3px;height:auto;min-height:30px;border-radius:2px}
