@@ -18,6 +18,12 @@ export function material(value,path=''){
   function content(v,depth=0){
     if(Array.isArray(v))return v.map(item=>content(item,depth+1));
     if(!v||typeof v!=='object')return v;
+    if(evidence&&depth===0){
+      // Queued/retrying/building all render the same saved-analysis placeholder.
+      // Only a change in the displayed state constitutes new information.
+      const state=['ready','failed','insufficient','source_changed','withdrawn'].includes(v.analysis_status)?v.analysis_status:'pending';
+      v={...v,analysis_status:state};
+    }
     return Object.fromEntries(Object.keys(v).sort().filter(key=>{
       if(['age_seconds','ttl_seconds','server_time','retry_after'].includes(key))return false;
       if(!evidence)return true;
@@ -25,7 +31,7 @@ export function material(value,path=''){
       // the research being read. Never rely on graph ID alone: read-time source
       // withdrawal can change nodes/analysis without a new stored graph ID.
       if(['checked_at','recorded_at'].includes(key)||key.startsWith('_'))return false;
-      return depth!==0||!['id','coverage','ticker_coverage'].includes(key);
+      return depth!==0||!['id','coverage','ticker_coverage','summary_status'].includes(key);
     }).map(key=>[key,content(v[key],depth+1)]));
   }
   // Keep source publication/observation, revisions, quote session/freshness,
