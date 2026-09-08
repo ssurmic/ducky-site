@@ -3,7 +3,7 @@ import {evidenceLink} from '../evidence-link.js';
 // has Follow toggles (POST/DELETE /kol/{id}/sub); below it, the recent summary feed. The feed is a RECORD of
 // the creator's view (attributed, tickers, bull/bear), never our advice.
 import { s } from "../strings.js";
-import {verifiedSpans,spanSection,legacyCalls,viewpointTake} from '../creator-spans.js';
+import {verifiedSpans,spanSection,legacyCalls,tickerViews} from '../creator-spans.js';
 import * as api from "../api.js";
 import * as store from "../store.js";
 import * as router from "../router.js";
@@ -283,15 +283,22 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       const reviewed = hasReviewedSummary(p);
       const meta = evidenceMeta(p);
       const points=verifiedSpans(p);
-      const stance = viewpointTake(p,focusedPoint);
       const art = el("article.cr-post");
       if(focusedPost)art.classList.add('is-focused-source');
-      const head = el("div.cr-post-head",
-        el("b.cr-who", (p.kol_name || p.kol_id || "")),
-        el("span.cr-take." + TAKE_CLS[stance], grounded||points.some(row=>row.intent!=='mention') ? s("creators.take_" + stance) : s(reviewed ? "creators.summary_ready" : "creators.unverified")));
-      if (grounded && p.tickers && p.tickers.length) head.appendChild(el("span.cr-tks.mono", p.tickers.slice(0, 4).map((t) => "$" + t).join(" · ")));
+      const head = el("div.cr-post-head",el("b.cr-who", (p.kol_name || p.kol_id || "")));
+      const identities=tickerViews(p);
+      const shownTickers=new Set(identities.map(row=>row.ticker));
+      for(const ticker of reviewed?taggedTickers(p):[])if(!shownTickers.has(ticker))identities.push({ticker,stance:'neutral'});
+      const badges=el('div.creator-ticker-views');
+      for(const row of identities){
+        const label='$'+row.ticker+(['bull','bear'].includes(row.stance)?' '+s('creators.take_'+row.stance):row.stance==='mixed'?' '+s('creators.mixed_views'):'');
+        const link=evidenceLink(row.ticker,row.pointId||'');link.textContent=label;
+        link.classList.add('cr-take',TAKE_CLS[row.stance]||'cr-neutral');badges.append(link);
+      }
+      if(identities.length)head.append(badges);
+      else head.append(el('span.cr-take.cr-neutral',s(reviewed?'creators.summary_ready':'creators.unverified')));
       art.appendChild(head);
-      const matched=reviewed?taggedTickers(p).filter(t=>watchedTickers.includes(t)):[];
+      const matched=identities.map(row=>row.ticker).filter(t=>watchedTickers.includes(t));
       if(matched.length)art.append(el('p.creator-watch-match.small',s('creatorstocks.matched')+' ',...matched.flatMap((t,i)=>[i?' · ':'',el('a.mono',{href:'#/chart/'+t},'$'+t)])));
       art.appendChild(el("time.muted.small", { datetime: p.published_at || "" }, s("creators.published") + " " + videoDate(p.published_at,isZh ? "zh-CN" : "en-US")));
       const source=meta.source || {};

@@ -34,7 +34,7 @@ test('unfollowed old source loads by exact index, focuses expanded point, and sc
  store.set('me',{tier:'pro',user_id:1});const calls=[];
  const ready={quality:'no_call',en:'The creator discusses demand.',source:{kind:'transcript',status:'ready',summary_reviewed:true}};
  const recent={id:2,kol_id:'other',kol_name:'Other',platform_post_id:'recent',title:'Recent post',summary:ready,calls:[],tickers:['NVDA']};
- const old={id:1,kol_id:'talk',kol_name:'Talk',platform_post_id:'abcdefghijk',title:'Old source',summary:{...ready,quality:'grounded'},
+ const old={id:1,kol_id:'talk',kol_name:'Talk',platform_post_id:'abcdefghijk',title:'Old source',summary:{...ready,quality:'unverified'},
   calls:[{sym:'AVGO',stance:'bear',evidence:'A legacy draft selected a different statement.',note:{en:'Obsolete duplicated AVGO card'}}],tickers:['AVGO'],
   reviewed_spans:[{basis:'attributed_opinion',intent:'opinion',stance:'support',ticker:'AVGO',point_id:'claim:abc',
    title:{en:'Customer concentration is falling'},evidence:'Broadcom is diversifying its customers.',source_url:'https://www.youtube.com/watch?v=abcdefghijk&t=634',start_seconds:634}]};
@@ -53,6 +53,7 @@ test('unfollowed old source loads by exact index, focuses expanded point, and sc
  assert.ok(focused.closest('.cr-sections'),'exact graph point is inside the single interpretation');
  assert.equal(root.querySelectorAll('.cr-post > .creator-reviewed-spans').length,0);
  assert.ok(focused.querySelector('.cr-take.cr-bull'));
+ assert.match(root.querySelector('.cr-post-head').textContent,/\$AVGO Bullish/,'ticker sentiment survives without a full-video reviewed summary');
  assert.ok(!root.querySelector('.cr-post').textContent.includes('Obsolete duplicated AVGO card'));
  assert.ok(!root.querySelector('.cr-post').textContent.includes('Verified source spans'));
  assert.equal(focused.querySelector('a').href,'https://www.youtube.com/watch?v=abcdefghijk&t=634');

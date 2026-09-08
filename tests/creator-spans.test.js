@@ -6,7 +6,7 @@ const dom=new JSDOM('<html lang="en"><body></body></html>');
 for(const k of ['window','document','Node'])globalThis[k]=dom.window[k];
 const copy=JSON.parse(readFileSync('i18n/en.json')),strings=document.createElement('script');
 strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
-const {spanSection,legacyCalls,viewpointTake}=await import('../public/js/app/creator-spans.js');
+const {spanSection,legacyCalls,viewpointTake,tickerViews}=await import('../public/js/app/creator-spans.js');
 test('verified mentions remain explicit, every passage is reachable and links are constrained',()=>{
  const rows=Array.from({length:9},(_,i)=>({ticker:'AVGO',basis:'verified_mention_no_direction',intent:'mention',published_at:'2026-08-05',start_seconds:1340,title:{en:'Broadcom valuation discussion '+i},source_url:'https://www.youtube.com/watch?v=eMXOSnMyk0o&t=1340'}));
  rows.push({...rows[0],basis:'unreviewed',title:{en:'Must not publish'}});
@@ -23,10 +23,11 @@ test('verified mentions remain explicit, every passage is reachable and links ar
 });
 
 test('one presentation replaces only covered legacy stocks and retains opposing and conditional viewpoints',()=>{
- const post={calls:[{sym:'AVGO',stance:'bear'},{sym:'NVDA',stance:'bull'}],reviewed_spans:[
+ const nvda={sym:'NVDA',stance:'bull',evidence:'The creator gives a supported opinion.'};
+ const post={calls:[{sym:'AVGO',stance:'bear'},nvda],reviewed_spans:[
   {ticker:'AVGO',basis:'attributed_opinion',intent:'opinion',stance:'support',point_id:'one'},
   {ticker:'AVGO',basis:'attributed_opinion',intent:'conditional',stance:'counter',point_id:'two'}]};
- assert.deepEqual(legacyCalls(post),[{sym:'NVDA',stance:'bull'}]);
+ assert.deepEqual(legacyCalls(post),[nvda]);
  assert.equal(viewpointTake(post),'neutral');
  assert.equal(viewpointTake(post,'one'),'bull');
  assert.equal(viewpointTake(post,'two'),'bear');
@@ -34,4 +35,5 @@ test('one presentation replaces only covered legacy stocks and retains opposing 
  assert.equal(section.querySelectorAll('article').length,2);
  assert.equal(section.querySelector('h3'),null);
  assert.ok(section.querySelector('[data-point-id="two"].is-focused.is-counter'));
+ assert.deepEqual(tickerViews(post).map(row=>[row.ticker,row.stance]),[['AVGO','mixed'],['NVDA','bull']]);
 });

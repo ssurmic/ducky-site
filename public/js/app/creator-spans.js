@@ -1,6 +1,7 @@
 import {el} from './ui.js';
 import {evidenceLink} from './evidence-link.js';
 import {s} from './strings.js';
+import {groundedClaim} from './views/creator-claim.js';
 
 export function verifiedSpans(post){
   return (post.reviewed_spans||[]).filter(row=>['attributed_opinion','verified_mention_no_direction'].includes(row.basis));
@@ -9,7 +10,20 @@ export function verifiedSpans(post){
 // viewpoints; the current source projection supersedes legacy calls per ticker.
 export function legacyCalls(post){
   const covered=new Set(verifiedSpans(post).map(row=>row.ticker));
-  return (post.calls||[]).filter(call=>!covered.has(call.sym));
+  return (post.calls||[]).filter(call=>groundedClaim(call)&&!covered.has(call.sym));
+}
+export function tickerViews(post){
+  const byTicker=new Map();
+  const add=(ticker,stance,pointId)=>{
+    if(!/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker||''))return;
+    if(!byTicker.has(ticker))byTicker.set(ticker,{ticker,directions:new Set(),pointId});
+    const value=byTicker.get(ticker);
+    if(['bull','bear'].includes(stance)){value.directions.add(stance);value.pointId=pointId||value.pointId;}
+  };
+  for(const row of verifiedSpans(post))add(row.ticker,{support:'bull',counter:'bear'}[row.stance],row.point_id);
+  for(const row of legacyCalls(post))add(row.sym,row.stance,row.point_id);
+  return [...byTicker.values()].map(({ticker,directions,pointId})=>({ticker,pointId,
+    stance:directions.size===1?[...directions][0]:directions.size>1?'mixed':'neutral'}));
 }
 export function viewpointTake(post,focus=''){
   const rows=verifiedSpans(post),focused=rows.find(row=>row.point_id===focus);

@@ -3302,6 +3302,7 @@
   "app.creators.shared_spans_note": "Open a timestamp to see what the creator said.",
   "app.creators.mention_only": "Mention; no verified direction",
   "app.creators.verified_view": "Verified view",
+  "app.creators.mixed_views": "Mixed views",
   "app.creators.more_spans": "Show {n} more passages",
   "app.chart.expiry_not_collected": "Listed by the provider but not collected in this pass: {dates}.",
   "app.evidence.creator_context": "View creator context",
