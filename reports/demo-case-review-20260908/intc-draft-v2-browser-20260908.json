@@ -1,0 +1,73 @@
+{
+  "checked_at": "2026-09-08T19:26:53.164Z",
+  "nativeCompletePlayback": {
+    "zh": {
+      "seconds": 34.32,
+      "ended": true,
+      "error": null
+    },
+    "en": {
+      "seconds": 31.48,
+      "ended": true,
+      "error": null
+    }
+  },
+  "mainColdChapter": {
+    "en": {
+      "players": [
+        {
+          "error": null,
+          "id": "product-demo-video",
+          "paused": true,
+          "ready": 4,
+          "time": 30.36
+        },
+        {
+          "error": null,
+          "id": "intc-tutorial-video",
+          "paused": true,
+          "ready": 0,
+          "time": 0
+        }
+      ],
+      "status": "At 0:30 · Start your watchlist free. Press Play in the video to watch."
+    },
+    "zh": {
+      "players": [
+        {
+          "error": null,
+          "id": "product-demo-video",
+          "paused": true,
+          "ready": 4,
+          "time": 33.68
+        },
+        {
+          "error": null,
+          "id": "intc-tutorial-video",
+          "paused": true,
+          "ready": 0,
+          "time": 0
+        }
+      ],
+      "status": "已定位 0:33 · 免费添加自选。按播放器的播放键观看。"
+    }
+  },
+  "collapse": {
+    "open": false,
+    "players": [
+      {
+        "error": null,
+        "id": "product-demo-video",
+        "paused": true,
+        "time": 33.68
+      },
+      {
+        "error": null,
+        "id": "intc-tutorial-video",
+        "paused": true,
+        "time": 12.567686
+      }
+    ]
+  },
+  "notes": "Actual IAB playback; no native human speech-quality certification. Caption text rendering checked at 320px; no dropped-frame API was available."
+}

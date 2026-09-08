@@ -17,6 +17,7 @@ P = argparse.ArgumentParser()
 P.add_argument('manifest', type=Path)
 P.add_argument('artifacts', type=Path)
 P.add_argument('--frames-only', action='store_true')
+P.add_argument('--native-captions', action='store_true', help='Make a web edition with separate native captions')
 A = P.parse_args()
 M = json.loads(A.manifest.read_text())
 ROOT = A.artifacts
@@ -108,11 +109,15 @@ cached_frames = {}
 for lang in M['render_languages']:
     for i, scene in enumerate(M['scenes']):
         name = scene['name']
+        editorial = M.get('editorial_overrides',{}).get(name,{}).get(lang,{})
+        labels = editorial.get('labels',LABELS[lang][i])
+        details = editorial.get('details',DETAILS[lang][i])
         base = Image.new('RGB', (W, H), BG)
         draw = ImageDraw.Draw(base)
         base.paste(DUCK.resize((76, 76)), (82, 36), DUCK.resize((76, 76)))
         draw.text((180, 49), 'Ducky', font=font(48, 'en'), fill=FG)
-        draw.text((1550, 65), '实景草稿' if lang == 'zh' else 'Preview cut', font=font(29, lang), fill=MUTED)
+        badge = M.get('review_label',{}).get(lang,'实景草稿' if lang == 'zh' else 'Preview cut')
+        draw.text((1838-font(29,lang).getlength(badge), 65), badge, font=font(29, lang), fill=MUTED)
         draw.line((82, 131, 1838, 131), fill='#23313f', width=2)
         source = None
         if i == 7:
@@ -128,29 +133,44 @@ for lang in M['render_languages']:
             draw.text((805, 840), 'duckybot.app', font=font(43, 'en'), fill=MUTED)
         else:
             draw.text((96, 198), f'{i+1:02d} / 08', font=font(30, 'en'), fill=ACCENT)
-            text_lines(draw, (96, 292), LABELS[lang][i], font(59 if lang=='zh' else 55,lang), gap=23)
-            text_lines(draw, (100, 516), DETAILS[lang][i], font(27 if lang=='en' else 29,lang), MUTED, gap=20)
-            source = ROOT/'captures'/('04-source-ready.zh.png' if i == 3 else name+'.'+lang+'.png')
+            text_lines(draw, (96, 292), labels, font(59 if lang=='zh' else 55,lang), gap=23)
+            text_lines(draw, (100, 516), details, font(27 if lang=='en' else 29,lang), MUTED, gap=20)
+            capture = M.get('capture_files',{}).get(name,{}).get(lang)
+            source = ROOT/'captures'/(capture or ('04-source-ready.zh.png' if i == 3 else name+'.'+lang+'.png'))
             image = Image.open(source).convert('RGB')
-            x, y, width, height = CROPS[name][lang]
+            crop_box = M.get('capture_crops',{}).get(name,{}).get(lang,CROPS[name][lang])
+            x, y, width, height = crop_box
             assert x+width <= image.width and y+height <= image.height
             crop = image.crop((x, y, x+width, y+height))
             crop_path = FRAMES/(name+'.'+lang+'.crop.png')
             crop.save(crop_path)
             card = Image.new('RGB', (1210, 655), '#121a24')
-            fit = ImageOps.contain(crop, (1180, 625), Image.Resampling.LANCZOS)
-            card.paste(fit, ((1210-fit.width)//2, (655-fit.height)//2))
+            quote = M.get('source_quote',{})
+            if quote.get('scene') == name:
+                cd = ImageDraw.Draw(card)
+                header = '原视频字幕摘录 · ' if lang=='zh' else 'Original Chinese captions · '
+                cd.text((44,28),header+quote['timestamp'],font=font(34,lang),fill=ACCENT)
+                text_lines(cd,(44,102),quote['display_lines'],font(67,'zh'),FG,gap=16)
+                if lang=='en':
+                    cd.text((45,284),quote['translation'],font=font(38,'en'),fill=MUTED)
+                cd.line((42,354,1167,354),fill='#344b5d',width=2)
+                cd.text((44,378),'产品中的原文摘录' if lang=='zh' else 'Source excerpt in Ducky',font=font(29,lang),fill=MUTED)
+                fit=ImageOps.contain(crop,(1120,180),Image.Resampling.LANCZOS)
+                card.paste(fit,((1210-fit.width)//2,432))
+            else:
+                fit = ImageOps.contain(crop, (1180, 625), Image.Resampling.LANCZOS)
+                card.paste(fit, ((1210-fit.width)//2, (655-fit.height)//2))
             base.paste(card, (630, 185))
             draw.rounded_rectangle((629,184,1841,841), 18, outline='#364b5c', width=2)
-            if i in (2,3):
-                label = '历史原话 · 8月24日发表 / 9月6日收录' if lang=='zh' else 'Historical source · published Aug 24 / recorded Sep 6'
+            if i in (2,3) or editorial.get('footer'):
+                label = editorial.get('footer') or ('历史原话 · 8月24日发表 / 9月6日收录' if lang=='zh' else 'Historical source · published Aug 24 / recorded Sep 6')
                 draw.text((635, 857), label, font=font(26,lang), fill=MUTED)
             for n in range(8):
                 draw.rounded_rectangle((100+n*50, 815, 132+n*50, 822), 3, fill=ACCENT if n<=i else '#34414f')
         cached_frames[(lang,i)] = base
         base.save(FRAMES/(name+'.'+lang+'.png'))
         records.append({'scene':name,'language':lang,'raw_capture':str(source) if source else None,
-            'raw_sha256':digest(source) if source else None,'crop':CROPS.get(name,{}).get(lang),
+            'raw_sha256':digest(source) if source else None,'crop':crop_box if source else None,
             'frame_sha256':digest(FRAMES/(name+'.'+lang+'.png'))})
 
 # Also retain a larger per-language review sheet.
@@ -166,7 +186,7 @@ if A.frames_only:
 render_report = {'version':M['version'],'kind':'edited_real_UI_capture_review_draft','fps':FPS,'videos':{},
     'not_continuous_screen_recording':True,'dgx_used':False,'notifications_sent':False,
     'audio_processing':'Whole-track two-pass loudnorm -16 LUFS / -2 dBTP; original speech speed and pitch',
-    'caption_processing':'Full sentence cues bounded by original provider first/last word; native track in each language; primary captions burned in',
+    'caption_processing':'Full sentence cues bounded by original provider first/last word; separate native tracks' + ('' if A.native_captions else '; primary captions also burned in'),
     'listening_acceptance':'not certified; review draft'}
 
 def vtt_time(sec):
@@ -177,7 +197,7 @@ for lang in M['render_languages']:
     chunks, timeline, start = [], [], 0.0
     for i, scene in enumerate(M['scenes']):
         stem = scene['name']+'.'+lang
-        source_dir = ROOT/'audio-revision' if (ROOT/'audio-revision'/(stem+'.wav')).exists() else ROOT/'audio'
+        source_dir = next(folder for folder in [ROOT/'audio-v2-alert-refinement',ROOT/'audio-v2-changes',ROOT/'audio-revision',ROOT/'audio'] if (folder/(stem+'.wav')).exists())
         path = source_dir/(stem+'.wav')
         with wave.open(str(path)) as wav:
             assert wav.getnchannels()==1 and wav.getsampwidth()==2 and wav.getframerate()==24000
@@ -206,11 +226,11 @@ for lang in M['render_languages']:
     for subtitle_lang in ['zh','en']:
         cues = ['WEBVTT','']
         for i,row in enumerate(timeline):
-            lines = wrap(M['scenes'][i][subtitle_lang],font(74,subtitle_lang),1720,subtitle_lang)
+            lines = wrap(M['scenes'][i][subtitle_lang],font(M.get('caption_font_size',74),subtitle_lang),1720,subtitle_lang)
             assert len(lines)<=2,(subtitle_lang,i,lines)
             cues += [str(i+1),vtt_time(row['cue_start'])+' --> '+vtt_time(row['cue_end']),*lines,'']
         (OUT/f'ducky-intc-draft.{lang}.{subtitle_lang}.vtt').write_text('\n'.join(cues)+'\n')
-    output = OUT/f'ducky-intc-draft.{lang}.mp4'
+    output = OUT/f'ducky-intc-{"tutorial" if A.native_captions else "draft"}.{lang}.mp4'
     command = ['ffmpeg','-v','error','-y','-f','rawvideo','-pix_fmt','rgb24','-s',f'{W}x{H}',
         '-r',str(FPS),'-i','pipe:0','-i',str(final_audio),'-c:v','libx264','-preset','fast','-crf','20',
         '-threads','2','-pix_fmt','yuv420p','-c:a','aac','-b:a','160k','-ar','48000',
@@ -218,7 +238,7 @@ for lang in M['render_languages']:
     process = subprocess.Popen(command,stdin=subprocess.PIPE,stderr=subprocess.PIPE)
     for i,row in enumerate(timeline):
         base = cached_frames[(lang,i)]
-        f = font(74,lang)
+        f = font(M.get('caption_font_size',74),lang)
         lines = wrap(M['scenes'][i][lang],f,1740,lang)
         assert len(lines)<=2
         for frame_i in range(round(row['seconds']*FPS)):
@@ -232,11 +252,14 @@ for lang in M['render_languages']:
                 px,py=(panel.width-1210)//2,(panel.height-655)//2
                 frame.paste(panel.crop((px,py,px+1210,py+655)),(630,185))
             d = ImageDraw.Draw(frame)
-            if row['cue_start']-row['start']<=t<=row['cue_end']-row['start']:
+            if not A.native_captions and row['cue_start']-row['start']<=t<=row['cue_end']-row['start']:
                 d.rectangle((0,910,W,H),fill=BG)
+                bounds=[f.getbbox(line) for line in lines]
+                total_height=sum(b[3]-b[1] for b in bounds)+10*(len(lines)-1)
+                y=910+(H-910-total_height)//2
                 for n,line in enumerate(lines):
-                    y=920+n*80 if len(lines)==2 else 950
-                    d.text(((W-f.getlength(line))/2,y),line,font=f,fill=FG)
+                    d.text(((W-f.getlength(line))/2,y-bounds[n][1]),line,font=f,fill=FG)
+                    y+=bounds[n][3]-bounds[n][1]+10
             process.stdin.write(frame.tobytes())
         print(lang,row['scene'],row['seconds'],flush=True)
     process.stdin.close()
@@ -244,4 +267,4 @@ for lang in M['render_languages']:
     assert process.wait()==0,error
     render_report['videos'][lang]={'path':str(output),'seconds_without_aac_padding':start,
         'sha256':digest(output),'timeline':timeline,'loudness_input':loud}
-    (OUT/'render-report.json').write_text(json.dumps(render_report,ensure_ascii=False,indent=2)+'\n')
+    (OUT/('native-render-report.json' if A.native_captions else 'render-report.json')).write_text(json.dumps(render_report,ensure_ascii=False,indent=2)+'\n')
