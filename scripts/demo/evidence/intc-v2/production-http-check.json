@@ -1,0 +1,74 @@
+{
+  "checked_at": "2026-09-08T19:33:32.773519+00:00",
+  "commit": "5ebff4521d26737b6b50f331e8836793fc1989ea",
+  "deployment": "https://6729ae40.ducky-site.pages.dev",
+  "pages": {
+    "zh": {
+      "status": 200,
+      "release": "5ebff452",
+      "main_v9": true,
+      "supplement_v2": true,
+      "main_chapters": 8,
+      "function_links": 7
+    },
+    "en": {
+      "status": 200,
+      "release": "5ebff452",
+      "main_v9": true,
+      "supplement_v2": true,
+      "main_chapters": 8,
+      "function_links": 7
+    }
+  },
+  "assets": {
+    "ducky-intc-tutorial-2026-09-08-v2.en.en.vtt": {
+      "status": 200,
+      "bytes": 1702,
+      "sha256": "855936fa5e0c38457dec758ce0327eb55e1453d62dfe5b4ab4047efdfcde35e6",
+      "content_type": "text/vtt; charset=utf-8"
+    },
+    "ducky-intc-tutorial-2026-09-08-v2.en.jpg": {
+      "status": 200,
+      "bytes": 160415,
+      "sha256": "3a6272f4e7c407a49da77d3432f07191480c29217b52da8836c4b34c9d344d44",
+      "content_type": "image/jpeg"
+    },
+    "ducky-intc-tutorial-2026-09-08-v2.en.mp4": {
+      "status": 200,
+      "bytes": 2102608,
+      "sha256": "09c0cb8e96378d83b4ab98e31737a0505ea55060a0e5e394a94a4a9d2df31e48",
+      "content_type": "video/mp4"
+    },
+    "ducky-intc-tutorial-2026-09-08-v2.en.zh.vtt": {
+      "status": 200,
+      "bytes": 1720,
+      "sha256": "8cedf398505e86b5a40b2df6bdf9f58f6a6e58ef841192dc2cfff6777987af43",
+      "content_type": "text/vtt; charset=utf-8"
+    },
+    "ducky-intc-tutorial-2026-09-08-v2.zh.en.vtt": {
+      "status": 200,
+      "bytes": 1702,
+      "sha256": "0a83083317265c1b00568eca3b4538c3c8dc98353b33f04193acbbfd9e5bea73",
+      "content_type": "text/vtt; charset=utf-8"
+    },
+    "ducky-intc-tutorial-2026-09-08-v2.zh.jpg": {
+      "status": 200,
+      "bytes": 145577,
+      "sha256": "e695034c13d2043f2661c2d957231e8a3fd26e10b88aa877d29ad6c2084bc7f8",
+      "content_type": "image/jpeg"
+    },
+    "ducky-intc-tutorial-2026-09-08-v2.zh.mp4": {
+      "status": 200,
+      "bytes": 2047848,
+      "sha256": "740906f749999d0f4797e9f00dc4c53b158ba7188638020c6f0dd892009d87c8",
+      "content_type": "video/mp4"
+    },
+    "ducky-intc-tutorial-2026-09-08-v2.zh.zh.vtt": {
+      "status": 200,
+      "bytes": 1720,
+      "sha256": "ca9231465247948af11008d4d0179d76fbc07f3f0d2f07bf9458834e778734ed",
+      "content_type": "text/vtt; charset=utf-8"
+    }
+  },
+  "passed": true
+}
