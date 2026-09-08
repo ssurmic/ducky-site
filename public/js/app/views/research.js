@@ -1,3 +1,4 @@
+import {evidenceLink} from '../evidence-link.js';
 // Shared event comparisons; current research is gated by the API, not CSS.
 import { s } from '../strings.js';
 import * as api from '../api.js';
@@ -38,7 +39,7 @@ export async function mount(root, params = {}) {
       card.appendChild(grid);
       card.append(el('p',s('research.raw_change')+' '+pct(report.raw_price_change_pct)),el('p.data-notice',s('research.basis')),
         el('p',pick(report.explanation)),el('p.muted.small',s('research.updated')+' '+String(result.built_at||'').replace('T',' ').slice(0,16)+' UTC'));
-      const actions=el('div.snap-actions',el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+e.ticker},s('watch.chart')),el('a.btn.btn-ghost.btn-sm',{href:'#/alerts?ticker='+e.ticker},s('watch.set_alert')));
+      const actions=el('div.snap-actions',evidenceLink(e.ticker,e.id),el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+e.ticker},s('watch.chart')),el('a.btn.btn-ghost.btn-sm',{href:'#/alerts?ticker='+e.ticker},s('watch.set_alert')));
       // The catalog contains reviewed issuer URLs. Preserve the original-source link.
       if(/^https:\/\//.test(e.source_url))actions.appendChild(el('a.btn.btn-ghost.btn-sm',{href:e.source_url,target:'_blank',rel:'noopener'},s('research.source')));
       card.appendChild(actions);host.appendChild(card);

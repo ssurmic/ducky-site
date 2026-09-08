@@ -16,7 +16,9 @@
 .quote-spark{height:23px;width:100%;min-width:0;grid-column:1/-1}.quote-spark polyline{fill:none;stroke:var(--accent-text);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .desk-quote small{font-size:.625rem;color:var(--muted);grid-column:1/-1}
 .desk-quote:hover{border-color:var(--accent)}.desk-quote:focus-visible{outline:2px solid var(--accent);outline-offset:4px;animation-play-state:paused}
-.orbit-controls{position:absolute;left:300px;bottom:18px;color:var(--muted);font-size:.625rem}
+.home-quote-strip .orbit-controls{position:static;grid-column:1/-1;color:var(--muted);font-size:.625rem}
+.orbit-controls p{font-size:.6875rem;line-height:1.6;margin:4px 0 0}
+.desk-quote small{display:block;line-height:1.5}
 .motion-toggle{border:0;background:none;color:var(--muted);font:inherit;cursor:pointer;min-height:32px}
 @keyframes desk-float{0%,100%{transform:translateY(0) rotate(var(--tilt))}50%{transform:translateY(-5px) rotate(var(--tilt))}}
 .motion-paused .desk-quote{animation-play-state:paused}.motion-paused .desk-duck img{transition:none}

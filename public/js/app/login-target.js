@@ -2,6 +2,7 @@
 // Only a canonical app route and allowlisted public creator choices are stored.
 // Never store arbitrary queries, credentials or private draft data.
 import { creatorRoute, creatorTarget } from './creator-route.js';
+import { evidenceHref } from './evidence-route.js';
 const KEY = "ducky.login-target";
 const MAX_AGE = 20 * 60 * 1000;
 const SIMPLE = new Set(["watchlist", "alerts", "billing", "profile", "creators", "calendar", "boards", "opportunities", "degen", "vibe", "ducky", "market", "macro", "screens"]);
@@ -9,6 +10,7 @@ const SIMPLE = new Set(["watchlist", "alerts", "billing", "profile", "creators",
 export function safeTarget(hash) {
   if (typeof hash !== "string" || hash.length > 2048) return null;
   const path = hash.split("?")[0];
+  if(path==="#/ducky")return "#/evidence";
   if (path === '#/updates') {
     const q = new URLSearchParams(hash.split('?')[1] || ''), target = new URLSearchParams();
     const ticker = (q.get('ticker') || '').toUpperCase(), item = q.get('item') || '';
@@ -55,6 +57,7 @@ export function safeTarget(hash) {
   }
   if (SIMPLE.has(path.slice(2)) && path.startsWith("#/")) return path;
   const match = /^#\/(chart|research|evidence)(?:\/([A-Za-z0-9][A-Za-z0-9.-]{0,14}))?$/.exec(path);
+  if(match?.[1]==='evidence'&&match[2])return evidenceHref(match[2],new URLSearchParams(hash.split('?')[1]||'').get('source'));
   return match ? `#/${match[1]}${match[2] ? "/" + match[2].toUpperCase() : ""}` : null;
 }
 

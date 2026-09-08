@@ -10,6 +10,12 @@ for(const lang of ['zh','en'])test(`${lang}: generated app ships every translati
  const table=JSON.parse(readFileSync(`i18n/${lang}.json`));
  const dom=new JSDOM(readFileSync(`dist/${lang==='en'?'en/':''}app/index.html`,'utf8'));
  const embedded=JSON.parse(dom.window.document.querySelector('#ducky-strings').textContent);
+ const navigation=JSON.parse(readFileSync('product-navigation.json'));
+ for(const {key} of navigation.radar){
+  for(const prefix of key==='all'?['radar.guide_']:['radar.guide_','boards.t_'])assert.ok(embedded[prefix+key],`catalogue translation missing: ${prefix+key}`);
+ }
+ for(const route of [...navigation.primary,...navigation.discovery,...navigation.research,...navigation.account])assert.ok(embedded['nav.'+route],route);
+ assert.equal(dom.window.document.querySelector('[data-route="ducky"]'),null);
  assert.deepEqual(embedded,Object.fromEntries(Object.entries(table).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));
  for(const k of ['creatorflow.browse_title','creatorflow.browse_hint','creatorflow.topic_ai','creatorflow.topic_portfolio','creatorflow.topic_macro','creatorflow.topic_basics','creatorflow.input_hint','alertdraft.title','alertdraft.prompt','alertdraft.review','chart.pick','chart.period_6mo']) {
   assert.ok(embedded[k]&&embedded[k]!==k,`${k} is readable in the built page`);

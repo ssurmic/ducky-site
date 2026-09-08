@@ -7,7 +7,7 @@ for(const key of ['window','document','Node','location','history'])globalThis[ke
 const copy=JSON.parse(readFileSync('i18n/en.json'));
 const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
 const store=await import('../public/js/app/store.js');
-const {mount,mapView,connectMap}=await import('../public/js/app/views/evidence.js');
+const {mount,mapView,connectMap,analysisPanel}=await import('../public/js/app/views/evidence.js');
 const {safeTarget}=await import('../public/js/app/login-target.js');
 const {closeModal}=await import('../public/js/app/ui.js');
 const response=(d,status=200)=>new Response(JSON.stringify(d),{status,headers:{'content-type':'application/json'}});
@@ -15,6 +15,20 @@ function fixture(){return {ticker:'AVGO',status:'ready',checked_at:'2026-09-07T1
  nodes:Array.from({length:10},(_,i)=>({id:'n'+i,title:{en:'Point '+i,zh:'观点 '+i},kind:'creator',stance:i===9?'counter':i<5?'support':'context',conditional:i===9,
  published_at:'2026-09-04',evidence:[{id:'e'+i,kind:'creator',author:i===9?'Counter Author':'Source Author',source_url:'https://example.com/source',title:{en:'Source '+i,zh:'来源 '+i},
  start_seconds:70,end_seconds:90,published_at:'2026-09-04',observed_at:'2026-09-07T12:00:00Z'}]})),coverage:{corpus_documents:12,jobs:{pending:2}},missing:['price_gaps']};}
+test('saved analysis expands locally and citations open the exact evidence',()=>{
+ let calls=0;globalThis.fetch=()=>{calls++;throw Error('must not infer on click');};
+ const d=fixture();d.analysis_status='ready';d.analysis_generated_at=d.checked_at;
+ d.analysis={overview:d.summary,sections:[{kind:'risks',...d.summary}]};
+ const root=analysisPanel(d);document.body.append(root);
+ assert.equal(root.querySelector('.evidence-analysis-body').hidden,true);
+ root.querySelector('.btn-primary').click();assert.equal(calls,0);
+ assert.equal(root.querySelector('.evidence-analysis-body').hidden,false);
+ root.querySelector('.brief-citation').click();assert.match(document.querySelector('.modal-body').textContent,/Counter Author/);
+ closeModal();root.remove();
+ d.analysis_status='source_changed';d.summary=null;
+ assert.ok(!analysisPanel(d).textContent.includes('Orders remain unconfirmed'));
+ assert.equal(safeTarget('#/evidence/avgo?source=claim:abc&token=secret'),'#/evidence/AVGO?source=claim%3Aabc');
+});
 test('six balanced nodes, exact source passage and progressive disclosure',()=>{
  const root=mapView(fixture());document.body.append(root);
  assert.equal(root.querySelectorAll('.evidence-node').length,6);

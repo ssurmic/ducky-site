@@ -13,7 +13,7 @@ const row={id:'research:1',ticker:'NVDA',stream:'vibe',observed_at:'2026-09-07T0
 const response=body=>new Response(JSON.stringify(body),{status:200,headers:{'content-type':'application/json'}});
 test('records retain actual zero, missing scores, full dates and safe links',()=>{
  const card=recordCard(row);assert.match(card.textContent,/0/);assert.match(card.textContent,/—/);assert.match(card.textContent,/Not provided/);
- assert.equal(card.querySelector('a'),null);assert.match(card.textContent,/captured discussion volume, not bullish or bearish/);
+ assert.equal(card.querySelector('a[href^="javascript:"]'),null);assert.ok(card.querySelector('a[href="#/evidence/NVDA"]'));assert.match(card.textContent,/captured discussion volume, not bullish or bearish/);
  assert.match(recordCard({...row,payload:{index:42.5,mentions:30}}).textContent,/42.5 \/ 100/);
  const doc=renderRecord({ticker:'NVDA',items:[row],streams:[]});assert.equal(doc.querySelectorAll('.research-stream').length,8);
  assert.ok([...doc.getElementsByTagName('a')].some(a=>a.getAttribute('href')==='#/boards?board=social&ticker=NVDA'));

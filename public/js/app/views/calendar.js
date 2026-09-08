@@ -1,3 +1,4 @@
+import {evidenceLink} from '../evidence-link.js';
 import { eventResearchSession, eventHint, safeSource } from "../calendar-event.js";
 import {sourceDay, effectiveTiming} from '../source-event.js';
 import {calendarTicker, calendarEventTicker, orderCalendarEvents, calendarDayPreview} from '../calendar-model.js';
@@ -383,7 +384,7 @@ export async function mount(root) {
         const main = el("div.cal-main");
         main.appendChild(el("span.cal-kind-label", categoryLabel(e)));
         const title = el("div.cal-title", isZh ? (e.title || "") : (e.title_en || e.title || ""));
-        for (const t of (e.tickers || [])) title.appendChild(el("a.cal-tk.mono" + (watchSet.has(String(t).toUpperCase()) ? ".on" : ""), { href: "#/chart/" + encodeURIComponent(t) }, "$" + t));
+        for (const t of (e.tickers || [])) title.append(evidenceLink(t),el("a.cal-tk.mono" + (watchSet.has(String(t).toUpperCase()) ? ".on" : ""), { href: "#/chart/" + encodeURIComponent(t) }, "$" + t));
         if (isMine) title.appendChild(el("span.cal-mine-badge", s("calendar.mine_badge")));
         main.appendChild(title);
         if(e.type==='index_change')main.append(el('p.cal-note',s('event.effective_date')+' · '+effectiveTiming(e)));

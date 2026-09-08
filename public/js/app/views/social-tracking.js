@@ -1,3 +1,4 @@
+import {evidenceLink} from '../evidence-link.js';
 import { el, clear, num, pct } from '../ui.js';
 import { s } from '../strings.js';
 import * as api from '../api.js';
@@ -40,7 +41,7 @@ export function socialCard(row,{stale=false,onHistory}={}) {
     el('p.small',s('social.record_id')),el('code.social-record-id',row.id),
     el('p.small.muted',s('social.collected',{date:dateTime(row.collected_at)})),
     el('p.small.muted',s('social.post_id_missing')),el('p.small.muted',s('social.identity')),
-    el('div.social-links',source(row.source_url,'social.source'),el('a',{href:'#/chart/'+encodeURIComponent(row.ticker)},s('radar.chart')+' ↗')));
+    el('div.social-links',evidenceLink(row.ticker,row.id),source(row.source_url,'social.source'),el('a',{href:'#/chart/'+encodeURIComponent(row.ticker)},s('radar.chart')+' ↗')));
   if(onHistory) {
     const host=el('div.social-history');
     const button=el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>onHistory(row.ticker,host,button)},s('social.history'));

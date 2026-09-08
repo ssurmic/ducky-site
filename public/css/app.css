@@ -1410,3 +1410,9 @@ html[data-theme=dark] .evidence-view,html[data-theme=dark] .evidence-detail{--ev
 .creator-reviewed-spans article.is-counter{border-left:3px solid var(--red)}
 .creator-reviewed-spans blockquote{margin:12px 0;padding-left:12px;border-left:2px solid var(--border);overflow-wrap:anywhere}
 .cr-post.is-focused-source{scroll-margin-top:90px}
+
+/* Saved analysis is a local disclosure; citations use the existing source dialog. */
+.evidence-analysis{margin-top:20px;max-width:100%;overflow-wrap:anywhere}
+.evidence-analysis-body{max-width:78ch;margin-top:20px}
+.evidence-analysis-body h2{font-size:1.25rem}.evidence-analysis-body h3{font-size:1rem;margin:22px 0 8px}
+.evidence-analysis-body p{line-height:1.75}.evidence-analysis .btn{min-height:44px}

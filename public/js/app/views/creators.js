@@ -1,3 +1,4 @@
+import {evidenceLink} from '../evidence-link.js';
 // views/creators.js — 财经博主: follow finance creators; Ducky summarises each new video. The creator grid
 // has Follow toggles (POST/DELETE /kol/{id}/sub); below it, the recent summary feed. The feed is a RECORD of
 // the creator's view (attributed, tickers, bull/bear), never our advice.
@@ -88,7 +89,7 @@ function callChips(calls, isZh, url,kolId) {
     chip.appendChild(el("details.cr-evidence", el("summary", s("creators.evidence")), c.evidence?el("blockquote", c.evidence):el('p.small.muted',s('creatorclaim.source_link'))));
     const sourceSeconds=c.action_start_seconds??c.start_seconds;
     if (safeSource(url) && Number.isFinite(sourceSeconds)) chip.appendChild(el("a", {href:atTime(url,sourceSeconds),target:"_blank",rel:"noopener noreferrer"}, `${Math.floor(sourceSeconds/60)}:${String(Math.floor(sourceSeconds)%60).padStart(2,"0")} ↗`));
-    chip.append(el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+encodeURIComponent(c.sym)},s('creators.chart')));
+    chip.append(evidenceLink(c.sym,c.point_id||c.claim_id),el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+encodeURIComponent(c.sym)},s('creators.chart')));
     chip.append(el('a.btn.btn-ghost.btn-sm',{href:creatorTarget({tab:'research',selected:kolId,ticker:c.sym,mine:false})},s('creatorclaim.price_title')));
     wrap.appendChild(chip);
   }

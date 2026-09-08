@@ -1,41 +1,145 @@
 {
-  "primary": ["watchlist", "evidence", "briefing", "chart", "calendar", "alerts", "creators"],
-  "discovery": ["opportunities", "vibe", "ducky"],
-  "radar": [
-    {"key": "all", "icon": "boards"},
-    {"key": "insider", "icon": "insider"},
-    {"key": "partner", "icon": "partner"},
-    {"key": "political", "icon": "insider"},
-    {"key": "earnings", "icon": "earnings"},
-    {"key": "index", "icon": "calendar"},
-    {"key": "news", "icon": "digest"},
-    {"key": "liquidity", "icon": "liquidity"},
-    {"key": "volscan", "icon": "volscan"},
-    {"key": "hiring", "icon": "hiring"},
-    {"key": "industry", "icon": "partner"},
-    {"key": "digest", "icon": "digest"}
+  "primary": [
+    "watchlist",
+    "evidence",
+    "briefing",
+    "chart",
+    "calendar",
+    "alerts",
+    "creators"
   ],
-  "research": ["market", "macro", "screens"],
-  "account": ["profile", "billing"],
+  "discovery": [
+    "opportunities",
+    "vibe"
+  ],
+  "radar": [
+    {
+      "key": "all",
+      "icon": "boards"
+    },
+    {
+      "key": "insider",
+      "icon": "insider"
+    },
+    {
+      "key": "partner",
+      "icon": "partner"
+    },
+    {
+      "key": "political",
+      "icon": "insider"
+    },
+    {
+      "key": "earnings",
+      "icon": "earnings"
+    },
+    {
+      "key": "index",
+      "icon": "calendar"
+    },
+    {
+      "key": "news",
+      "icon": "digest"
+    },
+    {
+      "key": "liquidity",
+      "icon": "liquidity"
+    },
+    {
+      "key": "volscan",
+      "icon": "volscan"
+    },
+    {
+      "key": "hiring",
+      "icon": "hiring"
+    },
+    {
+      "key": "industry",
+      "icon": "partner"
+    },
+    {
+      "key": "digest",
+      "icon": "digest"
+    }
+  ],
+  "research": [
+    "market",
+    "macro",
+    "screens"
+  ],
+  "account": [
+    "profile",
+    "billing"
+  ],
   "public_groups": [
-    {"key": "follow", "routes": ["watchlist", "chart", "calendar", "alerts"]},
-    {"key": "discover", "routes": ["boards", "opportunities", "screens", "market"]},
-    {"key": "research", "routes": ["briefing", "evidence", "creators", "vibe", "macro", "ducky"]}
+    {
+      "key": "follow",
+      "routes": [
+        "watchlist",
+        "chart",
+        "calendar",
+        "alerts"
+      ]
+    },
+    {
+      "key": "discover",
+      "routes": [
+        "boards",
+        "opportunities",
+        "screens",
+        "market"
+      ]
+    },
+    {
+      "key": "research",
+      "routes": [
+        "briefing",
+        "evidence",
+        "creators",
+        "vibe",
+        "macro"
+      ]
+    }
   ],
   "catalog": {
-    "watchlist": {"access": "free"},
-    "chart": {"access": "mixed"},
-    "calendar": {"access": "mixed"},
-    "alerts": {"access": "mixed"},
-    "boards": {"access": "mixed"},
-    "opportunities": {"access": "pro"},
-    "screens": {"access": "pro"},
-    "market": {"access": "mixed"},
-    "briefing": {"access": "pro"},
-    "evidence": {"access": "pro"},
-    "creators": {"access": "pro"},
-    "vibe": {"access": "pro"},
-    "macro": {"access": "pro"},
-    "ducky": {"access": "free"}
+    "watchlist": {
+      "access": "free"
+    },
+    "chart": {
+      "access": "mixed"
+    },
+    "calendar": {
+      "access": "mixed"
+    },
+    "alerts": {
+      "access": "mixed"
+    },
+    "boards": {
+      "access": "mixed"
+    },
+    "opportunities": {
+      "access": "pro"
+    },
+    "screens": {
+      "access": "pro"
+    },
+    "market": {
+      "access": "mixed"
+    },
+    "briefing": {
+      "access": "pro"
+    },
+    "evidence": {
+      "access": "pro"
+    },
+    "creators": {
+      "access": "pro"
+    },
+    "vibe": {
+      "access": "pro"
+    },
+    "macro": {
+      "access": "pro"
+    }
   }
 }

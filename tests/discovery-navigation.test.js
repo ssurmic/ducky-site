@@ -12,15 +12,15 @@ const {safeTarget}=await import('../public/js/app/login-target.js');
 const {selectNavigation}=await import('../public/js/app/navigation.js');
 const {parse}=await import('../public/js/app/router.js');
 const opportunities=await import('../public/js/app/views/opportunities.js');
-const {realEntries}=await import('../public/js/app/views/ducky.js');
 const {quoteModel,mountTour,mountDuck}=await import('../public/js/desk.js');
 const response=body=>new Response(JSON.stringify(body),{headers:{'content-type':'application/json'}});
 const flush=async()=>{for(let i=0;i<5;i++)await new Promise(r=>setTimeout(r,0));};
 
 test('new destinations survive sign-in and radar links select one matching category',()=>{
- for(const name of ['opportunities','degen','vibe','ducky','market','macro','screens']){
+ for(const name of ['opportunities','degen','vibe','market','macro','screens']){
   assert.equal(parse('#/'+name).name,name);assert.equal(safeTarget('#/'+name),'#/'+name);
  }
+ assert.equal(parse('#/ducky').name,'evidence');assert.equal(safeTarget('#/ducky'),'#/evidence');
  assert.equal(safeTarget('#/boards?board=insider&token=secret'),'#/boards?board=insider');
  const shell=new JSDOM(readFileSync('dist/app/index.html','utf8')).window.document;
  const nav=document.importNode(shell.querySelector('.app-nav'),true);document.body.append(nav);
@@ -61,11 +61,6 @@ test('a late discovery result cannot populate a new session',async()=>{
  const root=document.createElement('div'),pending=opportunities.mount(root);await flush();
  store.bumpEpoch();resolve(response({status:'ready',items:[{ticker:'PRIVATE'}]}));const cleanup=await pending;
  assert.ok(!root.textContent.includes('PRIVATE'));cleanup();
-});
-test('paper, watch-only and missing-book records never become Ducky real-money buys',()=>{
- const rows=[{book:'paper',status:'opened'},{book:'live',status:'watching'},{status:'opened'},
-  {book:'live',status:'closed',entry_px:10,exit_px:7},{book:'live',status:'opened',entry_px:null}];
- assert.deepEqual(realEntries(rows),rows.slice(3));
 });
 test('price decoration rejects malformed, mismatched and missing quotes without fabricating zeros',()=>{
  const doc={ticker:'AAA',last_d:'2026-09-04',bars:[{t:'2026-09-03',c:10},{t:'2026-09-04',c:9}]};
