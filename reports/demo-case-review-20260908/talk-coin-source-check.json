@@ -21,7 +21,7 @@
   "claim_scope": "Creator thesis; not an independently confirmed adoption event, trade or Ducky notification.",
   "explicit_condition_text": null,
   "explicit_time_horizon": null,
-  "producer_horizon_issue": "The stored horizon describes why traditional payment rails are unsuitable; it is a rationale, not a time horizon. Needs semantic correction before recording expanded details.",
+  "producer_horizon_issue": "Resolved in the current shared reader: horizon is null, the payment-rails rationale remains a reason, and the original erroneous field stays in the audit archive.",
   "source_gate": "Owner reports valid in a bounded read of 17 pre-August-11 directional points; no return-based filter was used for that query. Other sampled identities failed, so this case was independently checked.",
   "selected_before_price_fetch": true,
   "historical_replay": true,
@@ -29,12 +29,22 @@
   "ready_for_recording": false,
   "price_window_file": "coin-20260808-price-window-20260908.json",
   "remaining": [
-    "Correct the misclassified horizon through its producer and verify all views",
     "Verify exact map → creator → original navigation for this candidate on the final release",
     "Match the recorded product chart to the complete saved price window and date basis",
     "Await a current reviewed AI overview and the designated-receiver delivery acceptance"
   ],
   "observed_at": "2026-09-07T08:30:47.623759Z",
   "first_observed_at": null,
-  "observation_scope": "Source observation time supplied by the producer; earliest system discovery and historical delivery are not verified."
+  "observation_scope": "Source observation time supplied by the producer; earliest system discovery and historical delivery are not verified.",
+  "qualification_fix_acceptance": {
+    "runtime_reported": "5c93d19",
+    "source_owner_reports_live": true,
+    "independently_inspected": "Owner-provided production phone screenshot; current creator reader applies creator_qualifiers.horizon",
+    "screenshot": "/tmp/ducky-evidence-validation-20260907/final-coin-source-390.png",
+    "point_id_unchanged": true,
+    "stance_unchanged": "support",
+    "source_link_label": "24:22",
+    "inline_excerpt_visible": false,
+    "recording_action": "Focus the single interpretation point, read the attributed reason, then open the original-video timestamp. Do not invent an inline quotation."
+  }
 }
