@@ -71,9 +71,24 @@ No payments, account edits, real alerts or notifications were submitted.
 
 ## Validation and release
 
-Pending final release record below. Frontend unit suite before the touch fix: 359
-passed. Touch-specific regression and existing heatmap tests: 11 passed. Asset
-isolation: 4 passed, one existing missing legacy fixture skipped. Backend clean
-`origin/web` selftest: ALL GREEN, 2244 pytest checks, five warnings. Copy lint and
-1314 internal links passed. Full final suite and production verification are recorded
-after deployment.
+Released frontend `cea733ec773542943b56c69f9d0f487cb7ea176f`, Cloudflare Pages
+`a8295c51` to https://duckybot.app. App module graph `d3e3771b5fe99d72fe38`.
+
+Final frontend suite: **366 passed**. Touch-specific regression and existing
+heatmap tests: 11 passed. Asset isolation: 4 passed, one existing missing legacy
+fixture skipped. Backend clean `origin/web` selftest: ALL GREEN, 2244 pytest checks,
+five warnings; architecture lint 0 failures/0 warnings. Copy lint scanned 2423
+files; 1314 internal links passed. Release CI succeeded:
+https://github.com/ssurmic/ducky-site/actions/runs/34210392376.
+
+The final merged build repeated the 650px matrix: 160 combinations, zero overflow
+or runtime errors. Production at an actual 390×649 CSS viewport showed the new
+five-item bottom navigation and the real 16-stock heatmap. CIEN opened its detail
+and all 15 chart canvases; zoom in/out/reset were clicked successfully. The third
+tab opened six information-map nodes, marked Information Map current, and did not
+mark More. More → Alerts closed its menu and correctly marked More. The loaded
+production module graph matches the final local build. No account/notification/
+payment changes were submitted.
+
+Later upstream commits merged before the report update only change a separate
+demo source-review report, with no published UI/module differences.
