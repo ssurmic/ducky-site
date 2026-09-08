@@ -7,7 +7,7 @@ for(const key of ['window','document','Node','location','history'])globalThis[ke
 document.documentElement.lang='en';
 const strings=document.createElement('script');strings.id='ducky-strings';
 strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(JSON.parse(readFileSync('i18n/en.json'))).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
-const {claimDetails,priceContext,groundedClaim,sourceAt}=await import('../public/js/app/views/creator-claim.js');
+const {claimDetails,claimQualifications,priceContext,groundedClaim,sourceAt}=await import('../public/js/app/views/creator-claim.js');
 
 test('reviewed views survive omitted public quotations and keep missing qualifiers explicit',()=>{
  const call={extractor_version:'creator-claims-v1',evidence_verified:true,verification:'source_reviewed',source_hash:'abc',segment_ids:[2,3],evidence:'',action:'add',intent:'conditional',condition_text:'Only if sales improve'};
@@ -28,4 +28,12 @@ test('corrected historical interpretation stays labeled and v2 retains source pr
  assert.equal(groundedClaim(call),true);
  assert.equal(groundedClaim({...call,attribution_status:'superseded'}),false);
  assert.match(claimDetails({...call,attribution_status:'superseded'}).textContent,/interpretation has been corrected/);
+});
+
+test('map and creator adapters preserve self-reported behavior separately from outlook',()=>{
+ const basis='self_reported_position_behavior',data={action:'hold',source_stance:'neutral'};
+ assert.equal(claimQualifications({basis,data}).textContent,claimQualifications({basis,...data}).textContent);
+ assert.match(claimQualifications({basis,data}).textContent,/Original outlook labelneutral/);
+ assert.ok(!claimQualifications({basis}).textContent.includes('Original outlook label'));
+ assert.equal(claimQualifications({basis:'verified_mention_no_direction',...data}),null);
 });

@@ -38,3 +38,24 @@ test('one presentation replaces only covered legacy stocks and retains opposing 
  assert.match(section.textContent,/if orders slow/);assert.match(section.textContent,/this year/);
  assert.deepEqual(tickerViews(post).map(row=>[row.ticker,row.stance]),[['AVGO','mixed'],['NVDA','bull']]);
 });
+
+test('a reviewed position statement remains reachable and supersedes its old neutral call',()=>{
+ const old={sym:'INTC',stance:'neutral',evidence:'The creator said he continues to hold Intel.'};
+ const untouched={sym:'NVDA',stance:'bear',evidence:'The source describes a separate concern.'};
+ const position={ticker:'INTC',basis:'self_reported_position_behavior',intent:'self_reported',
+  action:'hold',source_stance:'neutral',stance:'support',point_id:'held-intc',published_at:'2026-08-24',
+  title:{en:'The creator says he will continue holding Intel.'},
+  reason:{en:'A statement at publication; current ownership is not established.'},
+  start_seconds:246.63,source_url:'https://www.youtube.com/watch?v=CEGiQA6CNd4&t=246s'};
+ const post={calls:[old,untouched],reviewed_spans:[
+  {ticker:'CRWD',basis:'attributed_opinion',intent:'opinion',stance:'support',point_id:'other-stock'},position]};
+ assert.deepEqual(legacyCalls(post),[untouched]);assert.equal(post.calls[0],old);assert.equal(old.stance,'neutral');
+ assert.equal(viewpointTake(post,'held-intc'),'bull');
+ assert.deepEqual(tickerViews(post).find(row=>row.ticker==='INTC'),{ticker:'INTC',pointId:'held-intc',stance:'bull'});
+ const section=spanSection(post.reviewed_spans,null,'held-intc',{inline:true});
+ const card=section.querySelector('[data-point-id="held-intc"].is-focused.is-support');assert.ok(card);
+ assert.match(card.textContent,/Self-reported/);assert.match(card.textContent,/Hold/);
+ assert.match(card.textContent,/Original outlook labelneutral/);assert.match(card.textContent,/current ownership is not established/);
+ assert.equal(card.querySelector('a[href^="https:"]').href,position.source_url);
+ assert.equal(section.querySelectorAll('article').length,2);
+});

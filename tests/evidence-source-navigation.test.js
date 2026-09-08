@@ -66,3 +66,34 @@ test('unfollowed old source loads by exact index, focuses expanded point, and sc
  assert.ok(!location.hash.includes('post='));
  } finally {dispose();root.remove();}
 });
+
+test('a map link opens the canonical position statement instead of the same-stock legacy neutral call',async()=>{
+ store.set('me',{tier:'pro',user_id:1});const point='claim:held-intc',postId='CEGiQA6CNd4';
+ const post={id:3,kol_id:'talk',kol_name:'Talk',platform_post_id:postId,title:'Position update',tickers:['INTC','CRWD'],
+  summary:{quality:'no_call',en:'A dated position update.',source:{kind:'transcript',status:'ready',summary_reviewed:true}},
+  calls:[{sym:'INTC',stance:'neutral',evidence:'The original source reports continued holding.',note:{en:'OLD_NEUTRAL_DUPLICATE'}}],
+  reviewed_spans:[
+   {basis:'attributed_opinion',ticker:'CRWD',stance:'support',point_id:'claim:other',title:{en:'A different stock view'}},
+   {basis:'self_reported_position_behavior',intent:'self_reported',action:'hold',source_stance:'neutral',
+    ticker:'INTC',stance:'support',point_id:point,published_at:'2026-08-24',title:{en:'The creator says he continues to hold Intel.'},
+    reason:{en:'This is the statement at publication; current ownership is not established.'},
+    source_url:'https://www.youtube.com/watch?v='+postId+'&t=246s',start_seconds:246.63}]};
+ globalThis.fetch=async(url,options)=>{
+  assert.ok(!options?.method||options.method==='GET');
+  return Response.json(url==='/kol/feed'?{kols:[],posts:[]}:
+   url==='/kol/talk/posts/'+postId?{creator:{id:'talk',name:'Talk'},post}:
+   url==='/me/kols'?{subs:[],analysis:{}}:{items:[]});
+ };
+ const root=document.createElement('main');document.body.append(root);
+ const dispose=await mount(root,{query:new URLSearchParams({scope:'discover',creator:'talk',post:postId,point})});await tick();
+ try{
+  const focused=root.querySelector('[data-point-id="'+point+'"].is-focused.is-support');assert.ok(focused);
+  assert.ok(focused.closest('.cr-sections').open);assert.equal(focused.dataset.scrolled,'true');
+  assert.match(root.querySelector('.cr-post-head').textContent,/\$INTC\s+bull/i);
+  assert.match(focused.textContent,/Self-reported action · Hold/);assert.match(focused.textContent,/Original outlook labelneutral/);
+  assert.match(focused.textContent,/current ownership is not established/);
+  assert.ok(!root.textContent.includes('OLD_NEUTRAL_DUPLICATE'));
+  assert.equal(root.querySelectorAll('.creator-reviewed-spans article').length,2);
+  assert.equal(focused.querySelector('a').href,post.reviewed_spans[1].source_url);
+ }finally{dispose();root.remove();}
+});

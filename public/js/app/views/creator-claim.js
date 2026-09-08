@@ -20,6 +20,13 @@ const pick=value=>typeof value==='object'&&value?value[document.documentElement.
 // Preserve the source's own qualification across creator, map and stock readers.
 export function claimQualifications(call) {
   const rows=el('dl.creator-claim-facts');
+  if(call.basis==='self_reported_position_behavior'){
+    const action=call.action||call.data?.action;
+    const label=s('creatorclaim.intent_self_reported')+(['open','add','hold','reduce','close'].includes(action)?' · '+s('creatorclaim.action_'+action):'');
+    rows.append(el('div',el('dt',s('creatorclaim.intent')),el('dd',label)));
+    const original=call.source_stance||call.data?.source_stance;
+    if(['bull','bear','neutral'].includes(original))rows.append(el('div',el('dt',s('creatorclaim.original_stance')),el('dd',s('creators.take_'+original))));
+  }
   for(const [key,value] of [['creators.stated_condition',call.condition_text],['creators.stated_horizon',call.horizon_text]]){
     if(typeof value==='string'&&value.trim())rows.append(el('div',el('dt',s(key)),el('dd',value)));
   }
