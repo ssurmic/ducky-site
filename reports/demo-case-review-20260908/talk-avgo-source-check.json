@@ -13,7 +13,10 @@
   "first_observed_at": null,
   "source_acquired_at": null,
   "source_reviewed_at": null,
-  "exact_span": null,
+  "exact_span": {
+    "start_seconds": 973.42,
+    "end_seconds": 992.44
+  },
   "player_target_label": "16:13",
   "caption_checkpoints": [
     "16:11 valuation discussion begins",
@@ -26,7 +29,7 @@
   ],
   "recording_status": "not_ready",
   "open_items": [
-    "Obtain exact source and observation clocks plus precise span from the producer",
+    "Obtain exact source and observation clocks from the producer; date-only publication/acquisition values do not supply exact timestamps",
     "Independently confirm the released normalized term; keep the original numeric conflict visible in source details and out of price calculations",
     "Keep creator assumptions and management attribution explicit",
     "Await ready current analysis rather than stale or pending prose",
@@ -40,5 +43,16 @@
     "attribution": "Creator valuation opinion; not an independently verified management forecast.",
     "comparison_eligible": false,
     "allowed_use": "Source navigation only; no first-capture or mature-performance claim."
+  },
+  "source_publication_date": "2026-09-03",
+  "source_acquisition_date": "2026-09-08",
+  "source_owner_acceptance": {
+    "backend": "a840195",
+    "frontend": "f66bd72",
+    "report_commit": "f6c7b109f678228062274c2ee2f876e5a9f0a01f",
+    "report": "reports/DATA-CORE-AND-RECOVERY-2026-09-07.md",
+    "original_excerpt_characters": 137,
+    "navigation": "Owner verified map → canonical point in the single interpretation → YouTube 16:13",
+    "analysis": "Independent combined review still pending; navigation acceptance is not analysis readiness."
   }
 }
