@@ -42,7 +42,7 @@ export function previewTitle(value) {
 }
 
 export function evidenceMeta(post) {
-  let data = post.summary;
+  let data = post?.summary;
   if (typeof data === "string") { try { data = JSON.parse(data); } catch { data = {}; } }
   return data && typeof data === "object" ? data : {};
 }
@@ -55,6 +55,10 @@ export function hasReviewedSummary(post) {
   const m = evidenceMeta(post);
   return hasGroundedCalls(post) || ((m.source?.summary_reviewed===true || ["short-video-v2","short-video-v3","creator-video-v4"].includes(m.source?.version)) && m.source.status === "ready" && m.source.kind === "transcript" && ["grounded", "no_call"].includes(m.quality));
 }
+export function discoveredSource(post){
+  const source=evidenceMeta(post).source;
+  return source?.kind==='metadata'&&source.status==='discovered'&&source.discovery_version==='creator-discovery-v1'&&Boolean(source.channel_id);
+}
 function atTime(url, seconds) {
   try { const u = new URL(url); if (!["www.youtube.com", "youtube.com", "youtu.be"].includes(u.hostname) || !Number.isFinite(seconds) || seconds < 0 || seconds > 5400) return url;
     u.searchParams.set("t", String(Math.floor(seconds))); return u.href;
@@ -62,7 +66,7 @@ function atTime(url, seconds) {
 }
 export function filterPosts(posts, { following, mine, archive, query = "", tickers=null }) {
   const needle = query.trim().toLocaleLowerCase();
-  return posts.filter(p => (!mine || following.has(p.kol_id)) && matchesStocks(p,tickers) && (archive || hasReviewedSummary(p) || verifiedSpans(p).length) &&
+  return posts.filter(p => (!mine || following.has(p.kol_id)) && matchesStocks(p,tickers) && (archive || hasReviewedSummary(p) || verifiedSpans(p).length || discoveredSource(p)) &&
     (!needle || [p.kol_name, p.title, ...(p.tickers || []), pickSummary(p.summary,true), pickSummary(p.summary,false)].join(" ").toLocaleLowerCase().includes(needle)))
     .sort((a,b)=>(Date.parse(b.published_at)||0)-(Date.parse(a.published_at)||0));
 }
@@ -230,6 +234,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       const page=doc.pages?.[k.id];
       const ready=page?.coverage?.reviewed ?? creatorPosts.filter(hasReviewedSummary).length;
       tile.append(el('p.creator-card-coverage',s('creatorpage.card_ready',{n:ready})));
+      const newest=[...creatorPosts].sort((a,b)=>(Date.parse(b.published_at)||0)-(Date.parse(a.published_at)||0))[0];
+      if(discoveredSource(newest))tile.append(el('p.data-notice.small',s('creators.new_source_pending',{date:String(newest.published_at||'').slice(0,10)})));
       const highlight=[...(page?.highlights || [])].sort((a,b)=>(Date.parse(b.published_at)||0)-(Date.parse(a.published_at)||0))[0];
       if(highlight)tile.append(el('p.creator-card-gist',conciseSummary(highlight.summary,isZh)));
       else tile.append(el('p.small.muted',s(page?.backfill?'creatorpage.preparing':'creatorpage.no_summary')));
@@ -309,8 +315,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
         art.appendChild(detail);
       } else {
         const status = meta.source?.status;
-        const statusKey = {too_long:'too_long',too_dense:'too_dense',processing:'review_pending',review_unavailable:'review_pending',model_unavailable:'review_pending',source_unavailable:'source_pending',asr_unavailable:'source_pending',asr_timeout:'source_pending'}[status] || 'archive_hint';
-        art.appendChild(el("p.muted.small", s('creators.'+statusKey)));
+        const statusKey = {discovered:'source_pending',too_long:'too_long',too_dense:'too_dense',processing:'review_pending',review_unavailable:'review_pending',model_unavailable:'review_pending',source_unavailable:'source_pending',asr_unavailable:'source_pending',asr_timeout:'source_pending'}[status] || 'archive_hint';
+        art.appendChild(el("p.muted.small", discoveredSource(p)?s('creators.new_source_pending',{date:String(p.published_at||'').slice(0,10)}):s('creators.'+statusKey)));
       }
 
       const spans=spanSection(p.reviewed_spans,null,focusedPoint);if(spans)art.append(spans);

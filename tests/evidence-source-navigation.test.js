@@ -11,8 +11,16 @@ strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filte
 const {creatorRoute,creatorTarget,evidenceTarget}=await import('../public/js/app/creator-route.js');
 const {safeTarget}=await import('../public/js/app/login-target.js');
 const {mount}=await import('../public/js/app/views/creators.js');
+const {filterPosts,hasGroundedCalls,hasReviewedSummary}=await import('../public/js/app/views/creators.js');
 const store=await import('../public/js/app/store.js');
 const tick=()=>new Promise(r=>setImmediate(r));
+
+test('a discovered new upload is visible without being promoted to a reviewed opinion',()=>{
+ const post={kol_id:'jin',summary:{quality:'unverified',source:{kind:'metadata',status:'discovered',discovery_version:'creator-discovery-v1',channel_id:'channel'}},tickers:[]};
+ assert.equal(filterPosts([post],{following:new Set(['jin']),mine:true,archive:false}).length,1);
+ assert.equal(hasGroundedCalls(post),false);assert.equal(hasReviewedSummary(post),false);
+ assert.equal(filterPosts([{...post,summary:{quality:'unverified'}}],{following:new Set(['jin']),mine:true,archive:false}).length,0);
+});
 
 test('exact creator/post/point link survives sign-in without carrying private values',()=>{
  const href=evidenceTarget({creator_id:'talk',post_id:'abcdefghijk',point_id:'claim:abc'});

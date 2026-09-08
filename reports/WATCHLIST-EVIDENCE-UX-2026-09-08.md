@@ -43,3 +43,32 @@ Validation before publication:
 Backend coverage and limitations are recorded separately in the central evidence audit.
 This release does not claim every source is ingested, every video reviewed, real-time
 quotes, or that a source mention is a bullish view.
+
+## Production walkthrough
+
+Checked on production `7563d19` / Pages `f064fc7f` and the following expiry-display
+release `8c2aa8c`, using the existing signed-in account without changing account,
+watchlist, alert or billing state:
+
+- At 393×650, watchlist, briefing, evidence, creators, calendar, radar, alerts,
+  profile, billing and the AVGO chart loaded without horizontal page overflow.
+- Production retains 15 watched symbols. CEG resolves to Constellation Energy and
+  presents an explicit add action; the production action was deliberately not clicked.
+- Profile Save, Save Password and Enable Web Push buttons are each 44px tall.
+- Selecting the September 7 market closure opens a 369px-wide modal inside the
+  393px viewport, retaining the closure state, next session and source link.
+- The homepage “See how Ducky researches” link opens its research dialog and sets
+  `#home-dossier`; the example includes dated price follow-up. Closing works.
+- Public navigation includes creator/KOL views and the grouped feature directory;
+  the historical ledger remains accessible outside the primary navigation. The ledger
+  has no horizontal page overflow at 1366px or 393px; wide tables scroll inside their
+  containers.
+- AVGO's selected stock shows $357.90 with its September 4 recorded session. The
+  August 5 TALK 君 context node opens the 22:20–22:31 source passage; July 20 opens
+  7:09–7:15. Both appear in the creator feed with the same publication and source time.
+
+The live creator walkthrough also detected a separate semantic defect: a Starlink
+passage containing the adjective “bullish” was attributed to BLSH. It was escalated to
+the shared evidence producer for correction and publication-gate regression coverage.
+UI consistency alone does not establish issuer or claim accuracy; final backend
+correction acceptance belongs in the central evidence audit.

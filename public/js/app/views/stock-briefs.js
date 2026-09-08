@@ -2,6 +2,7 @@ import {el,clear,spinner,errorBox,num,pct} from '../ui.js';
 import {s,LANG} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
+import {comparisonLabel,comparisonDetails} from '../comparison-context.js';
 
 const pick=value=>value?.[LANG==='en'?'en':'zh']||'';
 const time=value=>{const d=new Date(value);return value&&Number.isFinite(d.getTime())?d.toISOString().replace('T',' ').slice(0,16)+' UTC':'—';};
@@ -40,8 +41,8 @@ export function reportCard(row,{onHistory,archive=false}={}){
   const evidence=el('details.stock-brief-evidence',el('summary',s('stockbrief.evidence')));
   const nodes=new Map();
   for(const fact of facts){
-    const node=el('article.stock-brief-fact',{'tabindex':'-1'},el('h4',s('stockbrief.topic_'+fact.topic)),
-      el('p',factText(fact)),el('p.small.muted',s('stockbrief.observed',{date:time(fact.observed_at)})),
+    const node=el('article.stock-brief-fact',{'tabindex':'-1'},el('h4',comparisonLabel(fact)?s('comparison.heading'):s('stockbrief.topic_'+fact.topic)),
+      el('p',factText(fact)),comparisonDetails(fact),el('p.small.muted',s('stockbrief.observed',{date:time(fact.observed_at)})),
       fact.source_at?el('p.small.muted',s('stockbrief.source_date',{date:fact.source_at})):null,
       fact.freshness==='stale'?el('p.data-notice',s('stockbrief.fact_stale')):null);
     if(fact.topic==='reported_insider_purchase')node.append(el('p.small.muted',s('stockbrief.insider_basis')));
@@ -53,7 +54,7 @@ export function reportCard(row,{onHistory,archive=false}={}){
     for(const ref of item?.citations||[]){
       const index=facts.findIndex(f=>f.id===ref);if(index<0)continue;
       p.append(el('button.brief-citation',{type:'button','aria-label':s('stockbrief.citation',{n:index+1}),onclick:()=>{
-        detail.open=true;evidence.open=true;nodes.get(ref)?.focus();nodes.get(ref)?.scrollIntoView?.({block:'nearest'});
+        detail.open=true;evidence.open=true;nodes.get(ref)?.focus({preventScroll:true});nodes.get(ref)?.scrollIntoView?.({block:'start'});
       }},String(index+1)));
     }return p;
   };

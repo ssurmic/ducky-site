@@ -27,10 +27,28 @@ test('buyers and sellers are distinct, with business references separate from re
 test('only the matching peer basket can display a relative return',()=>{
  const p={ticker:'VST',status:'reviewed',peers:['CEG','NRG','TLN'],related:['ETN'],sources:[]};
  assert.doesNotMatch(companyContext(p,{symbols:['AVGO'],excess20:21.5}).textContent,/21.5/);
- const box=companyContext(p,{symbols:['CEG','NRG','TLN'],excess20:2.5,
+ const box=companyContext(p,{scope:'business_peers',symbols:['CEG','NRG','TLN'],excess20:2.5,
    windows:{20:{start:'2026-08-07',end:'2026-09-04',peers:[{ticker:'CEG',return_pct:-2}]}}});
  assert.match(box.textContent,/2.5 percentage points/);
  assert.doesNotMatch(box.textContent,/2.5% percentage/);
  assert.match(box.textContent,/2026-08-07/);
  assert.match(box.textContent,/-2.0%/);
+});
+
+test('disabled, reclassified or mismatched comparisons cannot leak returns through details',()=>{
+ const p={ticker:'VST',status:'reviewed',peers:['CEG','NRG','TLN'],version:'current'};
+ const rs={scope:'business_peers',symbols:['CEG','NRG','TLN'],excess20:2.5,taxonomy_version:'current',
+   windows:{20:{start:'2026-08-07',end:'2026-09-04',peers:[{ticker:'CEG',return_pct:-12.3}]}}};
+ for(const [profile,comparison]of [
+   [{...p,comparison_enabled:false},rs],
+   [p,{...rs,scope:'thematic_reference'}],
+   [p,{...rs,scope:undefined}],
+   [p,{...rs,symbols:['AVGO']}],
+   [p,{...rs,taxonomy_version:'old'}],
+   [p,{...rs,status:'benchmark_changed'}]
+ ]){
+   const box=companyContext(profile,comparison);
+   assert.doesNotMatch(box.textContent,/percentage points|2026-08-07|-12.3/);
+   assert.ok(box.querySelector('a[href="#/chart/CEG"]'),'Business identity remains available');
+ }
 });
