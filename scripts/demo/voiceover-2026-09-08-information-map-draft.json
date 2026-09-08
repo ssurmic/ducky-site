@@ -79,7 +79,7 @@
       "zh": "AI 帮你概括重要变化，依据点开就能查。",
       "en": "Get an AI overview, with sources you can open.",
       "dependency": "overview",
-      "capture_notes": "Use actual ready AVGO overview and its citations. The August 7 to September 4 XLK comparison is separate from the September 3 creator opinion. English copy review is pending. Later production recheck at 11:06 UTC was pending; the earlier v16 screenshot is QA evidence only.",
+      "capture_notes": "Use actual ready AVGO overview and its citations. The August 7 to September 4 XLK comparison is separate from the September 3 creator opinion. English copy review is pending. The normal-refresh fix now retains the explicitly dated previous analysis and its original citations; use that actual state without implying a new result.",
       "recording_status": "not_captured"
     },
     {
@@ -103,9 +103,10 @@
   ],
   "pending_acceptance": [
     "Current Reddit example and source/coverage receipts",
-    "Current AVGO overview after 11:06 UTC pending recheck, with reviewed natural English",
+    "Reviewed natural English overview prose; normal-refresh behavior has separately passed and may be shown as explicitly dated previous analysis",
     "Designated Telegram and email receiver plus separate real delivery receipts",
     "Final bilingual audio listening, word timing, captions, end-card playback and coordinated media publication"
   ],
-  "price_acceptance_receipt": "../../reports/demo-case-review-20260908/coin-product-bars-comparison-20260908.json"
+  "price_acceptance_receipt": "../../reports/demo-case-review-20260908/coin-product-bars-comparison-20260908.json",
+  "refresh_acceptance_receipt": "../../reports/demo-case-review-20260908/production-refresh-qa-20260908.json"
 }

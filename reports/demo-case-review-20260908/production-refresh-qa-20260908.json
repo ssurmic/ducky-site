@@ -1,0 +1,42 @@
+{
+  "checked_at": "2026-09-08T11:24:22.395459+00:00",
+  "environment": "Actual production Chrome, existing signed-in profile; read-only navigation and citation clicks, no viewport override",
+  "frontend": "36a8f8a",
+  "pages": "07abd0d9",
+  "backend_reported_by_owner": "a6a39bf",
+  "status_reported_by_owner": "refresh_pending",
+  "current_graph_reported_by_owner": "se-graph:d34815d8f030955fdf5b077fc0e9ec7a",
+  "analysis_snapshot_reported_by_owner": "se-graph:d3292f03eeb46272d5556c63a4b49e55",
+  "analysis_generated_at": "2026-09-08T10:48:35.357192+00:00",
+  "independent_browser_checks": {
+    "chinese_previous_label": "上次分析 · 2026-09-08 10:48 UTC",
+    "chinese_notice": "新资料已到，先显示上次分析及当时依据。",
+    "english_previous_label": "Previous analysis · 2026-09-08 10:48 UTC",
+    "english_notice": "New data has arrived. Showing the previous analysis with its original evidence.",
+    "previous_analysis_citation_4": {
+      "mentions": 3,
+      "observed_display": "2026-09-08 10:01 UTC",
+      "dialog_context": "这是 2026-09-08 10:48 UTC 生成分析时使用的记录。最新资料见导图。"
+    },
+    "current_graph_source": {
+      "mentions": 4,
+      "observed_display": "2026-09-08 11:01 UTC"
+    },
+    "prior_period_mentions_in_both": 13,
+    "direction_in_both": "unknown",
+    "console_errors_warnings": []
+  },
+  "citation_number_note": "Previous snapshot citations use their own numbering (overview 1/3, watch item 4). Do not identify sources solely by visible ordinal; exact source-node bindings matter.",
+  "accepted_scope": "The old reviewed analysis remains readable during ordinary updates, explicitly dated and linked to its original evidence. This does not establish a newly generated analysis or complete backfill.",
+  "owner_test_report": "399 frontend tests, copy lint and 1342 links passed; frontend hides old prose when original bindings are missing or source correction/withdrawal invalidates it. This task did not mutate production sources to repeat those negative tests.",
+  "remaining": "Natural English analysis prose, current Degen acceptance, designated Telegram/email real receipts and final media listening/caption/render acceptance",
+  "screenshot": {
+    "file": "screenshots/avgo-refresh-retains-analysis-en.png",
+    "sha256": "4bf322940bec159d1a9a037b3c8153753ef4cce6cae8d3545fe4a38d4e86a42f"
+  },
+  "screenshot_note": "An attempted dialog crop had incorrect bounds and was removed before committing. The retained screenshot is an unmodified full viewport capture.",
+  "new_model_job_started": false,
+  "account_changed": false,
+  "real_message_sent": false,
+  "final_media_generated": false
+}
