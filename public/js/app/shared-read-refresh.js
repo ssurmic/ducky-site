@@ -10,7 +10,7 @@ export function refreshable(path){
   if(typeof path!=='string'||!path.startsWith('/')||path.startsWith('//'))return false;
   const [base,raw='']=path.split('?'),query=new URLSearchParams(raw);
   if(['before','before_id','version','offset','cursor'].some(k=>query.has(k)))return false;
-  return /^(?:\/(?:evidence|snapshot|bars)\/[A-Z][A-Z0-9.-]{0,9}|\/briefing(?:\/stocks)?|\/research\/(?:context\/[A-Z][A-Z0-9.-]{0,9}|events\/[A-Z][A-Z0-9.-]{0,9}|changes)|\/market\/context|\/radar\/[a-z-]+\.json|\/kol\/(?:feed|[A-Za-z0-9_-]+\/page)|\/public\/(?:calendar|market-preview|kol-feed|signals\/recent)\.json|\/watchlist)$/.test(base);
+  return /^(?:\/(?:evidence|snapshot|bars)\/[A-Z][A-Z0-9.-]{0,9}|\/briefing(?:\/stocks)?|\/research\/(?:context\/[A-Z][A-Z0-9.-]{0,9}|events\/[A-Z][A-Z0-9.-]{0,9}|changes)|\/market\/context|\/radar\/[a-z-]+\.json|\/kol\/(?:feed|[A-Za-z0-9_-]+\/page|[A-Za-z0-9_-]+\/posts\/[A-Za-z0-9_-]+)|\/public\/(?:calendar|market-preview|kol-feed|signals\/recent)\.json|\/watchlist)$/.test(base);
 }
 
 export function material(value,path=''){

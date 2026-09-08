@@ -45,9 +45,10 @@ test('unfollowed old source loads by exact index, focuses expanded point, and sc
    url==='/me/kols'?{subs:['other'],analysis:{}}:{items:[]});
  };
  const root=document.createElement('main');document.body.append(root);
- const dispose=await mount(root,{query:new URLSearchParams('scope=discover&creator=talk&post=abcdefghijk&point=claim:abc')});await tick();
+ let dispose=await mount(root,{query:new URLSearchParams('scope=discover&creator=talk&post=abcdefghijk&point=claim:abc')});await tick();
  try {
  assert.ok(calls.includes('/kol/talk/posts/abcdefghijk'));
+ assert.ok(!calls.includes('/kol/feed'),'focused source does not wait for the recent catalogue');
  assert.equal(root.querySelectorAll('.cr-post').length,1);
  assert.ok(root.querySelector('.cr-sections').open);
  const focused=root.querySelector('[data-point-id="claim:abc"]');
@@ -61,8 +62,11 @@ test('unfollowed old source loads by exact index, focuses expanded point, and sc
  assert.equal(focused.dataset.scrolled,'true');assert.ok(focused.querySelector('details').open);
  assert.match(focused.textContent,/Customer concentration is falling/);
  root.querySelector('[data-creator-scope="following"]').click();await tick();
+ dispose();root.replaceChildren();
+ dispose=await mount(root,{query:new URLSearchParams(location.hash.split('?')[1])});
  assert.ok(!root.querySelector('.is-focused-source'));
  assert.match(root.querySelector('.cr-feed').textContent,/Recent post/);
+ assert.equal(calls.filter(path=>path==='/kol/feed').length,1);
  assert.ok(!location.hash.includes('post='));
  } finally {dispose();root.remove();}
 });

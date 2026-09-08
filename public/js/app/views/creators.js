@@ -109,15 +109,29 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   card.appendChild(spinner());
 
   const initial=creatorRoute(routeQuery);
+  const sourceOnly=!!(initial.post&&initial.selected&&initial.tab==='feed');
   let doc, subs, watches,linkedSource=null,linkFailed=false;
   try {
-    [doc, subs, watches] = await Promise.all([api.kol.feed(), api.kol.mine(), api.watchlist.list().catch(()=>null)]);
-    if(initial.post&&initial.selected){
+    if(sourceOnly){
+      // An exact source should not depend on loading the whole recent catalogue.
+      [linkedSource,subs,watches]=await Promise.all([
+        api.get('/kol/'+encodeURIComponent(initial.selected)+'/posts/'+encodeURIComponent(initial.post),{signal,silent402:true}),
+        api.kol.mine(),api.watchlist.list().catch(()=>null)]);
+      if(!linkedSource?.creator||!linkedSource?.post)throw Error('source_unavailable');
+      doc={kols:[],posts:[],pages:{}};
+    }else [doc, subs, watches] = await Promise.all([api.kol.feed(), api.kol.mine(), api.watchlist.list().catch(()=>null)]);
+    if(!sourceOnly&&initial.post&&initial.selected){
       try{linkedSource=await api.get('/kol/'+encodeURIComponent(initial.selected)+'/posts/'+encodeURIComponent(initial.post));}
       catch{linkFailed=true;}
     }
   } catch (e) {
     if (epoch !== store.epoch() || signal?.aborted) return () => {};
+    if(sourceOnly&&e.status===402){
+      clear(card);card.append(el('h1',s('creators.h1')),el('div.cr-pro-banner',
+        el('span.cr-pro-badge',s('creators.pro_badge')),el('span',s('creators.pro_hint')),
+        el('a.btn.btn-primary.btn-sm',{href:'#/billing'},s('creators.upgrade'))));
+      return () => {};
+    }
     const retry=el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{
       if(retry.disabled || !root.isConnected || epoch!==store.epoch() || signal?.aborted)return;
       retry.disabled=true;router.go(location.hash);
@@ -135,7 +149,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   let analysis=subs?.analysis || {},setupCleanup=()=>{},showSetup=!following.size&&initial.tab==='feed'&&!initial.ticker&&!initial.watched&&!initial.post,disposed=false,notice='',refreshing=false;
   const setupState={};
   const pending=()=>Object.values(analysis).some(x=>['queued','running'].includes(x.status));
-  const progress=progressPoll({active:()=>!disposed&&epoch===store.epoch()&&root.isConnected&&pending(),read:()=>api.kol.mine(),
+  const progress=progressPoll({active:()=>!sourceOnly&&!disposed&&epoch===store.epoch()&&root.isConnected&&pending(),read:()=>api.kol.mine(),
     onValue:next=>{
       const changed=JSON.stringify(analysis)!==JSON.stringify(next.analysis||{});
       const ready=Object.entries(next.analysis||{}).find(([id,x])=>x.status==='ready'&&analysis[id]?.status!=='ready');
@@ -154,7 +168,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   let query = "";
   let selected=kols.some(k=>k.id===initial.selected)?initial.selected:'', tab=initial.tab, shown=30;
   const labState={demo:initial.demo}, histories={}, archiveOpen=new Set();
-  const pageProgress=progressPoll({interval:30000,active:()=>!disposed&&store.isPro()&&epoch===store.epoch()&&root.isConnected&&!!selected&&tab==='feed',
+  const pageProgress=progressPoll({interval:30000,active:()=>!sourceOnly&&!disposed&&store.isPro()&&epoch===store.epoch()&&root.isConnected&&!!selected&&tab==='feed',
     read:()=>api.get('/kol/'+encodeURIComponent(selected)+'/page'),
     onValue:page=>{if(page.kol_id!==selected)return;const old=doc.pages?.[selected];if(page.content_hash===old?.content_hash&&page.status===old?.status)return;
       doc.pages={...(doc.pages||{}),[selected]:page};renderContent();}});
@@ -193,6 +207,11 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   }
 
   function renderContent() {
+    // Leaving the focused source mounts the normal workspace and its full data.
+    // Never present this one-post response as a complete directory or history.
+    if(sourceOnly&&(!focusedPost||selected!==initial.selected||tab!=='feed')){
+      router.go(creatorTarget({tab,mine,selected,ticker:stockTicker,demo:labState.demo}));return;
+    }
     if(focusedPost&&(selected!==initial.selected||tab!=='feed')){focusedPost='';focusedPoint='';linkFailed=false;}
     if(selected&&!kols.some(k=>k.id===selected))selected='';
     syncRoute();pageProgress.schedule();
@@ -260,8 +279,10 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       const creator=kols.find(k=>k.id===selected);
       content.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected='';renderContent();}},'← '+s('creatorpage.all')));
       content.append(el('header.creator-selected-heading',el('h1',creator.name)));
-      const overview=el('section.creator-page');content.append(el('details.creator-overview',el('summary',s('creators.overview_short')),overview));
-      renderCreatorPage(overview,{creator,page:doc.pages?.[selected]||{},tickers:stockFilter,onTab:value=>{tab=value;renderContent();}});
+      if(!sourceOnly){
+        const overview=el('section.creator-page');content.append(el('details.creator-overview',el('summary',s('creators.overview_short')),overview));
+        renderCreatorPage(overview,{creator,page:doc.pages?.[selected]||{},tickers:stockFilter,onTab:value=>{tab=value;renderContent();}});
+      }
     }
     const feedContent=selected?el('details.creator-video-archive',{open:true},el('summary',s('creators.latest'))):el('section.creator-recent-feed');
     if(selected){const kid=selected;feedContent.addEventListener('toggle',()=>{if(feedContent.open){archiveOpen.add(kid);}else archiveOpen.delete(kid);});}
@@ -269,7 +290,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     const archiveBtn = el("button.btn.btn-ghost.btn-sm", { type: "button", "aria-pressed": String(archive), onclick: () => { archive = !archive; render(); } }, s(archive ? "creators.only_grounded" : "creators.show_archive"));
     if(!selected)feedContent.append(el('header.creator-feed-heading',el('h2.creator-latest-title',s('creators.latest')),archiveBtn));
     else feedContent.appendChild(archiveBtn);
-    if(selected&&!histories[selected])feedContent.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>loadHistory(selected)},s('creatorpage.all_videos',{n:doc.pages?.[selected]?.coverage?.indexed ?? stats.length})));
+    if(selected&&!focusedPost&&!histories[selected])feedContent.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>loadHistory(selected)},s('creatorpage.all_videos',{n:doc.pages?.[selected]?.coverage?.indexed ?? stats.length})));
     if (mine && !following.size) {feedContent.appendChild(empty(s("creators.no_following")));feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{mine=false;render();}},s('creators.discover')));return;}
     const history=selected?histories[selected]:null;
     if(history?.loading)feedContent.append(el('p.small.muted',{role:'status'},s('common.loading')));
@@ -353,7 +374,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       if(target?.hasAttribute('tabindex'))target.focus({preventScroll:true});
     });
     if(!history?.items&&visiblePosts.length>shown) feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{shown+=30;renderContent();}},s('creators.load_more')));
-    feedContent.append(el('p.muted.small',s('creators.feed_limit',{n:history?.items?.length ?? posts.length})));
+    if(!focusedPost)feedContent.append(el('p.muted.small',s('creators.feed_limit',{n:history?.items?.length ?? posts.length})));
   }
 
   async function loadHistory(kid){
@@ -396,6 +417,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     render();progress.schedule();
   }
   async function refresh({automatic=false}={}){
+    if(sourceOnly){router.go(location.hash);return;}
     if(refreshing)return;refreshing=true;
     try{const [feed,mineDoc]=await Promise.all([api.kol.feed(),api.kol.mine()]);
       if(disposed||epoch!==store.epoch())return;

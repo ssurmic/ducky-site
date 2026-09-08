@@ -12,8 +12,8 @@ const {refreshable,material,sharedReadRefresh}=await import('../public/js/app/sh
 const response=(d,status=200)=>new Response(JSON.stringify(d),{status,headers:{'content-type':'application/json'}});
 
 test('only shared read endpoints qualify; history, settings, search and mutations never replay',()=>{
- for(const path of ['/evidence/AVGO','/briefing/stocks?ticker=NVDA','/kol/talk/page','/public/calendar.json','/watchlist'])assert.ok(refreshable(path));
- for(const path of ['/evidence/AVGO?version=old','/kol/talk/history','/me/profile','/auth/poll?nonce=secret','/public/symbols?q=AVGO','//external/path','/screens/preview','/radar/social/history.json'])assert.ok(!refreshable(path));
+ for(const path of ['/evidence/AVGO','/briefing/stocks?ticker=NVDA','/kol/talk/page','/kol/touzi-talk/posts/3E-HXC2HUvg','/public/calendar.json','/watchlist'])assert.ok(refreshable(path));
+ for(const path of ['/evidence/AVGO?version=old','/kol/talk/history','/kol/talk/posts','/kol/talk/posts/abc?version=old','/kol/talk/posts/abc/review','/me/profile','/auth/poll?nonce=secret','/public/symbols?q=AVGO','//external/path','/screens/preview','/radar/social/history.json'])assert.ok(!refreshable(path));
 });
 
 const evidence=()=>({id:'stored-graph',ticker:'AVGO',checked_at:'check-1',recorded_at:'build-1',
