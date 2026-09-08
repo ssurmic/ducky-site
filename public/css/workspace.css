@@ -365,28 +365,14 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 }
 @media(prefers-reduced-motion:reduce){.page-app *, .page-app *:before{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 
-/* Product destinations share the outer navigation; radar categories unfold here. */
-.nav-desktop-radar{display:none}
-.nav-radar>summary{display:flex;align-items:center;gap:12px;list-style:none;cursor:pointer;color:var(--muted);padding:10px 13px;min-height:44px;border-radius:8px;font-size:.9375rem}
-.nav-radar>summary::-webkit-details-marker{display:none}
-.nav-chevron{margin-left:auto;transition:transform .15s}
-.nav-radar[open]>summary .nav-chevron{transform:rotate(180deg)}
-.nav-radar.on>summary{color:var(--accent-text);background:color-mix(in srgb,var(--accent) 8%,var(--surface))}
-.nav-radar-links{display:grid;gap:3px;margin:4px 0 10px 15px;padding-left:9px;border-left:1px solid var(--border)}
-.nav-radar-links>a{display:flex;align-items:center;gap:9px;min-height:38px;padding:8px;color:var(--muted);font-size:.8125rem;text-decoration:none;border-radius:6px;line-height:1.4}
-.nav-radar-links .app-icon{width:16px;height:16px;flex:none}
-.nav-radar-links>a:hover,.nav-radar-links>a.on{background:var(--surface-2);color:var(--text)}
-.nav-more-panel>.nav-radar{grid-column:1/-1;border-top:1px solid var(--border)}
-.nav-more-panel>.nav-radar>summary{flex-direction:row;justify-content:flex-start;font-size:.875rem}
-.nav-more-panel .nav-radar-links{grid-template-columns:repeat(2,minmax(0,1fr));margin:0;border:0;padding:0}
-.nav-more-panel .nav-radar-links>a{font-size:.8125rem;min-width:0;min-height:44px}
+/* Outer sidebar sizing. */
 @media(min-width:1000px){
  .page-app .app-shell{grid-template-columns:218px minmax(0,1fr)}
  .page-app .app-nav{padding:16px 12px;gap:3px;scrollbar-width:thin}
  .page-app .app-nav>a{min-height:40px;padding:8px 12px;font-size:.875rem}
  .page-app .app-nav>a[data-route=opportunities]{margin-top:15px}
  .page-app .app-nav>.nav-mobile-primary{display:none}
- .nav-desktop-radar{display:block;flex:none;margin-top:15px}
+
  .page-app .app-nav>a[data-route=profile]{margin-top:auto}
  .page-app .radar-sidebar{display:none}
  .page-app .radar-layout{grid-template-columns:minmax(0,1fr)}
@@ -416,3 +402,71 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 }
 
 .page-app .billing-benefits{font-size:.875rem;line-height:1.65;color:var(--muted);margin:8px 0 16px}
+/* Navigation groups own destinations; only the current link receives an accent. */
+.nav-desktop-tree{display:none}
+.nav-tree>summary{display:flex;align-items:center;list-style:none;min-height:44px;cursor:pointer;border-radius:7px;color:var(--muted)}
+.nav-tree>summary::-webkit-details-marker{display:none}
+.nav-tree>summary>a{display:flex;gap:10px;align-items:center;flex:1;min-height:44px;padding:8px 10px;text-decoration:none;color:inherit;font-size:.875rem}
+.nav-tree>summary>.nav-chevron{display:grid;place-items:center;min-width:44px;min-height:44px;margin:0}
+.nav-tree[open]>summary>.nav-chevron{transform:rotate(180deg)}
+.nav-tree.on>summary{background:var(--surface-2);color:var(--text)}
+.nav-tree-links{display:grid;margin:2px 0 8px 20px;border-left:1px solid var(--border);padding-left:12px;gap:1px}
+.app-nav .nav-tree-links>a{display:flex;align-items:center;min-height:40px;text-decoration:none;color:var(--muted);font-size:.8125rem;line-height:1.4;padding:6px 9px;border-radius:5px}
+.app-nav .nav-tree-links>a.on{color:var(--accent-text);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.app-nav .nav-tree .app-icon{color:inherit}
+.app-nav .nav-tree a.on .app-icon{color:var(--accent-text)}
+.nav-more-panel>.nav-tree{grid-column:1/-1;border-top:1px solid var(--border)}
+.nav-more-panel .nav-tree-links{grid-template-columns:repeat(2,minmax(0,1fr))}
+.nav-more-panel .nav-tree-links>a{min-height:44px}
+@media(min-width:1000px){.nav-desktop-tree{display:block;flex:none}.page-app .app-nav>.nav-desktop-tree:first-of-type{margin-top:12px}}
+/* A list entry is a reference. The canonical reader owns the full body. */
+.radar-record-toggle{text-decoration:none;color:var(--text);display:block}
+.radar-record-title{font-size:.875rem;line-height:1.65;color:var(--muted)}
+.radar-record-meta{align-items:baseline}
+.radar-record-meta .radar-ticker{font-size:1rem;line-height:1.5}
+.radar-record-footer{justify-content:flex-end}
+.record-reader{max-width:900px;margin:0 auto}
+.record-breadcrumb{display:flex;gap:12px;align-items:center;font-size:.8125rem;color:var(--muted);margin:0 0 20px}
+.record-breadcrumb a{color:var(--muted);min-height:44px;display:flex;align-items:center}
+.record-language{display:flex;gap:6px;justify-content:flex-end;margin-bottom:12px}
+.record-language:empty{display:none}
+.record-language [aria-pressed=true]{border-color:var(--accent);color:var(--accent-text)}
+.record-reader .radar-record{border:0;background:transparent;border-radius:0}
+.record-heading{padding:0 0 24px;border-bottom:1px solid var(--border)}
+.record-heading .radar-record-meta{display:flex;flex-wrap:wrap;gap:10px}
+.record-heading .radar-ticker{font-size:clamp(1.4rem,3vw,2rem);font-weight:700;flex-basis:100%;margin-bottom:8px;letter-spacing:-.025em}
+.record-heading time{margin-left:auto;font-size:.8125rem}
+.record-reader .radar-detail{padding:0;border:0}
+.record-prose{max-width:72ch;padding:12px 0 24px}
+.record-prose section{margin:20px 0 28px}
+.record-prose h2{font-size:1rem;color:var(--text);line-height:1.6;margin:0 0 12px;font-weight:650}
+.record-prose p{font-size:.9375rem;line-height:1.95;color:var(--text);margin:8px 0;overflow-wrap:anywhere}
+.record-prose a{color:var(--accent-text)}
+.record-original{border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:8px 0 24px;padding:8px 0}
+.record-original summary{min-height:44px;display:flex;align-items:center;cursor:pointer;color:var(--muted);font-size:.8125rem}
+.record-original pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:.8125rem;line-height:1.7;padding:16px;background:var(--surface-2)}
+@media(max-width:600px){.record-breadcrumb{margin-bottom:8px}.record-reader .radar-record-meta .radar-kind{max-width:100%}.record-prose{padding-top:0}.record-prose section{margin:16px 0 24px}.record-prose p{font-size:.9375rem}}
+.record-reader{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px}
+.record-reader>.record-breadcrumb{grid-column:1;margin-bottom:12px}
+.record-reader>.record-language{grid-column:2;margin-bottom:12px;align-items:center}
+.record-reader>div:last-child{grid-column:1/-1}
+@media(max-width:600px){
+ .record-breadcrumb>span{display:none}
+ .record-heading{padding-bottom:16px}
+ .record-heading .radar-ticker{margin:0 0 4px}
+ .page-app .radar-heading>a{display:none}
+ .page-app .radar-heading>div{flex:1;min-width:0}
+ .page-app .radar-tabs button{font-size:.75rem;padding:8px 4px;white-space:nowrap}
+ .page-app .radar-filters:not(.filters-expanded){grid-template-columns:minmax(0,1fr) auto;padding:10px;gap:8px}
+ .page-app .radar-filters:not(.filters-expanded)>.radar-field:nth-child(2),
+ .page-app .radar-filters:not(.filters-expanded)>.radar-filter-actions{display:none}
+ .page-app .radar-filters:not(.filters-expanded)>.radar-field:first-child>span{display:none}
+ .page-app .radar-filters:not(.filters-expanded)>.radar-filter-toggle{grid-column:2;grid-row:1}
+ .page-app .radar-day{margin:12px 0 8px}
+ .page-app .radar-record-toggle{padding:14px}
+}
+@media(max-width:600px){
+ .page-app .nav-more-panel{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .page-app .nav-more-panel>a{padding:8px;gap:8px;font-size:.8125rem;min-height:52px}
+ .page-app .nav-more-panel>a .app-icon{flex:none;width:18px;height:18px}
+}

@@ -54,6 +54,7 @@ TEXT_EXT = {".html", ".js", ".css", ".xml", ".txt", ".json", ".webmanifest", ".s
 # string with Chinese in it fails CI until the string is translated or the key is consciously allowlisted here.
 CJK = re.compile(r"[\u3400-\u9fff\uf900-\ufaff\u3040-\u30ff]")
 EN_CJK_ALLOW = {
+    "app.reader.saved_refs_zh",  # Explicit Chinese report-body toggle, independent of site language.
     "nav.lang_toggle",       # "中文"  — switch-to-Chinese control
     "nav.lang_toggle_aria",  # "切换到中文" — its aria-label
     "footer.lang_other",     # "中文"  — footer language switch
@@ -145,6 +146,7 @@ def check_template_hardcoded_cjk() -> list[str]:
 # trip it; the few legitimate all-Latin ZH values (stylised demo-alert headers, crypto rails, dev comments) are
 # allowlisted explicitly.
 ZH_EN_ALLOW = {
+    "app.reader.saved_refs_en",  # Explicit English report-body toggle, independent of site language.
     "hero.b1_l1", "feed.a_l1",   # stylised demo-alert headers ("🚨🟢 INSIDER BUY — $1.12M / $TTMI"), same in both langs
     "billing.rail_usdc_trc20",   # "USDC · TRON TRC20" — a crypto network name, universal
     "app._comment",              # a developer note, never rendered

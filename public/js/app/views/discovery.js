@@ -9,9 +9,9 @@ import { mountScreen, mountSavedScreens } from './signal-screen.js';
 export function mount(root,route={}) {
   const name=store.get('route')?.name||'vibe';
   if(['degen','vibe'].includes(name))return mountSocial(root,{...route,view:name});
-  root.append(el('div.view-head',el('h1',s('nav.'+name))));
+  if(name!=='market')root.append(el('div.view-head',el('h1',s('nav.'+name))));
   const cleanups=[];
-  if(name==='market')cleanups.push(mountMarketContext(root));
+  if(name==='market')cleanups.push(mountMarketContext(root,{heading:'h1'}));
   else if(name==='macro')cleanups.push(mountMacroBeta(root));
   else {
     const query=new URLSearchParams(route.query);query.set('screening','1');

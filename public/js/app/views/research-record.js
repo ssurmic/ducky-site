@@ -4,6 +4,8 @@ import * as api from '../api.js';
 import {dateTime} from './creator-research.js';
 import {directionReading} from './vibe-direction.js';
 import {evidenceLink} from '../evidence-link.js';
+import {evidenceTarget} from '../creator-route.js';
+import {claimQualifications} from './creator-claim.js';
 
 const tr=k=>s('record.'+k);
 const streams=['price','technical','options','vibe','radar','creator','calendar','digest'];
@@ -24,6 +26,11 @@ export function recordCard(item) {
   let title=(LANG==='en'&&(p.title_en||p.summary_en))||p.title||p.summary||p.creator_name||'';
   if(typeof title!=='string') title='';
   if(title)card.append(el('p',title));
+  if(p.reviewed_point){
+    card.append(el('p.small.muted',p.author||''),el('p.small.muted',s('stockbrief.creator_dated')));
+    const qualifications=claimQualifications(p);if(qualifications)card.append(qualifications);
+    const target=evidenceTarget(p);if(target)card.append(link(target,s('evidence.creator_context')));
+  }
   let fields=[];
   if(item.stream==='price')fields=[['spot',px(p.spot)]];
   if(item.stream==='technical')fields=[['rsi',num(p.rsi_d,1)],['drawdown',p.dd_pct==null?'—':num(p.dd_pct,1)+'%']];
@@ -47,24 +54,34 @@ export function recordCard(item) {
     el('code.social-record-id',item.id));
   if(p.relation_basis)details.append(el('p.small',tr('relation')+' '+value(p.relation_basis)));
   try {const u=new URL(p.source_url);if(u.protocol==='https:'&&!u.username&&!u.password)details.append(link(u.href,tr('source')));}catch{}
-  card.append(details,evidenceLink(item.ticker,['radar','calendar','digest'].includes(item.stream)?item.id:''));return card;
+  card.append(details,evidenceLink(item.ticker,p.reviewed_point?p.point_id:['radar','calendar','digest'].includes(item.stream)?item.id:''));return card;
 }
 
 export function renderRecord(doc) {
   const section=el('section.research-record',el('h2',tr('title')));
-  if(!Array.isArray(doc.items)||!doc.items.length) {
+  if(!doc.items?.length&&!doc.creator_points?.items?.length) {
     section.append(el('p.data-notice',tr(doc.status==='pending'?'pending':'empty')));return section;
   }
   section.append(el('p.muted.small',tr('intro')));
   if(doc.refresh_pending)section.append(el('p.data-notice',tr('refreshing')));
   const grid=el('div.research-record-grid');
   for(const stream of streams) {
-    const items=doc.items.filter(r=>r.stream===stream);
+    const items=(doc.items||[]).filter(r=>r.stream===stream);
+    if(stream==='creator')for(const point of [...(doc.creator_points?.items||[])].reverse()){
+      const d=point.data||{};
+      items.unshift({...point,ticker:doc.ticker,stream,indexed_at:point.observed_at,
+        payload:{...d,reviewed_point:true,title:typeof d.title==='string'?d.title:d.title?.[LANG]||d.title?.en||d.title?.zh||'',source_url:point.source_url}});
+    }
     const card=el('section.card.research-stream',el('h3',tr(stream)),link(destination(stream,doc.ticker),tr('open_'+stream)));
     if(!items.length)card.append(el('p.muted.small',tr(stream==='radar'?'radar_uncovered':'uncovered')));
     else {
       card.append(recordCard(items[0]));
       if(items.length>1)card.append(el('details',el('summary',tr('more')),...items.slice(1).map(recordCard)));
+    }
+    if(stream==='creator'&&doc.creator_points?.coverage){
+      const coverage=doc.creator_points.coverage;
+      card.append(el('p.small.muted',s('stockbrief.creator_selected',{n:coverage.selected??0})));
+      if(coverage.status!=='ready'||coverage.omitted>0)card.append(el('p.data-notice',s('stockbrief.creator_partial')));
     }
     grid.append(card);
   }

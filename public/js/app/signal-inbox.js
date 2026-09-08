@@ -1,3 +1,4 @@
+import {recordHref} from './record-format.js';
 import {el,clear} from './ui.js';
 import {s,LANG} from './strings.js';
 import * as api from './api.js';
@@ -43,6 +44,7 @@ export function signalInboxSession({valid,onLoseAccess}) {
       if(tk&&row.kind==='ticker-brief')actions.append(el('a.btn.btn-ghost.btn-sm',{href:'#/briefing?ticker='+encodeURIComponent(tk)},s('stockbrief.open')));
       else if(tk)actions.append(el('a.btn.btn-ghost.btn-sm',{href:'#/research/'+encodeURIComponent(tk)},s('watch.research_record')),
         el('a.btn.btn-ghost.btn-sm',{href:'#/boards?mode=archive&ticker='+encodeURIComponent(tk)},s('updates.signal_radar')));
+      if(current && row.kind!=='ticker-brief' && /^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,149}$/.test(row.source_record_id||''))actions.append(el('a.btn.btn-ghost.btn-sm',{href:recordHref({id:row.source_record_id})},s('reader.open')));
       if(source)actions.append(el('a.btn.btn-ghost.btn-sm',{href:source,target:'_blank',rel:'noopener noreferrer'},s('boards.source')+' ↗'));
       card.append(actions);host.append(card);
     }

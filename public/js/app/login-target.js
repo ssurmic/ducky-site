@@ -5,7 +5,7 @@ import { creatorRoute, creatorTarget } from './creator-route.js';
 import { evidenceHref } from './evidence-route.js';
 const KEY = "ducky.login-target";
 const MAX_AGE = 20 * 60 * 1000;
-const SIMPLE = new Set(["watchlist", "alerts", "billing", "profile", "creators", "calendar", "boards", "opportunities", "degen", "vibe", "ducky", "market", "macro", "screens"]);
+const SIMPLE = new Set(["watchlist", "alerts", "billing", "profile", "creators", "calendar", "boards", "reports", "opportunities", "degen", "vibe", "ducky", "market", "macro", "screens"]);
 
 export function safeTarget(hash) {
   if (typeof hash !== "string" || hash.length > 2048) return null;
@@ -19,7 +19,8 @@ export function safeTarget(hash) {
     return '#/updates' + (target.size ? '?' + target : '');
   }
   if (path === '#/creators') return creatorTarget(creatorRoute(new URLSearchParams(hash.split('?')[1] || '')));
-  if (path === '#/boards') {
+  if(path.startsWith('#/record/')){try{const id=decodeURIComponent(path.slice(9));return /^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,149}$/.test(id)?'#/record/'+encodeURIComponent(id):null;}catch{return null;}}
+  if (path === '#/boards' || path === '#/reports') {
     const q = new URLSearchParams(hash.split('?')[1] || ''), screen = q.get('screen');
     if (q.get('board') === 'social') {
       const target = new URLSearchParams({board:'social'}), ticker = (q.get('ticker') || '').toUpperCase();
@@ -33,7 +34,7 @@ export function safeTarget(hash) {
     if(['all','insider','partner','political','earnings','index','news','liquidity','volscan','hiring','industry','digest','social'].includes(board))target.set('board',board);
     if (/^[A-Z][A-Z0-9.-]{0,11}$/.test(ticker)){target.set('mode','archive');target.set('ticker',ticker);}
     for (const key of ['start','end']) { const date=q.get(key)||''; if (/^\d{4}-\d{2}-\d{2}$/.test(date) && Number.isFinite(Date.parse(date)) && new Date(date).toISOString().slice(0,10)===date) target.set(key,date); }
-    return '#/boards'+(target.size?'?'+target:'');
+    return path+(target.size?'?'+target:'');
   }
   if (path === '#/briefing') {
     const query=new URLSearchParams(hash.split('?')[1] || ''),period=query.get('period');

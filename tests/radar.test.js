@@ -6,7 +6,7 @@ const dom=new JSDOM('<html lang="en" data-lang="en"><body></body></html>',{url:'
 for(const key of ['window','document','Node','location','history'])globalThis[key]=dom.window[key];
 const copy=JSON.parse(readFileSync('i18n/en.json'));
 const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
-const {filterRecords,archivePath,mount}=await import('../public/js/app/views/boards.js');
+const {filterRecords,archivePath,mount,itemRow}=await import('../public/js/app/views/boards.js');
 const store=await import('../public/js/app/store.js');store.set('me',{tier:'pro'});
 const now=Date.parse('2026-09-06T00:00:00Z');
 const sample=[
@@ -30,17 +30,18 @@ test('full archive filters and pagination are sent to the server, not applied on
  assert.equal(url.searchParams.get('start'),'2026-08-01');assert.equal(url.searchParams.get('end'),'2026-09-05');
  assert.equal(url.searchParams.get('before'),'42');assert.equal(url.searchParams.get('content'),'missing');
 });
-test('twelve categories, combined search, keyboard disclosures and explicit excerpt mode stay usable',async()=>{
+test('event categories, canonical links and explicit excerpt mode stay usable',async()=>{
  globalThis.fetch=async url=>response(String(url).includes('radar-history')?{items:[{board:'insider',ticker:'TTMI',ts:'2026-08-26T12:00:00Z',summary:{en:'Historical receipt'},body:{en:'Identity unverified'}}]}:{items:sample});
  const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams()});
- assert.equal(root.querySelector('.signal-screen').open,false);
+ assert.equal(root.querySelector('.signal-screen'),null);
  assert.equal(root.querySelector('.radar-market-panel'),null);
  assert.equal(document.activeElement,document.body);
- assert.equal(root.querySelectorAll('.radar-category').length,13);
+ assert.equal(root.querySelectorAll('.radar-category').length,8);
  root.querySelector('[name="ticker"]').value='TTMI';root.querySelector('[name="ticker"]').dispatchEvent(new window.Event('input'));
  root.querySelector('[data-board="insider"]').click();assert.equal(root.querySelectorAll('.radar-record').length,1);
- const toggle=root.querySelector('.radar-record-toggle'),detail=root.querySelector('#'+toggle.getAttribute('aria-controls'));
- assert.equal(detail.hidden,true);toggle.click();assert.equal(detail.hidden,false);assert.equal(toggle.getAttribute('aria-expanded'),'true');
+ const link=root.querySelector('.radar-record-toggle');assert.equal(link.getAttribute('href'),'#/record/1');
+ assert.equal(root.querySelector('.radar-detail'),null);
+ const detail=itemRow(sample[0],{standalone:true});
  assert.ok(detail.textContent.includes('Filing evidence'));assert.ok(detail.querySelector('a[href="#/alerts?ticker=TTMI"]'));
  root.querySelector('[data-mode="excerpts"]').click();assert.ok(root.textContent.includes('Identity unverified'));assert.ok(root.textContent.includes('2026-08-26'));
  assert.ok(!root.textContent.includes('radar.'));cleanup();root.remove();
@@ -90,7 +91,7 @@ test('late archive requests cannot overwrite a newer filter and pagination prese
  root.querySelector('[data-mode="archive"]').click();await flush();
  root.querySelector('[name="ticker"]').value='TTMI';root.querySelector('form.radar-filters').dispatchEvent(new window.Event('submit',{cancelable:true}));await flush();
  firstResolve(response({filter_version:3,items:[{id:99,kind:'insider',summary:'Stale response'}]}));await flush();
- assert.ok(!root.textContent.includes('Stale response'));assert.ok(root.textContent.includes('-3.0%'));
+ assert.ok(!root.textContent.includes('Stale response'));assert.ok(itemRow({...sample[0],base_d:'2026-09-05',base_px:100,ret_1d:-3},{standalone:true}).textContent.includes('-3.0%'));
  root.querySelector('.radar-more').click();await flush();assert.equal(root.querySelectorAll('.radar-record').length,2);
  assert.ok(requests[2].includes('before=2'));assert.ok(requests[2].includes('ticker=TTMI'));
  assert.equal(root.querySelectorAll('.radar-day').length,1);assert.equal(root.querySelector('.radar-more').hidden,true);
@@ -132,7 +133,7 @@ test('LIVE observations keep unknown publication separate from archive dates and
  const root=document.createElement('section');document.body.append(root);
  const cleanup=await mount(root,{query:new URLSearchParams('mode=archive&board=political')});
  try{
-  const detail=id=>root.querySelector('[data-record-id="'+id+'"] .radar-detail');
+  const detail=id=>itemRow(records.find(r=>r.id===id),{standalone:true}).querySelector('.radar-detail');
   const unknown=detail(101),known=detail(102),historical=detail(103);
   assert.ok(unknown.textContent.includes(copy['app.radar.observation_note']));
   assert.ok(!unknown.textContent.includes(copy['app.radar.backfill_note']));
@@ -155,9 +156,9 @@ test('index and news archive categories retain official timing, meaning and stoc
  globalThis.fetch=async url=>response(String(url).includes('archive.json')?{items:[index,news],filter_version:3}:{items:[],sources:[],sectors:[]});
  const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams('mode=archive')});
  try {
-  const event=root.querySelector('[data-record-id="301"]');assert.match(event.textContent,/Before market open · ET/);assert.match(event.textContent,/Funds tracking/);
+  const event=itemRow(index,{standalone:true});assert.match(event.textContent,/Before market open · ET/);assert.match(event.textContent,/Funds tracking/);
   assert.ok(event.querySelector('a[href="#/research/BE"]'));assert.equal(event.querySelector('a[href^="#/calendar?"]').getAttribute('href'),'#/calendar?ticker=BE&date=2026-09-21');
-  const release=root.querySelector('[data-record-id="302"]');assert.match(release.textContent,/headline alone/);assert.ok(release.textContent.includes(copy['app.radar.publication_unknown']));
+  const release=itemRow(news,{standalone:true});assert.match(release.textContent,/headline alone/);assert.ok(release.textContent.includes(copy['app.radar.publication_unknown']));
   assert.ok(release.querySelector('a[href="#/calendar?ticker=BE"]'));assert.ok(!root.textContent.includes('radar.kind_index'));
  }finally{cleanup();root.remove();}
 });
@@ -166,7 +167,7 @@ test('official lowercase live and revision provenance never reuse a historical-b
  const records=['live','source_revision','source_corroboration'].map((provenance,i)=>({id:401+i,kind:'news',ticker:'BE',ts:'2026-09-05T12:00:00Z',provenance,summary:'Official source record',extra:{event_type:'issuer_news',source_published_at:null}}));
  globalThis.fetch=async url=>response(String(url).includes('archive.json')?{items:records,filter_version:3}:{items:[],sources:[],sectors:[]});
  const root=document.createElement('section');const cleanup=await mount(root,{query:new URLSearchParams('mode=archive')});
- try{for(const [i,key] of ['observation_note','revision_note','corroboration_note'].entries()){const row=root.querySelector('[data-record-id="'+(401+i)+'"]');assert.ok(row.textContent.includes(copy['app.radar.'+key]));assert.ok(!row.textContent.includes(copy['app.radar.backfill_note']));}}
+ try{for(const [i,key] of ['observation_note','revision_note','corroboration_note'].entries()){const row=itemRow(records[i],{standalone:true});assert.ok(row.textContent.includes(copy['app.radar.'+key]));assert.ok(!row.textContent.includes(copy['app.radar.backfill_note']));}}
  finally{cleanup();}
 });
 
@@ -176,7 +177,7 @@ test('phone category picker exposes every category, preserves its selection and 
  const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams('board=insider')});
  const toggle=root.querySelector('.radar-category-toggle');
  assert.equal(toggle.getAttribute('aria-expanded'),'false');assert.ok(root.querySelector('#'+toggle.getAttribute('aria-controls')));
- toggle.click();assert.equal(toggle.getAttribute('aria-expanded'),'true');assert.equal(root.querySelectorAll('.radar-category').length,13);
+ toggle.click();assert.equal(toggle.getAttribute('aria-expanded'),'true');assert.equal(root.querySelectorAll('.radar-category').length,8);
  const political=root.querySelector('.radar-categories [data-board=political]');political.focus();political.click();await flush();
  assert.equal(toggle.getAttribute('aria-expanded'),'false');assert.equal(document.activeElement,toggle);
  assert.match(toggle.textContent,/Congress/);assert.equal(root.querySelector('.radar-categories [data-board=political]').getAttribute('aria-pressed'),'true');

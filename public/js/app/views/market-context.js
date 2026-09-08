@@ -8,9 +8,9 @@ import { readableDate as marketDate } from '../date-format.js';
 function source(value){try{const u=new URL(value);return u.protocol==='https:'?u.href:null;}catch{return null;}}
 function localized(value,key){return value?.[key+'_'+(LANG==='en'?'en':'zh')]||value?.[key+'_en']||'';}
 
-export function renderMarketContext(doc,{preview=false,watches=[],compact=false}={}) {
+export function renderMarketContext(doc,{preview=false,watches=[],compact=false,heading='h2'}={}) {
   const box=el('section.card.market-context',el('div.market-context-heading',
-    el('h2',s('market.title'))));
+    el(heading,s('market.title'))));
   box.classList.toggle('market-compact',compact);
   if(doc.status==='unavailable'||!doc.topics?.length) {
     box.append(el('p.data-notice',s('market.unavailable')));return box;
@@ -74,17 +74,17 @@ export function renderMarketContext(doc,{preview=false,watches=[],compact=false}
   return box;
 }
 
-export function mountMarketContext(root,{compact=false}={}) {
+export function mountMarketContext(root,{compact=false,heading='h2'}={}) {
   const epoch=store.epoch(), ctl=new AbortController();let disposed=false;
-  const placeholder=el('section.card.market-context',el('h2',s('market.title')),el('p.muted',s('market.loading')));
+  const placeholder=el('section.card.market-context',el(heading,s('market.title')),el('p.muted',s('market.loading')));
   root.append(placeholder);
   const pro=store.isPro();
   api.get(pro?'/market/context':'/public/market-preview.json',{signal:ctl.signal,auth:pro,silent402:true}).then(doc=>{
     if(disposed||epoch!==store.epoch())return;
-    placeholder.replaceWith(renderMarketContext(doc,{preview:!pro,watches:store.get('watchlist')||[],compact}));
+    placeholder.replaceWith(renderMarketContext(doc,{preview:!pro,watches:store.get('watchlist')||[],compact,heading}));
   }).catch(()=>{
     if(disposed||epoch!==store.epoch())return;
-    clear(placeholder);placeholder.append(el('h2',s('market.title')),el('p.data-notice',s('market.unavailable')));
+    clear(placeholder);placeholder.append(el(heading,s('market.title')),el('p.data-notice',s('market.unavailable')));
   });
   return ()=>{disposed=true;ctl.abort();};
 }

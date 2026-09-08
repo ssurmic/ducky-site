@@ -58,38 +58,36 @@
   {% macro nav_icon(name) -%}
   <svg class="app-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ducky-icon-{{ name }}"></use></svg>
   {%- endmacro %}
+  {% macro tree_group(group, desktop=false) -%}
+  <details class="nav-tree{{ ' nav-desktop-tree' if desktop else '' }}" data-group="{{ group.route }}">
+    <summary><a href="#/{{ group.route }}" data-route="{{ group.route }}" data-board="all">{{ nav_icon('digest' if group.route == 'reports' else group.route) }}<span>{{ t('app.nav.' ~ group.route) }}</span></a><span class="nav-chevron" aria-hidden="true">⌄</span></summary>
+    <div class="nav-tree-links">
+      {% for child in group.children %}
+      <a href="#/{{ child.route }}{{ '?board=' ~ child.get('board') if child.get('board') else '' }}" data-route="{{ child.route }}"{% if child.get('board') %} data-board="{{ child.get('board') }}"{% endif %}>{{ t('app.boards.t_' ~ child.get('board')) if child.get('board') else t('app.nav.' ~ child.route) }}</a>
+      {% endfor %}
+    </div>
+  </details>
+  {%- endmacro %}
   <nav class="app-nav no-glossary" aria-label="{{ t('app.nav.label') }}">
     {% for route in navigation.mobile %}
     <a href="#/{{ route }}" data-route="{{ route }}" class="nav-mobile-primary" data-mobile-primary aria-label="{{ t('app.nav.' ~ route) }}">{{ nav_icon(route) }}<span>{{ t('app.nav.evidence_short') if route == 'evidence' else t('app.nav.' ~ route) }}</span></a>
     {% endfor %}
-    {% for route in navigation.primary + navigation.discovery %}
+    {% for route in navigation.primary %}
     <a href="#/{{ route }}" data-route="{{ route }}" class="nav-secondary">{{ nav_icon(route) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
     {% endfor %}
-    <details class="nav-radar nav-desktop-radar">
-      <summary>{{ nav_icon('boards') }}<span>{{ t('app.nav.boards') }}</span><span class="nav-chevron" aria-hidden="true">⌄</span></summary>
-      <div class="nav-radar-links">
-        {% for board in navigation.radar %}
-        <a href="#/boards?board={{ board.key }}" data-route="boards" data-board="{{ board.key }}">{{ nav_icon(board.icon) }}<span>{{ t('app.radar.all') if board.key == 'all' else t('app.boards.t_' ~ board.key) }}</span></a>
-        {% endfor %}
-        {% for route in navigation.research %}
-        <a href="#/{{ route }}" data-route="{{ route }}">{{ nav_icon(route) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
-        {% endfor %}
-      </div>
-    </details>
+    {% for group in navigation.tree %}{{ tree_group(group, true) }}{% endfor %}
+
     {% for route in navigation.account %}
     <a href="#/{{ route }}" data-route="{{ route }}" class="nav-secondary">{{ nav_icon(route) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
     {% endfor %}
     <details class="nav-more">
       <summary>{{ nav_icon('more') }}<span>{{ t('app.nav.more') }}</span></summary>
       <div class="nav-more-panel">
-        {% for route in navigation.primary + navigation.discovery + navigation.research + navigation.account if route not in navigation.mobile %}
+        {% for route in navigation.primary + navigation.account if route not in navigation.mobile %}
+
         <a href="#/{{ route }}" data-route="{{ route }}">{{ nav_icon(route) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
         {% endfor %}
-        <details class="nav-radar"><summary>{{ nav_icon('boards') }}<span>{{ t('app.nav.radar_categories') }}</span></summary><div class="nav-radar-links">
-          {% for board in navigation.radar %}
-          <a href="#/boards?board={{ board.key }}" data-route="boards" data-board="{{ board.key }}">{{ nav_icon(board.icon) }}<span>{{ t('app.radar.all') if board.key == 'all' else t('app.boards.t_' ~ board.key) }}</span></a>
-          {% endfor %}
-        </div></details>
+        {% for group in navigation.tree %}{{ tree_group(group) }}{% endfor %}
       </div>
     </details>
   </nav>

@@ -13,8 +13,30 @@ export function refreshable(path){
   return /^(?:\/(?:evidence|snapshot|bars)\/[A-Z][A-Z0-9.-]{0,9}|\/briefing(?:\/stocks)?|\/research\/(?:context\/[A-Z][A-Z0-9.-]{0,9}|events\/[A-Z][A-Z0-9.-]{0,9}|changes)|\/market\/context|\/radar\/[a-z-]+\.json|\/kol\/(?:feed|[A-Za-z0-9_-]+\/page)|\/public\/(?:calendar|market-preview|kol-feed|signals\/recent)\.json|\/watchlist)$/.test(base);
 }
 
-export function material(value){
-  return JSON.stringify(value,(key,v)=>['age_seconds','ttl_seconds','server_time','retry_after'].includes(key)?undefined:v);
+export function material(value,path=''){
+  const evidence=/^\/evidence\/[A-Z][A-Z0-9.-]{0,9}(?:\?|$)/.test(path);
+  function content(v,depth=0){
+    if(Array.isArray(v))return v.map(item=>content(item,depth+1));
+    if(!v||typeof v!=='object')return v;
+    if(evidence&&depth===0){
+      // Queued/retrying/building all render the same saved-analysis placeholder.
+      // Only a change in the displayed state constitutes new information.
+      const state=['ready','failed','insufficient','source_changed','withdrawn'].includes(v.analysis_status)?v.analysis_status:'pending';
+      v={...v,analysis_status:state};
+    }
+    return Object.fromEntries(Object.keys(v).sort().filter(key=>{
+      if(['age_seconds','ttl_seconds','server_time','retry_after'].includes(key))return false;
+      if(!evidence)return true;
+      // Reprojection/check clocks and cross-ticker queue progress do not change
+      // the research being read. Never rely on graph ID alone: read-time source
+      // withdrawal can change nodes/analysis without a new stored graph ID.
+      if(['checked_at','recorded_at'].includes(key)||key.startsWith('_'))return false;
+      return depth!==0||!['id','coverage','ticker_coverage','summary_status'].includes(key);
+    }).map(key=>[key,content(v[key],depth+1)]));
+  }
+  // Keep source publication/observation, revisions, quote session/freshness,
+  // missing/withheld evidence and saved analysis content/status/version.
+  return JSON.stringify(content(value));
 }
 
 export function sharedReadRefresh(root,{signal,reload,interval=60000}={}){
@@ -27,7 +49,7 @@ export function sharedReadRefresh(root,{signal,reload,interval=60000}={}){
   const off=api.observeReads((path,value,options)=>{
     if(!active()||!refreshable(path))return;
     if(!entries.has(path)&&entries.size>=12)return;
-    entries.set(path,{signature:material(value),options});
+    entries.set(path,{signature:material(value,path),options});
   });
   function schedule(){clearTimeout(timer);if(active()&&!changed){timer=setTimeout(check,Math.min(300000,interval*2**Math.min(failures,3)));timer.unref?.();}}
   async function check(){
@@ -39,7 +61,7 @@ export function sharedReadRefresh(root,{signal,reload,interval=60000}={}){
       const value=await api.get(path,{...prior.options,signal,silent402:true,observe:false});
       if(!active())return;
       // A view's own polling may already have adopted a newer response.
-      if(material(value)!==entries.get(path)?.signature){changed=true;notice.hidden=false;root.dataset.freshness='earlier-version';}
+      if(material(value,path)!==entries.get(path)?.signature){changed=true;notice.hidden=false;root.dataset.freshness='earlier-version';}
       failures=0;
     }catch(error){
       failures++;

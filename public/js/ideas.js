@@ -22,10 +22,12 @@
   function statusPill(s) { return el("span", "status-pill status-" + (s || "none"), statusLabel(s)); }
   function bookPill(b) { return el("span", "book-pill" + (b === "live" ? " book-live" : ""), b === "live" ? (L.book_live || "LIVE") : (L.book_paper || "PAPER")); }
   function dirLabel(d) { return d > 0 ? L.dir_up : d < 0 ? L.dir_down : L.dir_flat; }
+  function illustrative(it) { return it.illustrative === true || /^example-/.test(it.slug || ''); }
+  function price(value) { return Number(value).toFixed(2); }
 
   // outcome so far from px fields: exit_px (closed) or last_px (open) vs entry_px
   function outcome(it) {
-    if (!isNum(it.entry_px)) return null;
+    if (illustrative(it) || !isNum(it.entry_px) || it.entry_px<=0) return null;
     var cur = isNum(it.exit_px) ? it.exit_px : isNum(it.last_px) ? it.last_px : null;
     if (cur == null) return null;
     return { pct: (cur / it.entry_px - 1) * 100, cur: cur, closed: isNum(it.exit_px), d: isNum(it.exit_px) ? it.closed_d : it.last_px_d };
@@ -80,7 +82,7 @@
       var tdt = el("td"); tdt.appendChild(el("span", "tk", it.ticker || "—")); tr.appendChild(tdt);
       var tdl = el("td", "summary"); var a = el("a", "idea-link", it.title || it.slug); a.href = detailHref(it.slug); tdl.appendChild(a); tr.appendChild(tdl);
       var tds = el("td"); tds.appendChild(statusPill(it.status)); tr.appendChild(tds);
-      var tdb = el("td"); tdb.appendChild(bookPill(it.book)); tr.appendChild(tdb);
+      var tdb = el("td"); tdb.appendChild(illustrative(it)?el('span','badge badge-placeholder',L.illustration):bookPill(it.book)); tr.appendChild(tdb);
       tr.appendChild(el("td", "mono", it.opened_d || "—"));
       var o = outcome(it); var tdo = el("td", "num");
       if (o) { tdo.textContent = pct(o.pct); tdo.classList.add(o.pct < 0 ? "neg" : "pos"); } else tdo.textContent = "—";
@@ -98,10 +100,12 @@
     document.title = (it.ticker && t0.indexOf(it.ticker) !== 0 ? it.ticker + " · " : "") + t0 + " · Ducky Bot";
     title.textContent = it.title || it.slug;
     var head = $("idea-head"); head.appendChild(bookPill(it.book)); head.appendChild(statusPill(it.status));
+    if(illustrative(it))head.appendChild(el('p','data-notice',L.illustration_note));
+    if(it.lang && !document.documentElement.lang.startsWith(it.lang))head.appendChild(el('p','caption',L.source_language));
     var meta = $("idea-meta"); meta.innerHTML = "";
-    [[null, it.ticker], [L.structure, it.structure], [L.entry, isNum(it.entry_px) ? it.entry_px + (it.opened_d ? " · " + it.opened_d : "") : null],
-     [L.exit, isNum(it.exit_px) ? it.exit_px + (it.closed_d ? " · " + it.closed_d : "") : null],
-     [L.last, isNum(it.last_px) ? it.last_px + (it.last_px_d ? " · " + it.last_px_d : "") : null],
+    [[null, it.ticker], [L.structure, it.structure], [L.entry, isNum(it.entry_px) ? price(it.entry_px) + (it.opened_d ? " · " + it.opened_d : "") : null],
+     [L.exit, isNum(it.exit_px) ? price(it.exit_px) + (it.closed_d ? " · " + it.closed_d : "") : null],
+     [L.last, !illustrative(it)&&isNum(it.last_px) ? price(it.last_px) + (it.last_px_d ? " · " + it.last_px_d : "") : null],
      [L.updated, (it.updated_at || "").slice(0, 10) + (cached ? " · " + (L.static || "") : "")]
     ].forEach(function (kv) { if (kv[1]) meta.appendChild(el("span", kv[0] ? null : "tk", (kv[0] ? kv[0] + " " : "") + kv[1])); });
     if (/fixture/i.test(String(j.note || ""))) { var fb = el("span", "badge badge-placeholder", L.fixture || "FIXTURE"); fb.title = j.note; meta.appendChild(fb); }
@@ -110,10 +114,10 @@
 
     var ob = $("idea-outcome"); ob.innerHTML = "";
     var o = outcome(it);
-    if (!o) { ob.appendChild(el("p", "outcome-line", L.outcome_na)); }
+    if (!o) { ob.appendChild(el("p", "outcome-line", illustrative(it)?L.illustration_note:L.outcome_na)); }
     else {
       ob.appendChild(el("p", "outcome-big " + (o.pct < 0 ? "neg" : "pos"), pct(o.pct)));
-      ob.appendChild(el("p", "outcome-line", it.entry_px + " → " + o.cur + " · " + (o.closed ? (L.exit || "exit") : (L.last || "last")) + " " + (o.d || "—")));
+      ob.appendChild(el("p", "outcome-line", price(it.entry_px) + " → " + price(o.cur) + " · " + (o.closed ? (L.exit || "exit") : (L.last || "last")) + " " + (o.d || "—")));
       if (it.structure && it.structure !== "shares") ob.appendChild(el("p", "outcome-note", fmt(L.outcome_struct_note, { structure: it.structure })));
     }
 

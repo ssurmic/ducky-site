@@ -9,10 +9,10 @@ export function selectNavigation(name, query=new URLSearchParams()) {
     a.classList.toggle('on',on);
     if(on)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
   });
-  const radarActive=name==='boards'||['market','macro','screens'].includes(name);
-  document.querySelectorAll('.nav-radar').forEach(group=>{
-    group.classList.toggle('on',radarActive);
-    if(radarActive)group.open=true;
+  document.querySelectorAll('.nav-tree').forEach(group=>{
+    const active=Boolean(group.querySelector('a.on'));
+    group.classList.toggle('on',active);
+    group.open=active;
   });
   const more=document.querySelector('.nav-more');
   if(more){if(more.open&&more.querySelector('.nav-more-panel')?.contains(document.activeElement))more.querySelector('summary')?.focus({preventScroll:true});more.open=false;more.classList.toggle('on',![...document.querySelectorAll('.app-nav > [data-mobile-primary]')].some(link=>link.dataset.route===name));}

@@ -98,7 +98,8 @@
         "evidence",
         "creators",
         "vibe",
-        "macro"
+        "macro",
+        "reports"
       ]
     }
   ],
@@ -141,6 +142,82 @@
     },
     "macro": {
       "access": "pro"
+    },
+    "reports": {
+      "access": "mixed"
     }
-  }
+  },
+  "tree": [
+    {
+      "route": "opportunities",
+      "children": [
+        {
+          "route": "vibe"
+        },
+        {
+          "route": "screens"
+        }
+      ]
+    },
+    {
+      "route": "boards",
+      "children": [
+        {
+          "route": "boards",
+          "board": "insider"
+        },
+        {
+          "route": "boards",
+          "board": "partner"
+        },
+        {
+          "route": "boards",
+          "board": "political"
+        },
+        {
+          "route": "boards",
+          "board": "earnings"
+        },
+        {
+          "route": "boards",
+          "board": "index"
+        },
+        {
+          "route": "boards",
+          "board": "news"
+        },
+        {
+          "route": "boards",
+          "board": "industry"
+        }
+      ]
+    },
+    {
+      "route": "reports",
+      "children": [
+        {
+          "route": "market"
+        },
+        {
+          "route": "macro"
+        },
+        {
+          "route": "reports",
+          "board": "digest"
+        },
+        {
+          "route": "reports",
+          "board": "liquidity"
+        },
+        {
+          "route": "reports",
+          "board": "volscan"
+        },
+        {
+          "route": "reports",
+          "board": "hiring"
+        }
+      ]
+    }
+  ]
 }
