@@ -1,0 +1,36 @@
+{
+  "video_id": "3E-HXC2HUvg",
+  "point_id": "claim:75b2c484c5bc6622e1a45ec5",
+  "creator": "投资 TALK 君",
+  "ticker": "AVGO",
+  "source_url": "https://www.youtube.com/watch?v=3E-HXC2HUvg&t=973s",
+  "independent_caption_checked_at": "2026-09-08T09:12:30+00:00",
+  "caption_export_sha256": "72fbee28854748269dc3af02f23547c60393b8495888dd943970ed167c401184",
+  "caption_metadata": "authored or unspecified",
+  "source_owner_reports_reviewed_opinion": true,
+  "independent_audio_review": false,
+  "source_publication_at": null,
+  "first_observed_at": null,
+  "source_acquired_at": null,
+  "source_reviewed_at": null,
+  "exact_span": null,
+  "player_target_label": "16:13",
+  "caption_checkpoints": [
+    "16:11 valuation discussion begins",
+    "16:13 price reference",
+    "16:15 and 16:20 FY2028 EPS assumptions",
+    "16:22 through 16:29 inconsistent forward valuation acronym",
+    "16:24 numeric caption conflicts with the earlier price reference",
+    "16:31 positive valuation opinion",
+    "16:38 and 16:39 transition to the next company"
+  ],
+  "recording_status": "not_ready",
+  "open_items": [
+    "Obtain exact source and observation clocks plus precise span from the producer",
+    "Review valuation acronym and conflicting numeric transcription without changing retained original text",
+    "Keep creator assumptions and management attribution explicit",
+    "Await ready current analysis rather than stale or pending prose",
+    "Use the complete available price history; the 20-session post-publication window is unfinished",
+    "No historical delivery receipt has been verified"
+  ]
+}
