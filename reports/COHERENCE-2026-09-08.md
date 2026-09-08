@@ -18,6 +18,8 @@ The shared-evidence, research-page, follower-update and source-fidelity changes 
 
 The final integration run passed **387 frontend tests**. Copy lint passed over 2,564 files and the internal link check passed **1,342 links with zero planned-page warnings**. Backend integration passed **2,406 tests / 5 warnings**, selftest ALL GREEN. Counts include concurrent work by other tasks.
 
+Closeout revalidation on backend `f0953ad`, including subsequent source and backfill integration, passed **2,467 tests / 5 warnings**, selftest ALL GREEN. The production backend was independently confirmed at `98cc56f` with this task's implementation included and the API active.
+
 The existing Back-navigation test intermittently asserted before JSDOM completed traversal under parallel load. It now waits for the actual `popstate`, retaining the same route/panel assertions. The full suite passed after that change.
 
 Code releases: `65d351d` (shared read/update preference), `2cab6f1` (reviewed creator records), `14949af` (format examples), `66eb1fc` (detail language navigation), `1881b1d` (stable Back acceptance). The final deployment details are recorded below and in the backend audit. Concurrent navigation, content-reader and evidence-hub work was integrated before release; original working directories and user changes were not reset.
