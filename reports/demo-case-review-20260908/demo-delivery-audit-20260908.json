@@ -1,0 +1,632 @@
+{
+  "checked_at": "2026-09-08T18:14:07.948280+00:00",
+  "scope": "Read-only live-site delivery audit and local preparation; no synthesis, DGX inference, messages to delivery receivers or live changes. Local static preview restarted.",
+  "browser_observations": [
+    {
+      "page": "https://duckybot.app/#product-demo",
+      "source": "https://duckybot.app/media/ducky-walkthrough-2026-09-07-watchlist-v9.zh.mp4",
+      "duration_seconds": 36.101333,
+      "chapter_count": 8,
+      "cold_seek_button": "跳至 0:33 · 免费添加自选",
+      "cold_seek_result_seconds": 33.68,
+      "paused": true,
+      "ready_state": 4,
+      "media_error": null,
+      "subtitle_languages": [
+        "zh",
+        "en"
+      ],
+      "restored_to_first_chapter_seconds": 0.16,
+      "guide_restored_closed": true
+    },
+    {
+      "page": "https://duckybot.app/en/#product-demo",
+      "source": "https://duckybot.app/media/ducky-walkthrough-2026-09-07-watchlist-v9.en.mp4",
+      "duration_seconds": 33.421333,
+      "chapter_count": 8,
+      "cold_seek_button": "Jump to 0:30 · Start your watchlist free",
+      "cold_seek_result_seconds": 30.36,
+      "paused": true,
+      "ready_state": 4,
+      "media_error": null,
+      "subtitle_languages": [
+        "zh",
+        "en"
+      ],
+      "audit_tab_closed": true
+    }
+  ],
+  "browser_test_limit": "Cold chapter seek and metadata only; not a new audiovisual playthrough or native-pronunciation acceptance.",
+  "media": [
+    {
+      "version": "watchlist-v9",
+      "language": "zh",
+      "path": "/Users/zizhaozhang/dev/ducky-site-demo-v10-20260907/public/media/ducky-walkthrough-2026-09-07-watchlist-v9.zh.mp4",
+      "sha256": "a57019e2c8a23a31f065a1442c3fdcb68fdf4e92f5c7186e9870a55a39580099",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "r_frame_rate": "25/1"
+          },
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "36.101333",
+          "size": "1445736"
+        }
+      },
+      "published_homepage_reference_observed": true
+    },
+    {
+      "version": "watchlist-v9",
+      "language": "en",
+      "path": "/Users/zizhaozhang/dev/ducky-site-demo-v10-20260907/public/media/ducky-walkthrough-2026-09-07-watchlist-v9.en.mp4",
+      "sha256": "28cca37fe0f66d0ebd211bfb6d11c5ff0e589b188368b131b670144e0c425d00",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "r_frame_rate": "25/1"
+          },
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "33.421333",
+          "size": "1433084"
+        }
+      },
+      "published_homepage_reference_observed": true
+    },
+    {
+      "version": "vibe-v10",
+      "language": "zh",
+      "path": "/Users/zizhaozhang/dev/ducky-site-demo-v10-20260907/public/media/ducky-walkthrough-2026-09-07-vibe-v10.zh.mp4",
+      "sha256": "9f90aaa61cd417671cb9dddaad588890497360b53b7006d461c0bb7603403ce4",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "r_frame_rate": "25/1"
+          },
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "38.461333",
+          "size": "1556474"
+        }
+      },
+      "published_homepage_reference_observed": false
+    },
+    {
+      "version": "vibe-v10",
+      "language": "en",
+      "path": "/Users/zizhaozhang/dev/ducky-site-demo-v10-20260907/public/media/ducky-walkthrough-2026-09-07-vibe-v10.en.mp4",
+      "sha256": "9859d6e58f221ec8ca0b2fe9d8be2e5719dbbcbdb42a021fce884cc7ba4c8d4d",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "r_frame_rate": "25/1"
+          },
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "36.701333",
+          "size": "1589540"
+        }
+      },
+      "published_homepage_reference_observed": false
+    }
+  ],
+  "published_v9_voice_provenance": {
+    "en": "en-US-JennyNeural",
+    "zh": "zh-CN-XiaoxiaoNeural"
+  },
+  "v10_synthesis": {
+    "provider": "Microsoft online speech service",
+    "client": "edge-tts",
+    "client_version": "7.2.8",
+    "model_revision": "not exposed by provider",
+    "rate": "+0%",
+    "pitch": "+0Hz",
+    "boundary": "WordBoundary"
+  },
+  "selected_v10_asset_directory": "/tmp/ducky-demo-v10/audio-v2",
+  "selected_hashes_matched": 54,
+  "render_wav_hashes_matched": 18,
+  "audio_v1_is_not_selected_render_source": true,
+  "v10_audio_assets": [
+    {
+      "scene": "01-watch",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "从你的自选股开始。",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/01-watch.zh.mp3",
+          "bytes": 13968,
+          "sha256": "c0bd1673eee4c3f180fb9613fe511e27f0650bd5ef2f2ae84db7286c698e436f"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/01-watch.zh.words.jsonl",
+          "bytes": 434,
+          "sha256": "bba871a8cc204663685d3a39246c2054a2aa84c19662b6b2a4560277e339ced1"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/01-watch.zh.wav",
+          "bytes": 111822,
+          "sha256": "62d510dbdd33ae1107cf3438a65d12dc33b9193c5c7cd3e12d66e456ac52ba22"
+        }
+      ]
+    },
+    {
+      "scene": "02-people",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "佩洛西的申报，高管的买入，原文都在。",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/02-people.zh.mp3",
+          "bytes": 24768,
+          "sha256": "25b627541190c79896a67a3859a8459f271307219c2c25a863a1b6773988e7a9"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/02-people.zh.words.jsonl",
+          "bytes": 787,
+          "sha256": "5f5b25a02399e62057ced8a6a51ce3df2d686c05e511b93d2576e41247234aa5"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/02-people.zh.wav",
+          "bytes": 198222,
+          "sha256": "dd7d2e9ce3620f4181d40357e33e3ab91975f0656846fbd9554b4afa99d09cfd"
+        }
+      ]
+    },
+    {
+      "scene": "03-partners",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "英伟达，投资诺基亚。与康宁合作，价格和条款一起看。",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/03-partners.zh.mp3",
+          "bytes": 38736,
+          "sha256": "7d91933663e5762685dc51e4ee3848a054e61e66f3b9a3fdd292ed95a12ab734"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/03-partners.zh.words.jsonl",
+          "bytes": 983,
+          "sha256": "bf57e9d5cf96b97366e04901999cbe9bf39fef09fb1f8f3abc2547006afd07ef"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/03-partners.zh.wav",
+          "bytes": 309966,
+          "sha256": "336fdabfb16886be44480a76d7efb1a29ebbe17080e45f7323cae252226c48cf"
+        }
+      ]
+    },
+    {
+      "scene": "04-price",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "到你设的价格，就提醒。后面涨跌，继续跟踪。",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/04-price.zh.mp3",
+          "bytes": 31104,
+          "sha256": "5e0b5bd9ce66a53bfe57bebfc07fa9c68bd629a0d3d8e4b15b0eeede4bd7c7e5"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/04-price.zh.words.jsonl",
+          "bytes": 955,
+          "sha256": "c911a5bff5c6060cd30569e61561b36b6f478b03093384763da6bc803258c4cd"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/04-price.zh.wav",
+          "bytes": 248910,
+          "sha256": "633d7eab5bc9e9a3680db2bf2d07d848b6b821b6222e135065cc8f5ca4c5366c"
+        }
+      ]
+    },
+    {
+      "scene": "05-macro",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "利率变化，怎样影响罗宾汉？",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/05-macro.zh.mp3",
+          "bytes": 18432,
+          "sha256": "c69c944878952ec405037a4df2b41379ad9462138a427b022ef3084d66886db4"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/05-macro.zh.words.jsonl",
+          "bytes": 454,
+          "sha256": "de5406371a656ec6cf6972f7c12210956a2265862fb22a0cf70baab407f33139"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/05-macro.zh.wav",
+          "bytes": 147534,
+          "sha256": "9b6a37354f7e3f69776386334e356fa3772c448975453da4a2b1c28645bff010"
+        }
+      ]
+    },
+    {
+      "scene": "06-creator",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "博主观点，连同原话一起看。",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/06-creator.zh.mp3",
+          "bytes": 19872,
+          "sha256": "884f0f7b51d83922d6dfbbe38d7dfb815c4004f01f6d3dc7bc15bb52f4ab33a0"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/06-creator.zh.words.jsonl",
+          "bytes": 532,
+          "sha256": "a94344290542c093a1842ce9ed7127be3faec0809e96a6a5d88dfc9c916748ca"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/06-creator.zh.wav",
+          "bytes": 159054,
+          "sha256": "09c8785b23b9cbf4a1e316c0a7c3156d242fb0580a20a500ec169edb3199705d"
+        }
+      ]
+    },
+    {
+      "scene": "07-social",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "社区讨论升温了吗？看提及数量，也看历史。",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/07-social.zh.mp3",
+          "bytes": 30096,
+          "sha256": "bfcec9c072a1287151ef9ac95e66ea29965ccd34e234ab3711f61a2c22bee279"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/07-social.zh.words.jsonl",
+          "bytes": 957,
+          "sha256": "8d1f816fe15af7ab1f44e2bf8c66f6c4d79044c8a79a94eda2772f44e75c7458"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/07-social.zh.wav",
+          "bytes": 240846,
+          "sha256": "04e959070175c901272ee60b1f7a3ebeda49650c96557aeafcf0abcd7fedc2c0"
+        }
+      ]
+    },
+    {
+      "scene": "08-brief",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "消息进收件箱。每天一份自选总结。",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/08-brief.zh.mp3",
+          "bytes": 26352,
+          "sha256": "1968e493e34772d2e1087f2b955ee291a9cac7e3586d495e2d409fe55a8c8d50"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/08-brief.zh.words.jsonl",
+          "bytes": 628,
+          "sha256": "2c47eee5192781928f70f00675b3391b0c18dd27fcd684de6e4fb543c671bedf"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/08-brief.zh.wav",
+          "bytes": 210894,
+          "sha256": "37723a9c1e58e21adcbe3d18a008fdf335ac7e3a1d41f076361c06e3ae2a2129"
+        }
+      ]
+    },
+    {
+      "scene": "09-start",
+      "language": "zh",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "spoken_text": "免费开始。",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/09-start.zh.mp3",
+          "bytes": 10224,
+          "sha256": "eebc8ebbbeda7eea6f615d244da025923cd8869ffdc6cd009de97f416773f5ff"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/09-start.zh.words.jsonl",
+          "bytes": 178,
+          "sha256": "b7fdd09268799d7dad8472e1a09fa363dacb4a0f7fbaacfee80f40d6367ecee9"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/09-start.zh.wav",
+          "bytes": 81870,
+          "sha256": "167ed2d2739c164f712ae916846c6c93b28cdabef0eaea87d4db7d5e94bb0eaa"
+        }
+      ]
+    },
+    {
+      "scene": "01-watch",
+      "language": "en",
+      "voice": "en-US-AvaNeural",
+      "spoken_text": "Start with the stocks you follow.",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/01-watch.en.mp3",
+          "bytes": 12672,
+          "sha256": "2e9c19cc1592d0a14ec6242b60be3ac2552d1cceaff5e5fb31d51a9e4c63530b"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/01-watch.en.words.jsonl",
+          "bytes": 490,
+          "sha256": "b375aea7e3165e01fe8303b9fc26d96f7b2c72a7f646398e9fe07ef987670cd7"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/01-watch.en.wav",
+          "bytes": 101454,
+          "sha256": "226530460f83b7f8b4737cf86446dfedb54400ea2e39ed16ad1f78e16bcec451"
+        }
+      ]
+    },
+    {
+      "scene": "02-people",
+      "language": "en",
+      "voice": "en-US-AvaNeural",
+      "spoken_text": "Pelosi's filings. Insider purchases. Check the sources.",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/02-people.en.mp3",
+          "bytes": 29376,
+          "sha256": "1671494c8ecdd02c23303a2b16448305f2558744e3afe9059dae41b60a92a9cd"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/02-people.en.words.jsonl",
+          "bytes": 590,
+          "sha256": "c7f798330883b2aa22a98cdd3e930ac050a42c542b2a5a4fd2e5022bda671b55"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/02-people.en.wav",
+          "bytes": 235086,
+          "sha256": "205e0395528764207346cc16186b8875d3516c0961f9407bb5bac481f9f9906b"
+        }
+      ]
+    },
+    {
+      "scene": "03-partners",
+      "language": "en",
+      "voice": "en-US-AvaNeural",
+      "spoken_text": "Nvidia backs Nokia and partners with Corning. Check the terms.",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/03-partners.en.mp3",
+          "bytes": 28800,
+          "sha256": "6b86e3ff0aa74b37767c45e20bf38881850d228bc9554f4264a90a36b778f3d2"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/03-partners.en.words.jsonl",
+          "bytes": 829,
+          "sha256": "c31f025a6bf58593c8f390b494edcaf4b0327318682709b70f113007c2690dd9"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/03-partners.en.wav",
+          "bytes": 230478,
+          "sha256": "6dd31a4397cc0f3fe1d17db6bdb5b9c40971c54b44fb2895d3c93f066cd6b2ee"
+        }
+      ]
+    },
+    {
+      "scene": "04-price",
+      "language": "en",
+      "voice": "en-US-AvaNeural",
+      "spoken_text": "Get an alert at your chosen price. Track what happens next.",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/04-price.en.mp3",
+          "bytes": 25344,
+          "sha256": "1a720e79d88cc13d14dd62fd57b0710c015757da6d5dcba745ec565de3b1a176"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/04-price.en.words.jsonl",
+          "bytes": 900,
+          "sha256": "3a6d67cbc6f5e43a4a24e34b9f58c56c04d3eb21c2b06244f945ad17084a3b71"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/04-price.en.wav",
+          "bytes": 202830,
+          "sha256": "ee428ddb547d786ea8b6a5b3397622c8afa401b2dd0044b0058bc4a7a048af57"
+        }
+      ]
+    },
+    {
+      "scene": "05-macro",
+      "language": "en",
+      "voice": "en-US-AvaNeural",
+      "spoken_text": "How do interest rates affect Robin Hood?",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/05-macro.en.mp3",
+          "bytes": 13392,
+          "sha256": "4a1832d03ea56e53702e86454819a4d7ad324bd6ccffb6c7d4205c4c40d8d949"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/05-macro.en.words.jsonl",
+          "bytes": 574,
+          "sha256": "c3e280a92c96cea3c2c5a55ca5e2b543569490a0a861ceca71ae870d961532ca"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/05-macro.en.wav",
+          "bytes": 107214,
+          "sha256": "e8bdad2de1d926a8c497fb22bec63973a08402058725821681bc8d60819ee5d7"
+        }
+      ]
+    },
+    {
+      "scene": "06-creator",
+      "language": "en",
+      "voice": "en-US-AvaNeural",
+      "spoken_text": "Creator views, with the original context.",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/06-creator.en.mp3",
+          "bytes": 18720,
+          "sha256": "4cca321514772eed0ac3bbd9b3526527ecddd6f02aa8501ee3a71e32e1efe37e"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/06-creator.en.words.jsonl",
+          "bytes": 499,
+          "sha256": "ab16a2a39e1137b8f1d9d0daa52d24a5aaa28954fdf3214b22702693f42b923e"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/06-creator.en.wav",
+          "bytes": 149838,
+          "sha256": "9299c69594db94876c8c48b82383483e9a23a2fad4ed5bd38ac0356f9753fb93"
+        }
+      ]
+    },
+    {
+      "scene": "07-social",
+      "language": "en",
+      "voice": "en-US-AvaNeural",
+      "spoken_text": "Is Reddit attention rising? See the counts and their history.",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/07-social.en.mp3",
+          "bytes": 25488,
+          "sha256": "bb6862a89221c959a54791e3d2fb7c90ad8a41d138804bc2ec5a60a83e1a4118"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/07-social.en.words.jsonl",
+          "bytes": 827,
+          "sha256": "4889e75e1f632fd8bdc4e7f8c6e5ae48737686b51814e3164923f89c1df4c46e"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/07-social.en.wav",
+          "bytes": 203982,
+          "sha256": "5eccabbba35eed12cd979e36a31022ea48359342a9edf16f0c972be64a161f7b"
+        }
+      ]
+    },
+    {
+      "scene": "08-brief",
+      "language": "en",
+      "voice": "en-US-AvaNeural",
+      "spoken_text": "Relevant updates in your inbox. A daily brief brings them together.",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/08-brief.en.mp3",
+          "bytes": 28800,
+          "sha256": "f513757c43e0fe0b7e7ade5e479b9ee599c8f2bd93a2168cb14c87e1a50a74ae"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/08-brief.en.words.jsonl",
+          "bytes": 911,
+          "sha256": "222e9daf6375e70602ff808fa18e2a9975b07acedd5d470f6659d574265db442"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/08-brief.en.wav",
+          "bytes": 230478,
+          "sha256": "95a5cb46be6f5744b9978aba14b991346ec036a240b4507890d45165ec1b42e3"
+        }
+      ]
+    },
+    {
+      "scene": "09-start",
+      "language": "en",
+      "voice": "en-US-AvaNeural",
+      "spoken_text": "Start free.",
+      "render_hash_matches": true,
+      "files": [
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/09-start.en.mp3",
+          "bytes": 7632,
+          "sha256": "694789704252158f5a62a86b99d9a28a7b97bdf38c9c25180e0b630d3930a6d2"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/09-start.en.words.jsonl",
+          "bytes": 163,
+          "sha256": "c10d41aec9f4a8dfa70e641e35865083ef5237a3aa48477ce3a5292145fc6dcd"
+        },
+        {
+          "path": "/tmp/ducky-demo-v10/audio-v2/09-start.en.wav",
+          "bytes": 61134,
+          "sha256": "c1c517b0755376af494cbc47a0dde5945b5419198f5fec2e7bee9668f53c9170"
+        }
+      ]
+    }
+  ],
+  "new_draft_full_sentence_audio_matches": [],
+  "reuse_limit": "Existing voices and processing tools are audition/reference inputs. No exact new-script scene match. Resynthesize accepted final text and realign subtitles; never relabel old speech. Source files under /tmp require preservation before cleanup.",
+  "draft": {
+    "manifest": "/Users/zizhaozhang/dev/ducky-site-demo-information-map-20260908/scripts/demo/voiceover-2026-09-08-information-map-draft.json",
+    "estimated_seconds": 38.6,
+    "measured": false,
+    "final_recorded": false,
+    "final_published": false
+  },
+  "preview": {
+    "url": "http://127.0.0.1:8807/",
+    "status": 200,
+    "bytes": 1233,
+    "local_only": true,
+    "silent": true,
+    "restarted_after_interruption": true
+  },
+  "remaining": [
+    "Three creator source points completing serial owner review; await stable source/version handoff.",
+    "Current overview and idiomatic English producer acceptance; retain original source bindings during normal refresh.",
+    "Designated Telegram and email receiver, verified identity/email, preferences, idempotent sends and independent real receipts.",
+    "Final-language live captures, bilingual voice audition/listening, word-boundary subtitles, phone readability, complete end-card playback.",
+    "Coordinated final media publication after acceptance; do not deploy this older preparation base wholesale."
+  ],
+  "real_notifications_sent": false,
+  "dgx_or_speech_model_called": false,
+  "live_resources_modified": false
+}

@@ -1,0 +1,211 @@
+{
+  "version": "2026-09-08-intc-draft-1",
+  "kind": "edited_real_UI_capture_review_draft",
+  "fps": 25,
+  "videos": {
+    "zh": {
+      "path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/render/ducky-intc-draft.zh.mp4",
+      "seconds_without_aac_padding": 32.519999999999996,
+      "sha256": "5323c1ea2725ffcefeef62a65bf51efb99f30ebe196c91673c37a9c677548d7e",
+      "timeline": [
+        {
+          "scene": "01-overload",
+          "start": 0.0,
+          "seconds": 4.08,
+          "speech_seconds": 3.744,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio/01-overload.zh.wav",
+          "audio_sha256": "876e525d95603234e538c17ee537909d23097de5275d2d2fd5ebfb4d1ade4d4e",
+          "cue_start": 0.23,
+          "cue_end": 3.555
+        },
+        {
+          "scene": "02-map",
+          "start": 4.08,
+          "seconds": 4.04,
+          "speech_seconds": 3.72,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio/02-map.zh.wav",
+          "audio_sha256": "b555aca2c80df44525391798d280951ef2a4933366d094439aa61cb43a10b495",
+          "cue_start": 4.3100000000000005,
+          "cue_end": 7.585000000000001
+        },
+        {
+          "scene": "03-creator",
+          "start": 8.120000000000001,
+          "seconds": 4.6,
+          "speech_seconds": 3.576,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio-revision/03-creator.zh.wav",
+          "audio_sha256": "29cc96028b42d1ca01bd8b7a8eb1a3fa0691a6e932889b2e219fd01a7081f604",
+          "cue_start": 8.350000000000001,
+          "cue_end": 11.500000000000002
+        },
+        {
+          "scene": "04-source",
+          "start": 12.72,
+          "seconds": 4.0,
+          "speech_seconds": 3.456,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio/04-source.zh.wav",
+          "audio_sha256": "3a8c7b8f2f505f0e7cc4f38ac05b0d5017c7c40c70b98fdc9cc0c09bc5ee6045",
+          "cue_start": 12.950000000000001,
+          "cue_end": 15.975000000000001
+        },
+        {
+          "scene": "05-alert",
+          "start": 16.72,
+          "seconds": 4.72,
+          "speech_seconds": 4.392,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio/05-alert.zh.wav",
+          "audio_sha256": "1968a9bff20a4696b73852150da3520f32268c0fbaa6b858f1cff038db5acb54",
+          "cue_start": 16.95,
+          "cue_end": 20.9
+        },
+        {
+          "scene": "06-channels",
+          "start": 21.439999999999998,
+          "seconds": 4.0,
+          "speech_seconds": 3.48,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio-revision/06-channels.zh.wav",
+          "audio_sha256": "c852a69736c407fc57797e5aff31a6510c27e25cfdf557d80ee6cb096a1b0f70",
+          "cue_start": 21.669999999999998,
+          "cue_end": 24.72
+        },
+        {
+          "scene": "07-calendar",
+          "start": 25.439999999999998,
+          "seconds": 3.88,
+          "speech_seconds": 3.552,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio/07-calendar.zh.wav",
+          "audio_sha256": "1f5a4bed9e0b8b950cffc70e6c80925360022bce59327de7e28dab24fd8b60e7",
+          "cue_start": 25.669999999999998,
+          "cue_end": 28.7825
+        },
+        {
+          "scene": "08-start",
+          "start": 29.319999999999997,
+          "seconds": 3.2,
+          "speech_seconds": 2.448,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio/08-start.zh.wav",
+          "audio_sha256": "d4c55e58ba304822863d9a8015c1f8e5f3a9eefa7eb300caf18190f0f931c487",
+          "cue_start": 29.549999999999997,
+          "cue_end": 31.562499999999996
+        }
+      ],
+      "loudness_input": {
+        "input_i": "-19.64",
+        "input_tp": "-3.83",
+        "input_lra": "3.10",
+        "input_thresh": "-29.94",
+        "output_i": "-15.98",
+        "output_tp": "-2.00",
+        "output_lra": "3.20",
+        "output_thresh": "-26.29",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.02"
+      }
+    },
+    "en": {
+      "path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/render/ducky-intc-draft.en.mp4",
+      "seconds_without_aac_padding": 31.319999999999997,
+      "sha256": "0a775fa2b2da337e5ee9376278a6abc610ad8591e8aa7c56f20e6485c8e8886e",
+      "timeline": [
+        {
+          "scene": "01-overload",
+          "start": 0.0,
+          "seconds": 3.8,
+          "speech_seconds": 3.408,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio/01-overload.en.wav",
+          "audio_sha256": "c141800253719333eeb5452ead9b163bbe4fba5c93d0ce1e067ea56e2b2a4d97",
+          "cue_start": 0.23,
+          "cue_end": 3.4050000000000002
+        },
+        {
+          "scene": "02-map",
+          "start": 3.8,
+          "seconds": 3.72,
+          "speech_seconds": 2.712,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio/02-map.en.wav",
+          "audio_sha256": "076ad551da1bb8c4a9636eede2340c6c7576561f5728d51a0499a7fab73296f4",
+          "cue_start": 4.03,
+          "cue_end": 6.5175
+        },
+        {
+          "scene": "03-creator",
+          "start": 7.52,
+          "seconds": 4.6,
+          "speech_seconds": 3.096,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio/03-creator.en.wav",
+          "audio_sha256": "236fc32a690ed99daebe20656db349285783f04520d17909dcc0ab643397d63c",
+          "cue_start": 7.75,
+          "cue_end": 10.6125
+        },
+        {
+          "scene": "04-source",
+          "start": 12.12,
+          "seconds": 4.0,
+          "speech_seconds": 2.688,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio/04-source.en.wav",
+          "audio_sha256": "412df8e394baf49973092c8ce73b2930f5b67911ece923bd3b7c173dc76d02fe",
+          "cue_start": 12.35,
+          "cue_end": 14.825
+        },
+        {
+          "scene": "05-alert",
+          "start": 16.119999999999997,
+          "seconds": 4.2,
+          "speech_seconds": 2.592,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio/05-alert.en.wav",
+          "audio_sha256": "d24113a524b764652a35340f4d9c2d5cb0daa16b295cf5d128adee04922b2847",
+          "cue_start": 16.349999999999998,
+          "cue_end": 18.7125
+        },
+        {
+          "scene": "06-channels",
+          "start": 20.319999999999997,
+          "seconds": 4.0,
+          "speech_seconds": 3.408,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio/06-channels.en.wav",
+          "audio_sha256": "d14f377386bef5daa749ae941578c608683b92e58c167223223e7d5ffaf999e4",
+          "cue_start": 20.549999999999997,
+          "cue_end": 23.724999999999998
+        },
+        {
+          "scene": "07-calendar",
+          "start": 24.319999999999997,
+          "seconds": 3.8,
+          "speech_seconds": 2.952,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio/07-calendar.en.wav",
+          "audio_sha256": "388c412e6ec9f2019fb493b7a32701f5ee15c6c86c854a51a2f0f96e203169e0",
+          "cue_start": 24.549999999999997,
+          "cue_end": 27.275
+        },
+        {
+          "scene": "08-start",
+          "start": 28.119999999999997,
+          "seconds": 3.2,
+          "speech_seconds": 2.136,
+          "audio_path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/audio/08-start.en.wav",
+          "audio_sha256": "ba3ec5ac1b80f7087af97addf095c91e60730639ebcb970fa646f3cb7bd867ad",
+          "cue_start": 28.349999999999998,
+          "cue_end": 30.262499999999996
+        }
+      ],
+      "loudness_input": {
+        "input_i": "-20.59",
+        "input_tp": "-3.33",
+        "input_lra": "3.90",
+        "input_thresh": "-31.16",
+        "output_i": "-16.47",
+        "output_tp": "-2.00",
+        "output_lra": "4.40",
+        "output_thresh": "-27.12",
+        "normalization_type": "dynamic",
+        "target_offset": "0.47"
+      }
+    }
+  },
+  "not_continuous_screen_recording": true,
+  "dgx_used": false,
+  "notifications_sent": false,
+  "audio_processing": "Whole-track two-pass loudnorm -16 LUFS / -2 dBTP; original speech speed and pitch",
+  "caption_processing": "Full sentence cues bounded by original provider first/last word; native track in each language; primary captions burned in",
+  "listening_acceptance": "not certified; review draft"
+}

@@ -1,0 +1,76 @@
+{
+  "checked_at": "2026-09-08T18:37:59.564631+00:00",
+  "checks": [
+    "zh full decode",
+    "zh codecs frames duration",
+    "zh timeline word cues hashes and CTA",
+    "zh zh captions complete max2lines",
+    "zh en captions complete max2lines",
+    "en full decode",
+    "en codecs frames duration",
+    "en timeline word cues hashes and CTA",
+    "en zh captions complete max2lines",
+    "en en captions complete max2lines"
+  ],
+  "passed": true,
+  "videos": {
+    "zh": {
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "r_frame_rate": "25/1",
+            "nb_read_frames": "813"
+          },
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "r_frame_rate": "0/0",
+            "nb_read_frames": "1525"
+          }
+        ],
+        "format": {
+          "duration": "32.520000",
+          "size": "2257406"
+        }
+      },
+      "full_decode_error": null,
+      "sha256": "5323c1ea2725ffcefeef62a65bf51efb99f30ebe196c91673c37a9c677548d7e"
+    },
+    "en": {
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "r_frame_rate": "25/1",
+            "nb_read_frames": "783"
+          },
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "r_frame_rate": "0/0",
+            "nb_read_frames": "1469"
+          }
+        ],
+        "format": {
+          "duration": "31.320000",
+          "size": "2263250"
+        }
+      },
+      "full_decode_error": null,
+      "sha256": "0a775fa2b2da337e5ee9376278a6abc610ad8591e8aa7c56f20e6485c8e8886e"
+    }
+  },
+  "subjective_native_listening": "Not certified; playback provided for review.",
+  "source_link_live_check": "INTC TALK point to YouTube t246 actually opened.",
+  "external_notifications_sent": false,
+  "dgx_used": false
+}

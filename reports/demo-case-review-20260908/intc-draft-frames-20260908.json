@@ -1,0 +1,200 @@
+[
+  {
+    "scene": "01-overload",
+    "language": "zh",
+    "raw_capture": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/captures/01-overload.zh.png",
+    "raw_sha256": "d8608fd32f5a80fded89a370214d737cf9a9436728fde07361adbfcf352b944f",
+    "crop": [
+      840,
+      85,
+      1120,
+      850
+    ],
+    "frame_sha256": "130c76cc23fcd85d534e09b45e481053969ac27d5bb3d0f266f57a1e1e82edfe"
+  },
+  {
+    "scene": "02-map",
+    "language": "zh",
+    "raw_capture": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/captures/02-map.zh.png",
+    "raw_sha256": "386873a34fb0d2099495a4e18ade9a49c0c7968a55a21e07748dbb80bcca6497",
+    "crop": [
+      845,
+      365,
+      1100,
+      650
+    ],
+    "frame_sha256": "cebf90f6eddfa1eabe362fa52a1a0f7a2786fa0972dbd0af50f056e638d8370d"
+  },
+  {
+    "scene": "03-creator",
+    "language": "zh",
+    "raw_capture": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/captures/03-creator.zh.png",
+    "raw_sha256": "dfee9315e2b5560152721f1f64900243da66451ad0910ea28f05b940e95f5b09",
+    "crop": [
+      855,
+      148,
+      1100,
+      370
+    ],
+    "frame_sha256": "b863b5d0020c0ae532d5b4997ef723a9904a2e28973d1d8e3e6b472cc8d5c993"
+  },
+  {
+    "scene": "04-source",
+    "language": "zh",
+    "raw_capture": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/captures/04-source-ready.zh.png",
+    "raw_sha256": "02be5f521d24ea101532c4b999cb796b50677ee10d2fc1e6790925dbf6370101",
+    "crop": [
+      16,
+      68,
+      1205,
+      680
+    ],
+    "frame_sha256": "061a24e19b35ae16253e3888414f06870c7895c147e44a709ea1804a63630ffd"
+  },
+  {
+    "scene": "05-alert",
+    "language": "zh",
+    "raw_capture": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/captures/05-alert.zh.png",
+    "raw_sha256": "1ec7f5392df5706c0fc3fa659ec5fd61b9e12001c070b0e0a0ca45f71211be61",
+    "crop": [
+      925,
+      95,
+      965,
+      470
+    ],
+    "frame_sha256": "edc65bcb9fb6ae8fe727ef54d509a496cca8387590b0cc3fef2354cb4e3de2bc"
+  },
+  {
+    "scene": "06-channels",
+    "language": "zh",
+    "raw_capture": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/captures/06-channels.zh.png",
+    "raw_sha256": "e2d00435cab3fdcf01ade0230acd75f16434c728395fcb71d1cb793ef2d1f93e",
+    "crop": [
+      930,
+      630,
+      940,
+      300
+    ],
+    "frame_sha256": "22a627f620b77fb79ef97075dc5a4dfff2b01167af38129a3f96736384efb93d"
+  },
+  {
+    "scene": "07-calendar",
+    "language": "zh",
+    "raw_capture": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/captures/07-calendar.zh.png",
+    "raw_sha256": "1d37b90fc8dcc3f10638e1000c267881042837d7984e047f4aa0e5eb98a0cefd",
+    "crop": [
+      845,
+      85,
+      1120,
+      700
+    ],
+    "frame_sha256": "817b75920e4661dd3170007e884b4c80a24bb59c6b2cbc8939f97eea9fcb3130"
+  },
+  {
+    "scene": "08-start",
+    "language": "zh",
+    "raw_capture": null,
+    "raw_sha256": null,
+    "crop": null,
+    "frame_sha256": "1a911c673a14ddcdf6da888af46971c17f0f1da58def65f71f99deccb741b4c7"
+  },
+  {
+    "scene": "01-overload",
+    "language": "en",
+    "raw_capture": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/captures/01-overload.en.png",
+    "raw_sha256": "17bed130f7802d11fadce2885abc1dc4fedf58ef93cf7acccb1a25eea9924f9a",
+    "crop": [
+      840,
+      85,
+      1120,
+      850
+    ],
+    "frame_sha256": "da4c04600f10b927075b413234a998674566c47968df4fabe349d298d9c6f287"
+  },
+  {
+    "scene": "02-map",
+    "language": "en",
+    "raw_capture": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/captures/02-map.en.png",
+    "raw_sha256": "f8b3f67de11b44aa4220093f20eb256fab360489d62ea021a3b2891f5ecebeed",
+    "crop": [
+      845,
+      380,
+      1100,
+      690
+    ],
+    "frame_sha256": "d90439757f0f12864cb21c26a96abb4f5fa8174e94af75e0d639f39519b72237"
+  },
+  {
+    "scene": "03-creator",
+    "language": "en",
+    "raw_capture": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/captures/03-creator.en.png",
+    "raw_sha256": "7e67f40c818c06584d48ba8e1da1ebb6b67d43ab4d8151c128a6ff871d19efe5",
+    "crop": [
+      855,
+      525,
+      1100,
+      370
+    ],
+    "frame_sha256": "4ec28937a61f4df221a667ef7ee2dbf93254f505ae21d09e2f66b42a973dec8e"
+  },
+  {
+    "scene": "04-source",
+    "language": "en",
+    "raw_capture": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/captures/04-source-ready.zh.png",
+    "raw_sha256": "02be5f521d24ea101532c4b999cb796b50677ee10d2fc1e6790925dbf6370101",
+    "crop": [
+      16,
+      68,
+      1205,
+      680
+    ],
+    "frame_sha256": "82e53aff03cd7423afa576b9165f4fd1fc8f620a25e8dd9bed863fef98e70760"
+  },
+  {
+    "scene": "05-alert",
+    "language": "en",
+    "raw_capture": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/captures/05-alert.en.png",
+    "raw_sha256": "790b29ff5aa44dad7beb450acb8efab4e158c9c6e15c016d51002b96f47ceac6",
+    "crop": [
+      925,
+      95,
+      965,
+      490
+    ],
+    "frame_sha256": "c3afd863b9ce91ccb8702b6952cd09e2d27e376de230f423e3fcd26ef448c0ed"
+  },
+  {
+    "scene": "06-channels",
+    "language": "en",
+    "raw_capture": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/captures/06-channels.en.png",
+    "raw_sha256": "ca24793a5ee32b677b9e4f5667531d8e405f8889c7bddc0669486da029f6060b",
+    "crop": [
+      930,
+      630,
+      940,
+      315
+    ],
+    "frame_sha256": "0e65efabd9764a0374d2dd94ff902bdf2dd9b8e574b898d49bb7d1d3d0a18172"
+  },
+  {
+    "scene": "07-calendar",
+    "language": "en",
+    "raw_capture": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/intc-draft-1/captures/07-calendar.en.png",
+    "raw_sha256": "14464617a4a6ea620a071955aa54196bb6a21101259575af6728991d4a42e602",
+    "crop": [
+      845,
+      85,
+      1120,
+      700
+    ],
+    "frame_sha256": "5a196cc2f9c28fde966f9cd48e18f7d5d2f24ea6c43d5a39d1c309baf21459ab"
+  },
+  {
+    "scene": "08-start",
+    "language": "en",
+    "raw_capture": null,
+    "raw_sha256": null,
+    "crop": null,
+    "frame_sha256": "49fdefb18c96da7b7376da2afb5cd805dca8a3455f7598f5bc8883356b7feab9"
+  }
+]

@@ -1,0 +1,111 @@
+{
+  "version": "2026-09-08-intc-draft-1",
+  "status": "production_capture_draft_not_for_publication",
+  "render_languages": [
+    "zh",
+    "en"
+  ],
+  "speakers": {
+    "zh": "zh-CN-XiaoxiaoNeural",
+    "en": "en-US-AvaNeural"
+  },
+  "synthesis": {
+    "provider": "Microsoft online speech service",
+    "client": "edge-tts",
+    "client_version": "7.2.8",
+    "rate": "+0%",
+    "pitch": "+0Hz",
+    "boundary": "WordBoundary",
+    "model_revision": "not exposed by provider"
+  },
+  "resource_plan": {
+    "dgx_memory_bytes": 0,
+    "dgx_gpu_memory_bytes": 0,
+    "model_downloads": false,
+    "local_neural_model_loaded": false,
+    "encoding": "CPU ffmpeg, maximum 2 threads"
+  },
+  "scenes": [
+    {
+      "name": "01-overload",
+      "zh": "盯着几只股票，却看不过来那么多消息？",
+      "en": "Following a few stocks, but buried in updates?",
+      "title_zh": "从自选出发",
+      "title_en": "Start with your stocks",
+      "minimum_seconds": 3.8
+    },
+    {
+      "name": "02-map",
+      "zh": "在信息导图里，找到和你有关的观点。",
+      "en": "Find relevant views in your Information Map.",
+      "title_zh": "相关观点，汇在一起",
+      "title_en": "Relevant views, together",
+      "minimum_seconds": 3.7
+    },
+    {
+      "name": "03-creator",
+      "zh": "这位博主当时说，继续持有英特尔。",
+      "en": "Here, this creator says he's holding Intel.",
+      "title_zh": "投资 TALK 君 · 2026-08-24",
+      "title_en": "TALK · August 24, 2026",
+      "minimum_seconds": 4.6
+    },
+    {
+      "name": "04-source",
+      "zh": "点开原话，直接跳到视频这一刻。",
+      "en": "Open the original, right where he says it.",
+      "title_zh": "原话 · 04:06",
+      "title_en": "Original source · 04:06",
+      "minimum_seconds": 4.0
+    },
+    {
+      "name": "05-alert",
+      "zh": "想持续跟进？设置你关心的提醒条件。",
+      "en": "Set an alert for the price you want to watch.",
+      "title_zh": "设定提醒条件",
+      "title_en": "Set your alert conditions",
+      "minimum_seconds": 4.2
+    },
+    {
+      "name": "06-channels",
+      "zh": "接收方式，在这里选择和连接。",
+      "en": "Choose and connect your email or Telegram here.",
+      "title_zh": "选择接收方式",
+      "title_en": "Choose how to stay updated",
+      "minimum_seconds": 4.0
+    },
+    {
+      "name": "07-calendar",
+      "zh": "再看看日历，重要事件提前了解。",
+      "en": "Check the calendar for the next events to watch.",
+      "title_zh": "接下来，关注什么",
+      "title_en": "What to watch next",
+      "minimum_seconds": 3.8
+    },
+    {
+      "name": "08-start",
+      "zh": "从你关注的股票开始。",
+      "en": "Start with the stocks you care about.",
+      "title_zh": "从你关注的股票开始",
+      "title_en": "Start with the stocks you care about",
+      "minimum_seconds": 3.2
+    }
+  ],
+  "source": {
+    "point": "claim:231a64321ade3830e177cc93",
+    "video": "CEGiQA6CNd4",
+    "url": "https://www.youtube.com/watch?v=CEGiQA6CNd4&t=246s",
+    "publication_display_utc": "2026-08-24 04:34",
+    "first_recorded_display_utc": "2026-09-06 22:36",
+    "last_updated_display_utc": "2026-09-07 02:26",
+    "clock_precision": "UI minute labels",
+    "meaning": "author reported holding Intel at the time; original neutral stance retained; no current holding or return forecast inferred"
+  },
+  "limitations": [
+    "Edited cuts from actual live UI captures, not a continuous latency measurement.",
+    "INTC overview pending; not narrated or shown as ready.",
+    "No alert saved, no external delivery sent, no email/TG receipt implied.",
+    "No historical performance or first-capture claim.",
+    "Voice and subtitles remain a review draft; final listening acceptance required."
+  ]
+}

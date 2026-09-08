@@ -1,0 +1,34 @@
+{
+  "checked_at": "2026-09-08T18:44:31.066243+00:00",
+  "url": "http://127.0.0.1:8808/",
+  "browser": "Actual in-app browser",
+  "playback": [
+    {
+      "language": "zh",
+      "duration": 32.52,
+      "ended": true,
+      "currentTime": 32.52,
+      "paused": true,
+      "media_error": null
+    },
+    {
+      "language": "en",
+      "duration": 31.32,
+      "ended": true,
+      "currentTime": 31.32,
+      "paused": true,
+      "media_error": null
+    }
+  ],
+  "mechanism": "Native video Space key, full uninterrupted playback to ended; no seek-to-end substituted for playback.",
+  "restored": "Chinese paused at start; tab marked as deliverable",
+  "limits": "This verifies playback completion, not subjective listening or native pronunciation. Dropped-frame telemetry is unavailable through this browser DOM bridge.",
+  "local_server_checks": {
+    "index": 200,
+    "both_mp4_head": 200,
+    "vtt_head": 200,
+    "range_read": 206,
+    "unlisted_profile_path": 404
+  },
+  "publication_changed": false
+}

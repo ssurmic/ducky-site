@@ -1,0 +1,67 @@
+{
+  "checked_at": "2026-09-08T18:36:59.264569+00:00",
+  "type": "actual_production_UI_navigation_and_local_draft_capture",
+  "browser": "Existing authenticated Chrome profile; own temporary tab closed after checks. No new authentication or account link.",
+  "main_path": {
+    "map": "https://duckybot.app/app/#/evidence/INTC",
+    "creator": "https://duckybot.app/app/#/creators?scope=discover&creator=touzi-talk&post=CEGiQA6CNd4&point=claim%3A231a64321ade3830e177cc93",
+    "point": "claim:231a64321ade3830e177cc93",
+    "original": "https://www.youtube.com/watch?v=CEGiQA6CNd4&t=246s",
+    "original_label": "4:06",
+    "live_landing_verified": true,
+    "youtube_state": "4:06/18:02 immediately after reload/pause; decoded paused frame later displayed4:08/18:01. Black loading capture rejected; final edit uses decoded frame.",
+    "source_claim": "Author said he would continue holding Intel. Self-reported Hold; original neutral label preserved.",
+    "publication_display_utc": "2026-08-24 04:34",
+    "first_recorded_display_utc": "2026-09-06 22:36",
+    "updated_display_utc": "2026-09-07 02:26",
+    "clock_precision": "minute-level UI labels",
+    "independent_full_video_fact_check": false,
+    "overview_state": "pending; excluded from narrated claims",
+    "english_same_point_and_link_verified": true
+  },
+  "watchlist": {
+    "changed": false,
+    "intc_is_not_currently_in_the_list": true,
+    "sequence_meaning": "Open with an existing general watchlist, then explicitly explore Intel in its Information Map; do not claim Intel was saved to this account."
+  },
+  "alerts": {
+    "route": "https://duckybot.app/app/#/alerts",
+    "before_count": 0,
+    "chinese_example": "英特尔（INTC）跌破 100 美元时提醒我。",
+    "english_example": "Alert me when Intel (INTC) falls below $100.",
+    "condition_review_clicked": false,
+    "condition_enabled": false,
+    "draft_cleared": true,
+    "screenshots": "Both text entry states verified by accessible UI. Initial Chinese screenshot had not yet painted the typed text and was replaced after a fresh snapshot confirmed it."
+  },
+  "channels": {
+    "route": "https://duckybot.app/app/#/profile",
+    "email_ui_state": "ready for alerts, selected",
+    "telegram_ui_state": "not linked, disabled",
+    "changed": false,
+    "test_clicked": false,
+    "delivery_receipt_verified": false,
+    "privacy": "Final crops exclude identity fields. Private raw profile captures are not checked into Git or exposed by the preview server."
+  },
+  "calendar": {
+    "route": "https://duckybot.app/app/#/calendar",
+    "date_range_display": "2026-09-06 through2026-09-19",
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "meaning": "Actual existing calendar view, not a newly computed forecast or proof of an INTC-specific alert."
+  },
+  "notification_sends": false,
+  "product_model_calls": false,
+  "local_speech": "edge-tts7.2.8, Microsoft online speech; Xiaoxiao and Ava. Pinned lightweight client installed from local pip cache into isolated temporary venv; no model downloads or paid subscription.",
+  "dgx_gpu_memory_bytes": 0,
+  "dgx_memory_bytes": 0,
+  "mutations": "Only local script/artifact files and unsaved form text. No product records, preferences or notifications changed.",
+  "limitations": [
+    "Edited shots from actual UI, not continuous real-time recording or performance proof.",
+    "Original source at the clicked timestamp displays NVIDIA product-price news while Intel holding is spoken in the passage; no product-price percentage is used as a stock-return claim.",
+    "No post-publication performance claim or first-capture claim.",
+    "Private draft only; published v9 retained."
+  ]
+}
