@@ -48,7 +48,11 @@ for(const lang of ['zh','en']){
   creator.click();assert.equal(f.w.location.search,'?design=brief&theme=dark');
   assert.equal(f.w.location.hash,'#desk-feature-creators');
   creator.click();assert.equal(f.scrolled.at(-1),'desk-feature-creators');
-  f.w.history.back();await new Promise(r=>setTimeout(r,30));
+  await new Promise((resolve,reject)=>{
+   const timer=setTimeout(()=>reject(new Error('Back navigation did not complete')),2000);
+   f.w.addEventListener('popstate',()=>{clearTimeout(timer);resolve();},{once:true});
+   f.w.history.back();
+  });
   assert.equal(f.w.location.hash,'#desk-feature-calendar');assert.equal(f.doc.getElementById('desk-feature-calendar').hidden,false);
   assert.equal(f.doc.querySelectorAll('.desk-feature:not([hidden])').length,1);
   f.cleanup();
