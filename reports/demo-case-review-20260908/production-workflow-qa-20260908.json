@@ -99,6 +99,8 @@
     "visible_state": "综合分析整理中，可先查看下方观点。",
     "status": "pending",
     "root_cause": "not independently established; source owner is updating source attribution and backfill",
-    "recording_consequence": "The earlier ready v16 screenshot is a dated functional acceptance record, not the current ready state. Final recording remains deferred."
+    "recording_consequence": "The earlier ready v16 screenshot is a dated functional acceptance record, not the current ready state. Final recording remains deferred.",
+    "root_cause_reported_by_ui_owner": "Reddit mentions changed from 3 to 4 and rank updated; TALK and price citations unchanged.",
+    "producer_followup": "UI owner asked shared analysis producer to distinguish ordinary newer data from withdrawn/corrected evidence. Retain an explicitly dated still-valid previous reviewed snapshot while normal updates process; immediately invalidate genuinely corrected or withdrawn sources. Fix not accepted yet."
   }
 }
