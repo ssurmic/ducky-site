@@ -1175,6 +1175,7 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 /* Evidence map — a compact canvas with a stock at the centre and dated, openable branches. */
 .evidence-view{--evidence-support:#1b7558;--evidence-counter:#b53c52;--evidence-context:#3d6e9c}
 html[data-theme=dark] .evidence-view,html[data-theme=dark] .evidence-detail{--evidence-support:#69c4a5;--evidence-counter:#f18b9b;--evidence-context:#8cb6e7}
+@media(prefers-color-scheme:dark){html:not([data-theme=light]) :is(.evidence-view,.evidence-detail){--evidence-support:#69c4a5;--evidence-counter:#f18b9b;--evidence-context:#8cb6e7}}
 .evidence-detail{--evidence-support:#1b7558;--evidence-counter:#b53c52;--evidence-context:#3d6e9c}
 .evidence-heading{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:12px}
 .evidence-heading .view-head{margin:0}
