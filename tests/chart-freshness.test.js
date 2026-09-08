@@ -21,6 +21,24 @@ test('missing and non-finite OHLC values cannot become zero-price candles',()=>{
   assert.deepEqual(normalizeBars([bar,{...bar,t:'2026-09-05',o:null},{...bar,t:'2026-09-06',c:Infinity}]),
     [{time:'2026-09-04',open:286,high:321.65,low:285.84,close:310.4,volume:10}]);
 });
+test('chart zoom works without reloading data; reset also restores automatic price scaling',async()=>{
+ let range={from:0,to:80},requests=0,fits=0,options;
+ const previous=window.LightweightCharts.createChart;
+ window.LightweightCharts.createChart=()=>({
+  addSeries:()=>({setData(){},createPriceLine(){},applyOptions(){}}),panes:()=>[],remove(){},
+  applyOptions(value){options=value;},timeScale:()=>({fitContent(){fits++;range={from:0,to:80};},getVisibleLogicalRange:()=>range,setVisibleLogicalRange(value){range=value;}})
+ });
+ globalThis.fetch=async url=>{requests++;return String(url).includes('/bars/')?response({bars:[bar]}):response({status:'unavailable'});};
+ const r=root(),close=await mount(r,{ticker:'ALAB'}),before=requests;
+ try{
+  const click=action=>r.querySelector(`[data-chart-zoom=${action}]`).click();
+  click('in');assert.deepEqual(range,{from:10,to:70});
+  click('out');assert.deepEqual(range,{from:0,to:80});
+  for(let i=0;i<40;i++)click('in');assert.equal(range.to-range.from,5);
+  click('reset');assert.deepEqual(range,{from:0,to:80});assert.equal(fits,2);
+  assert.equal(options.rightPriceScale.autoScale,true);assert.equal(requests,before);
+ }finally{close();r.remove();window.LightweightCharts.createChart=previous;}
+});
 test('cold chart retries 202 and displays the completed result',async t=>{
   t.mock.timers.enable({apis:['setTimeout']});let calls=0;
   globalThis.fetch=async url=>url.includes('/public/company/')?response({status:'pending'}):++calls===1?response({status:'building'},202):response({bars:[bar],stale:false});
