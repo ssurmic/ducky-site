@@ -290,7 +290,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     const archiveBtn = el("button.btn.btn-ghost.btn-sm", { type: "button", "aria-pressed": String(archive), onclick: () => { archive = !archive; render(); } }, s(archive ? "creators.only_grounded" : "creators.show_archive"));
     if(!selected)feedContent.append(el('header.creator-feed-heading',el('h2.creator-latest-title',s('creators.latest')),archiveBtn));
     else feedContent.appendChild(archiveBtn);
-    if(selected&&!focusedPost&&!histories[selected])feedContent.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>loadHistory(selected)},s('creatorpage.all_videos',{n:doc.pages?.[selected]?.coverage?.indexed ?? stats.length})));
+    if(selected&&!focusedPost&&!histories[selected])feedContent.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>loadHistory(selected)},s('creatorpage.video_archive')));
     if (mine && !following.size) {feedContent.appendChild(empty(s("creators.no_following")));feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{mine=false;render();}},s('creators.discover')));return;}
     const history=selected?histories[selected]:null;
     if(history?.loading)feedContent.append(el('p.small.muted',{role:'status'},s('common.loading')));

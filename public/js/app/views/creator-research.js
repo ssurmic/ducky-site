@@ -8,6 +8,16 @@ import {eventPriceSnapshot} from './event-price-snapshot.js';
 
 const researchOwners=new WeakMap();
 
+export function studyStatus(call) {
+  const context=call.price_context,window=context?.publication_20;
+  if(!window)return 'processing';
+  if(window.status==='time_unknown'||context.publication_reference?.status==='time_unknown')return 'time_unknown';
+  if(window.status==='corporate_action_review'||context.since_publication?.status==='corporate_action_review')return 'corporate_action_review';
+  if(window.status==='missing_history')return 'missing_history';
+  if(window.status==='missing_price'||context.publication_reference?.status!=='ready'||context.latest_close?.status!=='ready')return 'missing_price';
+  return ['ready','pending'].includes(window.status)?window.status:'processing';
+}
+
 export function researchRows(items, {kolId='', query='', history=false, allowedIds=null,tickers=null}={}) {
   const latest = new Map();
   const canonical=new Set(items.filter(p=>p.canonical).flatMap(p=>(p.calls||[]).map(c=>p.id+':'+c.point_id)));
@@ -48,11 +58,14 @@ export async function mountResearch(root, selection) {
       (Date.parse(b.post.published_at)||0)-(Date.parse(a.post.published_at)||0));
     const complete=rows.filter(r=>r.call.price_context?.publication_20?.status==='ready');
     if(rows.length)root.append(el('p.muted.small',s('creators.study_count',{n:rows.length,completed:complete.length})));
-    if(!rows.length && !loading && !loadError)root.append(el('p.empty',s('creators.no_studies')));
+    const counts={};for(const r of rows){const status=studyStatus(r.call);counts[status]=(counts[status]||0)+1;}
+    if(rows.length)root.append(el('p.small.muted.study-coverage',{ 'data-scope':'loaded_views' },
+      Object.entries(counts).map(([status,n])=>s('creators.coverage_'+status,{n})).join(' · ')));
+    if(!rows.length && !loading && !loadError)root.append(el('p.empty',s(doc.status==='collecting'?'creators.status_processing':'creators.no_studies')));
     const list=el('div.study-list');
     for(const {post,call} of rows) {
       const window=call.price_context?.publication_20 || {},out=window;
-      const status=out.status||'missing_price';
+      const status=studyStatus(call);
       const stance=normalizedStance(call.stance);
       const row=el('article.study-row',{class:'study-'+stance});
       const note=typeof call.note==='object'&&call.note?(call.note[LANG]||call.note.zh||call.note.en):call.note;
@@ -69,9 +82,10 @@ export async function mountResearch(root, selection) {
       details.append(claimDetails(call));
       details.append(timeline);
       if(post.provenance==='legacy_import') row.append(el('p.muted.small',s('creators.legacy_import')));
-      if(status==='ready') {
+      if(out.status==='ready') {
         row.append(el('p.study-window',s('creators.twenty_day_result')+' ',el('strong.mono',{class:out.ret<0?'neg':out.ret>0?'pos':''},pct(out.ret))));
-      } else row.append(el('p.study-status',s(status==='pending'?'creators.twenty_day_pending':'creators.status_'+status)));
+      }
+      if(status!=='ready')row.append(el('p.study-status',s(status==='pending'?'creators.twenty_day_pending':'creators.status_'+status)));
       const evidence=el('div.cr-evidence',
         call.evidence?el('blockquote',call.evidence):el('p.small.muted',s('creatorclaim.source_link')),
         el('p.muted.small',s('creators.version_recorded')+' '+dateTime(post.recorded_at)));

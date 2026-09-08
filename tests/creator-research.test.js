@@ -8,7 +8,7 @@ const strings=document.createElement('script');strings.id='ducky-strings';
 const copy=JSON.parse(readFileSync('i18n/en.json'));
 strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
 const store=await import('../public/js/app/store.js');
-const {researchRows,mountResearch,safeSource,normalizedStance}=await import('../public/js/app/views/creator-research.js');
+const {researchRows,mountResearch,safeSource,normalizedStance,studyStatus}=await import('../public/js/app/views/creator-research.js');
 const posts=[{id:1,revision_id:1,kol_id:'a',kol_name:'Alpha',calls:[{sym:'NVDA'}]},
  {id:1,revision_id:2,kol_id:'a',kol_name:'Alpha',calls:[{sym:'AMD'}]},
  {id:2,revision_id:3,kol_id:'b',kol_name:'Beta',calls:[{sym:'NVDA'}]}];
@@ -83,4 +83,33 @@ test('stance aliases normalize without making a mere mention bullish',()=>{
  assert.equal(normalizedStance(' Bullish '),'bull');assert.equal(normalizedStance('support'),'bull');
  assert.equal(normalizedStance('counter'),'bear');assert.equal(normalizedStance('mention'),'neutral');
  assert.equal(normalizedStance(null),'neutral');
+});
+
+test('uncomputed, immature, missing-price and unknown-time views remain distinct',()=>{
+ const context={publication_reference:{status:'ready'},latest_close:{status:'ready'},publication_20:{status:'pending'}};
+ assert.equal(studyStatus({}),'processing');
+ assert.equal(studyStatus({price_context:{}}),'processing');
+ assert.equal(studyStatus({price_context:context}),'pending');
+ assert.equal(studyStatus({price_context:{...context,latest_close:{status:'missing_price'}}}),'missing_price');
+ assert.equal(studyStatus({price_context:{...context,publication_reference:{status:'time_unknown'}}}),'time_unknown');
+ assert.equal(studyStatus({price_context:{...context,publication_20:{status:'ready'}}}),'ready');
+});
+
+test('coverage is for loaded views and an older mature view arrives on the next page',async()=>{
+ store.set('me',{tier:'pro'});
+ const base={...posts[0],title:'View',published_at:'2026-09-07T00:00:00Z'};
+ const call={sym:'NKE',stance:'bull',note:'View'};
+ const first={...base,calls:[call]};
+ const second={...base,id:5,revision_id:5,published_at:'2025-01-03T23:00:00Z',calls:[{...call,price_context:{
+  publication_reference:{status:'ready',price:100},latest_close:{status:'ready',price:80},
+  since_publication:{status:'ready',ret:-20},publication_20:{status:'ready',ret:-10}}}]};
+ let count=0;globalThis.fetch=async()=>new Response(JSON.stringify(++count===1?{items:[first],next_cursor:'older'}:{items:[second],next_cursor:null}),{headers:{'content-type':'application/json'}});
+ const root=document.createElement('section');document.body.append(root);await mountResearch(root,{});
+ assert.equal(root.querySelector('.study-coverage').dataset.scope,'loaded_views');
+ assert.match(root.querySelector('.study-coverage').textContent,/Awaiting calculation: 1/);
+ [...root.querySelectorAll('button')].find(b=>b.textContent==='Load more views').click();
+ await new Promise(resolve=>setTimeout(resolve,0));
+ assert.match(root.textContent,/2 views loaded · 1 completed/);
+ assert.match(root.textContent,/-10.0%/);assert.equal(root.querySelectorAll('.study-row').length,2);
+ assert.match(root.textContent,/not the creator’s complete history/);root.remove();
 });

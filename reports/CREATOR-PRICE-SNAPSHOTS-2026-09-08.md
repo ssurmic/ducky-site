@@ -23,3 +23,18 @@ versus publication labeling. Actual browser fixture review covered 320/393-pixel
 light mode and Chinese dark mode; prices, dates, stance and conditional text remain
 readable. Fixture data is explicitly synthetic. Production acceptance remains pending
 backend candidate availability; the earlier stock navigation release is already live.
+
+Final audit correction: an absent price snapshot is awaiting calculation, rather than
+automatically labeled missing prices. Known publication time, price coverage and window
+maturity are distinct states. The coverage line explicitly counts loaded views only;
+it is not a complete creator-history count. A regression loads an older mature losing
+view after an uncomputed first page and verifies that both remain visible. Focused
+creator UI tests: 9 passed. The backend supplies explicit returned-page pagination
+metadata and keeps missing prices separate from missing publication timestamps.
+
+The creator overview also labels its bounded channel sample and signals earlier
+records when the backend reports truncation. The archive entry says “Browse indexed
+videos” instead of suggesting a partial count is all channel videos. Chart evidence
+labels recorded_at as the opinion-version timestamp, not first_seen_at.
+Final local frontend suite: 428 passed; publication/detection semantics and older-page
+coverage regressions included. Production release and saved mobile receipts pending.
