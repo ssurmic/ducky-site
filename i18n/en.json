@@ -994,6 +994,7 @@
   "app.calendar.mine_only": "Earnings: watched stocks & peers",
   "app.calendar.mine_badge": "watchlist",
   "app.calendar.empty": "No recorded events in this period.",
+  "app.calendar.watchlist_unavailable": "Your watchlist could not be updated. Events are matched to the {n} stocks saved in this browser.",
   "app.calendar.load_error": "Couldn't load the calendar",
   "app.calendar.today": "Today",
   "app.calendar.tomorrow": "Tomorrow",
