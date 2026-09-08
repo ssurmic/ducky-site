@@ -3343,8 +3343,8 @@
   "app.comparison.classified_at": "分类记录日期：{date}",
   "app.comparison.classification_source": "查看分类来源",
   "app.comparison.membership": "成分股记录 · {date}",
-  "app.comparison.membership_note": "仅对应这份持仓快照，不代表整个比较区间或当前持仓。",
-  "app.comparison.holdings_source": "查看当日持仓资料",
+  "app.comparison.membership_note": "仅核验了这个日期的快照，不代表整个收益区间；基金官网的持仓资料可能已更新。",
+  "app.comparison.holdings_source": "查看基金持仓来源",
   "app.comparison.membership_unknown": "未核验 ETF 成分；选作参照不表示这只股票属于该 ETF。",
   "app.comparison.theme_note": "主题相关公司的业务与风险可能不同，不等于直接同行。"
 }
