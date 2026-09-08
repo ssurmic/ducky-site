@@ -2,6 +2,7 @@
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
 import { overviewView, layoutOverview } from "../watchlist-overview.js";
 import { companyContext } from "../company-context.js";
+import { icon } from "../icons.js";
 import { symbolPicker } from "../symbol-picker.js";
 import { s } from "../strings.js";
 import * as api from "../api.js";
@@ -149,7 +150,8 @@ export async function mount(root) {
       el("a.btn.btn-ghost.btn-sm", { href: "#/chart/" + t }, s("watch.chart")),
       el("button.btn.btn-ghost.btn-sm.danger", { type: "button", "aria-label": s("watch.remove") + " " + t, onclick: () => onRemove(t) }, "✕"));
     c.appendChild(head);
-    c.append(el('a.btn.btn-ghost.btn-sm',{href:'#/evidence/'+encodeURIComponent(t)},s('evidence.title')));
+    c.append(el('a.watch-evidence-entry',{href:'#/evidence/'+encodeURIComponent(t),'aria-label':s('watch.open_stock_map',{ticker:t})},
+      icon('evidence'),el('span',el('strong',s('evidence.title')),el('span',s('watch.map_description'))),el('span',{'aria-hidden':'true'},'→')));
     c.append(el('a.btn.btn-ghost.btn-sm.watch-research',{href:'#/research/'+encodeURIComponent(t)},s('watch.research_record')));
     if (!snap) { c.appendChild(spinner()); return c; }
     if (snap.pending) { c.appendChild(spinner(s("common.building"))); return c; }

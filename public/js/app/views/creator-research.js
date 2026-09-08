@@ -7,10 +7,10 @@ import {readingPreview} from '../reading-preview.js';
 
 export function researchRows(items, {kolId='', query='', history=false, allowedIds=null,tickers=null}={}) {
   const latest = new Map();
-  for (const p of items) if (!latest.has(p.id) || p.revision_id > latest.get(p.id)) latest.set(p.id,p.revision_id);
-  return items.filter(p=>(!kolId || p.kol_id===kolId) && (!allowedIds || allowedIds.includes(p.kol_id)) && (history || latest.get(p.id)===p.revision_id))
+  for (const p of items) if (!p.canonical && (!latest.has(p.id) || p.revision_id > latest.get(p.id))) latest.set(p.id,p.revision_id);
+  return items.filter(p=>(!kolId || p.kol_id===kolId) && (!allowedIds || allowedIds.includes(p.kol_id)) && (p.canonical || history || latest.get(p.id)===p.revision_id))
     .flatMap(p=>(p.calls || []).map(c=>({post:p,call:c})))
-    .filter(({call})=>history || !['retracted','superseded'].includes(call.attribution_status))
+    .filter(({call})=>history || (!call.canonical_replacement && !['retracted','superseded'].includes(call.attribution_status)))
     .filter(({post,call})=>(tickers===null||tickers.includes(call.sym))&&[post.kol_name,post.title,call.sym].join(' ').toLowerCase().includes(query.toLowerCase()));
 }
 
@@ -19,7 +19,7 @@ export async function mountResearch(root, selection) {
   if (!store.isPro()) {root.append(el('p.muted',s('creators.research_pro')),el('a.btn.btn-primary',{href:'#/billing'},s('creators.upgrade')));return;}
   root.append(el('p',{role:'status'},s('common.loading')));
   let doc;
-  try {doc=await api.get('/kol/research');}
+  try {doc=await api.get('/kol/research'+(selection?.kolId?'?kol_id='+encodeURIComponent(selection.kolId):''));}
   catch {if(root.isConnected) {clear(root);root.append(el('p.err',{role:'alert'},s('creators.research_error')));}return;}
   if(epoch!==store.epoch() || !root.isConnected) return;
   let horizon='20',basis='published',history=false;
@@ -29,7 +29,7 @@ export async function mountResearch(root, selection) {
     const controls=el('div.evidence-controls');
     for(const [value,key] of [['published','creators.window_published'],['recorded','creators.window_recorded']])
       controls.append(el('button.btn.btn-ghost.btn-sm',{type:'button','aria-pressed':String(basis===value),onclick:()=>{basis=value;render();}},s(key)));
-    const select=el('select.input',{'aria-label':s('creators.horizon')},...[1,5,20].map(n=>el('option',{value:String(n),selected:horizon===String(n)},s('creators.trading_days',{n}))));
+    const select=el('select.input',{'aria-label':s('creators.horizon')},...[1,5,20,60].map(n=>el('option',{value:String(n),selected:horizon===String(n)},s('creators.trading_days',{n}))));
     select.addEventListener('change',()=>{horizon=select.value;render();});controls.append(select);
     controls.append(el('button.btn.btn-ghost.btn-sm',{type:'button','aria-pressed':String(history),onclick:()=>{history=!history;render();}},s(history?'creators.latest_versions':'creators.all_versions')));
     root.append(controls,el('p.research-method',s('creators.method')),
@@ -48,7 +48,7 @@ export async function mountResearch(root, selection) {
       const status=window.status==='ready'?(out.status || 'pending'):(window.status || 'pending');
       const row=el('article.study-row');
       const note=typeof call.note==='object'&&call.note?(call.note[LANG]||call.note.zh||call.note.en):call.note;
-      row.append(el('div.study-heading',el('a.mono',{href:'#/chart/'+encodeURIComponent(call.sym)},'$'+call.sym),
+      row.append(el('div.study-heading',el('a.mono',{href:'#/evidence/'+encodeURIComponent(call.sym)+(call.point_id?'?source='+encodeURIComponent(call.point_id):'')},'$'+call.sym),
         el('span.cr-take',s('creators.take_'+call.stance)),el('span.evidence-badge','BACKTEST')),
         el('h3',readingPreview(note||post.title||post.kol_name,LANG!=='en')),el('p.muted.small',post.kol_name+' · '+s('creators.published')+' '+dateTime(post.published_at)));
       if(['retracted','superseded'].includes(call.attribution_status))row.append(el('p.err',s('creatorclaim.superseded')));
@@ -74,7 +74,7 @@ export async function mountResearch(root, selection) {
       if(source) evidence.append(el('a',{href:source,target:'_blank',rel:'noopener noreferrer'},s('creators.orig')+' ↗'));
       details.append(evidence);row.append(details);list.append(row);
     }
-    root.append(list,el('p.muted.small',s('creators.research_limit',{n:doc.limit || 500})));
+    root.append(list,el('p.muted.small',doc.limit?s('creators.research_limit',{n:doc.limit}):s('creators.research_scope')));
   }
 }
 

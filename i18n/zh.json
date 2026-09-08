@@ -1225,7 +1225,7 @@
   "app.creators.trading_days": "+{n} 交易日",
   "app.creators.latest_versions": "只看最新版本",
   "app.creators.all_versions": "包含历史版本",
-  "app.creators.method": "BACKTEST · 以时间点之后的下一个 SPY 交易日收盘为基准，比较 +1／5／20 交易日的同日收盘。展示未复权股价变化，不含分红、费用或成交假设；拆股等公司行动仍需核查。看空观点也显示实际股价涨跌，不换算成做空收益。",
+  "app.creators.method": "BACKTEST · 以时间点之后的下一个 SPY 交易日收盘为基准，比较 +1／5／20／60 交易日的同日收盘。展示未复权股价变化，不含分红、费用或成交假设；拆股等公司行动仍需核查。看空观点也显示实际股价涨跌，不换算成做空收益。",
   "app.creators.published_caveat": "发表窗口属于事后研究。后取得的字幕、修订或补录不代表 Ducky 在当时已掌握该观点。",
   "app.creators.recorded_caveat": "从该观点版本实际进入 Ducky 的时间之后计算；首次收录和版本记录是两个不同时间。",
   "app.creators.opinions": "本次展示观点",
@@ -3463,5 +3463,12 @@
   "app.calendar.earnings_source_retained": "当前保留已保存事件；最新变动请核对公司公告。",
   "app.calendar.source_last_success": "上次成功获取：{time}",
   "app.calendar.source_last_attempt": "最近尝试：{time}",
-  "app.calendar.source_time_unknown": "未记录"
+  "app.calendar.source_time_unknown": "未记录",
+  "app.watch.open_map": "信息导图",
+  "app.watch.open_stock_map": "打开 {ticker} 的信息导图",
+  "app.watch.map_description": "博主观点、公司事件与行情依据",
+  "app.evidence.switch_stock": "切换股票",
+  "app.evidence.all_watchlist": "全部自选股 · {n}",
+  "app.evidence.other_stock": "查看其他股票",
+  "app.creators.research_scope": "展示已审核、已收录的观点；未完成的价格窗口会保留在这里。"
 }

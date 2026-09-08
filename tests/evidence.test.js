@@ -107,7 +107,8 @@ test('reopening the selected ticker reads its latest snapshot instead of doing n
  };
  const root=document.createElement('div');document.body.append(root);
  const cleanup=await mount(root,{ticker:'AVGO'});
- root.querySelector('.evidence-ticker button').click();
+ root.querySelector('.evidence-switch-stock').click();
+ document.querySelector('.evidence-picker-form').dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));
  await new Promise(resolve=>setTimeout(resolve,0));
  assert.equal(calls,2);assert.match(root.querySelector('.evidence-analysis').textContent,/New saved analysis/);
  cleanup();root.remove();
@@ -119,7 +120,7 @@ test('mobile picker reopens the current ticker with a fresh read and closes the 
   const d=fixture();if(calls===2)d.nodes[0].title.en='A newly saved observation.';return response(d);
  };
  const root=document.createElement('div');document.body.append(root);const cleanup=await mount(root,{ticker:'AVGO'});
- root.querySelector('.evidence-empty-picker').click();
+ root.querySelector('.evidence-switch-stock').click();
  const form=document.querySelector('.evidence-picker-form');assert.ok(form);assert.equal(form.querySelector('input').value,'AVGO');
  form.dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));
  await new Promise(resolve=>setTimeout(resolve,0));
@@ -273,4 +274,20 @@ test('source branding preserves viewpoint, exact links, counts and source-dialog
  assert.equal(document.querySelector('.evidence-source>.evidence-source-badge').textContent,'YouTube');
  assert.equal(document.querySelector('.evidence-source a[target="_blank"]').href,'https://youtu.be/a');
  assert.equal(JSON.stringify(doc),original);closeModal();root.dispose();root.remove();
+});
+
+test('all fifty watched stocks remain reachable through the visible selector without searching',async()=>{
+ const stocks=Array.from({length:50},(_,i)=>'T'+String(i).padStart(2,'0'));
+ store.set('me',{tier:'pro'});store.set('watchlist',stocks);let requests=0;
+ globalThis.fetch=async()=>{requests++;return response({...fixture(),ticker:'T49'});};
+ const root=document.createElement('div');document.body.append(root);const cleanup=await mount(root,{ticker:'T49'});
+ assert.ok(root.querySelector('.evidence-watchlist a[href="#/evidence/T49"]'));
+ assert.ok(root.querySelector('.evidence-all-stocks').textContent.includes('50'));
+ const trigger=root.querySelector('.evidence-switch-stock');trigger.focus();trigger.click();
+ assert.equal(document.querySelectorAll('.evidence-picker-list a').length,50);
+ assert.equal(document.querySelector('.evidence-picker-list a[href="#/evidence/T49"]').getAttribute('aria-current'),'page');
+ assert.equal(requests,1);closeModal();assert.equal(document.activeElement,trigger);
+ trigger.click();const target=document.querySelector('.evidence-picker-list a[href="#/evidence/T48"]');target.click();
+ assert.equal(document.querySelector('.modal-body'),null);assert.equal(requests,1);
+ cleanup();root.remove();
 });

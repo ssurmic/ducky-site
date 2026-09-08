@@ -1225,7 +1225,7 @@
   "app.creators.trading_days": "+{n} trading days",
   "app.creators.latest_versions": "Latest versions only",
   "app.creators.all_versions": "Include earlier versions",
-  "app.creators.method": "BACKTEST · Base: the next SPY session close after the cutoff’s New York date. Compare matching closes after 1, 5 or 20 sessions. Unadjusted price changes exclude dividends, fees and execution; corporate actions still require review. Bearish views show the stock’s actual change, not a short return.",
+  "app.creators.method": "BACKTEST · Base: the next SPY session close after the cutoff’s New York date. Compare matching closes after 1, 5, 20 or 60 sessions. Unadjusted price changes exclude dividends, fees and execution; corporate actions still require review. Bearish views show the stock’s actual change, not a short return.",
   "app.creators.published_caveat": "The publication window is retrospective. Captions, revisions or imports obtained later do not prove Ducky knew the view at publication.",
   "app.creators.recorded_caveat": "Starts after this opinion version was saved in Ducky. First collection and version recording are separate timestamps.",
   "app.creators.opinions": "Views shown",
@@ -3463,5 +3463,12 @@
   "app.calendar.earnings_source_retained": "Saved events remain available. Check company announcements for the latest changes.",
   "app.calendar.source_last_success": "Last successful retrieval: {time}",
   "app.calendar.source_last_attempt": "Last attempt: {time}",
-  "app.calendar.source_time_unknown": "Not recorded"
+  "app.calendar.source_time_unknown": "Not recorded",
+  "app.watch.open_map": "Open map",
+  "app.watch.open_stock_map": "Open {ticker} information map",
+  "app.watch.map_description": "Creator views, company events and market evidence",
+  "app.evidence.switch_stock": "Switch stock",
+  "app.evidence.all_watchlist": "All {n} watchlist stocks",
+  "app.evidence.other_stock": "Look up another stock",
+  "app.creators.research_scope": "Reviewed, recorded views are shown here, including those still waiting for price windows."
 }

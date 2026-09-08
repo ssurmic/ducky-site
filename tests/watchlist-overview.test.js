@@ -153,3 +153,12 @@ test('filter autocomplete requires an explicit add and retains the selected stoc
  assert.ok(root.querySelector('[data-open="CEG"]'));assert.equal(filter.value,'CEG');
  dispose();root.replaceChildren();
 });
+
+test('each of fifty stock rows has a separate direct map link without opening details',()=>{
+ let selected=0;const rows=Array.from({length:50},(_,i)=>row('T'+i,50-i));
+ const view=overviewView(rows,{view:'list',onSelect:()=>selected++});
+ assert.equal(view.querySelectorAll('a.watch-map-link').length,50);
+ assert.equal(view.querySelectorAll('button a, a button').length,0);
+ const last=view.querySelector('a[href="#/evidence/T49"]');assert.ok(last);
+ assert.match(last.getAttribute('aria-label'),/T49/);last.click();assert.equal(selected,0);
+});

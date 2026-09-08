@@ -49,3 +49,14 @@ test('superseded interpretation is available only in historical view',()=>{
  assert.equal(researchRows([old]).length,0);
  assert.equal(researchRows([old],{history:true}).length,1);
 });
+
+test('canonical points survive later empty legacy revisions and collapse only their exact legacy duplicates',()=>{
+ const canonical={id:1,revision_id:'point:avgo',canonical:true,kol_id:'talk',calls:[{sym:'AVGO',stance:'bull',point_id:'a'}]};
+ const legacy={id:1,revision_id:20,kol_id:'talk',calls:[]};
+ const nke={...canonical,id:2,revision_id:'point:nke',calls:[{sym:'NKE',stance:'bull',intent:'conditional'}]};
+ const rows=researchRows([canonical,legacy,nke],{kolId:'talk'});
+ assert.deepEqual(rows.map(r=>r.call.sym),['AVGO','NKE']);
+ const duplicate={...legacy,calls:[{sym:'AVGO',stance:'bull',canonical_replacement:true}]};
+ assert.equal(researchRows([canonical,duplicate]).length,1);
+ assert.equal(researchRows([canonical,duplicate],{history:true}).length,2);
+});

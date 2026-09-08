@@ -1,5 +1,6 @@
 import { el, pct, px } from './ui.js';
 import { s, LANG } from './strings.js';
+import { icon } from './icons.js';
 
 const finite = n => typeof n === 'number' && Number.isFinite(n);
 export const weighted = row => row.market_cap_status === 'ready' && finite(row.market_cap) && row.market_cap > 0 && row.security_type !== 'ETF';
@@ -100,12 +101,13 @@ export function overviewView(rows, options) {
   const filtered=rows.filter(r=>[r.ticker,r.company,r.label_zh,r.label_en,r.industry].some(x=>String(x || '').toLowerCase().includes(query.trim().toLowerCase())));
   const label=r=>(LANG==='zh'?r.label_zh:r.label_en) || r.industry || (LANG==='zh'?r.sector_zh:r.sector) || s('company.unknown');
   const title=r=>`${r.ticker} · ${r.company || ''} · ${label(r)} · ${pct(r.change_pct,2)} · ${r.price_session || session || '—'} · ${s('watch.cap')}: ${capText(r.market_cap)} ${r.market_cap_currency || ''}`;
-  const button=(r,compact=false)=>el('button.watch-row', {type:'button','data-open':r.ticker,
+  const button=(r,compact=false)=>el('div.watch-row-entry',el('button.watch-row', {type:'button','data-open':r.ticker,
     'aria-pressed':String(selected===r.ticker),'aria-label':title(r),onclick:()=>onSelect(r.ticker)},
     el('span.watch-identity',el('span.watch-identity-title',el('strong',r.ticker),compact?null:el('span.watch-industry',label(r))),el('span.watch-company',r.company || r.ticker)),
     el('span.mono.watch-row-price',px(r.price)),
     el('span.mono.watch-change',{class:'watch-'+changeClass(r.change_pct)},pct(r.change_pct,2)),
-    el('span.mono.watch-row-cap',r.security_type==='ETF'?'ETF':capText(r.market_cap)));
+    el('span.mono.watch-row-cap',r.security_type==='ETF'?'ETF':capText(r.market_cap))),
+    el('a.watch-map-link',{href:'#/evidence/'+encodeURIComponent(r.ticker),'aria-label':s('watch.open_stock_map',{ticker:r.ticker})},icon('evidence'),el('span',s('watch.open_map'))));
   if(view!=='heatmap')root.append(el('p.muted.small.watch-session',session?s('watch.close_session',{date:session}):s('watch.summary_pending')));
   if(!filtered.length) {root.append(el('p.empty',s('watch.no_match')));return root;}
   if(view==='heatmap') {
@@ -150,8 +152,8 @@ export function overviewView(rows, options) {
   } else {
     filtered.sort((a,b)=>sort==='ticker'?a.ticker.localeCompare(b.ticker):
       (finite(b[sort])?b[sort]:-Infinity)-(finite(a[sort])?a[sort]:-Infinity) || a.ticker.localeCompare(b.ticker));
-    root.append(el('div.watch-table',el('div.watch-row.watch-columns',el('span',s('watch.stock')),el('span',s('watch.close')),
-      el('span',s('watch.day_change')),el('span',s('watch.cap'))),...filtered.map(r=>button(r))));
+    root.append(el('div.watch-table',el('div.watch-row-entry.watch-columns-entry',el('div.watch-row.watch-columns',el('span',s('watch.stock')),el('span',s('watch.close')),
+      el('span',s('watch.day_change')),el('span',s('watch.cap'))),el('span.watch-map-column',s('watch.open_map'))),...filtered.map(r=>button(r))));
   }
   const methods=el('details.watch-method',el('summary',s('watch.method')),
     el('p.muted.small',s('watch.method_body',{start:previous || '—',end:session || '—'})));
