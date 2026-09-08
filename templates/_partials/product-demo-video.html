@@ -1,7 +1,7 @@
 <section class="section product-demo" id="product-demo" aria-labelledby="product-demo-title">
  <div class="wrap">
   <div class="product-demo-heading"><div><p class="eyebrow mono">{{ t('walkthrough.eyebrow') }}</p><h2 id="product-demo-title">{{ t('walkthrough.title') }}</h2></div></div>
-  {% set video_version = '2026-09-08-creator-workflow-v1' %}
+  {% set video_version = '2026-09-08-seamless-story-v2' %}
   {% set video_asset = '/media/ducky-walkthrough-' ~ video_version ~ '.' ~ lang %}
   <video id="product-demo-video" class="product-demo-player" controls playsinline preload="none" width="1920" height="1080" poster="{{ video_asset }}.jpg" aria-label="{{ t('walkthrough.title') }}" aria-describedby="product-demo-note">
    <source src="{{ video_asset }}.mp4" type="video/mp4">
@@ -11,8 +11,8 @@
   </video>
   <div class="product-demo-caption"><p id="product-demo-note" class="small muted">{{ t('walkthrough.caption') }}</p><a href="{{ url('/app/') }}#/register">{{ t('walkthrough.start') }} →</a></div>
   {# Actual render offsets, after the opening fade of each scene. #}
-  {% set video_starts = [0.16, 5.32, 10.28, 14.68, 18.32, 24.4, 28.44, 33.76, 40.48] if lang == 'zh' else [0.16, 5.52, 10.12, 13.76, 17.04, 22.96, 26.44, 31.68, 38.08] %}
-  {% set chapter_routes = ['#/watchlist', '#/evidence', '#/creators?scope=discover', '#/creators?tab=research&scope=discover', '#/opportunities', '#/macro', '#/boards?board=insider&mode=archive', '#/briefing?period=daily'] %}
+  {% set video_starts = [0.2, 6.03, 12.2, 16.57, 21.3, 25.7, 30.07, 35.0] if lang == 'zh' else [0.2, 5.2, 10.77, 14.77, 20.5, 25.53, 32.07, 37.97] %}
+  {% set chapter_routes = ['#/watchlist', '#/evidence', '#/creators?scope=discover', '#/creators?tab=research&scope=discover', '#/opportunities', '#/macro', '#/boards?board=political&mode=archive&q=Pelosi', '#/briefing'] %}
   <details class="product-demo-guide" aria-labelledby="product-demo-guide-title" data-demo-guide
        data-loading="{{ t('walkthrough.guide.loading') }}" data-ready="{{ t('walkthrough.guide.ready') }}" data-error="{{ t('walkthrough.guide.error') }}">
    <summary class="product-demo-guide-heading" id="product-demo-guide-title">{{ t('walkthrough.guide.title') }}</summary>
@@ -40,7 +40,10 @@
    <details class="product-demo-cases"><summary>{{ t('walkthrough.cases.title') }}</summary>
     <p class="small muted">{{ t('walkthrough.cases.avgo') }} <a href="https://www.youtube.com/watch?v=3E-HXC2HUvg&amp;t=973s" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} · 16:13 ↗</a></p>
     <p class="small muted">{{ t('walkthrough.cases.nvda') }} <a href="https://www.youtube.com/watch?v=qleHy1oNdjU&amp;t=585s" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} · 9:45 ↗</a></p>
-    <p class="small muted">{{ t('walkthrough.cases.googl') }} <a href="https://www.youtube.com/watch?v=Qb9Nl-3bOi8&amp;t=772s" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} · 12:52 ↗</a></p>
+    <p class="small muted">{{ t('walkthrough.cases.pelosi') }} <a href="https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20035143.pdf" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} ↗</a></p>
+    <p class="small muted">{{ t('walkthrough.cases.hood') }} <a href="https://www.sec.gov/Archives/edgar/data/1783879/000178387925000189/xslF345X03/wk-form4_1750195641.xml" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} ↗</a></p>
+    <p class="small muted">{{ t('walkthrough.cases.nok') }} <a href="https://www.nokia.com/newsroom/inside-information-nvidia-to-make-usd-1-billion-equity-investment-in-nokia-in-addition-to-new-strategic-partnership-nokias-board-resolved-on-directed-share-issuance-to-nvidia/" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.source') }} ↗</a></p>
+    <p class="small muted"><a href="/media/ducky-demo-cases-2026-09-07.json">{{ t('walkthrough.cases.prices') }} →</a></p>
    </details>
   </details>
   {% include "_partials/product-demo-intc-tutorial.html" %}

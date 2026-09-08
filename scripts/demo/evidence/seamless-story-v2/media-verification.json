@@ -1,0 +1,160 @@
+{
+  "version": "2026-09-08-seamless-story-v2",
+  "checks": {
+    "zh": {
+      "duration": 40.566667,
+      "decode": "complete without errors",
+      "loudness": {
+        "input_i": "-16.05",
+        "input_tp": "-1.96",
+        "input_lra": "2.30",
+        "input_thresh": "-26.30",
+        "output_i": "-16.07",
+        "output_tp": "-2.00",
+        "output_lra": "1.80",
+        "output_thresh": "-26.32",
+        "normalization_type": "dynamic",
+        "target_offset": "0.07"
+      },
+      "audio": [
+        {
+          "scene": "01-focus",
+          "rms": 0.08974,
+          "peak": 0.66727
+        },
+        {
+          "scene": "02-source",
+          "rms": 0.09901,
+          "peak": 0.69986
+        },
+        {
+          "scene": "03-pelosi",
+          "rms": 0.10454,
+          "peak": 0.55722
+        },
+        {
+          "scene": "04-daily",
+          "rms": 0.1014,
+          "peak": 0.53842
+        },
+        {
+          "scene": "05-oversold",
+          "rms": 0.09385,
+          "peak": 0.66077
+        },
+        {
+          "scene": "06-hood",
+          "rms": 0.09977,
+          "peak": 0.59039
+        },
+        {
+          "scene": "07-nokia",
+          "rms": 0.09911,
+          "peak": 0.59167
+        },
+        {
+          "scene": "08-start",
+          "rms": 0.09276,
+          "peak": 0.59708
+        }
+      ],
+      "captions": "Both language tracks cover every authored word, ordered without overlap, final tail >=0.6 seconds.",
+      "assets": {
+        "ducky-walkthrough-2026-09-08-seamless-story-v2.zh.en.vtt": {
+          "bytes": 2671,
+          "sha256": "b9c612b18496a421cc4663a4ffc102dd0134016f3d96bf102ad9196214af71e2"
+        },
+        "ducky-walkthrough-2026-09-08-seamless-story-v2.zh.jpg": {
+          "bytes": 241625,
+          "sha256": "a5e34f1503bd1fe3115715a01b4680e12e49095b723a7ca22bb3c17e44c50a7b"
+        },
+        "ducky-walkthrough-2026-09-08-seamless-story-v2.zh.mp4": {
+          "bytes": 5068282,
+          "sha256": "2831ab49790734eb4fc0ae5e7d80ad22821566c7d63be333d66b682544a2378e"
+        },
+        "ducky-walkthrough-2026-09-08-seamless-story-v2.zh.zh.vtt": {
+          "bytes": 2701,
+          "sha256": "25a0589a849835002b62d55b2dcc1ef385b9e0c3a31d885bb411c6380b98df33"
+        }
+      }
+    },
+    "en": {
+      "duration": 42.6,
+      "decode": "complete without errors",
+      "loudness": {
+        "input_i": "-16.26",
+        "input_tp": "-1.93",
+        "input_lra": "2.20",
+        "input_thresh": "-27.01",
+        "output_i": "-16.14",
+        "output_tp": "-2.00",
+        "output_lra": "1.80",
+        "output_thresh": "-26.86",
+        "normalization_type": "dynamic",
+        "target_offset": "0.14"
+      },
+      "audio": [
+        {
+          "scene": "01-focus",
+          "rms": 0.08775,
+          "peak": 0.65747
+        },
+        {
+          "scene": "02-source",
+          "rms": 0.0847,
+          "peak": 0.62173
+        },
+        {
+          "scene": "03-pelosi",
+          "rms": 0.09222,
+          "peak": 0.61966
+        },
+        {
+          "scene": "04-daily",
+          "rms": 0.09518,
+          "peak": 0.56537
+        },
+        {
+          "scene": "05-oversold",
+          "rms": 0.08288,
+          "peak": 0.64069
+        },
+        {
+          "scene": "06-hood",
+          "rms": 0.08505,
+          "peak": 0.63293
+        },
+        {
+          "scene": "07-nokia",
+          "rms": 0.08428,
+          "peak": 0.60138
+        },
+        {
+          "scene": "08-start",
+          "rms": 0.0922,
+          "peak": 0.66888
+        }
+      ],
+      "captions": "Both language tracks cover every authored word, ordered without overlap, final tail >=0.6 seconds.",
+      "assets": {
+        "ducky-walkthrough-2026-09-08-seamless-story-v2.en.en.vtt": {
+          "bytes": 2746,
+          "sha256": "6802fb76c309cd1859e2de93b7a3477e93471db0f3b03e91411eb8eeb4090dc1"
+        },
+        "ducky-walkthrough-2026-09-08-seamless-story-v2.en.jpg": {
+          "bytes": 255834,
+          "sha256": "2c697c55857c07968b5943ce3518f6161fa689ad2152b53045a8448776ec26b7"
+        },
+        "ducky-walkthrough-2026-09-08-seamless-story-v2.en.mp4": {
+          "bytes": 5137533,
+          "sha256": "ee835725eb3c85034bc9cb20aef5f3e8b85cf8bce6d6b4380744e120940f76f9"
+        },
+        "ducky-walkthrough-2026-09-08-seamless-story-v2.en.zh.vtt": {
+          "bytes": 2626,
+          "sha256": "6459d03dda51e82f1d12bda96a5632bb87b3c417f5ffaf2051648069663f607b"
+        }
+      }
+    }
+  },
+  "scope": "Technical media and authored-script verification. No independent ASR or human listening certification."
+}

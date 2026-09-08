@@ -1,0 +1,728 @@
+{
+  "version": "2026-09-08-seamless-story-v2",
+  "capture_provenance": [
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/captures/01-add-form.zh.png",
+      "sha256": "a4dd305d3509d18f3c4ae3aa45e59ce3df4d759313ecd320c6c0b4b6f945a1bb",
+      "crop": [
+        410,
+        85,
+        1125,
+        480
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/captures/02-map.zh.png",
+      "sha256": "9d8d4c5268622dc64ce0dcb5647300153575cb9ad9ab16ea8e8f27856b778e64",
+      "crop": [
+        410,
+        365,
+        1125,
+        500
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/captures/03-creator.zh.png",
+      "sha256": "288975824371d62f73b2bd3c0aa8757f8262437bb3d1479ee661633f2f39f4c5",
+      "crop": [
+        427,
+        321,
+        1094,
+        345
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/captures/04-original.zh.png",
+      "sha256": "f3717c8120d103a9cf32f6ed6558c2b9bc7db24d38d63abb838ff26b0f4620f3",
+      "crop": [
+        16,
+        68,
+        1205,
+        670
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/captures/02-chart.zh.png",
+      "sha256": "00de373520367855e55f2ab55db80dcf85324de5a0eaa0a8ecacb55e15a2e1b4",
+      "crop": [
+        410,
+        83,
+        1125,
+        650
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/captures/pelosi-list.zh.png",
+      "sha256": "eee1291ae38dd684cde2fe4321db57c173cf33f36cc710f7bb4f32a76b147ce6",
+      "crop": [
+        394,
+        270,
+        1150,
+        560
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/captures/pelosi-record.zh.png",
+      "sha256": "fb34d97fd586cb256cacc286571c43f836604ec2919ab827d83f12c69160ab0f",
+      "crop": [
+        518,
+        150,
+        912,
+        430
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/captures/pelosi-source.png",
+      "sha256": "fbf6f81f32f47abf13efa222a5004d0494517c9125ecb3b9a6d76eab350caa39",
+      "crop": [
+        606,
+        58,
+        817,
+        840
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/captures/daily.zh.png",
+      "sha256": "b57bd8a8c3426f41d5f677549aba22e673f56894b1af232dbe13d31961fb333a",
+      "crop": [
+        413,
+        260,
+        1100,
+        454
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/captures/06-opportunities.zh.png",
+      "sha256": "55646f0ead8608e834c8d8ef577b9c9b1b9705afb8f4c914cad78eea9a8c4581",
+      "crop": [
+        410,
+        82,
+        1125,
+        650
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/captures/alerts.zh.png",
+      "sha256": "e56535c91a7716f46bc28f781c109973cc958787a3072fb1ecabc6d8dc3144b8",
+      "crop": [
+        410,
+        80,
+        1125,
+        365
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/captures/01-added.zh.png",
+      "sha256": "b7ebfe3dd82f6c85db4171d110762f7ff063c861caa70a180751bd129aa46e6d",
+      "crop": [
+        410,
+        85,
+        1125,
+        580
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/captures/01-add-form.en.png",
+      "sha256": "adca9908405e9a802368d53733dfb773617ab7d2351f0e2b631f74840101c495",
+      "crop": [
+        410,
+        85,
+        1125,
+        480
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/captures/02-map.en.png",
+      "sha256": "05227b07728d3b53695576e1406e74c8ef1bb9a50be6fce7bb6f7f4f103803c0",
+      "crop": [
+        410,
+        365,
+        1125,
+        500
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/captures/03-creator.en.png",
+      "sha256": "0249ed92b4e2336a4f804f9fe7b7d743f08dd8b64a3a50c9455d6be229ad7f6d",
+      "crop": [
+        427,
+        439,
+        1094,
+        248
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/captures/04-source-capture.en.png",
+      "sha256": "e585da3a1fa9bc84988f7a7b858bfa6e5faf372d0b0b74ca13129e4ee18fb0b3",
+      "crop": [
+        16,
+        56,
+        1205,
+        454
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/captures/02-chart.en.png",
+      "sha256": "89d06154d6d80371e080c2ae1b0da5754fac4a356076d1d16a80c6afb99a0fed",
+      "crop": [
+        410,
+        83,
+        1125,
+        650
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/captures/pelosi-list.en.png",
+      "sha256": "ff43f452c3fcfd08237b9404d5817358a7d38c634d3bab186dbd975f6033d11d",
+      "crop": [
+        394,
+        270,
+        1150,
+        560
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/captures/pelosi-record.en.png",
+      "sha256": "cd847564e8b75d9720394ebdaa610a00eb6feae2d6ffbd466822c4b2f548bb2b",
+      "crop": [
+        518,
+        150,
+        912,
+        430
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/captures/pelosi-source.png",
+      "sha256": "fbf6f81f32f47abf13efa222a5004d0494517c9125ecb3b9a6d76eab350caa39",
+      "crop": [
+        606,
+        58,
+        817,
+        840
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/captures/daily.en.png",
+      "sha256": "eeed7b32fd7ec036c98d143f8bd405ffc08e19a5e7ebae130551af143a34aed2",
+      "crop": [
+        413,
+        300,
+        1100,
+        454
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/captures/06-opportunities-ready.en.png",
+      "sha256": "751b1c7e1636c93cb4592bafec5fd89119e61a4feccf697ef1a611edde6c1b80",
+      "crop": [
+        410,
+        82,
+        1125,
+        650
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/captures/alerts.en.png",
+      "sha256": "b6e9c2e7ea0a50ab326813bc51168ce88c66ebbee332ebd50ecbc472f0b08bfc",
+      "crop": [
+        410,
+        80,
+        1125,
+        365
+      ]
+    },
+    {
+      "file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/creator-workflow-v1/captures/01-added.en.png",
+      "sha256": "1f9012dd844b5f6d26157b8d381138a88801fc4bd021c6a0aeae60e7726cf95a",
+      "crop": [
+        410,
+        85,
+        1125,
+        580
+      ]
+    }
+  ],
+  "videos": {
+    "zh": {
+      "path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/render/ducky-walkthrough-2026-09-08-seamless-story-v2.zh.mp4",
+      "seconds": 40.56666666666666,
+      "sha256": "2831ab49790734eb4fc0ae5e7d80ad22821566c7d63be333d66b682544a2378e",
+      "timeline": [
+        {
+          "scene": "01-focus",
+          "start": 0.0,
+          "seconds": 5.833333333333333,
+          "speech_seconds": 5.71,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio/01-focus.zh.wav",
+          "audio_sha256": "edee8947ad9255684395372fa8738847bd1283df61a5c9d30508ccdb67952d0b",
+          "captions": [
+            {
+              "text": "想投几只股票，",
+              "start": 0.095875,
+              "end": 1.3470410000000002
+            },
+            {
+              "text": "却不知道从哪看起？",
+              "start": 1.4835,
+              "end": 2.929624
+            },
+            {
+              "text": "加入自选，",
+              "start": 3.371541,
+              "end": 4.232832
+            },
+            {
+              "text": "打开信息导图。",
+              "start": 4.357791,
+              "end": 5.620458
+            }
+          ]
+        },
+        {
+          "scene": "02-source",
+          "start": 5.833333333333333,
+          "seconds": 6.166666666666667,
+          "speech_seconds": 6.03,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio/02-source.zh.wav",
+          "audio_sha256": "2585ade77fe5e2d112e1bf8a296834a7718b6510077fb190cebdc945c5dd71a9",
+          "captions": [
+            {
+              "text": "博主为什么看多？",
+              "start": 0.095875,
+              "end": 1.3814570000000002
+            },
+            {
+              "text": "点到原话。",
+              "start": 1.834875,
+              "end": 2.7535
+            },
+            {
+              "text": "习惯看K线？",
+              "start": 3.211,
+              "end": 4.381916
+            },
+            {
+              "text": "顺手就能看。",
+              "start": 4.828,
+              "end": 5.964499
+            }
+          ]
+        },
+        {
+          "scene": "03-pelosi",
+          "start": 12.0,
+          "seconds": 4.366666666666666,
+          "speech_seconds": 4.22,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio/03-pelosi.zh.wav",
+          "audio_sha256": "1493b61f86107dbfbd5a9320aae9952fcfc43a1f9177f745edad19652bbbbb81",
+          "captions": [
+            {
+              "text": "再看佩洛西披露：",
+              "start": 0.095875,
+              "end": 1.46175
+            },
+            {
+              "text": "交易记录，",
+              "start": 1.644041,
+              "end": 2.4364999999999997
+            },
+            {
+              "text": "直接连到原始文件。",
+              "start": 2.561458,
+              "end": 4.156666
+            }
+          ]
+        },
+        {
+          "scene": "04-daily",
+          "start": 16.366666666666667,
+          "seconds": 4.733333333333333,
+          "speech_seconds": 4.61,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio/04-daily.zh.wav",
+          "audio_sha256": "f3da3da326b53ecbe839d67a3f32c8a5706860b694d600b0e41b0e33a02327cc",
+          "captions": [
+            {
+              "text": "每天相关消息，",
+              "start": 0.095875,
+              "end": 1.358541
+            },
+            {
+              "text": "AI帮你梳理，",
+              "start": 1.540833,
+              "end": 2.700291
+            },
+            {
+              "text": "留在你的",
+              "start": 2.882583,
+              "end": 3.364208
+            },
+            {
+              "text": "投资时间线里。",
+              "start": 3.364208,
+              "end": 4.546625000000001
+            }
+          ]
+        },
+        {
+          "scene": "05-oversold",
+          "start": 21.1,
+          "seconds": 4.4,
+          "speech_seconds": 4.28,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio-revision/05-oversold.zh.wav",
+          "audio_sha256": "1bfe83fec5373541c54a928cec1f58c8a88aa662e7c9b3de51a1060160eb5f52",
+          "captions": [
+            {
+              "text": "每天检查超跌，",
+              "start": 0.095875,
+              "end": 1.3470410000000002
+            },
+            {
+              "text": "设好提醒。",
+              "start": 1.506416,
+              "end": 2.425041
+            },
+            {
+              "text": "再回放两个例子。",
+              "start": 2.878458,
+              "end": 4.1869570000000005
+            }
+          ]
+        },
+        {
+          "scene": "06-hood",
+          "start": 25.5,
+          "seconds": 4.366666666666666,
+          "speech_seconds": 4.22,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio/06-hood.zh.wav",
+          "audio_sha256": "657f27c6bb7e4ca90c9fd2a62b75735c2dfe0f9c30069371e9450b84378a7b71",
+          "captions": [
+            {
+              "text": "罗宾汉董事",
+              "start": 0.095875,
+              "end": 0.978916
+            },
+            {
+              "text": "买入披露后，",
+              "start": 0.978916,
+              "end": 1.966333
+            },
+            {
+              "text": "二十个交易日",
+              "start": 2.171541,
+              "end": 3.227791
+            },
+            {
+              "text": "涨了四成。",
+              "start": 3.249541,
+              "end": 4.13375
+            }
+          ]
+        },
+        {
+          "scene": "07-nokia",
+          "start": 29.866666666666667,
+          "seconds": 4.933333333333334,
+          "speech_seconds": 4.8,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio/07-nokia.zh.wav",
+          "audio_sha256": "ce37483bd4d0e252231b707434953e765181210a9b7b48d9a3677159f928af23",
+          "captions": [
+            {
+              "text": "诺基亚合作消息后，",
+              "start": 0.095875,
+              "end": 1.5649570000000002
+            },
+            {
+              "text": "回落到五块八毛七，",
+              "start": 1.74725,
+              "end": 3.227791
+            },
+            {
+              "text": "后来到十块零三。",
+              "start": 3.410083,
+              "end": 4.7300830000000005
+            }
+          ]
+        },
+        {
+          "scene": "08-start",
+          "start": 34.8,
+          "seconds": 5.766666666666667,
+          "speech_seconds": 4.84,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio-revision/08-start.zh.wav",
+          "audio_sha256": "09790bbf64cda24dc0e4e4c54fa8962d77f22056506a63f2b4e554267ff4005b",
+          "captions": [
+            {
+              "text": "少翻消息，",
+              "start": 0.095875,
+              "end": 1.060332
+            },
+            {
+              "text": "把时间留给自己。",
+              "start": 1.196791,
+              "end": 2.470916
+            },
+            {
+              "text": "Ducky，免费关注一只。",
+              "start": 2.924291,
+              "end": 4.771833
+            }
+          ]
+        }
+      ],
+      "input_loudness": {
+        "input_i": "-19.95",
+        "input_tp": "-3.10",
+        "input_lra": "2.10",
+        "input_thresh": "-30.19",
+        "output_i": "-16.17",
+        "output_tp": "-2.00",
+        "output_lra": "1.70",
+        "output_thresh": "-26.42",
+        "normalization_type": "dynamic",
+        "target_offset": "0.17"
+      }
+    },
+    "en": {
+      "path": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/render/ducky-walkthrough-2026-09-08-seamless-story-v2.en.mp4",
+      "seconds": 42.6,
+      "sha256": "ee835725eb3c85034bc9cb20aef5f3e8b85cf8bce6d6b4380744e120940f76f9",
+      "timeline": [
+        {
+          "scene": "01-focus",
+          "start": 0.0,
+          "seconds": 5.0,
+          "speech_seconds": 4.85,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio/01-focus.en.wav",
+          "audio_sha256": "9227f58618103ce733b71f289f3652881a064b5fcbe3c5d070535b624add923e",
+          "captions": [
+            {
+              "text": "Got a few stocks in mind?",
+              "start": 0.1,
+              "end": 1.488791
+            },
+            {
+              "text": "Add them",
+              "start": 1.74725,
+              "end": 2.1945
+            },
+            {
+              "text": "to your watchlist.",
+              "start": 2.1945,
+              "end": 3.124625
+            },
+            {
+              "text": "Open the Information Map.",
+              "start": 3.387166,
+              "end": 4.7645
+            }
+          ]
+        },
+        {
+          "scene": "02-source",
+          "start": 5.0,
+          "seconds": 5.566666666666666,
+          "speech_seconds": 5.43,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio/02-source.en.wav",
+          "audio_sha256": "eaf8f20aa2b44631e50d9f88b6deed1df93e9fa1f799b8c0700ffd27c53123ea",
+          "captions": [
+            {
+              "text": "Why is a creator bullish?",
+              "start": 0.1,
+              "end": 1.511749
+            },
+            {
+              "text": "Jump to the exact quote.",
+              "start": 1.770166,
+              "end": 3.0787069999999996
+            },
+            {
+              "text": "Prefer charts?",
+              "start": 3.341291,
+              "end": 4.259874
+            },
+            {
+              "text": "They’re right here.",
+              "start": 4.522458,
+              "end": 5.349333000000001
+            }
+          ]
+        },
+        {
+          "scene": "03-pelosi",
+          "start": 10.566666666666666,
+          "seconds": 4.0,
+          "speech_seconds": 3.85,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio/03-pelosi.en.wav",
+          "audio_sha256": "381a0d2afe4208a9a634450c8f163d9eeff9a1aedf3378efaf0898d6df5f2f67",
+          "captions": [
+            {
+              "text": "Check Pelosi’s",
+              "start": 0.1,
+              "end": 0.925708
+            },
+            {
+              "text": "reported trades,",
+              "start": 0.925708,
+              "end": 1.844332
+            },
+            {
+              "text": "then open\nthe original filing.",
+              "start": 2.072458,
+              "end": 3.7709159999999997
+            }
+          ]
+        },
+        {
+          "scene": "04-daily",
+          "start": 14.566666666666666,
+          "seconds": 5.733333333333333,
+          "speech_seconds": 5.61,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio/04-daily.en.wav",
+          "audio_sha256": "1fa0cc3977bdb7344b60571f509673fce3ba61a4bd3b404a5b32e92dd8f683bc",
+          "captions": [
+            {
+              "text": "AI pulls together",
+              "start": 0.1,
+              "end": 1.246791
+            },
+            {
+              "text": "what matters to your stocks.",
+              "start": 1.246791,
+              "end": 2.5782499999999997
+            },
+            {
+              "text": "Your briefings build",
+              "start": 2.836708,
+              "end": 3.903208
+            },
+            {
+              "text": "a daily investment\ntimeline.",
+              "start": 3.903208,
+              "end": 5.5099160000000005
+            }
+          ]
+        },
+        {
+          "scene": "05-oversold",
+          "start": 20.3,
+          "seconds": 5.033333333333333,
+          "speech_seconds": 4.9,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio-revision/05-oversold.en.wav",
+          "audio_sha256": "1a539d4c535b236fc6f4521b6c0b2d2f4a3c0afbf55d3779c3a7e96e3dec0327",
+          "captions": [
+            {
+              "text": "Find oversold stocks.",
+              "start": 0.1,
+              "end": 1.614957
+            },
+            {
+              "text": "Set alerts.",
+              "start": 1.873375,
+              "end": 2.780541
+            },
+            {
+              "text": "Now, replay two examples.",
+              "start": 3.043125,
+              "end": 4.821832000000001
+            }
+          ]
+        },
+        {
+          "scene": "06-hood",
+          "start": 25.333333333333336,
+          "seconds": 6.533333333333333,
+          "speech_seconds": 6.4,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio/06-hood.en.wav",
+          "audio_sha256": "fb66eb0ab9a6d260a6a900d8248846938435cc5a2b398be03ed63f09dccb3f66",
+          "captions": [
+            {
+              "text": "Robinhood: a director’s",
+              "start": 0.1,
+              "end": 1.739916
+            },
+            {
+              "text": "purchase filing, then a rise of",
+              "start": 1.739916,
+              "end": 3.655041
+            },
+            {
+              "text": "about forty-one percent",
+              "start": 3.655041,
+              "end": 5.088541
+            },
+            {
+              "text": "over twenty sessions.",
+              "start": 5.088541,
+              "end": 6.3282490000000005
+            }
+          ]
+        },
+        {
+          "scene": "07-nokia",
+          "start": 31.866666666666667,
+          "seconds": 5.9,
+          "speech_seconds": 5.77,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio/07-nokia.en.wav",
+          "audio_sha256": "38fcea325aa87659c633cd599fc729daa12366ae4386dbc195ee556016a06ac6",
+          "captions": [
+            {
+              "text": "Nokia: a partnership\nannouncement,",
+              "start": 0.1,
+              "end": 2.3603739999999998
+            },
+            {
+              "text": "a pullback to\nfive eighty-seven,",
+              "start": 2.657333,
+              "end": 4.458999
+            },
+            {
+              "text": "then ten oh-three.",
+              "start": 4.641291,
+              "end": 5.686041
+            }
+          ]
+        },
+        {
+          "scene": "08-start",
+          "start": 37.766666666666666,
+          "seconds": 4.833333333333333,
+          "speech_seconds": 3.91,
+          "audio_file": "/Users/zizhaozhang/dev/ducky-demo-artifacts-20260908/seamless-story-v2/audio-revision/08-start.en.wav",
+          "audio_sha256": "574a143decb6e08a421f9aa09c883d15841f550c4d890b099ac8e8ffe6bfba32",
+          "captions": [
+            {
+              "text": "Less scrolling.",
+              "start": 0.1,
+              "end": 1.041583
+            },
+            {
+              "text": "More time for you.",
+              "start": 1.3,
+              "end": 2.2989159999999997
+            },
+            {
+              "text": "Start free with Ducky.",
+              "start": 2.561458,
+              "end": 3.812624
+            }
+          ]
+        }
+      ],
+      "input_loudness": {
+        "input_i": "-20.52",
+        "input_tp": "-3.40",
+        "input_lra": "2.40",
+        "input_thresh": "-31.29",
+        "output_i": "-16.57",
+        "output_tp": "-2.00",
+        "output_lra": "1.90",
+        "output_thresh": "-27.31",
+        "normalization_type": "dynamic",
+        "target_offset": "0.57"
+      }
+    }
+  },
+  "editing": "Edited actual UI actions, with editorial camera movement; no application-latency claim.",
+  "audio": "No time stretching. Two-pass loudnorm -16 LUFS / -2 dBTP; 48 kHz AAC.",
+  "caption_method": "Authored short semantic phrases, aligned to native-language provider word boundaries."
+}

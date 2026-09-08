@@ -1,0 +1,165 @@
+{
+  "version": "2026-09-08-seamless-story-v2",
+  "status": "production",
+  "render_languages": [
+    "zh",
+    "en"
+  ],
+  "speakers": {
+    "zh": "zh-CN-XiaoxiaoNeural",
+    "en": "en-US-AvaNeural"
+  },
+  "synthesis": {
+    "provider": "Microsoft online speech service",
+    "client": "edge-tts",
+    "rate": "+9%",
+    "pitch": "+0Hz",
+    "boundary": "WordBoundary"
+  },
+  "scenes": [
+    {
+      "name": "01-focus",
+      "zh": "想投几只股票，却不知道从哪看起？加入自选，打开信息导图。",
+      "en": "Got a few stocks in mind? Add them to your watchlist. Open the Information Map.",
+      "caption_groups": {
+        "zh": [
+          "想投几只股票，",
+          "却不知道从哪看起？",
+          "加入自选，",
+          "打开信息导图。"
+        ],
+        "en": [
+          "Got a few stocks in mind?",
+          "Add them",
+          "to your watchlist.",
+          "Open the Information Map."
+        ]
+      }
+    },
+    {
+      "name": "02-source",
+      "zh": "博主为什么看多？点到原话。习惯看K线？顺手就能看。",
+      "en": "Why is a creator bullish? Jump to the exact quote. Prefer charts? They’re right here.",
+      "caption_groups": {
+        "zh": [
+          "博主为什么看多？",
+          "点到原话。",
+          "习惯看K线？",
+          "顺手就能看。"
+        ],
+        "en": [
+          "Why is a creator bullish?",
+          "Jump to the exact quote.",
+          "Prefer charts?",
+          "They’re right here."
+        ]
+      }
+    },
+    {
+      "name": "03-pelosi",
+      "zh": "再看佩洛西披露：交易记录，直接连到原始文件。",
+      "en": "Check Pelosi’s reported trades, then open the original filing.",
+      "caption_groups": {
+        "zh": [
+          "再看佩洛西披露：",
+          "交易记录，",
+          "直接连到原始文件。"
+        ],
+        "en": [
+          "Check Pelosi’s",
+          "reported trades,",
+          "then open\nthe original filing."
+        ]
+      }
+    },
+    {
+      "name": "04-daily",
+      "zh": "每天相关消息，AI帮你梳理，留在你的投资时间线里。",
+      "en": "AI pulls together what matters to your stocks. Your briefings build a daily investment timeline.",
+      "caption_groups": {
+        "zh": [
+          "每天相关消息，",
+          "AI帮你梳理，",
+          "留在你的",
+          "投资时间线里。"
+        ],
+        "en": [
+          "AI pulls together",
+          "what matters to your stocks.",
+          "Your briefings build",
+          "a daily investment\ntimeline."
+        ]
+      }
+    },
+    {
+      "name": "05-oversold",
+      "zh": "每天检查超跌，设好提醒。再回放两个例子。",
+      "en": "Find oversold stocks. Set alerts. Now, replay two examples.",
+      "caption_groups": {
+        "zh": [
+          "每天检查超跌，",
+          "设好提醒。",
+          "再回放两个例子。"
+        ],
+        "en": [
+          "Find oversold stocks.",
+          "Set alerts.",
+          "Now, replay two examples."
+        ]
+      }
+    },
+    {
+      "name": "06-hood",
+      "zh": "罗宾汉董事买入披露后，二十个交易日涨了四成。",
+      "en": "Robinhood: a director’s purchase filing, then a rise of about forty-one percent over twenty sessions.",
+      "caption_groups": {
+        "zh": [
+          "罗宾汉董事",
+          "买入披露后，",
+          "二十个交易日",
+          "涨了四成。"
+        ],
+        "en": [
+          "Robinhood: a director’s",
+          "purchase filing, then a rise of",
+          "about forty-one percent",
+          "over twenty sessions."
+        ]
+      }
+    },
+    {
+      "name": "07-nokia",
+      "zh": "诺基亚合作消息后，回落到五块八毛七，后来到十块零三。",
+      "en": "Nokia: a partnership announcement, a pullback to five eighty-seven, then ten oh-three.",
+      "caption_groups": {
+        "zh": [
+          "诺基亚合作消息后，",
+          "回落到五块八毛七，",
+          "后来到十块零三。"
+        ],
+        "en": [
+          "Nokia: a partnership\nannouncement,",
+          "a pullback to\nfive eighty-seven,",
+          "then ten oh-three."
+        ]
+      }
+    },
+    {
+      "name": "08-start",
+      "zh": "少翻消息，把时间留给自己。Ducky，免费关注一只。",
+      "en": "Less scrolling. More time for you. Start free with Ducky.",
+      "caption_groups": {
+        "zh": [
+          "少翻消息，",
+          "把时间留给自己。",
+          "Ducky，免费关注一只。"
+        ],
+        "en": [
+          "Less scrolling.",
+          "More time for you.",
+          "Start free with Ducky."
+        ]
+      }
+    }
+  ]
+}
