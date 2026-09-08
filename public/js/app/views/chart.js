@@ -129,6 +129,11 @@ export async function mount(root, params) {
     }
     if (!ovl.count) legendRow.appendChild(el('span.muted.small',s('chart.no_overlays')));
     optionNotes.append(el('p.small.muted.chart-scale-note',s(fitReferences?'chart.scale_all':'chart.scale_candles')),
+      // The header is the last completed daily bar; wall distances use the
+      // separately saved spot. Neither build time nor option retrieval is a
+      // quote timestamp, and the snapshot contract does not retain one yet.
+      typeof overlaySnapshot.spot==='number'&&Number.isFinite(overlaySnapshot.spot)&&overlaySnapshot.spot>0?
+        el('p.small.muted.chart-wall-basis',s('chart.wall_price_basis',{price:px(overlaySnapshot.spot)})):null,
       el('p.chart-wall-position',wallPosition(overlaySnapshot.spot,selected.gamma)),
       el('p.small.muted.chart-snapshot-date',optionScope(selected)),
       Number.isFinite(built.getTime())?el('p.small.muted',s('chart.snapshot_as_of',{date:built.toISOString().slice(0,16).replace('T',' ')})):null,
