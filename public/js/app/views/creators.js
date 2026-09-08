@@ -1,3 +1,4 @@
+import {quotaNote} from '../experience.js';
 import {evidenceLink} from '../evidence-link.js';
 // views/creators.js — 财经博主: follow finance creators; Ducky summarises each new video. The creator grid
 // has Follow toggles (POST/DELETE /kol/{id}/sub); below it, the recent summary feed. The feed is a RECORD of
@@ -128,7 +129,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     if (epoch !== store.epoch() || signal?.aborted) return () => {};
     if(sourceOnly&&e.status===402){
       clear(card);card.append(el('h1',s('creators.h1')),el('div.cr-pro-banner',
-        el('span.cr-pro-badge',s('creators.pro_badge')),el('span',s('creators.pro_hint')),
+        el('span.cr-pro-badge',s('creators.pro_badge')),el('span',s('experience.creator_hint')),
         el('a.btn.btn-primary.btn-sm',{href:'#/billing'},s('creators.upgrade'))));
       return () => {};
     }
@@ -146,7 +147,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   if(linkedSource?.creator&&!kols.some(k=>k.id===linkedSource.creator.id))kols.push(linkedSource.creator);
   const watchRows=Array.isArray(watches)?watches:(watches?.items || watches?.tickers || watches?.watchlist || []);
   const watchedTickers=watchRows.map(t=>typeof t==='string'?t:t?.ticker || t?.symbol).filter(t=>typeof t==='string').map(t=>t.toUpperCase());
-  let analysis=subs?.analysis || {},setupCleanup=()=>{},showSetup=!following.size&&initial.tab==='feed'&&!initial.ticker&&!initial.watched&&!initial.post,disposed=false,notice='',refreshing=false;
+  let analysis=subs?.analysis || {},setupCleanup=()=>{},showSetup=store.isPro()&&!following.size&&initial.tab==='feed'&&!initial.ticker&&!initial.watched&&!initial.post,disposed=false,notice='',refreshing=false;
   const setupState={};
   const pending=()=>Object.values(analysis).some(x=>['queued','running'].includes(x.status));
   const progress=progressPoll({active:()=>!sourceOnly&&!disposed&&epoch===store.epoch()&&root.isConnected&&pending(),read:()=>api.kol.mine(),
@@ -169,7 +170,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   let query = "";
   let selected=kols.some(k=>k.id===initial.selected)?initial.selected:'', tab=initial.tab, shown=30;
   const labState={demo:initial.demo}, histories={}, archiveOpen=new Set();
-  const pageProgress=progressPoll({interval:30000,active:()=>!sourceOnly&&!disposed&&store.isPro()&&epoch===store.epoch()&&root.isConnected&&!!selected&&tab==='feed',
+  const pageProgress=progressPoll({interval:30000,active:()=>!sourceOnly&&!disposed&&(store.isPro()||following.has(selected))&&epoch===store.epoch()&&root.isConnected&&!!selected&&tab==='feed',
     read:()=>api.get('/kol/'+encodeURIComponent(selected)+'/page'),
     onValue:page=>{if(page.kol_id!==selected)return;const old=doc.pages?.[selected];if(page.content_hash===old?.content_hash&&page.status===old?.status)return;
       doc.pages={...(doc.pages||{}),[selected]:page};renderContent();}});
@@ -183,13 +184,14 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     const actions=el('div.evidence-controls.creator-page-actions',el('button.btn.btn-primary.btn-sm',{type:'button',onclick:()=>{mine=false;selected='';tab='feed';render();card.querySelector('[role=combobox]')?.focus();}},s('creatorflow.add')),
       el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:refresh},s('creatorflow.refresh')));
     card.querySelector('.evidence-page-head').append(actions);
+    if(!store.isPro()&&Number.isFinite(subs?.cap))card.append(quotaNote("creators",following.size,subs.cap));
     if(notice)card.append(el('p.creator-follow-success',{role:'status'},notice));
     if(pending())card.append(el('p.creator-sync-note.small.muted',{role:'status'},s('creatorflow.analysis_auto')));
     const isPro = store.isPro();
     if (!isPro) {
       const banner = el("div.cr-pro-banner",
-        el("span.cr-pro-badge", s("creators.pro_badge")),
-        el("span", " " + s("creators.pro_hint") + " "),
+        el("span.cr-pro-badge", s("experience.plan_free")),
+        el("span", " " + s("experience.creator_hint") + " "),
         el("a.btn.btn-primary.btn-sm", { href: "#/billing" }, s("creators.upgrade")));
       card.appendChild(banner);
     }
@@ -258,15 +260,15 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       const creatorPosts=posts.filter(p=>p.kol_id===k.id);
       const page=doc.pages?.[k.id];
       const ready=page?.coverage?.reviewed ?? creatorPosts.filter(hasReviewedSummary).length;
-      tile.append(el('p.creator-card-coverage',s('creatorpage.card_ready',{n:ready})));
+      tile.append(el('p.creator-card-coverage',!store.isPro()&&!following.has(k.id)?s('experience.not_followed_data'):s('creatorpage.card_ready',{n:ready})));
       const newest=[...creatorPosts].sort((a,b)=>(Date.parse(b.published_at)||0)-(Date.parse(a.published_at)||0))[0];
       if(discoveredSource(newest))tile.append(el('p.data-notice.small',s('creators.new_source_pending',{date:String(newest.published_at||'').slice(0,10)})));
       const highlight=[...(page?.highlights || [])].sort((a,b)=>(Date.parse(b.published_at)||0)-(Date.parse(a.published_at)||0))[0];
       if(highlight)tile.append(el('p.creator-card-gist',conciseSummary(highlight.summary,isZh)));
       else tile.append(el('p.small.muted',s(page?.backfill?'creatorpage.preparing':'creatorpage.no_summary')));
-      const label = isPro ? (on ? s("creators.following") : s("creators.follow")) : s("creators.follow");
-      const chip = el("button.cr-chip" + (on && isPro ? ".on" : ""), { type: "button",'aria-label':label+' '+k.name }, label);
-      chip.addEventListener("click", () => { if (isPro) {if(on)toggle(k.id,chip);else confirmCreator({...k,recent:creatorPosts.slice(0,3)},()=>api.kol.sub(k.id),followed,()=>!disposed&&epoch===store.epoch());} else router.go("#/billing"); });
+      const label = on ? s("creators.following") : s("creators.follow");
+      const chip = el("button.cr-chip" + (on ? ".on" : ""), { type: "button",'aria-label':label+' '+k.name }, label);
+      chip.addEventListener("click", () => { if(on)toggle(k.id,chip);else confirmCreator({...k,recent:creatorPosts.slice(0,3)},()=>api.kol.sub(k.id),followed,()=>!disposed&&epoch===store.epoch()); });
       tile.append(chip);grid.append(tile);
     }
     if (!selected && mine) content.append(el('details.creator-directory-picker',el('summary',s('creators.directory_short')),grid));
@@ -280,6 +282,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       const creator=kols.find(k=>k.id===selected);
       content.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected='';renderContent();}},'← '+s('creatorpage.all')));
       content.append(el('header.creator-selected-heading',el('h1',creator.name)));
+      if(!store.isPro()&&!following.has(selected))content.append(el('div.card',el('p',s('experience.follow_to_read')),el('button.btn.btn-primary',{type:'button',onclick:()=>confirmCreator(creator,()=>api.kol.sub(selected),followed,()=>!disposed&&epoch===store.epoch())},s('creators.follow'))));
       if(!sourceOnly){
         const overview=el('section.creator-page');content.append(el('details.creator-overview',el('summary',s('creators.overview_short')),overview));
         renderCreatorPage(overview,{creator,page:doc.pages?.[selected]||{},tickers:stockFilter,onTab:value=>{tab=value;renderContent();}});
@@ -401,7 +404,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     chip.disabled = true;
     const on = following.has(id);
     try {
-      if (on) { await api.kol.unsub(id); following.delete(id); }
+      if (on) { await api.kol.unsub(id); following.delete(id); if(!store.isPro()){posts.splice(0,posts.length,...posts.filter(p=>p.kol_id!==id));delete doc.pages?.[id];delete histories[id];if(selected===id)selected='';} }
       else { await api.kol.sub(id); following.add(id); }
       render();
     } catch (err) { toast(s("common.error", { msg: err.message }), "err"); }
@@ -415,7 +418,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     following.add(response.kol_id);selected=response.kol_id;mine=true;showSetup=false;tab='feed';query='';setupState.input='';
     if(response.creator&&!kols.some(k=>k.id===response.kol_id))kols.push({...response.creator,id:response.kol_id});
     if(response.analysis)analysis[response.kol_id]=response.analysis;
-    render();progress.schedule();
+    render();progress.schedule();if(!store.isPro())refresh({automatic:true});
   }
   async function refresh({automatic=false}={}){
     if(sourceOnly){router.go(location.hash);return;}

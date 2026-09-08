@@ -80,6 +80,7 @@ export function normalizePlans(resp) {
   }
   if (resp && Array.isArray(resp.rails)) out.rails = resp.rails.map((r) => String(r.id || r).toLowerCase());
   if (resp && resp.usdt) out.usdt = resp.usdt;
+  if(resp?.limits)out.limits=resp.limits;
   // An authoritative empty/partial catalogue must not revive retired plans or rails.
   // Static prices are an informational fallback only when the API is unreachable.
   const P = CFG.PRICES || {};
@@ -126,7 +127,11 @@ export async function mount(root, { query } = {}) {
   const panel = el("section.pay-panel", { hidden: true });
   const ordersBox = el("section.orders", el("h2", s("billing.orders")), spinner());
   const foot = el("p.muted.small.billing-foot", s("billing.disclaimer") + " ", el("a", { href: (LANG === "zh" ? "" : "/en") + "/disclaimer/" }, s("billing.disclaimer_link")));
-  root.append(head, picker, currencyPicker, toggle, tiers, renewal, rails, panel, ordersBox, foot);
+  const comparison=el('section.experience-comparison',
+    el('article.card',el('h2',s('experience.plan_free')),el('p',s('experience.plan_free_detail')),
+      el('p.small.muted',s('experience.plan_no_card')),el('a.btn.btn-ghost',{href:'#/watchlist'},s('experience.plan_free_cta'))),
+    el('article.card',el('h2',s('experience.plan_pro')),el('p',s('experience.plan_pro_detail')),el('p',s('experience.plan_depth'))));
+  root.append(head, comparison, picker, currencyPicker, toggle, tiers, renewal, rails, panel, ordersBox, foot);
 
   function price(p) {
     return localizedPrice(p, selected.months, selected.currency);
@@ -291,6 +296,13 @@ export async function mount(root, { query } = {}) {
     catch (err) {
       plans = normalizePlans(null);
       picker.appendChild(el("p.errbox", s("billing.catalog_unavailable")));
+    }
+  }
+  if(plans?.limits){
+    for(const [i,tier] of ['free','pro'].entries()){
+      const limits=plans.limits[tier];if(!limits)continue;
+      const line=comparison.children[i].querySelector('p');
+      line.textContent=['watches','evidence','creators','alerts'].map(key=>key==='evidence'&&limits[key]===null?s('experience.plan_any_map'):Number.isFinite(limits[key])?s('experience.allow_'+key,{cap:limits[key]}):'—').join(' · ');
     }
   }
   renderTiers(); renderRails(); loadOrders();

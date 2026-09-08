@@ -24,7 +24,7 @@ test('creator research uses private endpoint and does not fall back when Pro exp
   store.set('me',{tier:'free'});calls.length=0;
   globalThis.fetch=async(url)=>{calls.push(url);return Response.json({posts:[],access:'catalog_only'});};
   assert.equal((await api.kol.feed()).access,'catalog_only');
-  assert.deepEqual(calls,['/public/kol-feed.json']);
+  assert.deepEqual(calls,['/kol/trial-feed']);
 });
 
 test('creator feature links retain only safe public navigation choices through sign-in',()=>{

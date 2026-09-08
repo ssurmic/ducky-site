@@ -47,7 +47,7 @@ export function mountSetup(root,{onFollow,initial='',state={},compact=false,rest
   function closeSuggestions(){suggestions.hidden=true;field.setAttribute('aria-expanded','false');field.removeAttribute('aria-activedescendant');activeIndex=-1;}
   async function search() {
     const version=++suggestVersion;const value=field.value.trim();
-    if(!store.isPro()||value.length>100){closeSuggestions();return;}
+    if(!store.get('me')||value.length>100){closeSuggestions();return;}
     try {
       const doc=await api.get('/kol/suggest?q='+encodeURIComponent(value),{signal:ctl.signal});
       if(!live()||version!==suggestVersion)return;
@@ -57,7 +57,7 @@ export function mountSetup(root,{onFollow,initial='',state={},compact=false,rest
       suggestions.hidden=!choices.length;field.setAttribute('aria-expanded',String(!!choices.length));
     }catch {if(live()&&version===suggestVersion)closeSuggestions();}
   }
-  function pick(c){closeSuggestions();field.value=c.name;state.input=c.name;begin(c.channel_id,c.channel_id);}
+  function pick(c){closeSuggestions();field.value=c.name;state.input=c.name;if(!store.isPro()&&c.kol_id){confirmCreator(c,()=>api.kol.sub(c.kol_id),confirmed,live);return;}begin(c.channel_id,c.channel_id);}
   field.addEventListener('input',()=>{state.input=field.value;state.doc=null;generation++;suggestVersion++;clear(results);closeSuggestions();onQuery(field.value);clearTimeout(debounce);debounce=setTimeout(search,200);});
   field.addEventListener('focus',search);
   field.addEventListener('blur',()=>{setTimeout(()=>{if(!suggestions.contains(document.activeElement))closeSuggestions();},0);});
@@ -84,7 +84,7 @@ export function mountSetup(root,{onFollow,initial='',state={},compact=false,rest
   }
   async function begin(input,chooseId=null){
     if(busy||!live())return;
-    if(!store.isPro()){clear(results);results.append(el('a.btn.btn-primary',{href:'#/billing'},s('creators.upgrade')));return;}
+    if(!store.isPro()){clear(results);results.append(el('p',s('experience.directory_only')));search();return;}
     const version=++generation;state.initialized=true;state.input=field.value;state.doc=null;suggestVersion++;closeSuggestions();busy=true;submit.disabled=true;
     clear(results);results.append(el('p',{role:'status'},s('common.loading')));
     try {const doc=await api.post('/kol/resolve',{input},{signal:ctl.signal});if(live()&&version===generation){show(doc);const c=doc.candidates?.find(c=>c.channel_id===chooseId);if(c)choose(c,doc.id);}}
@@ -121,7 +121,7 @@ export function confirmCreator(creator,follow,onFollow,live=()=>true) {
   action.addEventListener('click',async()=>{
     if(!live()){close();return;}action.disabled=true;dialog.querySelector('button.btn-ghost').disabled=true;
     try {const response=await follow();if(response?.subscribed!==true)throw new Error('follow_not_saved');action.disabled=false;if(live())onFollow(response);close();}
-    catch {error.textContent=s('creatorflow.follow_error');action.disabled=false;dialog.querySelector('button.btn-ghost').disabled=false;}
+    catch(err) {action.disabled=false;if(err.status===402){close();document.querySelector('.modal-box')?.focus();return;}error.textContent=s('creatorflow.follow_error');dialog.querySelector('button.btn-ghost').disabled=false;}
   });
   dialog.addEventListener('cancel',e=>{e.preventDefault();close();});
   dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)close();}});

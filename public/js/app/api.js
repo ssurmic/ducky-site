@@ -176,7 +176,7 @@ export const billing = {
 };
 export const kol = {
   // No public fallback for a denied/expired Pro session.
-  feed: () => store.isPro() ? get('/kol/feed') : get('/public/kol-feed.json', { auth:false }),
+  feed: () => store.isPro() ? get('/kol/feed') : get('/kol/trial-feed'),
   mine: () => get("/me/kols"),
   sub: (id) => post("/kol/" + encodeURIComponent(id) + "/sub", {}),
   unsub: (id) => del("/kol/" + encodeURIComponent(id) + "/sub"),

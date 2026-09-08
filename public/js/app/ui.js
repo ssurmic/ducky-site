@@ -171,10 +171,11 @@ export function confirm(text) {
 /** 402 upsell: {cap, tier} from the API. */
 export function upsell(info) {
   info = info || {};
-  const tier = tierName(info.tier || store.tier());
-  const body = el("div",
-    el("p", info.cap !== undefined ? s("alerts.cap_body", { tier, cap: info.cap }) : s("upsell.body")),
-    el("p.muted", s("billing.pick_pro")));
-  modal(info.cap !== undefined ? s("alerts.cap_title") : s("upsell.title"), body,
-    [{ label: s("alerts.cap_cta"), primary: true, href: "#/billing" }]);
+  const feature = info.feature || ({watch_limit:'watches',alert_limit:'alerts',creator_limit:'creators',evidence_limit:'evidence'}[info.error]);
+  const quota = Number.isFinite(info.cap) && ['watches','alerts','creators','evidence'].includes(feature);
+  const body = el('div',el('p',quota?s('experience.limit_'+feature,{cap:info.cap}):s('upsell.body')),
+    el('p.muted',quota?s('experience.replace'):s('billing.pick_pro')));
+  modal(quota?s('experience.limit_title'):s('upsell.title'),body,
+    [{label:s('experience.keep_free')},
+     {label:s('experience.compare'),primary:true,href:'#/billing'}]);
 }

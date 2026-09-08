@@ -1,5 +1,10 @@
 {
-  "mobile": ["watchlist", "calendar", "evidence", "boards"],
+  "mobile": [
+    "watchlist",
+    "calendar",
+    "evidence",
+    "boards"
+  ],
   "primary": [
     "watchlist",
     "evidence",
@@ -132,10 +137,10 @@
       "access": "pro"
     },
     "evidence": {
-      "access": "pro"
+      "access": "mixed"
     },
     "creators": {
-      "access": "pro"
+      "access": "mixed"
     },
     "vibe": {
       "access": "pro"

@@ -10,6 +10,10 @@ const SIMPLE = new Set(["watchlist", "alerts", "billing", "profile", "creators",
 export function safeTarget(hash) {
   if (typeof hash !== "string" || hash.length > 2048) return null;
   const path = hash.split("?")[0];
+  if(path==='#/evidence'){
+    const example=new URLSearchParams(hash.split('?')[1]||'').get('example');
+    if(['NOK','GLW','HOOD'].includes(example))return '#/evidence?example='+example;
+  }
   if(path==="#/ducky")return "#/evidence";
   if (path === '#/billing') {
     const q = new URLSearchParams(hash.split('?')[1] || ''), target = new URLSearchParams();

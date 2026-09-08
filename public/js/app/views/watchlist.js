@@ -1,3 +1,4 @@
+import {freeGuide,quotaNote} from '../experience.js';
 // views/watchlist.js — add ticker · list of 全景 mini-cards from /snapshot · remove.
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
 import { overviewView, layoutOverview } from "../watchlist-overview.js";
@@ -34,6 +35,7 @@ export async function mount(root) {
   const form = el("form.add-row", { onsubmit: onAdd }, picker.wrap, addBtn);
   const addOptions = el('details.watch-add-options', {open:!(store.get('watchlist')||[]).length},
     el('summary',s('watch.add')),el('p.view-intro.muted',s('watch.workflow')),form);
+  const usage=el("div");
   const list = el("div.watch-overview", { id: "watch-cards" });
   const resize=()=>layoutOverview(list);
   if(document.fonts)document.fonts.ready.then(()=>{if(!disposed)layoutOverview(list,true);});
@@ -82,7 +84,7 @@ export async function mount(root) {
       card(selected,(store.get('snapshots') || {})[selected]));
   }
   head.append(addOptions);
-  root.append(head, controls, offer, layout,
+  root.append(head, freeGuide() || "", usage, controls, offer, layout,
     el('div.chips',el('a.chip',{href:'#/updates'},s('updates.entry_title'))));
 
   async function onAdd(e) {
@@ -126,6 +128,7 @@ export async function mount(root) {
     const me = store.get("me") || {};
     // finding watchlist.js:54 — GET /me serves the cap top-level as watch_cap (app.py), never me.caps.watches.
     const cap = me.watch_cap;
+    clear(usage);if(!store.isPaid())usage.append(quotaNote("watches",items.length,cap)||"");
     const cnt = document.getElementById("watch-count");
     if (cnt) cnt.textContent = cap ? s("watch.count", { n: items.length, cap }) : String(items.length);
     if (selected && !items.includes(selected)) {selected=null;renderDetail();}
@@ -223,6 +226,7 @@ export async function mount(root) {
       const items = normalizeList(response);
       if (disposed || store.epoch() !== epoch) return;
       overview = response?.overview || null;
+      if(Number.isFinite(response?.cap))store.patch("me",{watch_cap:response.cap});
       loading = false;
       store.set("watchlist", items);
     } catch (err) {
