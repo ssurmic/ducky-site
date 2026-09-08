@@ -21,10 +21,13 @@ export function companyContext(p, rs = {}) {
     box.append(flow);
   }
   const peers = p.peers || [];
+  const matching = p.comparison_enabled!==false && rs.scope==='business_peers' && rs.status!=='benchmark_changed'
+    && peers.length>0 && peers.slice().sort().join()===(rs.symbols||[]).slice().sort().join()
+    && !(p.version && rs.taxonomy_version && p.version!==rs.taxonomy_version);
   if (peers.length) {
     box.append(el('div.company-links',el('span.muted.small',s(p.comparison_enabled===false?'company.business_refs':'company.peers')),
       ...peers.map(t=>el('a.chip',{href:'#/chart/'+encodeURIComponent(t)},'$'+t))));
-    if (rs.excess20 != null && peers.slice().sort().join() === (rs.symbols || []).slice().sort().join()) {
+    if (matching && Number.isFinite(rs.excess20)) {
       box.append(el('p.small',s('company.comparison',{n:20,value:(rs.excess20>0?'+':'')+num(rs.excess20,1)})));
     }
   } else box.append(el('p.muted.small',s('company.no_peers')));
@@ -36,7 +39,7 @@ export function companyContext(p, rs = {}) {
   details.append(el('p.muted.small',s('company.related_note')));
   const when = p.description_reviewed_at || p.reviewed_at || p.profile_as_of;
   if (when) details.append(el('p.muted.small',s('company.as_of',{date:String(when).slice(0,10)})));
-  const w=rs.windows?.['20'];
+  const w=matching?rs.windows?.['20']:null;
   if(w?.start && w?.end) details.append(el('p.muted.small',s('company.window',{start:w.start,end:w.end})));
   for(const peer of w?.peers || []) details.append(el('p.small.mono',s('company.peer_return',{ticker:peer.ticker,value:pct(peer.return_pct)})));
   for (const source of [...(p.sources || []),...(p.peer_sources || [])]) {
