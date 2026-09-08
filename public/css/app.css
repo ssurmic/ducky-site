@@ -1567,6 +1567,7 @@ html[lang^=en] .study-price-snapshot>div>.small:first-child{min-height:2.8em}
 .study-list>.study-group:only-child{grid-column:1/-1}
 .study-group{min-width:0;border:1px solid var(--border);border-radius:12px;background:var(--surface);overflow:hidden;--study-bull:#107348;--study-bear:#b53c52}
 html[data-theme=dark] .study-group{--study-bull:#47df98;--study-bear:#f18b9b}
+@media(prefers-color-scheme:dark){html:not([data-theme=light]) :is(.study-row,.study-group){--study-bull:#47df98;--study-bear:#f18b9b}}
 .study-group-summary{display:block;list-style:none;padding:18px;cursor:pointer;border-top:3px solid transparent}
 .study-group-summary::-webkit-details-marker{display:none}
 .study-group-summary.study-bull{border-top-color:var(--study-bull)}
