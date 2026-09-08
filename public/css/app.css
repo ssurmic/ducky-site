@@ -1477,6 +1477,9 @@ html[data-theme=dark] :is(.evidence-view,.evidence-detail){--source-youtube:#f18
 .evidence-analysis-status{font-size:13px;line-height:1.7;color:var(--muted);margin:8px 0 12px}
 .evidence-analysis.is-pending{padding:14px 18px 2px;border-color:var(--border);background:var(--surface)}
 /* Direction remains source-owned. Color and text make it legible together. */
+.evidence-node.is-context{border-color:var(--border);border-inline-start-color:color-mix(in srgb,var(--branch) 40%,var(--border));background:linear-gradient(125deg,color-mix(in srgb,var(--branch) 3%,var(--surface)),var(--surface))}
+.evidence-node.is-context:is(:hover,:focus-visible){border-color:var(--branch);background:color-mix(in srgb,var(--branch) 5%,var(--surface))}
+.evidence-node.is-context .evidence-source-watermark{color:var(--branch)}
 .evidence-node:is(.is-support,.is-counter){--source-tone:var(--branch);border-color:color-mix(in srgb,var(--branch) 60%,var(--border));border-inline-start:3px solid var(--branch);background:linear-gradient(125deg,color-mix(in srgb,var(--branch) 18%,var(--surface)),color-mix(in srgb,var(--branch) 7%,var(--surface)))}
 .evidence-node:is(.is-support,.is-counter):is(:hover,:focus-visible){border-color:var(--branch);background:linear-gradient(125deg,color-mix(in srgb,var(--branch) 23%,var(--surface)),color-mix(in srgb,var(--branch) 10%,var(--surface)));box-shadow:0 4px 18px color-mix(in srgb,var(--branch) 10%,transparent)}
 .evidence-node:is(.is-support,.is-counter) .evidence-source-badge{color:var(--branch)}
