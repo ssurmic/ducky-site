@@ -1,4 +1,4 @@
-import {el,clear,spinner,errorBox,modal,closeModal} from '../ui.js';
+import {el,clear,spinner,errorBox,modal,closeModal,dateTime as time} from '../ui.js';
 import {s,LANG,has} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
@@ -13,7 +13,6 @@ import {claimQualifications} from './creator-claim.js';
 const pick=v=>v?.[LANG==='en'?'en':'zh']||'';
 const original=v=>pick(v)||v?.en||v?.zh||'';
 const tickerOK=v=>/^[A-Z][A-Z0-9.\-]{0,9}$/.test(v||'');
-const time=v=>{const d=new Date(v);return v&&Number.isFinite(d.getTime())?d.toISOString().replace('T',' ').slice(0,16)+' UTC':'—';};
 const date=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}/.test(v)?v.slice(0,10):'—';
 function source(v){try{const u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch{return null;}}
 const position=v=>{const n=Math.floor(v);return Number.isFinite(n)?Math.floor(n/60)+':'+String(n%60).padStart(2,'0'):'';};

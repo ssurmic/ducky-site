@@ -3081,7 +3081,7 @@
   "app.stockbrief.status_ready": "已更新",
   "app.stockbrief.topic_sector_etf_vs_nasdaq100": "板块 ETF 与 Nasdaq-100",
   "app.stockbrief.missing_reddit_attention": "Reddit 讨论热度",
-  "app.stockbrief.cadence": "美东 08:00、20:00 起依次更新；同一批次中，来源变化可触发后台修订，修订补更有 30 分钟冷却。资料时间见报告。",
+  "app.stockbrief.cadence": "每日美东 08:00、20:00 起更新。报告内标明资料日期。",
   "app.stockbrief.reused": "依据未变，沿用上次判断。",
   "app.stockbrief.state_hold_watch": "持有观察",
   "app.stockbrief.missing_stock_vs_sector_etf": "个股与板块 ETF",

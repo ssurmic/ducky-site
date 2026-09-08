@@ -1,4 +1,4 @@
-import {el,modal,px,num} from './ui.js';
+import {el,modal,px,num,dateTime} from './ui.js';
 import {s} from './strings.js';
 const finite=n=>typeof n==='number'&&Number.isFinite(n);
 const date=v=>typeof v==='string'?v.slice(0,10):'—';
@@ -23,7 +23,7 @@ export function marketDetail(doc){
     el('p.evidence-market-price',hasPrice(quote)?px(quote.data.price):'—'),
     el('p.small.muted',s(priceLabel(doc),{date:date(quote?.data?.price_session)})),
     el('p.small.muted',s(savedQuote(quote)?'evidence.saved_quote_note':'evidence.quote_note')),
-    el('p.small.muted',s('evidence.observed',{at:quote?.observed_at||'—'})),
+    el('p.small.muted',s('evidence.observed',{at:dateTime(quote?.observed_at)})),
     el('h3',s('evidence.water_title')),
     band?el('p',s('evidence.range_values',{low:px(band.low),high:px(band.high)})):null,
     el('p',level===null?s('evidence.water_unknown'):s('evidence.water_value',{n:num(level*100,0)})),

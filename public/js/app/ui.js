@@ -59,6 +59,10 @@ export function date(iso) {
   if (Number.isNaN(d.getTime())) return String(iso).slice(0, 10);
   return d.toISOString().slice(0, 10);
 }
+export function dateTime(value) {
+  const d = new Date(value);
+  return value && Number.isFinite(d.getTime()) ? d.toISOString().replace('T', ' ').slice(0, 16) + ' UTC' : '—';
+}
 export function tierName(t) { return s("tier." + (t || "free")); }
 
 export function tierBadge(t) {

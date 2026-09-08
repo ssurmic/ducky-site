@@ -29,11 +29,12 @@ test('missing, stale and out-of-range prices never create a green water score',(
 });
 
 test('saved quote amount and source time remain distinct from daily-close validity',()=>{
- const doc={ticker:'COIN',price_session_context:{status:'invalid'},market_context:{price:{data:{price:178.94,price_session:'2026-09-08:CLOSED',basis:'saved_provider_quote_not_live_tick'},observed_at:'2026-09-08T20:07:29Z'}}};
+ const doc={ticker:'COIN',price_session_context:{status:'invalid'},market_context:{price:{data:{price:178.94,price_session:'2026-09-08:CLOSED',basis:'saved_provider_quote_not_live_tick'},observed_at:'2026-09-08T20:07:28.318816+00:00'}}};
  assert.match(priceBadge(doc).textContent,/178.94.*time needs checking/);
  doc.price_session_context.status='current';assert.match(priceBadge(doc).textContent,/Saved quote.*2026-09-08/);
  marketDetail(doc);const dialog=document.querySelector('[role=dialog]');
- assert.match(dialog.textContent,/not a live tick or a verified closing price/);assert.match(dialog.textContent,/20:07:29/);
+ assert.match(dialog.textContent,/not a live tick or a verified closing price/);assert.match(dialog.textContent,/2026-09-08 20:07 UTC/);
+ assert.doesNotMatch(dialog.textContent,/T20:07|318816/);
  doc.price_session_context.status='stale';assert.match(priceBadge(doc).textContent,/overdue/);
  for(const price of [null,0,-1,NaN,Infinity]){doc.market_context.price.data.price=price;assert.match(priceBadge(doc).textContent,/—Price unavailable/);}
 });

@@ -3081,7 +3081,7 @@
   "app.stockbrief.status_ready": "Updated",
   "app.stockbrief.topic_sector_etf_vs_nasdaq100": "Sector ETF versus Nasdaq-100",
   "app.stockbrief.missing_reddit_attention": "Reddit attention",
-  "app.stockbrief.cadence": "Scheduled refreshes begin at 08:00 and 20:00 ET. Changed evidence can trigger another background revision within that batch, with a 30-minute cooldown. Each report shows its source dates.",
+  "app.stockbrief.cadence": "Updates begin at 08:00 and 20:00 ET each day. Each report shows its source dates.",
   "app.stockbrief.reused": "Evidence is unchanged; the previous assessment is retained.",
   "app.stockbrief.state_hold_watch": "Monitor an existing position",
   "app.stockbrief.missing_stock_vs_sector_etf": "Stock versus sector ETF",
