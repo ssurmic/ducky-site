@@ -3353,5 +3353,14 @@
   "app.evidence.analysis_pending": "Analysis is being prepared. Explore the viewpoints below.",
   "app.evidence.analysis_insufficient": "There is not enough evidence for an analysis yet.",
   "app.evidence.analysis_source_changed": "Sources have changed. The analysis is being updated.",
-  "app.evidence.analysis_withdrawn": "Related sources were withdrawn. The analysis is unavailable."
+  "app.evidence.analysis_withdrawn": "Related sources were withdrawn. The analysis is unavailable.",
+  "app.evidence.source_youtube": "YouTube",
+  "app.evidence.source_x": "X",
+  "app.evidence.source_macro": "Macro",
+  "app.evidence.source_reddit": "Reddit",
+  "app.evidence.source_substack": "Substack",
+  "app.evidence.source_filing": "Company filing",
+  "app.evidence.source_creator": "Creator",
+  "app.evidence.source_data": "Data & records",
+  "app.evidence.source_mixed": "Mixed sources"
 }

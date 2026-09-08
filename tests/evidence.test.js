@@ -190,3 +190,34 @@ test('untranslated source entries show original text without inventing a transla
  assert.match(document.querySelector('.modal-body').textContent,/原始公告内容/);
  closeModal();root.dispose();root.remove();
 });
+
+test('platform identity uses source domains and structured metadata, never author names or stance',async()=>{
+ const {sourceIdentity,nodeSourceIdentity}=await import('../public/js/app/evidence-source.js');
+ for(const url of ['https://www.youtube.com/watch?v=abc','https://youtu.be/abc','https://www.youtube-nocookie.com/embed/abc'])assert.equal(sourceIdentity({source_url:url}),'youtube');
+ for(const url of ['https://youtube.com.evil.test/watch','https://evil.test/?url=youtube.com','javascript:alert(1)','https://youtube.com@evil.test/'])assert.notEqual(sourceIdentity({source_url:url,platform:'youtube'}),'youtube');
+ assert.equal(sourceIdentity({source_url:'https://x.com/author/status/123'}),'x');
+ assert.equal(sourceIdentity({source_url:'https://twitter.com/author/status/123'}),'x');
+ assert.equal(sourceIdentity({kind:'creator',author:'YouTube Analyst'}),'creator');
+ assert.equal(sourceIdentity({kind:'creator',platform:'youtube'}),'youtube');
+ assert.equal(sourceIdentity({kind:'fact',topic:'macro_background'}),'macro');
+ assert.equal(sourceIdentity({kind:'fact',topic:'technicals'}),'data');
+ assert.equal(sourceIdentity({source_url:'https://www.sec.gov/Archives/doc.htm'}),'filing');
+ assert.equal(nodeSourceIdentity({evidence:[{source_url:'https://youtu.be/a'},{source_url:'https://x.com/a/status/1'}]}),'mixed');
+});
+
+test('source branding preserves viewpoint, exact links, counts and source-dialog attribution',()=>{
+ const doc=fixture();doc.summary=null;
+ doc.nodes=doc.nodes.slice(0,4).map((node,i)=>({...node,stance:['support','counter','context','context'][i],evidence:[{...node.evidence[0],source_url:['https://youtu.be/a','https://x.com/a/status/1','https://fred.stlouisfed.org/series/CPIAUCSL','https://example.com/data'][i],kind:i===2?'fact':'creator',topic:i===2?'macro_background':undefined}]}));
+ const original=JSON.stringify(doc),root=mapView(doc);document.body.append(root);
+ for(const [identity,stance]of [['youtube','support'],['x','counter'],['macro','context']]){
+  const card=root.querySelector('.evidence-node.source-'+identity);assert.ok(card.classList.contains('is-'+stance));
+  assert.equal(card.querySelector('.evidence-category').textContent,copy['app.evidence.'+stance]);
+  assert.equal(card.querySelector('.evidence-source-badge').textContent,copy['app.evidence.source_'+identity]);
+  assert.equal(card.querySelector('.evidence-source-watermark').getAttribute('aria-hidden'),'true');
+ }
+ assert.equal(root.querySelectorAll('.evidence-node').length,4);
+ root.querySelector('.evidence-node.source-youtube').click();
+ assert.equal(document.querySelector('.evidence-source>.evidence-source-badge').textContent,'YouTube');
+ assert.equal(document.querySelector('.evidence-source a[target="_blank"]').href,'https://youtu.be/a');
+ assert.equal(JSON.stringify(doc),original);closeModal();root.dispose();root.remove();
+});

@@ -3353,5 +3353,14 @@
   "app.evidence.analysis_pending": "综合分析整理中，可先查看下方观点。",
   "app.evidence.analysis_insufficient": "资料还不足以形成综合分析。",
   "app.evidence.analysis_source_changed": "来源已有变化，综合分析正在更新。",
-  "app.evidence.analysis_withdrawn": "相关来源已撤回，暂不显示综合分析。"
+  "app.evidence.analysis_withdrawn": "相关来源已撤回，暂不显示综合分析。",
+  "app.evidence.source_youtube": "YouTube",
+  "app.evidence.source_x": "X",
+  "app.evidence.source_macro": "宏观",
+  "app.evidence.source_reddit": "Reddit",
+  "app.evidence.source_substack": "Substack",
+  "app.evidence.source_filing": "公司披露",
+  "app.evidence.source_creator": "博主",
+  "app.evidence.source_data": "数据与记录",
+  "app.evidence.source_mixed": "多种来源"
 }

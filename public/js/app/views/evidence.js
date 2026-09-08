@@ -7,6 +7,7 @@ import {waterLevel,marketDetail,priceBadge} from '../evidence-context.js';
 import {icon} from '../icons.js';
 import {evidenceTarget} from '../creator-route.js';
 import {comparisonBadge,comparisonDetails} from '../comparison-context.js';
+import {sourceIdentity,nodeSourceIdentity,sourceBadge,sourceMark} from '../evidence-source.js';
 
 const pick=v=>v?.[LANG==='en'?'en':'zh']||'';
 const original=v=>pick(v)||v?.en||v?.zh||'';
@@ -24,7 +25,7 @@ export function detail(node){
     pick(node.reason)?el('p',pick(node.reason)):null);
   for(const e of node.evidence||[]){
     const explanation=e.kind==='fact'?factDescription(e):pick(e.reason)||pick(e.title);
-    const item=el('article.evidence-source',el('h3',e.author||s('evidence.recorded_data')),
+    const item=el('article.evidence-source',sourceBadge(sourceIdentity(e)),el('h3',e.author||s('evidence.recorded_data')),
       original(e.original_title)?el('div.evidence-original',el('span.small.muted',s('evidence.original_only')),el('p',original(e.original_title))):null,
       explanation&&explanation!==pick(node.reason)?el('p',explanation):null,
       e.kind==='fact'?comparisonDetails(e):null,
@@ -180,18 +181,20 @@ export function mapView(doc,{archive=false,onPickTicker}={}){
     center.style.gridRow='1 / '+(Math.min(3,Math.ceil(visible.length/2))+1);
     map.classList.toggle('is-empty',!visible.length);
     for(const [i,node] of visible.entries()){
+      const identity=nodeSourceIdentity(node);
       const authors=[...new Set((node.evidence||[]).map(e=>e.author).filter(Boolean))];
       const linked=node.kind==='creator'&&node.evidence?.length===1?evidenceTarget(node.evidence[0]):null;
-      const card=el('button.evidence-node',{type:'button',class:'is-'+node.stance,style:{gridColumn:i%2===0?'1':'3',gridRow:String(Math.floor(i/2)+1)},onclick:()=>{if(linked)location.hash=linked;else detail(node);}},
-        el('span.evidence-node-label',el('span.evidence-category',s('evidence.'+node.stance)),
-          node.conditional?el('span.evidence-condition',s('evidence.condition_tag')):null,
-          el('span.evidence-node-number',{'aria-hidden':'true'},String(nodes.indexOf(node)+1).padStart(2,'0'))),
+      const card=el('button.evidence-node',{type:'button',class:'is-'+node.stance+' source-'+identity,'data-source':identity,style:{gridColumn:i%2===0?'1':'3',gridRow:String(Math.floor(i/2)+1)},onclick:()=>{if(linked)location.hash=linked;else detail(node);}},
+        ['youtube','x','macro'].includes(identity)?el('span.evidence-source-watermark',{'aria-hidden':'true'},sourceMark(identity)):null,
+        el('span.evidence-node-label',sourceBadge(identity),el('span.evidence-category',s('evidence.'+node.stance))),
         el('strong',pick(node.title)),
+        node.conditional?el('span.evidence-node-flags',el('span.evidence-condition',s('evidence.condition_tag'))):null,
         ...(node.evidence||[]).filter(e=>e.kind==='fact').map(comparisonBadge).filter(Boolean).slice(0,1),
         original(node.original_title)?el('span.evidence-original-title',original(node.original_title)):null,
         el('span.evidence-node-author',icon(authors.length?'creators':'briefing'),el('span',authors.join(' · ')||s('evidence.recorded_data'))),
         el('span.evidence-node-mobile-meta',authors.length?el('span.evidence-mobile-author',authors.join(' · ')):null,el('span',date(node.published_at||node.observed_at)),!authors.length?el('span.evidence-mobile-count',s((node.evidence||[]).length===1?'evidence.source_single':'evidence.sources',{n:(node.evidence||[]).length})):null,node.conditional?el('span.evidence-condition',s('evidence.condition_tag')):null),
         el('span.evidence-node-footer',el('span',date(node.published_at||node.observed_at)),
+          el('span.evidence-node-number',{'aria-hidden':'true'},String(nodes.indexOf(node)+1).padStart(2,'0')),
           el('span',s((node.evidence||[]).length===1?'evidence.source_single':'evidence.sources',{n:(node.evidence||[]).length})+' ↗')));
       groups.get(node.stance)?.list.append(card);
     }
