@@ -45,3 +45,8 @@ test('malformed source links remain literal text and do not break a report',()=>
  const body=renderDocument({blocks:[{text:'Read https://[invalid and https://example.com/source. <img src=x onerror=alert(1)>'}]});
  assert.ok(body.textContent.includes('https://[invalid'));assert.equal(body.querySelector('img'),null);assert.equal(body.querySelectorAll('a').length,1);
 });
+
+test('translation truncation is disclosed only for the selected source body',()=>{
+ const translated={...row,extra:{...row.extra,translation_message_truncated:true}};
+ assert.equal(recordDocument(translated,'zh').truncated,true);assert.ok(!recordDocument(translated,'en').truncated);
+});

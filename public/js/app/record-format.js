@@ -37,7 +37,7 @@ export function recordDocument(row,language=LANG){
   const parts=block.heading.split(/\s+\/\s+/);
   if(parts.length===2 && parts.some(p=>/[\u3400-\u9fff]/.test(p))){block.heading=parts.find(p=>language==='zh'?/[\u3400-\u9fff]/.test(p):!/[\u3400-\u9fff]/.test(p))||block.heading;}
  }
- return {title,raw,hasBody:Boolean(extra.message_text||extra.message_en||extra.message_zh),blocks,lead:lead.length>170?lead.slice(0,170)+'…':lead,report,
+ return {title,raw,truncated:language==='zh'&&extra.message_zh?extra.translation_message_truncated:extra.message_truncated,hasBody:Boolean(extra.message_text||extra.message_en||extra.message_zh),blocks,lead:lead.length>170?lead.slice(0,170)+'…':lead,report,
   language:language==='zh'&&extra.message_zh?'zh':language==='en'&&extra.message_en?'en':null};
 }
 function paragraph(text){

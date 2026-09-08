@@ -386,7 +386,7 @@ export function itemRow(it, {standalone=false, language=LANG}={}){
       for(const [id,text] of notes)evidence.append(el('p.small',id+' · '+text));
       if(notes.size)detail.append(evidence);
     }
-    if(it.extra?.message_truncated)detail.append(el('p.muted',s('boards.truncated')));
+    if(doc.truncated)detail.append(el('p.muted',s('boards.truncated')));
     if(!body && !it.archived)detail.append(el('p.muted',s('radar.body_note')));
     detail.append(el('div.radar-detail-facts',el('span',s('boards.recorded_at')),el('strong',dateTime(it.observed_at || it.ts)),
       el('span',s('radar.record_type')),el('strong',kind)),el('p.radar-time-note.muted',s(timeNote)));
