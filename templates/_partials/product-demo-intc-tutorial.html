@@ -12,8 +12,12 @@
   <p id="intc-tutorial-note" class="small muted">{{ t('walkthrough.intc.note') }}</p>
   <a class="product-demo-tutorial-link" href="{{ url('/app/') }}#/creators?scope=discover&amp;creator=touzi-talk&amp;post=CEGiQA6CNd4&amp;point=claim%3A231a64321ade3830e177cc93">{{ t('walkthrough.intc.open') }} →</a>
   <details class="product-demo-transcript">
-   <summary>{{ t('walkthrough.intc.transcript') }}</summary>
-   <ol>{% for i in range(1,9) %}<li>{{ t('walkthrough.intc.line.' ~ i) }}</li>{% endfor %}</ol>
+   <summary>{{ t('walkthrough.intc.guide') }}</summary>
+   {# Final v2 scene starts, verified against usage-step-timings.json and the published media hashes. #}
+   {% set tutorial_starts = [0, 4.08, 8.12, 12.72, 17.80, 23.24, 27.24] if lang == 'zh' else [0, 3.80, 7.52, 12.12, 16.12, 20.48, 24.48] %}
+   <ol>{% for second in tutorial_starts %}
+    <li><span class="mono">{{ '%02d:%05.2f'|format((second / 60)|int, second % 60) }}</span> · <strong>{{ t('walkthrough.intc.step.' ~ loop.index ~ '.title') }}</strong><br>{{ t('walkthrough.intc.step.' ~ loop.index ~ '.body') }}</li>
+   {% endfor %}</ol>
    <p class="small muted">{{ t('walkthrough.intc.source_note') }} <a href="https://www.youtube.com/watch?v=CEGiQA6CNd4&amp;t=249s" target="_blank" rel="noopener noreferrer">{{ t('walkthrough.intc.source') }} ↗</a></p>
   </details>
  </div>

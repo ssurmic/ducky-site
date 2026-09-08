@@ -1,0 +1,118 @@
+{
+  "checked_at": "2026-09-08T19:44:27.493Z",
+  "kind": "Viewport simulation, not physical-device or touch emulation",
+  "cases": [
+    {
+      "lang": "zh",
+      "theme": "dark",
+      "viewport": [
+        320,
+        600
+      ],
+      "scroll_width": 320,
+      "header_height": 65,
+      "first_step_top": 142.9296875,
+      "fully_visible_steps": 3,
+      "steps": 7,
+      "videos_untouched": true
+    },
+    {
+      "lang": "zh",
+      "theme": "light",
+      "viewport": [
+        320,
+        600
+      ],
+      "scroll_width": 320,
+      "header_height": 65,
+      "first_step_top": 142.9296875,
+      "fully_visible_steps": 3,
+      "steps": 7,
+      "videos_untouched": true
+    },
+    {
+      "lang": "en",
+      "theme": "dark",
+      "viewport": [
+        320,
+        600
+      ],
+      "scroll_width": 320,
+      "header_height": 65,
+      "first_step_top": 142.6640625,
+      "fully_visible_steps": 2,
+      "steps": 7,
+      "videos_untouched": true
+    },
+    {
+      "lang": "en",
+      "theme": "light",
+      "viewport": [
+        320,
+        600
+      ],
+      "scroll_width": 320,
+      "header_height": 65,
+      "first_step_top": 142.6640625,
+      "fully_visible_steps": 2,
+      "steps": 7,
+      "videos_untouched": true
+    },
+    {
+      "lang": "zh",
+      "theme": "dark",
+      "viewport": [
+        390,
+        650
+      ],
+      "scroll_width": 390,
+      "header_height": 65,
+      "first_step_top": 151.78125,
+      "fully_visible_steps": 4,
+      "steps": 7,
+      "videos_untouched": true
+    },
+    {
+      "lang": "zh",
+      "theme": "light",
+      "viewport": [
+        390,
+        650
+      ],
+      "scroll_width": 390,
+      "header_height": 65,
+      "first_step_top": 151.78125,
+      "fully_visible_steps": 4,
+      "steps": 7,
+      "videos_untouched": true
+    },
+    {
+      "lang": "en",
+      "theme": "dark",
+      "viewport": [
+        390,
+        650
+      ],
+      "scroll_width": 390,
+      "header_height": 65,
+      "first_step_top": 151.6484375,
+      "fully_visible_steps": 3,
+      "steps": 7,
+      "videos_untouched": true
+    },
+    {
+      "lang": "en",
+      "theme": "light",
+      "viewport": [
+        390,
+        650
+      ],
+      "scroll_width": 390,
+      "header_height": 65,
+      "first_step_top": 151.6484375,
+      "fully_visible_steps": 3,
+      "steps": 7,
+      "videos_untouched": true
+    }
+  ]
+}

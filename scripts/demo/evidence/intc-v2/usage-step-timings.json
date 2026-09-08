@@ -1,0 +1,71 @@
+{
+  "basis": "Final v2 native-caption render timeline; no media or voice changes",
+  "languages": {
+    "zh": {
+      "video_sha256": "740906f749999d0f4797e9f00dc4c53b158ba7188638020c6f0dd892009d87c8",
+      "steps": [
+        {
+          "scene": "01-overload",
+          "start_seconds": 0.0
+        },
+        {
+          "scene": "02-map",
+          "start_seconds": 4.08
+        },
+        {
+          "scene": "03-creator",
+          "start_seconds": 8.12
+        },
+        {
+          "scene": "04-source",
+          "start_seconds": 12.72
+        },
+        {
+          "scene": "05-alert",
+          "start_seconds": 17.8
+        },
+        {
+          "scene": "06-channels",
+          "start_seconds": 23.24
+        },
+        {
+          "scene": "07-calendar",
+          "start_seconds": 27.24
+        }
+      ]
+    },
+    "en": {
+      "video_sha256": "09c0cb8e96378d83b4ab98e31737a0505ea55060a0e5e394a94a4a9d2df31e48",
+      "steps": [
+        {
+          "scene": "01-overload",
+          "start_seconds": 0.0
+        },
+        {
+          "scene": "02-map",
+          "start_seconds": 3.8
+        },
+        {
+          "scene": "03-creator",
+          "start_seconds": 7.52
+        },
+        {
+          "scene": "04-source",
+          "start_seconds": 12.12
+        },
+        {
+          "scene": "05-alert",
+          "start_seconds": 16.12
+        },
+        {
+          "scene": "06-channels",
+          "start_seconds": 20.48
+        },
+        {
+          "scene": "07-calendar",
+          "start_seconds": 24.48
+        }
+      ]
+    }
+  }
+}

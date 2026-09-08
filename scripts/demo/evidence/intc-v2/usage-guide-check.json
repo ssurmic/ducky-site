@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-09-08T19:43:14.957Z",
+  "languages": {
+    "zh": {
+      "steps": 7,
+      "times": [
+        "00:00.00",
+        "00:04.08",
+        "00:08.12",
+        "00:12.72",
+        "00:17.80",
+        "00:23.24",
+        "00:27.24"
+      ],
+      "mainChapters": 8,
+      "mainFeatureLinks": 7,
+      "sourceHref": "https://www.youtube.com/watch?v=CEGiQA6CNd4&t=249s"
+    },
+    "en": {
+      "steps": 7,
+      "times": [
+        "00:00.00",
+        "00:03.80",
+        "00:07.52",
+        "00:12.12",
+        "00:16.12",
+        "00:20.48",
+        "00:24.48"
+      ],
+      "mainChapters": 8,
+      "mainFeatureLinks": 7,
+      "sourceHref": "https://www.youtube.com/watch?v=CEGiQA6CNd4&t=249s"
+    }
+  },
+  "mediaUnchanged": 8
+}

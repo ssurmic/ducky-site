@@ -10,7 +10,7 @@ The source was published August 24 and recorded September 6, 2026. This does not
 
 ## Playback and accessibility
 
-Both voices retain their original speech speed. The final call to action stays visible for 3.2 seconds. Web files use separate native Chinese and English tracks with localized defaults, plus an expandable text transcript and original-source link.
+Both voices retain their original speech speed. The final call to action stays visible for 3.2 seconds. Web files use separate native Chinese and English tracks with localized defaults, plus an expandable feature guide and original-source link.
 
 A real 320px browser check caught clipped long English captions and overlap with controls. The web edition now uses 17 short phrase cues per voice, matched to the selected speech’s word boundaries. Native caption size is limited to 90%; only this tutorial uses the higher portrait position. Collapsing the tutorial pauses its audio without touching the main film. Media preload remains none and there is no autoplay.
 
@@ -27,3 +27,10 @@ Machine-readable source, audio, phrase, browser and asset receipts are in `scrip
 ## Publication
 
 Approved scope: publish this collapsible supplement after successful CI; preserve the v9 main tour and guide. Published entry: `https://duckybot.app/#intc-tutorial` and `https://duckybot.app/en/#intc-tutorial`. PR #1 passed CI and merged as `5ebff4521d26737b6b50f331e8836793fc1989ea`; main CI also passed (run 34269417974). Pages deployment `6729ae40` serves the verified build. Both live pages return 200, retain v9 / eight chapters / seven feature links, and all eight media assets match the recorded SHA-256 hashes. Both production videos play through to their exact durations with ended=true and no media errors. The original-view link reaches the normal product login gate in the unauthenticated browser; no sign-in was submitted. This acceptance record is a documentation follow-up; the deployed code remains 5ebff452.
+
+
+## Usage-guide correction
+
+Replaces the eight narration lines beneath the supplement with seven operational steps in both languages: video time, interface name, and what to do or check. Times come from the final v2 render timeline and are tied to the unchanged published media hashes. The original-source link remains. This does not change the main v9 feature guide, either film, captions, playback code or shared CSS.
+
+The rendered HTML was checked against all fourteen exact start times; each language has seven steps, the original video link, eight main-film chapters and seven independent main feature links. All eight media hashes are unchanged. Build, copy lint and links pass. Actual browser viewport checks cover both languages and themes at 320×600 and 390×650; text wraps without horizontal overflow. No playback was started during this text-only check. Timing and browser receipts are in `scripts/demo/evidence/intc-v2/usage-*`.
