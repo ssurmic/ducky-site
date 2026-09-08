@@ -69,3 +69,16 @@ test('Pro watchlist has no free guide or placeholder text',async()=>{
  assert.equal(root.querySelector('.free-guide'),null);assert.ok(!root.textContent.includes('null'));
  assert.match(root.textContent,/0\/50/);stop();root.remove();
 });
+
+test('unselected creator content is unavailable, never falsely reported as no summaries',async()=>{
+ store.set('me',me());
+ globalThis.fetch=async url=>response(String(url).includes('/trial-feed')?{kols:[{id:'one',name:'One',platform:'youtube'}],posts:[],pages:{}}:String(url).includes('/me/kols')?{subs:[],cap:2}:{items:[]});
+ const {mount:creators}=await import('../public/js/app/views/creators.js');
+ const root=document.createElement('div');document.body.append(root);const stop=await creators(root,{query:new URLSearchParams('scope=discover')});
+ assert.match(root.textContent,/Follow to see available coverage/);
+ assert.ok(!root.textContent.includes(copy['app.creatorpage.no_summary']));
+ root.querySelector('.creator-name').click();
+ assert.equal(root.querySelector('.creator-overview'),null);
+ assert.equal(root.querySelector('.creator-video-archive'),null);
+ assert.ok(!root.textContent.includes(copy['app.creatorpage.no_summary']));stop();root.remove();
+});

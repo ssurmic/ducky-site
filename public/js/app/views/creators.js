@@ -141,6 +141,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     return () => {};
   }
   const following = new Set((subs && subs.subs) || []);
+  const canRead = id => store.isPro() || [...following].slice(0,subs?.cap ?? 2).includes(id);
   if (epoch !== store.epoch() || signal?.aborted) return () => {};
   const kols = (doc && doc.kols) || [];
   for(const c of subs?.creators || [])if(!kols.some(k=>k.id===c.kol_id))kols.push({...c,id:c.kol_id});
@@ -170,7 +171,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   let query = "";
   let selected=kols.some(k=>k.id===initial.selected)?initial.selected:'', tab=initial.tab, shown=30;
   const labState={demo:initial.demo}, histories={}, archiveOpen=new Set();
-  const pageProgress=progressPoll({interval:30000,active:()=>!sourceOnly&&!disposed&&(store.isPro()||following.has(selected))&&epoch===store.epoch()&&root.isConnected&&!!selected&&tab==='feed',
+  const pageProgress=progressPoll({interval:30000,active:()=>!sourceOnly&&!disposed&&canRead(selected)&&epoch===store.epoch()&&root.isConnected&&!!selected&&tab==='feed',
     read:()=>api.get('/kol/'+encodeURIComponent(selected)+'/page'),
     onValue:page=>{if(page.kol_id!==selected)return;const old=doc.pages?.[selected];if(page.content_hash===old?.content_hash&&page.status===old?.status)return;
       doc.pages={...(doc.pages||{}),[selected]:page};renderContent();}});
@@ -260,12 +261,12 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       const creatorPosts=posts.filter(p=>p.kol_id===k.id);
       const page=doc.pages?.[k.id];
       const ready=page?.coverage?.reviewed ?? creatorPosts.filter(hasReviewedSummary).length;
-      tile.append(el('p.creator-card-coverage',!store.isPro()&&!following.has(k.id)?s('experience.not_followed_data'):s('creatorpage.card_ready',{n:ready})));
+      tile.append(el('p.creator-card-coverage',!canRead(k.id)?s(on?'experience.creator_outside_trial':'experience.not_followed_data'):s('creatorpage.card_ready',{n:ready})));
       const newest=[...creatorPosts].sort((a,b)=>(Date.parse(b.published_at)||0)-(Date.parse(a.published_at)||0))[0];
       if(discoveredSource(newest))tile.append(el('p.data-notice.small',s('creators.new_source_pending',{date:String(newest.published_at||'').slice(0,10)})));
       const highlight=[...(page?.highlights || [])].sort((a,b)=>(Date.parse(b.published_at)||0)-(Date.parse(a.published_at)||0))[0];
       if(highlight)tile.append(el('p.creator-card-gist',conciseSummary(highlight.summary,isZh)));
-      else tile.append(el('p.small.muted',s(page?.backfill?'creatorpage.preparing':'creatorpage.no_summary')));
+      else if(canRead(k.id))tile.append(el('p.small.muted',s(page?.backfill?'creatorpage.preparing':'creatorpage.no_summary')));
       const label = on ? s("creators.following") : s("creators.follow");
       const chip = el("button.cr-chip" + (on ? ".on" : ""), { type: "button",'aria-label':label+' '+k.name }, label);
       chip.addEventListener("click", () => { if(on)toggle(k.id,chip);else confirmCreator({...k,recent:creatorPosts.slice(0,3)},()=>api.kol.sub(k.id),followed,()=>!disposed&&epoch===store.epoch()); });
@@ -282,7 +283,12 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       const creator=kols.find(k=>k.id===selected);
       content.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected='';renderContent();}},'← '+s('creatorpage.all')));
       content.append(el('header.creator-selected-heading',el('h1',creator.name)));
-      if(!store.isPro()&&!following.has(selected))content.append(el('div.card',el('p',s('experience.follow_to_read')),el('button.btn.btn-primary',{type:'button',onclick:()=>confirmCreator(creator,()=>api.kol.sub(selected),followed,()=>!disposed&&epoch===store.epoch())},s('creators.follow'))));
+      if(!canRead(selected)){
+        content.append(el('div.card',el('p',s(following.has(selected)?'experience.creator_outside_trial':'experience.follow_to_read')),
+          following.has(selected)?el('button.btn.btn-ghost',{type:'button',onclick:event=>toggle(selected,event.currentTarget)},s('creators.following')):
+          el('button.btn.btn-primary',{type:'button',onclick:()=>confirmCreator(creator,()=>api.kol.sub(selected),followed,()=>!disposed&&epoch===store.epoch())},s('creators.follow'))));
+        return;
+      }
       if(!sourceOnly){
         const overview=el('section.creator-page');content.append(el('details.creator-overview',el('summary',s('creators.overview_short')),overview));
         renderCreatorPage(overview,{creator,page:doc.pages?.[selected]||{},tickers:stockFilter,onTab:value=>{tab=value;renderContent();}});
@@ -306,7 +312,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     }
     const candidates=focusedPost?posts.filter(p=>p.kol_id===initial.selected&&p.platform_post_id===focusedPost):(history?.items||posts);
     const visiblePosts = filterPosts(candidates, {following,mine:focusedPost?false:mine,archive:archive||!!focusedPost,query:'',tickers:focusedPost?null:stockFilter}).filter(p=>!selected || p.kol_id===selected);
-    if (!visiblePosts.length) { feedContent.appendChild(empty(s("creators.feed_empty"))); return; }
+    if (!visiblePosts.length) { feedContent.appendChild(empty(s(!store.isPro()&&!following.size?'experience.follow_to_read':'creators.feed_empty'))); return; }
     const feed = el("div.cr-feed");
     for (const p of visiblePosts.slice(0, history?.items?visiblePosts.length:shown)) {
       const grounded = hasGroundedCalls(p);
