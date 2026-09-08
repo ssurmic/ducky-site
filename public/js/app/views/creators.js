@@ -3,7 +3,7 @@ import {evidenceLink} from '../evidence-link.js';
 // has Follow toggles (POST/DELETE /kol/{id}/sub); below it, the recent summary feed. The feed is a RECORD of
 // the creator's view (attributed, tickers, bull/bear), never our advice.
 import { s } from "../strings.js";
-import {verifiedSpans,spanSection} from '../creator-spans.js';
+import {verifiedSpans,spanSection,legacyCalls,viewpointTake} from '../creator-spans.js';
 import * as api from "../api.js";
 import * as store from "../store.js";
 import * as router from "../router.js";
@@ -282,12 +282,13 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       const grounded = hasGroundedCalls(p);
       const reviewed = hasReviewedSummary(p);
       const meta = evidenceMeta(p);
-      const stance = grounded && ["bull", "bear"].includes(p.take) ? p.take : "neutral";
+      const points=verifiedSpans(p);
+      const stance = viewpointTake(p,focusedPoint);
       const art = el("article.cr-post");
       if(focusedPost)art.classList.add('is-focused-source');
       const head = el("div.cr-post-head",
         el("b.cr-who", (p.kol_name || p.kol_id || "")),
-        el("span.cr-take." + TAKE_CLS[stance], grounded ? s("creators.take_" + stance) : s(reviewed ? "creators.summary_ready" : "creators.unverified")));
+        el("span.cr-take." + TAKE_CLS[stance], grounded||points.some(row=>row.intent!=='mention') ? s("creators.take_" + stance) : s(reviewed ? "creators.summary_ready" : "creators.unverified")));
       if (grounded && p.tickers && p.tickers.length) head.appendChild(el("span.cr-tks.mono", p.tickers.slice(0, 4).map((t) => "$" + t).join(" · ")));
       art.appendChild(head);
       const matched=reviewed?taggedTickers(p).filter(t=>watchedTickers.includes(t)):[];
@@ -300,15 +301,16 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
       if(Number.isFinite(source.caption_coverage_pct)) sourceFacts.append(el('span',s('creators.coverage',{n:source.caption_coverage_pct})));
 
       if (p.title) art.appendChild(el("h3.cr-video-title", {title:p.title}, previewTitle(p.title)));
-      if (reviewed) {
+      if (reviewed || points.length) {
         if(meta.source?.corrections?.length)art.appendChild(el('p.small',s('creatorclaim.corrected')));
         const sections = meta.source?.sections || [];
-        const fullSummary = pickSummary(p.summary,isZh) || pickSummary(sections[0],isZh);
+        const fullSummary = reviewed?(pickSummary(p.summary,isZh) || pickSummary(sections[0],isZh)):'';
         art.appendChild(el("p.cr-sum", conciseSummary(fullSummary,isZh)));
         const detail = el("details.cr-sections",el("summary",s("creators.read_summary")),el("p.cr-attribution.muted.small", s("creators.attribution", { name: p.kol_name || p.kol_id || "—" })),el("p",fullSummary));
         if(focusedPost)detail.open=true;
-        if (grounded && p.calls?.length) detail.append(callChips(p.calls,isZh,p.url,p.kol_id));
-        if (sections.length) {
+        const spans=spanSection(points,null,focusedPoint,{inline:true});if(spans)detail.append(spans);
+        if (grounded && legacyCalls(p).length) detail.append(callChips(legacyCalls(p),isZh,p.url,p.kol_id));
+        if (reviewed && sections.length) {
 
           for (const section of sections) detail.appendChild(el("div", safeSource(p.url)?el("a", {href:atTime(p.url,section.start_seconds),target:"_blank",rel:"noopener noreferrer"}, `${Math.floor(section.start_seconds/60)}:${String(Math.floor(section.start_seconds)%60).padStart(2,"0")} ↗`):null, el("p", pickSummary(section,isZh))));
         }
@@ -319,7 +321,6 @@ export async function mount(root, {query:routeQuery=new URLSearchParams()} = {})
         art.appendChild(el("p.muted.small", discoveredSource(p)?s('creators.new_source_pending',{date:String(p.published_at||'').slice(0,10)}):s('creators.'+statusKey)));
       }
 
-      const spans=spanSection(p.reviewed_spans,null,focusedPoint);if(spans)art.append(spans);
       if(focusedPost&&focusedPoint&&!p.reviewed_spans?.some(v=>v.point_id===focusedPoint))art.append(el('p.data-notice',s('evidence.point_changed')));
       const audit=el('details.creator-audit',el('summary',s('creators.source_details')),
         el('p.muted.small',s('creators.first_seen')+' '+dateTime(p.first_seen_at)),
