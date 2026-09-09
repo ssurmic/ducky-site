@@ -16,7 +16,7 @@ const post=(id,tk)=>({id,kol_id:'known',kol_name:'Other Creator',title:'Recorded
   published_at:'2026-09-07T00:00:00Z',summary:{quality:'no_call',zh:'博主讨论业务。',source:{kind:'transcript',status:'ready',summary_reviewed:true}},
   url:'https://www.youtube.com/watch?v=abcdefghijk'});
 
-test('Chinese name lookup finds a channel with no summaries and never applies watchlist filtering',async()=>{
+test('explicit Add creator lookup finds a Chinese channel with no summaries independently of discovery stock filters',async()=>{
   store.set('me',{tier:'pro',user_id:1});const calls=[];
   globalThis.fetch=async(url,options)=>{
     calls.push([url,options]);
@@ -24,6 +24,7 @@ test('Chinese name lookup finds a channel with no summaries and never applies wa
     if(url==='/me/kols')return Response.json({subs:[],analysis:{}});
     if(url==='/watchlist')return Response.json({items:[{ticker:'NVDA'}]});
     if(url==='/kol/lookups')return Response.json({items:[]});
+    if(url.startsWith('/kol/discover'))return Response.json({status:'ready',items:[]});
     if(url.startsWith('/kol/suggest'))return Response.json({items:[candidate]});
     if(url==='/kol/resolve'){
       assert.equal(JSON.parse(options.body).input,'卓野聊美股');
@@ -34,8 +35,13 @@ test('Chinese name lookup finds a channel with no summaries and never applies wa
   const root=document.createElement('main');document.body.append(root);
   const dispose=await mount(root,{query:new URLSearchParams('scope=watchlist&ticker=NVDA')});await tick();
   assert.equal(root.querySelector('.creator-stock-filter'),null);
-  assert.ok(!root.textContent.includes(copy['app.creatorstocks.watchlist']));
   assert.equal(root.querySelectorAll('input').length,1);
+  assert.ok(root.querySelector('input[type=search]'));
+  assert.equal(root.querySelector('[role=combobox]'),null);
+  assert.ok(!calls.some(([url])=>url==='/kol/lookups'||url==='/kol/resolve'));
+  [...root.querySelectorAll('.creator-page-actions button')].find(b=>b.textContent===copy['app.creatorflow.add']).click();await tick();
+  assert.ok(root.querySelector('.creator-add-panel [role=combobox]'));
+  assert.equal(root.querySelectorAll('input').length,2);
   const field=root.querySelector('[role=combobox]');field.value='卓野聊美股';field.dispatchEvent(new window.Event('input'));
   field.dispatchEvent(new window.Event('focus'));await tick();
   assert.ok(root.querySelector('[role=listbox]').textContent.includes(candidate.name));
@@ -47,12 +53,12 @@ test('Chinese name lookup finds a channel with no summaries and never applies wa
   dispose();root.remove();
 });
 
-test('creator feed retains unrelated posts and marks watched stocks only on reviewed content',async()=>{
+test('Following retains unrelated posts and marks watched stocks only on reviewed content',async()=>{
   store.set('me',{tier:'pro',user_id:1});
   globalThis.fetch=async url=>Response.json(url==='/kol/feed'?{kols:[{id:'known',name:'Other Creator',profile:{}}],posts:[post(1,'NVDA'),post(2,'TSLA')]}:
     url==='/me/kols'?{subs:['known'],analysis:{}}:url==='/watchlist'?{items:[{ticker:'NVDA'}]}:{items:[]});
   const root=document.createElement('main');document.body.append(root);
-  const dispose=await mount(root,{query:new URLSearchParams('scope=watchlist&ticker=NVDA')});await tick();
+  const dispose=await mount(root,{query:new URLSearchParams('scope=following')});await tick();
   assert.equal(root.querySelectorAll('.cr-post').length,2);
   assert.equal(root.querySelectorAll('.creator-watch-match').length,1);
   assert.ok(root.querySelector('.creator-watch-match').textContent.includes('NVDA'));
@@ -86,19 +92,23 @@ test('explicit stock links retain related content and language URL despite a sav
   dispose();root.remove();language.remove();
 });
 
-test('restored lookup keeps the visible name and discovery results in sync without replacing Following',async()=>{
+test('old lookup restores only in explicit Add and never replaces Following or the discovery query',async()=>{
  store.set('me',{tier:'pro',user_id:1});const calls=[];
  globalThis.fetch=async url=>{calls.push(url);return Response.json(url==='/kol/feed'?{kols:[{id:'known',name:'Other Creator',profile:{}}],posts:[post(1,'NVDA')]}:
   url==='/me/kols'?{subs:['known'],analysis:{}}:url==='/watchlist'?{items:[]}:
   url==='/kol/lookups'?{items:[{id:'old',input:candidate.name,status:'ready',candidates:[candidate]}]}:{items:[]});};
  const root=document.createElement('main');document.body.append(root);
  const dispose=await mount(root,{query:new URLSearchParams('scope=following')});await tick();
- assert.equal(root.querySelector('[role=combobox]').value,'');assert.equal(root.querySelectorAll('.cr-post').length,1);
+ assert.equal(root.querySelector('[role=combobox]'),null);assert.equal(root.querySelectorAll('.cr-post').length,1);
  assert.ok(!calls.includes('/kol/lookups'));
  root.querySelector('[data-creator-scope="discover"]').click();await tick();
- assert.equal(root.querySelector('[role=combobox]').value,candidate.name);
+ assert.equal(root.querySelector('input[type=search]').value,'');
+ assert.equal(root.querySelector('[role=combobox]'),null);assert.ok(!calls.includes('/kol/lookups'));
  assert.equal(root.querySelector('[data-creator-scope="discover"]').getAttribute('aria-pressed'),'true');
  assert.equal(root.querySelector('.creator-recent-feed'),null);
+ [...root.querySelectorAll('.creator-page-actions button')].find(b=>b.textContent===copy['app.creatorflow.add']).click();await tick();
+ assert.equal(root.querySelector('.creator-add-panel [role=combobox]').value,candidate.name);
+ assert.equal(root.querySelector('input[type=search]').value,'');
  assert.ok(root.querySelector('.creator-find-results').textContent.includes(candidate.name));
  dispose();root.remove();
 });

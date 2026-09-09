@@ -191,13 +191,19 @@ test('long-running alert setup keeps polling with bounded backoff until ready',a
 });
 
 test('creator search keeps the input mounted and archives never show unsupported claims',async()=>{
- globalThis.fetch=async(url)=>String(url).includes('/subs')?response({subs:['creator-a']}):response({kols:[{id:'creator-a',name:'Wall Street'}],posts:[{kol_id:'creator-a',kol_name:'Wall Street',title:'Memory report',published_at:'2026-09-04T20:02:00Z',tickers:['WRONG'],summary:'UNSUPPORTED CLAIM'}],subs:['creator-a']});
- store.set('me',{tier:'pro'});const root=document.createElement('div');const dispose=await creators.mount(root);
- const search=root.querySelector('[role="combobox"]');search.value='Wall Street';search.dispatchEvent(new window.Event('input'));
- assert.equal(root.querySelector('[role="combobox"]'),search);assert.equal(search.value,'Wall Street');
+ const creator={id:'creator-a',name:'Wall Street'};
+ globalThis.fetch=async(url)=>url==='/me/kols'?response({subs:['creator-a'],analysis:{}}):url==='/watchlist'?response({items:[]}):
+   url.startsWith('/kol/discover')?response({status:'ready',items:[{creator,status:'no_verified_view',latest_view:null}]}):
+   response({kols:[creator],posts:[{kol_id:'creator-a',kol_name:'Wall Street',title:'Memory report',published_at:'2026-09-04T20:02:00Z',tickers:['WRONG'],summary:'UNSUPPORTED CLAIM'}]});
+ store.set('me',{tier:'pro'});const root=document.createElement('div');document.body.append(root);
+ const dispose=await creators.mount(root,{query:new URLSearchParams('scope=discover')});
+ const search=root.querySelector('input[type="search"]');search.value='Wall Street';search.dispatchEvent(new window.Event('input'));
+ assert.equal(root.querySelector('input[type="search"]'),search);assert.equal(search.value,'Wall Street');
+ root.querySelector('.creator-discovery-search').dispatchEvent(new window.Event('submit',{cancelable:true}));
+ await new Promise(resolve=>setImmediate(resolve));
  root.querySelector('.creator-name').click();
  const archive=[...root.querySelectorAll('button')].find(b=>b.textContent===copy['app.creators.show_archive']);archive.click();
- assert.ok(root.textContent.includes('Memory report'));assert.equal(root.textContent.includes('UNSUPPORTED CLAIM'),false);assert.equal(root.textContent.includes('$WRONG'),false);dispose();
+ assert.ok(root.textContent.includes('Memory report'));assert.equal(root.textContent.includes('UNSUPPORTED CLAIM'),false);assert.equal(root.textContent.includes('$WRONG'),false);dispose();root.remove();
 });
 
 test('short video summaries without stock calls are readable but never directional',()=>{

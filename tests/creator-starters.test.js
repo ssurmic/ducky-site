@@ -73,7 +73,7 @@ test('search, followed workspace and source pages do not add an unrelated recomm
  const root=document.createElement('main');document.body.append(root);const dispose=await mount(root);await tick();
  assert.equal(root.querySelector('.creator-starters'),null);
  root.querySelector('[data-creator-scope="discover"]').click();await tick();assert.ok(root.querySelector('.creator-starters'));
- const input=root.querySelector('[role="combobox"]');input.value='Other';input.dispatchEvent(new window.Event('input'));assert.equal(root.querySelector('.creator-starters'),null);
+ const input=root.querySelector('input[type="search"]');input.value='Other';input.dispatchEvent(new window.Event('input'));assert.equal(root.querySelector('.creator-starters'),null);
  dispose();root.remove();
 });
 

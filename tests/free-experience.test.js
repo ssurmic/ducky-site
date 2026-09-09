@@ -72,7 +72,10 @@ test('Pro watchlist has no free guide or placeholder text',async()=>{
 
 test('unselected creator content is unavailable, never falsely reported as no summaries',async()=>{
  store.set('me',me());
- globalThis.fetch=async url=>response(String(url).includes('/trial-feed')?{kols:[{id:'one',name:'One',platform:'youtube'}],posts:[],pages:{}}:String(url).includes('/me/kols')?{subs:[],cap:2}:{items:[]});
+ const creator={id:'one',name:'One',platform:'youtube'};
+ globalThis.fetch=async url=>response(String(url).includes('/trial-feed')?{kols:[creator],posts:[],pages:{}}:
+   String(url).startsWith('/kol/discover')?{status:'ready',items:[{creator,status:'no_verified_view',latest_view:null}]}:
+   String(url).includes('/me/kols')?{subs:[],cap:2}:{items:[]});
  const {mount:creators}=await import('../public/js/app/views/creators.js');
  const root=document.createElement('div');document.body.append(root);const stop=await creators(root,{query:new URLSearchParams('scope=discover')});
  assert.match(root.textContent,/Follow to read available research and call history/);

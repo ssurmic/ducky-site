@@ -18,6 +18,7 @@ test('a failed creator read retries the same source route with GETs and does not
   globalThis.fetch=async(url,opts)=>{
     requests.push([url,opts.method]);
     if(url==='/kol/talk/posts/abcdefghijk'&&fail)return Response.json({detail:'unavailable'},{status:503});
+    if(url.startsWith('/kol/discover'))return Response.json({status:'ready',items:[{creator:{id:'another',name:'Another creator'},status:'no_verified_view',latest_view:null}]});
     return Response.json(url==='/kol/talk/posts/abcdefghijk'?{creator:{id:'talk',name:'Talk'},post:{id:1,kol_id:'talk',platform_post_id:'abcdefghijk',title:'Exact source',published_at:'2026-09-07',summary:{en:'Recorded discussion',quality:'no_call',source:{kind:'transcript',status:'ready',version:'creator-video-v4',summary_reviewed:true}},calls:[],tickers:[]}}:url==='/kol/feed'?{kols:[{id:'talk',name:'Talk',profile:{}},{id:'another',name:'Another creator',profile:{}}],posts:[],pages:{}}:url==='/me/kols'?{subs:['talk'],analysis:{}}:{items:[]});
   };
   const target=location.hash;await router.render();

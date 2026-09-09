@@ -3749,7 +3749,7 @@
   "app.screen.allowance": "Saved screens: {used} / {cap}",
   "app.screen.outside_allowance": "Outside your current allowance. Remove an older screen to activate this one.",
   "app.creatordiscovery.filter": "Latest stock view",
-  "app.creatordiscovery.all": "Bullish & bearish",
+  "app.creatordiscovery.all": "All views",
   "app.creatordiscovery.support": "Bullish",
   "app.creatordiscovery.counter": "Bearish",
   "app.creatordiscovery.basis": "One latest verified view per creator, sorted by publication date. A mention alone is not a stock view.",
@@ -3849,5 +3849,13 @@
   "app.creatorlab.eyebrow": "PORTFOLIO SCENARIOS",
   "app.creatorlab.simulation_badge": "SIMULATION",
   "community.join_hint": "We read every suggestion. See new features and product demos in the group.",
-  "app.opportunities.catalog_candidate_counts": "Currently matching: {fresh}. Previously recorded candidates needing updated evidence: {previous}."
+  "app.opportunities.catalog_candidate_counts": "Currently matching: {fresh}. Previously recorded candidates needing updated evidence: {previous}.",
+  "app.creatordiscovery.search": "Search creators, stocks or views",
+  "app.creatordiscovery.search_button": "Search",
+  "app.creatordiscovery.scope": "Show creators",
+  "app.creatordiscovery.watchlist": "My watchlist",
+  "app.creatordiscovery.everyone": "All creators",
+  "app.creatordiscovery.empty_watchlist": "Add a stock to your watchlist to find related views, or choose All creators.",
+  "app.creatordiscovery.no_match": "No matching views yet. Try another search or choose All creators.",
+  "app.creatordiscovery.result_limit": "Showing a limited set of matches. Narrow your search to find more specific views."
 }

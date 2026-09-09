@@ -114,7 +114,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   const initial=creatorRoute(routeQuery);
   const sourceOnly=!!(initial.post&&initial.selected&&initial.tab==='feed');
   let doc, subs, watches,linkedSource=null,linkFailed=false;
-  let discovery={items:[],status:'unavailable'},discoveryStance='all',discoveryRequest=0,directoryLimit=6;
+  let discovery={items:[],status:'unavailable'},discoveryStance='all',discoveryRequest=0,directoryLimit=6,discoveryTimer=null,discoveryController=null;
   try {
     if(sourceOnly){
       // An exact source should not depend on loading the whole recent catalogue.
@@ -153,8 +153,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   for(const c of subs?.creators || [])if(!kols.some(k=>k.id===c.kol_id))kols.push({...c,id:c.kol_id});
   if(linkedSource?.creator&&!kols.some(k=>k.id===linkedSource.creator.id))kols.push(linkedSource.creator);
   const watchRows=Array.isArray(watches)?watches:(watches?.items || watches?.tickers || watches?.watchlist || []);
-  const watchedTickers=watchRows.map(t=>typeof t==='string'?t:t?.ticker || t?.symbol).filter(t=>typeof t==='string').map(t=>t.toUpperCase());
-  let analysis=subs?.analysis || {},setupCleanup=()=>{},showSetup=store.isPro()&&!following.size&&initial.tab==='feed'&&!initial.ticker&&!initial.watched&&!initial.post,disposed=false,notice='',refreshing=false;
+  let watchedTickers=watchRows.map(t=>typeof t==='string'?t:t?.ticker || t?.symbol).filter(t=>typeof t==='string').map(t=>t.toUpperCase());
+  let analysis=subs?.analysis || {},setupCleanup=()=>{},showSetup=false,disposed=false,notice='',refreshing=false;
   const setupState={};
   const pending=()=>Object.values(analysis).some(x=>['queued','running'].includes(x.status));
   const progress=progressPoll({active:()=>!sourceOnly&&!disposed&&epoch===store.epoch()&&root.isConnected&&pending(),read:()=>api.kol.mine(),
@@ -170,25 +170,28 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   if(linkedSource?.post){const i=posts.findIndex(p=>p.kol_id===initial.selected&&p.platform_post_id===initial.post);if(i<0)posts.push(linkedSource.post);else posts[i]=linkedSource.post;}
   let focusedPost=initial.post,focusedPoint=initial.point;
   let archive = false;
-  // An explicit stock link locates its content across creators. The old implicit
-  // watchlist scope remains a people-first feed; name search also clears this tag.
+  // Explicit stock links retain their ticker; discovery can also use current watchlist symbols.
+  // A channel lookup is independent from these read-only content filters.
   let stockTicker=initial.watched?'':initial.ticker;
   let mine = stockTicker?false:initial.mine, watched=false;
-  let query = "";
+  let query = "", discoveryScope=watchedTickers.length?'watchlist':'all';
+  mergeDiscovery();
   let selected=kols.some(k=>k.id===initial.selected)?initial.selected:'', tab=initial.tab, shown=30;
   const labState={demo:initial.demo}, histories={}, archiveOpen=new Set();
   const pageProgress=progressPoll({interval:30000,active:()=>!sourceOnly&&!disposed&&canRead(selected)&&epoch===store.epoch()&&root.isConnected&&!!selected&&tab==='feed',
     read:()=>api.get('/kol/'+encodeURIComponent(selected)+'/page'),
     onValue:page=>{if(page.kol_id!==selected)return;const old=doc.pages?.[selected];if(page.content_hash===old?.content_hash&&page.status===old?.status)return;
       doc.pages={...(doc.pages||{}),[selected]:page};renderContent();}});
-  render();progress.schedule();
+  if(!sourceOnly&&!mine&&!selected&&(stockTicker||discoveryScope==='watchlist'))await loadDiscovery(false);
+  if(disposed||epoch!==store.epoch()||signal?.aborted)return ()=>{};
+  mergeDiscovery();render();progress.schedule();
 
   function render() {
     setupCleanup();clear(card);
     card.append(el('div.evidence-page-head',el('div',el("h1", s("creators.h1")), el("p.muted", s("creators.sub"))),
       el('span')));
 
-    const actions=el('div.evidence-controls.creator-page-actions',el('button.btn.btn-primary.btn-sm',{type:'button',onclick:()=>{mine=false;selected='';tab='feed';render();card.querySelector('[role=combobox]')?.focus();}},s('creatorflow.add')),
+    const actions=el('div.evidence-controls.creator-page-actions',el('button.btn.btn-primary.btn-sm',{type:'button',onclick:()=>{mine=false;selected='';tab='feed';showSetup=!showSetup;render();loadDiscovery();if(showSetup)card.querySelector('[role=combobox]')?.focus();}},s('creatorflow.add')),
       el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:refresh},s('creatorflow.refresh')));
     card.querySelector('.evidence-page-head').append(actions);
     if(!store.isPro()&&Number.isFinite(subs?.cap))card.append(quotaNote("creators",following.size,subs.cap));
@@ -206,13 +209,22 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     card.append(el('div.creator-starters-host'));
     const controls = el("div.creators-controls");
     for (const [value,key] of [['following',"creators.mine"],['discover',"creators.discover"]]) {
-      controls.appendChild(el("button.btn.btn-ghost.btn-sm", {type:"button",'data-creator-scope':value, "aria-pressed":String(value==='following'?mine:!mine), onclick:()=>{mine=value==='following';stockTicker='';selected='';query='';setupState.input='';setupState.doc=null;shown=30;render();}},s(key)));
+      controls.appendChild(el("button.btn.btn-ghost.btn-sm", {type:"button",'data-creator-scope':value, "aria-pressed":String(value==='following'?mine:!mine), onclick:()=>{mine=value==='following';stockTicker='';selected='';query='';showSetup=false;shown=30;render();if(!mine)loadDiscovery();}},s(key)));
     }
     card.appendChild(controls);
     const search=el('div.creator-person-search');controls.append(search);
-    setupCleanup=mountSetup(search,{onFollow:followed,state:setupState,compact:true,restore:!mine&&!selected&&!stockTicker&&tab==='feed',onQuery:value=>{
-      query=value.trim();mine=false;selected='';stockTicker='';tab='feed';shown=30;renderContent();
-    }});
+    const field=el('input.input',{type:'search',maxlength:100,value:query,
+      'aria-label':s('creatordiscovery.search'),placeholder:s('creatordiscovery.search'),autocomplete:'off'});
+    const form=el('form.creator-discovery-search',field,el('button.btn.btn-ghost',{type:'submit'},s('creatordiscovery.search_button')));
+    field.addEventListener('input',()=>{query=field.value.trim();directoryLimit=6;queueDiscovery();});
+    form.addEventListener('submit',e=>{e.preventDefault();query=field.value.trim();loadDiscovery();});
+    search.append(form);
+    if(showSetup){
+      const setup=el('div.creator-add-panel',el('div.creator-add-heading',el('h2',s('creatorflow.add')),
+        el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{showSetup=false;render();}},s('common.close'))));
+      card.append(setup);
+      setupCleanup=mountSetup(setup,{onFollow:followed,state:setupState,compact:true,restore:true});
+    }
     card.appendChild(el("div.creators-content"));
     renderContent();
   }
@@ -229,8 +241,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     const content = card.querySelector(".creators-content");
     clear(content);
     const startersHost=card.querySelector('.creator-starters-host');clear(startersHost);
-    if(!sourceOnly&&tab==='feed'&&!selected&&!query&&!stockTicker&&(!mine||!following.size)){
-      const starters=creatorStarters(starterDiscovery,{following,state:starterState,onFollow:async(creator,button,view)=>{
+    if(!sourceOnly&&tab==='feed'&&!selected&&!query&&!stockTicker&&!showSetup&&(!mine||!following.size)){
+      const starters=creatorStarters(mine?starterDiscovery:discovery,{following,state:starterState,onFollow:async(creator,button,view)=>{
         if(button.disabled||disposed||epoch!==store.epoch()||signal?.aborted)return;
         button.disabled=true;
         try{const response=await api.kol.sub(creator.id);
@@ -256,7 +268,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     const stockFilter=tab!=='rank'&&stockTicker?[stockTicker]:null;
     const stockPosts=posts.filter(p=>matchesStocks(p,stockFilter));
     const previews=new Map((discovery.items||[]).filter(r=>r.creator?.id).map(r=>[r.creator.id,r]));
-    const available=kols.filter(k=>(!mine || following.has(k.id)));
+    const available=mine?kols.filter(k=>following.has(k.id)):tab==='feed'&&!selected?(discovery.items||[]).map(r=>r.creator).filter(k=>k?.id):[...kols];
     if(!mine)available.sort((a,b)=>(Date.parse(previews.get(b.id)?.latest_view?.published_at)||0)-(Date.parse(previews.get(a.id)?.latest_view?.published_at)||0));
     const tabs=el('nav.creator-workspace-tabs',{'aria-label':s('creatorflow.workspace')});
     for(const [value,key] of [['feed','creators.feed_h'],['research','creators.research'],['lab','creatorlab.tab'],['rank','creatorrank.tab']])tabs.append(el('button',{type:'button','aria-pressed':String(tab===value),onclick:()=>{tab=value;renderContent();}},s(key)));
@@ -281,26 +293,27 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     if(!mine&&!selected){
       const filter=el('select.input',{'aria-label':s('creatordiscovery.filter')},
         ...['all','support','counter'].map(value=>el('option',{value,selected:value===discoveryStance},s('creatordiscovery.'+value))));
-      filter.addEventListener('change',async()=>{
-        discoveryStance=filter.value;directoryLimit=6;const request=++discoveryRequest;filter.disabled=true;
-        try{const next=await api.get('/kol/discover?'+new URLSearchParams({stance:discoveryStance,lang:isZh?'zh':'en'}),{signal});
-          if(disposed||epoch!==store.epoch()||request!==discoveryRequest)return;discovery=next;
-        }catch{if(disposed||request!==discoveryRequest)return;discovery={items:[],status:'unavailable'};}
-        renderContent();
-      });
-      content.append(el('div.creator-discovery-controls',el('label',el('span',s('creatordiscovery.filter')),filter)),el('p.creator-discovery-basis',s('creatordiscovery.basis')));
+      filter.addEventListener('change',()=>{discoveryStance=filter.value;directoryLimit=6;loadDiscovery();});
+      const scope=el('select.input',{'aria-label':s('creatordiscovery.scope')},
+        ...(stockTicker?[el('option',{value:'stock',selected:true},'$'+stockTicker)]:[]),
+        el('option',{value:'watchlist',selected:!stockTicker&&discoveryScope==='watchlist'},s('creatordiscovery.watchlist')),
+        el('option',{value:'all',selected:!stockTicker&&discoveryScope==='all'},s('creatordiscovery.everyone')));
+      scope.addEventListener('change',()=>{if(scope.value!=='stock'){stockTicker='';discoveryScope=scope.value;}directoryLimit=6;loadDiscovery();});
+      content.append(el('div.creator-discovery-controls',
+        el('label',el('span',s('creatordiscovery.scope')),scope),
+        el('label',el('span',s('creatordiscovery.filter')),filter)),el('p.creator-discovery-basis',s('creatordiscovery.basis')));
+      if(discovery.coverage?.truncated||discovery.coverage?.scan_limited)content.append(el('p.small.muted',s('creatordiscovery.result_limit')));
     }
     const grid = el("div.creator-directory");
     if(!mine)grid.classList.add('creator-discovery-directory');
-    const directory=(selected?[]:available).filter(k=>(!query || [k.name,k.handle,k.profile?.title].join(' ').toLowerCase().includes(query.toLowerCase()))
-      &&(mine||discoveryStance==='all'||previews.get(k.id)?.latest_view));
-    for (const k of mine?directory:directory.slice(0,query?directory.length:directoryLimit)) {
+    const directory=selected?[]:available;
+    for (const k of mine?directory:directory.slice(0,directoryLimit)) {
       const entry=previews.get(k.id);
       if(!mine&&discoveryStance!=='all'&&!entry?.latest_view)continue;
       const on = following.has(k.id);
       const profile=k.profile || {};
       const tile=el('article.creator-profile',{class:selected===k.id?'selected':''});
-      const title=el('button.creator-name',{type:'button','aria-pressed':String(selected===k.id),onclick:()=>{selected=k.id;query='';setupState.input='';shown=30;render();}},k.name || k.id);
+      const title=el('button.creator-name',{type:'button','aria-pressed':String(selected===k.id),onclick:()=>{selected=k.id;query='';showSetup=false;setupState.input='';shown=30;render();}},k.name || k.id);
       tile.append(el('div.creator-identity',avatar(k),el('div',title,el('p.muted.small',[
         profile.handle || k.handle,k.platform==='youtube'?'YouTube':k.platform,
         k.lang==='en'?'English':k.lang==='zh'?'中文':s('creatordiscovery.language_unknown')].filter(Boolean).join(' · ')))));
@@ -323,17 +336,21 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     }
     if (!selected && mine) content.append(el('details.creator-directory-picker',el('summary',s('creators.directory_short')),grid));
     else content.appendChild(grid);
-    if(!mine&&!selected&&!query&&directory.length>directoryLimit)content.append(el('button.btn.btn-ghost.creator-directory-more',
+    if(!mine&&!selected&&directory.length>directoryLimit)content.append(el('button.btn.btn-ghost.creator-directory-more',
       {type:'button',onclick:()=>{directoryLimit+=6;renderContent();}},s('creatorstart.more',{n:directory.length-directoryLimit})));
-    if(!selected&&!mine&&!grid.childElementCount)content.append(el('p.empty',s(discovery.status==='unavailable'?'creatordiscovery.unavailable':'creatordiscovery.no_view')));
-    // Search is for people, not the subset that happens to have reviewed stock posts.
-    // The same visible input searches the shared directory and submits a channel lookup.
+    if(!selected&&!mine&&!grid.childElementCount){
+      const message=discovery.status==='loading'?'common.loading':discovery.status==='empty_watchlist'?'creatordiscovery.empty_watchlist':discovery.status==='unavailable'?'creatordiscovery.unavailable':'creatordiscovery.no_match';
+      content.append(el('p.empty',{role:'status'},s(message)));
+      if(discovery.status==='unavailable')content.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>loadDiscovery()},s('common.retry')));
+    }
+    // Discovery results come from the shared index, including authors outside the recent feed.
+    if(!selected&&!mine&&!stockTicker)return;
     if(query&&!selected)return;
 
 
     if(selected){
       const creator=kols.find(k=>k.id===selected);
-      content.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected='';renderContent();}},'← '+s('creatorpage.all')));
+      content.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected='';renderContent();if(!mine)loadDiscovery();}},'← '+s('creatorpage.all')));
       content.append(el('header.creator-selected-heading',el('h1',creator.name)));
       if(!canRead(selected)){
         content.append(el('div.card',el('p',s(following.has(selected)?'experience.creator_outside_trial':'experience.follow_to_read')),
@@ -354,7 +371,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     if(!selected)feedContent.append(el('header.creator-feed-heading',el('h2.creator-latest-title',s('creators.latest')),archiveBtn));
     else feedContent.appendChild(archiveBtn);
     if(selected&&!focusedPost&&!histories[selected])feedContent.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>loadHistory(selected)},s('creatorpage.video_archive')));
-    if (mine && !following.size) {feedContent.appendChild(empty(s("creators.no_following")));feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{mine=false;render();}},s('creators.discover')));return;}
+    if (mine && !following.size) {feedContent.appendChild(empty(s("creators.no_following")));feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{mine=false;render();loadDiscovery();}},s('creators.discover')));return;}
     const history=selected?histories[selected]:null;
     if(history?.loading)feedContent.append(el('p.small.muted',{role:'status'},s('common.loading')));
     if(history?.error)feedContent.append(el('p.err',s('creators.load_error')));
@@ -479,17 +496,46 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     if(response.analysis)analysis[response.kol_id]=response.analysis;
     render();progress.schedule();if(!store.isPro())refresh({automatic:true});
   }
+  function mergeDiscovery(){
+    for(const entry of discovery.items||[]){const c=entry.creator;if(c?.id&&!kols.some(k=>k.id===c.id))kols.push(c);}
+  }
+  function queueDiscovery(){
+    clearTimeout(discoveryTimer);discoveryRequest++;discoveryController?.abort();
+    discovery={items:[],status:'loading'};renderContent();
+    discoveryTimer=setTimeout(()=>loadDiscovery(),250);
+  }
+  async function loadDiscovery(paint=true){
+    clearTimeout(discoveryTimer);const request=++discoveryRequest;discoveryController?.abort();
+    const ctl=new AbortController();discoveryController=ctl;
+    const abort=()=>ctl.abort();signal?.addEventListener('abort',abort,{once:true});
+    const params=new URLSearchParams({stance:discoveryStance,lang:isZh?'zh':'en'});
+    if(stockTicker)params.set('ticker',stockTicker);
+    else if(discoveryScope==='watchlist')params.set('tickers',[...new Set(watchedTickers)].slice(0,100).join(','));
+    if(query)params.set('q',query.slice(0,100));
+    discovery={items:[],status:'loading'};if(paint)renderContent();
+    try{
+      const next=!stockTicker&&discoveryScope==='watchlist'&&!watchedTickers.length?{items:[],status:'empty_watchlist'}:
+        await api.get('/kol/discover?'+params,{signal:ctl.signal});
+      if(disposed||epoch!==store.epoch()||signal?.aborted||request!==discoveryRequest)return;
+      discovery=next;mergeDiscovery();
+    }catch{
+      if(disposed||epoch!==store.epoch()||signal?.aborted||request!==discoveryRequest)return;
+      discovery={items:[],status:'unavailable'};
+    }finally{signal?.removeEventListener('abort',abort);}
+    if(paint)renderContent();
+  }
   async function refresh({automatic=false}={}){
     if(sourceOnly){router.go(location.hash);return;}
     if(refreshing)return;refreshing=true;
-    try{const [feed,mineDoc,readyDoc]=await Promise.all([api.kol.feed(),api.kol.mine(),
-      api.get('/kol/discover?lang='+(isZh?'zh':'en'),{signal}).catch(()=>({items:[],status:'unavailable'}))]);
+    try{const [feed,mineDoc,readyDoc,watchDoc]=await Promise.all([api.kol.feed(),api.kol.mine(),
+      api.get('/kol/discover?lang='+(isZh?'zh':'en'),{signal}).catch(()=>({items:[],status:'unavailable'})),api.watchlist.list().catch(()=>null)]);
       if(disposed||epoch!==store.epoch())return;
       starterDiscovery=readyDoc;
+      if(watchDoc){const rows=Array.isArray(watchDoc)?watchDoc:(watchDoc.items||watchDoc.tickers||watchDoc.watchlist||[]);watchedTickers=rows.map(x=>typeof x==='string'?x:x?.ticker||x?.symbol).filter(x=>typeof x==='string').map(x=>x.toUpperCase());}
       doc=feed;posts.splice(0,posts.length,...(feed.posts||[]));kols.splice(0,kols.length,...(feed.kols||[]));
       for(const c of mineDoc.creators||[])if(!kols.some(k=>k.id===c.kol_id))kols.push({...c,id:c.kol_id});
-      analysis=mineDoc.analysis||{};following.clear();for(const id of mineDoc.subs||[])following.add(id);render();progress.schedule();
+      analysis=mineDoc.analysis||{};following.clear();for(const id of mineDoc.subs||[])following.add(id);await loadDiscovery(false);if(disposed||epoch!==store.epoch())return;render();progress.schedule();
     }catch{if(!disposed&&!automatic)toast(s('creators.load_error'),'err');}finally{refreshing=false;}
   }
-  return () => {disposed=true;progress.stop();pageProgress.stop();setupCleanup();document.querySelector('dialog.creator-confirm')?.remove();};
+  return () => {disposed=true;clearTimeout(discoveryTimer);discoveryController?.abort();progress.stop();pageProgress.stop();setupCleanup();document.querySelector('dialog.creator-confirm')?.remove();};
 }

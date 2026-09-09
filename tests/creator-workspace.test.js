@@ -127,11 +127,13 @@ test('follow feedback persists and analysis completion is read automatically',as
   if(url==='/watchlist')return response({items:[]});
   if(url==='/me/kols')return response({subs:followed?['joseph']:[],creators:[creator],analysis:followed?{joseph:{status:ready?'ready':'queued'}}:{}});
   if(url==='/kol/lookups')return response({items:[]});
+  if(url.startsWith('/kol/discover'))return response({status:'ready',items:[{creator:{...creator,id:'joseph'},status:'no_verified_view',latest_view:null}]});
   if(url==='/kol/joseph/sub'){followed=true;return response({subscribed:true,kol_id:'joseph',creator,analysis:{status:'queued'}});}
   assert.fail(url);
  };
  const cleanup=await mount(root);await tick();
  [...root.querySelectorAll('button')].find(b=>b.textContent===copy['app.creators.discover']).click();
+ await tick();
  root.querySelector('.cr-chip').click();document.querySelector('dialog .btn-primary').click();await tick();
  assert.ok(root.querySelector('.creator-follow-success').textContent.includes('Added Joseph Carlson'));
  ready=true;t.mock.timers.tick(4000);await tick();await tick();

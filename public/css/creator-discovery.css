@@ -36,3 +36,12 @@
 .creator-directory-more{margin:0 0 28px;min-height:44px}
 @media(max-width:1150px){.page-app .creators-view .creator-discovery-directory{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.page-app .creators-view .creator-discovery-directory{grid-template-columns:minmax(0,1fr);gap:14px}.page-app .creator-discovery-directory .creator-profile{padding:18px;min-height:0;gap:16px}.creator-discovery-controls label{align-items:stretch;flex-direction:column;gap:10px}.creator-discovery-controls .input{align-self:flex-start}.creator-discovery-basis{font-size:.75rem}.creator-discovery-links a,.creator-profile .creator-profile-footer .cr-chip{min-height:44px}}
+
+.creator-discovery-search{display:flex;gap:10px;width:100%;max-width:700px;margin:12px 0 0}
+.creator-discovery-search .input{min-width:0;flex:1;margin:0;min-height:44px;font-size:16px}
+.creator-discovery-search button{flex:none;min-height:44px}
+.creator-discovery-controls{display:flex;flex-wrap:wrap;gap:12px 24px}
+.creator-add-panel{margin:16px 0;padding:16px;border:1px solid var(--border);border-radius:14px}
+.creator-add-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.creator-add-heading h2{font-size:1rem;margin:0}
+@media(max-width:700px){.creator-discovery-controls{align-items:start;gap:16px}.creator-discovery-controls label{flex:1;min-width:0}.creator-discovery-controls .input{font-size:16px;width:100%}}
