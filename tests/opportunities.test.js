@@ -7,13 +7,13 @@ for(const key of ['window','document','Node','location','history'])globalThis[ke
 const copy=JSON.parse(readFileSync('i18n/en.json'));
 document.querySelector('script').textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));
 const store=await import('../public/js/app/store.js');
-const {candidateCard,ratingValue,discoveryQuery,mount}=await import('../public/js/app/views/opportunities.js');
+const {candidateCard,ratingValue,ratingComponents,optionRatio,discoveryQuery,mount}=await import('../public/js/app/views/opportunities.js');
 const response=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json'}});
 const flush=async()=>{for(let i=0;i<6;i++)await new Promise(r=>setTimeout(r,0));};
 const event=(node,type='change')=>node.dispatchEvent(new dom.window.Event(type,{bubbles:true}));
 const rating={status:'ready',stars:2,version:'opportunity-rating/1',basis:'research_attention_not_expected_return',components:[
  {key:'price_dislocation',value:1,max:1},{key:'stabilization',value:1,max:1},
- {key:'peer_lag',value:0,max:1},{key:'valuation_support',value:null,max:1},{key:'business_support',value:0,max:1}]};
+ {key:'peer_lag',value:0,max:1},{key:'valuation_support',value:0,max:1},{key:'business_support',value:0,max:1}].map(part=>({...part,status:part.value===1?'supported':'not_supported'}))};
 const item=ticker=>({ticker,company:'Layout fixture only',sector:'Technology',market_cap:3e9,as_of:'2026-09-04',current_price:8,ma252:12,
  price_series:[{date:'2026-09-03',close:10},{date:'2026-09-04',close:8}],technical:{rsi_d:29,dd_pct:-30,ma252_pct:-33.3,iv_hv:null},
  relative:{status:'ready',kind:'industry_etf',benchmark:'SOXX',symbols:['SOXX'],as_of:'2026-09-04',excess20:-3,
@@ -128,4 +128,82 @@ test('a complete universe directory does not imply its price scan is complete',a
  assert.ok(root.textContent.includes('Stock-check progress and data gaps are reported separately'));
  assert.ok(!root.textContent.includes('The directory scan is complete.'));
  assert.ok(root.textContent.includes('— lack sufficient data'));
+});
+
+
+test('partial evidence retains each known condition without inventing complete stars',()=>{
+ for(const known of [2,3]){
+  const priority={...rating,status:'insufficient_evidence',stars:null,components:rating.components.map((part,i)=>
+   i<known?part:{...part,value:null,status:'unknown'})};
+  const card=candidateCard({...item('EXMP'),priority});
+  assert.equal(ratingValue(priority),null);assert.equal(card.querySelector('.opportunity-stars'),null);
+  assert.ok(card.textContent.includes(`${known} of 5 conditions checked`));
+  assert.equal(card.querySelectorAll('.opportunity-factors > div').length,5);
+  assert.equal(card.querySelector('[data-factor="price_dislocation"] dd').textContent,'Met · 1');
+  assert.equal(card.querySelector('[data-factor="business_support"] dd').textContent,'Unknown · —');
+  if(known===3)assert.equal(card.querySelector('[data-factor="peer_lag"] dd').textContent,'Not met · 0');
+  assert.equal(ratingValue({...priority,status:'ready',stars:5}),null);
+ }
+});
+
+test('factor rendering rejects duplicate keys, unknown versions and malformed or contradictory units',()=>{
+ for(const priority of [
+  {...rating,version:'opportunity-rating/999'},
+  {...rating,components:rating.components.map(p=>({...p,key:'price_dislocation'}))},
+  {...rating,components:rating.components.map(p=>({...p,max:100}))},
+  {...rating,components:rating.components.map(p=>({...p,value:'1'}))},
+  {...rating,components:rating.components.map(p=>({...p,value:true}))},
+  {...rating,components:rating.components.map(p=>({...p,status:'unknown'}))},
+ ]){
+  assert.equal(ratingComponents(priority),null);assert.equal(ratingValue(priority),null);
+  assert.equal(candidateCard({...item('EXMP'),priority}).querySelector('.opportunity-factors'),null);
+ }
+});
+
+const optionData=row=>({ticker:row.ticker,as_of:row.as_of,status:'ready',observed_at:'2026-09-05T00:10:00Z',
+ volatility_unit:'annualized_decimal',iv30:.45,hv20:.5,iv_hv:.9,
+ expiries:[{expiry:'2026-09-25',dte:21},{expiry:'2026-10-16',dte:42}],
+ source_url:'https://finance.yahoo.com/quote/EXMP/options/'});
+
+test('IV30/HV20 requires its same-session snapshot and does not reuse old near-expiry ratios',()=>{
+ const row=item('EXMP');row.technical.iv_hv=.9;row.technical.reference_options={ratio:.9,iv:.45,hv20:.5};
+ assert.equal(optionRatio(row),null);
+ assert.equal(candidateCard(row).querySelectorAll('.opportunity-metrics dd')[3].textContent,'—');
+ row.technical.options=optionData(row);
+ assert.equal(optionRatio(row),.9);
+ const card=candidateCard(row);
+ assert.equal(card.querySelectorAll('.opportunity-metrics dd')[3].textContent,'0.90');
+ assert.ok(card.textContent.includes('IV30 / HV20'));assert.ok(card.textContent.includes('45.0%'));
+ assert.ok(card.textContent.includes('50.0%'));assert.ok(card.textContent.includes('2026-09-05 00:10 UTC'));
+ assert.ok(card.textContent.includes('2026-09-25 (21 days remaining) / 2026-10-16 (42 days remaining)'));
+ assert.ok(card.querySelector('a[href="https://finance.yahoo.com/quote/EXMP/options/"]'));
+ assert.ok(card.textContent.includes('Closing data · 2026-09-04'));
+});
+
+test('mismatched or incomplete option snapshots cannot populate the ratio; partial observation remains explicit',()=>{
+ const row=item('EXMP');row.technical.iv_hv=.9;
+ for(const changes of [{ticker:'OTHER'},{as_of:'2026-09-03'},{volatility_unit:'percent'},
+  {observed_at:'bad-date'},{status:'partial'},{iv30:NaN},{hv20:0}]){
+  row.technical.options={...optionData(row),...changes};assert.equal(optionRatio(row),null);
+  assert.equal(candidateCard(row).querySelectorAll('.opportunity-metrics dd')[3].textContent,'—');
+ }
+ row.technical.options={...optionData(row),status:'partial',iv30:null,
+  source_url:'javascript:alert(1)',expiries:[{expiry:'2026-09-25',dte:21},{expiry:'2026-02-30',dte:42}]};
+ const card=candidateCard(row);
+ assert.ok(card.textContent.includes('Options observed · 2026-09-05 00:10 UTC'));
+ assert.ok(card.textContent.includes('2026-09-25 (21 days remaining)'));
+ assert.ok(!card.textContent.includes('2026-02-30'));assert.ok(!card.textContent.includes('45.0%'));
+ assert.equal(card.querySelector('a[href^="javascript:"]'),null);
+ assert.ok(card.textContent.includes('Same-session IV30/HV20 unavailable'));
+});
+
+test('warming and stale discovery offer the existing oversold screen without querying or blending legacy results',async()=>{
+ for(const status of ['warming','stale']){
+  const calls=[];const root=await open(async url=>{calls.push(String(url));return response(packet([item('OLD')],{status}));});
+  assert.equal(root.querySelector('.opportunity-card'),null);
+  const fallback=root.querySelector('.opportunity-feedback a[href="#/screens?screen=oversold"]');
+  assert.ok(fallback);assert.equal(fallback.textContent,'Open the existing oversold screen');
+  assert.ok(root.textContent.includes('separately from this daily discovery list'));
+  assert.equal(calls.length,1);assert.ok(calls[0].startsWith('/opportunities?'));
+ }
 });

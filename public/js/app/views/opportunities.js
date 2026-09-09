@@ -22,6 +22,17 @@ const comparisonReady = row => row.relative?.status === 'ready' &&
   (!row.relative.as_of || row.relative.as_of === row.as_of) &&
   (!row.relative.windows?.['20'] || (row.relative.windows['20'].status === 'ok' &&
     row.relative.windows['20'].end === row.as_of));
+const optionsSnapshot = row => {
+  const options = row.technical?.options;
+  return options && options.ticker === row.ticker && options.as_of === row.as_of &&
+    options.volatility_unit === 'annualized_decimal' && typeof options.observed_at === 'string' &&
+    Number.isFinite(Date.parse(options.observed_at)) ? options : null;
+};
+export function optionRatio(row) {
+  const options = optionsSnapshot(row), ratio = row.technical?.iv_hv;
+  return options?.status === 'ready' && finite(options.iv30) && options.iv30 > 0 &&
+    finite(options.hv20) && options.hv20 > 0 && finite(ratio) && ratio > 0 ? ratio : null;
+}
 
 // Retained for callers of the original local preview; discovery filters now run on the server.
 export function selectCandidates(items, scope, watches, query='') {
@@ -44,19 +55,27 @@ export function discoveryQuery(filters, cursor=null) {
   return q.toString();
 }
 
-/** Stars are a server-owned research rating. Missing evidence never becomes zero or a new score. */
-export function ratingValue(priority) {
-  if (priority?.status !== 'ready' || priority.basis !== 'research_attention_not_expected_return' ||
-      !Number.isInteger(priority.stars) || priority.stars < 0 || priority.stars > 5 ||
-      typeof priority.version !== 'string' || !priority.version || !Array.isArray(priority.components) ||
-      priority.components.length !== factors.length) return null;
+/** Validate factor evidence independently of whether the complete rating is available. */
+export function ratingComponents(priority) {
+  if (priority?.version !== 'opportunity-rating/1' ||
+      priority.basis !== 'research_attention_not_expected_return' ||
+      !Array.isArray(priority.components) || priority.components.length !== factors.length) return null;
   const keys = new Set();
   if (priority.components.some(part => {
     if (!part || !factors.includes(part.key) || keys.has(part.key) || part.max !== 1 ||
-        ![null, 0, 1].includes(part.value)) return true;
+        ![null, 0, 1].includes(part.value) ||
+        part.status !== (part.value === null ? 'unknown' : part.value === 1 ? 'supported' : 'not_supported')) return true;
     keys.add(part.key); return false;
   })) return null;
-  return priority.stars;
+  return priority.components;
+}
+
+/** Stars are server-owned. Partial evidence never becomes a complete score. */
+export function ratingValue(priority) {
+  const components = ratingComponents(priority);
+  return priority?.status === 'ready' && Number.isInteger(priority.stars) &&
+    priority.stars >= 0 && priority.stars <= 5 && components &&
+    components.every(part => part.value !== null) ? priority.stars : null;
 }
 function sources(explanation) {
   return (Array.isArray(explanation?.sources) ? explanation.sources : []).slice(0, 12).filter(source => {
@@ -98,15 +117,18 @@ function evidenceDetails(row) {
       el('p.small.muted', s('opportunities.peer_symbols', {symbols:(valuation.symbols || []).join(', ')})));
   } else fundamentals.append(el('p.small.muted', label('comparable_missing')));
   const priority = el('section', el('h3', label('priority_basis')), el('p.small.muted', label('priority_note')));
-  if (ratingValue(row.priority) !== null) {
+  const components = ratingComponents(row.priority);
+  if (components) {
+    priority.append(el('p.small.muted', s('opportunities.factors_checked', {
+      n:components.filter(part => part.value !== null).length})));
     const parts = el('dl.opportunity-factors');
-    for (const part of row.priority.components) {
-      if (!factors.includes(part.key)) continue;
-      parts.append(el('div', el('dt', label('factor_' + part.key)),
-        el('dd.mono', part.value === null ? '—' : number(part.value, 0) + ' / ' + number(part.max, 0))));
+    for (const part of components) {
+      parts.append(el('div', {'data-factor':part.key}, el('dt', label('factor_' + part.key)),
+        el('dd', label('factor_status_' + part.status) + ' · ' + (part.value === null ? '—' : number(part.value, 0)))));
     }
     priority.append(parts);
-  } else priority.append(el('p.data-notice', label('priority_missing')));
+  }
+  if (ratingValue(row.priority) === null) priority.append(el('p.data-notice', label('priority_missing')));
   const kinds = ['business_peers','industry_etf','sector_etf','market_etf'];
   const comparison = el('section', el('h3', label('comparison')));
   if (comparisonReady(row) && kinds.includes(rel.kind) && typeof rel.benchmark === 'string') {
@@ -125,8 +147,29 @@ function evidenceDetails(row) {
   if (!sourceList.length) sourceSection.append(el('p.small.muted', label('sources_missing')));
   if (explanation.as_of) sourceSection.append(el('p.small.muted',
     s('opportunities.explanation_at', {date:dateTime(explanation.as_of)})));
+  const options = optionsSnapshot(row);
+  const volatility = el('section', el('h3', label('iv_hv')), el('p.small.muted', label('options_basis')));
+  if (options) {
+    const values = el('dl.opportunity-fundamentals');
+    for (const key of ['iv30', 'hv20']) {
+      const value = finite(options[key]) && options[key] > 0 && (key === 'hv20' || optionRatio(row) !== null) ?
+        number(options[key] * 100) + '%' : '—';
+      values.append(el('div', el('dt', label('options_' + key)), el('dd.mono', value)));
+    }
+    volatility.append(values, el('p.small.muted',
+      s('opportunities.options_observed', {date:dateTime(options.observed_at)})));
+    const expiries = (Array.isArray(options.expiries) ? options.expiries : []).slice(0, 2).filter(item =>
+      typeof item?.expiry === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(item.expiry) &&
+      Number.isFinite(Date.parse(item.expiry)) && new Date(item.expiry).toISOString().slice(0, 10) === item.expiry &&
+      Number.isSafeInteger(item.dte) && item.dte > 0);
+    if (expiries.length) volatility.append(el('p.small.muted', label('options_expiries') + ' · ' +
+      expiries.map(item => s('opportunities.options_expiry', {date:item.expiry, n:item.dte})).join(' / ')));
+    const source = sources({sources:[{url:options.source_url}]})[0];
+    if (source) volatility.append(el('a.small', {href:source.url, target:'_blank', rel:'noopener noreferrer'}, label('options_source')));
+  }
+  if (optionRatio(row) === null) volatility.append(el('p.data-notice', label('iv_missing')));
   return el('details.opportunity-evidence', el('summary', label('evidence')),
-    el('div.opportunity-evidence-grid', fundamentals, priority, comparison, sourceSection));
+    el('div.opportunity-evidence-grid', fundamentals, priority, comparison, volatility, sourceSection));
 }
 
 export function candidateCard(row, watches=[]) {
@@ -149,7 +192,7 @@ export function candidateCard(row, watches=[]) {
   const gap = comparisonReady(row) && finite(rel.excess20) ? rel.excess20 : null;
   const metric = (key, value) => el('div', el('dt', label(key)), el('dd.mono', value));
   card.append(el('dl.opportunity-metrics', metric('drawdown', percent(tech.dd_pct)), metric('rsi', number(tech.rsi_d)),
-    metric('ma252', percent(tech.ma252_pct)), metric('iv_hv', number(tech.iv_hv, 2)),
+    metric('ma252', percent(tech.ma252_pct)), metric('iv_hv', number(optionRatio(row), 2)),
     metric(rel.kind === 'business_peers' ? 'relative' : 'reference_gap', gap === null ? '—' :
       s(gap < 0 ? 'opportunities.behind' : 'opportunities.ahead', {n:Math.abs(gap).toFixed(1)})),
     metric('forward_pe', financialReady(fund) && finite(fund.forward_pe) ? number(fund.forward_pe) + '×' : '—')));
@@ -159,7 +202,7 @@ export function candidateCard(row, watches=[]) {
     el('p', explained && why ? why : label('explanation_missing'))));
   if (explained && risks) card.append(el('p.opportunity-risk', el('strong', label('risks') + ' · '), risks));
   const gaps = [];
-  if (!finite(tech.iv_hv)) gaps.push(label('iv_missing'));
+  if (optionRatio(row) === null) gaps.push(label('iv_missing'));
   if (gap === null) gaps.push(label('peer_missing'));
   if (gaps.length) card.append(el('p.small.muted.opportunity-gaps', gaps.join(' · ')));
   card.append(evidenceDetails(row), el('div.opportunity-actions', link('#/research/' + tk, 'opportunities.research'),
@@ -226,7 +269,10 @@ export async function mount(root, route={}) {
     dated.textContent = doc.as_of ? s('opportunities.close_at', {date:doc.as_of}) : '';
     if (doc.status === 'warming' || doc.status === 'stale') {
       feedback.append(el('p.data-notice', label('status_' + doc.status)),
-        el('button.btn.btn-ghost', {type:'button', onclick:() => load()}, s('common.retry')));
+        el('div.opportunity-actions',
+          link('#/screens?screen=oversold', 'opportunities.legacy_screen'),
+          el('button.btn.btn-ghost', {type:'button', onclick:() => load()}, s('common.retry'))),
+        el('p.small.muted', label('legacy_screen_note')));
     } else {
       feedback.append(el('p', s('opportunities.loaded_results', {n:items.length, total:doc.total})));
       if (doc.status === 'partial') feedback.append(el('p.small.muted', label('status_partial')));
