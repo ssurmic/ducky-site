@@ -1,0 +1,110 @@
+[
+  {
+    "route": "/app/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/disclaimer/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/en/app/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/en/disclaimer/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/en/idea/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/en/ideas/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/en/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/en/privacy/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/en/research-records/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/en/track-record/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/en/trending/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/idea/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/ideas/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/privacy/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/research-records/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/track-record/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  },
+  {
+    "route": "/trending/",
+    "status": 200,
+    "bad": [],
+    "paidLinks": 0
+  }
+]
