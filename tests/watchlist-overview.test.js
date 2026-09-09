@@ -11,6 +11,30 @@ const store=await import('../public/js/app/store.js');
 const {mount}=await import('../public/js/app/views/watchlist.js');
 const row=(ticker,cap,change=0)=>({ticker,company:ticker+' Company',market_cap:cap,market_cap_status:'ready',market_cap_currency:'USD',market_cap_as_of:'2026-09-07T00:00:00Z',price:100,price_status:'ready',change_pct:change});
 
+test('shared price refresh updates the visible list while keeping selection, filters and open research intact',async()=>{
+ const {sharedReadRefresh}=await import('../public/js/app/shared-read-refresh.js');
+ Object.defineProperty(document,'visibilityState',{get:()=>'visible',configurable:true});
+ store.bumpEpoch();store.set('me',{tier:'pro',watch_cap:50});store.set('watchlist',[]);store.set('snapshots',{});
+ let value={items:['AVGO'],cap:50,overview:{items:[row('AVGO',1e9)],session:'2026-09-08'}};
+ const calls=[];globalThis.fetch=async url=>{calls.push(String(url));return new Response(JSON.stringify(String(url)==='/watchlist'?value:{snapshot:{ok:false}}),{headers:{'content-type':'application/json'}});};
+ const root=document.querySelector('main'),refresh=sharedReadRefresh(root,{reload:()=>assert.fail('automatic full page reload')});
+ const dispose=await mount(root);
+ const filter=root.querySelector('.watch-filter');filter.value='AVGO';filter.dispatchEvent(new window.Event('input'));
+ root.querySelector('[data-open="AVGO"]').click();await new Promise(r=>setTimeout(r,0));
+ const detail=root.querySelector('.watch-detail'),card=detail.firstElementChild;
+ value={...value,overview:{...value.overview,items:[{...row('AVGO',1e9,2),price:102}]}};
+ await refresh.check();
+ assert.match(root.querySelector('.watch-overview').textContent,/102/);
+ assert.equal(filter.value,'AVGO');assert.equal(detail.firstElementChild,card);assert.equal(detail.hidden,false);
+ assert.equal(root.querySelector('aside').hidden,true);
+ assert.equal(calls.filter(x=>x.startsWith('/snapshot/')).length,1);
+ // A remote deletion is not silently applied as a numeric update.
+ value={...value,items:[],overview:{items:[]}};
+ await refresh.check();await refresh.check();assert.equal(root.querySelector('aside').hidden,false);
+ assert.deepEqual(store.get('watchlist'),['AVGO']);
+ refresh.stop();dispose();root.replaceChildren();
+});
+
 test('treemap has exact market-cap areas without overlaps at 50 symbols',()=>{
  const rows=Array.from({length:50},(_,i)=>row('T'+i,10**(i/10)));
  const tiles=treemap(rows);const total=rows.reduce((n,r)=>n+r.market_cap,0);

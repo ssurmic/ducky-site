@@ -264,6 +264,21 @@ export async function mount(root) {
   unsubs.push(store.subscribe("watchlist", render));
   unsubs.push(store.subscribe("snapshots", renderDetail));
   unsubs.push(store.subscribe("me", () => {render();renderDetail();}));
+  const priceUpdate=event=>{
+    const update=event.detail,response=update?.value;
+    if(disposed||update?.path!=='/watchlist'||!Array.isArray(response?.overview?.items))return;
+    const current=store.get('watchlist')||[],incoming=normalizeList(response);
+    // Membership/cap changes still require the shared reload flow. A price
+    // refresh never restores a removed ticker or replaces an open stock study.
+    if(current.length!==incoming.length||current.some(t=>!incoming.includes(t))||
+       (Number.isFinite(response.cap)&&response.cap!==store.get('me')?.watch_cap))return;
+    const focused=list.contains(document.activeElement)?document.activeElement?.dataset?.open:null;
+    overview=response.overview;render();
+    if(focused)list.querySelector(`[data-open="${focused}"]`)?.focus({preventScroll:true});
+    update.accepted=true;
+  };
+  root.addEventListener('ducky:shared-read',priceUpdate);
+  unsubs.push(()=>root.removeEventListener('ducky:shared-read',priceUpdate));
   render();
   await load();
   return () => {disposed=true;root.classList.remove("watchlist-view");unsubs.forEach((u) => u());};

@@ -1,6 +1,6 @@
 // Revalidate only already-read, explicitly allowed shared cache endpoints. No
 // source acquisition, POSTs, account settings, searches or history are replayed.
-// A changed page is labelled; the reader chooses when to replace its open work.
+// Research changes are labelled; watchlist prices can opt into an in-place update.
 import * as api from './api.js';
 import * as store from './store.js';
 import {el} from './ui.js';
@@ -51,17 +51,28 @@ export function sharedReadRefresh(root,{signal,reload,interval=60000}={}){
     if(!entries.has(path)&&entries.size>=12)return;
     entries.set(path,{signature:material(value,path),options});
   });
-  function schedule(){clearTimeout(timer);if(active()&&!changed){timer=setTimeout(check,Math.min(300000,interval*2**Math.min(failures,3)));timer.unref?.();}}
+  const pendingReads=()=>[...entries].filter(([path])=>!changed||path==='/watchlist');
+  function schedule(){clearTimeout(timer);if(active()&&(!changed||pendingReads().length)){timer=setTimeout(check,Math.min(300000,interval*2**Math.min(failures,3)));timer.unref?.();}}
   async function check(){
-    clearTimeout(timer);if(!active()||running||changed)return;
-    if(document.visibilityState==='hidden'||!entries.size){schedule();return;}
+    clearTimeout(timer);if(!active()||running)return;
+    const available=pendingReads();
+    if(document.visibilityState==='hidden'||!available.length){schedule();return;}
     running=true;
-    const [path,prior]=[...entries][cursor++%entries.size];
+    const [path,prior]=available[cursor++%available.length];
     try{
       const value=await api.get(path,{...prior.options,signal,silent402:true,observe:false});
       if(!active())return;
       // A view's own polling may already have adopted a newer response.
-      if(material(value,path)!==entries.get(path)?.signature){changed=true;notice.hidden=false;root.dataset.freshness='earlier-version';}
+      const signature=material(value,path);
+      if(signature!==entries.get(path)?.signature){
+        // Only the mounted view can accept its own cached numeric update. Other
+        // endpoints retain the existing explicit reload/disclosure behaviour.
+        const update={path,value,accepted:false};
+        if(path==='/watchlist')(root.querySelector('.route-page')||root).dispatchEvent(
+          new window.CustomEvent('ducky:shared-read',{detail:update}));
+        if(update.accepted)entries.set(path,{...prior,signature});
+        else {changed=true;notice.hidden=false;root.dataset.freshness='earlier-version';}
+      }
       failures=0;
     }catch(error){
       failures++;
