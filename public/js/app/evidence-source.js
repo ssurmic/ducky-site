@@ -20,7 +20,7 @@ export function sourceIdentity(e={}) {
   if(domain('x.com')||domain('twitter.com'))return 'x';
   if(domain('reddit.com')||host==='redd.it')return 'reddit';
   if(domain('substack.com'))return 'substack';
-  if(domain('sec.gov'))return 'filing';
+  if(domain('sec.gov')||host==='disclosures-clerk.house.gov')return 'filing';
   // A stored platform can identify a source whose link was not retained.
   if(!e.source_url){
     const platform=String(e.platform||'').toLowerCase();

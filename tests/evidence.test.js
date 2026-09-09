@@ -15,6 +15,39 @@ function fixture(){return {ticker:'AVGO',status:'ready',checked_at:'2026-09-07T1
  nodes:Array.from({length:10},(_,i)=>({id:'n'+i,title:{en:'Point '+i,zh:'观点 '+i},kind:'creator',stance:i===9?'counter':i<5?'support':'context',conditional:i===9,
  published_at:'2026-09-04',evidence:[{id:'e'+i,kind:'creator',author:i===9?'Counter Author':'Source Author',source_url:'https://example.com/source',title:{en:'Source '+i,zh:'来源 '+i},
  start_seconds:70,end_seconds:90,published_at:'2026-09-04',observed_at:'2026-09-07T12:00:00Z'}]})),coverage:{corpus_documents:12,jobs:{pending:2}},missing:['price_gaps']};}
+test('historical ownership direction stays consistent across badge, filter, source and dates',()=>{
+ const doc=fixture();doc.ticker='VST';doc.nodes=[{id:'exercise',kind:'record',stance:'support',
+  title:{en:'Spouse exercised calls to acquire 5,000 VST shares'},published_at:'2026-01-23',
+  evidence:[{kind:'record',topic:'ownership_disclosure',author:'Nancy Pelosi',freshness:'stale',
+   source_url:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20033725.pdf',
+   published_at:'2026-01-23',observed_at:'2026-09-08T06:00:00Z',retrieved_at:'2026-09-09T06:00:00Z',
+   data:{opinion_state:'not_stated',applicability:'historical_event',event_direction:'positive',
+    event_date:'2026-01-16',filing_date:'2026-01-23',validity:{classification:'classified',source:'validated_source_fields'}}}]}];
+ const root=mapView(doc);document.body.append(root);
+ assert.equal(root.querySelector('.evidence-node .evidence-category').textContent,'Bullish clue');
+ assert.ok(root.querySelector('.evidence-node.source-filing.is-support'));
+ assert.equal(root.querySelector('.evidence-filters .is-support .evidence-filter-count').textContent,'1');
+ assert.match(root.querySelector('.evidence-node-footer').textContent,/Event · 2026-01-16/);
+ assert.ok(!root.querySelector('.evidence-node-footer').textContent.includes('2026-09-09'));
+ root.querySelector('.evidence-filters .is-support').click();
+ assert.equal(root.querySelectorAll('.evidence-node').length,1);
+ root.querySelector('.evidence-node').click();const body=document.querySelector('.modal-body');
+ assert.equal(body.querySelector('.evidence-stance').textContent,'Bullish clue');
+ assert.match(body.textContent,/Event date · 2026-01-16/);assert.match(body.textContent,/Disclosed · 2026-01-23/);
+ assert.match(body.textContent,/historical event/);assert.ok(!body.textContent.includes('data is stale'));
+ assert.equal(body.querySelector('a[target="_blank"]').href,doc.nodes[0].evidence[0].source_url);
+ closeModal();root.dispose();root.remove();
+});
+test('ownership labels require a consistent typed event, never words or retrieval age',async()=>{
+ const {eventLabel,nodeEvent}=await import('../public/js/app/evidence-event.js');
+ const event={opinion_state:'not_stated',applicability:'historical_event',event_direction:'negative',
+  event_date:'2026-01-16',validity:{classification:'classified',source:'validated_source_fields'}};
+ const node={stance:'counter',title:{en:'Purchase'},evidence:[{topic:'ownership_disclosure',data:event}]};
+ assert.equal(eventLabel(node),'Bearish clue');
+ for(const change of [{stance:'support'},{evidence:[]},{evidence:[{topic:'ownership_disclosure',data:{...event,validity:{classification:'needs_review'}}}]},
+  {evidence:[node.evidence[0],{kind:'creator',title:{en:'Buy'}}]}])assert.equal(nodeEvent({...node,...change}),null);
+ const creator=fixture().nodes[0];assert.equal(eventLabel(creator),'Bullish');
+});
 test('saved overview is visible on arrival; reasons and exact citations require no network',()=>{
  let calls=0;globalThis.fetch=()=>{calls++;throw Error('must not infer on click');};
  const d=fixture();d.analysis_status='ready';d.analysis_generated_at=d.checked_at;

@@ -11,6 +11,7 @@ import {evidenceTarget} from '../creator-route.js';
 import {comparisonBadge,comparisonDetails} from '../comparison-context.js';
 import {sourceIdentity,nodeSourceIdentity,sourceBadge,sourceMark} from '../evidence-source.js';
 import {claimQualifications} from './creator-claim.js';
+import {ownershipEvent,eventLabel,eventDate} from '../evidence-event.js';
 
 const pick=v=>v?.[LANG==='en'?'en':'zh']||'';
 const original=v=>pick(v)||v?.en||v?.zh||'';
@@ -22,22 +23,26 @@ const factDescription=e=>e.topic==='price_gaps'?(e.data?.gaps?.length?e.data.gap
 const missingLabel=k=>k.startsWith('ytd_')?s('evidence.missing_ytd',{benchmark:k.slice(4)}):k==='price_gaps'?s('evidence.missing_gaps'):has('stockbrief.missing_'+k)?s('stockbrief.missing_'+k):s('evidence.missing_other');
 
 export function detail(node,{analysisAt}={}){
-  const body=el('div.evidence-detail',el('p.evidence-stance',{class:'is-'+node.stance},s('evidence.'+node.stance)),
+  const body=el('div.evidence-detail',el('p.evidence-stance',{class:'is-'+node.stance},eventLabel(node)),
     analysisAt?el('p.data-notice',s('evidence.analysis_snapshot_source',{at:time(analysisAt)})):null,
     node.conditional?el('p.data-notice',s('evidence.conditional')):null,
     pick(node.reason)?el('p',pick(node.reason)):null);
   for(const e of node.evidence||[]){
+    const event=ownershipEvent(e);
     const explanation=e.kind==='fact'?factDescription(e):pick(e.reason)||pick(e.title);
     const item=el('article.evidence-source',sourceBadge(sourceIdentity(e)),el('h3',e.author||s('evidence.recorded_data')),
       original(e.original_title)?el('div.evidence-original',el('span.small.muted',s('evidence.original_only')),el('p',original(e.original_title))):null,
       explanation&&explanation!==pick(node.reason)?el('p',explanation):null,
       e.kind==='creator'?claimQualifications(e):null,
       e.kind==='fact'?comparisonDetails(e):null,
-      e.published_at?el('p.small.muted',s('evidence.published',{at:date(e.published_at)})):null,
+      event?el('p.evidence-event-basis',s('evidence.event_basis')):null,
+      event?.event_date?el('p.small.muted',s('evidence.event_date',{at:date(event.event_date)})):null,
+      event?.filing_date?el('p.small.muted',s('evidence.filing_date',{at:date(event.filing_date)})):
+        e.published_at?el('p.small.muted',s('evidence.published',{at:date(e.published_at)})):null,
       el('p.small.muted',s('evidence.observed',{at:time(e.observed_at)})),
       e.retrieved_at?el('p.small.muted',s('evidence.retrieved',{at:Array.isArray(e.retrieved_at)?e.retrieved_at.map(time).join(' / '):time(e.retrieved_at)})):null,
       Number.isFinite(e.start_seconds)?el('p.small.muted',s('evidence.segment',{start:position(e.start_seconds),end:position(e.end_seconds)})):null);
-    if(e.freshness==='stale')item.append(el('p.data-notice',s('evidence.stale_source')));
+    if(e.freshness==='stale')item.append(el('p.data-notice',s(event?'evidence.historical_event':'evidence.stale_source')));
     const href=source(e.source_url);
     const internal=evidenceTarget(e);
     if(internal)item.append(el('a.btn.btn-primary.btn-sm',{href:internal,onclick:()=>closeModal()},s('evidence.creator_context')));
@@ -194,18 +199,19 @@ export function mapView(doc,{archive=false,onPickTicker,example=false}={}){
     map.classList.toggle('is-empty',!visible.length);
     for(const [i,node] of visible.entries()){
       const identity=nodeSourceIdentity(node);
+      const eventAt=eventDate(node),shownDate=eventAt?s('evidence.event_short',{at:eventAt}):date(node.published_at||node.observed_at);
       const authors=[...new Set((node.evidence||[]).map(e=>e.author).filter(Boolean))];
       const linked=node.kind==='creator'&&node.evidence?.length===1?evidenceTarget(node.evidence[0]):null;
       const card=el('button.evidence-node',{type:'button',class:'is-'+node.stance+' source-'+identity,'data-source':identity,style:{gridColumn:i%2===0?'1':'3',gridRow:String(Math.floor(i/2)+1)},onclick:()=>{if(linked)location.hash=linked;else detail(node);}},
         ['youtube','x','macro'].includes(identity)?el('span.evidence-source-watermark',{'aria-hidden':'true'},sourceMark(identity)):null,
-        el('span.evidence-node-label',sourceBadge(identity),el('span.evidence-category',s('evidence.'+node.stance))),
+        el('span.evidence-node-label',sourceBadge(identity),el('span.evidence-category',eventLabel(node))),
         el('strong',pick(node.title)),
         node.conditional?el('span.evidence-node-flags',el('span.evidence-condition',s('evidence.condition_tag'))):null,
         ...(node.evidence||[]).filter(e=>e.kind==='fact').map(comparisonBadge).filter(Boolean).slice(0,1),
         original(node.original_title)?el('span.evidence-original-title',original(node.original_title)):null,
         el('span.evidence-node-author',icon(authors.length?'creators':'briefing'),el('span',authors.join(' · ')||s('evidence.recorded_data'))),
-        el('span.evidence-node-mobile-meta',authors.length?el('span.evidence-mobile-author',authors.join(' · ')):null,el('span',date(node.published_at||node.observed_at)),!authors.length?el('span.evidence-mobile-count',s((node.evidence||[]).length===1?'evidence.source_single':'evidence.sources',{n:(node.evidence||[]).length})):null,node.conditional?el('span.evidence-condition',s('evidence.condition_tag')):null),
-        el('span.evidence-node-footer',el('span',date(node.published_at||node.observed_at)),
+        el('span.evidence-node-mobile-meta',authors.length?el('span.evidence-mobile-author',authors.join(' · ')):null,el('span',shownDate),!authors.length?el('span.evidence-mobile-count',s((node.evidence||[]).length===1?'evidence.source_single':'evidence.sources',{n:(node.evidence||[]).length})):null,node.conditional?el('span.evidence-condition',s('evidence.condition_tag')):null),
+        el('span.evidence-node-footer',el('span',shownDate),
           el('span.evidence-node-number',{'aria-hidden':'true'},String(nodes.indexOf(node)+1).padStart(2,'0')),
           el('span',s((node.evidence||[]).length===1?'evidence.source_single':'evidence.sources',{n:(node.evidence||[]).length})+' ↗')));
       groups.get(node.stance)?.list.append(card);

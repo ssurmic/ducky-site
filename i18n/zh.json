@@ -3369,7 +3369,7 @@
   "app.evidence.source_macro": "宏观",
   "app.evidence.source_reddit": "Reddit",
   "app.evidence.source_substack": "Substack",
-  "app.evidence.source_filing": "公司披露",
+  "app.evidence.source_filing": "监管披露",
   "app.evidence.source_creator": "博主",
   "app.evidence.source_data": "数据与记录",
   "app.evidence.source_mixed": "多种来源",
@@ -3793,5 +3793,13 @@
   "app.access.unavailable_title": "页面加载失败",
   "app.access.refresh": "刷新页面",
   "community.quack": "嘎！",
-  "community.wish": "嘎，祝您发大财！"
+  "community.wish": "嘎，祝您发大财！",
+  "app.evidence.event_positive": "偏多线索",
+  "app.evidence.event_negative": "偏空线索",
+  "app.evidence.event_non_directional": "持仓记录",
+  "app.evidence.event_basis": "方向来自已披露的持仓行为，当前是否仍持有尚不明确。",
+  "app.evidence.event_date": "发生日期 · {at}",
+  "app.evidence.filing_date": "披露日期 · {at}",
+  "app.evidence.event_short": "发生于 {at}",
+  "app.evidence.historical_event": "这是历史事件，发生日期与已披露的行为保留在记录中。"
 }

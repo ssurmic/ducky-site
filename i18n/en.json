@@ -3369,7 +3369,7 @@
   "app.evidence.source_macro": "Macro",
   "app.evidence.source_reddit": "Reddit",
   "app.evidence.source_substack": "Substack",
-  "app.evidence.source_filing": "Company filing",
+  "app.evidence.source_filing": "Regulatory filing",
   "app.evidence.source_creator": "Creator",
   "app.evidence.source_data": "Data & records",
   "app.evidence.source_mixed": "Mixed sources",
@@ -3793,5 +3793,13 @@
   "app.access.unavailable_title": "Couldn’t load this page",
   "app.access.refresh": "Refresh page",
   "community.quack": "Quack!",
-  "community.wish": "Quack! Here’s to green days!"
+  "community.wish": "Quack! Here’s to green days!",
+  "app.evidence.event_positive": "Bullish clue",
+  "app.evidence.event_negative": "Bearish clue",
+  "app.evidence.event_non_directional": "Ownership event",
+  "app.evidence.event_basis": "Direction describes the reported ownership event. Current holdings are not established.",
+  "app.evidence.event_date": "Event date · {at}",
+  "app.evidence.filing_date": "Disclosed · {at}",
+  "app.evidence.event_short": "Event · {at}",
+  "app.evidence.historical_event": "This is a historical event; the date and reported action remain on record."
 }
