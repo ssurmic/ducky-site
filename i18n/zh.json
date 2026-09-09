@@ -3801,5 +3801,15 @@
   "app.evidence.event_date": "发生日期 · {at}",
   "app.evidence.filing_date": "披露日期 · {at}",
   "app.evidence.event_short": "发生于 {at}",
-  "app.evidence.historical_event": "这是历史事件，发生日期与已披露的行为保留在记录中。"
+  "app.evidence.historical_event": "这是历史事件，发生日期与已披露的行为保留在记录中。",
+  "app.creatorstart.eyebrow": "已有核实观点",
+  "app.creatorstart.title": "从这几位博主开始",
+  "app.creatorstart.intro": "先看一条观点，再决定关注谁。",
+  "app.creatorstart.people": "已有观点可读的博主",
+  "app.creatorstart.preview": "预览 {name} 的观点",
+  "app.creatorstart.read": "看这条观点",
+  "app.creatorstart.follow_name": "关注 {name}",
+  "app.creatorstart.pause": "暂停动效",
+  "app.creatorstart.resume": "开启动效",
+  "app.creatorstart.qualifications": "查看条件与期限"
 }

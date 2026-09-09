@@ -1,0 +1,26 @@
+.creator-starters{border:1px solid var(--border);border-radius:20px;background:radial-gradient(ellipse at 75% 0%,color-mix(in srgb,var(--accent) 9%,transparent),transparent 65%),var(--surface);padding:24px;margin:20px 0 28px}
+.creator-starters-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.creator-starters-heading h2{font-size:1.3rem;margin:4px 0 8px;letter-spacing:-.025em}
+.creator-starters-heading p{font-size:.82rem;line-height:1.6;color:var(--muted);margin:0}
+.creator-starters-heading .creator-starters-eyebrow{color:var(--accent-text,var(--accent));font-size:.7rem;font-weight:700}
+.creator-starters-motion{font:inherit;font-size:.7rem;color:var(--muted);border:0;background:transparent;cursor:pointer;min-height:44px;min-width:44px;padding:4px 8px;flex:none}
+.creator-starters-rail{display:flex;justify-content:space-around;gap:12px;padding:22px 2px 14px;overflow-x:auto;scroll-snap-type:x proximity}
+.creator-starter-person{border:0;background:none;color:var(--text);font:inherit;cursor:pointer;display:flex;flex:1 0 92px;max-width:150px;min-width:0;align-items:center;flex-direction:column;gap:10px;padding:8px 4px;scroll-snap-align:center;border-radius:14px}
+.creator-starter-portrait{position:relative;display:block;border-radius:50%;padding:4px;border:1px solid var(--border);background:var(--bg);animation:creator-starter-float 6s ease-in-out infinite;animation-delay:var(--float-delay);transition:border-color .15s,box-shadow .15s}
+.creator-starter-portrait .creator-avatar,.creator-starter-portrait .creator-monogram{width:60px;height:60px;border-radius:50%;font-size:1.3rem}
+.creator-starter-ready{position:absolute;right:1px;bottom:1px;display:grid;place-items:center;width:18px;height:18px;background:var(--green,#43d6a0);color:#07231a;border:2px solid var(--surface);border-radius:50%;font-size:10px;font-weight:800}
+.creator-starter-name{font-size:.75rem;font-weight:600;max-width:100%;line-height:1.5;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.creator-starter-person[aria-pressed=true] .creator-starter-portrait{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 15%,transparent)}
+.creator-starter-person[aria-pressed=true]{color:var(--accent-text,var(--accent))}
+.creator-starter-person:focus-visible,.creator-starters-motion:focus-visible{outline:2px solid var(--focus-ring,var(--accent));outline-offset:2px}
+.creator-starters:hover .creator-starter-portrait,.creator-starters:focus-within .creator-starter-portrait,.creator-starters.is-paused .creator-starter-portrait{animation-play-state:paused}
+.creator-starters-preview{display:flex;gap:24px;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:16px}
+.creator-starter-quote{flex:1;min-width:0}
+.creator-starter-byline{font-size:.7rem;line-height:1.7;color:var(--muted);margin:0 0 6px;overflow-wrap:anywhere}
+.creator-starter-byline strong{color:var(--text);font-weight:600}
+.creator-starter-excerpt{font-size:.85rem;line-height:1.65;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.creator-starter-actions{display:flex;gap:8px;flex-shrink:0}
+.creator-starter-qualifications{font-size:.75rem;margin-top:4px}.creator-starter-qualifications>summary{color:var(--muted);cursor:pointer;min-height:32px;align-content:center}.creator-starter-qualifications .creator-claim-facts{font-size:.75rem;max-width:72ch}.creator-starter-qualifications dd{overflow-wrap:anywhere}
+@keyframes creator-starter-float{0%,100%{transform:translate(-2px,2px)}50%{transform:translate(2px,-4px)}}
+@media(prefers-reduced-motion:reduce){.creator-starter-portrait{animation:none;transition:none}.creator-starters-motion{display:none}}
+@media(max-width:600px){.creator-starters{padding:16px;margin:16px 0 22px;border-radius:16px}.creator-starters-heading h2{font-size:1.1rem}.creator-starters-heading p{font-size:.75rem}.creator-starters-heading{gap:4px}.creator-starters-motion{font-size:.65rem;padding:4px}.creator-starters-rail{justify-content:flex-start;gap:6px;padding:16px 2px 10px}.creator-starter-person{flex:0 0 82px}.creator-starter-portrait .creator-avatar,.creator-starter-portrait .creator-monogram{width:50px;height:50px}.creator-starter-name{font-size:.68rem}.creator-starters-preview{display:block;padding-top:12px}.creator-starter-excerpt{font-size:.8rem}.creator-starter-actions{margin-top:12px}.creator-starter-actions .btn{min-height:44px;flex:1}}

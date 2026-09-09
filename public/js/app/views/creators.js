@@ -1,4 +1,5 @@
 import {discoveryPreview} from './creator-discovery.js';
+import {creatorStarters} from './creator-starters.js';
 import {quotaNote} from '../experience.js';
 import {evidenceLink} from '../evidence-link.js';
 // views/creators.js — 财经博主: follow finance creators; Ducky summarises each new video. The creator grid
@@ -144,6 +145,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     return () => {};
   }
   const following = new Set((subs && subs.subs) || []);
+  let starterDiscovery=discovery;
+  const starterState={};
   const canRead = id => (sourceOnly&&id===initial.selected&&!!linkedSource?.post) || store.isPro() || [...following].slice(0,subs?.cap ?? 2).includes(id);
   if (epoch !== store.epoch() || signal?.aborted) return () => {};
   const kols = (doc && doc.kols) || [];
@@ -200,6 +203,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       card.appendChild(banner);
     }
 
+    card.append(el('div.creator-starters-host'));
     const controls = el("div.creators-controls");
     for (const [value,key] of [['following',"creators.mine"],['discover',"creators.discover"]]) {
       controls.appendChild(el("button.btn.btn-ghost.btn-sm", {type:"button",'data-creator-scope':value, "aria-pressed":String(value==='following'?mine:!mine), onclick:()=>{mine=value==='following';stockTicker='';selected='';query='';setupState.input='';setupState.doc=null;shown=30;render();}},s(key)));
@@ -224,6 +228,18 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     syncRoute();pageProgress.schedule();
     const content = card.querySelector(".creators-content");
     clear(content);
+    const startersHost=card.querySelector('.creator-starters-host');clear(startersHost);
+    if(!sourceOnly&&tab==='feed'&&!selected&&!query&&!stockTicker&&(!mine||!following.size)){
+      const starters=creatorStarters(starterDiscovery,{following,state:starterState,onFollow:async(creator,button)=>{
+        if(button.disabled||disposed||epoch!==store.epoch()||signal?.aborted)return;
+        button.disabled=true;
+        try{const response=await api.kol.sub(creator.id);
+          if(!disposed&&epoch===store.epoch()&&!signal?.aborted)followed(response);
+        }catch{if(!disposed&&epoch===store.epoch())toast(s('creatorflow.follow_error'),'err');}
+        finally{button.disabled=false;}
+      }});
+      if(starters)startersHost.append(starters);
+    }
     const outerControls=card.querySelector('.creators-controls');
     outerControls.style.display=tab==='rank'||(selected&&tab==='feed')?'none':'';
     outerControls.querySelector('.creator-person-search').hidden=tab!=='feed'||mine;
@@ -451,8 +467,10 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   async function refresh({automatic=false}={}){
     if(sourceOnly){router.go(location.hash);return;}
     if(refreshing)return;refreshing=true;
-    try{const [feed,mineDoc]=await Promise.all([api.kol.feed(),api.kol.mine()]);
+    try{const [feed,mineDoc,readyDoc]=await Promise.all([api.kol.feed(),api.kol.mine(),
+      api.get('/kol/discover?lang='+(isZh?'zh':'en'),{signal}).catch(()=>({items:[],status:'unavailable'}))]);
       if(disposed||epoch!==store.epoch())return;
+      starterDiscovery=readyDoc;
       doc=feed;posts.splice(0,posts.length,...(feed.posts||[]));kols.splice(0,kols.length,...(feed.kols||[]));
       for(const c of mineDoc.creators||[])if(!kols.some(k=>k.id===c.kol_id))kols.push({...c,id:c.kol_id});
       analysis=mineDoc.analysis||{};following.clear();for(const id of mineDoc.subs||[])following.add(id);render();progress.schedule();
