@@ -3845,5 +3845,6 @@
   "app.creatorstart.more": "More creators ({n} remaining)",
   "app.creatorlab.eyebrow": "PORTFOLIO SCENARIOS",
   "app.creatorlab.simulation_badge": "SIMULATION",
-  "community.join_hint": "We read every suggestion. See new features and product demos in the group."
+  "community.join_hint": "We read every suggestion. See new features and product demos in the group.",
+  "app.opportunities.catalog_candidate_counts": "Currently matching: {fresh}. Previously recorded candidates needing updated evidence: {previous}."
 }

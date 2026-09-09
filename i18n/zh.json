@@ -3845,5 +3845,6 @@
   "app.creatorstart.more": "更多博主（还有 {n} 位）",
   "app.creatorlab.eyebrow": "组合情景比较",
   "app.creatorlab.simulation_badge": "模拟",
-  "community.join_hint": "每条建议我们都会认真看，也会在群里分享新功能和产品演示。"
+  "community.join_hint": "每条建议我们都会认真看，也会在群里分享新功能和产品演示。",
+  "app.opportunities.catalog_candidate_counts": "当前符合条件 {fresh} 只；资料待更新的已记录候选 {previous} 只。"
 }
