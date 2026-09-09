@@ -245,3 +245,13 @@ test('candidate history preserves a nonmatch and null reading',async()=>{
  assert.ok(root.querySelector('.opportunity-history').textContent.includes('—'));
  assert.equal(root.querySelector('.opportunity-history button').hidden,true);
 });
+
+
+test('catalog coverage does not reinterpret legacy source inventory as completed snapshots',async()=>{
+ for(const catalog of [{snapshot_rows:1190},{source_rows:1190,snapshot_rows:102,current_candidates:54,recorded_candidates:17}]){
+  const root=await open(async()=>response(packet([],{coverage:{catalog}})));
+  const text=root.querySelector('.opportunity-coverage').textContent;
+  assert.ok(!text.includes('1190') && !text.includes('1,190'));
+  if(catalog.source_rows){assert.ok(text.includes('102'));assert.ok(text.includes('54'));assert.ok(text.includes('17'));}
+ }
+});

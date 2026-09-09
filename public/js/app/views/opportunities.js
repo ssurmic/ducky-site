@@ -342,7 +342,7 @@ export async function mount(root, route={}) {
         el('button.btn.btn-ghost', {type:'button', onclick:() => load({append:true})}, label('load_more')));
     }
     const c = doc.coverage || {};
-    if (c.catalog) coverage.append(el('p.small.muted', s('opportunities.catalog_coverage', {n:number(c.catalog.snapshot_rows,0), date:dateTime(c.catalog.snapshot_as_of)})),
+    if (c.catalog) coverage.append(el('p.small.muted', s('opportunities.catalog_coverage', {n:finite(c.catalog.source_rows) ? number(c.catalog.snapshot_rows,0) : '—', date:dateTime(c.catalog.snapshot_as_of)})),
       el('p.small.muted', s('opportunities.catalog_candidate_counts', {fresh:number(c.catalog.current_candidates,0), previous:number(c.catalog.recorded_candidates,0)})));
     coverage.append(el('details.card', el('summary', label('coverage_title')),
       el('p', s('opportunities.discovery_coverage', {name:c.universe_name || '—',
