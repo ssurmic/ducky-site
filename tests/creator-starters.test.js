@@ -56,6 +56,7 @@ test('new accounts see ready creators without a lookup, auto-follow or model job
  };
  const root=document.createElement('main');document.body.append(root);const dispose=await mount(root);await tick();
  assert.ok(root.querySelector('.creator-starters'));
+ assert.ok(!root.querySelector('.creator-directory').textContent.includes('0 条摘要'),'a missing global feed slice does not prove zero summaries');
  assert.ok(requests.every(([,method])=>method==='GET'));
  assert.ok(!requests.some(([url])=>url.includes('resolve')||url.includes('analy')));
  const button=root.querySelector('.creator-starter-actions button');button.click();button.click();await tick();

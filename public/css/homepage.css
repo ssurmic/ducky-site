@@ -195,6 +195,9 @@ html.home-dialog-open{overflow:hidden;scrollbar-gutter:stable}
 .home-community p.home-duck-bubble{display:table;width:fit-content;margin:0 0 12px;padding:8px 14px;border-radius:16px 16px 16px 3px;background:color-mix(in srgb,var(--accent,#ff9800) 15%,transparent);color:inherit;font-size:.9375rem}
 .home-community p.home-duck-bubble[hidden]{display:none}
 .home-community-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-start;max-width:260px;flex:0 0 260px}
+.home-community-invite{display:flex;align-items:flex-start;gap:10px;width:100%;padding:14px 12px;border:1px solid color-mix(in srgb,var(--green,#65bd7f) 35%,var(--border));border-radius:12px;text-decoration:none;color:var(--text);background:color-mix(in srgb,var(--green,#65bd7f) 6%,transparent);transition:border-color .15s,background .15s;text-align:left}
+.home-community-invite:hover{border-color:var(--green,#65bd7f);background:color-mix(in srgb,var(--green,#65bd7f) 11%,transparent);text-decoration:none}
+.home-community-invite>span:nth-child(2){min-width:0;flex:1}.home-community-invite strong{display:block;font-size:.875rem;font-weight:700;line-height:1.5}.home-community-invite small{display:block;font-size:.7rem;line-height:1.65;color:var(--muted);margin-top:5px}.home-community-icon{display:grid;place-items:center;width:32px;height:32px;flex:none;border-radius:9px;background:color-mix(in srgb,var(--green,#65bd7f) 12%,transparent);color:var(--green,#65bd7f)}.home-community-arrow{font-size:1rem;color:var(--muted)}
 .home-crypto{width:100%;min-width:0;font-size:.8125rem;text-align:left}
 .home-crypto summary{cursor:pointer;min-height:44px;align-content:center;color:var(--muted)}
 .home-crypto-content{padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}

@@ -48,7 +48,7 @@ export async function mountSimulation(root,{kolId='',allowedIds=null,tickers=nul
   function render() {
     state.config=config;state.demo=demo;state.horizon=horizon;onStateChange();
     clear(root);
-    root.append(el('div.creator-lab-intro',el('div',el('p.eyebrow','PLAY AROUND'),el('h2',s('creatorlab.title')),el('p.muted',s('creatorlab.intro'))),el('span.evidence-badge',demo?s('creatorlab.demo_badge'):'SIMULATION')));
+    root.append(el('div.creator-lab-intro',el('div',el('p.eyebrow',s('creatorlab.eyebrow')),el('h2',s('creatorlab.title')),el('p.muted',s('creatorlab.intro'))),el('span.evidence-badge',demo?s('creatorlab.demo_badge'):s('creatorlab.simulation_badge'))));
     const chooser=el('div.evidence-controls');
     if(rows.length){const select=el('select.input',{'aria-label':s('creatorlab.opinion')},...rows.map((r,i)=>el('option',{value:i,selected:active===r},r.post.kol_name+' · '+r.call.sym+' · '+s('creators.take_'+r.call.stance)+' · '+dateTime(r.post.recorded_at))));select.addEventListener('change',()=>{active=rows[Number(select.value)];demo=false;render();});chooser.append(select);}
     chooser.append(el('button.btn.btn-ghost.btn-sm',{type:'button','aria-pressed':String(demo),onclick:()=>{demo=!demo;render();}},s(demo?'creatorlab.leave_demo':'creatorlab.try_demo')));

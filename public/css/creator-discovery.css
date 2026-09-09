@@ -1,0 +1,38 @@
+/* Discovery previews remain readable without a second scrolling viewport. */
+.creator-discovery-controls{margin:22px 0 12px;padding:4px 0}
+.creator-discovery-controls label{display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-size:.875rem;color:var(--muted)}
+.creator-discovery-controls label>span{line-height:1.6}
+.creator-discovery-controls .input{width:auto;max-width:100%;min-height:44px;margin:0}
+.creator-discovery-basis{font-size:.8rem;line-height:1.7;color:var(--muted);margin:0 0 20px;max-width:80ch}
+.page-app .creators-view .creator-discovery-directory{max-height:none;overflow:visible;padding:0;margin:18px 0 20px;gap:18px;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch}
+.page-app .creators-view .creator-discovery-directory:has(.creator-discovery-qualifications[open]){align-items:start}
+.page-app .creator-discovery-directory .creator-profile{padding:22px;border-radius:16px;gap:20px;min-height:370px}
+.creator-discovery-directory .creator-identity{align-items:center;min-height:52px}
+.creator-discovery-directory .creator-identity>div{min-width:0;flex:1}
+.creator-discovery-directory .creator-name{font-size:.95rem;line-height:1.45;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.creator-discovery-directory .creator-identity .small{font-size:.72rem;margin-top:5px;overflow-wrap:anywhere}
+.creator-discovery-preview{display:flex;flex-direction:column;gap:12px}
+.creator-discovery-stance{display:flex;align-items:center;gap:10px;font-size:.85rem}
+.creator-discovery-badge{font-size:.72rem;font-weight:650;line-height:1.5;padding:3px 8px;border-radius:6px}
+.creator-discovery-badge.is-bull{color:var(--green);background:color-mix(in srgb,var(--green) 12%,transparent)}
+.creator-discovery-badge.is-bear{color:var(--red);background:color-mix(in srgb,var(--red) 12%,transparent)}
+.creator-discovery-preview .creator-card-gist{font-size:.875rem;line-height:1.75;color:var(--text);-webkit-line-clamp:3}
+.creator-discovery-qualifications{font-size:.8rem;border:1px solid var(--border);border-radius:10px;background:color-mix(in srgb,var(--bg) 45%,transparent);padding:0 12px}
+.creator-discovery-qualifications>summary{cursor:pointer;min-height:44px;align-content:center;color:var(--muted);padding:10px 0;line-height:1.6}
+.creator-discovery-qualifications[open]>summary{border-bottom:1px solid var(--border)}
+.creator-discovery-qualifications .creator-claim-facts{margin:12px 0;gap:16px}
+.creator-discovery-qualifications .creator-claim-facts>div{grid-template-columns:minmax(0,1fr);gap:6px}
+.creator-discovery-qualifications .creator-claim-facts dt{font-size:.72rem;font-weight:600}
+.creator-discovery-qualifications .creator-claim-facts dd{font-size:.8rem;line-height:1.8}
+.creator-discovery-date{font-size:.7rem;color:var(--muted);line-height:1.7}
+.creator-discovery-links{display:flex;align-items:center;gap:8px 18px;flex-wrap:wrap;font-size:.75rem}
+.creator-discovery-links a{display:inline-flex;align-items:center;min-height:32px;color:var(--accent-text,var(--accent));text-decoration:none}
+.creator-discovery-links a:hover{text-decoration:underline}
+.creator-profile-footer{display:flex;align-items:center;gap:12px;justify-content:space-between;margin-top:auto;padding-top:16px;border-top:1px solid var(--border)}
+.creator-profile-meta{min-width:0;flex:1}
+.creator-profile .creator-profile-footer .creator-card-coverage{font-size:.7rem;line-height:1.6;color:var(--muted);margin:0}
+.creator-profile-pending{font-size:.7rem;line-height:1.65;color:var(--muted);margin:5px 0 0!important}
+.creator-profile .creator-profile-footer .cr-chip{margin:0;flex:none;align-self:center;min-height:38px}
+.creator-directory-more{margin:0 0 28px;min-height:44px}
+@media(max-width:1150px){.page-app .creators-view .creator-discovery-directory{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.page-app .creators-view .creator-discovery-directory{grid-template-columns:minmax(0,1fr);gap:14px}.page-app .creator-discovery-directory .creator-profile{padding:18px;min-height:0;gap:16px}.creator-discovery-controls label{align-items:stretch;flex-direction:column;gap:10px}.creator-discovery-controls .input{align-self:flex-start}.creator-discovery-basis{font-size:.75rem}.creator-discovery-links a,.creator-profile .creator-profile-footer .cr-chip{min-height:44px}}

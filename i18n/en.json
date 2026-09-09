@@ -3783,7 +3783,7 @@
   "app.api.billing_paused": "All features are available without a subscription.",
   "community.title": "Built with love. Open to everyone.",
   "community.body": "We’re building Ducky for the love of it. Tokens and data cost money, so if it helps you out, buy us a coffee.",
-  "community.join": "Join the community",
+  "community.join": "Join the English community",
   "community.telegram": "Find us on Telegram",
   "community.pet": "Pet the duck",
   "community.stop": "Stop the duck from wobbling",
@@ -3841,5 +3841,9 @@
   "app.creatorstart.follow_name": "Follow {name}",
   "app.creatorstart.pause": "Pause motion",
   "app.creatorstart.resume": "Resume motion",
-  "app.creatorstart.qualifications": "Conditions and time horizon"
+  "app.creatorstart.qualifications": "Conditions and time horizon",
+  "app.creatorstart.more": "More creators ({n} remaining)",
+  "app.creatorlab.eyebrow": "PORTFOLIO SCENARIOS",
+  "app.creatorlab.simulation_badge": "SIMULATION",
+  "community.join_hint": "We read every suggestion. See new features and product demos in the group."
 }

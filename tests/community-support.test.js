@@ -11,6 +11,7 @@ for(const lang of ['zh','en'])test('support preserves the exact owner destinatio
  assert.ok(root.closest('[data-home-hero]'),'support belongs in the former duck greeting slot');
  assert.ok(root.compareDocumentPosition(doc.querySelector('[data-duck-orbit]'))&4);
  assert.equal(doc.querySelector('.public-coffee').href,'https://buymeacoffee.com/duckybot');
+ assert.equal(root.querySelector('.home-community-invite').href,'https://t.me/'+(lang==='en'?'duckybotGroupEN':'duckybotGroup'));
  assert.equal(root.querySelector('[data-support-address]').textContent,wallet);
  assert.match(root.querySelector('.home-crypto').textContent,/Ethereum.*ERC-20/s);
  let copied;

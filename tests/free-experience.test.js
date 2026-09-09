@@ -110,6 +110,9 @@ test('Discovery keeps stance, timestamped source and missing English explicit',a
  const card=discoveryPreview({latest_view:view,coverage:{scan_limited:false}});
  assert.match(card.textContent,/Bearish.*NVDA/);assert.match(card.textContent,/Margins may weaken/);assert.match(card.textContent,/If demand slows/);
  assert.ok(card.querySelector('a').href.endsWith('t=123s'));
+ const qualifications=card.querySelector('details.creator-discovery-qualifications');
+ assert.equal(qualifications.open,false);
+ qualifications.open=true;assert.match(qualifications.textContent,/If demand slows/);
  const missing=discoveryPreview({latest_view:{...view,text:{zh:'不能当成英文'},condition_text:null}});
  assert.match(missing.textContent,/English version is not available/);assert.doesNotMatch(missing.textContent,/不能当成英文/);
 });
