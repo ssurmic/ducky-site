@@ -3831,5 +3831,6 @@
   "app.opportunities.reason_original_ivhv": "Original IV/HV scan",
   "app.opportunities.history_unknown": "Insufficient evidence",
   "app.opportunities.history_row": "Recorded {recorded} · Source observed {source} · {state} · Drawdown {drawdown}",
-  "app.opportunities.reference_iv_hv": "Near-expiry IV / HV20"
+  "app.opportunities.reference_iv_hv": "Near-expiry IV / HV20",
+  "app.opportunities.catalog_candidate_counts": "Currently matching: {fresh}. Previously recorded candidates needing updated evidence: {previous}."
 }

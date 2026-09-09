@@ -3831,5 +3831,6 @@
   "app.opportunities.reason_original_ivhv": "原 IV/HV 扫描",
   "app.opportunities.history_unknown": "证据不足",
   "app.opportunities.history_row": "记录于 {recorded} · 资料时间 {source} · {state} · 回撤 {drawdown}",
-  "app.opportunities.reference_iv_hv": "近到期 IV / HV20"
+  "app.opportunities.reference_iv_hv": "近到期 IV / HV20",
+  "app.opportunities.catalog_candidate_counts": "当前符合条件 {fresh} 只；资料待更新的已记录候选 {previous} 只。"
 }
