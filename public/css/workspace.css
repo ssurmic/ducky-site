@@ -345,7 +345,7 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .modal-actions{padding:10px 14px;flex-wrap:wrap}
  .page-app :is(.btn,.seg button,.cal-mnav,.cal-today,.cal-mode,.market-topic-trigger,.radar-category,.nav-more summary){touch-action:manipulation}
 }
-@media(max-width:360px){
+@media(max-width:580px){
  .page-app .watch-controls{display:grid;grid-template-columns:minmax(0,1fr) auto}
  .page-app .watch-controls .watch-modes{grid-column:1;grid-row:1;justify-self:start}
  .page-app .watch-controls .watch-modes .btn{white-space:nowrap;padding-inline:9px}
