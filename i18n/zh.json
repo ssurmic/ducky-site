@@ -2635,7 +2635,7 @@
   "app.watch.close": "收盘价",
   "app.watch.day_change": "日涨跌",
   "app.watch.stock": "股票／业务",
-  "app.watch.close_session": "{date} 收盘涨跌 · 点击股票查看详情",
+  "app.watch.close_session": "{date} 收盘价",
   "app.watch.summary_pending": "行情资料待补齐",
   "app.watch.no_match": "没有匹配的自选股",
   "app.watch.map_legend": "面积＝市值 · 颜色＝日涨跌",
@@ -3737,5 +3737,9 @@
   "app.opportunities.factors_checked": "已核对 {n} / 5 项条件",
   "app.opportunities.factor_status_supported": "符合",
   "app.opportunities.factor_status_not_supported": "不符合",
-  "app.opportunities.factor_status_unknown": "待补资料"
+  "app.opportunities.factor_status_unknown": "待补资料",
+  "app.watch.saved_value": "已保存收盘",
+  "app.watch.saved_close": "已保存收盘 · {date}",
+  "app.watch.saved_at": "记录时间",
+  "app.watch.retained_note": "部分更新缺价，暂显示同日已保存收盘。"
 }

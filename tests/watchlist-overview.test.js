@@ -162,3 +162,16 @@ test('each of fifty stock rows has a separate direct map link without opening de
  const last=view.querySelector('a[href="#/evidence/T49"]');assert.ok(last);
  assert.match(last.getAttribute('aria-label'),/T49/);last.click();assert.equal(selected,0);
 });
+
+test('list and heatmap label retained exact-session closes without turning missing into zero',()=>{
+ const saved={...row('SAVED',10,-10),price:90,price_status:'retained',price_session:'2026-09-08',price_recorded_at:'2026-09-08T21:00:00Z'};
+ const missing={...row('MISSING',20,null),price:null,price_status:'missing'};
+ for(const mode of ['list','heatmap']){
+  const view=overviewView([saved,missing],{view:mode,area:'equal',session:'2026-09-08',previous:'2026-09-04',onSelect:()=>{}});
+  assert.match(view.querySelector('[role="status"]').textContent,/Using saved closes/);
+  assert.match(view.querySelector('[data-open="SAVED"]').textContent,/90\.00/);
+  assert.match(view.querySelector('[data-open="SAVED"]').textContent,/Saved close/);
+  assert.match(view.querySelector('[data-open="MISSING"]').textContent,/—/);
+  assert.match(view.querySelector('.watch-method').textContent,/2026-09-08T21:00:00Z/);
+ }
+});

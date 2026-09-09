@@ -3,6 +3,8 @@ import { s, LANG } from './strings.js';
 import { icon } from './icons.js';
 
 const finite = n => typeof n === 'number' && Number.isFinite(n);
+const retained = row => row.price_status === 'retained';
+const savedLabel = row => s('watch.saved_close', {date:row.price_session || '—'});
 export const weighted = row => row.market_cap_status === 'ready' && finite(row.market_cap) && row.market_cap > 0 && row.security_type !== 'ETF';
 export function capText(value) {
   return finite(value) && value > 0 ? new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US', {notation:'compact', maximumFractionDigits:1}).format(value) : '—';
@@ -81,6 +83,7 @@ function mapInspector(frame, label, session) {
       el('div.muted.small',label(row)),
       el('dl.watch-tip-facts',el('dt',s('watch.close')),el('dd.mono',px(row.price)),el('dt',s('watch.cap')),el('dd.mono',capText(row.market_cap)+' '+(row.market_cap_currency || ''))),
       el('div.watch-tip-date',row.price_session || session || s('watch.summary_pending')));
+    if(retained(row))tip.append(el('p.watch-saved-note',savedLabel(row)),el('p.small',s('watch.retained_note')));
     tip.hidden=false;node.setAttribute('aria-describedby',tip.id);
     const box=frame.getBoundingClientRect(),cell=node.getBoundingClientRect(),rect=tip.getBoundingClientRect();
     const x=event?.clientX ?? cell.left+cell.width/2,y=event?.clientY ?? cell.top+cell.height/2;
@@ -100,16 +103,17 @@ export function overviewView(rows, options) {
   const root=el('div.watch-summary');
   const filtered=rows.filter(r=>[r.ticker,r.company,r.label_zh,r.label_en,r.industry].some(x=>String(x || '').toLowerCase().includes(query.trim().toLowerCase())));
   const label=r=>(LANG==='zh'?r.label_zh:r.label_en) || r.industry || (LANG==='zh'?r.sector_zh:r.sector) || s('company.unknown');
-  const title=r=>`${r.ticker} · ${r.company || ''} · ${label(r)} · ${pct(r.change_pct,2)} · ${r.price_session || session || '—'} · ${s('watch.cap')}: ${capText(r.market_cap)} ${r.market_cap_currency || ''}`;
+  const title=r=>`${r.ticker} · ${r.company || ''} · ${label(r)} · ${pct(r.change_pct,2)} · ${r.price_session || session || '—'} · ${s('watch.cap')}: ${capText(r.market_cap)} ${r.market_cap_currency || ''}${retained(r)?' · '+savedLabel(r):''}`;
   const button=(r,compact=false)=>el('div.watch-row-entry',el('button.watch-row', {type:'button','data-open':r.ticker,
     'aria-pressed':String(selected===r.ticker),'aria-label':title(r),onclick:()=>onSelect(r.ticker)},
     el('span.watch-identity',el('span.watch-identity-title',el('strong',r.ticker),compact?null:el('span.watch-industry',label(r))),el('span.watch-company',r.company || r.ticker)),
-    el('span.mono.watch-row-price',px(r.price)),
+    el('span.mono.watch-row-price',px(r.price),retained(r)?el('small.watch-saved-note',s('watch.saved_value')):null),
     el('span.mono.watch-change',{class:'watch-'+changeClass(r.change_pct)},pct(r.change_pct,2)),
     el('span.mono.watch-row-cap',r.security_type==='ETF'?'ETF':capText(r.market_cap))),
     el('a.watch-map-link',{href:'#/evidence/'+encodeURIComponent(r.ticker),'aria-label':s('watch.open_stock_map',{ticker:r.ticker})},icon('evidence'),el('span',s('watch.open_map'))));
   if(view!=='heatmap')root.append(el('p.muted.small.watch-session',session?s('watch.close_session',{date:session}):s('watch.summary_pending')));
   if(!filtered.length) {root.append(el('p.empty',s('watch.no_match')));return root;}
+  if(filtered.some(retained))root.append(el('p.muted.small.watch-retained-note',{role:'status'},s('watch.retained_note')));
   if(view==='heatmap') {
     const panel=el('section.watch-map-panel'),frame=el('div.watch-map-frame');
     panel.append(el('div.watch-map-heading',el('div',el('h2',s('watch.map_title')),
@@ -130,7 +134,7 @@ export function overviewView(rows, options) {
         // consume the first tap; keyboard focus still gets its full inspector.
         onfocus:()=>inspector.focus(r,tile),onblur:inspector.blur},
         el('span.watch-tile-sector',label(r)),el('strong',r.ticker),
-        el('span.mono.watch-tile-change',pct(r.change_pct,2)),el('span.mono.watch-tile-price',px(r.price)),el('span.watch-tile-company',r.company || ''),
+        el('span.mono.watch-tile-change',pct(r.change_pct,2)),el('span.mono.watch-tile-price',px(r.price),retained(r)?el('small.watch-saved-note',s('watch.saved_value')):null),el('span.watch-tile-company',r.company || ''),
         el('span.watch-tile-cap',s('watch.cap')+' '+capText(r.market_cap)));
       tile.style.setProperty('--tile-color',heatColor(r.change_pct));
       map.append(tile);
@@ -158,6 +162,7 @@ export function overviewView(rows, options) {
   const methods=el('details.watch-method',el('summary',s('watch.method')),
     el('p.muted.small',s('watch.method_body',{start:previous || '—',end:session || '—'})));
   for(const r of filtered) methods.append(el('p.small',`${r.ticker} · ${s('watch.cap')}: ${capText(r.market_cap)} ${r.market_cap_currency || ''} · ${s('watch.cap_as_of')}: ${r.market_cap_as_of?.slice(0,10) || '—'}`));
+  for(const r of filtered.filter(retained))methods.append(el('p.small',`${r.ticker} · ${savedLabel(r)} · ${s('watch.saved_at')}: ${r.price_recorded_at || '—'}`));
   root.append(methods);
   return root;
 }

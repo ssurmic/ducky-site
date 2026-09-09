@@ -1085,6 +1085,9 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 .watch-columns span:first-child {text-align:left}
 .watch-up {color:var(--green)} .watch-down {color:var(--red)} .watch-flat,.watch-unknown {color:var(--muted)}
 .watch-session {margin:8px 0 12px}
+.watch-saved-note{display:block;font-family:inherit;font-size:11px;font-weight:500;line-height:1.4;color:var(--muted);white-space:normal}
+.watch-retained-note{margin:4px 0 12px;line-height:1.5}
+.watch-tile .watch-saved-note{color:inherit;opacity:.85}
 .watch-map-panel {padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:0 5px 24px #00000008}
 .watch-map-heading {display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 18px}
 .watch-map-heading h2 {margin:0;font-size:16px;font-weight:650;letter-spacing:.01em}

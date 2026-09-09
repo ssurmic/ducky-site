@@ -2635,7 +2635,7 @@
   "app.watch.close": "Close",
   "app.watch.day_change": "Daily change",
   "app.watch.stock": "Stock / business",
-  "app.watch.close_session": "Change at the {date} close · Select a stock for details",
+  "app.watch.close_session": "Closing prices · {date}",
   "app.watch.summary_pending": "Price data pending",
   "app.watch.no_match": "No matching stocks",
   "app.watch.map_legend": "Area = market cap · Colour = daily change",
@@ -3737,5 +3737,9 @@
   "app.opportunities.factors_checked": "{n} of 5 conditions checked",
   "app.opportunities.factor_status_supported": "Met",
   "app.opportunities.factor_status_not_supported": "Not met",
-  "app.opportunities.factor_status_unknown": "Unknown"
+  "app.opportunities.factor_status_unknown": "Unknown",
+  "app.watch.saved_value": "Saved close",
+  "app.watch.saved_close": "Saved close · {date}",
+  "app.watch.saved_at": "Recorded at",
+  "app.watch.retained_note": "Using saved closes where the latest update was empty."
 }

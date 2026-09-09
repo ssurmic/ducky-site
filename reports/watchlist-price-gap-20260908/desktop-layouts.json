@@ -1,0 +1,34 @@
+[
+  {
+    "lang": "zh",
+    "theme": "light",
+    "firstRowTop": 344.890625,
+    "overflow": false,
+    "rows": 50,
+    "width": 1200
+  },
+  {
+    "lang": "zh",
+    "theme": "dark",
+    "firstRowTop": 344.890625,
+    "overflow": false,
+    "rows": 50,
+    "width": 1200
+  },
+  {
+    "lang": "en",
+    "theme": "light",
+    "firstRowTop": 344.890625,
+    "overflow": false,
+    "rows": 50,
+    "width": 1200
+  },
+  {
+    "lang": "en",
+    "theme": "dark",
+    "firstRowTop": 344.890625,
+    "overflow": false,
+    "rows": 50,
+    "width": 1200
+  }
+]
