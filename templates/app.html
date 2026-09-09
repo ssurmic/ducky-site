@@ -51,6 +51,7 @@
     <span class="tier-host" id="tier-badge"></span>
     <span class="spacer"></span>
     <a class="lang-toggle mono" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" lang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle>{{ t('app.nav.lang') }}</a>
+    <a class="account-avatar" id="account-avatar" href="#/profile" hidden aria-label="{{ t('app.account.profile') }}"></a>
     <a class="btn btn-ghost btn-sm" id="logout" href="#/login" hidden>{{ t('app.common.logout') }}</a>
   </header>
 

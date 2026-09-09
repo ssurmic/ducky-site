@@ -1608,3 +1608,10 @@ html[data-theme=dark] .study-group{--study-bull:#47df98;--study-bear:#f18b9b}
 .experience-comparison{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
 .experience-comparison article{min-width:0}.experience-comparison p{line-height:1.65}
 @media(max-width:600px){.free-guide-links{grid-template-columns:1fr 1fr}.experience-comparison{grid-template-columns:1fr}.experience-quota>a{margin-left:0}.evidence-examples>strong{width:100%}}
+
+/* Account identity stays distinct from the Ducky brand and fits narrow headers. */
+.app-top .account-avatar { position:relative; display:inline-flex; flex:0 0 36px; width:36px; height:36px; align-items:center; justify-content:center; border-radius:50%; overflow:hidden; border:1px solid var(--border); background:var(--surface-2); color:var(--text); font-size:14px; font-weight:700; text-decoration:none; }
+.app-top .account-avatar[hidden] { display:none; }
+.account-avatar img { position:absolute; inset:1px; width:32px; height:32px; border-radius:50%; object-fit:cover; }
+.account-avatar:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+.x-login { justify-content:center; }

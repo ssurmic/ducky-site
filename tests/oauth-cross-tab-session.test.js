@@ -28,6 +28,7 @@ test('an expired boot token does not clear the replacement saved by another tab'
   oldSession();let resolve;const requests=[];
   globalThis.fetch=(url,options)=>{
     requests.push(url);
+    if(url==='/auth/refresh')return Promise.resolve(denied());
     if(url==='/watchlist')return Promise.resolve(Response.json({items:[]}));
     return new Promise(r=>resolve=r);
   };

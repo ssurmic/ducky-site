@@ -11,11 +11,13 @@ import {startNonceFlow} from './nonce-flow.js';
 
 const KEY = "ducky.token";
 let freshBootstrapLogin = false;
+let renewal = null;
+const LOGGED_OUT = "ducky.logged-out";
 export const didAuthenticateOnBoot = () => freshBootstrapLogin;
 const storage = () => { try { return tg.inTG ? window.sessionStorage : window.localStorage; } catch (e) { return null; } };
 
 export function loadToken() { try { const st = storage(); return st ? st.getItem(KEY) : null; } catch (e) { return null; } }
-export function saveToken(token) { try { const st = storage(); if (st) st.setItem(KEY, token); } catch (e) { /* private mode */ } }
+export function saveToken(token) { try { window.localStorage.removeItem(LOGGED_OUT); } catch {} try { const st = storage(); if (st) st.setItem(KEY, token); } catch (e) { /* private mode */ } }
 export function clearToken() { try { const st = storage(); if (st) st.removeItem(KEY); } catch (e) { /* ignore */ } }
 
 /** Retry a request on TRANSIENT failure only (network status 0, 5xx, or 429) with backoff; a definitive
@@ -53,11 +55,13 @@ export async function establish(resp) {
  *  them together instead of serially, then prefetch every watchlist snapshot in parallel (L2 hits, §18.2.4)
  *  so the dashboard paints from the warmed store instead of a 4-deep serial chain. */
 async function hydrate() {
+  const epoch = store.epoch(), token = store.get("token");
   const [me, wl] = await Promise.all([
     api.me(),
     api.watchlist.list().catch(() => null),   // non-fatal: the watchlist view re-fetches on mount
   ]);
   if (!me || typeof me !== 'object' || Array.isArray(me)) throw new api.ApiError(502,{error:'session_unavailable'});
+  if (epoch !== store.epoch() || token !== store.get("token")) throw new api.ApiError(0,{detail:"session_changed"});
   store.set("me", me);
   if (wl) {
     const tickers = normalizeWatch(wl);
@@ -87,22 +91,50 @@ function prefetchSnapshots(tickers) {
 }
 
 export function logout() {
-  // Best-effort SERVER-SIDE revocation: bump users.session_epoch so a token copied before this
-  // logout dies NOW, not at its 24h expiry. Direct keepalive fetch with the still-present token
-  // (bypasses the api wrapper's 401→logout handler to avoid recursion); never blocks the UI.
   const tok = store.get('token') || loadToken();
+  // Capture before clearing; no cookie mutation is sent, so a late logout response
+  // cannot overwrite a newer login in this or another tab.
   try {
-    if (tok) fetch(api.base() + "/auth/logout", { method: "POST", keepalive: true,
-      headers: { Authorization: "Bearer " + tok } }).catch(() => {});
-  } catch (e) { /* ignore */ }
+    if (tok) fetch(api.base() + "/auth/logout", {method:"POST",keepalive:true,
+      headers:{Authorization:"Bearer "+tok}}).catch(()=>{});
+  } catch {}
+  try { if(loadToken()===tok)window.localStorage.setItem(LOGGED_OUT,"1"); } catch {}
   forgetSession(tok);
 }
 
-// A failed request belongs to this tab's captured session. Another tab may have
-// already completed Google sign-in and replaced the shared saved token.
-export function expireSession({token,epoch} = {}) {
-  if(token!==store.get('token') || epoch!==store.epoch())return;
-  forgetSession(token); // An already-invalid session needs no server-side logout.
+function deviceToken(token) {
+  try { return typeof JSON.parse(atob(token.split('.')[0].replace(/-/g,'+').replace(/_/g,'/'))).d === 'string'; }
+  catch { return false; }
+}
+
+// One renewal per tab. State and shared storage guards prevent stale work from
+// restoring an account after logout or replacing a newer sign-in.
+export async function renewSession() {
+  if(renewal)return renewal;
+  const token=store.get('token'),epoch=store.epoch(),saved=loadToken();
+  const work=(async()=>{
+    const response=await api.auth.refresh();
+    if(epoch!==store.epoch() || token!==store.get('token') || saved!==loadToken())
+      throw new api.ApiError(0,{detail:'session_changed'});
+    if(!response?.token)throw new api.ApiError(502,{error:'session_unavailable'});
+    saveToken(response.token);store.set('token',response.token);
+    return true;
+  })();
+  renewal=work;
+  try{return await work;}finally{if(renewal===work)renewal=null;}
+}
+
+export async function expireSession({token,epoch,retry=true} = {}) {
+  if(token!==store.get('token') || epoch!==store.epoch())return false;
+  if(retry && deviceToken(token) && loadToken()===token) {
+    try { return await renewSession(); }
+    catch(error) {
+      // Offline/server failure is not logout. Retain the session for retry.
+      if(error.status!==401)throw error;
+    }
+  }
+  if(token===store.get('token') && epoch===store.epoch())forgetSession(token);
+  return false;
 }
 
 function forgetSession(token) {
@@ -118,7 +150,9 @@ function forgetSession(token) {
 }
 
 export async function refreshMe(opts) {
+  const epoch = store.epoch();
   const me = await api.me(opts);
+  if(epoch!==store.epoch())throw new api.ApiError(0,{detail:"session_changed"});
   store.set("me", me);
   return me;
 }
@@ -150,7 +184,19 @@ export async function boot() {
   if (!tg.inTG) {
     try { if (await consumeWidgetRedirect()) { freshBootstrapLogin = true; return true; } } catch (e) { console.warn("widget redirect auth failed", e); }
   }
-  const token = loadToken();
+  let token = loadToken();
+  if(!tg.inTG) {
+    let loggedOut=false;
+    try { loggedOut=window.localStorage.getItem(LOGGED_OUT)==="1"; } catch {}
+    if(token || !loggedOut) {
+      if(token)store.set("token",token);
+      try { await renewSession(); token=store.get("token"); }
+      catch(error) {
+        if(error.body?.detail==='session_changed')return false;
+        // Valid legacy/access tokens remain usable during a renewal outage.
+      }
+    }
+  }
   if (token) {
     store.set("token", token);
     try { await hydrate(); return true; } catch (e) {

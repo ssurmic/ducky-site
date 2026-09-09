@@ -468,3 +468,8 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .nav-more-panel>a{padding:8px;gap:8px;font-size:.8125rem;min-height:52px}
  .page-app .nav-more-panel>a .app-icon{flex:none;width:18px;height:18px}
 }
+
+/* The account avatar adds a fifth header control. Keep English logout inside 320px. */
+@media (max-width:360px) {
+ .page-app .app-top { padding-inline:10px; gap:6px; }
+}

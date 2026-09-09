@@ -37,7 +37,7 @@ export async function request(method, path, opts) {
   // Bind reads to the page that started them, never the next route's observer.
   const observers=method==='GET'&&opts.observe!==false?[...readObservers]:[];
   const observed=value=>{for(const fn of observers){try{fn(path,value,{auth:opts.auth!==false});}catch{}}return value;};
-  const sessionChanged = () => opts.auth !== false && (token !== store.get("token") || epoch !== store.epoch());
+  const sessionChanged = () => (opts.auth !== false || opts.bindSession) && (token !== store.get("token") || epoch !== store.epoch());
   if (opts.auth !== false && token) headers.Authorization = "Bearer " + token;
   let body;
   if (opts.body !== undefined) { headers["Content-Type"] = "application/json"; body = JSON.stringify(opts.body); }
@@ -65,7 +65,10 @@ export async function request(method, path, opts) {
   const data = await parse(res);
   if (sessionChanged()) throw new ApiError(0, { detail: "session_changed" }, path);
   if (res.status === 401 && opts.auth !== false) {
-    if (onUnauthorized && !(opts.preserveBadTelegram && data?.error === 'bad_telegram')) onUnauthorized({token,epoch});
+    if (onUnauthorized && !opts.skipUnauthorized && !(opts.preserveBadTelegram && data?.error === 'bad_telegram')) {
+      const recovered = await onUnauthorized({token,epoch,retry:!opts.sessionRetried});
+      if (recovered) return request(method,path,{...opts,sessionRetried:true});
+    }
     throw new ApiError(401, data, path);
   }
   if (res.status === 402) {
@@ -106,10 +109,13 @@ export async function getWithRetry(path, opts) {
 export function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
 
 /** Authenticated binary fetch → data: URI (CSP img-src allows data:, not blob:). */
-export async function getDataUri(path) {
+export async function getDataUri(path, sessionRetried=false) {
   const session={token:store.get('token'),epoch:store.epoch()};
   const res = await request("GET", path, { raw: true });
-  if (res.status === 401) { if (onUnauthorized) onUnauthorized(session); throw new ApiError(401, null, path); }
+  if (res.status === 401) {
+    if (onUnauthorized && await onUnauthorized({...session,retry:!sessionRetried}))return getDataUri(path,true);
+    throw new ApiError(401, null, path);
+  }
   if (!res.ok) throw new ApiError(res.status, await parse(res), path);
   const blob = await res.blob();
   return new Promise((resolve, reject) => {
@@ -123,20 +129,22 @@ export async function getDataUri(path) {
 // ---- typed endpoints (contract: SYSTEMDESIGN.md §4.2, backend pack M3) ------------------------
 export const auth = {
   providers: (opts) => get("/auth/providers", { ...opts, auth: false }),
-  googleSession: () => post("/auth/session", {}, { auth: false, credentials: "include" }),
+  googleSession: (provider="google") => post("/auth/session" + (provider === "x" ? "?provider=x" : ""), {}, { auth: false, bindSession:true, credentials: "include" }),
+  refresh: () => post("/auth/refresh", {}, { credentials:"include", skipUnauthorized:true }),
+  xLink: () => post("/auth/x/link", { lang:LANG }, {credentials:"include"}),
   googleLink: () => post("/auth/google/link", { lang: LANG }, { credentials: "include" }),
-  miniapp: (initData) => post("/auth/miniapp", { initData }, { auth: false }),
-  widget: (user) => post("/auth/widget", user, { auth: false }),
+  miniapp: (initData) => post("/auth/miniapp", { initData }, { auth: false, bindSession:true, credentials:"include" }),
+  widget: (user) => post("/auth/widget", user, { auth: false, bindSession:true, credentials:"include" }),
   linkTelegram: (user, opts) => post('/auth/link/telegram', user, {...opts, preserveBadTelegram:true}),
   telegramLinkNonce: (opts) => post('/auth/link/telegram/nonce', {}, opts),
   telegramLinkPoll: (nonce, opts) => get('/auth/link/telegram/poll?nonce='+encodeURIComponent(nonce), opts),
   telegramLinkConfirm: (nonce, opts) => post('/auth/link/telegram/confirm', {nonce}, opts),
   telegramLinkCancel: (nonce, opts) => post('/auth/link/telegram/cancel', {nonce}, opts),
   nonce: (opts) => post("/auth/nonce", {}, { ...opts, auth: false }),
-  password: (email, password) => post("/auth/password", { email, password }, { auth: false }),
-  poll: (nonce, opts) => get("/auth/poll?nonce=" + encodeURIComponent(nonce), { ...opts, auth: false }),
-  register: (email, password) => post("/auth/register", { email, password, lang: LANG }, { auth: false }),
-  redeem: (code, username, password) => post("/auth/redeem", { code, username, password, lang: LANG }, { auth: false }),
+  password: (email, password) => post("/auth/password", { email, password }, { auth: false, bindSession:true, credentials:"include" }),
+  poll: (nonce, opts) => get("/auth/poll?nonce=" + encodeURIComponent(nonce), { ...opts, auth: false, bindSession:true, credentials:"include" }),
+  register: (email, password) => post("/auth/register", { email, password, lang: LANG }, { auth: false, bindSession:true, credentials:"include" }),
+  redeem: (code, username, password) => post("/auth/redeem", { code, username, password, lang: LANG }, { auth: false, bindSession:true, credentials:"include" }),
   requestReset: (email) => post("/auth/password-reset/request", { email, lang: LANG }, { auth: false }),
   confirmReset: (token, password) => post("/auth/password-reset/confirm", { token, password }, { auth: false }),
 };

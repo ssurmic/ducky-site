@@ -184,16 +184,17 @@ export async function mount(root, params = {}) {
     pw.appendChild(el("p.small", el("a", { href: "#/forgot" }, s("recovery.forgot"))));
     account.appendChild(pw);
 
-    if (providers.google) {
-      const section = el("section.pwsec", el("h2", s("google.title")), el("p.muted.small", s("google.link_hint")));
-      if (prof.google_linked) section.append(el("p.ok", s("google.linked")));
+    for(const provider of ["google","x"]) {
+      if(!providers[provider])continue;
+      const section = el("section.pwsec", el("h2", s(provider+".title")), el("p.muted.small", s(provider+".link_hint")));
+      if (prof[provider+"_linked"]) section.append(el("p.ok", s(provider+".linked")));
       else {
-        const link = el("button.btn.btn-ghost", { type: "button" }, s("google.link"));
+        const link = el("button.btn.btn-ghost", { type: "button" }, s(provider+".link"));
         link.addEventListener("click", async () => {
           if (link.disabled) return;
           link.disabled = true;
-          try { const result = await api.auth.googleLink(); window.location.assign(result.url); }
-          catch (_) { toast(s("google.failed"), "err"); link.disabled = false; }
+          try { const result = await (provider==="x"?api.auth.xLink():api.auth.googleLink()); window.location.assign(result.url); }
+          catch (_) { toast(s(provider+".failed"), "err"); link.disabled = false; }
         });
         section.append(link);
       }

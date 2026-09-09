@@ -5,6 +5,7 @@ import * as api from "./api.js";
 import * as router from "./router.js";
 import * as store from "./store.js";
 import * as ui from "./ui.js";
+import {renderAccountAvatar} from "./account-avatar.js";
 import { s } from "./strings.js";
 import { rememberTarget, takeTarget, safeTarget, signedInTarget, needsEmailSetup } from "./login-target.js";
 
@@ -15,7 +16,7 @@ async function boot() {
 
   const logoutBtn = document.getElementById("logout");
   if (logoutBtn) logoutBtn.addEventListener("click", (e) => { e.preventDefault(); auth.logout(); });
-  store.subscribe("me", (me) => { ui.renderTierBadge(); if (logoutBtn) logoutBtn.hidden = !me || tg.inTG; });
+  store.subscribe("me", (me) => { renderAccountAvatar(me); ui.renderTierBadge(); if (logoutBtn) logoutBtn.hidden = !me || tg.inTG; });
 
   let ok = false;
   const requested = location.hash;

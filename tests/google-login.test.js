@@ -45,7 +45,7 @@ test('Google cancellation makes no session request and shows a retry route',asyn
 test('email registration checks confirmation then sends one request and returns to verification',async()=>{
   store.set('token',null);let registrations=0;
   globalThis.fetch=async(url,opts)=>{
-    if(url.endsWith('/auth/register')) {registrations++;assert.equal(opts.credentials,'omit');return reply({token:'signup-token',email_sent:true});}
+    if(url.endsWith('/auth/register')) {registrations++;assert.equal(opts.credentials,'include');return reply({token:'signup-token',email_sent:true});}
     return reply(url.endsWith('/me')?{user_id:15}: {items:[]});
   };
   const root=document.createElement('div');document.body.append(root);await register.mount(root);

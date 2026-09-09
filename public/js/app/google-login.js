@@ -6,9 +6,11 @@ import {el} from './ui.js';
 
 export function googleLogin({signal}={}) {
   const link=el('a.btn.google-login',{href:api.base()+'/auth/google/start?lang='+LANG},s('google.continue'));
+  const xlink=el("a.btn.x-login",{href:api.base()+"/auth/x/start?lang="+LANG},s("x.continue"));
+  xlink.hidden=true;
   const retry=el('button.btn.google-login',{type:'button','data-google-retry':''},s('google.loading'));
   const status=el('p.muted.small',{'role':'status'},s('google.scope'));
-  const element=el('div.google-login-block',link,retry,status);
+  const element=el('div.google-login-block',link,xlink,retry,status);
   let disposed=false,busy=false,cancelAttempt=null;
   link.hidden=true;
 
@@ -30,7 +32,9 @@ export function googleLogin({signal}={}) {
       const config=await Promise.race([api.auth.providers({signal:controller.signal,timeout:5000}),deadline]);
       if(disposed)return;
       if(typeof config?.google!=='boolean')throw new Error('invalid_provider_response');
-      element.hidden=!config.google;
+      element.hidden=!config.google&&!config.x;
+      xlink.hidden=!config.x;
+      status.textContent=s(config.x?"x.scope":"google.scope");
       link.hidden=!config.google;retry.hidden=true;
     } catch (_) {
       if(disposed)return;
