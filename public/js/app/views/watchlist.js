@@ -58,7 +58,7 @@ export async function mount(root) {
   });
   filterPicker.wrap.classList.add('watch-search');unsubs.push(filterPicker.dispose);
   const sorting = el('select.input',{'aria-label':s('watch.sort'),onchange:()=>{sort=sorting.value;render();}},
-    ...['market_cap','change_pct','ticker'].map(key=>el('option',{value:key},s('watch.sort_'+key))));
+    ...['market_cap','change_pct','ytd','drawdown','relative','iv_hv','attention','degen','ticker'].map(key=>el('option',{value:key},s('watch.sort_'+key))));
   const controls = el('div.watch-controls',modes,filterPicker.wrap,sorting,el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:load},s('watch.refresh')));
   function renderOffer() {
     clear(offer);

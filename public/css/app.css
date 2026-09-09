@@ -1618,3 +1618,61 @@ html[data-theme=dark] .study-group{--study-bull:#47df98;--study-bear:#f18b9b}
 .account-avatar img { position:absolute; inset:1px; width:32px; height:32px; border-radius:50%; object-fit:cover; }
 .account-avatar:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
 .x-login { justify-content:center; }
+
+/* Watchlist comparison: analytical fields occupy the former identity-column gap. */
+.watch-rich-entry{grid-template-columns:minmax(0,1fr)104px}
+.watch-rich-entry>.watch-row{grid-template-columns:minmax(158px,1.8fr) repeat(6,minmax(80px,1fr)) minmax(94px,1.1fr);gap:12px;padding:16px;align-items:center}
+.watch-rich-entry .watch-identity-title{flex-wrap:wrap;gap:5px 8px}
+.watch-rich-entry .watch-identity strong{font-size:16px;letter-spacing:.025em}
+.watch-rich-entry .watch-industry{font-size:12px;padding:3px 5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.watch-rich-entry .watch-company{font-size:11px;line-height:1.45}
+.watch-stock-cap{color:var(--muted);font-size:11px;line-height:1.5}
+.watch-metric,.watch-quote{display:flex;flex-direction:column;align-items:flex-end;gap:5px;min-width:0;text-align:right}
+.watch-metric-value{font-size:16px;font-weight:600;line-height:1.25;font-variant-numeric:tabular-nums;letter-spacing:-.025em;white-space:nowrap}
+.watch-metric-label{display:none;color:var(--muted);font-size:11px;font-weight:400;line-height:1.4}
+.watch-metric-note{color:var(--muted);font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+.watch-metric-status{color:var(--muted);font-size:12px;line-height:1.4}
+.watch-rich-entry .watch-row-price{font-size:16px;line-height:1.3}
+.watch-rich-entry .watch-change{font-size:11px;line-height:1.35;padding:3px 6px;align-self:flex-end}
+.watch-rich-entry .watch-columns{min-height:44px;font-size:12px;line-height:1.5;padding-block:12px}
+.watch-rich-entry .watch-columns>span:not(:first-child){text-align:right}
+.watch-attention-high{color:var(--orange)}
+.watch-metric[data-status=stale] .watch-metric-value,.watch-metric[data-status=expired] .watch-metric-value,.watch-metric[data-status=outside_latest_sample] .watch-metric-value{color:var(--muted)}
+.watch-metric-method{margin:18px 0 12px;color:var(--muted);font-size:12px}
+.watch-metric-method>summary,.watch-metric-source>summary{min-height:36px;display:list-item;align-content:center;cursor:pointer}
+.watch-metric-method p{max-width:90ch;line-height:1.7;margin:8px 0}
+.watch-metric-source{padding:4px 12px;border-top:1px solid var(--border)}
+.watch-metric-source dl{display:grid;grid-template-columns:130px 1fr;gap:8px 16px;font-size:11px;overflow-wrap:anywhere}
+.watch-metric-source dd{margin:0}
+.watch-metric-source>a{display:inline-block;margin:8px 0;font-size:12px}
+@container(max-width:1160px){
+  .watch-rich-entry{grid-template-columns:minmax(0,1fr)96px}
+  .watch-rich-entry>.watch-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 20px;padding:16px;min-height:0}
+  .watch-rich-entry .watch-identity{grid-column:1/3;grid-row:1}
+  .watch-rich-entry .watch-quote{grid-column:3;grid-row:1}
+  .watch-rich-entry .watch-metric{align-items:flex-start;text-align:left;padding-top:10px;border-top:1px solid var(--border);gap:4px}
+  .watch-rich-entry .watch-metric-label{display:block}
+  .watch-rich-entry .watch-industry{display:inline}
+  .watch-rich-entry .watch-stock-cap{display:block}
+  .watch-rich-entry.watch-columns-entry{display:none}
+  .watch-rich-entry .watch-map-link{align-self:start;margin-top:20px}
+}
+@container(max-width:620px){
+  .watch-rich-entry{grid-template-columns:minmax(0,1fr)}
+  .watch-rich-entry>.watch-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 10px;padding:14px;min-height:0}
+  .watch-rich-entry .watch-identity{grid-column:1/3;grid-row:1}
+  .watch-rich-entry .watch-quote{grid-column:3;grid-row:1}
+  .watch-rich-entry .watch-identity strong{font-size:16px}
+  .watch-rich-entry .watch-identity-title{display:flex;align-items:flex-start;flex-direction:column}
+  .watch-rich-entry .watch-metric-value{font-size:16px}
+  .watch-rich-entry .watch-metric-note,.watch-rich-entry .watch-metric-status{font-size:11px}
+  .watch-rich-entry .watch-map-link{flex-direction:row;justify-self:end;align-self:auto;min-height:40px;margin:0 14px 14px;padding:8px 12px}
+  .watch-metric-source dl{grid-template-columns:1fr;gap:5px}
+  .watch-metric-source dd{margin-bottom:8px}
+}
+
+@container(max-width:320px){
+ .watch-rich-entry>.watch-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .watch-rich-entry .watch-identity{grid-column:1;grid-row:1}
+ .watch-rich-entry .watch-quote{grid-column:2;grid-row:1}
+}

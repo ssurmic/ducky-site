@@ -199,3 +199,27 @@ test('list and heatmap label retained exact-session closes without turning missi
   assert.match(view.querySelector('.watch-method').textContent,/2026-09-08T21:00:00Z/);
  }
 });
+
+test('six comparison metrics retain zero, missing samples, losses and individual clocks',()=>{
+ const r={...row('AVGO',1e9),metrics:{
+  ytd:{value:0,status:'ready',as_of:'2026-09-08',start:'2025-12-31'},
+  drawdown:{value:-24.2,status:'stale',as_of:'2026-09-04:CLOSED'},
+  relative:{value:-7.3,status:'ready',symbols:['MRVL','CRDO']},
+  iv_hv:{value:.73,status:'ready',iv:32.1,hv:44.2,expiry:'2026-09-16'},
+  attention:{value:16,status:'ready'},degen:{value:null,status:'insufficient'}}};
+ const view=overviewView([r],{view:'list',onSelect:()=>{}});
+ const cells=view.querySelectorAll('.watch-metric');assert.equal(cells.length,6);
+ assert.match(cells[0].textContent,/0.0%/);assert.match(cells[1].textContent,/-24.2%.*Earlier data.*2026-09-04/);
+ assert.match(cells[2].textContent,/-7.3 pp.*MRVL \/ CRDO/);
+ assert.match(cells[3].textContent,/0.73×.*IV below HV.*09\/16/);
+ assert.match(cells[5].textContent,/—.*Insufficient data/);assert.doesNotMatch(cells[5].textContent,/0 \/ 100/);
+ assert.match(view.querySelector('.watch-metric-method').textContent,/IV 32.1% \/ HV20 44.2%.*2026-09-16/);
+ assert.match(view.querySelector('.watch-row[data-open]').getAttribute('aria-label'),/YTD return · 0.0%/);
+ assert.equal(view.querySelectorAll('button a, a button').length,0);
+});
+
+test('metric sorting puts valid zero and losses ahead of missing or stale comparisons',()=>{
+ const rows=[['LOSS',-5,'ready'],['MISSING',null,'missing'],['FLAT',0,'ready'],['OLD',50,'stale']].map(([t,v,status])=>({...row(t,1e9),metrics:{ytd:{value:v,status}}}));
+ const view=overviewView(rows,{view:'list',sort:'ytd',onSelect:()=>{}});
+ assert.deepEqual([...view.querySelectorAll('button.watch-row')].map(n=>n.dataset.open),['FLAT','LOSS','MISSING','OLD']);
+});
