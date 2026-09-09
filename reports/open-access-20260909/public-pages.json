@@ -3,108 +3,126 @@
     "route": "/app/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/disclaimer/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/en/app/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/en/disclaimer/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/en/idea/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/en/ideas/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/en/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/en/privacy/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/en/research-records/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/en/track-record/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/en/trending/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/idea/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/ideas/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/privacy/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/research-records/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/track-record/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   },
   {
     "route": "/trending/",
     "status": 200,
     "bad": [],
-    "paidLinks": 0
+    "paidLinks": 0,
+    "version": true
   }
 ]
