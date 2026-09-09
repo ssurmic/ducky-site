@@ -9,7 +9,11 @@ const response=body=>new Response(JSON.stringify(body),{headers:{'content-type':
 const flush=async()=>{for(let i=0;i<8;i++)await new Promise(r=>setTimeout(r,0));};
 function fixture(lang=''){
  const dom=new JSDOM(readFileSync(`dist/${lang}index.html`,'utf8'),{url:'https://ducky.test/',pretendToBeVisual:true});
- const doc=dom.window.document,root=doc.querySelector('[data-duck-orbit]');
+  const doc=dom.window.document,root=doc.querySelector('[data-duck-orbit]');
+  // The build embeds today's real closes. A fixed-clock test must not compare
+  // its September 4 fixture against a newer September 8 production receipt.
+  root.querySelector('[data-desk-quotes]').textContent=JSON.stringify(Object.fromEntries(
+    [...root.querySelectorAll('[data-quote]')].map(card=>[card.dataset.quote,value(card.dataset.quote)])));
  return {dom,doc,root};
 }
 
@@ -22,7 +26,7 @@ test('verified close uses completed sessions and expires the verification, not t
  assert.equal(quoteModel({...input,session_context:{...input.session_context,expected_session:'2026-09-08',status:'stale'}},'NVDA',{now:noon}).status,'stale');
  assert.equal(quoteModel({...input,session_context:{...input.session_context,basis:'recorded_provider_quote'}},'NVDA',{now:noon}).status,'unchecked');
 });
-test('homepage keeps the close label, retries an outage online, and drops late work on dispose',async()=>{
+test('homepage keeps the close label, retries an outage online, and drops late work on dispose',async t=>{
  for(const lang of ['', 'en/']){
   const {dom,root}=fixture(lang);let offline=true,calls=0,resolve,clock=noon;
   const cleanup=mountQuotes(root,{now:()=>clock,fetcher:async(url,opts)=>{
@@ -32,6 +36,7 @@ test('homepage keeps the close label, retries an outage online, and drops late w
    if(resolve==='pending')return new Promise(r=>resolve=r);
    return response(value(ticker,clock));
   }});
+  t.after(()=>{cleanup();dom.window.close();});
   await flush();assert.equal(calls,3);
   for(const card of root.querySelectorAll('[data-quote]')){
    assert.match(card.querySelector('[data-quote-date]').textContent,lang?/close/:/收盘/);
@@ -48,7 +53,7 @@ test('homepage keeps the close label, retries an outage online, and drops late w
   await flush();assert.equal(root.textContent,before);dom.window.close();
  }
 });
-test('periodic public close reads pause while hidden and reject an older returned session',async()=>{
+test('periodic public close reads pause while hidden and reject an older returned session',async t=>{
  const {dom,doc,root}=fixture();let tick,hidden=false,clock=noon,old=false,calls=0;
  Object.defineProperty(doc,'hidden',{get:()=>hidden});
  dom.window.setInterval=fn=>{tick=fn;return 1;};dom.window.clearInterval=()=>{};
@@ -56,6 +61,7 @@ test('periodic public close reads pause while hidden and reject an older returne
   calls++;const ticker=new URL(url).pathname.split('/').at(-1).replace('.json','');
   return response(value(ticker,clock,old?'2026-09-03':'2026-09-04',old?999:100));
  }});
+ t.after(()=>{cleanup();dom.window.close();});
  await flush();assert.equal(calls,3);
  hidden=true;clock+=5*60000;tick();await flush();assert.equal(calls,3);
  hidden=false;old=true;doc.dispatchEvent(new dom.window.Event('visibilitychange'));await flush();assert.equal(calls,6);
