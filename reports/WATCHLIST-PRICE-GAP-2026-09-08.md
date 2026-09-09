@@ -22,4 +22,19 @@ Artifacts in `watchlist-price-gap-20260908/` are synthetic, not user account dat
 The backend companion passed 4,162 tests / 6 skips with ALL GREEN and architecture lint
 0/0. A read-only preview against the production store took 0.165 seconds for 54 shared
 watched tickers: 48 retained, 5 current, 1 still missing. That is a backend preview, not a
-claim of production publication or a live-feed SLA. Publication receipts follow after deploy.
+claim of production publication or a live-feed SLA.
+
+Production release completed: backend `84e30a1e16ddbd40e5e105a878a39c94247f552d`, frontend
+`cfc646f2200c5b9c519fe76ba25e460cfc99321b`, Pages `9f8a6fb7`. Exact backend CI 34301894195
+and frontend CI 34302073166 passed. The original backend release wrapper verified recovery
+backup `recovery-20260909T021612768502Z-3c44b560`, passed API health and restored timers.
+The existing company-context producer rebuilt the shared overview without provider/model
+work. UBER lacked an accepted same-day close; one retry after the existing deadline returned
+21 accepted bars, including September 8 close 73.13, and the producer republished it.
+
+Actual production account verification: all 36 watchlist entries and heatmap tiles have
+prices, including NVDA 225.73, GOOGL 338.36, META 613.48 and UBER 73.13. Chinese/English
+393px mobile layouts and English 1200px desktop showed no horizontal overflow or browser
+errors. Production screenshots were inspected but are not committed as synthetic fixtures.
+The full 54-ticker shared watched scope also has prices; 41 retained / 13 ready at the later
+check, with ordinary background retries continuing. No user watchlist was changed.
