@@ -54,7 +54,22 @@ test('capacity limits explain replacement without a purchase option',()=>{
  const modal=document.getElementById('modal');
  assert.ok(modal.textContent.includes('30'));
  assert.equal(modal.querySelector('a[href="#/billing"]'),null);
- ui.closeModal();
+  ui.closeModal();
+});
+
+test('an old API 402 during deployment is a loading failure, not a capacity claim',async()=>{
+ store.set('me',{tier:'free',access:{billing_enabled:false}});
+ store.set('token','local-test-only');
+ api.setPaymentRequiredHandler(ui.upsell);
+ globalThis.fetch=async()=>new Response(JSON.stringify({error:'pro_required'}),{status:402,headers:{'content-type':'application/json'}});
+ await assert.rejects(api.kol.feed(),e=>e.status===402);
+ const dialog=document.querySelector('[role="dialog"]');
+ assert.match(dialog.textContent,/Couldn’t load this page/);
+ assert.doesNotMatch(dialog.textContent,/limit|upgrade|Pro|subscription/i);
+ assert.equal(dialog.querySelectorAll('.modal-actions button').length,1);
+ assert.equal(dialog.querySelectorAll('.modal-actions a').length,1);
+ assert.equal(dialog.querySelector('.modal-actions a').textContent,'Refresh page');
+ ui.closeModal();api.setPaymentRequiredHandler(null);
 });
 
 test('built pages have no subscription entry, pricing comparison or account badge',()=>{

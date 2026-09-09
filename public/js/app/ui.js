@@ -172,9 +172,11 @@ export function confirm(text) {
 export function upsell(info) {
   info = info || {};
   if (!store.billingEnabled()) {
-    modal(s('access.limit_title'), el('p', Number.isFinite(info.cap)
-      ? s('access.limit_body', {cap:info.cap}) : s('access.unavailable')),
-      [{label:s('common.close')}]);
+    const capped = Number.isFinite(info.cap) && info.cap > 0 &&
+      ['watch_limit','alert_limit','creator_limit','evidence_limit','screen_limit'].includes(info.error);
+    modal(s(capped ? 'access.limit_title' : 'access.unavailable_title'),
+      el('p', capped ? s('access.limit_body', {cap:info.cap}) : s('access.unavailable')),
+      capped ? [] : [{label:s('access.refresh'),primary:true,onclick:()=>window.location.reload()}]);
     return;
   }
   const feature = info.feature || ({watch_limit:'watches',alert_limit:'alerts',creator_limit:'creators',evidence_limit:'evidence'}[info.error]);

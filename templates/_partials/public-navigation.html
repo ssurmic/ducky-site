@@ -22,12 +22,12 @@
       {% endfor %}
      </div>
      <div class="public-menu-footer"><p>{{ t('nav.access_note') }}</p><div><a href="{{ url('/track-record/') }}">{{ t('nav.history') }}</a><a href="{{ url('/') }}#faq">{{ t('nav.help') }}</a></div></div>
-     <div class="public-mobile-account"><a class="btn btn-ghost" href="{{ url('/app/') }}">{{ t('nav.signin') }}</a><a class="lang-toggle" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle aria-label="{{ t('nav.lang_toggle_aria') }}">{{ t('nav.lang_toggle') }}</a></div>
+     <div class="public-mobile-account"><a class="btn btn-ghost" href="{{ url('/app/') }}">{{ t('nav.cta_bot') }}</a><a class="lang-toggle" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle aria-label="{{ t('nav.lang_toggle_aria') }}">{{ t('nav.lang_toggle') }}</a></div>
     </div>
    </details>
    <a class="public-top-link" href="{{ url('/') }}#desk-feature-creators">{{ t('nav.creators') }}</a>
    <a class="public-top-link" href="{{ url('/') }}#home-dossier" data-home-open aria-haspopup="dialog">{{ t('nav.examples') }}</a>
   </nav>
-  <div class="public-nav-actions"><a class="lang-toggle mono public-language" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle aria-label="{{ t('nav.lang_toggle_aria') }}">{{ t('nav.lang_toggle') }}</a><a class="public-signin public-desktop-action" href="{{ url('/app/') }}">{{ t('nav.signin') }}</a><a class="btn btn-primary public-start" href="{{ url('/app/') }}#/register">{{ t('nav.cta_bot') }}</a></div>
+  <div class="public-nav-actions"><a class="lang-toggle mono public-language" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle aria-label="{{ t('nav.lang_toggle_aria') }}">{{ t('nav.lang_toggle') }}</a><a class="btn btn-primary public-start" href="{{ url('/app/') }}#/login">{{ t('nav.cta_bot') }}</a></div>
  </div>
 </header>
