@@ -2511,7 +2511,7 @@
   "app.social.meaning_insufficient": "任一期间不足 20 次提及或缺数据，暂不评分。",
   "app.social.mentions": "24 小时提及",
   "app.social.change": "较 24 小时前",
-  "app.social.rank": "来源排名",
+  "app.social.rank": "排名",
   "app.social.previous": "24 小时前提及次数",
   "app.social.upvotes": "来源净赞数",
   "app.social.rank_previous": "此前排名",
@@ -3761,5 +3761,18 @@
   "app.experience.allow_screens": "{cap} 个组合筛选",
   "app.experience.personal_stock": "研究 {ticker}",
   "app.screen.limit_reached": "免费账号可保存 1 个组合筛选；可替换已有筛选，或升级增加数量。",
-  "app.creatorrank.followed_scope": "仅展示你关注的博主；名次按所有符合条件的博主计算。"
+  "app.creatorrank.followed_scope": "仅展示你关注的博主；名次按所有符合条件的博主计算。",
+  "app.social.communities": "Reddit 社区",
+  "app.social.all_stocks": "股票总榜",
+  "app.social.ranking": "Reddit 24 小时讨论榜",
+  "app.social.mentions_short": "提及量",
+  "app.social.stock": "股票",
+  "app.social.trend": "近 30 天记录",
+  "app.social.trend_building": "历史累积中",
+  "app.social.trend_days": "{n} 天记录",
+  "app.social.community_note": "社区数据与总榜有重叠，不相加。曲线按已保存的每日记录绘制，缺失日期留空；提及量不代表看多或看空。",
+  "app.social.updated": "更新于 {date}",
+  "app.social.change_short": "24h 变化",
+  "app.social.votes_short": "净赞数",
+  "app.social.row_details": "详情"
 }

@@ -2511,7 +2511,7 @@
   "app.social.meaning_insufficient": "Below 20 mentions in either window, or missing data. No score.",
   "app.social.mentions": "Mentions · 24h",
   "app.social.change": "Change vs 24h ago",
-  "app.social.rank": "Source rank",
+  "app.social.rank": "Rank",
   "app.social.previous": "Mentions 24h ago",
   "app.social.upvotes": "Reported net votes",
   "app.social.rank_previous": "Prior rank",
@@ -3761,5 +3761,18 @@
   "app.experience.allow_screens": "{cap} saved screens",
   "app.experience.personal_stock": "Research {ticker}",
   "app.screen.limit_reached": "Your Free account includes 1 saved screen. Replace it or upgrade to save more.",
-  "app.creatorrank.followed_scope": "Showing your followed creators. Ranks are based on all eligible creators."
+  "app.creatorrank.followed_scope": "Showing your followed creators. Ranks are based on all eligible creators.",
+  "app.social.communities": "Reddit communities",
+  "app.social.all_stocks": "All stocks",
+  "app.social.ranking": "Stocks discussed on Reddit · 24h",
+  "app.social.mentions_short": "Mentions",
+  "app.social.stock": "Stock",
+  "app.social.trend": "Past 30 days",
+  "app.social.trend_building": "History building",
+  "app.social.trend_days": "{n} recorded days",
+  "app.social.community_note": "Community counts overlap with the total. Trends use saved daily observations, with gaps left empty. Mentions do not measure bullish or bearish sentiment.",
+  "app.social.updated": "Updated {date}",
+  "app.social.change_short": "24h change",
+  "app.social.votes_short": "Net votes",
+  "app.social.row_details": "Details"
 }

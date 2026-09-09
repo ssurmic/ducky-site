@@ -92,3 +92,41 @@ test('detection price snapshots keep real zero and do not turn overheating into 
  assert.doesNotMatch(card.textContent,/Publication reference/);
  assert.match(card.textContent,/20-session window after detection/);
 });
+
+test('community selection scopes requests, history and language navigation; late results are discarded',async()=>{
+ store.set('me',{tier:'free'});let finishStocks;const urls=[];
+ globalThis.fetch=async url=>{
+  urls.push(String(url));const q=new URL(String(url),'https://ducky.test').searchParams;
+  if(String(url).includes('/history'))return response({items:[row],next_cursor:null});
+  if(q.get('subreddit')==='stocks')return new Promise(resolve=>{finishStocks=resolve;});
+  return response({...doc,community:q.get('subreddit')||'all-stocks',items:[{...row,mentions:q.get('subreddit')==='options'?7:1000}]});
+ };
+ const root=document.createElement('div');document.body.append(root);const clean=await mountSocial(root);
+ root.querySelector('[data-community="stocks"]').click();await flush();
+ root.querySelector('[data-community="options"]').click();await flush();
+ assert.equal(root.querySelector('[data-community="options"]').getAttribute('aria-pressed'),'true');
+ assert.match(location.hash,/subreddit=options/);assert.match(root.querySelector('.social-rank-summary').textContent,/7/);
+ finishStocks(response({...doc,community:'stocks',items:[{...row,ticker:'WRONG'}]}));await flush();
+ assert.doesNotMatch(root.textContent,/WRONG/);
+ root.querySelector('.social-evidence button').click();await flush();
+ assert.ok(urls.at(-1).includes('subreddit=options'));
+ clean();root.remove();
+});
+
+test('rank table shows provider rank order even when attention score order differs',async()=>{
+ globalThis.fetch=async()=>response({...doc,items:[{...row,rank:2,index:100},{...row,ticker:'MU',rank:1,index:50}]});
+ const root=document.createElement('div');const clean=await mountSocial(root);
+ assert.match(root.querySelector('.social-rank-summary').textContent,/MU/);
+ assert.ok(root.querySelector('.social-rank-map a[href*="source="]'));clean();
+});
+
+test('recorded trend distinguishes cold start, real zero and missing days',async()=>{
+ const {attentionTrend}=await import('../public/js/app/views/social-ranking.js');
+ assert.equal(attentionTrend([{at:'2026-09-08T12:00:00Z',mentions:2}]).querySelector('svg'),null);
+ const chart=attentionTrend([{at:'2026-09-01T12:00:00Z',mentions:0},{at:'2026-09-03T12:00:00Z',mentions:10}]);
+ assert.equal(chart.querySelectorAll('circle').length,2);assert.equal(chart.querySelectorAll('path').length,0);
+ assert.match(chart.textContent,/2026-09-01 · 0/);
+ const {safeTarget}=await import('../public/js/app/login-target.js');
+ assert.equal(safeTarget('#/vibe?subreddit=stocks&token=secret'),'#/vibe?subreddit=stocks');
+ assert.equal(safeTarget('#/boards?board=social&subreddit=options'),'#/boards?board=social&subreddit=options');
+});

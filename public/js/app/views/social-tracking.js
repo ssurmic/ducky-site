@@ -7,6 +7,8 @@ import { dateTime } from './creator-research.js';
 import {eventPriceSnapshot} from './event-price-snapshot.js';
 import { socialHistoryChart } from './social-history-chart.js';
 import { directionReading, generalVibe } from './vibe-direction.js';
+import {communities,communityName} from '../social-communities.js';
+import {rankingRow} from './social-ranking.js';
 
 export function filterSocial(items, query='', scope='all', watches=[]) {
   const q=query.trim().replace(/^\$/,'').toLowerCase();
@@ -55,11 +57,13 @@ export function socialCard(row,{stale=false,onHistory}={}) {
 export async function mountSocial(root,route={}) {
   const degen=route.view==='degen', standalone=['degen','vibe'].includes(route.view);
   const ctl=new AbortController(), epoch=store.epoch();let alive=true,doc=null,watchState='unloaded',watches=[],expiry=null;
+  let subreddit=communities.includes(route.query?.get('subreddit'))?route.query.get('subreddit'):'all-stocks',loadVersion=0;
   let viewQuery=route.query?.get('ticker')||'',viewScope=['all','hot','watchlist'].includes(route.query?.get('scope'))?route.query.get('scope'):(degen?'hot':'all');
   function syncFilterUrl(){
     const params=new URLSearchParams(standalone?{}:{board:'social'});
     if(viewQuery.trim())params.set('ticker',viewQuery.trim());
     if(viewScope!=='all'||degen)params.set('scope',viewScope);
+    if(subreddit!=='all-stocks')params.set('subreddit',subreddit);
     const hash=(standalone?'#/vibe':'#/boards')+(params.size?'?'+params:'');
     history.replaceState(null,'',location.pathname+location.search+hash);
     for(const a of document.querySelectorAll('[data-lang-toggle]')){
@@ -70,19 +74,31 @@ export async function mountSocial(root,route={}) {
   route.signal?.addEventListener('abort',cleanup,{once:true});
   const valid=()=>alive&&!ctl.signal.aborted&&epoch===store.epoch();
   const page=el('section.radar-workspace.social-workspace');root.append(page);
-  page.append(el('header.radar-heading',el('div',el('p.social-eyebrow',el('a',{href:'#/opportunities'},s('nav.opportunities')),' / '+s('boards.t_social')),
-    el('h1',s('social.title')),el('p.muted',s('social.description')))));
+  page.append(el('header.radar-heading',el('h1',s('social.title'))));
   const method=el('details.social-method',el('summary',s('social.method')),
     el('div.social-platforms',el('span',s('social.reddit_source')),el('span.muted',s('social.x_unavailable'))),
     el('p',s('social.merged')),el('p',s('social.formula')),el('p',s('social.threshold')),el('p',s('social.limits')),
     el('p.small.muted',s('social.no_forecast')),source('https://apewisdom.io/methodology/','social.provider_method'));
   page.append(method);
+  const tabs=el('nav.social-communities',{'aria-label':s('social.communities')});
+  for(const scope of communities)tabs.append(el('button.btn.btn-ghost',{type:'button','data-community':scope,
+    'aria-pressed':String(scope===subreddit),onclick:()=>{
+      if(scope===subreddit)return;
+      subreddit=scope;syncFilterUrl();
+      for(const b of tabs.querySelectorAll('button'))b.setAttribute('aria-pressed',String(b.dataset.community===scope));
+      load();
+    }},communityName(scope)||s('social.all_stocks')));
+  page.insertBefore(tabs,method);
   const content=el('div');page.insertBefore(content,method);
   async function load() {
+    const version=++loadVersion,scope=subreddit;
+    clearTimeout(expiry);
     clear(content);content.append(el('p',{role:'status'},s('common.loading')));
     try {
-      doc=await api.get('/radar/social.json',{signal:ctl.signal,silent402:true});
-      if(!valid())return;
+      const result=await api.get('/radar/social.json'+(scope==='all-stocks'?'':'?subreddit='+encodeURIComponent(scope)),{signal:ctl.signal,silent402:true});
+      if(!valid()||version!==loadVersion)return;
+      doc=result;
+      if(doc.community&&doc.community!==scope)throw new Error('wrong_community');
       if(!Array.isArray(doc?.items)||!['ready','stale','unavailable'].includes(doc.status))throw new Error('invalid_response');
       clearTimeout(expiry);
       if(doc.status==='ready' && doc.stale_after_seconds && doc.collected_at) {
@@ -92,7 +108,7 @@ export async function mountSocial(root,route={}) {
       }
       render();
     } catch(e) {
-      if(!valid())return;clear(content);
+      if(!valid()||version!==loadVersion)return;clear(content);
       content.append(el('section.card.social-empty',el('h2',s(e.status===402?'social.lock_title':'social.load_error')),
         e.status===402?el('a.btn.btn-primary',{href:'#/billing'},s('radar.access_upgrade')):
           el('button.btn.btn-ghost',{type:'button',onclick:load},s('common.retry'))));
@@ -100,7 +116,6 @@ export async function mountSocial(root,route={}) {
   }
   function render() {
     clear(content);
-    content.append(generalVibe());
     const stale=doc.status==='stale';
     if(doc.status==='unavailable') {
       content.append(el('section.card.social-empty',el('h2',s('social.unavailable')),el('p',s('social.unavailable_note')),
@@ -112,12 +127,13 @@ export async function mountSocial(root,route={}) {
     method.querySelector('.social-observed')?.remove();
     method.append(el('p.small.muted.social-observed',s('social.collected',{date:dateTime(doc.collected_at)})));
     if(stale)content.append(el('p.social-stale',{role:'status'},s('social.stale')));
-    content.append(el('h2.vibe-stocks-title',s('social.stock_vibe')));
+    content.append(el('div.social-ranking-heading',el('h2.vibe-stocks-title',s('social.ranking')),
+      el('p.small.muted',s('social.updated',{date:dateTime(doc.collected_at)}))));
     const query=el('input.input',{type:'search','aria-label':s('social.search'),placeholder:s('social.search')});
     query.value=viewQuery;
     const scope=el('select.input',{'aria-label':s('social.filter')},...['all','hot','watchlist'].map(v=>el('option',{value:v},s('social.filter_'+v))));
     scope.value=viewScope;
-    const list=el('div.social-grid'),count=el('p.small.muted',{role:'status','aria-live':'polite'});
+    const list=el('div.social-ranking'),count=el('p.small.muted',{role:'status','aria-live':'polite'});
     const update=()=>{
       viewQuery=query.value;viewScope=scope.value;
       clear(list);
@@ -126,9 +142,10 @@ export async function mountSocial(root,route={}) {
         if(watchState==='error')list.append(el('button.btn.btn-ghost',{type:'button',onclick:loadWatches},s('common.retry')));
         return;
       }
-      const rows=filterSocial(doc.items,query.value,scope.value,watches);
+      const rows=filterSocial(doc.items,query.value,scope.value,watches).sort((a,b)=>a.rank-b.rank);
       count.textContent=s('social.results',{n:rows.length});
-      for(const row of rows)list.append(socialCard(row,{stale,onHistory:loadHistory}));
+      if(rows.length)list.append(el('div.social-rank-columns',...['rank','stock','mentions_short','change','upvotes','trend'].map(k=>el('span',s('social.'+k)))));
+      for(const row of rows)list.append(rankingRow(row,{samples:doc.trends?.items?.[row.ticker]||[],details:socialCard(row,{stale,onHistory:loadHistory})}));
       if(!rows.length)list.append(el('div.social-empty',el('h2',s('social.no_match')),el('p.muted',s('social.no_match_note'))));
     };
     async function loadWatches() {
@@ -148,15 +165,17 @@ export async function mountSocial(root,route={}) {
       if(scope.value==='watchlist' && watchState==='unloaded')loadWatches();else update();
     });
     content.append(el('div.social-filters',el('label',el('span',s('social.search')),query),el('label',el('span',s('social.filter')),scope)),count,list);
+    content.append(el('p.small.muted',s('social.community_note')),
+      el('details.social-general-details',el('summary',s('social.general')),generalVibe()));
     update();
     if(viewScope==='watchlist' && watchState==='unloaded')loadWatches();
   }
   async function loadHistory(ticker,host,button) {
     button.disabled=true;
     try {
-      const params=new URLSearchParams({ticker,limit:'10'});if(host.dataset.cursor)params.set('before',host.dataset.cursor);
+      const scope=subreddit,params=new URLSearchParams({ticker,limit:'10',subreddit:scope});if(host.dataset.cursor)params.set('before',host.dataset.cursor);
       const data=await api.get('/radar/social/history.json?'+params,{signal:ctl.signal,silent402:true});
-      if(!valid() || !host.isConnected)return;
+      if(!valid() || !host.isConnected||scope!==subreddit)return;
       if(!Array.isArray(data?.items))throw new Error('invalid_response');
       host.querySelector('.social-history-error')?.remove();
       if(!host.childElementCount)host.append(el('p.small.muted',s('social.history_note')));

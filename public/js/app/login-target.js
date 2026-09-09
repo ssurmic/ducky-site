@@ -3,6 +3,7 @@
 // Never store arbitrary queries, credentials or private draft data.
 import { creatorRoute, creatorTarget } from './creator-route.js';
 import { evidenceHref } from './evidence-route.js';
+import {communities} from './social-communities.js';
 const KEY = "ducky.login-target";
 const MAX_AGE = 20 * 60 * 1000;
 const SIMPLE = new Set(["watchlist", "alerts", "billing", "profile", "creators", "calendar", "boards", "reports", "opportunities", "degen", "vibe", "ducky", "market", "macro", "screens"]);
@@ -36,6 +37,7 @@ export function safeTarget(hash) {
     if (q.get('board') === 'social') {
       const target = new URLSearchParams({board:'social'}), ticker = (q.get('ticker') || '').toUpperCase();
       if (/^[A-Z][A-Z0-9.-]{0,11}$/.test(ticker)) target.set('ticker', ticker);
+      if(communities.includes(q.get('subreddit')))target.set('subreddit',q.get('subreddit'));
       return '#/boards?' + target;
     }
     if (['oversold','insider-oversold','institution-oversold'].includes(screen)) return '#/boards?screen=' + screen;
@@ -58,6 +60,7 @@ export function safeTarget(hash) {
     const ticker=(query.get('ticker')||'').toUpperCase();
     if(/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker))target.set('ticker',ticker);
     if(['hot','watchlist','all'].includes(query.get('scope')))target.set('scope',query.get('scope'));
+    if(communities.includes(query.get('subreddit')))target.set('subreddit',query.get('subreddit'));
     return path+(target.size?'?'+target:'');
   }
   if (path === '#/alerts' || path === '#/calendar') {
