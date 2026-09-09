@@ -3782,7 +3782,7 @@
   "app.access.unavailable": "Please refresh the page and try again.",
   "app.api.billing_paused": "All features are available without a subscription.",
   "community.title": "Built with love. Open to everyone.",
-  "community.body": "This little duck runs on love and tokens. If it helps, treat it to a coffee. Come hang out with us, too.",
+  "community.body": "This duck runs on love. Tokens and data, though? Those come with a bill. If Ducky helps you out, a coffee keeps the little wings flapping.",
   "community.join": "Join the community",
   "community.telegram": "Find us on Telegram",
   "community.pet": "Pet the duck",
@@ -3801,5 +3801,12 @@
   "app.evidence.event_date": "Event date · {at}",
   "app.evidence.filing_date": "Disclosed · {at}",
   "app.evidence.event_short": "Event · {at}",
-  "app.evidence.historical_event": "This is a historical event; the date and reported action remain on record."
+  "app.evidence.historical_event": "This is a historical event; the date and reported action remain on record.",
+  "nav.coffee": "Buy me a coffee",
+  "community.crypto": "Treat the duck to some USDC",
+  "community.network": "Ethereum mainnet (ERC-20)",
+  "community.crypto_note": "Send USDC on Ethereum mainnet.",
+  "community.copy": "Copy address",
+  "community.copied": "Address copied. Quack!",
+  "community.copy_failed": "Couldn’t copy. Select the address above and copy it manually."
 }

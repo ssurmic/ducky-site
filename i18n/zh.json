@@ -3782,7 +3782,7 @@
   "app.access.unavailable": "请刷新页面后重试。",
   "app.api.billing_paused": "全部功能已开放，无需订阅。",
   "community.title": "我们在用爱发电",
-  "community.body": "Token 也要花钱。喜欢小鸭子的话，请它喝杯咖啡吧，也欢迎来社区一起玩。",
+  "community.body": "小鸭子用爱发电，Token 和数据也要花钱。如果 Ducky 帮到了你，请它喝杯咖啡，添点继续扑腾的力气。",
   "community.join": "加入社区",
   "community.telegram": "在 Telegram 找到我们",
   "community.pet": "摸摸小鸭子的脑袋",
@@ -3801,5 +3801,12 @@
   "app.evidence.event_date": "发生日期 · {at}",
   "app.evidence.filing_date": "披露日期 · {at}",
   "app.evidence.event_short": "发生于 {at}",
-  "app.evidence.historical_event": "这是历史事件，发生日期与已披露的行为保留在记录中。"
+  "app.evidence.historical_event": "这是历史事件，发生日期与已披露的行为保留在记录中。",
+  "nav.coffee": "请小鸭子喝咖啡",
+  "community.crypto": "用 USDC 投喂小鸭子",
+  "community.network": "Ethereum 主网（ERC-20）",
+  "community.crypto_note": "请使用 Ethereum 主网发送 USDC。",
+  "community.copy": "复制地址",
+  "community.copied": "地址已复制，嘎！",
+  "community.copy_failed": "没有复制成功，请选中上方地址手动复制。"
 }

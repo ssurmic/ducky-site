@@ -1,5 +1,5 @@
 <section class="home-hero no-glossary" id="top" data-home-hero>
- <div class="home-atmosphere" aria-hidden="true"><div class="home-logo-orbit"><img src="/avatar-duck-512.png" width="512" height="512" alt="" decoding="async"><i></i><i></i></div></div>
+ <div class="home-atmosphere" aria-hidden="true"><div class="home-logo-orbit"><img src="/duck-head-cutout-v1.png" width="512" height="512" alt="" decoding="async"><i></i><i></i></div></div>
  <div class="wrap home-composition">
   <div class="home-copy">
    <p class="home-eyebrow"><span></span><b data-home-eyebrow>{{ t('home.eyebrow') }}</b></p>
@@ -12,7 +12,7 @@
    <div class="home-inputs" aria-label="{{ t('home.sources') }}">
     {% for i in range(1,5) %}<div class="home-input home-input-{{ i }}"><span class="home-input-mark" aria-hidden="true">{{ ['↗','≡','▷','⌁'][i-1] }}</span><span>{{ t('home.source' ~ i) }}</span></div>{% endfor %}
    </div>
-   <div class="home-seal" aria-hidden="true"><img src="/avatar-160.jpg" width="72" height="72" alt=""><span>Ducky</span></div>
+   <div class="home-seal" aria-hidden="true"><img src="/duck-head-cutout-v1.png" width="72" height="72" alt=""><span>Ducky</span></div>
    <section class="home-dossier" id="home-dossier" aria-labelledby="home-dossier-title">
     <div class="home-dossier-heading"><div><span class="home-caption">{{ t('home.demo_label') }}</span><h2 id="home-dossier-title">{{ t('home.dossier_title') }}</h2></div><button type="button" class="home-dossier-mark" data-home-open aria-haspopup="dialog" aria-label="{{ t('home.try') }}">↗</button></div>
     <div class="home-stocks" role="tablist" aria-label="{{ t('home.choose_stock') }}">
@@ -38,6 +38,7 @@
  <dialog class="home-research-dialog" data-home-dialog aria-labelledby="home-dossier-title">
   <div class="home-dialog-toolbar"><span>{{ t('home.try') }}</span><button type="button" data-home-close aria-label="{{ t('app.common.close') }}">{{ t('app.common.close') }} <span aria-hidden="true">×</span></button></div>
  </dialog>
+ {% include "_partials/home-community.html" %}
  {% include "_partials/desk-quotes.html" %}
  <div class="wrap home-bottomline"><span>{{ t('home.bottomline') }}</span><button type="button" class="home-motion" data-home-motion aria-pressed="false" data-play="{{ t('home.play') }}" data-pause="{{ t('home.pause') }}">{{ t('home.pause') }}</button></div>
 </section>

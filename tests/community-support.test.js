@@ -1,0 +1,26 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {JSDOM} from 'jsdom';
+import {mountDuckCommunity} from '../public/js/duck-community.js';
+const wallet='0x799d72a921fe14a4589fcb539731f8b198d55944';
+for(const lang of ['zh','en'])test('support preserves the exact owner destination and handles clipboard permission failures: '+lang,async()=>{
+ const dom=new JSDOM(readFileSync(`dist/${lang==='en'?'en/':''}index.html`,'utf8'));
+ const doc=dom.window.document,root=doc.querySelector('[data-duck-community]');
+ assert.equal(doc.querySelectorAll('#community').length,1);
+ assert.ok(root.closest('[data-home-hero]'),'support belongs in the former duck greeting slot');
+ assert.ok(root.compareDocumentPosition(doc.querySelector('[data-duck-orbit]'))&4);
+ assert.equal(doc.querySelector('.public-coffee').href,'https://buymeacoffee.com/duckybot');
+ assert.equal(root.querySelector('[data-support-address]').textContent,wallet);
+ assert.match(root.querySelector('.home-crypto').textContent,/Ethereum.*ERC-20/s);
+ let copied;
+ Object.defineProperty(dom.window.navigator,'clipboard',{value:{writeText:async text=>{copied=text;}},configurable:true});
+ const dispose=mountDuckCommunity(root),button=root.querySelector('[data-copy-address]'),status=root.querySelector('[data-copy-status]');
+ button.click();await new Promise(r=>setTimeout(r,0));assert.equal(copied,wallet);assert.equal(status.textContent,status.dataset.success);
+ dom.window.navigator.clipboard.writeText=async()=>{throw Error('Permission denied');};
+ button.click();await new Promise(r=>setTimeout(r,0));assert.equal(status.textContent,status.dataset.failure);assert.equal(button.disabled,false);
+ assert.equal(root.querySelector('[data-support-address]').textContent,wallet,'manual-copy fallback remains visible');
+ const pet=root.querySelector('[data-duck-pet]');pet.click();assert.equal(pet.getAttribute('aria-pressed'),'true');assert.equal(root.querySelector('[data-duck-bubble]').textContent,root.querySelector('[data-duck-bubble]').dataset.quack);
+ pet.click();assert.equal(pet.getAttribute('aria-pressed'),'false');
+ dispose();dom.window.close();
+});

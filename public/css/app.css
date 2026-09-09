@@ -212,7 +212,7 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 
 /* ---- brand mark + empty states (mascot.svg; SYSTEMDESIGN §5.2 C) ---- */
 .app-top .brand { display: inline-flex; align-items: center; gap: 6px; }
-.app-top .avatar-mark { width: 26px; height: 26px; box-shadow: 0 0 0 2px color-mix(in srgb, var(--neon, #7dff6a) 70%, transparent), 0 0 10px 1px color-mix(in srgb, var(--neon, #7dff6a) 45%, transparent); }
+.app-top .avatar-mark { width: 26px; height: 26px; box-shadow: none; }
 .empty::before { content: ""; display: block; width: 72px; height: 72px; margin: 0 auto 8px; background: url("/avatar-160.jpg") center / cover no-repeat; border-radius: 50%; opacity: 1; }
 
 /* §14 profile */
@@ -530,7 +530,7 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 @media(max-width:600px){.creator-person-search{flex-basis:100%}.creators-controls>[data-creator-scope]{margin-top:0}.creator-person-search .creator-find-form{gap:8px}}
 
 /* Keep the brand warm without a neon halo competing with navigation. */
-.app-top .avatar-mark { width: 30px; height: 30px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 18%, transparent); }
+.app-top .avatar-mark { width: 30px; height: 30px; box-shadow: none; }
 .app-top .tier-badge.tier-pro { color:var(--accent-text, var(--accent)); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 25%, var(--border)); font-size: 10px; border-radius: 6px; padding: 3px 6px; }
 .app-top .lang-toggle, .app-top #logout { font-size: 12px; min-height: 36px; padding: 8px 10px; border-radius: 10px; }
 .profile-reminder { max-width: 760px; margin: 0 auto 20px; padding: 12px 16px; font-size: 13px; line-height: 1.6; }
@@ -1618,3 +1618,4 @@ html[data-theme=dark] .study-group{--study-bull:#47df98;--study-bear:#f18b9b}
 .account-avatar img { position:absolute; inset:1px; width:32px; height:32px; border-radius:50%; object-fit:cover; }
 .account-avatar:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
 .x-login { justify-content:center; }
+

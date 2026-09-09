@@ -27,5 +27,7 @@
   },
   "og_image": "/og.png",
   "desk_prices": "public/desk-prices.json",
-  "community_url": "https://t.me/DuckyBotCommunity"
+  "community_url": "https://t.me/DuckyBotCommunity",
+  "support_url": "https://buymeacoffee.com/duckybot",
+  "support_ethereum_address": "0x799d72a921fe14a4589fcb539731f8b198d55944"
 }

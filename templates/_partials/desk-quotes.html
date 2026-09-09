@@ -1,6 +1,4 @@
   <div class="duck-orbit home-quote-strip wrap" data-duck-orbit data-api="{{ cfg.api_base }}" data-app="{{ url('/app/') }}" data-greeting="{{ t('desk.duck_note') }}" data-reply="{{ t('desk.duck_reply') }}">
-   <div class="duck-bubble" data-duck-message>{{ t('desk.duck_note') }}</div>
-   <div class="duck-anchor"><button class="desk-duck" type="button" aria-label="{{ t('desk.duck_hint') }}"><img src="/avatar-160.jpg" alt="" width="136" height="136" fetchpriority="high"></button></div>
    {% for ticker in ['NVDA','SPY','NOK'] %}
    {% set quote = desk_quotes.get(ticker) %}
    <a class="desk-quote desk-quote-{{ loop.index }}" href="{{ url('/app/') }}#/chart/{{ ticker }}" data-quote="{{ ticker }}">

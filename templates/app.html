@@ -23,9 +23,9 @@
 <meta name="theme-color" content="#0b0f14" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="icon" href="/mascot.svg" type="image/svg+xml">
-<link rel="alternate icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/avatar-group.jpg">
+<link rel="icon" href="/duck-head-cutout-v1.png" type="image/png">
+<link rel="alternate icon" href="/duck-head-cutout-v1.png" type="image/png">
+<link rel="apple-touch-icon" href="/duck-head-cutout-v1.png">
 <link rel="manifest" href="{{ url('/manifest.webmanifest') }}">
 <link rel="stylesheet" href="/css/site.css">
 <link rel="stylesheet" href="/css/app.css">
@@ -47,7 +47,7 @@
 <a class="skip" href="#main">{{ t('app.nav.skip') }}</a>
 <div class="app-shell" id="app">
   <header class="app-top">
-    <a class="brand" href="{{ url('/') }}" title="{{ t('app.nav.home') }}"><img class="avatar-mark" src="/avatar-160.jpg" alt="" width="26" height="26" loading="eager" fetchpriority="high" decoding="sync"> {{ t('app.brand') }}</a>
+    <a class="brand" href="{{ url('/') }}" title="{{ t('app.nav.home') }}"><img class="avatar-mark" src="/duck-head-cutout-v1.png" alt="" width="40" height="40" loading="eager" fetchpriority="high" decoding="sync"> {{ t('app.brand') }}</a>
     <span class="spacer"></span>
     <a class="lang-toggle mono" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" lang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle>{{ t('app.nav.lang') }}</a>
     <a class="account-avatar" id="account-avatar" href="#/profile" hidden aria-label="{{ t('app.account.profile') }}"></a>
@@ -96,7 +96,7 @@
   <main class="app-main" id="main" tabindex="-1" data-glossary>
     <p id="profile-reminder" class="profile-reminder" hidden>{{ t('app.profile.recovery_reminder') }} <a href="#/profile">{{ t('app.profile.recovery_action') }}</a></p>
     <div class="app-view" id="view" aria-live="polite"></div>
-    <p class="app-foot">{{ t('app.foot.disclaimer') }} <a href="{{ url('/disclaimer/') }}">{{ t('app.billing.disclaimer_link') }}</a></p>
+    <p class="app-foot">{% if cfg.get('support_url') %}<a href="{{ cfg.support_url }}" target="_blank" rel="noopener noreferrer">☕ {{ t('nav.coffee') }}</a> · {% endif %}{{ t('app.foot.disclaimer') }} <a href="{{ url('/disclaimer/') }}">{{ t('app.billing.disclaimer_link') }}</a></p>
     <noscript><p class="errbox">{{ t('app.noscript') }}</p></noscript>
   </main>
 
