@@ -1,3 +1,4 @@
+import {canReadStock,stockResearchEntry} from '../experience.js';
 import {evidenceLink} from '../evidence-link.js';
 // Shared event comparisons; current research is gated by the API, not CSS.
 import { s } from '../strings.js';
@@ -10,11 +11,7 @@ export async function mount(root, params = {}) {
   const zh = document.documentElement.lang.startsWith('zh');
   const pick = value => typeof value === 'object' && value ? value[zh ? 'zh' : 'en'] || '' : value || '';
   root.append(el('h1', s('research.title')), el('p.view-intro.muted', s('research.intro')));
-  if (!store.isPaid()) {
-    root.appendChild(el('section.card', el('h2', s('research.lock_title')), el('p', s('research.lock_body')),
-      el('a.btn.btn-primary', {href:'#/billing'}, s('research.unlock'))));
-    return;
-  }
+  if(ticker&&!canReadStock(ticker)){root.append(stockResearchEntry(ticker));return;}
   const input=el('input.input.mono',{value:ticker,'aria-label':s('alerts.ticker_ph'),placeholder:s('alerts.ticker_ph'),maxlength:'10'});
   root.appendChild(el('form.add-row',{onsubmit:e=>{e.preventDefault();const t=input.value.trim().toUpperCase();if(/^[A-Z][A-Z0-9.-]{0,9}$/.test(t))location.hash='#/research/'+t;}},input,el('button.btn.btn-primary',{type:'submit'},s('research.load'))));
   if(!ticker){await mountChanges(root,params.signal);return;}

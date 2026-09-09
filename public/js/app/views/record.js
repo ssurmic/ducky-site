@@ -14,7 +14,7 @@ export async function mount(root,route={}){
    const saved=doc.items?.find(r=>'example:'+r.id===route.id);
    if(!saved)throw new Error(s('reader.unavailable'));
    data={item:{...saved,id:route.id,archived:true,summary:saved.summary?.[LANG],extra:{message_text:saved.body?.[LANG]||''}}};
-  }else data=await api.get((store.isPro()?'/radar/record.json?':'/public/radar/record.json?')+new URLSearchParams({id:route.id||''}),{auth:store.isPro(),signal:route.signal});
+  }else data=await api.get((!!store.get('me')?'/radar/record.json?':'/public/radar/record.json?')+new URLSearchParams({id:route.id||''}),{auth:!!store.get('me'),signal:route.signal});
   if(route.signal?.aborted || epoch!==store.epoch())return;
   const row=data.item,parent=(REPORT_KINDS.has(row.kind)||['liquidity','digest','volscan','hiring'].includes(row.board))?'reports':'boards';
   // Both translation receipts and source-delivery aliases resolve to this one address.

@@ -77,11 +77,6 @@ export async function mountSocial(root,route={}) {
     el('p',s('social.merged')),el('p',s('social.formula')),el('p',s('social.threshold')),el('p',s('social.limits')),
     el('p.small.muted',s('social.no_forecast')),source('https://apewisdom.io/methodology/','social.provider_method'));
   page.append(method);
-  if(!store.isPro()) {
-    page.append(el('section.card.social-empty',el('h2',s('social.lock_title')),el('p',s('social.lock_note')),
-      el('a.btn.btn-primary',{href:'#/billing'},s('radar.access_upgrade'))));
-    return cleanup;
-  }
   const content=el('div');page.insertBefore(content,method);
   async function load() {
     clear(content);content.append(el('p',{role:'status'},s('common.loading')));

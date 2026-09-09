@@ -28,7 +28,10 @@ export function claimQualifications(call) {
     if(['bull','bear','neutral'].includes(original))rows.append(el('div',el('dt',s('creatorclaim.original_stance')),el('dd',s('creators.take_'+original))));
   }
   for(const [key,value] of [['creators.stated_condition',call.condition_text],['creators.stated_horizon',call.horizon_text]]){
-    if(typeof value==='string'&&value.trim())rows.append(el('div',el('dt',s(key)),el('dd',value)));
+    if(typeof value==='string'&&value.trim()){
+      const original=document.documentElement.lang?.startsWith('en')&&/[\u3400-\u9fff]/.test(value);
+      rows.append(el('div',el('dt',s(key)),el('dd',original?el('details',el('summary',s('creatorclaim.source_wording')),el('p',{lang:'zh'},value)):value)));
+    }
   }
   return rows.children.length?rows:null;
 }

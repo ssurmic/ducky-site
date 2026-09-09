@@ -1,3 +1,4 @@
+import {canReadStock,stockResearchEntry} from '../experience.js';
 import { companyContext } from "../company-context.js";
 import { symbolPicker } from "../symbol-picker.js";
 // views/chart.js — Lightweight Charts 5 candlesticks from /bars + RSI(14) pane; Pro overlays via overlays.js.
@@ -55,7 +56,7 @@ export function lastBarState(payload, time) {
 export async function mount(root, params) {
   let ticker = (params && params.ticker) || "";
   // finding chart.js:364 — gate periods to the tier the server enforces (me.gates.bars_period).
-  const maxPeriod = (((store.get("me") || {}).gates || {}).bars_period) || "6mo";
+  const maxPeriod = "2y";
   const allowed = (p) => PERIOD_BARS[p] <= (PERIOD_BARS[maxPeriod] || PERIOD_BARS["6mo"]);
   // finding chart.js:63 — drawSeq is a per-draw token; candles/rsiSeries are hoisted so a Telegram theme flip
   // can re-apply their colors without a full refetch (finding tg.js:65).
@@ -271,12 +272,12 @@ export async function mount(root, params) {
     chart.timeScale().fitContent();
     zoomButtons.forEach(b=>b.disabled=false);
 
-    // Overlays: Pro only. Free/paid see a lock strip instead.
-    if (store.isPro()) {
+    // The same complete overlays are available for each selected research stock.
+    if (canReadStock(ticker)) {
       overlayStatus.appendChild(spinner(s("chart.loading_snapshot")));
       try {
         const snaps = store.get("snapshots") || {};
-        let snap = reusableSnapshot(snaps[ticker]) ? snaps[ticker] : null;
+        let snap = reusableSnapshot(snaps[ticker]) && snaps[ticker].research_access === 'full' ? snaps[ticker] : null;
         // finding chart.js:97 — /snapshot wraps data as {ticker, snapshot:{…}} (app.py _snap_payload); unwrap it
         // (same class as the watchlist bug) so the .ok/overlays fields exist and the store isn't poisoned.
         if (!snap) { const r = await api.snapshot(ticker, { tries: 6 }); if (!api.isAccepted(r)) { snap = unpackSnapshot(r); store.patch("snapshots", { [ticker]: snap }); } }
@@ -290,8 +291,7 @@ export async function mount(root, params) {
         } else overlayStatus.appendChild(el("span.muted.small", s("common.building")));
       } catch (err) { if (my === drawSeq && alive) { clear(overlayStatus); overlayStatus.appendChild(el("span.muted.small", s("common.error", { msg: err.message }))); } }
     } else {
-      const fake = el("div.legend-fake.mono", s("chart.overlays"));
-      overlayStatus.appendChild(lock(fake, s("chart.lock")));
+      overlayStatus.appendChild(stockResearchEntry(ticker));
     }
   }
 

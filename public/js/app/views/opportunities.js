@@ -233,7 +233,7 @@ export async function mount(root, route={}) {
   root.classList.add('opportunities-view');
   const dated = el('p.small.muted');
   root.append(el('div.view-head', el('div', el('h1', s('nav.opportunities')), el('p.muted', label('description')), dated)));
-  if (!store.isPro()) { root.append(paywall(), methodCard()); return cleanup; }
+
   const controls = {}, form = el('form.card.opportunity-filter-panel'), moreFilters = el('details.opportunity-more-filters',
     el('summary', label('more_filters'))), core = el('div.opportunity-filters'), extra = el('div.opportunity-filters');
   function control(key, options) {

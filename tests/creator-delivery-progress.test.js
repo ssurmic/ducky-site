@@ -10,7 +10,7 @@ const {renderProgress}=await import('../public/js/app/views/creator-progress.js'
 const value={schema:'creator-progress/1',status:'ready',shared:true,counts:{discovered_posts:28,archived:12,readable_summaries:0,readable_lower_bound:0},window:{since_day:'2026-07-10',as_of:'2026-09-08T12:00:00Z'},provider:{allowed:false,retry_at:1788888600}};
 test('progress preserves true zero and channel scope without turning retry time into an ETA',()=>{
  const node=renderProgress(value);assert.deepEqual([...node.querySelectorAll('dd')].map(x=>x.textContent),['28','12','0']);
- assert.match(node.textContent,/2026-07-10 to 2026-09-08/);assert.match(node.textContent,/Source retrieval is paused/);
+ assert.match(node.textContent,/2026-07-10 to 2026-09-08/);assert.match(node.textContent,/New videos are not being collected right now/);
  assert.match(node.textContent,/follow list is personal/);assert.doesNotMatch(node.textContent,/%|1788888600|ETA/);
 });
 test('a bounded readable scan is a lower bound, never an exact or invented total',()=>{

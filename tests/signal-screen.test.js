@@ -80,11 +80,11 @@ test('official event choices survive saved-rule loading and preview without chan
   const zh=JSON.parse(readFileSync('i18n/zh.json'));assert.equal(zh['app.screen.event_index'],'指数调整');assert.equal(zh['app.screen.event_news'],'公司新闻');
  }finally{dispose();r.remove();}
 });
-test('free user cannot fetch composite research or accidentally create notifications',async()=>{
+test('free preview reads shared research without saving or enabling notifications',async()=>{
  store.set('me',{tier:'free'});store.set('token',null);const calls=[];
  globalThis.fetch=async(url,opts)=>{calls.push(String(url));return response({sectors:[]});};
  const r=root(),dispose=mountScreen(r,{});submit(r,'.screen-form');await flush();
- assert.equal(calls.some(c=>c.includes('/screens')),false);assert.ok(r.querySelector('a[href="#/billing"]'));assert.equal(r.querySelector('.screen-save').hidden,true);
+ assert.equal(calls.some(c=>c.includes('/screens/preview')),true);assert.equal(calls.some(c=>c.endsWith('/screens')),false);
  dispose();r.remove();
 });
 test('saved alerts show the actual delivery state and toggling uses explicit owner action',async()=>{

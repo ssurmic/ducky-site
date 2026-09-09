@@ -32,7 +32,7 @@ const MACRO_META = [
     impact: ["私营部门就业变化，可与非农就业报告对照。", "Private-sector employment changes, for comparison with the nonfarm payroll report."] },
   { re: /非农|NFP|nonfarm|payroll/i, abbr: ["非农", "NFP"],
     impact: ["月度就业报告。就业强弱会影响经济与利率预期，需结合预期值和前值修订查看。", "The monthly jobs report. Employment changes can affect growth and rate expectations; compare the result with forecasts and revisions."] },
-  { re: /初请|jobless|claims/i, abbr: ["初请", "Jobless"],
+  { re: /初请|jobless|claims/i, abbr: ["初请", "Jobless claims"],
     impact: ["每周失业救济申请数据，用于观察就业变化。单周波动需结合近期趋势查看。", "Weekly unemployment claims help track employment changes. Compare a single reading with the recent trend."] },
   { re: /CPI/i, abbr: ["CPI", "CPI"],
     impact: ["消费者物价变化。高于或低于预期的结果可能改变利率预期。", "Changes in consumer prices. A result above or below forecasts can shift interest-rate expectations."] },
@@ -40,7 +40,7 @@ const MACRO_META = [
     impact: ["生产端物价变化，可用于观察成本压力。", "Producer-price changes help track cost pressures."] },
   { re: /PCE/i, abbr: ["PCE", "PCE"],
     impact: ["个人消费支出物价指数，是美联储关注的通胀指标。", "The personal consumption expenditures price index is an inflation measure followed by the Fed."] },
-  { re: /零售|retail/i, abbr: ["零售", "Retail"],
+  { re: /零售|retail/i, abbr: ["零售", "Retail sales"],
     impact: ["零售销售反映商品消费需求，可与近期趋势和预期值比较。", "Retail sales track spending on goods. Compare the release with forecasts and recent trends."] },
   { re: /\bGDP\b/i, abbr: ["GDP", "GDP"],
     impact: ["经济增长数据，可比较本期增速、预期值和前值修订。", "Economic growth data. Compare the growth rate with forecasts and revisions."] },
@@ -62,7 +62,7 @@ const STRUCT_ABBR = [
 function _hay(e) { return String(e.title || "") + " " + String(e.title_en || ""); }
 function macroMeta(e) { const h = _hay(e); for (const m of MACRO_META) if (m.re.test(h)) return m; return null; }
 function shortLabel(e, isZh, scopeTicker='') {
-  if(e.type === "holiday") return s("calendar.closed_short");
+  if(e.type === "holiday") { const name=(isZh?e.title:e.title_en)?.split("·").slice(1).join("·").trim(); return s("calendar.closed_short")+(name?" · "+name:""); }
   if(e.type === "early_close") return s("calendar.early_short");
   if(e.type === "index_change") { const ticker=calendarEventTicker(e,scopeTicker); if(ticker)return ticker; }
   const full = isZh ? (e.title || "") : (e.title_en || e.title || "");
@@ -78,7 +78,7 @@ function addDays(d, n) { const x = new Date(d.getFullYear(), d.getMonth(), d.get
 
 export async function mount(root, route={}) {
   const isZh = (document.documentElement.lang || "zh").slice(0, 2) !== "en";
-  const isPro = store.isPro();
+  const hasContextAccess = !!store.get('me');
   const query = new URLSearchParams((location.hash.split("?")[1] || ""));
   const scopeTicker = calendarTicker(query.get("ticker"));
   const epoch=store.epoch();
@@ -109,7 +109,7 @@ export async function mount(root, route={}) {
       if(!Array.isArray(rows))throw new Error('watchlist_unavailable');
       return rows.map(row=>typeof row==='string'?row:row?.ticker||row?.symbol).filter(Boolean).map(t=>String(t).toUpperCase());
     }).catch(()=>{watchError=true;return null;});
-    const loaded = await Promise.all([api.calendar.feed(), isPro ? api.calendar.links().catch(() => ({})) : Promise.resolve({}),watches]);
+    const loaded = await Promise.all([api.calendar.feed(), hasContextAccess ? api.calendar.links().catch(() => ({})) : Promise.resolve({}),watches]);
     if(!active()){cleanup();return cleanup;}
     doc=loaded[0]; links=loaded[1]?.issuers || {};
     if(loaded[2]!==null){watch=loaded[2];store.set('watchlist',watch);}
@@ -142,7 +142,7 @@ export async function mount(root, route={}) {
   function typeMatch(e) { if(["holiday", "early_close"].includes(e.type)) return true; const t = FILTER_TYPES[filter]; return !t || t.includes(e.type); }
   function dayEvents(iso) {
     let list = (byDate.get(iso) || []).filter(typeMatch);
-    if (mineOnly && isPro) list = list.filter((e) => e.type !== "earnings" || evHasMine(e));
+    if (mineOnly && hasContextAccess) list = list.filter((e) => e.type !== "earnings" || evHasMine(e));
     return list;
   }
 
@@ -178,8 +178,8 @@ export async function mount(root, route={}) {
     if(watchError)card.append(el('div.data-notice.calendar-watch-warning',{role:'status'},
       el('p',s('calendar.watchlist_unavailable',{n:watch.length})),
       el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>router.go(location.hash)},s('common.retry'))));
-    else if(isPro) card.appendChild(el("p.event-scope-note.muted.small",s("event.scope_note",{n:watch.length})));
-    if (!isPro) {
+    else if(hasContextAccess) card.appendChild(el("p.event-scope-note.muted.small",s("event.scope_note",{n:watch.length})));
+    if (!hasContextAccess) {
       card.appendChild(el("div.cr-pro-banner",
         el("span.cr-pro-badge", s("calendar.pro_badge")),
         el("span", " " + s("calendar.pro_hint") + " "),
@@ -212,8 +212,8 @@ export async function mount(root, route={}) {
       bar.appendChild(chip);
     }
     const mineBtn = el("button.cal-fchip.cal-mine" + (mineOnly ? ".on" : ""), { type: "button", "aria-pressed":String(mineOnly) },
-      (mineOnly ? "★ " : "☆ ") + s("calendar.mine_only") + (isPro ? "" : " 🔒"));
-    mineBtn.addEventListener("click", () => { if (!isPro) { router.go("#/billing"); return; } mineOnly = !mineOnly; render(); });
+      (mineOnly ? "★ " : "☆ ") + s("calendar.mine_only") + (hasContextAccess ? "" : " 🔒"));
+    mineBtn.addEventListener("click", () => { if (!hasContextAccess) { router.go("#/billing"); return; } mineOnly = !mineOnly; render(); });
     bar.appendChild(mineBtn);
     const filters=el("details.cal-filters", el("summary", s("calendar.filters")), bar, el("p.small.muted",s("calendar.timing_note")));
     filters.open=filter!=="all" || mineOnly;
@@ -258,7 +258,7 @@ export async function mount(root, route={}) {
       for (const e of visible) {
         if (e.type === "earnings") {
           const sym = calendarEventTicker(e,scopeTicker);
-          const pill = el("span.pill.pill-earn.cal-kind-earnings" + (isPro && evHasMine(e) ? ".mine" : ""), { title: (sym + " " + (isZh ? (e.title || "") : (e.title_en || e.title || ""))).trim() });
+          const pill = el("span.pill.pill-earn.cal-kind-earnings" + (hasContextAccess && evHasMine(e) ? ".mine" : ""), { title: (sym + " " + (isZh ? (e.title || "") : (e.title_en || e.title || ""))).trim() });
           pill.appendChild(el("span.pill-kind", categoryLabel(e)));
           if (e.logo) pill.appendChild(el("img.pill-logo", { src: e.logo, alt: sym, loading: "lazy" }));
           pill.appendChild(el("span.pill-tk", sym || "ER"));
@@ -285,7 +285,7 @@ export async function mount(root, route={}) {
         const dot = el("i.bardot"); dot.style.background = DOTC[visualType(e)] || "var(--muted)"; b.appendChild(dot);
         const label = e.type === "earnings" ? (calendarEventTicker(e,scopeTicker) || categoryLabel(e)) : shortLabel(e, isZh, scopeTicker);
         b.setAttribute("title", isZh ? (e.title || "") : (e.title_en || e.title || ""));
-        b.appendChild(el("span.pill-txt" + (e.type === "earnings" && isPro && evHasMine(e) ? ".mine" : ""), label));
+        b.appendChild(el("span.pill-txt" + (e.type === "earnings" && hasContextAccess && evHasMine(e) ? ".mine" : ""), label));
         box.appendChild(b);
       }
       if (hidden.length) box.appendChild(el("div.pill-more", "+" + hidden.length));
@@ -320,7 +320,7 @@ export async function mount(root, route={}) {
         const dt = new Date(viewY, viewM, day);
         const iso = ymd(dt);
         const evs = dayEvents(iso);
-        const mine = isPro && evs.some(evHasMine);
+        const mine = hasContextAccess && evs.some(evHasMine);
         const wknd = dt.getDay() === 0 || dt.getDay() === 6;
         const cell = el("button.cal-cell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : "") + (evs.some(e=>e.type==="holiday") ? ".cal-closed" : "") + (evs.some(e=>e.type==="early_close") ? ".cal-early" : ""),
           { type: "button", "aria-label": iso + ", " + previewDescription(evs), "aria-pressed": String(iso === selected), "data-date":iso, "aria-haspopup":"dialog" });
@@ -365,7 +365,7 @@ export async function mount(root, route={}) {
         const grid = el("div.cal-bigrid");
         for (let i = 0; i < 7; i++) {
           const d = addDays(first, i), iso = ymd(d), evs = dayEvents(iso);
-          const mine = isPro && evs.some(evHasMine);
+          const mine = hasContextAccess && evs.some(evHasMine);
           const wknd = d.getDay() === 0 || d.getDay() === 6;
           const session = evs.find(e => ["holiday", "early_close"].includes(e.type));
           const weekday = new Intl.DateTimeFormat(isZh ? "zh-CN" : "en-US", {weekday:"short"}).format(d);
@@ -409,7 +409,7 @@ export async function mount(root, route={}) {
     if (!evs.length) { detail.appendChild(el("p.muted.cal-empty-day", s("calendar.day_empty"))); }
     else {
       for (const e of evs) {
-        const isMine = isPro && evHasMine(e);
+        const isMine = hasContextAccess && evHasMine(e);
         const row = el("div.cal-ev" + (isMine ? ".cal-mine-ev" : "") + ".cal-t-" + visualType(e) + ".cal-kind-" + category(e));
         if (e.type === "earnings" && e.logo) row.appendChild(el("img.cal-ev-logo", { src: e.logo, alt: (e.tickers || [])[0] || "", loading: "lazy" }));
         else row.appendChild(el("span.cal-ico", { "aria-hidden": "true" }, icon(ICON[visualType(e)] || "calendar")));

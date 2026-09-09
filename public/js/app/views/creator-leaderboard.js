@@ -6,10 +6,10 @@ import {dateTime,metric} from './creator-research.js';
 
 export async function mountLeaderboard(root,{onSelect=()=>{}}={}) {
   root.append(el('h2',s('creatorrank.title')),el('p.muted',s('creatorrank.intro')));
-  if(!store.isPro()){root.append(el('p',s('creators.research_pro')),el('a.btn.btn-primary',{href:'#/billing'},s('creators.upgrade')));return;}
   const epoch=store.epoch(),target=el('div');root.append(target);target.append(el('p',{role:'status'},s('common.loading')));
   let doc;try{doc=await api.get('/kol/leaderboard');}catch{if(target.isConnected){clear(target);target.append(el('p.err',s('creators.research_error')));}return;}
   if(epoch!==store.epoch()||!target.isConnected)return;clear(target);
+  if(doc.scope==='followed_creators')target.append(el('p.small.muted',s('creatorrank.followed_scope')));
   const rows=doc.rows || [],eligible=rows.filter(r=>r.eligible);
   target.append(el('div.evidence-metrics',metric(s('creatorrank.qualified'),eligible.length),metric(s('creatorrank.minimum'),'N ≥ 20'),metric(s('creatorrank.period'),'≥ 90 '+s('creatorrank.days')),metric(s('creatorrank.coverage'),'≥ 80%')),
     el('p.research-method',s('creatorrank.method')));

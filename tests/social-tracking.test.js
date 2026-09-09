@@ -35,11 +35,11 @@ test('even a maximum attention score leaves Bulls and Bears unknown',()=>{
  assert.doesNotMatch(card.querySelector('.vibe-direction').textContent,/100|bullish views dominate|bearish views dominate/);
  assert.equal(card.querySelector('.social-evidence').open,false);
 });
-test('radar social category mounts its own section and free access never fetches private rows',async()=>{
- store.set('me',{tier:'free'});let requests=0;globalThis.fetch=()=>{requests++;throw new Error('unexpected');};
+test('radar social category mounts its own section and free access reads current rows',async()=>{
+ store.set('me',{tier:'free'});let requests=0;globalThis.fetch=async()=>{requests++;return response({status:'unavailable',items:[]});};
  const root=document.createElement('div');const cleanup=await mount(root,{query:new URLSearchParams('board=social')});
- assert.equal(requests,0);assert.match(root.textContent,/Vibe Check/);assert.match(root.textContent,/X \/ Twitter · not available/);
- assert.ok(root.querySelector('a[href="#/billing"]'));assert.doesNotMatch(root.textContent,/NVDA/);cleanup();
+ assert.equal(requests,1);assert.match(root.textContent,/Vibe Check/);assert.match(root.textContent,/X \/ Twitter · not available/);
+ assert.equal(root.querySelector('a[href="#/billing"]'),null);assert.doesNotMatch(root.textContent,/NVDA/);cleanup();
 });
 test('current rows, search, history retry and cursor are usable without duplicated pages',async()=>{
  store.set('me',{tier:'pro'});let count=0,urls=[];

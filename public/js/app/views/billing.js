@@ -302,7 +302,7 @@ export async function mount(root, { query } = {}) {
     for(const [i,tier] of ['free','pro'].entries()){
       const limits=plans.limits[tier];if(!limits)continue;
       const line=comparison.children[i].querySelector('p');
-      line.textContent=['watches','evidence','creators','alerts'].map(key=>key==='evidence'&&limits[key]===null?s('experience.plan_any_map'):Number.isFinite(limits[key])?s('experience.allow_'+key,{cap:limits[key]}):'—').join(' · ');
+      line.textContent=['watches','evidence','creators','alerts','screens'].map(key=>key==='evidence'&&limits[key]===null?s('experience.plan_any_map'):Number.isFinite(limits[key])?s('experience.allow_'+key,{cap:limits[key]}):'—').join(' · ');
     }
   }
   renderTiers(); renderRails(); loadOrders();

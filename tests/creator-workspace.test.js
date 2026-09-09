@@ -42,8 +42,8 @@ test('identity dialog never subscribes before affirmative confirmation, includin
  document.querySelector('dialog .btn-primary').click();await new Promise(r=>setTimeout(r,0));assert.equal(calls,1);assert.equal(followed,1);
 });
 
-test('free simulation has no private fetch and fictional returns require explicit selection',async()=>{
- store.set('me',{tier:'free'});globalThis.fetch=()=>assert.fail('private fetch');
+test('free simulation reads scoped history and fictional returns require explicit selection',async()=>{
+ store.set('me',{tier:'free'});globalThis.fetch=async url=>{assert.match(url,/^\/kol\/research/);return Response.json({items:[]});};
  const root=document.createElement('section');document.body.append(root);await mountSimulation(root,{});
  assert.equal(root.querySelector('.creator-sim-chart'),null);
  [...root.querySelectorAll('button')].find(b=>b.textContent==='Try a fictional scenario').click();

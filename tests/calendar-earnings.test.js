@@ -65,11 +65,11 @@ test('business interpretation stays separate from accounting facts and does not 
  assert.equal(earningsEstimateBasis({basis_by_metric:{eps:'GAAP'}},'eps'),'GAAP');
 });
 
-test('calendar earnings is Pro only, shares requests, and discards responses after logout',async()=>{
+test('calendar earnings is included in Free, shares requests, and discards responses after logout',async()=>{
  store.set('me',{tier:'free'});let calls=[];
  globalThis.fetch=async url=>{calls.push(url);return Response.json({});};
  const free=eventResearchSession();free.mount({type:'earnings',date:'2026-09-10',tickers:['TEST']});await tick();
- assert.deepEqual(calls,[]);free.dispose();
+ assert.equal(calls.filter(u=>u.startsWith('/earnings/context')).length,1);free.dispose();calls=[];
  store.set('me',{tier:'pro'});const pending=[];
  globalThis.fetch=async url=>{calls.push(url);if(url.startsWith('/earnings/context'))return new Promise(r=>pending.push(r));
    return Response.json({relations:[],history:{samples:[]}});};

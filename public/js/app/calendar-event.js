@@ -16,7 +16,7 @@ export const eventHint = e => isIndexChange(e)?sourceEventHint(e):s('event.hint_
 // Request dedup lives for a view only; no private data survives account changes.
 export function eventResearchSession(scopeTicker='') {
   const epoch=store.epoch(), controller=new AbortController(), cache=new Map(); let disposed=false;
-  const valid=()=>!disposed&&epoch===store.epoch()&&store.isPro();
+  const valid=()=>!disposed&&epoch===store.epoch()&&!!store.get('me');
   function load(e,ticker='') {
     const params={kind:eventKind(e),date:e.date,issuer:(e.tickers||[])[0]||''};
     if(ticker) params.ticker=ticker;
@@ -30,7 +30,7 @@ export function eventResearchSession(scopeTicker='') {
     const schedule=e.schedule_status==='source_scheduled'?s('event.schedule_source'):s('event.schedule_check');
     if(hint) box.append(hint);
     box.append(el('p.event-schedule.muted.small',schedule));
-    if(!store.isPro()) { box.append(el('a.event-upgrade',{href:'#/billing'},s('event.pro')));return box; }
+    if(!store.get('me')) { box.append(el('a.event-upgrade',{href:'#/billing'},s('event.pro')));return box; }
     const relevance=el('div.event-relevance',el('span.muted.small',s('event.matching')));
     const details=el('details.event-evidence',{open:kind==='ppi'},el('summary',s('event.history')));
     const prediction=el('div');

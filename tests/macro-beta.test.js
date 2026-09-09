@@ -39,7 +39,7 @@ test('line chart supports ranges, separate yield units and exact keyboard date r
 });
 test('free macro card never requests private data; account change suppresses pending chart',async()=>{
  store.set('me',{tier:'free'});let calls=0;globalThis.fetch=async()=>{calls++;return response(fixture());};
- const free=document.createElement('div');const dispose=mountMacroBeta(free);await tick();assert.equal(calls,0);assert.ok(free.querySelector('a[href="#/billing"]'));dispose();
+ const free=document.createElement('div');const dispose=mountMacroBeta(free);await tick();assert.equal(calls,1);assert.equal(free.querySelector('a[href="#/billing"]'),null);dispose();
  store.set('me',{tier:'pro'});let done;globalThis.fetch=()=>new Promise(r=>done=r);
  const root=document.createElement('div'),clean=mountMacroBeta(root);store.bumpEpoch();store.set('me',null);done(response(fixture()));await tick();
  assert.equal(root.querySelector('svg'),null);clean();

@@ -39,8 +39,8 @@ export async function mountSimulation(root,{kolId='',allowedIds=null,tickers=nul
   const epoch=store.epoch();let rows=[],active=null,demo=state.demo===true,horizon=state.horizon || '20';
   let config=state.config || {...DEFAULT_CONFIG};
   root.append(el('p',{role:'status'},s('common.loading')));
-  if(store.isPro()) {
-    try{const doc=await api.get('/kol/research');rows=simulationRows(doc.items || [],kolId).filter(r=>(!allowedIds||allowedIds.includes(r.post.kol_id))&&(tickers===null||tickers.includes(r.call.sym)));}
+  if(store.get('me')) {
+    try{const doc=await api.get('/kol/research'+(kolId?'?kol_id='+encodeURIComponent(kolId):''));rows=simulationRows(doc.items || [],kolId).filter(r=>(!allowedIds||allowedIds.includes(r.post.kol_id))&&(tickers===null||tickers.includes(r.call.sym)));}
     catch{if(root.isConnected){clear(root);root.append(el('p.err',s('creators.research_error')));}return;}
   }
   if(epoch!==store.epoch()||!root.isConnected)return;
@@ -54,7 +54,7 @@ export async function mountSimulation(root,{kolId='',allowedIds=null,tickers=nul
     chooser.append(el('button.btn.btn-ghost.btn-sm',{type:'button','aria-pressed':String(demo),onclick:()=>{demo=!demo;render();}},s(demo?'creatorlab.leave_demo':'creatorlab.try_demo')));
     const period=el('select.input',{'aria-label':s('creators.horizon')},...[5,20].map(n=>el('option',{value:n,selected:horizon===String(n)},s('creators.trading_days',{n}))));period.addEventListener('change',()=>{horizon=period.value;render();});chooser.append(period);root.append(chooser);
     if(demo)root.append(el('p.creator-demo-notice',s('creatorlab.demo_notice')));
-    else if(!active)root.append(el('p.creator-demo-notice',s(store.isPro()?'creatorlab.no_data':'creatorlab.pro_demo')));
+    else if(!active)root.append(el('p.creator-demo-notice',s('creatorlab.no_data')));
     else {root.append(el('div.creator-lab-source',el('b',active.post.kol_name+' · $'+active.call.sym),el('blockquote',active.call.evidence),el('p.small',s('creatorlab.recorded')+' '+dateTime(active.post.recorded_at))));const url=safeSource(active.post.url);if(url)root.append(el('a',{href:url,target:'_blank',rel:'noopener noreferrer'},s('creators.orig')+' ↗'));}
     const layout=el('div.creator-lab-layout'),form=el('form.creator-lab-config'),output=el('section.creator-lab-output',{'aria-live':'polite'});const settings=el('details.creator-sim-settings',el('summary',s('creatorpage.adjust')),form);layout.append(output,settings);root.append(layout);
     form.addEventListener('submit',e=>e.preventDefault());

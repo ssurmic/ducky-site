@@ -122,7 +122,7 @@ export async function mount(root,route={}){
       {href:'#/briefing?period='+value,'aria-current':value===period?'page':null},s('briefing.'+value)))));
   const body=el('div');root.append(head,body);
   head.append(el('a.btn.btn-ghost.btn-sm',{href:'#/briefing'},s('stockbrief.title')));
-  if(store.isPro())head.append(el('a.btn.btn-ghost.btn-sm',{href:'#/research'},s('record.changes')));
+  if(store.get('me'))head.append(el('a.btn.btn-ghost.btn-sm',{href:'#/research'},s('record.changes')));
   const valid=id=>alive&&!ctl.signal.aborted&&store.epoch()===epoch&&(id==null||id===request);
   async function load(){
     const id=++request;clear(body).append(spinner());

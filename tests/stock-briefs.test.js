@@ -47,10 +47,10 @@ test('stale, withdrawn and pending reports cannot appear current; unsafe prose s
  assert.match(reportCard({ticker:'NVDA',status:'pending',refresh:{status:'failed'}}).textContent,/worker will retry/);
  assert.match(factText({topic:'volatility',data:{iv:0,hv:10,ratio:null}}),/IV 0.0%.*IV\/HV —/);
 });
-test('free access makes no private requests and a direct ticker uses the shared read endpoint',async()=>{
- store.set('me',{tier:'free'});let calls=[];globalThis.fetch=async url=>{calls.push(String(url));return response({items:[fixture()]});};
- const root=document.createElement('div');let cleanup=await mountStockBriefs(root);assert.equal(calls.length,0);assert.ok(root.querySelector('a[href="#/billing"]'));cleanup();root.replaceChildren();
- store.set('me',{tier:'pro'});cleanup=await mountStockBriefs(root,{query:new URLSearchParams('ticker=NVDA')});
+test('free briefs use scoped results and a selected stock uses the same shared endpoint',async()=>{
+ store.set('me',{tier:'free'});let calls=[];globalThis.fetch=async url=>{calls.push(String(url));return response({items:String(url).includes('ticker=NVDA')?[fixture()]:[]});};
+ const root=document.createElement('div');let cleanup=await mountStockBriefs(root);assert.deepEqual(calls,['/briefing/stocks']);assert.ok(root.querySelector('a[href="#/evidence"]'));cleanup();root.replaceChildren();calls=[];
+ store.set('me',{tier:'free',experience:{evidence:{selected:['NVDA']}}});cleanup=await mountStockBriefs(root,{query:new URLSearchParams('ticker=NVDA')});
  assert.deepEqual(calls,['/briefing/stocks?ticker=NVDA']);assert.equal(root.querySelectorAll('.stock-brief').length,1);cleanup();
 });
 test('late shared reports are discarded after logout',async()=>{

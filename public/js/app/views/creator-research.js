@@ -65,7 +65,6 @@ function sourceClock(seconds) {
 
 export async function mountResearch(root, selection) {
   const epoch=store.epoch();
-  if (!store.isPro()) {root.append(el('p.muted',s('creators.research_pro')),el('a.btn.btn-primary',{href:'#/billing'},s('creators.upgrade')));return;}
   const owner={};researchOwners.set(root,owner);
   let doc={items:[]},loading=false,loadError=false,sequence=0,focusHandled=false;
   const openGroups=new Set();

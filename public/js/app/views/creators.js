@@ -1,3 +1,4 @@
+import {discoveryPreview} from './creator-discovery.js';
 import {quotaNote} from '../experience.js';
 import {evidenceLink} from '../evidence-link.js';
 // views/creators.js — 财经博主: follow finance creators; Ducky summarises each new video. The creator grid
@@ -112,6 +113,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   const initial=creatorRoute(routeQuery);
   const sourceOnly=!!(initial.post&&initial.selected&&initial.tab==='feed');
   let doc, subs, watches,linkedSource=null,linkFailed=false;
+  let discovery={items:[],status:'unavailable'},discoveryStance='all',discoveryRequest=0;
   try {
     if(sourceOnly){
       // An exact source should not depend on loading the whole recent catalogue.
@@ -120,7 +122,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         api.kol.mine(),api.watchlist.list().catch(()=>null)]);
       if(!linkedSource?.creator||!linkedSource?.post)throw Error('source_unavailable');
       doc={kols:[],posts:[],pages:{}};
-    }else [doc, subs, watches] = await Promise.all([api.kol.feed(), api.kol.mine(), api.watchlist.list().catch(()=>null)]);
+    }else [doc, subs, watches, discovery] = await Promise.all([api.kol.feed(), api.kol.mine(), api.watchlist.list().catch(()=>null),
+      api.get('/kol/discover?lang='+(isZh?'zh':'en'),{signal}).catch(()=>({items:[],status:'unavailable'}))]);
     if(!sourceOnly&&initial.post&&initial.selected){
       try{linkedSource=await api.get('/kol/'+encodeURIComponent(initial.selected)+'/posts/'+encodeURIComponent(initial.post));}
       catch{linkFailed=true;}
@@ -141,7 +144,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     return () => {};
   }
   const following = new Set((subs && subs.subs) || []);
-  const canRead = id => store.isPro() || [...following].slice(0,subs?.cap ?? 2).includes(id);
+  const canRead = id => (sourceOnly&&id===initial.selected&&!!linkedSource?.post) || store.isPro() || [...following].slice(0,subs?.cap ?? 2).includes(id);
   if (epoch !== store.epoch() || signal?.aborted) return () => {};
   const kols = (doc && doc.kols) || [];
   for(const c of subs?.creators || [])if(!kols.some(k=>k.id===c.kol_id))kols.push({...c,id:c.kol_id});
@@ -230,7 +233,9 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     const isPro = store.isPro();
     const stockFilter=tab!=='rank'&&stockTicker?[stockTicker]:null;
     const stockPosts=posts.filter(p=>matchesStocks(p,stockFilter));
+    const previews=new Map((discovery.items||[]).filter(r=>r.creator?.id).map(r=>[r.creator.id,r]));
     const available=kols.filter(k=>(!mine || following.has(k.id)));
+    if(!mine)available.sort((a,b)=>(Date.parse(previews.get(b.id)?.latest_view?.published_at)||0)-(Date.parse(previews.get(a.id)?.latest_view?.published_at)||0));
     const tabs=el('nav.creator-workspace-tabs',{'aria-label':s('creatorflow.workspace')});
     for(const [value,key] of [['feed','creators.feed_h'],['research','creators.research'],['lab','creatorlab.tab'],['rank','creatorrank.tab']])tabs.append(el('button',{type:'button','aria-pressed':String(tab===value),onclick:()=>{tab=value;renderContent();}},s(key)));
     content.append(tabs);
@@ -251,22 +256,37 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     }
     const stats=stockPosts.filter(p=>(!mine || following.has(p.kol_id)) && (!selected || p.kol_id===selected));
 
+    if(!mine&&!selected){
+      const filter=el('select.input',{'aria-label':s('creatordiscovery.filter')},
+        ...['all','support','counter'].map(value=>el('option',{value,selected:value===discoveryStance},s('creatordiscovery.'+value))));
+      filter.addEventListener('change',async()=>{
+        discoveryStance=filter.value;const request=++discoveryRequest;filter.disabled=true;
+        try{const next=await api.get('/kol/discover?'+new URLSearchParams({stance:discoveryStance,lang:isZh?'zh':'en'}),{signal});
+          if(disposed||epoch!==store.epoch()||request!==discoveryRequest)return;discovery=next;
+        }catch{if(disposed||request!==discoveryRequest)return;discovery={items:[],status:'unavailable'};}
+        renderContent();
+      });
+      content.append(el('div.evidence-controls',el('label',s('creatordiscovery.filter'),filter)),el('p.small.muted',s('creatordiscovery.basis')));
+    }
     const grid = el("div.creator-directory");
     for (const k of (selected?[]:available).filter(k=>!query || [k.name,k.handle,k.profile?.title].join(' ').toLowerCase().includes(query.toLowerCase()))) {
+      const entry=previews.get(k.id);
+      if(!mine&&discoveryStance!=='all'&&!entry?.latest_view)continue;
       const on = following.has(k.id);
       const profile=k.profile || {};
       const tile=el('article.creator-profile',{class:selected===k.id?'selected':''});
       const title=el('button.creator-name',{type:'button','aria-pressed':String(selected===k.id),onclick:()=>{selected=k.id;query='';setupState.input='';shown=30;render();}},k.name || k.id);
-      tile.append(el('div.creator-identity',avatar(k),el('div',title,el('p.muted.small',(profile.handle || k.handle || '')+' · '+(k.platform==='youtube'?'YouTube':k.platform || '')+' · '+(k.lang || '—')))));
+      tile.append(el('div.creator-identity',avatar(k),el('div',title,el('p.muted.small',(profile.handle || k.handle || '')+' · '+(k.platform==='youtube'?'YouTube':k.platform || '')+' · '+(k.lang==='en'?'English':k.lang==='zh'?'中文':s('creatordiscovery.language_unknown'))))));
       const creatorPosts=posts.filter(p=>p.kol_id===k.id);
       const page=doc.pages?.[k.id];
       const ready=page?.coverage?.reviewed ?? creatorPosts.filter(hasReviewedSummary).length;
+      if(!mine)tile.append(discoveryPreview(entry,discovery.status));
       tile.append(el('p.creator-card-coverage',!canRead(k.id)?s(on?'experience.creator_outside_trial':'experience.not_followed_data'):s('creatorpage.card_ready',{n:ready})));
       const newest=[...creatorPosts].sort((a,b)=>(Date.parse(b.published_at)||0)-(Date.parse(a.published_at)||0))[0];
       if(discoveredSource(newest))tile.append(el('p.data-notice.small',s('creators.new_source_pending',{date:String(newest.published_at||'').slice(0,10)})));
       const highlight=[...(page?.highlights || [])].sort((a,b)=>(Date.parse(b.published_at)||0)-(Date.parse(a.published_at)||0))[0];
-      if(highlight)tile.append(el('p.creator-card-gist',conciseSummary(highlight.summary,isZh)));
-      else if(canRead(k.id))tile.append(el('p.small.muted',s(page?.backfill?'creatorpage.preparing':'creatorpage.no_summary')));
+      if(highlight&&mine)tile.append(el('p.creator-card-gist',conciseSummary(highlight.summary,isZh)));
+      else if(canRead(k.id)&&mine)tile.append(el('p.small.muted',s(page?.backfill?'creatorpage.preparing':'creatorpage.no_summary')));
       const label = on ? s("creators.following") : s("creators.follow");
       const chip = el("button.cr-chip" + (on ? ".on" : ""), { type: "button",'aria-label':label+' '+k.name }, label);
       chip.addEventListener("click", () => { if(on)toggle(k.id,chip);else confirmCreator({...k,recent:creatorPosts.slice(0,3)},()=>api.kol.sub(k.id),followed,()=>!disposed&&epoch===store.epoch()); });
@@ -274,6 +294,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     }
     if (!selected && mine) content.append(el('details.creator-directory-picker',el('summary',s('creators.directory_short')),grid));
     else content.appendChild(grid);
+    if(!selected&&!mine&&!grid.childElementCount)content.append(el('p.empty',s(discovery.status==='unavailable'?'creatordiscovery.unavailable':'creatordiscovery.no_view')));
     // Search is for people, not the subset that happens to have reviewed stock posts.
     // The same visible input searches the shared directory and submits a channel lookup.
     if(query&&!selected)return;
@@ -349,8 +370,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         if(meta.source?.corrections?.length)art.appendChild(el('p.small',s('creatorclaim.corrected')));
         const sections = meta.source?.sections || [];
         const fullSummary = reviewed?(pickSummary(p.summary,isZh) || pickSummary(sections[0],isZh)):'';
-        art.appendChild(el("p.cr-sum", conciseSummary(fullSummary,isZh)));
-        const detail = el("details.cr-sections",el("summary",s("creators.read_summary")),el("p.cr-attribution.muted.small", s("creators.attribution", { name: p.kol_name || p.kol_id || "—" })),el("p",fullSummary));
+        if(fullSummary)art.appendChild(el("p.cr-sum", conciseSummary(fullSummary,isZh)));
+        const detail = el("details.cr-sections",el("summary",s(fullSummary?"creators.read_summary":"creatordiscovery.excerpts")),el("p.cr-attribution.muted.small", s("creators.attribution", { name: p.kol_name || p.kol_id || "—" })),el("p",fullSummary));
         if(focusedPost)detail.open=true;
         const spans=spanSection(points,null,focusedPoint,{inline:true});if(spans)detail.append(spans);
         if (grounded && legacyCalls(p).length) detail.append(callChips(legacyCalls(p),isZh,p.url,p.kol_id));

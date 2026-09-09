@@ -96,7 +96,7 @@ export function renderMacroBeta(doc){
 export function mountMacroBeta(root){
   const epoch=store.epoch(),ctl=new AbortController();let disposed=false;
   const box=el('section.card.macro-beta',el('h2',s('macro.title')));root.append(box);
-  if(!store.isPro()){box.append(el('p.muted',s('macro.free')),el('a.btn.btn-primary.btn-sm',{href:'#/billing'},s('macro.open')));return()=>{disposed=true;};}
+  if(!store.get('me')){box.append(el('p.muted',s('macro.free')),el('a.btn.btn-primary.btn-sm',{href:'#/billing'},s('macro.open')));return()=>{disposed=true;};}
   box.append(el('p.muted',s('macro.loading')));
   api.get('/macro/beta',{signal:ctl.signal,silent402:true}).then(doc=>{if(!disposed&&epoch===store.epoch())box.replaceWith(renderMacroBeta(doc));}).catch(()=>{if(!disposed&&epoch===store.epoch()){clear(box);box.append(el('h2',s('macro.title')),el('p.data-notice',s('macro.unavailable')));}});
   return()=>{disposed=true;ctl.abort();};

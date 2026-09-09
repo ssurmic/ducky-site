@@ -46,10 +46,10 @@ test('event kinds keep payrolls, productivity, minutes, PMI and issuer earnings 
  assert.equal(eventKind({type:'rebal',title:'MSCI rebalance'}),'index');
  assert.equal(eventKind({type:'rebal',title:'Month-end rebalance'}),'month_end');
 });
-test('free event cards have useful hints but make no private request',async()=>{
+test('free event cards include current context and useful hints',async()=>{
  store.set('me',{tier:'free'});let calls=0;globalThis.fetch=async()=>{calls++;return response({});};
  const session=eventResearchSession();const box=session.mount({type:'earnings',date:'2026-09-10',tickers:['CRDO']});
- assert.match(box.textContent,/guidance/);assert.ok(box.querySelector('a[href="#/billing"]'));assert.equal(calls,0);session.dispose();
+ assert.match(box.textContent,/guidance/);assert.equal(box.querySelector('a[href="#/billing"]'),null);assert.equal(calls,2);session.dispose();
 });
 test('event evidence retains losses and missing observations with source links',async()=>{
  store.set('me',{tier:'pro'});

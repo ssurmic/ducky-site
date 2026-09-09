@@ -43,7 +43,7 @@ test('market context labels headline coverage and creator attribution without ra
 test('free market preview makes only a public request and logout discards pending private data',async()=>{
  store.set('me',{tier:'free'});const urls=[];globalThis.fetch=async url=>{urls.push(String(url));return response({status:'unavailable'});};
  const free=document.createElement('div');const dispose=mountMarketContext(free);await tick();
- assert.deepEqual(urls,['/public/market-preview.json']);dispose();
+ assert.deepEqual(urls,['/market/context']);dispose();
  store.set('me',{tier:'pro'});let done;globalThis.fetch=()=>new Promise(r=>done=r);
  const root=document.createElement('div');const clean=mountMarketContext(root);
  store.bumpEpoch();store.set('me',null);done(response({status:'ok',topics:[{label_en:'SECRET'}]}));await tick();

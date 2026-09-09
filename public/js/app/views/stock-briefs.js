@@ -1,3 +1,4 @@
+import {canReadStock,stockResearchEntry} from '../experience.js';
 import {el,clear,spinner,errorBox,num,pct} from '../ui.js';
 import {s,LANG} from '../strings.js';
 import * as api from '../api.js';
@@ -25,7 +26,7 @@ export function factText(fact){
   if(fact.topic==='creator_view')return [d.author,sessionDate(d.published_at),pick(d.title)||d.title?.en||d.title?.zh].filter(Boolean).join(' · ');
   if(fact.topic==='reported_insider_purchase')return (d.owners||[]).map(o=>o.name).join(', ')+' · '+
     (d.transactions||[]).map(t=>`${t.date} · ${n(t.shares,0)} × $${n(t.price,2)}`).join(' / ');
-  if(fact.topic==='business_peer_comparison')return (d.benchmark||'')+' · '+n(d.excess20)+' pp';
+  if(fact.topic==='business_peer_comparison')return (LANG==='en' ? (d.benchmark_en || (/[^\x00-\x7F]/.test(d.benchmark||'') ? comparisonLabel(fact) : d.benchmark)) : d.benchmark || comparisonLabel(fact))+' · '+n(d.excess20)+' pp';
   if(d.left&&d.right)return `${d.left} ${pct(d.left_return_pct)} / ${d.right} ${pct(d.right_return_pct)} · ${n(d.excess_pp,2)} pp · ${d.start} → ${d.end}`;
   if(fact.topic==='macro_background')return s('stockbrief.fact_macro',{date:d.date||'—',regime:s('stockbrief.regime_'+(['mixed','supportive','adverse'].includes(d.regime)?d.regime:'unknown')),rate:n(d.metrics?.nominal_10y,2)});
   return [d.publisher||d.author||'',LANG==='en'?(d.summary_en||d.title||''):(d.summary||d.title||'')].filter(Boolean).join(' · ')||s('stockbrief.recorded_source');
@@ -110,10 +111,7 @@ export async function mountStockBriefs(root,route={}){
   const host=el('div.stock-briefs');root.append(host);
   async function load(){
     const id=++request;clear(host);
-    if(!store.isPro()){
-      host.append(el('section.card',el('h2',s('stockbrief.lock_title')),el('p',s('stockbrief.lock_note')),
-        el('a.btn.btn-primary',{href:'#/billing'},s('radar.access_upgrade'))));return;
-    }
+    if(ticker&&!canReadStock(ticker)){host.append(stockResearchEntry(ticker));return;}
     host.append(spinner());
     try{
       const doc=await api.get('/briefing/stocks'+(safeTicker(ticker)?'?ticker='+encodeURIComponent(ticker):''),{signal:ctl.signal,silent402:true});
@@ -121,7 +119,8 @@ export async function mountStockBriefs(root,route={}){
       if(!Array.isArray(doc?.items))throw Error('invalid_response');
       clear(host);
       host.append(el('p.small.muted',s('stockbrief.cadence')));
-      if(!doc.items.length)host.append(el('section.card',el('h2',s('briefing.add_title')),
+      if(!doc.items.length&&!store.isPro())host.append(stockResearchEntry());
+      else if(!doc.items.length)host.append(el('section.card',el('h2',s('briefing.add_title')),
         el('p',s('stockbrief.empty')),el('a.btn.btn-primary',{href:'#/watchlist'},s('briefing.edit_watchlist'))));
       for(const row of doc.items.slice(0,3))host.append(reportCard(row,{onHistory:history}));
       if(doc.items.length>3)host.append(el('details.card.stock-brief-more',el('summary',s('briefing.show_all',{n:doc.items.length,more:doc.items.length-3})),
@@ -135,7 +134,7 @@ export async function mountStockBriefs(root,route={}){
     try{
       const query=new URLSearchParams({limit:'3'});if(panel.dataset.cursor)query.set('before',panel.dataset.cursor);
       const doc=await api.get('/briefing/stocks/'+tk+'/history?'+query,{signal:ctl.signal,silent402:true});
-      if(!valid()||!card.isConnected||!store.isPro())return;
+      if(!valid()||!card.isConnected||!canReadStock(tk))return;
       panel.querySelector('.error')?.remove();
       for(const row of doc.items||[])panel.append(reportCard(row,{archive:true}));
       panel.dataset.cursor=doc.next_cursor||'';button.hidden=!doc.next_cursor;button.textContent=s('creators.load_more');

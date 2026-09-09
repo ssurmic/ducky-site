@@ -93,7 +93,7 @@ export function mountScreen(root,{signal,query,initialConfig}={}){
       // settings. Report what actually exists rather than a local checkbox.
       notify.checked=row.notify;toast(s(row.notify?'screen.saved_notify':'screen.saved_only'));
       await loadSaved();saveButton.textContent=s('screen.saved_open');saveButton.disabled=false;
-    }catch(err){if(valid())toast(s('common.error',{msg:err.message}),'err');}
+    }catch(err){if(valid())toast(err.message==='screen_limit'?s('screen.limit_reached'):s('common.error',{msg:err.message}),'err');}
     finally{if(valid())saveButton.disabled=false;}
   });
   saveName.addEventListener('input',()=>saveName.setCustomValidity(''));
@@ -134,9 +134,6 @@ export function mountScreen(root,{signal,query,initialConfig}={}){
     }catch{}
   }
   async function runPreview(){
-    if(!store.isPro()){
-      clearResults();status.replaceChildren(el('span',s('screen.pro')),link('#/billing',s('nav.billing')));return;
-    }
     current=read();fields.cap_max.setCustomValidity(current.cap_min!=null && current.cap_max!=null && current.cap_min>=current.cap_max?s('screen.cap_error'):'');
     fields.insider_min.setCustomValidity(current.insider_min!=null && current.insider_min<200000?s('screen.insider_error'):'');
     if(!form.reportValidity())return;
@@ -192,20 +189,22 @@ export function mountSavedScreens(root,{signal}={}){
   async function load(){
     list.replaceChildren(spinner());
     try{
-      const [doc,history]=await Promise.all([api.get('/screens',{signal}),store.isPro()?api.get('/screens/hits',{signal}):Promise.resolve({items:[]})]);
+      const [doc,history]=await Promise.all([api.get('/screens',{signal}),api.get('/screens/hits',{signal})]);
       if(!valid())return;clear(list);
+      list.append(el('p.small.muted',s('screen.allowance',{used:doc.items.length,cap:doc.cap})));
       if(!doc.items.length)list.append(el('p.muted',s('screen.saved_empty')));
       if(!doc.evaluation_enabled)list.append(el('p.muted',s('screen.paused_tier')));
       for(const row of doc.items){
-        const toggle=el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:!doc.evaluation_enabled && !row.notify,onclick:async()=>{
-          toggle.disabled=true;try{await api.post('/screens/'+row.id,{notify:!row.notify},{signal});if(valid())await load();}catch(err){if(valid()){toggle.disabled=false;toast(s('common.error',{msg:err.message}),'err');}}
+        const active=!doc.active_ids||doc.active_ids.includes(row.id);
+        const toggle=el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:(!doc.evaluation_enabled||!active) && !row.notify,onclick:async()=>{
+          toggle.disabled=true;try{await api.post('/screens/'+row.id,{notify:!row.notify},{signal});if(valid())await load();}catch(err){if(valid()){toggle.disabled=false;toast(err.message==='screen_limit'?s('screen.limit_reached'):s('common.error',{msg:err.message}),'err');}}
         }},s(row.notify?'screen.pause':'screen.enable'));
         const del=el('button.btn.btn-ghost.btn-sm.danger',{type:'button',onclick:async()=>{
           if(!await confirm(s('screen.delete_confirm')))return;del.disabled=true;
-          try{await api.del('/screens/'+row.id,{signal});if(valid())await load();}catch(err){if(valid()){del.disabled=false;toast(s('common.error',{msg:err.message}),'err');}}
+          try{await api.del('/screens/'+row.id,{signal});if(valid())await load();}catch(err){if(valid()){del.disabled=false;toast(err.message==='screen_limit'?s('screen.limit_reached'):s('common.error',{msg:err.message}),'err');}}
         }},s('common.delete'));
         list.append(el('article.card.screen-saved-row',el('h3',row.name),el('p',configSummary(row.config)),
-          el('p.muted.small',s(!row.last_checked?'screen.waiting':row.notify?'screen.monitoring':'screen.in_app_only')),
+          el('p.muted.small',s(!active?'screen.outside_allowance':!row.last_checked?'screen.waiting':row.notify?'screen.monitoring':'screen.in_app_only')),
           row.last_checked?el('p.muted.small',s('screen.checked',{date:textDate(row.last_checked)})):null,
           el('div.screen-actions',link('#/boards?screen='+row.id,s('screen.open')),toggle,del)));
       }

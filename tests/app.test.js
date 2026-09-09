@@ -110,13 +110,13 @@ test('fast route changes keep late calendar results out of the active watchlist'
  await first;assert.equal(document.querySelector('#view h1').textContent,copy['app.watch.title']);
 });
 
-test('free research view does not fetch or leak a ticker report',async()=>{
+test('unselected free research gives a stock selection path without fetching',async()=>{
  const research=await import('../public/js/app/views/research.js');
  store.set('me',{tier:'free'});let requests=0;
  globalThis.fetch=async()=>{requests++;return response({reports:[]});};
  const root=document.createElement('div');await research.mount(root,{ticker:'AMKR'});
- assert.equal(requests,0);assert.ok(root.querySelector('a[href="#/billing"]'));
- assert.equal(root.textContent.includes('AMKR'),false);
+ assert.equal(requests,0);assert.ok(root.querySelector('a[href="#/evidence/AMKR"]'));
+ assert.ok(root.querySelector('a[href="#/evidence/AMKR"]'));
 });
 
 test('creator following, quality and search filters compose independently',()=>{

@@ -80,7 +80,7 @@ test('holiday survives category filters and never requests private event researc
  button(root,copy['app.calendar.mode_month']).click();
  assert.ok(root.querySelector('.cal-closed'));
  button(root,copy['app.calendar.mode_biweekly']).click();
- assert.match(root.querySelector('.cal-closed .pill').textContent,/Closed/);
+ assert.match(root.querySelector('.cal-closed .pill').textContent,/Market closed/);
  assert.match(root.querySelector('.cal-closed').getAttribute('aria-label'),/US markets closed/);
  root.remove();
 });
@@ -96,7 +96,7 @@ test('month navigation and view changes keep the selected detail in the visible 
  assert.equal(root.querySelector('.cal-bicell[aria-pressed="true"]').dataset.date,selectedDate);
 });
 
-test('official index deep links lead 42 same-day events through preview, dialog, month and list without private access',async()=>{
+test('official index deep links lead 42 same-day events through preview, dialog, month and list with free context',async()=>{
  const day='2026-09-21',calls=[];
  const official={id:'index:BE:add',event_id:'index:BE:add',type:'index_change',date:day,title:'BE 纳入 S&P 500',title_en:'BE joins S&P 500',tickers:['BE'],action:'add',index_name:'S&P 500',time:'盘前',time_en:'Before market open',effective_at:day,time_zone:'America/New_York',source_url:'https://example.test/official'};
  const others=['AGNC','AMSF','BKE',...Array.from({length:38},(_,i)=>'F'+i)].map(ticker=>({...official,id:'index:'+ticker,event_id:'index:'+ticker,tickers:[ticker],title:ticker+' 纳入 S&P 500',title_en:ticker+' joins S&P 500'}));
@@ -119,13 +119,13 @@ test('official index deep links lead 42 same-day events through preview, dialog,
   assert.equal(row.querySelector('.cal-tk').textContent,'$BE');assert.equal(document.querySelectorAll('#modal .cal-tk')[1].textContent,'$AMSF');
   assert.ok(row.querySelector('a[href="https://example.test/official"]'));
   const more=row.querySelector('.cal-research-more');more.open=true;more.dispatchEvent(new window.Event('toggle'));
-  assert.equal(calls.some(url=>url.includes('/calendar/context')||url.includes('/calendar/links')),false);
-  assert.ok(more.querySelector('a[href="#/billing"]'));
+  assert.equal(calls.some(url=>url.includes('/calendar/context')||url.includes('/calendar/links')),true);
+  assert.equal(more.querySelector('a[href="#/billing"]'),null);
   closeModal();
   button(root,copy['app.calendar.mode_month']).click();assert.equal(root.querySelector('.cal-sel .mbar .pill-txt').textContent,'BE');
   assert.equal(root.querySelector('.cal-sel .cal-event-count').textContent,'42');
   button(root,copy['app.calendar.mode_list']).click();assert.equal(root.querySelectorAll('.cal-ev').length,42);assert.equal(root.querySelector('.cal-tk').textContent,'$BE');
-  assert.equal(calls.some(url=>url.includes('/calendar/context')||url.includes('/calendar/links')),false);
+  assert.equal(calls.some(url=>url.includes('/calendar/context')||url.includes('/calendar/links')),true);
  }finally{cleanup();root.remove();location.hash='';store.set('me',{tier:'pro'});store.set('watchlist',priorWatch);}
 });
 

@@ -60,7 +60,7 @@ test('discovery shows stocks outside the watchlist, preserving zero and unknown 
 test('free visitors do not fetch current candidates and stale results are not promoted',async()=>{
  store.set('me',{tier:'free'});let calls=[];globalThis.fetch=async url=>{calls.push(String(url));return response({});};
  let root=document.createElement('div');let cleanup=await opportunities.mount(root);
- assert.equal(calls.length,0);assert.ok(root.querySelector('a[href="#/billing"]'));cleanup();
+ assert.ok(calls.some(url=>url.includes('/opportunities?')));assert.equal(root.querySelector('a[href="#/billing"]'),null);cleanup();
  store.set('me',{tier:'pro'});
  globalThis.fetch=async(url,opts)=>{
   calls.push(String(url));

@@ -23,11 +23,11 @@ test('creator history preserves versions and composes with following and stock s
  assert.equal(safeSource('https://youtube.com.evil.test/'),null);
 });
 
-test('free creator research never requests or mounts private results',async()=>{
- store.set('me',{tier:'free'});globalThis.fetch=()=>assert.fail('private fetch');
+test('free creator research reads the server-scoped results',async()=>{
+ store.set('me',{tier:'free'});let calls=0;globalThis.fetch=async url=>{calls++;assert.match(url,/^\/kol\/research/);return Response.json({items:[]});};
  const root=document.createElement('section');document.body.append(root);
  await mountResearch(root,{});
- assert.ok(root.querySelector('a[href="#/billing"]'));assert.equal(root.querySelector('.study-row'),null);root.remove();
+ assert.equal(calls,1);assert.equal(root.querySelector('.study-row'),null);root.remove();
 });
 
 test('paid history keeps a loss, exact dates, and unavailable windows visible',async()=>{

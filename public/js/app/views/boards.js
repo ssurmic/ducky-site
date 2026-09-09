@@ -121,7 +121,7 @@ export async function mount(root, route={}) {
   if(params.get('board')==='social')return mountSocial(root,{...route,query:params});
   const reports=store.get('route')?.name==='reports';
   const availableBoards=reports?REPORT_BOARDS:EVENT_BOARDS;
-  const currentAccess=store.isPro();
+  const currentAccess=!!store.get('me');
   const readingNow=()=>Date.now()-(currentAccess?0:5*86400000);
   let accessInfo=null;
   const state={reports,mode:['archive','excerpts'].includes(params.get('mode'))?params.get('mode'):'recent',

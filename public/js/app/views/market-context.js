@@ -78,7 +78,7 @@ export function mountMarketContext(root,{compact=false,heading='h2'}={}) {
   const epoch=store.epoch(), ctl=new AbortController();let disposed=false;
   const placeholder=el('section.card.market-context',el(heading,s('market.title')),el('p.muted',s('market.loading')));
   root.append(placeholder);
-  const pro=store.isPro();
+  const pro=!!store.get('me');
   api.get(pro?'/market/context':'/public/market-preview.json',{signal:ctl.signal,auth:pro,silent402:true}).then(doc=>{
     if(disposed||epoch!==store.epoch())return;
     placeholder.replaceWith(renderMarketContext(doc,{preview:!pro,watches:store.get('watchlist')||[],compact,heading}));

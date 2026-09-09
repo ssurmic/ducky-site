@@ -237,8 +237,8 @@ export async function mount(root,route={}){
   const ctl=new AbortController(),epoch=store.epoch();let alive=true,request=0,currentMap=null;
   const valid=id=>alive&&!ctl.signal.aborted&&epoch===store.epoch()&&(id==null||id===request);
   let chosen=store.get('me')?.experience?.evidence?.selected||[];
-  let example=exampleTickers.includes(route.query?.get('example'))?route.query.get('example'):(!store.isPro()&&!route.ticker?'GLW':null);
-  let ticker=example||String(route.ticker||'').toUpperCase();
+  let example=exampleTickers.includes(route.query?.get('example'))?route.query.get('example'):null;
+  let ticker=example||String(route.ticker||chosen[0]||'').toUpperCase();
   if(!tickerOK(ticker))ticker=(store.get('watchlist')||[]).find(tickerOK)||'';
   function picker(){
     const field=el('input.input',{type:'search',value:ticker,placeholder:'AVGO / ORCL',maxlength:10,'aria-label':s('evidence.ticker')});
@@ -252,7 +252,7 @@ export async function mount(root,route={}){
   }
   const heading=el('header.evidence-heading',el('div.view-head',el('h1',s('evidence.title'))),
     el('button.evidence-switch-stock',{type:'button',onclick:picker,'aria-haspopup':'dialog'},
-      ticker?el('strong.mono',ticker):null,el('span',s('evidence.switch_stock')),el('span',{'aria-hidden':'true'},'⌄')));root.append(heading);
+      el('strong.mono',ticker),el('span',s('evidence.switch_stock')),el('span',{'aria-hidden':'true'},'⌄')));root.append(heading);
   const favorites=el('div.evidence-watchlist');
   const stocks=[...new Set((store.get('watchlist')||[]).filter(tickerOK))].sort();
   const preview=[...(stocks.includes(ticker)?[ticker]:[]),...stocks.filter(t=>t!==ticker)].slice(0,7);
@@ -260,10 +260,14 @@ export async function mount(root,route={}){
   if(stocks.length)favorites.append(el('button.evidence-all-stocks',{type:'button',onclick:picker,'aria-haspopup':'dialog'},s('evidence.all_watchlist',{n:stocks.length}),' ⌄'));
   root.append(favorites);
   const trial=el('div.evidence-trial');root.append(trial);
+  function syncSelection(){
+    const me=store.get('me');if(!me)return;
+    store.set('me',{...me,experience:{...me.experience,evidence:{...me.experience?.evidence,selected:chosen}}});
+  }
   function trialControls(){
     clear(trial);
     if(store.isPro()&&!example)return;
-    trial.append(el('div.evidence-examples',el('strong',s('experience.examples')),
+    trial.append(el('details.evidence-examples',el('summary',s('experience.examples')),
       ...exampleTickers.map(t=>el('a.chip',{href:'#/evidence?example='+t,'aria-current':example===t?'page':null},t))));
     if(!store.isPro()){
       trial.append(quotaNote('evidence',chosen.length,store.get('me')?.experience?.evidence?.cap??3));
@@ -271,7 +275,7 @@ export async function mount(root,route={}){
       for(const t of chosen)personal.append(el('div.evidence-selection',el('a',{href:'#/evidence/'+t},t),
         el('button',{type:'button','aria-label':s('experience.remove_map',{ticker:t}),onclick:async e=>{
           e.currentTarget.disabled=true;
-          try{const r=await api.del('/me/evidence/'+t,{signal:ctl.signal});if(!valid())return;chosen=r.selected;trialControls();load();}
+          try{const r=await api.del('/me/evidence/'+t,{signal:ctl.signal});if(!valid())return;chosen=r.selected;syncSelection();trialControls();}
           catch(error){if(valid())host.prepend(errorBox(error));}
         }},'×')));
       trial.append(personal);
@@ -295,7 +299,7 @@ export async function mount(root,route={}){
         try{
           const r=await api.post('/me/evidence/'+ticker,{}, {signal:ctl.signal});if(!valid(id))return;
           if(r.status!=='ready'){note.textContent=s('experience.map_unavailable');return;}
-          chosen=r.selected||chosen;trialControls();load();
+          chosen=r.selected||chosen;syncSelection();trialControls();
         }catch(error){if(valid(id)&&error.status!==402)host.append(errorBox(error));}
         finally{action.disabled=false;}
       }},s('experience.add_map',{ticker}));
@@ -321,22 +325,22 @@ export async function mount(root,route={}){
         try{
           const q=new URLSearchParams({limit:'10'});if(cursor)q.set('before',cursor);
           const archive=await api.get('/evidence/'+ticker+'/history?'+q,{signal:ctl.signal,silent402:true});
-          if(!valid(id)||!store.isPro())return;
+          if(!valid(id))return;
           for(const row of archive.items||[])historyPanel.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>load(row.id)},time(row.recorded_at)));
           cursor=archive.next_cursor;historyButton.hidden=!cursor;historyButton.textContent=s('evidence.show_all');
         }catch(error){if(valid(id))historyPanel.append(errorBox(error));}
         finally{historyButton.disabled=false;}
       }},s('evidence.history'));
       host.append(el('div.evidence-links',el('a.btn.btn-ghost.btn-sm',{href:'#/briefing?ticker='+ticker},s('nav.briefing')),
-        el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+ticker},s('radar.chart')),store.isPro()?historyButton:el('a.btn.btn-ghost.btn-sm',{href:'#/billing'},s('experience.map_history')),
+        el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+ticker},s('radar.chart')),historyButton,
         version?el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>load()},s('evidence.latest')):null),historyPanel);
     }catch(error){if(valid(id)){clear(host);host.append(errorBox(error,()=>load(version)));}}
   }
-  const unsubs=[store.subscribe('me',()=>load())];
+  const unsubs=[store.subscribe('me',()=>{chosen=store.get('me')?.experience?.evidence?.selected||[];trialControls();load();})];
   const cleanup=()=>{alive=false;request++;currentMap?.dispose?.();currentMap=null;ctl.abort();unsubs.forEach(fn=>fn());closeModal();};
   route.signal?.addEventListener('abort',cleanup,{once:true});
   if(route.signal?.aborted)cleanup();else {
-    if(store.get('me')&&!store.isPro())try{const r=await api.get('/me/evidence',{signal:ctl.signal});if(valid()){chosen=r.selected||[];trialControls();}}catch(error){if(valid())trial.append(errorBox(error));}
+    if(store.get('me')&&!store.isPro())try{const r=await api.get('/me/evidence',{signal:ctl.signal});if(valid()){chosen=r.selected||[];if(JSON.stringify(chosen)!==JSON.stringify(store.get('me')?.experience?.evidence?.selected||[]))syncSelection();if(!example&&!route.ticker&&chosen.length){ticker=chosen[0];const name=heading.querySelector('strong.mono');if(name)name.textContent=ticker;}trialControls();}}catch(error){if(valid())trial.append(errorBox(error));}
     if(valid())await load();
   }
   return cleanup;

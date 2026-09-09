@@ -13,15 +13,12 @@ const store=await import('../public/js/app/store.js');
 const {mount,archivePath}=await import('../public/js/app/views/boards.js');
 const response=data=>new Response(JSON.stringify(data),{headers:{'content-type':'application/json'}});
 
-test('free radar uses public endpoints and shifts its recent window by five days',async()=>{
- store.set('me',{tier:'free'});store.set('token',null);const calls=[];
- const cutoff=new Date(Date.now()-5*86400000).toISOString(),old=new Date(Date.now()-6*86400000).toISOString();
- globalThis.fetch=async(url,options)=>{url=String(url);calls.push({url,options});
-  return response(url.includes('archive.json')?{filter_version:3,items:[{id:1,ts:old,kind:'stake',ticker:'EX',summary:'Delayed source'}],access:{mode:'delayed',delay_days:5,available_before:cutoff}}:{items:[]});};
+test('free radar reads current authenticated records without an artificial delay',async()=>{
+ store.set('me',{tier:'free'});const calls=[];
+ globalThis.fetch=async(url,options)=>{calls.push(String(url));return response(String(url).includes('archive.json')?{filter_version:3,items:[{id:1,ts:new Date().toISOString(),kind:'stake',ticker:'EX',summary:'Current source'}],access:{mode:'current',delay_days:0}}:{items:[]});};
  const root=document.createElement('section');document.body.append(root);const dispose=await mount(root,{query:new URLSearchParams()});
- assert.ok(calls.some(c=>c.url.includes('/public/radar/archive.json')));assert.equal(calls.some(c=>/\/radar\/archive\.json/.test(c.url)&&!c.url.includes('/public/')),false);
- assert.ok(root.textContent.includes('Delayed source'));assert.ok(root.textContent.includes(copy['app.radar.access_delayed']));
- const recent=new URL(calls.find(c=>c.url.includes('archive.json')).url,'https://ducky.test');assert.ok(recent.searchParams.get('start')<=new Date(Date.now()-11*86400000).toISOString().slice(0,10));
+ assert.ok(calls.some(url=>url.startsWith('/radar/archive.json')));assert.ok(!calls.some(url=>url.startsWith('/public/radar')));
+ assert.match(root.textContent,/Current source/);assert.equal(root.querySelector('.radar-access-note'),null);
  dispose();root.remove();
 });
 test('Pro radar uses authenticated private URLs and does not mix public cache mode',async()=>{

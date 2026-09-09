@@ -18,7 +18,7 @@ const tick=()=>new Promise(r=>setTimeout(r,0));
 
 test('free guide exposes actions and actual server caps; paid users keep their workspace',()=>{
  store.set('me',me());const guide=freeGuide();assert.equal(guide.querySelectorAll('.free-guide-links a').length,4);
- assert.match(guide.textContent,/5 watched stocks/);assert.match(guide.textContent,/Maps for 3 stocks/);assert.match(guide.textContent,/2 creators/);
+ assert.match(guide.textContent,/5 watched stocks/);assert.match(guide.textContent,/Research 3 stocks/);assert.match(guide.textContent,/2 creators/);
  store.set('me',{tier:'pro'});assert.equal(freeGuide(),null);
 });
 test('watchlist limit names the correct feature and keeps the free path available',()=>{
@@ -55,7 +55,7 @@ test('a chosen free map stays locked until explicit save; unavailable data costs
  root.querySelector('.card .btn-primary').click();await tick();assert.match(root.textContent,/No slot was used/);
  assert.ok(!calls.some(([u])=>u==='/evidence/AVGO'));
  ready=true;root.querySelector('.card .btn-primary').click();await tick();await tick();
- assert.match(root.textContent,/Your maps 1 \/ 3/);assert.match(root.textContent,/Saved evidence/);
+ assert.match(root.textContent,/Research stocks 1 \/ 3/);assert.match(root.textContent,/Saved evidence/);
  assert.equal(root.querySelectorAll('.evidence-node').length,1);
  assert.ok(root.querySelector('a[href="#/billing"]').textContent);stop();root.remove();closeModal();
 });
@@ -75,10 +75,41 @@ test('unselected creator content is unavailable, never falsely reported as no su
  globalThis.fetch=async url=>response(String(url).includes('/trial-feed')?{kols:[{id:'one',name:'One',platform:'youtube'}],posts:[],pages:{}}:String(url).includes('/me/kols')?{subs:[],cap:2}:{items:[]});
  const {mount:creators}=await import('../public/js/app/views/creators.js');
  const root=document.createElement('div');document.body.append(root);const stop=await creators(root,{query:new URLSearchParams('scope=discover')});
- assert.match(root.textContent,/Follow to see available coverage/);
+ assert.match(root.textContent,/Follow for full summaries/);
  assert.ok(!root.textContent.includes(copy['app.creatorpage.no_summary']));
  root.querySelector('.creator-name').click();
  assert.equal(root.querySelector('.creator-overview'),null);
  assert.equal(root.querySelector('.creator-video-archive'),null);
  assert.ok(!root.textContent.includes(copy['app.creatorpage.no_summary']));stop();root.remove();
+});
+
+test('default Free map opens the selected stock, and removing it revokes the local research access',async()=>{
+ store.set('me',{...me(),experience:{...me().experience,evidence:{cap:3,selected:['VST']}}});store.set('watchlist',['VST']);
+ let selected=['VST'],calls=[];
+ globalThis.fetch=async(url,opts)=>{
+  calls.push(String(url));
+  if(url==='/me/evidence')return response({selected,cap:3});
+  if(url==='/me/evidence/VST'&&opts.method==='DELETE'){selected=[];return response({selected});}
+  if(url==='/evidence/VST')return response({ticker:'VST',status:'ready',nodes:[]});
+  throw Error('Unexpected '+url);
+ };
+ const root=document.createElement('div');document.body.append(root);const stop=await mount(root,{});
+ try{
+  assert.ok(calls.includes('/evidence/VST'));assert.doesNotMatch(root.textContent,/Historical example:|GLW.*Historical/);
+  assert.equal(root.querySelector('.evidence-examples').open,false);
+  root.querySelector('.evidence-selection button').click();await tick();await tick();
+  assert.deepEqual(store.get('me').experience.evidence.selected,[]);
+  assert.match(root.textContent,/Choose a stock to research/);
+ }finally{stop();root.remove();}
+});
+
+test('Discovery keeps stance, timestamped source and missing English explicit',async()=>{
+ const {discoveryPreview}=await import('../public/js/app/views/creator-discovery.js');
+ const view={ticker:'NVDA',stance:'counter',text:{en:'Margins may weaken.',zh:'利润率可能下降。'},published_at:'2026-08-01T12:00:00Z',
+  source_url:'https://www.youtube.com/watch?v=fixture&t=123s',condition_text:'If demand slows.',conditional:true};
+ const card=discoveryPreview({latest_view:view,coverage:{scan_limited:false}});
+ assert.match(card.textContent,/Bearish.*NVDA/);assert.match(card.textContent,/Margins may weaken/);assert.match(card.textContent,/If demand slows/);
+ assert.ok(card.querySelector('a').href.endsWith('t=123s'));
+ const missing=discoveryPreview({latest_view:{...view,text:{zh:'不能当成英文'},condition_text:null}});
+ assert.match(missing.textContent,/English version is not available/);assert.doesNotMatch(missing.textContent,/不能当成英文/);
 });

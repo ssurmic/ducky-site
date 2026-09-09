@@ -115,7 +115,7 @@ test('far-away option levels stay listed without flattening candles; explicit fi
  }finally{close();r.remove();window.LightweightCharts.createChart=previous;}
 });
 
-test('compact candle controls preserve tier gates, cached aggregation and keyboard-accessible symbol switching',async()=>{
+test('compact candle controls include two years for Free, cached aggregation and keyboard-accessible symbol switching',async()=>{
  const previous=window.LightweightCharts.createChart;let candle,barsRequests=0;
  window.LightweightCharts.createChart=()=>({
   addSeries(type){const series={setData(v){this.data=v;},createPriceLine(){},applyOptions(){}};if(type===1)candle=series;return series;},
@@ -125,7 +125,8 @@ test('compact candle controls preserve tier gates, cached aggregation and keyboa
  globalThis.fetch=async url=>{if(String(url).includes('/bars/')){barsRequests++;return response({bars});}return response({status:'unavailable'});};
  const r=root(),close=await mount(r,{ticker:'ALAB'});
  try{
-  assert.equal(r.querySelector('[data-period="2y"]').disabled,true);
+  assert.equal(r.querySelector('[data-period="2y"]').disabled,false);
+  assert.equal(r.querySelector('[data-period="1y"]').disabled,false);
   const change=r.querySelector('.chart-change');assert.equal(r.querySelector('.chart-search').hidden,true);change.click();
   assert.equal(change.getAttribute('aria-expanded'),'true');assert.equal(document.activeElement,r.querySelector('.chart-search input'));change.click();
   assert.equal(r.querySelector('.chart-search').hidden,true);

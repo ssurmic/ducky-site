@@ -20,3 +20,13 @@ export function quotaNote(feature,used,cap) {
     used>=cap?el('span',s('experience.replace')):null,
     el('a',{href:'#/billing'},s('experience.more')));
 }
+
+
+export function canReadStock(ticker) {
+  return store.isPro() || (store.get('me')?.experience?.evidence?.selected || []).includes(ticker);
+}
+
+export function stockResearchEntry(ticker='') {
+  return el('section.card',el('h2',ticker?s('experience.personal_stock',{ticker}):s('experience.personal_map')),el('p',s('experience.map_choose')),
+    el('a.btn.btn-primary',{href:'#/evidence'+(ticker?'/'+encodeURIComponent(ticker):'')},s('experience.open_research')));
+}
