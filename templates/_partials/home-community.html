@@ -1,0 +1,7 @@
+<section class="home-community wrap" data-duck-community aria-labelledby="home-community-title">
+ <div class="home-community-card">
+  <div class="home-duck-pet"><button class="home-duck-head" type="button" aria-pressed="false" aria-label="{{ t('community.pet') }}" data-duck-pet data-pet-label="{{ t('community.pet') }}" data-stop-label="{{ t('community.stop') }}"><img src="/avatar-160.jpg" width="72" height="72" alt="" loading="lazy" decoding="async"></button><small>{{ t('community.hint') }}</small></div>
+  <div class="home-community-copy"><h2 id="home-community-title">{{ t('community.title') }}</h2><p>{{ t('community.body') }}</p><p class="home-duck-bubble" data-duck-bubble role="status" hidden>{{ t('community.bubble') }}</p></div>
+  <div class="home-community-actions"><a class="btn btn-ghost" href="{{ cfg.get('community_url') or ('https://t.me/' ~ cfg.bot ~ '?start=src_community') }}" target="_blank" rel="noopener noreferrer">{{ t('community.join') if cfg.get('community_url') else t('community.telegram') }} <span aria-hidden="true">↗</span></a>{% if cfg.get('support_url') %}<a class="btn btn-primary" href="{{ cfg.support_url }}" target="_blank" rel="noopener noreferrer">☕ {{ t('community.coffee') }}</a>{% endif %}</div>
+ </div>
+</section>

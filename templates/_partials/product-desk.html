@@ -10,7 +10,7 @@
    {% for route in tools %}
    <article id="desk-feature-{{ route }}" class="desk-feature" tabindex="-1" aria-labelledby="desk-title-{{ route }}"{% if not loop.first %} hidden{% endif %}>
     <p class="eyebrow mono">{{ t('desk.preview_label') }} / {{ '%02d' % loop.index }}</p>
-    <div class="desk-feature-heading"><h3 id="desk-title-{{ route }}">{{ t('desk.title.' ~ route) }}</h3><span class="feature-access feature-access-{{ navigation.catalog[route].access }}">{{ t('nav.access.' ~ navigation.catalog[route].access) }}</span></div><p class="desk-feature-copy">{{ t('desk.preview_' ~ route) }}</p>
+    <div class="desk-feature-heading"><h3 id="desk-title-{{ route }}">{{ t('desk.title.' ~ route) }}</h3></div><p class="desk-feature-copy">{{ t('desk.preview_' ~ route) }}</p>
     <div class="desk-feature-tags">
      {% if route in ['boards','reports'] %}{% for group in navigation.tree if group.route == route %}{% for child in group.children %}<a href="{{ url('/app/') }}#/{{ child.route }}{{ '?board=' ~ child.get('board') if child.get('board') else '' }}">{{ t('app.boards.t_' ~ child.board) if child.get('board') else t('app.nav.' ~ child.route) }} ↗</a>{% endfor %}{% endfor %}
      {% elif route in ['opportunities','chart','screens'] %}<span>RSI</span><span>IV / HV</span><span>20D</span>
@@ -19,7 +19,7 @@
     </div>
     <div class="desk-feature-access"><span>{{ t('desk.access_title') }}</span><p>{{ t('desk.access.' ~ route) }}</p></div>
     {% if route == 'creators' %}<a class="desk-sample-link" href="#video-example">{{ t('desk.public_sample') }} →</a>{% endif %}
-    <div class="desk-feature-actions"><a class="btn btn-primary" href="{{ url('/app/') }}#/{{ route }}">{{ t('desk.open_tool') }} ↗</a>{% if navigation.catalog[route].access != 'free' %}<a href="#pricing">{{ t('desk.pro_unlock') }} →</a>{% endif %}</div>
+    <div class="desk-feature-actions"><a class="btn btn-primary" href="{{ url('/app/') }}#/{{ route }}">{{ t('desk.open_tool') }} ↗</a></div>
    </article>
    {% endfor %}
    <div class="desk-preview-footer"><img src="/avatar-160.jpg" alt="" width="32" height="32"><span>{{ t('desk.register_note') }}</span></div>

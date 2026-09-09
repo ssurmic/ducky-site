@@ -83,7 +83,7 @@ test('price decoration rejects malformed, mismatched and missing quotes without 
  for(const c of [null,0,-2,NaN,true])assert.equal(quoteModel({...doc,bars:[{t:'2026-09-04',c}]},'AAA'),null);
  assert.equal(quoteModel({...doc,bars:[...doc.bars,doc.bars[1]]},'AAA'),null);
 });
-test('homepage tour opens each named tool and keeps pricing visible in both languages',()=>{
+test('homepage tour opens each named tool and keeps billing hidden in both languages',()=>{
  for(const prefix of ['','en/']){
   const page=new JSDOM(readFileSync(`dist/${prefix}index.html`,'utf8')).window.document;
   const tour=page.querySelector('[data-product-tour]'),cleanup=mountTour(tour);
@@ -99,7 +99,7 @@ test('homepage tour opens each named tool and keeps pricing visible in both lang
    assert.equal(tour.querySelector('.desk-feature:not([hidden])').id,'desk-feature-'+option.value);
    assert.equal(tour.querySelector('[aria-pressed=true]').dataset.tool,option.value);
   }
-  assert.equal(page.querySelector('#pricing').closest('details'),null);cleanup();
+  assert.equal(page.querySelector('#pricing'),null);cleanup();
  }
 });
 test('mobile and reduced-motion duck is steady while its greeting stays keyboard accessible',async()=>{

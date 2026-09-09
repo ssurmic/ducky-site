@@ -30,7 +30,7 @@ export function eventResearchSession(scopeTicker='') {
     const schedule=e.schedule_status==='source_scheduled'?s('event.schedule_source'):s('event.schedule_check');
     if(hint) box.append(hint);
     box.append(el('p.event-schedule.muted.small',schedule));
-    if(!store.get('me')) { box.append(el('a.event-upgrade',{href:'#/billing'},s('event.pro')));return box; }
+    if(!store.get('me')) { box.append(el('a.event-upgrade',{href:'#/login'},s('login.title')));return box; }
     const relevance=el('div.event-relevance',el('span.muted.small',s('event.matching')));
     const details=el('details.event-evidence',{open:kind==='ppi'},el('summary',s('event.history')));
     const prediction=el('div');

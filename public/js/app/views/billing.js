@@ -101,6 +101,11 @@ export function planSelection(query, previous = selected) {
 }
 
 export async function mount(root, { query } = {}) {
+  if (!store.billingEnabled()) {
+    root.append(el('h1', s('access.title')), el('p', s('access.body')),
+      el('a.btn.btn-primary', {href:'#/watchlist'}, s('nav.watchlist')));
+    return;
+  }
   let plans = (Date.now() - plansCacheAt < PLANS_TTL_MS) ? plansCache : null, busy = false;   // finding billing.js:14
   const me = store.get("me") || {};
   selected = planSelection(query);

@@ -31,7 +31,7 @@ for(const lang of ['zh','en']){
   for(const route of routes){
    const link=links.find(a=>a.dataset.featureLink===route),panel=f.doc.getElementById(link.hash.slice(1));
    assert.ok(panel,route);assert.ok(panel.querySelector('.desk-feature-access').textContent.trim());
-   assert.ok(panel.querySelector('.feature-access-'+catalog.catalog[route].access));
+   assert.equal(panel.querySelector('.feature-access'),null);
    const target=panel.querySelector('.desk-feature-actions .btn').hash;
    assert.equal(safeTarget(target),target);
    assert.equal(signedInTarget({email_verified:true,profile_complete:true},target),target);

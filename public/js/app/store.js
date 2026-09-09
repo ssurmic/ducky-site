@@ -41,6 +41,8 @@ function emit(key) {
   if (any) for (const fn of Array.from(any)) { try { fn(key, state[key]); } catch (e) { console.error(e); } }
 }
 
-export function tier() { return (state.me && state.me.tier) || "free"; }
+// Billing is a product policy, separate from the historical subscription in /me.
+export function billingEnabled() { return state.me?.access?.billing_enabled ?? (window.DUCKY?.BILLING_ENABLED !== false); }
+export function tier() { return state.me && !billingEnabled() ? 'pro' : (state.me && state.me.tier) || "free"; }
 export function isPro() { return tier() === "pro"; }
 export function isPaid() { const t = tier(); return t === "pro" || t === "paid"; }

@@ -74,8 +74,7 @@
     "screens"
   ],
   "account": [
-    "profile",
-    "billing"
+    "profile"
   ],
   "public_groups": [
     {

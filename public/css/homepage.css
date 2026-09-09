@@ -175,3 +175,25 @@ html.home-dialog-open{overflow:hidden;scrollbar-gutter:stable}
 .home-research-dialog .home-dossier:before,.home-research-dialog [data-home-open]{display:none}
 .home-research-dialog .home-price-history svg{max-height:180px}
 @media(max-width:480px){.home-research-dialog{width:calc(100% - 16px);max-height:calc(100dvh - 16px);border-radius:14px}.home-research-dialog .home-dossier{padding:16px}.home-dialog-toolbar{padding-inline:12px}}
+
+/* The existing duck avatar invites feedback without introducing another plan. */
+.home-community{padding-block:12px 24px}
+.home-community-card{display:flex;align-items:center;gap:24px;padding:28px 32px;border:1px solid color-mix(in srgb,var(--accent,#ff9800) 28%,transparent);border-radius:24px;background:color-mix(in srgb,var(--accent,#ff9800) 5%,transparent)}
+.home-duck-head img{display:block;border-radius:50%;box-shadow:0 0 0 6px color-mix(in srgb,var(--accent,#ff9800) 8%,transparent)}
+.home-community-copy{flex:1;min-width:0}
+.home-community h2{margin:0 0 6px;font-size:1.3rem;line-height:1.3;letter-spacing:-.02em}
+.home-community p{margin:0;color:var(--muted);font-size:.9375rem;line-height:1.55}
+.home-community .btn{flex:none;min-height:44px;white-space:normal;text-align:center}
+@media(max-width:640px){.home-community-card{display:grid;grid-template-columns:72px minmax(0,1fr);gap:14px 16px;padding:20px}.home-duck-head img{width:64px;height:64px}.home-community h2{font-size:1.1rem}.home-community p{font-size:.875rem}.home-community .btn{grid-column:1/-1;justify-self:start}}
+
+.home-duck-pet{flex:none;text-align:center;width:86px}
+.home-duck-head{display:block;margin:0 auto 10px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;touch-action:manipulation;transform-origin:50% 75%}
+.home-duck-head:focus-visible{outline:3px solid var(--accent,#ff9800);outline-offset:8px}
+.home-duck-pet small{display:block;font-size:.6875rem;line-height:1.3;color:var(--muted)}
+.home-duck-head.is-wobbling{animation:duck-head-wobble .65s ease-in-out infinite}
+@keyframes duck-head-wobble{0%,100%{transform:rotate(-9deg) translateY(0)}50%{transform:rotate(9deg) translateY(-3px)}}
+.home-community p.home-duck-bubble{display:table;width:fit-content;margin-top:12px;padding:8px 12px;border-radius:14px 14px 14px 3px;background:color-mix(in srgb,var(--accent,#ff9800) 15%,transparent);color:inherit;font-size:.875rem}
+.home-community p.home-duck-bubble[hidden]{display:none}
+.home-community-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+@media(max-width:640px){.home-duck-pet{width:72px}.home-community-actions{grid-column:1/-1;justify-content:flex-start}.home-community-actions .btn{font-size:.8125rem}}
+@media(prefers-reduced-motion:reduce){.home-duck-head.is-wobbling{animation:none}}

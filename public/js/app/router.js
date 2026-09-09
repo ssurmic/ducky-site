@@ -29,7 +29,7 @@ const ROUTES = {
   alerts: () => import("./views/alerts.js"),
   updates: () => import("./views/updates.js"),
   chart: () => import("./views/chart.js"),
-  billing: () => import("./views/billing.js"),
+  billing: () => store.billingEnabled() ? import("./views/billing.js") : import("./views/profile.js"),
   profile: () => import("./views/profile.js"),
   creators: () => import("./views/creators.js"),
   calendar: () => import("./views/calendar.js"),
@@ -49,7 +49,8 @@ export function parse(hash) {
   let query;
   try { query = new URLSearchParams(qi === -1 ? "" : raw.slice(qi + 1)); } catch (e) { query = new URLSearchParams(); }
   const parts = path.split("/").filter(Boolean);
-  const name = parts[0] === "ducky" ? "evidence" : parts[0] || "watchlist";
+  let name = parts[0] === "ducky" ? "evidence" : parts[0] || "watchlist";
+  if(name==='billing' && !store.billingEnabled()){name='profile';query=new URLSearchParams();}
   if(name==='record'){let id='';try{id=decodeURIComponent(parts[1]||'');}catch{} return {name,params:{id,query}};}
   if (name === "chart" || name === "research" || name === "evidence") return { name, params: { ticker: (parts[1] || "").toUpperCase(), query } };
   if(name==='boards' && ['liquidity','digest','hiring','volscan'].includes(query.get('board')))return {name:'reports',params:{query}};

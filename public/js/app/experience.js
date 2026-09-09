@@ -18,7 +18,7 @@ export function quotaNote(feature,used,cap) {
   return el('div.experience-quota',{'aria-live':'polite'},
     el('span',s('experience.usage_'+feature,{used,cap})),
     used>=cap?el('span',s('experience.replace')):null,
-    el('a',{href:'#/billing'},s('experience.more')));
+    store.billingEnabled()?el('a',{href:'#/billing'},s('experience.more')):null);
 }
 
 

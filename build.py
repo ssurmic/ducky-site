@@ -542,7 +542,8 @@ def write_config_js(cfg: dict, version: str) -> None:
     data = {
         "API_BASE": cfg["api_base"], "BOT": cfg["bot"], "MINIAPP": cfg["miniapp"],
         "CHANNEL": cfg.get("channel"), "TRACK_JSON": cfg.get("track_json", "/track-record.json"),
-        "FEED_JSON": cfg.get("feed_json", "/feed.json"), "PRICES": cfg["prices"], "VERSION": version,
+        "FEED_JSON": cfg.get("feed_json", "/feed.json"), "PRICES": None, "VERSION": version,
+        "BILLING_ENABLED": False,
     }
     body = json.dumps(data, ensure_ascii=False, indent=2)
     (DIST / "config.js").write_text(

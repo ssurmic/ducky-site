@@ -74,7 +74,7 @@ export function renderTierBadge() {
   if (!host) return;
   clear(host);
   const me = store.get("me");
-  if (!me) return;
+  if (!me || !store.billingEnabled()) return;
   host.appendChild(tierBadge(me.tier));
 }
 
@@ -171,6 +171,12 @@ export function confirm(text) {
 /** 402 upsell: {cap, tier} from the API. */
 export function upsell(info) {
   info = info || {};
+  if (!store.billingEnabled()) {
+    modal(s('access.limit_title'), el('p', Number.isFinite(info.cap)
+      ? s('access.limit_body', {cap:info.cap}) : s('access.unavailable')),
+      [{label:s('common.close')}]);
+    return;
+  }
   const feature = info.feature || ({watch_limit:'watches',alert_limit:'alerts',creator_limit:'creators',evidence_limit:'evidence'}[info.error]);
   const quota = Number.isFinite(info.cap) && ['watches','alerts','creators','evidence'].includes(feature);
   const body = el('div',el('p',quota?s('experience.limit_'+feature,{cap:info.cap}):s('upsell.body')),
