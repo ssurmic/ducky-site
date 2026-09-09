@@ -97,7 +97,7 @@
 
   <main class="app-main" id="main" tabindex="-1" data-glossary>
     <p id="profile-reminder" class="profile-reminder" hidden>{{ t('app.profile.recovery_reminder') }} <a href="#/profile">{{ t('app.profile.recovery_action') }}</a></p>
-    <div class="app-view" id="view" aria-live="polite"></div>
+    <div class="app-view" id="view" aria-live="polite"><div class="spinner-row" role="status"><span class="spinner" aria-hidden="true"></span><span class="muted">{{ t('app.common.loading') }}</span></div></div>
     <p class="app-foot">{% if cfg.get('support_url') %}<a href="{{ cfg.support_url }}" target="_blank" rel="noopener noreferrer">☕ {{ t('nav.coffee') }}</a> · {% endif %}{{ t('app.foot.disclaimer') }} <a href="{{ url('/disclaimer/') }}">{{ t('app.billing.disclaimer_link') }}</a></p>
     <noscript><p class="errbox">{{ t('app.noscript') }}</p></noscript>
   </main>

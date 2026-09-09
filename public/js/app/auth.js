@@ -12,6 +12,7 @@ import {startNonceFlow} from './nonce-flow.js';
 const KEY = "ducky.token";
 let freshBootstrapLogin = false;
 let renewal = null;
+const REFRESH_LOCK_WAIT_MS = 5000;
 const LOGGED_OUT = "ducky.logged-out";
 export const didAuthenticateOnBoot = () => freshBootstrapLogin;
 const storage = () => { try { return tg.inTG ? window.sessionStorage : window.localStorage; } catch (e) { return null; } };
@@ -158,8 +159,28 @@ export async function renewSession() {
   };
   // A browser cookie is shared by tabs, so renewal must be serialized there too.
   // Older browsers retain the guarded fallback and the server's concurrency checks.
-  const work=window.navigator?.locks?.request && !tg.inTG
-    ? window.navigator.locks.request('ducky-session-refresh',refresh) : refresh();
+  const lockedRefresh=async()=>{
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),REFRESH_LOCK_WAIT_MS);
+    try {
+      return await window.navigator.locks.request('ducky-session-refresh',{signal:controller.signal},()=>{
+        // Only bound the queue wait. Once granted, the API's own request timeout
+        // applies, and the lock stays held until that request actually finishes.
+        clearTimeout(timer);
+        return refresh();
+      });
+    } catch(error) {
+      if(!controller.signal.aborted)throw error;
+      if(adoptSharedToken(token,epoch))return true;
+      if(epoch!==store.epoch() || token!==store.get('token') || saved!==loadToken())
+        throw new api.ApiError(0,{detail:'session_changed'});
+      // A suspended tab can hold this lock indefinitely. Cancel our queued
+      // request without stealing its lock, rotating cookies in parallel, or
+      // treating contention as logout. A later user retry can acquire it anew.
+      throw new api.ApiError(503,{detail:'session_busy'});
+    } finally { clearTimeout(timer); }
+  };
+  const work=window.navigator?.locks?.request && !tg.inTG ? lockedRefresh() : refresh();
   renewal=work;
   try{return await work;}finally{if(renewal===work)renewal=null;}
 }
@@ -225,7 +246,7 @@ export async function boot() {
   if (!tg.inTG) {
     try { if (await consumeWidgetRedirect()) { freshBootstrapLogin = true; return true; } } catch (e) { console.warn("widget redirect auth failed", e); }
   }
-  let token = loadToken();
+  let token = loadToken(), renewalError = null;
   if(!tg.inTG) {
     let loggedOut=false;
     try { loggedOut=window.localStorage.getItem(LOGGED_OUT)==="1"; } catch {}
@@ -234,6 +255,7 @@ export async function boot() {
       try { await renewSession(); token=store.get("token"); }
       catch(error) {
         if(error.body?.detail==='session_changed')return false;
+        if(error.body?.detail==='session_busy')renewalError=error;
         // Valid legacy/access tokens remain usable during a renewal outage.
       }
     }
@@ -241,12 +263,16 @@ export async function boot() {
   if (token) {
     store.set("token", token);
     try { await hydrate(); return true; } catch (e) {
+      if(e.body?.detail==='session_busy')throw e;
       if (e && e.status === 401) {
         if(loadToken()===token)clearToken();
         if(store.get('token')===token)store.set('token',null);
       } // transient (network/5xx) → keep the valid token
     }
   }
+  // A usable access token can still hydrate above. Otherwise preserve the
+  // session and let boot offer recovery, including cookie-only restoration.
+  if(renewalError)throw renewalError;
   return false;
 }
 

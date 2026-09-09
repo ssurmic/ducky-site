@@ -116,7 +116,7 @@ test('a password/session epoch change is not treated as a harmless renewal',asyn
 });
 test('waiting for the cross-tab lock adopts the winner without another refresh request',async()=>{
  saved();let enter,lockName,calls=0;
- Object.defineProperty(window.navigator,'locks',{configurable:true,value:{request:(name,fn)=>{lockName=name;return new Promise((resolve,reject)=>{enter=()=>Promise.resolve(fn()).then(resolve,reject);});}}});
+ Object.defineProperty(window.navigator,'locks',{configurable:true,value:{request:(name,options,fn)=>{lockName=name;return new Promise((resolve,reject)=>{enter=()=>Promise.resolve(fn()).then(resolve,reject);});}}});
  globalThis.fetch=async()=>{calls++;return me();};
  try{
   const pending=auth.renewSession();auth.saveToken(next);await enter();

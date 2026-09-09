@@ -18,9 +18,25 @@ async function boot() {
   if (logoutBtn) logoutBtn.addEventListener("click", (e) => { e.preventDefault(); auth.logout(); });
   store.subscribe("me", (me) => { renderAccountAvatar(me); ui.renderTierBadge(); if (logoutBtn) logoutBtn.hidden = !me || tg.inTG; });
 
+  await restoreAndStart();
+}
+
+async function restoreAndStart() {
+  const root=document.getElementById('view');
+  root?.replaceChildren(ui.spinner(s('session.restoring')));
+
   let ok = false;
   const requested = location.hash;
-  try { ok = await auth.boot(); } catch (e) { console.warn(e); }
+  try { ok = await auth.boot(); } catch (e) {
+    if(e.body?.detail==='session_busy' && !router.isPublic(requested)) {
+      root?.replaceChildren(ui.el('section.card', {role:'status'},
+        ui.el('h1', s('session.retry_title')),
+        ui.el('p.muted', s('session.retry_body')),
+        ui.el('button.btn.btn-primary', {type:'button', onclick:()=>restoreAndStart().catch(showBootError)}, s('common.retry'))));
+      return;
+    }
+    console.warn(e);
+  }
   if (!ok && !router.isPublic(requested)) {
     rememberTarget(requested);
     history.replaceState(null, "", location.pathname + location.search + "#/login");
@@ -34,9 +50,14 @@ async function boot() {
   store.subscribe("me", renderReminder);
   renderReminder(store.get("me"));
   ui.renderTierBadge();
+  const logoutBtn = document.getElementById('logout');
   if (logoutBtn) logoutBtn.hidden = !ok || tg.inTG;
   await router.start();
   document.body.classList.add("ready");
 }
 
-boot().catch((e) => { console.error(e); ui.toast(s("common.error", { msg: e.message }), "err"); });
+function showBootError(e) {
+  console.error(e);
+  document.getElementById('view')?.replaceChildren(ui.errorBox(e,()=>location.reload()));
+}
+boot().catch(showBootError);

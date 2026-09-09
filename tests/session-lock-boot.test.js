@@ -1,0 +1,32 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {setImmediate as flush} from 'node:timers/promises';
+import {JSDOM} from 'jsdom';
+const dom=new JSDOM('<main class="app-main"><div id="view"></div></main>',{url:'https://ducky.test/app/#/watchlist'});
+for(const key of ['window','document','Node','MutationObserver','location','history'])globalThis[key]=dom.window[key];
+globalThis.requestAnimationFrame=fn=>setTimeout(fn,0);
+const copy=JSON.parse(readFileSync('i18n/en.json'));
+const strings=document.createElement('script');strings.id='ducky-strings';
+strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
+test('boot shows session progress, then a working retry without losing the requested route',async t=>{
+ t.mock.timers.enable({apis:['setTimeout']});
+ let lockSignal,calls=0;
+ Object.defineProperty(window.navigator,'locks',{configurable:true,value:{request:(name,{signal})=>{
+  lockSignal=signal;return new Promise((resolve,reject)=>signal.addEventListener('abort',()=>reject(signal.reason),{once:true}));
+ }}});
+ globalThis.fetch=async url=>{calls++;return Response.json(url==='/auth/refresh'?{token:'recovered'}:url==='/me'?{user_id:1,profile_complete:true,email_verified:true,tier:'free'}:{items:[]});};
+ await import('../public/js/app/main.js');await flush();
+ assert.equal(document.querySelector('#view').textContent,copy['app.session.restoring']);
+ t.mock.timers.tick(5000);await flush();
+ assert.equal(lockSignal.aborted,true);assert.equal(calls,0);
+ assert.equal(location.hash,'#/watchlist');assert.equal(document.querySelector('h1').textContent,copy['app.session.retry_title']);
+ const button=document.querySelector('#view button');assert.equal(button.textContent,copy['app.common.retry']);
+ window.navigator.locks.request=(name,options,run)=>Promise.resolve(run());
+ button.click();t.mock.timers.reset();
+ for(let i=0;i<100&&!document.body.classList.contains('ready');i++)await new Promise(r=>setTimeout(r,5));
+ assert.equal(document.body.dataset.route,'watchlist');assert.ok(document.querySelector('#view h1'));
+ assert.equal(document.body.classList.contains('ready'),true);assert.equal(location.hash,'#/watchlist');
+ assert.equal(document.querySelector('#view').textContent.includes(copy['app.session.retry_body']),false);
+ dom.window.close();
+});
