@@ -20,3 +20,14 @@ Validation:
 The five-second limit applies to active-page lock acquisition, not to all page loading or a suspended browser's wall clock. A still-suspended lock holder can require a later retry; the fix does not claim to release another tab's lock.
 
 API semantics: [LockManager.request and AbortSignal](https://developer.mozilla.org/en-US/docs/Web/API/LockManager/request).
+
+## Published and verified, 07:22 UTC
+
+- Runtime commit: `88e0d28d6c5aeb9745052cb16fc05329224f2b30` (main and `codex/session-lock-recovery-20260909`). Built after committing, retaining all current main assets.
+- Exact-commit GitHub check: [34323295623](https://github.com/ssurmic/ducky-site/actions/runs/34323295623), successful.
+- Pages receipt: [9ee5d03f](https://9ee5d03f.ducky-site.pages.dev). Production serves version `88e0d28d`, module graph `88df48669e5aa32fccbf`, with the static loading component.
+- Real Chrome local fixture: EN 320×670 light/dark and ZH 390×670 dark show a complete retry card above the navigation, without clipped text. Desktop user retry after releasing the local lock reaches the expected sign-in screen (fixture returns 401). The unit entry-point test separately verifies successful authenticated restoration and destination preservation.
+- Two independent new production tabs rendered EN creators and ZH watchlist, with the same existing `ssurmic zen` profile and real page content. The creator QA task independently reports the originally stuck tab recovered profile/avatar/logout and the creators heading after a full refresh. No credentials were cleared, accounts switched, or old tabs closed. These latest live checks use the browser's current account, not the earlier Free test account.
+- Production coffee navigation retains the visible left navigation's font family and 14px size, with weight 700 and dark green text `rgb(181, 237, 121)`.
+
+The authoring worktree's later documentation commit is not a new web release. Future frontend work should start from the current main runtime; no backend deployment belongs to this change.
