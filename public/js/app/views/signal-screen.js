@@ -5,6 +5,8 @@ import * as store from '../store.js';
 import { el, clear, spinner, toast, confirm } from '../ui.js';
 
 const EVENTS=['insider','stake','partner','13f','political','index','news'];
+const CHANGED='ducky:screens-changed';
+const changed=root=>root.dispatchEvent(new window.Event(CHANGED));
 export const defaults=()=>({scope:'covered',sector:'',cap_min:null,cap_max:null,events:[],event_op:'and',days:30,institutional_change:'all',
   oversold:false,rsi_max:null,iv_hv_max:null,drawdown_min:null,insider_min:200000});
 export const presets={
@@ -92,7 +94,7 @@ export function mountScreen(root,{signal,query,initialConfig}={}){
       // Server may return an existing idempotent save with different notification
       // settings. Report what actually exists rather than a local checkbox.
       notify.checked=row.notify;toast(s(row.notify?'screen.saved_notify':'screen.saved_only'));
-      await loadSaved();saveButton.textContent=s('screen.saved_open');saveButton.disabled=false;
+      changed(root);saveButton.textContent=s('screen.saved_open');saveButton.disabled=false;
     }catch(err){if(valid())toast(err.message==='screen_limit'?s('screen.limit_reached'):s('common.error',{msg:err.message}),'err');}
     finally{if(valid())saveButton.disabled=false;}
   });
@@ -103,7 +105,8 @@ export function mountScreen(root,{signal,query,initialConfig}={}){
     fields.sector.value=current.sector;
   }).catch(()=>{});
   if(store.get('token'))loadSaved();
-  const cleanup=()=>{alive=false;request++;};signal?.addEventListener('abort',cleanup,{once:true});return cleanup;
+  root.addEventListener(CHANGED,loadSaved);
+  const cleanup=()=>{alive=false;request++;root.removeEventListener(CHANGED,loadSaved);};signal?.addEventListener('abort',cleanup,{once:true});return cleanup;
 
   function valid(){return alive && epoch===store.epoch();}
   function clearResults(){request++;lastPreview=null;saveForm.hidden=true;clear(results);status.textContent='';preview.disabled=false;}
@@ -197,11 +200,11 @@ export function mountSavedScreens(root,{signal}={}){
       for(const row of doc.items){
         const active=!doc.active_ids||doc.active_ids.includes(row.id);
         const toggle=el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:(!doc.evaluation_enabled||!active) && !row.notify,onclick:async()=>{
-          toggle.disabled=true;try{await api.post('/screens/'+row.id,{notify:!row.notify},{signal});if(valid())await load();}catch(err){if(valid()){toggle.disabled=false;toast(err.message==='screen_limit'?s('screen.limit_reached'):s('common.error',{msg:err.message}),'err');}}
+          toggle.disabled=true;try{await api.post('/screens/'+row.id,{notify:!row.notify},{signal});if(valid())changed(root);}catch(err){if(valid()){toggle.disabled=false;toast(err.message==='screen_limit'?s('screen.limit_reached'):s('common.error',{msg:err.message}),'err');}}
         }},s(row.notify?'screen.pause':'screen.enable'));
         const del=el('button.btn.btn-ghost.btn-sm.danger',{type:'button',onclick:async()=>{
           if(!await confirm(s('screen.delete_confirm')))return;del.disabled=true;
-          try{await api.del('/screens/'+row.id,{signal});if(valid())await load();}catch(err){if(valid()){del.disabled=false;toast(err.message==='screen_limit'?s('screen.limit_reached'):s('common.error',{msg:err.message}),'err');}}
+          try{await api.del('/screens/'+row.id,{signal});if(valid())changed(root);}catch(err){if(valid()){del.disabled=false;toast(err.message==='screen_limit'?s('screen.limit_reached'):s('common.error',{msg:err.message}),'err');}}
         }},s('common.delete'));
         list.append(el('article.card.screen-saved-row',el('h3',row.name),el('p',configSummary(row.config)),
           el('p.muted.small',s(!active?'screen.outside_allowance':!row.last_checked?'screen.waiting':row.notify?'screen.monitoring':'screen.in_app_only')),
@@ -214,5 +217,6 @@ export function mountSavedScreens(root,{signal}={}){
       }
     }catch(err){if(valid())list.replaceChildren(el('p',s('common.error',{msg:err.message})),el('button.btn.btn-ghost',{type:'button',onclick:load},s('common.retry')));}
   }
-  load();const cleanup=()=>{alive=false;};signal?.addEventListener('abort',cleanup,{once:true});return cleanup;
+  root.addEventListener(CHANGED,load);
+  load();const cleanup=()=>{alive=false;root.removeEventListener(CHANGED,load);};signal?.addEventListener('abort',cleanup,{once:true});return cleanup;
 }

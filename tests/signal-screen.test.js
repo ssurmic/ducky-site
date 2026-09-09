@@ -105,6 +105,34 @@ test('scope and event time windows remain legible in the saved summary',()=>{
  const summary=configSummary(c);assert.ok(summary.includes('My watchlist'));assert.ok(summary.includes('90'));assert.ok(summary.includes(' AND '));assert.ok(summary.includes('$2B'));
 });
 
+test('saving a Free screen immediately updates its list and quota without navigation',async()=>{
+ store.set('token','fixture');store.set('me',{tier:'free'});
+ let saved=[];const calls=[];
+ globalThis.fetch=async(url,opts)=>{
+  url=String(url);calls.push(url);
+  if(url.includes('facets'))return response({sectors:[]});
+  if(url.endsWith('/screens/preview'))return response(fixture(JSON.parse(opts.body).config));
+  if(url.endsWith('/screens/hits'))return response({items:[]});
+  if(url.endsWith('/screens')&&opts.method==='POST'){
+   saved=[{id:7,...JSON.parse(opts.body)}];return response(saved[0]);
+  }
+  return response({items:saved,cap:1,active_ids:saved.map(row=>row.id),evaluation_enabled:true});
+ };
+ const r=root(),editor=mountScreen(r,{}),list=mountSavedScreens(r,{});await flush();
+ try{
+  assert.ok(r.querySelector('.screen-saved').textContent.includes('0 / 1'));
+  submit(r,'.screen-form');await flush();r.querySelector('[name=screen_name]').value='Free test screen';
+  submit(r,'.screen-save');await flush();
+  assert.equal(saved[0].notify,false);
+  const panel=r.querySelector('.screen-saved');
+  assert.ok(panel.textContent.includes('1 / 1'));assert.ok(panel.textContent.includes('Free test screen'));
+  assert.ok(!panel.textContent.includes(copy['app.screen.saved_empty']));
+  assert.ok(r.querySelector('option[value="7"]'));
+ }finally{editor();list();}
+ const count=calls.length;r.dispatchEvent(new window.Event('ducky:screens-changed'));await flush();
+ assert.equal(calls.length,count);r.remove();
+});
+
 test('unknown and cancelled delivery render as distinct states without a sent claim',async()=>{
  pro();const config=defaults();
  globalThis.fetch=async(url,opts)=>response(String(url).endsWith('/screens/hits')?
