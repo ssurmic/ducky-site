@@ -39,11 +39,11 @@ export function metricCell(key,m={}) {
 }
 
 export function metricMethods(rows){
-  return el('details.watch-metric-method',el('summary',s('watch.metric_method')),
+  return el('details.watch-metric-method',{'data-disclosure':'metrics'},el('summary',s('watch.metric_method')),
     el('p.small.muted',s('watch.metric_method_prices')),
     el('p.small.muted',s('watch.metric_method_vol')),
     el('p.small.muted',s('watch.metric_method_social')),
-    ...rows.map(row=>el('details.watch-metric-source',el('summary',row.ticker),
+    ...rows.map(row=>el('details.watch-metric-source',{'data-disclosure':'metrics:'+row.ticker},el('summary',row.ticker),
       el('dl',...metricKeys.flatMap(key=>{const m=row.metrics?.[key]||{};return[
         el('dt',metricLabel(key)),el('dd',s('watch.metric_asof',{date:date(m.as_of)}),
           m.recorded_at?' · '+s('watch.metric_saved',{date:m.recorded_at.replace('T',' ').replace(/\..*|\+00:00|Z/g,'')+' UTC'}):'',

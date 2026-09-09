@@ -22,12 +22,16 @@ test('shared price refresh updates the visible list while keeping selection, fil
  const filter=root.querySelector('.watch-filter');filter.value='AVGO';filter.dispatchEvent(new window.Event('input'));
  root.querySelector('[data-open="AVGO"]').click();await new Promise(r=>setTimeout(r,0));
  const detail=root.querySelector('.watch-detail'),card=detail.firstElementChild;
+ root.querySelector('.watch-metric-method').open=true;root.querySelector('.watch-metric-source').open=true;
+ root.querySelector('.watch-map-link').focus();
  value={...value,overview:{...value.overview,items:[{...row('AVGO',1e9,2),price:102}]}};
  await refresh.check();
  assert.match(root.querySelector('.watch-overview').textContent,/102/);
  assert.equal(filter.value,'AVGO');assert.equal(detail.firstElementChild,card);assert.equal(detail.hidden,false);
  assert.equal(root.querySelector('aside').hidden,true);
  assert.equal(calls.filter(x=>x.startsWith('/snapshot/')).length,1);
+ assert.equal(root.querySelector('.watch-metric-method').open,true);assert.equal(root.querySelector('.watch-metric-source').open,true);
+ assert.equal(document.activeElement.dataset.mapOpen,'AVGO');
  // A remote deletion is not silently applied as a numeric update.
  value={...value,items:[],overview:{items:[]}};
  await refresh.check();await refresh.check();assert.equal(root.querySelector('aside').hidden,false);
