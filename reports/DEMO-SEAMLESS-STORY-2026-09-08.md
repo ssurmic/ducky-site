@@ -32,4 +32,11 @@ The main film now opens the Information Map within two seconds and follows one r
 
 ## Release
 
-Production receipts are appended after exact-commit CI and Pages verification.
+- Published code `6ea5eb280f11bde6d26ba04bea8e4af6b148c0c8`; exact-commit [CI 34292948014](https://github.com/ssurmic/ducky-site/actions/runs/34292948014) passed.
+- Pages `4f6f75b0`, approximately September 9, 2026 00:00 UTC (September 8 local time).
+- Both homepage languages select the new asset version. All eight media assets match the final local hashes; both MP4 byte-range requests return HTTP 206 with exact bytes. Each language has eight chapters, eight independent feature-guide links and the preserved Intel tutorial.
+- Application module graph remains `7f027bddeb1ac54f439c`. This media release retains the latest free-experience and creator-contrast changes.
+- Live entry points: [Chinese](https://duckybot.app/#product-demo) and [English](https://duckybot.app/en/#product-demo).
+
+- Both production players completed: Chinese `40.566667`, English `42.6`; `ended=true`, paused, ready state 4, and the correct final asset URLs. Playback receipts are saved beside the HTTP/hash evidence.
+- Temporary recording/preview tabs and the local range server were closed. Production Chinese/English tabs are retained. The Pages lock is released; this final documentation receipt does not require another deployment.
