@@ -75,7 +75,7 @@ test('unselected creator content is unavailable, never falsely reported as no su
  globalThis.fetch=async url=>response(String(url).includes('/trial-feed')?{kols:[{id:'one',name:'One',platform:'youtube'}],posts:[],pages:{}}:String(url).includes('/me/kols')?{subs:[],cap:2}:{items:[]});
  const {mount:creators}=await import('../public/js/app/views/creators.js');
  const root=document.createElement('div');document.body.append(root);const stop=await creators(root,{query:new URLSearchParams('scope=discover')});
- assert.match(root.textContent,/Follow for full summaries/);
+ assert.match(root.textContent,/Follow to read available research and call history/);
  assert.ok(!root.textContent.includes(copy['app.creatorpage.no_summary']));
  root.querySelector('.creator-name').click();
  assert.equal(root.querySelector('.creator-overview'),null);
