@@ -3782,7 +3782,7 @@
   "app.access.unavailable": "Please refresh the page and try again.",
   "app.api.billing_paused": "All features are available without a subscription.",
   "community.title": "Built with love. Open to everyone.",
-  "community.body": "This duck runs on love. Tokens and data, though? Those come with a bill. If Ducky helps you out, a coffee keeps the little wings flapping.",
+  "community.body": "We’re building Ducky for the love of it. Tokens and data cost money, so if it helps you out, buy us a coffee.",
   "community.join": "Join the community",
   "community.telegram": "Find us on Telegram",
   "community.pet": "Pet the duck",
@@ -3809,5 +3809,5 @@
   "community.copy": "Copy address",
   "community.copied": "Address copied. Quack!",
   "community.copy_failed": "Couldn’t copy. Select the address above and copy it manually.",
-  "community.thirsty": "Still no coffee? This duck is thirsty."
+  "community.thirsty": "Still tapping? Drench me in coffee."
 }
