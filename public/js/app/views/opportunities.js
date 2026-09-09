@@ -22,6 +22,12 @@ const comparisonReady = row => row.relative?.status === 'ready' &&
   (!row.relative.as_of || row.relative.as_of === row.as_of) &&
   (!row.relative.windows?.['20'] || (row.relative.windows['20'].status === 'ok' &&
     row.relative.windows['20'].end === row.as_of));
+const referenceRatio = row => {
+  const v = row.technical?.reference_options;
+  return row.qualification?.lane === 'snapshot_observation' && v?.basis === 'near_expiry_iv_hv20' &&
+    finite(v.ratio) && v.ratio > 0 && finite(v.iv) && v.iv > 0 && finite(v.hv20) && v.hv20 > 0 &&
+    Math.abs(v.iv/v.hv20-v.ratio) <= .02 ? v.ratio : null;
+};
 const optionsSnapshot = row => {
   const options = row.technical?.options;
   return options && options.ticker === row.ticker && options.as_of === row.as_of &&
@@ -168,8 +174,45 @@ function evidenceDetails(row) {
     if (source) volatility.append(el('a.small', {href:source.url, target:'_blank', rel:'noopener noreferrer'}, label('options_source')));
   }
   if (optionRatio(row) === null) volatility.append(el('p.data-notice', label('iv_missing')));
+  const original = row.scanner_options, scanner = el('section');
+  if (original?.basis === 'original_ivhv_scanner') {
+    scanner.append(el('h3', label('original_scanner')), el('p.small.muted', s('opportunities.observed_at', {date:dateTime(original.observed_at)})),
+      el('p', s('opportunities.original_ratios', {short:number(original.cheap?.ratio_short, 2), long:number(original.cheap?.ratio_long, 2)})),
+      el('p.small.muted', label('original_basis')));
+  }
   return el('details.opportunity-evidence', el('summary', label('evidence')),
-    el('div.opportunity-evidence-grid', fundamentals, priority, comparison, volatility, sourceSection));
+    el('div.opportunity-evidence-grid', fundamentals, priority, comparison, volatility, sourceSection, scanner));
+}
+
+function observationHistory(ticker) {
+  const epoch=store.epoch(), token=store.get('token');
+  const list=el('div'), status=el('p.small.muted', {role:'status'});
+  const button=el('button.btn.btn-ghost.btn-sm', {type:'button'}, label('history_load'));
+  const details=el('details.opportunity-history', el('summary', label('history')), list, status, button);
+  let before=null, busy=false;
+  button.addEventListener('click', async () => {
+    if (busy) return;
+    busy=true; button.disabled=true; status.textContent='';
+    try {
+      const query=new URLSearchParams({limit:'20'});
+      if (before) query.set('before', before);
+      const doc=await api.get('/opportunities/'+encodeURIComponent(ticker)+'/history?'+query);
+      if (!details.isConnected || epoch!==store.epoch() || token!==store.get('token')) return;
+      if (!Array.isArray(doc?.items)) throw Error('invalid_history');
+      for (const item of doc.items) {
+        const state=['matched','not_matched','stale','unknown'].includes(item.state)?item.state:'unknown';
+        list.append(el('p.small', s('opportunities.history_row', {
+          recorded:dateTime(item.recorded_at), source:dateTime(item.source_at),
+          state:label('history_'+state), drawdown:percent(item.document?.technical?.dd_pct)})));
+      }
+      before=typeof doc.next_cursor==='string'?doc.next_cursor:null;
+      button.hidden=!before; button.textContent=label('load_more');
+      if (!doc.items.length) status.textContent=label('history_empty');
+    } catch {
+      if (details.isConnected && epoch===store.epoch() && token===store.get('token')) status.textContent=label('load_failed');
+    } finally {busy=false;button.disabled=false;}
+  });
+  return details;
 }
 
 export function candidateCard(row, watches=[]) {
@@ -177,42 +220,58 @@ export function candidateCard(row, watches=[]) {
   const watched = typeof row.in_watchlist === 'boolean' ? row.in_watchlist :
     Array.isArray(watches) ? watches.some(x => (x.ticker || x) === row.ticker) : null;
   const tk = encodeURIComponent(row.ticker);
+  const compact = ['snapshot_observation','original_ivhv'].includes(row.qualification?.lane);
   const identity = el('div.opportunity-identity', el('a.ticker', {href:'#/research/' + tk}, '$' + row.ticker),
     el('p', row.company || ''), el('p.small.muted',
       (row.sector ? sectorName(row.sector) : label('sector_unknown')) + ' · ' + money(row.market_cap)));
   const badges = el('div.opportunity-badges');
   if (watched !== null) badges.append(el('span.chip', label(watched ? 'watched' : 'discovered')));
   if (row.qualification?.recovery === true) badges.append(el('span.opportunity-recovery', label('recovery')));
+  for (const reason of row.qualification?.reasons || []) {
+    if (['technical_oversold','recorded_drawdown','iv_below_hv','original_ivhv'].includes(reason))
+      badges.append(el('span.chip', label('reason_' + reason)));
+  }
+  if (['stale','unknown'].includes(row.candidate_state)) badges.append(el('span.chip', label('recorded_candidate')));
   identity.append(badges);
   const card = el('article.card.opportunity-card', {'data-ticker':row.ticker},
-    el('div.opportunity-heading', identity, rating(row.priority)));
+    el('div.opportunity-heading', identity, ...(compact ? [] : [rating(row.priority)])));
   card.append(el('div.opportunity-price', el('strong.mono', finite(row.current_price) && row.current_price > 0 ? px(row.current_price) : '—'),
-    el('span.small.muted', s('opportunities.close_at', {date:row.as_of || '—'}))),
-    priceTrend(row.price_series, {reference:{value:row.ma252, date:row.as_of, label:label('ma252_reference')}}));
+    el('span.small.muted', s('opportunities.close_at', {date:row.price_as_of || row.as_of || '—'}))));
+  if (!compact || row.price_series?.length > 1) card.append(priceTrend(row.price_series, {reference:{value:row.ma252, date:row.as_of, label:label('ma252_reference')}}));
   const gap = comparisonReady(row) && finite(rel.excess20) ? rel.excess20 : null;
   const metric = (key, value) => el('div', el('dt', label(key)), el('dd.mono', value));
-  card.append(el('dl.opportunity-metrics', metric('drawdown', percent(tech.dd_pct)), metric('rsi', number(tech.rsi_d)),
-    metric('ma252', percent(tech.ma252_pct)), metric('iv_hv', number(optionRatio(row), 2)),
+  const metrics = el('dl.opportunity-metrics', metric(compact ? 'recorded_drawdown' : 'drawdown', percent(tech.dd_pct)), metric('rsi', number(tech.rsi_d)));
+  if (compact) metrics.append(metric(referenceRatio(row) !== null ? 'reference_iv_hv' : 'iv_hv', number(referenceRatio(row) ?? optionRatio(row), 2)));
+  else metrics.append(
+    metric('ma252', percent(tech.ma252_pct)), metric(referenceRatio(row) !== null ? 'reference_iv_hv' : 'iv_hv', number(referenceRatio(row) ?? optionRatio(row), 2)),
     metric(rel.kind === 'business_peers' ? 'relative' : 'reference_gap', gap === null ? '—' :
       s(gap < 0 ? 'opportunities.behind' : 'opportunities.ahead', {n:Math.abs(gap).toFixed(1)})),
-    metric('forward_pe', financialReady(fund) && finite(fund.forward_pe) ? number(fund.forward_pe) + '×' : '—')));
+    metric('forward_pe', financialReady(fund) && finite(fund.forward_pe) ? number(fund.forward_pe) + '×' : '—'));
+  card.append(metrics);
+  if (row.screen_summary) {
+    const summary = localized(row.screen_summary);
+    if (summary) card.append(el('section.opportunity-context', el('h3', label('screen_reason')),
+      el('p', summary), el('p.small.muted', s('opportunities.observed_at', {date:dateTime(row.screen_summary.source_at)})),
+      el('p.small.muted', localized(row.screen_summary.limitation))));
+  }
   const explanation = row.explanation || {}, why = localized(explanation.why_fell), risks = localized(explanation.risks);
   const explained = explanation.status === 'ready' && sources(explanation).length > 0;
-  card.append(el('section.opportunity-context', el('h3', label('why_fell')),
+  if (!compact || explained) card.append(el('section.opportunity-context', el('h3', label('why_fell')),
     el('p', explained && why ? why : label('explanation_missing'))));
   if (explained && risks) card.append(el('p.opportunity-risk', el('strong', label('risks') + ' · '), risks));
   const gaps = [];
-  if (optionRatio(row) === null) gaps.push(label('iv_missing'));
+  if (optionRatio(row) === null && referenceRatio(row) === null) gaps.push(label('iv_missing'));
   if (gap === null) gaps.push(label('peer_missing'));
-  if (gaps.length) card.append(el('p.small.muted.opportunity-gaps', gaps.join(' · ')));
-  card.append(evidenceDetails(row), el('div.opportunity-actions', link('#/research/' + tk, 'opportunities.research'),
+  if (gaps.length && !compact) card.append(el('p.small.muted.opportunity-gaps', gaps.join(' · ')));
+  if (compact && !row.screen_summary) card.append(el('p.small.muted', label('explanation_missing')));
+  card.append(evidenceDetails(row), observationHistory(row.ticker), el('div.opportunity-actions', link('#/research/' + tk, 'opportunities.research'),
     evidenceLink(row.ticker), link('#/chart/' + tk, 'nav.chart'), link('#/alerts?ticker=' + tk, 'boards.set_alert')));
   return card;
 }
 
 function methodCard() {
   return el('details.card.opportunity-method', el('summary', label('method')),
-    el('p', label('discovery_rule')), el('p', label('priority_note')),
+    el('p', label('catalog_rule')), el('p', label('discovery_rule')), el('p', label('priority_note')),
     el('p.small.muted', label('discovery_not_strategy')),
     el('a', {href:(LANG === 'en' ? '/en' : '') + '/research-records/'}, label('backtest')));
 }
@@ -273,15 +332,17 @@ export async function mount(root, route={}) {
           link('#/screens?screen=oversold', 'opportunities.legacy_screen'),
           el('button.btn.btn-ghost', {type:'button', onclick:() => load()}, s('common.retry'))),
         el('p.small.muted', label('legacy_screen_note')));
-    } else {
+    }
+    if (items.length || !['warming','stale'].includes(doc.status)) {
       feedback.append(el('p', s('opportunities.loaded_results', {n:items.length, total:doc.total})));
       if (doc.status === 'partial') feedback.append(el('p.small.muted', label('status_partial')));
-      for (const row of items) results.append(candidateCard(row, null));
+      for (const row of items) results.append(candidateCard(doc.status==='stale' ? {...row,candidate_state:'stale'} : row, null));
       if (!items.length) results.append(el('div.card', el('h2', label('empty')), el('p.muted', label('empty_note'))));
       if (doc.next_cursor !== null && doc.next_cursor !== undefined && doc.next_cursor !== '') paging.append(
         el('button.btn.btn-ghost', {type:'button', onclick:() => load({append:true})}, label('load_more')));
     }
     const c = doc.coverage || {};
+    if (c.catalog) coverage.append(el('p.small.muted', s('opportunities.catalog_coverage', {n:number(c.catalog.snapshot_rows,0), date:dateTime(c.catalog.snapshot_as_of)})));
     coverage.append(el('details.card', el('summary', label('coverage_title')),
       el('p', s('opportunities.discovery_coverage', {name:c.universe_name || '—',
         checked:number(c.checked, 0), total:number(c.universe_count, 0), qualified:number(c.qualified, 0), unknown:number(c.unknown, 0)})),

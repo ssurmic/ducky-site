@@ -57,7 +57,7 @@ test('discovery shows stocks outside the watchlist, preserving zero and unknown 
  assert.equal(opportunities.candidateCard({ticker:'NEW'},null).querySelector('.chip'),null,
   'an unavailable watchlist cannot label a stock as outside it');
 });
-test('free visitors do not fetch current candidates and stale results are not promoted',async()=>{
+test('all accounts request candidates and stale results retain an explicit update notice',async()=>{
  store.set('me',{tier:'free'});let calls=[];globalThis.fetch=async url=>{calls.push(String(url));return response({});};
  let root=document.createElement('div');let cleanup=await opportunities.mount(root);
  assert.ok(calls.some(url=>url.includes('/opportunities?')));assert.equal(root.querySelector('a[href="#/billing"]'),null);cleanup();
@@ -68,7 +68,8 @@ test('free visitors do not fetch current candidates and stale results are not pr
   return response({items:[],sectors:[]});
  };
  root=document.createElement('div');cleanup=await opportunities.mount(root);
- assert.ok(!root.querySelector('.opportunity-card'));assert.ok(!root.textContent.includes('STALE'));cleanup();
+ assert.ok(root.querySelector('.opportunity-card'));assert.ok(root.textContent.includes('STALE'));
+ assert.ok(root.textContent.includes(copy['app.opportunities.status_stale']));cleanup();
 });
 test('a late discovery result cannot populate a new session',async()=>{
  store.set('me',{tier:'pro'});let resolve;
