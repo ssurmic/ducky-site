@@ -3808,5 +3808,6 @@
   "community.crypto_note": "请使用 Ethereum 主网发送 USDC。",
   "community.copy": "复制地址",
   "community.copied": "地址已复制，嘎！",
-  "community.copy_failed": "没有复制成功，请选中上方地址手动复制。"
+  "community.copy_failed": "没有复制成功，请选中上方地址手动复制。",
+  "community.thirsty": "还不给我买咖啡？鸭子渴了。"
 }

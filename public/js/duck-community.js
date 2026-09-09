@@ -2,7 +2,7 @@
 export function mountDuckCommunity(root) {
   const button=root.querySelector('[data-duck-pet]'), bubble=root.querySelector('[data-duck-bubble]');
   if(!button || !bubble)return ()=>{};
-  let greetingTimer,alive=true;
+  let greetingTimer,tapTimer,zoomTimer,taps=0,alive=true;
   const copyButton=root.querySelector('[data-copy-address]'),copyStatus=root.querySelector('[data-copy-status]');
   async function copyAddress(){
     if(!copyStatus)return;
@@ -18,18 +18,29 @@ export function mountDuckCommunity(root) {
   }
   function pet(){
     clearTimeout(greetingTimer);
+    clearTimeout(tapTimer);
+    clearTimeout(zoomTimer);
+    button.classList.remove('is-thirsty');
+    taps++;
+    tapTimer=setTimeout(()=>{taps=0;},1000);
+    const thirsty=taps===3;
+    if(thirsty)taps=0;
     const active=button.getAttribute('aria-pressed')!=='true';
     button.setAttribute('aria-pressed',String(active));
     button.setAttribute('aria-label',active?button.dataset.stopLabel:button.dataset.petLabel);
     button.classList.toggle('is-wobbling',active);
     bubble.hidden=false;
-    if(active){
+    if(thirsty){
+      button.classList.add('is-thirsty');
+      bubble.textContent=bubble.dataset.thirsty;
+      zoomTimer=setTimeout(()=>{button.classList.remove('is-thirsty');},2400);
+    }else if(active){
       bubble.textContent=bubble.dataset.quack;
       greetingTimer=setTimeout(()=>{bubble.textContent=bubble.dataset.wish;},700);
     }
   }
   button.addEventListener('click',pet);
   copyButton?.addEventListener('click',copyAddress);
-  return ()=>{alive=false;clearTimeout(greetingTimer);button.removeEventListener('click',pet);copyButton?.removeEventListener('click',copyAddress);};
+  return ()=>{alive=false;clearTimeout(greetingTimer);clearTimeout(tapTimer);clearTimeout(zoomTimer);button.removeEventListener('click',pet);copyButton?.removeEventListener('click',copyAddress);};
 }
 if(typeof document!=='undefined')document.querySelectorAll('[data-duck-community]').forEach(mountDuckCommunity);

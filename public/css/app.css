@@ -1618,4 +1618,3 @@ html[data-theme=dark] .study-group{--study-bull:#47df98;--study-bear:#f18b9b}
 .account-avatar img { position:absolute; inset:1px; width:32px; height:32px; border-radius:50%; object-fit:cover; }
 .account-avatar:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
 .x-login { justify-content:center; }
-

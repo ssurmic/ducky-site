@@ -3808,5 +3808,6 @@
   "community.crypto_note": "Send USDC on Ethereum mainnet.",
   "community.copy": "Copy address",
   "community.copied": "Address copied. Quack!",
-  "community.copy_failed": "Couldn’t copy. Select the address above and copy it manually."
+  "community.copy_failed": "Couldn’t copy. Select the address above and copy it manually.",
+  "community.thirsty": "Still no coffee? This duck is thirsty."
 }

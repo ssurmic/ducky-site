@@ -22,5 +22,7 @@ for(const lang of ['zh','en'])test('support preserves the exact owner destinatio
  assert.equal(root.querySelector('[data-support-address]').textContent,wallet,'manual-copy fallback remains visible');
  const pet=root.querySelector('[data-duck-pet]');pet.click();assert.equal(pet.getAttribute('aria-pressed'),'true');assert.equal(root.querySelector('[data-duck-bubble]').textContent,root.querySelector('[data-duck-bubble]').dataset.quack);
  pet.click();assert.equal(pet.getAttribute('aria-pressed'),'false');
+ pet.click();assert.equal(pet.classList.contains('is-thirsty'),true);assert.equal(root.querySelector('[data-duck-bubble]').textContent,root.querySelector('[data-duck-bubble]').dataset.thirsty);
+ await new Promise(r=>setTimeout(r,750));assert.equal(root.querySelector('[data-duck-bubble]').textContent,root.querySelector('[data-duck-bubble]').dataset.thirsty,'normal greeting must not overwrite the three-tap surprise');
  dispose();dom.window.close();
 });
