@@ -44,7 +44,7 @@
 .desk-feature-actions{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-top:35px;font-size:.8125rem}
 .desk-feature-actions .btn{border-radius:7px;font-size:.875rem}
 .desk-preview-footer{border-top:1px solid var(--border);padding-top:20px;margin-top:45px;display:flex;align-items:center;gap:12px;color:var(--muted);font-size:.75rem;line-height:1.7}
-.desk-preview-footer img{border-radius:50%;flex:none}
+.desk-preview-footer img{object-fit:contain;flex:none}
 /* A compact plan overview; full limits and alternate currencies expand on request. */
 .page-index .desk-pricing{padding-block:48px;border-block:1px solid var(--border);background:var(--surface-2,var(--bg-2))}
 .desk-pricing>.wrap{max-width:1040px}
@@ -91,3 +91,5 @@
 @media(max-width:360px){.desk-tool-number{display:none}.desk-preview{padding:20px}.desk-feature h3{font-size:28px}}
 @media(hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){.desk-quote{animation:none;transform:none}.desk-duck img{transition:none;transform:none}.motion-toggle{display:none}}
 @media(prefers-reduced-motion:reduce){.desk-tour *, .duck-orbit *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+.home-quote-strip{padding-left:0;padding-top:0}.home-quote-strip .desk-quote{animation:none}

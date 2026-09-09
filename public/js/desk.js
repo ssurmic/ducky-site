@@ -107,6 +107,8 @@ export function mountQuotes(root,{fetcher=fetch,now=Date.now,intervalMs=5*60*100
 export function mountDuck(root,{fetcher=fetch}={}) {
   const duck=root.querySelector('.desk-duck'),anchor=root.querySelector('.duck-anchor');
   const message=root.querySelector('[data-duck-message]'),toggle=root.querySelector('[data-motion-toggle]');
+  // The interactive brand duck now lives in the support section above the quotes.
+  if(!duck || !anchor){root.classList.add('motion-paused');if(toggle)toggle.hidden=true;return mountQuotes(root,{fetcher});}
   const sharedToggle=root.closest('[data-home-hero]')?.querySelector('[data-home-motion]');
   const fine=window.matchMedia('(min-width: 761px) and (hover: hover) and (pointer: fine)'),reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
   let alive=true,paused=false,visible=true,frame=0,timer=0;

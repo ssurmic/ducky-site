@@ -1,7 +1,22 @@
 <section class="home-community wrap" id="community" data-duck-community aria-labelledby="home-community-title">
  <div class="home-community-card">
   <div class="home-duck-pet"><button class="home-duck-head" type="button" aria-pressed="false" aria-label="{{ t('community.pet') }}" data-duck-pet data-pet-label="{{ t('community.pet') }}" data-stop-label="{{ t('community.stop') }}"><img src="/duck-head-cutout-v1.png" width="168" height="168" alt="" loading="lazy" decoding="async"></button><small>{{ t('community.hint') }}</small></div>
-  <div class="home-community-copy"><p class="home-duck-bubble" data-duck-bubble data-quack="{{ t('community.quack') }}" data-wish="{{ t('community.wish') }}" role="status" aria-live="polite" hidden></p><h2 id="home-community-title">{{ t('community.title') }}</h2><p>{{ t('community.body') }}</p></div>
-  <div class="home-community-actions"><a class="btn btn-ghost" href="{{ cfg.get('community_url') or ('https://t.me/' ~ cfg.bot ~ '?start=src_community') }}" target="_blank" rel="noopener noreferrer">{{ t('community.join') if cfg.get('community_url') else t('community.telegram') }} <span aria-hidden="true">↗</span></a>{% if cfg.get('support_url') %}<a class="btn btn-primary" href="{{ cfg.support_url }}" target="_blank" rel="noopener noreferrer">☕ {{ t('community.coffee') }}</a>{% endif %}</div>
+  <div class="home-community-copy"><p class="home-duck-bubble" data-duck-bubble data-quack="{{ t('community.quack') }}" data-wish="{{ t('community.wish') }}" data-thirsty="{{ t('community.thirsty') }}" role="status" aria-live="polite" hidden></p><h2 id="home-community-title">{{ t('community.title') }}</h2><p>{{ t('community.body') }}</p></div>
+  <div class="home-community-actions">
+   {% if cfg.get('support_url') %}<a class="btn btn-primary" href="{{ cfg.support_url }}" target="_blank" rel="noopener noreferrer">☕ {{ t('community.coffee') }}</a>{% endif %}
+   <a class="btn btn-ghost" href="{{ cfg.get('community_url') or ('https://t.me/' ~ cfg.bot ~ '?start=src_community') }}" target="_blank" rel="noopener noreferrer">{{ t('community.join') if cfg.get('community_url') else t('community.telegram') }} <span aria-hidden="true">↗</span></a>
+   {% if cfg.get('support_ethereum_address') %}
+   <details class="home-crypto">
+    <summary>{{ t('community.crypto') }}</summary>
+    <div class="home-crypto-content">
+     <strong>{{ t('community.network') }}</strong>
+     <code data-support-address>{{ cfg.support_ethereum_address }}</code>
+     <p>{{ t('community.crypto_note') }}</p>
+     <button class="btn btn-ghost" type="button" data-copy-address>{{ t('community.copy') }}</button>
+     <p class="home-copy-status" role="status" aria-live="polite" data-copy-status data-success="{{ t('community.copied') }}" data-failure="{{ t('community.copy_failed') }}"></p>
+    </div>
+   </details>
+   {% endif %}
+  </div>
  </div>
 </section>

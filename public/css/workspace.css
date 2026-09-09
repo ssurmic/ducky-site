@@ -24,7 +24,7 @@ body.page-app{--font:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFa
 .page-app :is(button,a,input,select,textarea,summary):focus-visible{outline:2px solid var(--focus-ring);outline-offset:3px}
 .page-app .app-top{min-height:62px;padding-inline:24px;gap:12px}
 .app-top .brand{font-size:.9375rem;font-weight:700;white-space:nowrap}
-.app-top .avatar-mark{width:30px;height:30px;box-shadow:none}
+.app-top .avatar-mark{width:40px;height:40px;box-shadow:none}
 .page-app .tier-badge{border-radius:5px;letter-spacing:.04em}
 .page-app .app-foot{font-size:.75rem;margin-top:32px;opacity:.85}
 .page-app .app-main>.app-view>.route-page>.card>h1+p.muted{margin:8px 0 20px;font-size:.9375rem}
@@ -211,7 +211,7 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .card{padding:18px}
  .page-app .app-top{padding-inline:14px;gap:8px}
  .page-app .app-top .brand{font-size:.875rem}
- .page-app .app-top .avatar-mark{width:26px;height:26px}
+ .page-app .app-top .avatar-mark{width:34px;height:34px}
  .page-app .app-top .btn-sm{font-size:.75rem;padding:5px 8px}
  .page-app .tier-badge{padding:2px 5px;font-size:.6875rem}
  .page-app .radar-layout{grid-template-columns:1fr}
@@ -285,7 +285,7 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .cal-bicell .cal-biquiet{font-size:11px;line-height:1.4}
  .page-app .cal-bicell .pill-logo{width:14px;height:14px}
 }
-@media(max-width:360px){.page-app .app-top .brand{font-size:.75rem;gap:6px}.page-app .app-top .avatar-mark{width:24px;height:24px}}
+@media(max-width:360px){.page-app .app-top .brand{font-size:.75rem;gap:6px}.page-app .app-top .avatar-mark{width:30px;height:30px}}
 @media(pointer:coarse){.page-app .btn,.page-app .btn-sm,.page-app .cal-mnav,.page-app .cal-today,.page-app .modal-close{min-height:44px}.page-app .input{font-size:16px}}
 /* Portrait reading stays compact; targets remain usable with a finger or mouse. */
 .watch-add-options{margin:8px 0 12px}

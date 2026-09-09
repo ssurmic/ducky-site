@@ -102,12 +102,12 @@ test('homepage tour opens each named tool and keeps billing hidden in both langu
   assert.equal(page.querySelector('#pricing'),null);cleanup();
  }
 });
-test('mobile and reduced-motion duck is steady while its greeting stays keyboard accessible',async()=>{
+test('quote cards keep refreshing after the interactive duck moves into the support section',async()=>{
  window.matchMedia=()=>({matches:false,addEventListener(){},removeEventListener(){}});
  const page=new JSDOM(readFileSync('dist/index.html','utf8')).window.document,root=document.importNode(page.querySelector('[data-duck-orbit]'),true);
  document.body.append(root);const cleanup=mountDuck(root,{fetcher:async()=>{throw Error('offline');}});
  assert.ok(root.classList.contains('motion-paused'));assert.equal(root.querySelector('[data-motion-toggle]').hidden,true);
- root.querySelector('.desk-duck').click();assert.equal(root.querySelector('[data-duck-message]').textContent,root.dataset.reply);
+ assert.equal(root.querySelector('.desk-duck'),null);
  await flush();assert.ok(root.querySelector('[data-quote-price]').textContent.startsWith('$'));
  cleanup();root.remove();
 });
