@@ -63,6 +63,7 @@ export async function mount(root, params) {
   let period = allowed("6mo") ? "6mo" : maxPeriod, chart = null, ro = null, ovl = null, alive = true, drawSeq = 0, candles = null, rsiSeries = null, macdHist = null, macdLineS = null, macdSig = null;
   let histogram = [], referenceLines = [], overlaySnapshot = null, interval='day', expiry='combined', extras=false, fitReferences=false;
   const barCache=new Map();
+  let plottedBars=[],drawnPeriod=null;
 
   const input = el("input.input.mono", { type: "text", value: ticker, placeholder: s("chart.pick"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "80", "aria-label": s("chart.pick") });
   const picker = symbolPicker(input);
@@ -142,7 +143,7 @@ export async function mount(root, params) {
   }
 
   let refreshTimer = null;
-  function destroy() { clearTimeout(refreshTimer); refreshTimer = null; if (ovl) { ovl.remove(); ovl = null; } if (ro) { ro.disconnect(); ro = null; } if (chart) { try { chart.remove(); } catch (e) { /* ignore */ } chart = null; } candles = rsiSeries = macdHist = macdLineS = macdSig = null; histogram = []; referenceLines = []; overlaySnapshot = null; clear(host); }
+  function destroy() { drawnPeriod=null;plottedBars=[];clearTimeout(refreshTimer); refreshTimer = null; if (ovl) { ovl.remove(); ovl = null; } if (ro) { ro.disconnect(); ro = null; } if (chart) { try { chart.remove(); } catch (e) { /* ignore */ } chart = null; } candles = rsiSeries = macdHist = macdLineS = macdSig = null; histogram = []; referenceLines = []; overlaySnapshot = null; clear(host); }
 
   function paintOverlays() {
     if (!candles || !overlaySnapshot) return;
@@ -189,12 +190,83 @@ export async function mount(root, params) {
     if(focused)optionControls.querySelector(`[data-chart-control="${focused}"]`)?.focus({preventScroll:true});
   }
 
+  function showPrice(payload,last) {
+    const spot = document.getElementById("chart-spot");
+    if (spot) {
+      const state=lastBarState(payload,last.time);
+      spot.replaceChildren(el('span',px(last.close)),el('time.small.muted',{datetime:String(last.time),title:s('chart.last_bar',{date:String(last.time)})},
+        s(state==='complete'?'chart.close_as_of':state==='in_progress'?'chart.bar_in_progress':'chart.bar_completion_unknown',{date:String(last.time)})));
+      const recorded=payload?.last_bar_observed_at;
+      const stamp=typeof recorded==='string'&&/(Z|[+-]\d{2}:\d{2})$/.test(recorded)?new Date(recorded):null;
+      if(payload?.last_d===String(last.time)&&stamp&&Number.isFinite(stamp.getTime()))spot.append(
+        el('time.small.muted.chart-bar-recorded',{datetime:stamp.toISOString()},s('chart.bar_recorded_at',{date:stamp.toISOString().slice(0,16).replace('T',' ')})));
+    }
+  }
+
+  const showCandle=(bar,date)=>ohlc.replaceChildren(el('time.small.muted',String(date)),
+    el('dl.chart-ohlc-values',['open','high','low','close'].map(key=>el('div',el('dt',s('chart.'+key)),el('dd',px(bar[key]))))));
+  function paintSeries(bars) {
+    const LWC=window.LightweightCharts,palette=chartPalette(),{text,up,down}=palette;
+    candles.setData(bars);
+    showCandle(bars.at(-1),bars.at(-1).time);
+    // RSI(14) in its own pane
+    const rsiData=overlays.rsi(bars,14);
+    if(rsiData.length&&!rsiSeries){
+      rsiSeries = chart.addSeries(LWC.LineSeries, { color: palette.blue, lineWidth: 2, priceLineVisible: false, lastValueVisible: true, title: s("chart.rsi") }, 1);
+      referenceLines.push([rsiSeries.createPriceLine({ price: 70, color: down, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), 'down']);
+      referenceLines.push([rsiSeries.createPriceLine({ price: 30, color: up, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), 'up']);
+    }
+    rsiSeries?.setData(rsiData);
+    // MACD(12,26,9) in its own pane: histogram (green above / red below) + MACD line + signal, zero line marked.
+    const m = overlays.macd(bars, 12, 26, 9);
+    if (m.macd.length&&!macdHist) {
+      macdHist = chart.addSeries(LWC.HistogramSeries, { priceLineVisible: false, lastValueVisible: false, priceFormat: { type: "price", precision: 2, minMove: 0.01 } }, 2);
+      macdSig = chart.addSeries(LWC.LineSeries, { color: palette.amber, lineWidth: 1, priceLineVisible: false, lastValueVisible: false }, 2);
+      macdLineS = chart.addSeries(LWC.LineSeries, { color: palette.blue, lineWidth: 1, priceLineVisible: false, lastValueVisible: true, title: s("chart.macd") }, 2);
+      referenceLines.push([macdLineS.createPriceLine({ price: 0, color: text, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), 'text']);
+    }
+    histogram=m.hist;
+    macdHist?.setData(histogram.map(p=>({...p,color:p.value>=0?palette.histUp:palette.histDown})));
+    macdSig?.setData(m.signal);macdLineS?.setData(m.macd);
+    plottedBars=bars;
+    // Size all panes together after creating them; adding MACD must not squeeze RSI.
+    chart.panes().forEach((pane,index)=>pane.setStretchFactor([4,1,1][index] || 1));
+  }
+
+  // The scheduled shared reader owns revalidation. Update this view's cache and
+  // series without recreating the chart, reopening disclosures or fetching again.
+  const barsUpdate=event=>{
+    const update=event.detail,path=update?.path||'',prefix='/bars/'+encodeURIComponent(ticker)+'?period=';
+    if(!alive||!path.startsWith(prefix))return;
+    const requested=path.slice(prefix.length),payload=update.value;
+    if(!PERIODS.includes(requested)||api.isAccepted(payload)||
+       (payload?.ticker&&payload.ticker!==ticker)||(payload?.period&&payload.period!==requested))return;
+    const rows=normalizeBars(payload);
+    if(!rows.length)return;
+    barCache.set(requested,payload);
+    if(requested===period&&drawnPeriod===period&&chart&&candles){
+      clearTimeout(refreshTimer);refreshTimer=null;
+      const scale=chart.timeScale(),logical=scale.getVisibleLogicalRange?.(),visible=scale.getVisibleRange?.();
+      const previous=plottedBars,next=aggregateBars(rows,interval);
+      const fitted=logical&&logical.from<=0&&logical.to>=previous.length-1;
+      const offset=next.findIndex(bar=>bar.time===previous[0]?.time);
+      paintSeries(next);showPrice(payload,rows.at(-1));clear(status);
+      if(next.length<35)status.append(el('p.small.muted',s('chart.indicators_short')));
+      if(payload?.stale)status.append(el('p.data-notice',s('chart.stale_bars',{date:payload.expected_last_d||'—'})));
+      if(fitted)scale.fitContent();
+      else if(logical&&offset>=0)scale.setVisibleLogicalRange?.({from:logical.from+offset,to:logical.to+offset});
+      else if(visible)scale.setVisibleRange?.(visible);
+    }else if(requested===period&&!chart)void draw();
+    update.accepted=true;
+  };
+  root.addEventListener('ducky:shared-read',barsUpdate);
+
   async function draw(attempt = 0) {
     // finding chart.js:63 — take a per-draw token. Rapid period/ticker switches while /bars is slow used to
     // race: each draw passed the lone 'alive' check, each created a chart in the same host (stacked duplicates,
     // leaked ResizeObserver/canvas, and the slower response could win with the WRONG period). Every await below
     // re-checks (my !== drawSeq) and bails, so only the latest draw ever mutates the DOM/chart.
-    const my = ++drawSeq;
+    const my = ++drawSeq,requestedPeriod=period;
     destroy();zoomButtons.forEach(b=>b.disabled=true);
     clear(status); clear(legendRow); clear(optionControls); clear(optionNotes); clear(wallNotes); clear(overlayStatus); clear(ohlc);
     references.hidden=true;workspace.classList.remove('has-references');
@@ -202,7 +274,14 @@ export async function mount(root, params) {
     const LWC = window.LightweightCharts;
     if (!LWC) { clear(status); status.appendChild(errorBox(new Error("charts lib missing"))); return; }
     let bars, payload;
-    try { payload = attempt===0&&barCache.has(period)?barCache.get(period):await api.bars(ticker, period); if(!api.isAccepted(payload)&&!payload?.stale)barCache.set(period,payload); bars = normalizeBars(payload); }
+    try {
+      const cachedBefore=barCache.get(requestedPeriod);
+      payload=attempt===0&&barCache.has(requestedPeriod)?barCache.get(requestedPeriod):await api.bars(ticker,requestedPeriod);
+      if(my!==drawSeq||!alive)return;
+      if(barCache.get(requestedPeriod)!==cachedBefore)payload=barCache.get(requestedPeriod);
+      if(!api.isAccepted(payload)&&!payload?.stale)barCache.set(requestedPeriod,payload);
+      bars=normalizeBars(payload);
+    }
     catch (err) { if (my !== drawSeq || !alive) return; clear(status); status.appendChild(errorBox(err, draw)); return; }
     if (my !== drawSeq || !alive) return;
     clear(status);
@@ -215,16 +294,7 @@ export async function mount(root, params) {
     const last=bars[bars.length-1];
     bars=aggregateBars(bars,interval);
     if(bars.length<35)status.append(el('p.small.muted',s('chart.indicators_short')));
-    const spot = document.getElementById("chart-spot");
-    if (spot) {
-      const state=lastBarState(payload,last.time);
-      spot.replaceChildren(el('span',px(last.close)),el('time.small.muted',{datetime:String(last.time),title:s('chart.last_bar',{date:String(last.time)})},
-        s(state==='complete'?'chart.close_as_of':state==='in_progress'?'chart.bar_in_progress':'chart.bar_completion_unknown',{date:String(last.time)})));
-      const recorded=payload?.last_bar_observed_at;
-      const stamp=typeof recorded==='string'&&/(Z|[+-]\d{2}:\d{2})$/.test(recorded)?new Date(recorded):null;
-      if(payload?.last_d===String(last.time)&&stamp&&Number.isFinite(stamp.getTime()))spot.append(
-        el('time.small.muted.chart-bar-recorded',{datetime:stamp.toISOString()},s('chart.bar_recorded_at',{date:stamp.toISOString().slice(0,16).replace('T',' ')})));
-    }
+    showPrice(payload,last);
     if (payload?.stale) {
       status.appendChild(el('p.data-notice', s('chart.stale_bars', { date: payload.expected_last_d || '—' })));
       retry();
@@ -242,33 +312,12 @@ export async function mount(root, params) {
     });
     candles = chart.addSeries(LWC.CandlestickSeries, { ...candleStyle(palette),
       priceLineVisible: true, priceLineWidth: 1,lastValueVisible: true });
-    candles.setData(bars);
-    const showCandle=(bar,date)=>ohlc.replaceChildren(el('time.small.muted',String(date)),
-      el('dl.chart-ohlc-values',['open','high','low','close'].map(key=>el('div',el('dt',s('chart.'+key)),el('dd',px(bar[key]))))));
-    showCandle(bars.at(-1),bars.at(-1).time);
-    chart.subscribeCrosshairMove?.(param=>{const bar=param.seriesData?.get(candles);showCandle(bar||bars.at(-1),bar?param.time:bars.at(-1).time);});
-    // RSI(14) in its own pane
-    const rsiData=overlays.rsi(bars,14);
-    if(rsiData.length){
-      rsiSeries = chart.addSeries(LWC.LineSeries, { color: palette.blue, lineWidth: 2, priceLineVisible: false, lastValueVisible: true, title: s("chart.rsi") }, 1);
-      rsiSeries.setData(rsiData);
-      referenceLines.push([rsiSeries.createPriceLine({ price: 70, color: down, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), 'down']);
-      referenceLines.push([rsiSeries.createPriceLine({ price: 30, color: up, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), 'up']);
-    }
-    // MACD(12,26,9) in its own pane: histogram (green above / red below) + MACD line + signal, zero line marked.
-    const m = overlays.macd(bars, 12, 26, 9);
-    if (m.macd.length) {
-      macdHist = chart.addSeries(LWC.HistogramSeries, { priceLineVisible: false, lastValueVisible: false, priceFormat: { type: "price", precision: 2, minMove: 0.01 } }, 2);
-      histogram = m.hist;
-      macdHist.setData(histogram.map((p) => ({ time: p.time, value: p.value, color: p.value >= 0 ? palette.histUp : palette.histDown })));
-      macdSig = chart.addSeries(LWC.LineSeries, { color: palette.amber, lineWidth: 1, priceLineVisible: false, lastValueVisible: false }, 2);
-      macdSig.setData(m.signal);
-      macdLineS = chart.addSeries(LWC.LineSeries, { color: palette.blue, lineWidth: 1, priceLineVisible: false, lastValueVisible: true, title: s("chart.macd") }, 2);
-      macdLineS.setData(m.macd);
-      referenceLines.push([macdLineS.createPriceLine({ price: 0, color: text, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: "" }), 'text']);
-    }
-    // Size all panes together after creating them; adding MACD must not squeeze RSI.
-    chart.panes().forEach((pane,index)=>pane.setStretchFactor([4,1,1][index] || 1));
+    paintSeries(bars);
+    drawnPeriod=requestedPeriod;
+    chart.subscribeCrosshairMove?.(param=>{
+      if(!alive||my!==drawSeq||!plottedBars.length)return;
+      const bar=param.seriesData?.get(candles);showCandle(bar||plottedBars.at(-1),bar?param.time:plottedBars.at(-1).time);
+    });
     chart.timeScale().fitContent();
     zoomButtons.forEach(b=>b.disabled=false);
 
@@ -316,5 +365,5 @@ export async function mount(root, params) {
 
   await draw();
   document.fonts?.ready.then(()=>{if(alive)retheme();});
-  return () => { picker.dispose(); alive = false; compactLayout?.removeEventListener?.('change',onLayout); stopTheme(); destroy(); };
+  return () => { picker.dispose(); alive = false; compactLayout?.removeEventListener?.('change',onLayout); stopTheme(); root.removeEventListener('ducky:shared-read',barsUpdate); destroy(); };
 }

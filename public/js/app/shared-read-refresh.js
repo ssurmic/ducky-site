@@ -51,7 +51,8 @@ export function sharedReadRefresh(root,{signal,reload,interval=60000}={}){
     if(!entries.has(path)&&entries.size>=12)return;
     entries.set(path,{signature:material(value,path),options});
   });
-  const pendingReads=()=>[...entries].filter(([path])=>!changed||path==='/watchlist');
+  const numericRead=path=>path==='/watchlist'||/^\/bars\/[A-Z][A-Z0-9.-]{0,9}\?period=(?:3mo|6mo|1y|2y)$/.test(path);
+  const pendingReads=()=>[...entries].filter(([path])=>!changed||numericRead(path));
   function schedule(){clearTimeout(timer);if(active()&&(!changed||pendingReads().length)){timer=setTimeout(check,Math.min(300000,interval*2**Math.min(failures,3)));timer.unref?.();}}
   async function check(){
     clearTimeout(timer);if(!active()||running)return;
@@ -68,7 +69,7 @@ export function sharedReadRefresh(root,{signal,reload,interval=60000}={}){
         // Only the mounted view can accept its own cached numeric update. Other
         // endpoints retain the existing explicit reload/disclosure behaviour.
         const update={path,value,accepted:false};
-        if(path==='/watchlist')(root.querySelector('.route-page')||root).dispatchEvent(
+        if(numericRead(path))(root.querySelector('.route-page')||root).dispatchEvent(
           new window.CustomEvent('ducky:shared-read',{detail:update}));
         if(update.accepted)entries.set(path,{...prior,signature});
         else {changed=true;notice.hidden=false;root.dataset.freshness='earlier-version';}

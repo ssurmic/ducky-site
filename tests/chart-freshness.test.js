@@ -278,3 +278,67 @@ test('a saved intraday bar stays unfinished after the close and shows its actual
  assert.match(legacy.querySelector('#chart-spot').textContent,/completion unverified/);
  assert.equal(legacy.querySelector('.chart-bar-recorded'),null);dispose();legacy.remove();
 });
+
+for(const zoomed of [false,true])test(`scheduled bars refresh adopts complete two-year history in place (${zoomed?'zoomed dates preserved':'full range expands'})`,async()=>{
+ const {sharedReadRefresh}=await import('../public/js/app/shared-read-refresh.js');
+ const previous=window.LightweightCharts.createChart,instances=[];let barsRequests=0;
+ window.LightweightCharts.createChart=()=>{
+  let logical={from:0,to:0};const all=[];
+  const scale={fitContent(){logical={from:0,to:all[0].data.length-1};},getVisibleLogicalRange:()=>({...logical}),
+   setVisibleLogicalRange(value){logical=value;}};
+  const chart={all,scale,addSeries(type){const item={type,data:[],setData(v){this.data=v;},createPriceLine(){return {};},removePriceLine(){},applyOptions(){}};all.push(item);return item;},
+   panes:()=>[],timeScale:()=>scale,remove(){this.removed=true;},applyOptions(){}};
+  instances.push(chart);return chart;
+ };
+ const full=[];let day=new Date('2024-09-09T00:00:00Z');
+ while(full.length<501){if(![0,6].includes(day.getUTCDay()))full.push({...bar,t:day.toISOString().slice(0,10)});day.setUTCDate(day.getUTCDate()+1);}
+ const partial=full.slice(250);let ready=false;
+ globalThis.fetch=async url=>{
+  if(!String(url).includes('/bars/'))return response({status:'unavailable'});
+  barsRequests++;const period=new URL(url,'https://ducky.test').searchParams.get('period');
+  return response({ticker:'VST',period,bars:period==='2y'?(ready?full:partial):partial.slice(-126),stale:false,
+   last_d:full.at(-1).t,expected_last_d:full.at(-1).t,last_bar_state:'complete',last_bar_source:ready?'chart_cache':'prices_daily'});
+ };
+ const r=root(),watch=sharedReadRefresh(r,{reload:()=>assert.fail('numeric refresh must not reload the page')});
+ const close=await mount(r,{ticker:'VST'});
+ try{
+  r.querySelector('[data-period="2y"]').click();await flush();
+  r.querySelector('[data-interval="week"]').click();await flush();
+  const chart=instances.at(-1),before=chart.all[0].data,created=instances.length;
+  if(zoomed)r.querySelector('[data-chart-zoom="in"]').click();
+  const range=chart.scale.getVisibleLogicalRange();
+  const disclosure=r.querySelector('.chart-reference-details');disclosure.open=true;
+  r.querySelector('[data-interval="week"]').focus();
+  ready=true;await watch.check();await watch.check();
+  const after=chart.all[0].data,offset=after.findIndex(b=>b.time===before[0].time);
+  assert.equal(instances.length,created,'retain the actual chart instance');
+  assert.ok(after.length>before.length);assert.equal(after[0].time,'2024-09-09');
+  assert.equal(r.querySelector('[data-period][aria-pressed=true]').dataset.period,'2y');
+  assert.equal(r.querySelector('[data-interval][aria-pressed=true]').dataset.interval,'week');
+  assert.equal(document.activeElement.dataset.interval,'week');assert.equal(disclosure.open,true);
+  assert.deepEqual(chart.scale.getVisibleLogicalRange(),zoomed?{from:range.from+offset,to:range.to+offset}:{from:0,to:after.length-1});
+  assert.ok(chart.all[1].data.length>before.length-14,'RSI adopts the longer history too');
+  assert.equal(r.querySelector('.shared-read-update').hidden,true);
+  const fetched=barsRequests;
+  r.querySelector('[data-interval="day"]').click();await flush();
+  assert.equal(instances.at(-1).all[0].data.length,501,'period cache must also adopt completed history');
+  assert.equal(barsRequests,fetched,'aggregation only reads the updated local period cache');
+  close();watch.stop();await watch.check();assert.equal(barsRequests,fetched);
+ }finally{close();watch.stop();r.remove();window.LightweightCharts.createChart=previous;}
+});
+
+test('shared completion also leaves a cold chart placeholder without another request',async()=>{
+ const {sharedReadRefresh}=await import('../public/js/app/shared-read-refresh.js');let ready=false,requests=0;
+ globalThis.fetch=async url=>{
+  if(!String(url).includes('/bars/'))return response({status:'unavailable'});
+  requests++;return ready?response({ticker:'VST',period:'6mo',bars:[bar]}):response({status:'building'},202);
+ };
+ const r=root(),watch=sharedReadRefresh(r,{reload:()=>assert.fail('must not reload')}),close=await mount(r,{ticker:'VST'});
+ try{
+  assert.match(r.querySelector('#chart-status').textContent,/being prepared/);
+  ready=true;await watch.check();await flush();
+  assert.match(r.querySelector('#chart-spot').textContent,/310.40/);
+  assert.doesNotMatch(r.querySelector('#chart-status').textContent,/being prepared/);
+  assert.equal(requests,2);assert.equal(r.querySelector('.shared-read-update').hidden,true);
+ }finally{close();watch.stop();r.remove();}
+});
