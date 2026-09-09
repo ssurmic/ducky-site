@@ -227,3 +227,11 @@ test('metric sorting puts valid zero and losses ahead of missing or stale compar
  const view=overviewView(rows,{view:'list',sort:'ytd',onSelect:()=>{}});
  assert.deepEqual([...view.querySelectorAll('button.watch-row')].map(n=>n.dataset.open),['FLAT','LOSS','MISSING','OLD']);
 });
+
+
+test('long reference baskets stay compact while all members remain in the disclosure',()=>{
+ const symbols=['AAA','BBB','CCC','DDD','EEE','FFF'];
+ const view=overviewView([{...row('BASKET',1e9),metrics:{relative:{value:1,status:'ready',symbols}}}],{view:'list',onSelect:()=>{}});
+ assert.match(view.querySelector('[data-metric=relative]').textContent,/AAA \/ BBB \+4/);
+ assert.match(view.querySelector('.watch-metric-source').textContent,/AAA \/ BBB \/ CCC \/ DDD \/ EEE \/ FFF/);
+});

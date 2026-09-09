@@ -25,7 +25,7 @@ export function metricCell(key,m={}) {
   }
   if(key==='ytd')note=s('watch.metric_ytd_basis');
   if(key==='drawdown')note=s('watch.metric_close_high');
-  if(key==='relative')note=(m.symbols||[]).join(' / ')||s('watch.metric_reference');
+  if(key==='relative'){const refs=m.symbols||[];note=refs.slice(0,2).join(' / ')+(refs.length>2?' +'+(refs.length-2):'')||s('watch.metric_reference');}
   if(key==='iv_hv'&&valid)note=s(m.value<1?'watch.metric_iv_lower':m.value>1?'watch.metric_iv_higher':'watch.metric_iv_equal')+(m.expiry?' · '+m.expiry.slice(5).replace('-','/'):'');
   if(key==='attention')note=s('watch.metric_reddit');
   if(key==='degen')note=s('watch.metric_score');
