@@ -128,6 +128,9 @@ test('saving a Free screen immediately updates its list and quota without naviga
   assert.ok(panel.textContent.includes('1 / 1'));assert.ok(panel.textContent.includes('Free test screen'));
   assert.ok(!panel.textContent.includes(copy['app.screen.saved_empty']));
   assert.ok(r.querySelector('option[value="7"]'));
+  r.querySelector('[name=rsi_max]').value='20';
+  r.querySelector('[name=rsi_max]').dispatchEvent(new window.Event('input',{bubbles:true}));
+  assert.equal(r.querySelector('.screen-save button[type=submit]').textContent,copy['app.screen.save']);
  }finally{editor();list();}
  const count=calls.length;r.dispatchEvent(new window.Event('ducky:screens-changed'));await flush();
  assert.equal(calls.length,count);r.remove();

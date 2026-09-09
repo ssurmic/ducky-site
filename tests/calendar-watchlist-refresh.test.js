@@ -28,7 +28,7 @@ test('calendar re-reads a nonempty cached watchlist on each visit and prioritize
  const {root,calls}=fixture(()=>response({items:[{ticker:'NVDA'},{ticker:'ORCL'}]}));
  let close=await calendar.mount(root);
  assert.deepEqual(store.get('watchlist'),['NVDA','ORCL']);
- assert.match(root.querySelector('.event-scope-note').textContent,/2 watched stocks/);
+ assert.match(root.querySelector('.event-scope-note').textContent,/Stocks in your watchlist: 2/);
  assert.ok(root.querySelector(`[data-date="${day}"] .pill-tk`).textContent.includes('ORCL'));
  button(root,'app.calendar.mode_list').click();root.querySelector('.cal-mine').click();
  assert.equal(root.querySelectorAll('.cal-mine-ev').length,1);
@@ -52,7 +52,7 @@ test('failed or pending watchlist reads preserve saved membership and show an ex
 test('a confirmed empty server watchlist replaces an older nonempty browser list',async()=>{
  const {root}=fixture(()=>response({items:[]}));const close=await calendar.mount(root);
  assert.deepEqual(store.get('watchlist'),[]);
- assert.match(root.querySelector('.event-scope-note').textContent,/0 watched stocks/);
+ assert.match(root.querySelector('.event-scope-note').textContent,/Stocks in your watchlist: 0/);
  assert.equal(root.querySelector('.calendar-watch-warning'),null);close();root.remove();
 });
 

@@ -109,7 +109,7 @@ export function mountScreen(root,{signal,query,initialConfig}={}){
   const cleanup=()=>{alive=false;request++;root.removeEventListener(CHANGED,loadSaved);};signal?.addEventListener('abort',cleanup,{once:true});return cleanup;
 
   function valid(){return alive && epoch===store.epoch();}
-  function clearResults(){request++;lastPreview=null;saveForm.hidden=true;clear(results);status.textContent='';preview.disabled=false;}
+  function clearResults(){request++;lastPreview=null;saveForm.hidden=true;saveButton.textContent=s('screen.save');clear(results);status.textContent='';preview.disabled=false;}
   function fill(c){
     current={...defaults(),...c};
     for(const [key,node] of Object.entries(fields)){
@@ -172,7 +172,7 @@ export function resultCard(item){
     el('span',item.company || '')),link('#/boards?mode=archive&ticker='+encodeURIComponent(item.ticker),s('screen.records'))),
     el('p.muted.small',facts.join(' · ')),el('p.small',
       ['RSI '+(tech.rsi_d==null?'—':Number(tech.rsi_d).toFixed(1)), 'IV/HV '+(tech.iv_hv==null?'—':Number(tech.iv_hv).toFixed(2)),
-        s('screen.oversold')+' '+s(tech.oversold==null?'screen.unknown':tech.oversold?'screen.yes':'screen.no')].join(' · ')));
+        s('screen.oversold')+': '+s(tech.oversold==null?'screen.unknown':tech.oversold?'screen.yes':'screen.no')].join(' · ')));
   card.append(el('p.muted.small',s('screen.company_at',{date:textDate(item.company_as_of)})),el('p.muted.small',s('screen.technical_at',{date:textDate(item.snapshot_at)})));
   if(item.technical_status==='stale')card.append(el('p.muted.small',s('screen.unknown_technical_stale')));
   for(const event of item.events || [])card.append(el('div.screen-evidence',el('span',s('screen.event_'+event.kind)),

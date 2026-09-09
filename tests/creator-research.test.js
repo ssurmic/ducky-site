@@ -109,7 +109,7 @@ test('coverage is for loaded views and an older mature view arrives on the next 
  assert.match(root.querySelector('.study-coverage').textContent,/Awaiting calculation: 1/);
  [...root.querySelectorAll('button')].find(b=>b.textContent==='Load more views').click();
  await new Promise(resolve=>setTimeout(resolve,0));
- assert.match(root.textContent,/2 views loaded · 1 completed/);
+ assert.match(root.textContent,/Views loaded: 2 · Completed 20-day comparisons: 1/);
  assert.match(root.textContent,/-10.0%/);assert.equal(root.querySelectorAll('.study-row').length,2);
  assert.match(root.textContent,/not the creator’s complete history/);root.remove();
 });
@@ -158,7 +158,7 @@ test('groups default closed, keep distinct returns and stay open when another pa
  assert.match(group.querySelector('.study-group-views').textContent,/-10.0%/);
  assert.match(group.querySelector('.study-group-views').textContent,/Only after earnings/);
  assert.match(root.querySelectorAll('.study-group')[1].querySelector('summary').textContent,/—/);
- assert.match(root.textContent,/3 views loaded/);assert.match(root.textContent,/2 creator–stock groups/);
+ assert.match(root.textContent,/Views loaded: 3/);assert.match(root.textContent,/Creator–stock groups: 2/);
  root.remove();
 });
 
