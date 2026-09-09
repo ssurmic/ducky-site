@@ -70,3 +70,56 @@ test('avatar is an accessible profile link with safe URL and error fallback',()=
  renderAccountAvatar({account_name:'安全',avatar_url:'https://evil.test/avatar'});assert.equal(link.querySelector('img'),null);
  renderAccountAvatar(null);assert.equal(link.hidden,true);assert.equal(link.textContent,'');
 });
+
+const changed=(from,to)=>window.dispatchEvent(new window.StorageEvent('storage',{key:'ducky.token',oldValue:from,newValue:to,storageArea:window.localStorage}));
+test('same-account renewal in another tab retries with its newer token without logging out',async()=>{
+ saved();store.set('me',{user_id:1});let resolve;const calls=[];
+ globalThis.fetch=(url,options)=>{calls.push([url,options.headers.Authorization]);return calls.length===1?new Promise(r=>resolve=r):Promise.resolve(me());};
+ const pending=api.me();auth.saveToken(next);changed(old,next);resolve(denied());
+ assert.equal((await pending).user_id,1);assert.equal(store.get('token'),next);assert.equal(store.get('me').user_id,1);
+ assert.deepEqual(calls,[['/me','Bearer '+old],['/me','Bearer '+next]]);
+});
+test('bootstrap adopts a same-account renewal that arrived while its refresh was pending',async()=>{
+ saved();let resolve;globalThis.fetch=url=>url==='/auth/refresh'?new Promise(r=>resolve=r):Promise.resolve(url==='/me'?me():Response.json({items:[]}));
+ const boot=auth.boot();for(let i=0;i<20&&!resolve;i++)await Promise.resolve();assert.ok(resolve);auth.saveToken(next);resolve(Response.json({token:old}));
+ assert.equal(await boot,true);assert.equal(store.get('token'),next);assert.equal(auth.loadToken(),next);assert.equal(store.get('me').user_id,1);
+});
+test('a shared renewal can recover a stale refresh 401 without overwriting the winner',async()=>{
+ saved();let resolve;globalThis.fetch=()=>new Promise(r=>resolve=r);
+ const pending=auth.renewSession();auth.saveToken(next);resolve(denied());
+ assert.equal(await pending,true);assert.equal(store.get('token'),next);assert.equal(auth.loadToken(),next);
+});
+test('a different account in shared storage never receives an old-account write retry',async()=>{
+ saved();store.set('me',{user_id:1});let resolve;const calls=[];
+ globalThis.fetch=(url,options)=>{calls.push(url);return new Promise(r=>resolve=r);};
+ const pending=api.post('/watchlist',{ticker:'VST'});
+ const other=btoa(JSON.stringify({u:2,e:1,s:0,d:'c'.repeat(32)}))+'.signature';
+ auth.saveToken(other);changed(old,other);resolve(denied());
+ await assert.rejects(pending,e=>e.body.detail==='session_changed');
+ assert.deepEqual(calls,['/watchlist']);assert.equal(store.get('me'),null);assert.equal(auth.loadToken(),other);
+});
+test('another tab logout cancels late renewal without restoring credentials',async()=>{
+ saved();let resolve;globalThis.fetch=()=>new Promise(r=>resolve=r);
+ const pending=auth.renewSession();window.localStorage.removeItem('ducky.token');changed(old,null);
+ resolve(Response.json({token:next}));await assert.rejects(pending,e=>e.body.detail==='session_changed');
+ assert.equal(store.get('token'),null);assert.equal(auth.loadToken(),null);
+});
+test('a queued storage event cannot erase a subsequent sign-in',()=>{
+ saved();auth.saveToken(next);store.set('token',next);store.set('me',{user_id:1});
+ changed(old,null);assert.equal(store.get('token'),next);assert.equal(store.get('me').user_id,1);
+});
+test('a password/session epoch change is not treated as a harmless renewal',async()=>{
+ saved();store.set('me',{user_id:1});
+ const changedEpoch=btoa(JSON.stringify({u:1,e:1,s:1,d:'c'.repeat(32)}))+'.signature';
+ auth.saveToken(changedEpoch);changed(old,changedEpoch);
+ assert.equal(store.get('token'),null);assert.equal(store.get('me'),null);assert.equal(auth.loadToken(),changedEpoch);
+});
+test('waiting for the cross-tab lock adopts the winner without another refresh request',async()=>{
+ saved();let enter,lockName,calls=0;
+ Object.defineProperty(window.navigator,'locks',{configurable:true,value:{request:(name,fn)=>{lockName=name;return new Promise((resolve,reject)=>{enter=()=>Promise.resolve(fn()).then(resolve,reject);});}}});
+ globalThis.fetch=async()=>{calls++;return me();};
+ try{
+  const pending=auth.renewSession();auth.saveToken(next);await enter();
+  assert.equal(await pending,true);assert.equal(lockName,'ducky-session-refresh');assert.equal(calls,0);assert.equal(store.get('token'),next);
+ }finally{delete window.navigator.locks;}
+});

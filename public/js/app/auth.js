@@ -107,25 +107,66 @@ function deviceToken(token) {
   catch { return false; }
 }
 
+function tokenAccount(token) {
+  try {
+    const data=JSON.parse(atob(token.split('.')[0].replace(/-/g,'+').replace(/_/g,'/')));
+    return Number.isSafeInteger(data.u) && Number.isSafeInteger(data.s) ? {user:data.u,epoch:data.s} : null;
+  } catch { return null; }
+}
+
+// These claims are only a concurrency hint. The API still verifies the adopted
+// credential before returning data; a different account is never used to retry
+// an operation that started in the old account.
+function adoptSharedToken(token,epoch) {
+  if(tg.inTG || epoch!==store.epoch() || token!==store.get('token'))return false;
+  const newer=loadToken(),before=tokenAccount(token),after=tokenAccount(newer);
+  if(!newer || newer===token || !before || !after || before.user!==after.user || before.epoch!==after.epoch)return false;
+  if(store.get('me')?.user_id!=null && Number(store.get('me').user_id)!==after.user)return false;
+  store.set('token',newer);
+  return true;
+}
+
+// Logout/account switches in another tab invalidate this tab's private UI.
+// Same-account renewals are adopted lazily, avoiding reload/refresh ping-pong.
+if(typeof window!=='undefined')window.addEventListener('storage',event=>{
+  if(tg.inTG || event.key!==KEY || event.storageArea!==storage() || event.newValue!==loadToken())return;
+  const token=store.get('token');
+  if(!token || event.newValue===token)return;
+  const before=tokenAccount(token),after=tokenAccount(event.newValue);
+  if(before && after && before.user===after.user && before.epoch===after.epoch)return;
+  forgetSession(token);
+});
+
 // One renewal per tab. State and shared storage guards prevent stale work from
 // restoring an account after logout or replacing a newer sign-in.
 export async function renewSession() {
   if(renewal)return renewal;
   const token=store.get('token'),epoch=store.epoch(),saved=loadToken();
-  const work=(async()=>{
-    const response=await api.auth.refresh();
+  const refresh=async()=>{
+    if(adoptSharedToken(token,epoch))return true;
+    if(epoch!==store.epoch() || token!==store.get('token') || saved!==loadToken())
+      throw new api.ApiError(0,{detail:'session_changed'});
+    let response;
+    try { response=await api.auth.refresh(); }
+    catch(error) { if(adoptSharedToken(token,epoch))return true; throw error; }
+    if(adoptSharedToken(token,epoch))return true;
     if(epoch!==store.epoch() || token!==store.get('token') || saved!==loadToken())
       throw new api.ApiError(0,{detail:'session_changed'});
     if(!response?.token)throw new api.ApiError(502,{error:'session_unavailable'});
     saveToken(response.token);store.set('token',response.token);
     return true;
-  })();
+  };
+  // A browser cookie is shared by tabs, so renewal must be serialized there too.
+  // Older browsers retain the guarded fallback and the server's concurrency checks.
+  const work=window.navigator?.locks?.request && !tg.inTG
+    ? window.navigator.locks.request('ducky-session-refresh',refresh) : refresh();
   renewal=work;
   try{return await work;}finally{if(renewal===work)renewal=null;}
 }
 
 export async function expireSession({token,epoch,retry=true} = {}) {
   if(token!==store.get('token') || epoch!==store.epoch())return false;
+  if(retry && adoptSharedToken(token,epoch))return true;
   if(retry && deviceToken(token) && loadToken()===token) {
     try { return await renewSession(); }
     catch(error) {
