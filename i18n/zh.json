@@ -3041,7 +3041,7 @@
   "app.stockbrief.lock_title": "Pro 个股简报",
   "app.stockbrief.all": "全部关注",
   "app.stockbrief.missing_option_concentrations": "期权持仓集中区",
-  "app.social.merged": "Vibe Check 观察多空倾向；讨论量只说明有多少人在提及，不能说明看多还是看空。",
+  "app.social.merged": "讨论量统计提及次数，不等于独立作者数；判断多空倾向需要原帖中的观点依据。",
   "app.stockbrief.unready_source_changed": "引用的来源发生修订，相关报告已暂停展示，等待重新检查。",
   "app.stockbrief.empty": "先关注一只股票。它的报告生成后，会和其他关注者共享。",
   "app.stockbrief.missing_creator_source": "已核对的博主记录",

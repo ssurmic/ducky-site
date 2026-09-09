@@ -3041,7 +3041,7 @@
   "app.stockbrief.lock_title": "Stock briefs with Pro",
   "app.stockbrief.all": "All followed",
   "app.stockbrief.missing_option_concentrations": "Option concentrations",
-  "app.social.merged": "Vibe Check is about bullish versus bearish views. Mention counts measure discussion volume, not its direction.",
+  "app.social.merged": "Mention counts are not unique-author counts. Bullish or bearish readings require attributable viewpoints.",
   "app.stockbrief.unready_source_changed": "A cited source changed. This report is withheld until it has been checked again.",
   "app.stockbrief.empty": "Follow a stock to receive its shared research report once it is ready.",
   "app.stockbrief.missing_creator_source": "Reviewed creator record",
