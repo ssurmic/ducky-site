@@ -62,6 +62,7 @@ test('new accounts see ready creators without a lookup, auto-follow or model job
  assert.equal(requests.filter(([url,method])=>url==='/kol/ready/sub'&&method==='POST').length,1);
  assert.equal(root.querySelector('.creator-starters'),null);
  assert.ok(root.textContent.includes('Creator ready'));
+ assert.match(location.hash,/creator=ready&post=abcdefghijk&point=claim%3Aready/);
  dispose();root.remove();
 });
 

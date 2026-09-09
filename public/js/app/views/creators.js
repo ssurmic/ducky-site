@@ -230,11 +230,17 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     clear(content);
     const startersHost=card.querySelector('.creator-starters-host');clear(startersHost);
     if(!sourceOnly&&tab==='feed'&&!selected&&!query&&!stockTicker&&(!mine||!following.size)){
-      const starters=creatorStarters(starterDiscovery,{following,state:starterState,onFollow:async(creator,button)=>{
+      const starters=creatorStarters(starterDiscovery,{following,state:starterState,onFollow:async(creator,button,view)=>{
         if(button.disabled||disposed||epoch!==store.epoch()||signal?.aborted)return;
         button.disabled=true;
         try{const response=await api.kol.sub(creator.id);
-          if(!disposed&&epoch===store.epoch()&&!signal?.aborted)followed(response);
+          if(!disposed&&epoch===store.epoch()&&!signal?.aborted){
+            followed(response);
+            // The selected source can be older than the bounded global feed.
+            // A successful follow opens the very view that made this creator eligible.
+            if(response?.subscribed===true)router.go(creatorTarget({tab:'feed',mine:false,
+              selected:creator.id,post:view.post_id,point:view.point_id}));
+          }
         }catch{if(!disposed&&epoch===store.epoch())toast(s('creatorflow.follow_error'),'err');}
         finally{button.disabled=false;}
       }});

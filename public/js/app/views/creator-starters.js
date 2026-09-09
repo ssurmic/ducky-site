@@ -59,7 +59,7 @@ export function creatorStarters(doc,{following,state={},onFollow}={}) {
       el('summary',s('creatorstart.qualifications')),qualifications));
     const controls=el('div.creator-starter-actions',
       el('a.btn.btn-ghost.btn-sm',{href:evidenceTarget(v)},s('creatorstart.read')),
-      el('button.btn.btn-primary.btn-sm',{type:'button','aria-label':s('creatorstart.follow_name',{name:c.name}),onclick:event=>onFollow?.(c,event.currentTarget)},s('creators.follow')));
+      el('button.btn.btn-primary.btn-sm',{type:'button','aria-label':s('creatorstart.follow_name',{name:c.name}),onclick:event=>onFollow?.(c,event.currentTarget,v)},s('creators.follow')));
     preview.append(quote,controls);
   }
   section.append(rail,preview);motion();show();return section;
