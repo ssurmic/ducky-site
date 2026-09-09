@@ -197,13 +197,51 @@ test('mismatched or incomplete option snapshots cannot populate the ratio; parti
  assert.ok(card.textContent.includes('Same-session IV30/HV20 unavailable'));
 });
 
-test('warming and stale discovery offer the existing oversold screen without querying or blending legacy results',async()=>{
+test('warming and stale discovery retain dated observations and a recovery link',async()=>{
  for(const status of ['warming','stale']){
   const calls=[];const root=await open(async url=>{calls.push(String(url));return response(packet([item('OLD')],{status}));});
-  assert.equal(root.querySelector('.opportunity-card'),null);
+  assert.ok(root.querySelector('.opportunity-card'));
   const fallback=root.querySelector('.opportunity-feedback a[href="#/screens?screen=oversold"]');
   assert.ok(fallback);assert.equal(fallback.textContent,'Open the existing oversold screen');
   assert.ok(root.textContent.includes('separately from this daily discovery list'));
   assert.equal(calls.length,1);assert.ok(calls[0].startsWith('/opportunities?'));
  }
+});
+
+
+test('recorded candidates show their original scope, summary and independent daily price',()=>{
+ const row=item('CRDO');row.qualification={lane:'snapshot_observation',reasons:['recorded_drawdown']};
+ row.technical.reference_options={basis:'near_expiry_iv_hv20',ratio:.63,iv:50.,hv20:80.};
+ row.screen_summary={en:'Recorded drawdown is -40%.',status:'waiting',source_at:'2026-09-04T20:00:00Z',limitation:{en:'Screen readings do not prove a cause.'}};
+ row.price_as_of='2026-09-08';row.candidate_state='stale';
+ const card=candidateCard(row);
+ assert.ok(card.textContent.includes('Near-expiry IV / HV20'));
+ assert.equal(card.querySelectorAll('.opportunity-metrics dd')[2].textContent,'0.63');
+ assert.ok(card.textContent.includes('Recorded drawdown is -40%.'));
+ assert.ok(card.textContent.includes('Previous candidate'));
+ assert.ok(card.textContent.includes('Closing data · 2026-09-08'));
+ assert.equal(optionRatio(row),null);
+});
+
+
+test('candidate history loads only on demand and cannot write into another session',async()=>{
+ let calls=0,finish;
+ const root=await open(async url=>{
+  if(String(url).includes('/history?')){calls++;return new Promise(r=>finish=r);}
+  return response(packet([item('CRDO')]));
+ });
+ assert.equal(calls,0);
+ const button=root.querySelector('.opportunity-history button');button.click();button.click();await flush();
+ assert.equal(calls,1);store.set('token','new-session');
+ finish(response({items:[{state:'matched',recorded_at:'2026-09-08T20:00:00Z',document:{technical:{dd_pct:-43}}}],next_cursor:null}));
+ await flush();assert.ok(!root.querySelector('.opportunity-history').textContent.includes('-43'));
+});
+
+test('candidate history preserves a nonmatch and null reading',async()=>{
+ const root=await open(async url=>String(url).includes('/history?')?response({items:[
+  {state:'not_matched',recorded_at:'2026-09-08T20:00:00Z',source_at:null,document:{technical:{dd_pct:null}}}],next_cursor:null}):response(packet([item('CRDO')])));
+ root.querySelector('.opportunity-history button').click();await flush();
+ assert.ok(root.querySelector('.opportunity-history').textContent.includes('Did not match'));
+ assert.ok(root.querySelector('.opportunity-history').textContent.includes('—'));
+ assert.equal(root.querySelector('.opportunity-history button').hidden,true);
 });

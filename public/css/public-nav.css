@@ -96,7 +96,11 @@ html.public-menu-open{overflow:hidden;scrollbar-gutter:stable}
 }
 @media(max-width:360px){.public-brand>span{display:none}.public-nav-actions .public-language{min-width:44px}}
 
-.public-coffee{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:44px;min-height:44px;color:var(--text);font-size:.8125rem;text-decoration:none;white-space:nowrap;border-radius:9px}
+.public-coffee{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:44px;min-height:44px;color:var(--support-ink);font:700 .875rem var(--font);text-decoration:none;white-space:nowrap;border-radius:9px}
 .public-coffee:hover{background:var(--surface-2);text-decoration:none}
 @media(max-width:1120px){.public-coffee-label{display:none}}
 @media(max-width:700px){.public-brand>span{display:none}.public-nav-actions{gap:4px}}
+
+:root{--support-ink:#397018}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--support-ink:#b5ed79}}
+:root[data-theme=dark]{--support-ink:#b5ed79}
