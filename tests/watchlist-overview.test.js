@@ -11,6 +11,28 @@ const store=await import('../public/js/app/store.js');
 const {mount}=await import('../public/js/app/views/watchlist.js');
 const row=(ticker,cap,change=0)=>({ticker,company:ticker+' Company',market_cap:cap,market_cap_status:'ready',market_cap_currency:'USD',market_cap_as_of:'2026-09-07T00:00:00Z',price:100,price_status:'ready',change_pct:change});
 
+test('recent provider quote is separate from the completed close and expires by its trade clock',async()=>{
+ const {currentQuote}=await import('../public/js/app/watchlist-overview.js');
+ const at=Date.now();const r={...row('NVDA',1e9),quote:{status:'current',price:105,change_pct:null,quote_at:new Date(at).toISOString(),provider:'alpaca',feed:'iex'}};
+ assert.equal(currentQuote(r,at)?.price,105);
+ assert.equal(currentQuote(r,at+180001),null);
+ assert.equal(currentQuote(r,at-1),null);
+ const list=overviewView([r],{view:'list',session:'2026-09-08',onSelect:()=>{}});
+ assert.match(list.querySelector('.watch-row-price').textContent,/105/);
+ assert.match(list.querySelector('.watch-quote').textContent,/Latest quote/);
+ assert.doesNotMatch(list.querySelector('.watch-change').textContent,/0\.00/); // no inherited daily change
+ const map=overviewView([r],{view:'heatmap',area:'equal',session:'2026-09-08',onSelect:()=>{}});
+ assert.match(map.querySelector('.watch-tile-price').textContent,/100/);
+ const stale=overviewView([{...r,quote:{...r.quote,status:'stale'}}],{view:'list',onSelect:()=>{}});
+ assert.match(stale.querySelector('.watch-row-price').textContent,/100/);
+});
+
+test('missing YTD identifies the unavailable input instead of claiming a small sample',()=>{
+ const r={...row('NVDA',1e9),metrics:{ytd:{status:'insufficient',reason:'adjustment_vintage_mismatch'}}};
+ const list=overviewView([r],{view:'list',onSelect:()=>{}});
+ assert.match(list.querySelector('[data-metric="ytd"]').textContent,/Adjusted prices awaiting update/);
+});
+
 test('shared price refresh updates the visible list while keeping selection, filters and open research intact',async()=>{
  const {sharedReadRefresh}=await import('../public/js/app/shared-read-refresh.js');
  Object.defineProperty(document,'visibilityState',{get:()=>'visible',configurable:true});

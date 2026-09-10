@@ -4,6 +4,12 @@ import { icon } from './icons.js';
 import {metricKeys,metricCell,metricLabel,metricMethods,metricSortValue} from './watchlist-metrics.js';
 
 const finite = n => typeof n === 'number' && Number.isFinite(n);
+export function currentQuote(row, now=Date.now()) {
+  const q=row.quote, age=now-Date.parse(q?.quote_at);
+  return q?.status==='current'&&finite(q.price)&&q.price>0&&age>=0&&age<=180000?q:null;
+}
+const quoteTime=q=>new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{
+  hour:'2-digit',minute:'2-digit',timeZone:'America/New_York',timeZoneName:'short'}).format(new Date(q.quote_at));
 const retained = row => row.price_status === 'retained';
 const savedLabel = row => s('watch.saved_close', {date:row.price_session || '—'});
 export const weighted = row => row.market_cap_status === 'ready' && finite(row.market_cap) && row.market_cap > 0 && row.security_type !== 'ETF';
@@ -106,16 +112,19 @@ export function overviewView(rows, options) {
   const label=r=>(LANG==='zh'?r.label_zh:r.label_en) || r.industry || (LANG==='zh'?r.sector_zh:r.sector) || s('company.unknown');
   const title=r=>`${r.ticker} · ${r.company || ''} · ${label(r)} · ${pct(r.change_pct,2)} · ${r.price_session || session || '—'} · ${s('watch.cap')}: ${capText(r.market_cap)} ${r.market_cap_currency || ''}${retained(r)?' · '+savedLabel(r):''}`;
   const button=(r,compact=false)=>{
+    const quote=compact?null:currentQuote(r);
+    const shown=quote||r;
     const cells=compact?[]:metricKeys.map(key=>metricCell(key,r.metrics?.[key]));
     const identity=el('span.watch-identity',el('span.watch-identity-title',el('strong',r.ticker),
       compact?null:el('span.watch-industry',label(r))),el('span.watch-company',r.company || r.ticker),
       compact?null:el('span.watch-stock-cap',s('watch.cap')+' '+(r.security_type==='ETF'?'ETF':capText(r.market_cap))));
-    const price=el('span.mono.watch-row-price',px(r.price),retained(r)?el('small.watch-saved-note',s('watch.saved_value')):null);
-    const change=el('span.mono.watch-change',{class:'watch-'+changeClass(r.change_pct)},pct(r.change_pct,2));
+    const price=el('span.mono.watch-row-price',px(shown.price),!quote&&retained(r)?el('small.watch-saved-note',s('watch.saved_value')):null);
+    const change=el('span.mono.watch-change',{class:'watch-'+changeClass(shown.change_pct)},pct(shown.change_pct,2));
     return el('div.watch-row-entry',{class:compact?'':'watch-rich-entry'},el('button.watch-row', {type:'button','data-open':r.ticker,
-      'aria-pressed':String(selected===r.ticker),'aria-label':title(r)+(compact?'':' · '+cells.map(c=>[...c.children].map(n=>n.textContent).join(' · ')).join(' · ')),onclick:()=>onSelect(r.ticker)},
+      'aria-pressed':String(selected===r.ticker),'aria-label':title(quote?{...r,change_pct:quote.change_pct,price_session:quoteTime(quote)}:r)+(quote?' · '+s('watch.latest_quote'):'')+(compact?'':' · '+cells.map(c=>[...c.children].map(n=>n.textContent).join(' · ')).join(' · ')),onclick:()=>onSelect(r.ticker)},
       identity,...cells,...(compact?[price,change,el('span.mono.watch-row-cap',capText(r.market_cap))]:[
-        el('span.watch-quote',el('span.watch-metric-label',s('watch.close')),price,change)])),
+        el('span.watch-quote',el('span.watch-metric-label',s(quote?'watch.latest_quote':'watch.close')),price,change,
+          quote?el('small.watch-metric-note',{title:quote.provider+' · '+quote.feed},s('watch.latest_quote')+' · '+quoteTime(quote)):null)])),
       el('a.watch-map-link',{href:'#/evidence/'+encodeURIComponent(r.ticker),'aria-label':s('watch.open_stock_map',{ticker:r.ticker}),'data-map-open':r.ticker},icon('evidence'),el('span',s('watch.open_map'))));
   };
   if(view!=='heatmap')root.append(el('p.muted.small.watch-session',session?s('watch.close_session',{date:session}):s('watch.summary_pending')));

@@ -30,7 +30,8 @@ export function metricCell(key,m={}) {
   if(key==='attention')note=s('watch.metric_reddit');
   if(key==='degen')note=s('watch.metric_score');
   const state=m.status||'missing';
-  const status=ready?'':s(stateCopy[state]||stateCopy.missing);
+  const reasonCopy={anchor_missing:'watch.ytd_anchor_missing',latest_session_missing:'watch.ytd_close_pending',adjustment_vintage_mismatch:'watch.ytd_adjustment_pending'};
+  const status=ready?'':s(key==='ytd'&&reasonCopy[m.reason]||stateCopy[state]||stateCopy.missing);
   return el('span.watch-metric',{'data-metric':key,'data-status':state},
     el('span.watch-metric-label',metricLabel(key)),
     el('strong.watch-metric-value',{class:tone},value),

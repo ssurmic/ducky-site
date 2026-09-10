@@ -3866,7 +3866,7 @@
   "app.watch.metric_iv_hv": "IV / HV20",
   "app.watch.metric_attention": "讨论热度",
   "app.watch.metric_degen": "Degen Index",
-  "app.watch.metric_quote": "收盘 / 日涨跌",
+  "app.watch.metric_quote": "价格 / 日涨跌",
   "app.watch.metric_pp": "{n} pp",
   "app.watch.metric_ytd_basis": "年初至今",
   "app.watch.metric_close_high": "收盘高点",
@@ -4002,5 +4002,9 @@
   "app.share.dated": "资料有时效性，请核对原文日期。",
   "app.share.saved": "资料收录于 {at}",
   "app.share.snapshot_note": "单条信息摘要，不代表完整研究；请结合原文阅读。",
-  "app.share.scan_source": "扫码查看原文"
+  "app.share.scan_source": "扫码查看原文",
+  "app.watch.latest_quote": "最新报价",
+  "app.watch.ytd_anchor_missing": "缺少年初基准价",
+  "app.watch.ytd_close_pending": "收盘数据待更新",
+  "app.watch.ytd_adjustment_pending": "复权数据待更新"
 }

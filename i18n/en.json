@@ -3866,7 +3866,7 @@
   "app.watch.metric_iv_hv": "IV / HV20",
   "app.watch.metric_attention": "Discussion",
   "app.watch.metric_degen": "Degen Index",
-  "app.watch.metric_quote": "Close / day change",
+  "app.watch.metric_quote": "Price / day change",
   "app.watch.metric_pp": "{n} pp",
   "app.watch.metric_ytd_basis": "Year to date",
   "app.watch.metric_close_high": "Closing high",
@@ -4002,5 +4002,9 @@
   "app.share.dated": "Dated information. Check the source date.",
   "app.share.saved": "Recorded {at}",
   "app.share.snapshot_note": "One evidence item from a broader study. Read it with the original source.",
-  "app.share.scan_source": "Scan for source"
+  "app.share.scan_source": "Scan for source",
+  "app.watch.latest_quote": "Latest quote",
+  "app.watch.ytd_anchor_missing": "Year-start price unavailable",
+  "app.watch.ytd_close_pending": "Close awaiting update",
+  "app.watch.ytd_adjustment_pending": "Adjusted prices awaiting update"
 }
