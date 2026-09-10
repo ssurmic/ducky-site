@@ -395,7 +395,7 @@ export function itemRow(it, {standalone=false, language=LANG}={}){
     if(!it.archived && !it.provenance){
       detail.append(el('h4',s('radar.follow_up')));
       if(it.base_d)detail.append(el('p.muted',s('creators.base_close')+' '+it.base_d+' · '+px(it.base_px)),
-        el('div.study-results',...[1,5,20].map(n=>metric(s('creators.trading_days',{n}),pct(it['ret_'+n+'d']),it['ret_'+n+'d']))),el('p.radar-time-note.muted',s('boards.outcome_method')));
+        el('div.study-results',...[1,5,20].map(n=>metric(s(n===1?'creators.trading_days_single':'creators.trading_days',{n}),pct(it['ret_'+n+'d']),it['ret_'+n+'d']))),el('p.radar-time-note.muted',s('boards.outcome_method')));
       else detail.append(el('p.muted',s('radar.outcome_missing')));
     }
     const actions=el('div.radar-record-actions');

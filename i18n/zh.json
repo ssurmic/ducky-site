@@ -4138,5 +4138,7 @@
   "app.reader.english_unavailable_detail": "暂无英文版本，可展开下方原文阅读。",
   "app.reader.original_zh": "阅读中文原文",
   "idea.original_title_zh": "中文原标题",
-  "idea.record_title": "{ticker} 研究记录"
+  "idea.record_title": "{ticker} 研究记录",
+  "app.creators.trading_days_single": "+{n} 交易日",
+  "app.creatorlab.result_detail_single": "最大收盘回撤 {drawdown} · 成本 {fees} · {n} 次交易"
 }
