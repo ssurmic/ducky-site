@@ -17,6 +17,11 @@ python3 scripts/check_links.py        # internal links + anchors
 scripts/serve.sh                      # http://localhost:8000/
 ```
 
+Research Brief is explicitly enabled by `research_brief_preview: true` in `site.config.json`.
+Without that setting it stays disabled. `python3 build.py --no-research-brief-preview` builds
+a rollback with the preview route and navigation disabled; `--research-brief-preview` enables it
+for a local preview. The switch does not change API authentication or data access.
+
 Copy lives in `i18n/zh.json` and `i18n/en.json` (flat keys, identical key sets — the build fails otherwise).
 Prices, bot handle, channel and API base live in `site.config.json`. App modules share a content-addressed
 directory `/app-assets/<hash>/`; all relative imports remain inside it so authentication and routing use

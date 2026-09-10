@@ -5,6 +5,7 @@
   "miniapp": "app",
   "channel": null,
   "api_base": "https://api.duckybot.app",
+  "research_brief_preview": true,
   "track_json": "/track-record.json",
   "feed_json": "/feed.json",
   "prices": {

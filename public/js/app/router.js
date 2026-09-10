@@ -9,6 +9,7 @@ import { selectNavigation } from './navigation.js';
 import {sharedReadRefresh} from './shared-read-refresh.js';
 
 const ROUTES = {
+  ...(window.DUCKY?.RESEARCH_BRIEF_ENABLED === true ? { 'research-brief': () => import('./views/research-brief.js') } : {}),
   reports: () => import('./views/boards.js'),
   record: () => import('./views/record.js'),
   evidence: () => import('./views/evidence.js'),
@@ -102,7 +103,7 @@ export async function render() {
   if (my !== seq) return;
   current = route;
   clear(page);
-  if(!PUBLIC.has(route.name)&&!['profile','billing','alerts'].includes(route.name)){
+  if(!PUBLIC.has(route.name)&&!['profile','billing','alerts','research-brief'].includes(route.name)){
     // Keep this outside the view's DOM so its local render cannot erase the notice.
     sharedReadRefresh(root,{signal:controller.signal,reload:()=>{store.set('snapshots',{});render();}});
   }

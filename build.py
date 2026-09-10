@@ -91,6 +91,11 @@ def load_config(api_base: str | None) -> dict:
     return cfg
 
 
+def research_brief_enabled(cfg: dict, override: bool | None = None) -> bool:
+    """Absent/invalid settings stay off; an explicit CLI choice overrides site config."""
+    return override if override is not None else cfg.get("research_brief_preview") is True
+
+
 def load_i18n() -> dict[str, dict[str, str]]:
     tables = {lang: json.loads((I18N / f"{lang}.json").read_text(encoding="utf-8")) for lang in LANGS}
     base = set(tables[LANGS[0]])
@@ -544,6 +549,7 @@ def write_config_js(cfg: dict, version: str) -> None:
         "CHANNEL": cfg.get("channel"), "TRACK_JSON": cfg.get("track_json", "/track-record.json"),
         "FEED_JSON": cfg.get("feed_json", "/feed.json"), "PRICES": None, "VERSION": version,
         "BILLING_ENABLED": False,
+        "RESEARCH_BRIEF_ENABLED": cfg.get("research_brief_preview") is True,
     }
     body = json.dumps(data, ensure_ascii=False, indent=2)
     (DIST / "config.js").write_text(
@@ -604,6 +610,8 @@ def load_video_example():
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--api-base", help="override api_base from site.config.json")
+    ap.add_argument("--research-brief-preview", action=argparse.BooleanOptionalAction, default=None,
+                    help="override the Research Brief site setting (absent setting: disabled)")
     args = ap.parse_args()
 
     # refresh the static calendar fallback (deterministic index rebalances) so dates roll forward
@@ -614,6 +622,7 @@ def main() -> None:
         print(f"[build] gen_calendar skipped: {e}")
 
     cfg, tables, version = load_config(args.api_base), load_i18n(), git_sha()
+    cfg["research_brief_preview"] = research_brief_enabled(cfg, args.research_brief_preview)
     pages, env, liq, track_n = page_targets(), make_env(), load_liquidity(), load_track_n()
     track_stats = load_track_stats()   # §5.3.4/5 — graceful {'ok': False} when the notary JSON is absent
     video_example = load_video_example()

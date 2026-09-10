@@ -71,12 +71,21 @@
     </div>
   </details>
   {%- endmacro %}
+  {% set brief_enabled = cfg.get('research_brief_preview', false) %}
+  {% set mobile_routes = ['watchlist', 'research-brief', 'calendar', 'boards'] if brief_enabled else navigation.mobile %}
   <nav class="app-nav no-glossary" aria-label="{{ t('app.nav.label') }}">
-    {% for route in navigation.mobile %}
+    {% for route in mobile_routes %}
+    {% if route == 'research-brief' %}
+    <a href="#/research-brief" data-route="research-brief" class="nav-mobile-primary" data-mobile-primary aria-label="{{ t('app.researchbrief.title') }}">{{ nav_icon('digest') }}<span>{{ t('app.researchbrief.nav_short') }}</span></a>
+    {% else %}
     <a href="#/{{ route }}" data-route="{{ route }}" class="nav-mobile-primary" data-mobile-primary aria-label="{{ t('app.nav.' ~ route) }}">{{ nav_icon(route) }}<span>{{ t('app.nav.evidence_short') if route == 'evidence' else t('app.nav.' ~ route) }}</span></a>
+    {% endif %}
     {% endfor %}
     {% for route in navigation.primary %}
     <a href="#/{{ route }}" data-route="{{ route }}" class="nav-secondary">{{ nav_icon(route) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
+    {% if route == 'watchlist' and brief_enabled %}
+    <a href="#/research-brief" data-route="research-brief" class="nav-secondary">{{ nav_icon('digest') }}<span>{{ t('app.researchbrief.title') }}</span></a>
+    {% endif %}
     {% endfor %}
     {% for group in navigation.tree %}{{ tree_group(group, true) }}{% endfor %}
 
@@ -86,7 +95,7 @@
     <details class="nav-more">
       <summary>{{ nav_icon('more') }}<span>{{ t('app.nav.more') }}</span></summary>
       <div class="nav-more-panel">
-        {% for route in navigation.primary + navigation.account if route not in navigation.mobile %}
+        {% for route in navigation.primary + navigation.account if route not in mobile_routes %}
 
         <a href="#/{{ route }}" data-route="{{ route }}">{{ nav_icon(route) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
         {% endfor %}

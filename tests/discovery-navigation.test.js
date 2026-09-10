@@ -31,15 +31,18 @@ test('new destinations survive sign-in and radar links select one matching categ
  assert.ok(nav.querySelector('[data-route=vibe]').classList.contains('on'));
  assert.equal(nav.querySelector('.nav-desktop-tree[data-group=boards] [aria-current=page]'),null);nav.remove();
 });
-test('phone navigation promotes the information map and keeps alerts reachable in More',()=>{
+test('phone navigation promotes enabled research and keeps displaced tools reachable in More',()=>{
+ const briefEnabled=readFileSync('dist/config.js','utf8').includes('"RESEARCH_BRIEF_ENABLED": true');
+ const expected=briefEnabled?['watchlist','research-brief','calendar','boards']:['watchlist','calendar','evidence','boards'];
  for(const prefix of ['', 'en/']){
   const shell=new JSDOM(readFileSync(`dist/${prefix}app/index.html`,'utf8')).window.document;
   const nav=document.importNode(shell.querySelector('.app-nav'),true);document.body.append(nav);
   const primary=[...nav.querySelectorAll(':scope > [data-mobile-primary]')];
-  assert.deepEqual(primary.map(a=>a.dataset.route),['watchlist','calendar','evidence','boards']);
+  assert.deepEqual(primary.map(a=>a.dataset.route),expected);
   assert.ok(nav.querySelector('.nav-more-panel [data-route=alerts]'));
-  assert.equal(nav.querySelector('.nav-more-panel [data-route=evidence]'),null);
-  for(const route of ['evidence','watchlist','calendar','boards']){selectNavigation(route);assert.equal(nav.querySelector('.nav-more').classList.contains('on'),false,route);}
+  assert.equal(Boolean(nav.querySelector('.nav-more-panel [data-route=evidence]')),briefEnabled);
+  for(const route of expected){selectNavigation(route);assert.equal(nav.querySelector('.nav-more').classList.contains('on'),false,route);}
+  if(briefEnabled){selectNavigation('evidence');assert.ok(nav.querySelector('.nav-more').classList.contains('on'));}
   for(const route of ['alerts','updates','chart','vibe']){selectNavigation(route);assert.ok(nav.querySelector('.nav-more').classList.contains('on'),route);}
   const more=nav.querySelector('.nav-more');more.open=true;more.querySelector('[data-route=alerts]').focus();
   selectNavigation('evidence');assert.equal(more.open,false);assert.equal(document.activeElement,more.querySelector('summary'));

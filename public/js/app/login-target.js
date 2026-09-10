@@ -11,6 +11,15 @@ const SIMPLE = new Set(["watchlist", "alerts", "billing", "profile", "creators",
 export function safeTarget(hash) {
   if (typeof hash !== "string" || hash.length > 2048) return null;
   const path = hash.split("?")[0];
+  if (path === '#/research-brief' && window.DUCKY?.RESEARCH_BRIEF_ENABLED === true) {
+    const q = new URLSearchParams(hash.split('?')[1] || ''), target = new URLSearchParams();
+    const ticker = (q.get('ticker') || '').toUpperCase(), creator = q.get('creator') || '';
+    if (/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker)) target.set('ticker',ticker);
+    if (/^[A-Za-z0-9_-]{1,100}$/.test(creator)) target.set('creator',creator);
+    if (['30','all'].includes(q.get('days'))) target.set('days',q.get('days'));
+    if (q.get('scope') === 'all') target.set('scope','all');
+    return path + (target.size ? '?' + target : '');
+  }
   if(path==='#/evidence'){
     const example=new URLSearchParams(hash.split('?')[1]||'').get('example');
     if(['NOK','GLW','HOOD'].includes(example))return '#/evidence?example='+example;
