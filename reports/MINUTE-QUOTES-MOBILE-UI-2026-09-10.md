@@ -11,3 +11,8 @@ Quote-only map refresh只更新价格，不关闭作者组/改卡片；源内容
 本地633项前端回归全通过，新增独立map刷新测试23项全部通过（含源变更拒绝、卸载后不更新）。lint_copy和1274内链通过。隔离浏览器390px中文深色列表及320px英文浅色stock/map均无页面水平溢出，清楚展示当天真实时钟字段（合成数据，非行情覆盖证据）。报价文字与loss/missing分别检查，列表第一、Overview第二、列头排序及五项导航保留。生产发布和自然定时刷新待回填。
 
 后端合约及完整来源研究在ducky-bot `reports/MINUTE-QUOTES-AND-MOBILE-RECOVERY-2026-09-10.md`。不能将本次验收声称为所有股票/作者均已完整覆盖。
+
+
+发布验收：前端da4449b4fb4cc8101cc75e1cc2b4cfaf28ce5049，main CI34523080267通过；Pages39acb98a、asset graph c941466842f0a849faf8。正式Chrome手机视口390px，中英文43行、List-first/Overview-second、五项导航、YTD排序均可用，无页面横向溢出。后台27dc5571运行原Yahoo quote timer，20:00:20 shared59/59均有9/10quote；PURE源成交较旧保持Saved quote。ORCL页面未手动刷新便自动采用新quote，stock/map同值同美东时间。没有远程控制用户iPhone或声称它已刷新；旧手机需一次Safari自身刷新。
+
+最终完整634项JS测试全通过（先前633项后追加map原位刷新测试），测试覆盖新价、过期、回退顺序、保留卡片/历史、版本更新与离线/卸载。控制台错误及原始资料完整性仍分别按实际观察记录，不能把数据获取成功等同于摘要已完整就绪。

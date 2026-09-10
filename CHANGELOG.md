@@ -1,6 +1,6 @@
 # Change log
 
-## 2026-09-10 · Quote clocks and long-open page recovery (pending release)
+## 2026-09-10 · Quote clocks and long-open page recovery (released: da4449b4 / Pages39acb98a)
 
 Current list/stock/map prices share dated quote selection, retaining the newer valid quote on failure. Returning pages revalidate; healthy old releases offer an explicit update without losing forms or auth. Daily metrics and historical evidence retain their own dates. [Checks and limits](reports/MINUTE-QUOTES-MOBILE-UI-2026-09-10.md).
 
