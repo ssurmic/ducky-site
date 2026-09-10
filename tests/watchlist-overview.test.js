@@ -257,3 +257,23 @@ test('long reference baskets stay compact while all members remain in the disclo
  assert.match(view.querySelector('[data-metric=relative]').textContent,/AAA \/ BBB \+4/);
  assert.match(view.querySelector('.watch-metric-source').textContent,/AAA \/ BBB \/ CCC \/ DDD \/ EEE \/ FFF/);
 });
+
+
+test('collapsed list exposes the analysis clock and distinguishes retained text from a pending read',async()=>{
+ const {reading,pick}=await import('../public/js/app/stock-reading.js');
+ const base={ticker:'NVDA',as_of:'2026-09-09T20:00:00Z',overview:{en:'An attributed previous view.',zh:'已核对观点。',citations:['e1']},sources:[{id:'e1'}]};
+ for(const status of ['ready','refresh_pending','read_pending','read_failed']){
+  const view=overviewView([row('NVDA',10)],{view:'list',renderResearch:()=>reading({...base,status}),onSelect:()=>{}});
+  const details=view.querySelector('.watch-inline-reading'),summary=details.querySelector('summary');
+  assert.equal(details.open,false);
+  if(['ready','refresh_pending'].includes(status)){
+   assert.equal(summary.querySelector('.watch-reading-date').textContent,details.querySelector('.stock-analysis-date').textContent);
+   assert.match(summary.textContent,status==='ready'?/Analysis as of.*2026/:/Previous analysis.*2026.*newer sources are under review/);
+   assert.equal(summary.querySelector('.watch-reading-preview').textContent,pick(base.overview));
+   assert.equal(view.querySelectorAll('.brief-citation').length,1);
+  }else{
+   assert.equal(summary.querySelector('.watch-reading-date'),null);
+   assert.doesNotMatch(summary.textContent,/An attributed previous view|2026/);
+  }
+ }
+});
