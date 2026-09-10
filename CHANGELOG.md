@@ -1,11 +1,19 @@
 # Change log
 
-## 2026-09-10 — Show followed creators' history on the first page (implementation)
+## 2026-09-10 — Show followed creators' history on the first page (deployed)
 
 Following now reaches the API before pagination, so other creators' recent records cannot
 leave the first page empty. Later pages keep the same filter; a changed-scope cursor retries
 from the first page. Discover still includes unfollowed creators. Full frontend suite:
-618 passed; production deployment pending. [Evidence and acceptance](reports/CREATOR-HISTORY-PAGE-SCOPE-2026-09-10.md).
+618 passed; PR #13 and exact main CI `34484377137` passed. App `92026a55`, Pages
+`7a25997b`, graph `1fd559894eca2fda7830` is published; six public asset hashes match.
+Signed-in English and Chinese first pages display 16 views in 8 creator–stock groups.
+AVGO expansion preserves three records, source timestamps and a negative recorded-price
+change; 20-session results remain explicitly unfinished. List-first ordering and direct
+maps work when NVDA's summary is unavailable. Backend `175a7675` filters within current
+account access and reads subscriptions without cold schema migration. Rollback: app
+`533cd73d` / Pages `ce3835e3`. Existing translation/entity concerns remain content work.
+[Evidence and acceptance](reports/CREATOR-HISTORY-PAGE-SCOPE-2026-09-10.md).
 ## 2026-09-10 — Distinguish reading from unfinished generation (deployed)
 
 Watchlist prices can arrive before the saved research response. Empty cells now say “Loading saved analysis…” during that read, then show the actual accepted, pending or failed state. Existing paragraphs remain visible during a refresh. Sorting and direct maps remain usable while research loads; no extra request or generation is added.

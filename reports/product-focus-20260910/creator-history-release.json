@@ -1,0 +1,50 @@
+{
+  "date": "2026-09-10",
+  "backend": "175a76754feb7e5c03a9b4e71e4a528d473a451c",
+  "frontend": "92026a552759f1c1d15c0304beef80020904491a",
+  "pages": "7a25997b",
+  "backend_api_started_at": "2026-09-10T14:07:53Z",
+  "backup": "recovery-20260910T140718373046Z-71d56c66",
+  "configuration_changes": [],
+  "browser": {
+    "surface": "signed-in desktop Chrome",
+    "languages": [
+      "en",
+      "zh"
+    ],
+    "following_count": 10,
+    "first_page_visible_views": 16,
+    "first_page_creator_stock_groups": 8,
+    "completed_20_session_comparisons": 0,
+    "load_more_required_for_first_content": false,
+    "avgo_expanded_records": 3,
+    "avgo_original_link": "https://www.youtube.com/watch?v=3E-HXC2HUvg&t=973",
+    "watchlist_count": 43,
+    "default_view": "list",
+    "second_view": "overview",
+    "nvda_direct_map_nodes": 123,
+    "nvda_summary_readable": false,
+    "subscriptions_changed": false,
+    "initial_fresh_document_error": true,
+    "built_in_refresh_recovered": true,
+    "second_independent_fresh_document_succeeded": true,
+    "physical_phone_test": false,
+    "limits": [
+      "not proof of complete creator coverage",
+      "not semantic acceptance of every displayed view",
+      "not a freshness or latency SLA"
+    ]
+  },
+  "validation": {
+    "backend_local_passed": 4827,
+    "backend_local_skipped": 6,
+    "frontend_local_passed": 618,
+    "backend_exact_ci": 34485960664,
+    "frontend_exact_ci": 34484377137
+  },
+  "rollback": {
+    "backend": "9a6aebfd8421ca39b79a98b4552462d9f9e2de99",
+    "frontend": "533cd73da816fdbcf6ba933b268e5b15155f4dcb",
+    "pages": "ce3835e3"
+  }
+}
