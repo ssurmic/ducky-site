@@ -28,4 +28,14 @@ sort buttons and the direct map action retain 44px touch heights.
 - Measurements and synthetic screenshots: [artifacts](watchlist-density-20260910/).
   These are Chrome viewport simulations, not physical-device or touch-emulation tests.
 
-Release receipt will be added after publishing and checking the production page.
+## Production receipt
+
+Runtime `62974f8b3d786ad55d983880c7a300414a2ed1b6` passed exact main
+CI `34541489064` and was deployed as Pages `d9110fac` to `duckybot.app`.
+The production app shell and CSS use `62974f8b`; module graph is
+`e189f450e1fbbc112741`. At 393 × 650, the signed-in page displayed all nine
+new sort indicators, 13/12/11px stock/price/preview text, a 16px input and
+44px sort height, with no document overflow. IV/HV descending was clicked
+and visually verified. Initial page data arrived after the first short locator
+wait; this styling release does not claim to improve API/data latency.
+Rollback runtime: `93ed2a61e2cf1c03b402a899c7ca36bab2bfafcf`.
