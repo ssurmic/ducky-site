@@ -98,15 +98,18 @@ export function reportCard(row,{onHistory,archive=false}={}){
 
 export async function mountStockBriefs(root,route={}){
   const params=route.query instanceof URLSearchParams?route.query:new URLSearchParams(route.query||'');
+  if(window.DUCKY?.PRODUCT_FOCUS_ENABLED===true&&params.get('archive')!=='1'){
+    const shared=await import('./shared-briefs.js');return shared.mount(root,route);
+  }
   const ticker=String(params.get('ticker')||'').toUpperCase();
   const ctl=new AbortController(),epoch=store.epoch();let alive=true,request=0;
   const valid=id=>alive&&!ctl.signal.aborted&&epoch===store.epoch()&&(id==null||id===request);
   root.append(el('div.view-head',el('h1',s('stockbrief.title')),
     el('a.btn.btn-ghost.btn-sm',{href:'#/briefing?period=daily'},s('stockbrief.events'))),
-    el('p.view-intro',s('stockbrief.intro')));
+    el('p.view-intro',s(params.get('archive')==='1'?'focus.past_briefs_note':'stockbrief.intro')));
   const search=el('input.input',{type:'search',value:ticker,placeholder:s('stockbrief.search'),'aria-label':s('stockbrief.search'),maxlength:10});
   root.append(el('form.add-row.stock-brief-search',{onsubmit:e=>{e.preventDefault();const t=search.value.trim().toUpperCase().replace(/^\$/,'');
-    if(safeTicker(t))location.hash='#/briefing?ticker='+encodeURIComponent(t);}},search,
+    if(safeTicker(t))location.hash='#/briefing?ticker='+encodeURIComponent(t)+(params.get('archive')==='1'?'&archive=1':'');}},search,
     el('button.btn.btn-ghost',{type:'submit'},s('stockbrief.load')),ticker?el('a.btn.btn-ghost',{href:'#/briefing'},s('stockbrief.all')):null));
   const host=el('div.stock-briefs');root.append(host);
   async function load(){
@@ -118,7 +121,7 @@ export async function mountStockBriefs(root,route={}){
       if(!valid(id))return;
       if(!Array.isArray(doc?.items))throw Error('invalid_response');
       clear(host);
-      host.append(el('p.small.muted',s('stockbrief.cadence')));
+      if(params.get('archive')!=='1')host.append(el('p.small.muted',s('stockbrief.cadence')));
       if(!doc.items.length&&!store.isPro())host.append(stockResearchEntry());
       else if(!doc.items.length)host.append(el('section.card',el('h2',s('briefing.add_title')),
         el('p',s('stockbrief.empty')),el('a.btn.btn-primary',{href:'#/watchlist'},s('briefing.edit_watchlist'))));

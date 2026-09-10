@@ -11,6 +11,7 @@ const strings=document.createElement('script');strings.id='ducky-strings';string
 const store=await import('../public/js/app/store.js');
 const today=await import('../public/js/app/views/today.js');
 const stock=await import('../public/js/app/views/stock.js');
+const briefs=await import('../public/js/app/views/stock-briefs.js');
 const watch=await import('../public/js/app/views/watchlist.js');
 const {reading,compactPrice,dayWindow}=await import('../public/js/app/stock-reading.js');
 const {closingPoints,closingChart}=await import('../public/js/app/stock-price-chart.js');
@@ -25,6 +26,25 @@ function item(ticker='NVDA'){return {ticker,status:'ready',as_of:'2026-09-09T22:
  overview:{en:'Sample Author expects orders to recover, conditional on spending.',zh:'作者认为订单可能恢复，取决于支出。',citations:['source']},sources:[node()]};}
 const change=(id=1)=>({id:'change:'+id,ticker:'NVDA',kind:'added',state:'available',node:node(),published_at:'2026-09-09',available_at:'2026-09-10T01:00:00Z'});
 function setup(){closeModal();store.bumpEpoch();store.set('me',{user_id:12,tier:'pro',access:{billing_enabled:false}});store.set('token','synthetic-only');store.set('watchlist',['NVDA']);const root=document.querySelector('main');root.replaceChildren();return root;}
+
+test('stock briefs reuse the exact shared paragraph and original citations with one cached read',async()=>{
+ const root=setup(),calls=[];
+ globalThis.fetch=async(input,options)=>{calls.push([input,options.method]);return Response.json({watchlist_count:1,items:[item()]});};
+ const dispose=await briefs.mountStockBriefs(root);
+ assert.equal(calls.length,1);assert.equal(calls[0][0],'/me/stock-research');assert.equal(calls[0][1],'GET');
+ assert.match(root.textContent,/conditional on spending/);
+ root.querySelector('.brief-citation').click();assert.equal(calls.length,1);
+ assert.ok(root.querySelector('a[href="#/briefing?archive=1"]'));
+ closeModal();dispose();
+});
+
+test('shared brief read failures and account changes cannot expose an earlier paragraph',async()=>{
+ let root=setup();globalThis.fetch=async()=>Response.json({unexpected:true});
+ let dispose=await briefs.mountStockBriefs(root);assert.ok(root.querySelector('.errbox'));dispose();
+ root=setup();let finish;globalThis.fetch=async()=>await new Promise(resolve=>finish=resolve);
+ const pending=briefs.mountStockBriefs(root);await pause();store.bumpEpoch();finish(Response.json({items:[item()]}));
+ dispose=await pending;assert.doesNotMatch(root.textContent,/conditional on spending/);dispose();
+});
 
 test('three destinations and stock deep links survive sign-in without arbitrary queries',()=>{
  setup();assert.equal(parse('').name,'today');assert.equal(takeTarget(),'#/today');

@@ -45,7 +45,7 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
   }
   details.addEventListener('toggle',()=>{if(details.open&&!historyLoaded)loadHistory();});
   shell.append(el('details.focus-tools',el('summary',s('focus.deeper_research')),el('div.focus-tool-links',
-    ...[['briefing?ticker='+ticker,'stock_brief'],['evidence/'+ticker,'evidence'],['chart/'+ticker,'full_chart'],['research/'+ticker,'track_record'],['calendar?ticker='+ticker,'upcoming'],['alerts?ticker='+ticker,'set_alert']].map(([route,key])=>
+    ...[['briefing?archive=1&ticker='+ticker,'past_stock_briefs'],['evidence/'+ticker,'evidence'],['chart/'+ticker,'full_chart'],['research/'+ticker,'track_record'],['calendar?ticker='+ticker,'upcoming'],['alerts?ticker='+ticker,'set_alert']].map(([route,key])=>
       el('a.btn.btn-ghost',{href:'#/'+route},s('focus.'+key))))));
   async function loadEvidence(){
     clear(body);body.append(spinner());
