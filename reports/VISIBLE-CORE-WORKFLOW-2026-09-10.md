@@ -100,3 +100,13 @@ history and losses; no competitor metric, predictive claim or scoring method was
 Previous production app code: `7cd5f6ab948e89e63b94ed51b68cc273c22c22ec`, Pages deployment `6a399330`.
 This iteration changes presentation and local sorting only. Backend access checks, model admission,
 strategy qualifications, source revisions and notification rules remain authoritative.
+
+## Follow-up: English author-count grammar
+
+The production MU source audit exposed incorrect singular labels in author groups. Single records,
+single original sources and the final single-record expansion now have proper EN/ZH translations.
+The eight 320×650 / 390×650 × EN/ZH × light/dark synthetic stock-page checks showed no document
+overflow, 522px main viewport, correct source counts and the one-record disclosure. Four representative
+screenshots were visually reviewed. Viewport override was reset afterward. Full local frontend suite:
+614 passed; copy lint 3,259 files; link check 1,274 links. No source counts, grouping, citations or API
+behavior changed. Production publication remains separately recorded.
