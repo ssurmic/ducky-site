@@ -1,6 +1,6 @@
 <section class="home-community wrap" id="community" data-duck-community aria-labelledby="home-community-title">
  <div class="home-community-card">
-  <div class="home-duck-pet"><button class="home-duck-head" type="button" aria-pressed="false" aria-label="{{ t('community.pet') }}" data-duck-pet data-pet-label="{{ t('community.pet') }}" data-stop-label="{{ t('community.stop') }}"><img src="/duck-head-cutout-v1.png" width="168" height="168" alt="" loading="lazy" decoding="async"></button><small>{{ t('community.hint') }}</small></div>
+  <div class="home-duck-pet"><button class="home-duck-head" type="button" aria-pressed="false" aria-label="{{ t('community.pet') }}" data-duck-pet data-pet-label="{{ t('community.pet') }}" data-stop-label="{{ t('community.stop') }}"><img src="/duck-head-cutout-v1.png" width="168" height="168" alt="" loading="lazy" decoding="async" draggable="false"></button><small>{{ t('community.hint') }}</small></div>
   <div class="home-community-copy"><p class="home-duck-bubble" data-duck-bubble data-quack="{{ t('community.quack') }}" data-wish="{{ t('community.wish') }}" data-thirsty="{{ t('community.thirsty') }}" role="status" aria-live="polite" hidden></p><h2 id="home-community-title">{{ t('community.title') }}</h2><p>{{ t('community.body') }}</p></div>
   <div class="home-community-actions">
    {% if cfg.get('support_url') %}<a class="btn btn-primary" href="{{ cfg.support_url }}" target="_blank" rel="noopener noreferrer">☕ {{ t('community.coffee') }}</a>{% endif %}
