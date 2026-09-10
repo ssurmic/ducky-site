@@ -8,7 +8,8 @@ import * as store from '../store.js';
 import {factText} from './stock-briefs.js';
 import {waterLevel,marketDetail,priceBadge} from '../evidence-context.js';
 import {icon} from '../icons.js';
-import {evidenceTarget} from '../creator-route.js';
+import {evidenceTarget,creatorTarget} from '../creator-route.js';
+import {groupAuthors,sourceOccurrences,originalSourceKey} from '../evidence-grouping.js';
 import {comparisonBadge,comparisonDetails} from '../comparison-context.js';
 import {sourceIdentity,nodeSourceIdentity,sourceBadge,sourceMark} from '../evidence-source.js';
 import {claimQualifications} from './creator-claim.js';
@@ -115,6 +116,16 @@ export function connectMap(map,center,branches){
     const layout=window.getComputedStyle(map).getPropertyValue('--evidence-layout').trim();
     const cards=[...branches.querySelectorAll('.evidence-node')];
     const groups=layout==='tree'?[...branches.querySelectorAll('.evidence-group')]:[];
+    if(layout==='lanes'){
+      for(const group of branches.querySelectorAll('.evidence-group')){
+        const h=group.querySelector('.evidence-group-heading').getBoundingClientRect();
+        const x=h.left-box.left+h.width/2,y=h.top-box.top;
+        const rx=root.left-box.left+root.width/2,ry=root.bottom-box.top;
+        const tone=['support','counter','context'].find(k=>group.classList.contains('is-'+k));
+        shape('path',{class:'evidence-wire is-'+tone,d:`M ${rx} ${ry} C ${rx} ${ry+16}, ${x} ${y-16}, ${x} ${y}`});
+      }
+      return;
+    }
     if(layout==='tree'&&cards.length){
       const x=10,y=root.bottom-box.top,rx=root.left-box.left+root.width/2;
       const last=groups.at(-1)?.querySelector('.evidence-group-heading')?.getBoundingClientRect()||cards.at(-1).getBoundingClientRect();
@@ -155,15 +166,17 @@ export function connectMap(map,center,branches){
   };
 }
 
-export function mapView(doc,{archive=false,onPickTicker,example=false}={}){
+export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalysis=true,state}={}){
   const nodes=Array.isArray(doc.nodes)?doc.nodes:[],view=el('section.evidence-workspace');
   if(archive)view.append(el('p.data-notice',s('evidence.archive',{at:time(doc.recorded_at)})));
   if(doc.status==='stale')view.append(el('p.data-notice',s('evidence.stale')));
   if(doc.withdrawn)view.append(el('p.data-notice',s('evidence.withdrawn',{n:doc.withdrawn})));
-  if(!example)view.append(analysisPanel(doc));
-  else view.append(el('p',s('experience.sample_overview')));
+  if(!example&&showAnalysis)view.append(analysisPanel(doc));
+  else if(example)view.append(el('p',s('experience.sample_overview')));
   if(!nodes.length){view.append(el('p.empty',s('evidence.empty')),el('a.btn.btn-ghost',{href:'#/research/'+doc.ticker},s('evidence.records')));return view;}
-  let scope='all',limit=6;
+  let scope=['support','counter','context'].includes(state?.scope)?state.scope:'all',limit=state?.expanded?nodes.length:6;
+  view.readingState=()=>({scope,expanded:limit>6});
+  const occurrences=sourceOccurrences(nodes);
   const filters=el('div.evidence-filters',{'aria-label':s('evidence.filter')});
   const controls=[];
   const filterSelect=el('select.input.evidence-filter-select',{'aria-label':s('evidence.filter'),onchange:()=>{scope=filterSelect.value;limit=6;paint();}});
@@ -183,8 +196,8 @@ export function mapView(doc,{archive=false,onPickTicker,example=false}={}){
     el('div.evidence-center-info',el('span.small.muted',s(nodes.length===1?'evidence.recorded_single':'evidence.recorded_count',{n:nodes.length})),
       pending?el('span.evidence-mobile-state',s('evidence.queue_short',{n:pending})):null));
   if(level!==null){center.style.setProperty('--water-height',Math.round(level*100)+'%');center.style.setProperty('--water-color',`hsl(${Math.round(35+level*125)} 40% 48%)`);}
-  const map=el('div.evidence-map',center,branches);view.append(map);
-  const connections=connectMap(map,center,branches);view.dispose=()=>connections.dispose();
+  const map=el('div.evidence-map.evidence-lanes',center,branches);view.append(map);
+  const connections=connectMap(map,center,branches);view.dispose=()=>connections.dispose();view.refresh=()=>connections.refresh();
   const total=el('p.small.muted',{'aria-live':'polite'});
   const more=el('button.btn.btn-ghost',{type:'button',onclick:()=>{limit=nodes.length;paint();}},s('evidence.show_all'));
   view.append(el('div.evidence-map-footer',total,more));
@@ -197,8 +210,8 @@ export function mapView(doc,{archive=false,onPickTicker,example=false}={}){
     const ordered=[...first,...filtered.filter(n=>!first.includes(n))];
     clear(branches);
     const groups=new Map();
-    for(const stance of ['support','counter','context']){
-      const count=filtered.filter(n=>n.stance===stance).length;if(!count)continue;
+    for(const stance of ['support','context','counter']){
+      const count=filtered.filter(n=>n.stance===stance).length;if(scope!=='all'&&!count)continue;
       const list=el('div.evidence-group-nodes');
       const group=el('section.evidence-group',{class:'is-'+stance},el('h2.evidence-group-heading',el('span',s('evidence.'+stance)),el('span.evidence-group-count',String(count))),list);
       groups.set(stance,{group,list});
@@ -206,16 +219,19 @@ export function mapView(doc,{archive=false,onPickTicker,example=false}={}){
     const visible=ordered.slice(0,limit);
     center.style.gridRow='1 / '+(Math.min(3,Math.ceil(visible.length/2))+1);
     map.classList.toggle('is-empty',!visible.length);
-    for(const [i,node] of visible.entries()){
+    const cards=new Map();
+    for(const node of visible){
       const identity=nodeSourceIdentity(node);
       const eventAt=eventDate(node),shownDate=eventAt?s('evidence.event_short',{at:eventAt}):date(node.published_at||node.observed_at);
       const authors=[...new Set((node.evidence||[]).map(authorLabel).filter(Boolean))];
       const linked=node.kind==='creator'&&node.evidence?.length===1?evidenceTarget(node.evidence[0]):null;
       const shareContext={ticker:doc.ticker,recorded_at:doc.recorded_at,archive,example,status:doc.status};
-      const card=el('article.evidence-node',{class:'is-'+node.stance+' source-'+identity,'data-source':identity,style:{gridColumn:i%2===0?'1':'3',gridRow:String(Math.floor(i/2)+1)},onclick:()=>{if(linked)location.hash=linked;else detail(node,{shareContext});}},
+      const repeats=node.kind==='creator'?Math.max(0,...(node.evidence||[]).map(e=>occurrences.get(originalSourceKey(e))||0)):0;
+      const card=el('article.evidence-node',{class:'is-'+node.stance+' source-'+identity,'data-source':identity,'data-reading-anchor':node.id,onclick:()=>{if(linked)location.hash=linked;else detail(node,{shareContext,readingTicker:doc.ticker});}},
         ['youtube','x','macro'].includes(identity)?el('span.evidence-source-watermark',{'aria-hidden':'true'},sourceMark(identity)):null,
         el('span.evidence-node-label',sourceBadge(identity),el('span.evidence-category',eventLabel(node))),
         el('strong',pick(node.title)),
+        repeats>1?el('span.evidence-repeat',s('evidence.repeated_source',{n:repeats})):null,
         node.conditional?el('span.evidence-node-flags',el('span.evidence-condition',s('evidence.condition_tag'))):null,
         ...(node.evidence||[]).filter(e=>e.kind==='fact').map(comparisonBadge).filter(Boolean).slice(0,1),
         original(node.original_title)?el('span.evidence-original-title',original(node.original_title)):null,
@@ -224,17 +240,34 @@ export function mapView(doc,{archive=false,onPickTicker,example=false}={}){
         el('span.evidence-node-footer',el('span',shownDate),
           el('span.evidence-node-number',{'aria-hidden':'true'},String(nodes.indexOf(node)+1).padStart(2,'0')),
           el('span',s((node.evidence||[]).length===1?'evidence.source_single':'evidence.sources',{n:(node.evidence||[]).length})+' ↗')));
-      card.append(el('button.evidence-node-open',{type:'button','aria-label':pick(node.title)}),
+      card.append(el('button.evidence-node-open',{type:'button','aria-label':pick(node.title),'data-reading-key':doc.ticker+':node:'+node.id}),
         el('button.evidence-share-trigger',{type:'button','aria-label':s('share.card_label',{title:pick(node.title)}),onclick:event=>{event.stopPropagation();openCardShare(node,shareContext);}},s('share.action')));
-      groups.get(node.stance)?.list.append(card);
+      cards.set(node.id,card);
     }
-    for(const {group,list}of groups.values()){if(list.childElementCount)branches.append(group);}
+    for(const [stance,{group,list}]of groups){
+      for(const bucket of groupAuthors(visible.filter(n=>n.stance===stance))){
+        if(!bucket.author){for(const node of bucket.nodes)list.append(cards.get(node.id));continue;}
+        const block=el('section.evidence-author-group',{'data-author':bucket.author.id},
+          el('header.evidence-author-heading',el('a',{href:creatorTarget({selected:bucket.author.id,mine:false,ticker:doc.ticker}),'aria-label':bucket.author.name+' · '+s('evidence.author_archive')},bucket.author.name),
+            el('span.small.muted',s('evidence.author_points',{n:bucket.nodes.length})+(bucket.sources.size?' · '+s('evidence.author_sources',{n:bucket.sources.size}):''))));
+        for(const node of bucket.nodes.slice(0,2))block.append(cards.get(node.id));
+        if(bucket.nodes.length>2){
+          const rest=el('details.evidence-author-more',{'data-reading-key':doc.ticker+':author:'+stance+':'+bucket.author.id},
+            el('summary',s('evidence.author_more',{n:bucket.nodes.length-2})),...bucket.nodes.slice(2).map(n=>cards.get(n.id)));
+          rest.addEventListener('toggle',()=>connections.refresh());block.append(rest);
+        }
+        list.append(block);
+      }
+      if(!list.childElementCount)list.append(el('p.small.muted',s('evidence.no_stance_records')));
+      branches.append(group);
+    }
     reset.hidden=scope==='all';
     if(!filtered.length)branches.append(el('p.empty',s('evidence.no_match')));
     total.textContent=s('evidence.showing',{shown:Math.min(limit,filtered.length),total:filtered.length});
     more.hidden=filtered.length<=limit;connections.refresh();
   }
   paint();
+  view.append(el('p.small.muted',s('evidence.group_note')));
   if(example)return view;
   const coverage=doc.coverage||{},jobs=coverage.jobs||{};
   if(pending)view.append(el('p.evidence-queue-note.small.muted',s('evidence.queue_short',{n:pending})+' · '+s('evidence.queue_note')));

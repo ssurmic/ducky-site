@@ -1,4 +1,14 @@
 # Change log
+## 2026-09-10 — Restore visible maps, creator history and calendar (candidate)
+
+List is the default watchlist on desktop and phone, with the saved overview in a table column and
+clickable sorting headers. Stock rows and pages link directly to the information map; existing facts
+remain visible during summary preparation. Bullish/context/bearish lanes group authors and flag
+repeat sources without removing source history. Calendar and Creators return to primary navigation.
+Explore and first-use Today include clearly dated, clickable examples.
+
+Acceptance, real COST onboarding steps and limits: [visible core workflow](reports/VISIBLE-CORE-WORKFLOW-2026-09-10.md).
+
 
 ## 2026-09-10 — Connected stock reading (deployed)
 

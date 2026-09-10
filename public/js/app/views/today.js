@@ -1,4 +1,5 @@
 import {el,clear,spinner} from '../ui.js';
+import {researchExamples} from '../research-examples.js';
 import {s} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
@@ -28,11 +29,11 @@ export function changeCard(item,{from='today'}={}){
   return article;
 }
 
-export async function mount(root,{signal,scope:initialScope='watchlist',embedded=false}={}){
+export async function mount(root,{signal,scope:initialScope='watchlist',embedded=false,initialDays=1}={}){
   const epoch=store.epoch();
   if(readingEpoch!==epoch){readingStates.clear();readingEpoch=epoch;}
   const stateKey=initialScope+'|'+embedded,saved=readingStates.get(stateKey);
-  let disposed=false,seq=0,cursor=null,scope=initialScope,days=saved?.days||1,query=saved?.query||'',windowRange=dayWindow(),rows=[],pages=0;
+  let disposed=false,seq=0,cursor=null,scope=initialScope,days=saved?.days||initialDays,query=saved?.query||'',windowRange=dayWindow(),rows=[],pages=0;
   const main=el('section.focus-today'),feed=el('div.change-list'),status=el('div',{'aria-live':'polite'});
   const title=el('header.focus-heading',el('div',el('h1',s('focus.today')),el('p.muted',s('focus.today_intro'))),
     el('a.btn.btn-ghost',{href:'#/calendar'},s('focus.upcoming')));
@@ -76,7 +77,7 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
     for(const node of [filters,status,feed,coverage])node.hidden=response.watchlist_count===0;
     more.hidden=response.watchlist_count===0||!cursor;
     if(response.watchlist_count===0){
-      replaceReading(summaries,el('p',s('focus.start_following')),el('a.btn.btn-primary',{href:'#/watchlist'},s('focus.add_stocks')));return;
+      replaceReading(summaries,el('p',s('focus.start_following')),el('a.btn.btn-primary',{href:'#/watchlist'},s('focus.add_stocks')),researchExamples());return;
     }
     const ready=items.filter(i=>['ready','refresh_pending'].includes(i.status)&&pick(i.overview));
     const selected=(ready.length?ready:items).slice(0,3);

@@ -55,7 +55,7 @@ test('a late stock detail response is discarded after the account epoch changes'
  const dispose=await pending;assert.doesNotMatch(root.textContent,/Old account result/);dispose();
 });
 
-test('three destinations and stock deep links survive sign-in without arbitrary queries',()=>{
+test('core destinations and stock deep links survive sign-in without arbitrary queries',()=>{
  setup();assert.equal(parse('').name,'today');assert.equal(takeTarget(),'#/today');
  for(const path of ['#/today','#/explore','#/stock/NVDA'])assert.equal(safeTarget(path+'?token=secret'),path);
  assert.equal(parse('#/stock/nvda?source=a').params.ticker,'NVDA');
@@ -123,12 +123,12 @@ test('returning to research restores filters and pages through fresh source chec
  assert.equal(root.querySelector('select').value,'1');assert.equal(root.querySelector('input[type=search]').value,'');dispose();
 });
 
-test('watchlist defaults to readable research and a single stock destination',async()=>{
+test('watchlist defaults to a compact list with shared research and direct maps',async()=>{
  const root=setup();globalThis.fetch=async url=>Response.json(url==='/me/stock-research'?{items:[item()]}:
   {items:[{ticker:'NVDA'}],overview:{items:[{ticker:'NVDA',company:'NVIDIA',price:98,price_status:'ready',price_session:'2026-09-09',change_pct:0}]}});
- const dispose=await watch.mount(root);assert.equal(root.querySelectorAll('.stock-list-row').length,1);
+ const dispose=await watch.mount(root);assert.equal(root.querySelectorAll('.watch-compact-table tbody tr').length,1);
  assert.equal(root.querySelector('.stock-name').getAttribute('href'),'#/stock/NVDA');assert.match(root.textContent,/conditional on spending/);
- assert.equal(root.querySelector('.watch-metric'),null);dispose();
+ assert.ok(root.querySelector('.watch-metric'));assert.ok(root.querySelector('a[href="#/evidence/NVDA"]'));assert.equal(root.querySelector('[data-mode=list]').getAttribute('aria-pressed'),'true');dispose();
 });
 
 test('an explicitly empty watchlist shows onboarding, while unreadable research does not imply no watches',async()=>{
@@ -143,11 +143,11 @@ test('an explicitly empty watchlist shows onboarding, while unreadable research 
 test('quotes render before slow research and failed membership is not erased by a late summary',async()=>{
  const root=setup();let finish;
  globalThis.fetch=async url=>url==='/me/stock-research'?await new Promise(r=>finish=r):Response.json({items:[{ticker:'NVDA'}],overview:{items:[{ticker:'NVDA',price:98,price_status:'ready',price_session:'2026-09-09'}]}});
- let pending=watch.mount(root);await pause();assert.match(root.querySelector('.stock-list-row').textContent,/98/);
+ let pending=watch.mount(root);await pause();assert.match(root.querySelector('.watch-compact-table tbody tr').textContent,/98/);
  finish(Response.json({items:[item()]}));let dispose=await pending;dispose();root.replaceChildren();
  globalThis.fetch=async url=>url==='/me/stock-research'?await new Promise(r=>finish=r):Response.json({error:'unavailable'},{status:503});
  pending=watch.mount(root);await pause();assert.ok(root.querySelector('.errbox'));
- finish(Response.json({items:[item()]}));dispose=await pending;assert.ok(root.querySelector('.errbox'));assert.equal(root.querySelector('.stock-list-row'),null);dispose();
+ finish(Response.json({items:[item()]}));dispose=await pending;assert.ok(root.querySelector('.errbox'));assert.equal(root.querySelector('.watch-compact-table tbody tr'),null);dispose();
 });
 
 test('stock overview preserves opposing evidence and loads history only on expansion',async()=>{
@@ -181,10 +181,10 @@ test('shared watchlist updates preserve reading focus and filters, and never res
  globalThis.fetch=async url=>{reads++;return Response.json(url==='/me/stock-research'?{items:[{ticker:'NVDA',status:'pending'}]}:
   {items:['NVDA'],overview:{items:[{ticker:'NVDA',price:100}]}});};
  const dispose=await watch.mount(root);const filter=root.querySelector('.watch-filter');filter.value='nvd';filter.dispatchEvent(new window.Event('input'));
- root.querySelector('.stock-open').focus();
+ root.querySelector('[data-map-open]').focus();
  assert.ok(sharedUpdate(root,'/me/stock-research',{items:[item(),item('AMD')]}));
- assert.match(root.textContent,/conditional on spending/);assert.equal(root.querySelectorAll('.stock-list-row').length,1);
- assert.equal(root.querySelector('.watch-filter').value,'nvd');assert.equal(document.activeElement.dataset.readingKey,'NVDA:open');
+ assert.match(root.textContent,/conditional on spending/);assert.equal(root.querySelectorAll('.watch-compact-table tbody tr').length,1);
+ assert.equal(root.querySelector('.watch-filter').value,'nvd');assert.equal(document.activeElement.dataset.readingKey,'NVDA:map');
  assert.equal(reads,2);store.bumpEpoch();assert.equal(sharedUpdate(root,'/me/stock-research',{items:[]}),false);dispose();
 });
 
@@ -226,4 +226,45 @@ test('an untouched price chart follows the new close; unavailable summaries do n
  sharedUpdate(root,'/bars/NVDA?period=6mo',{bars:[{t:'2026-09-08',c:100},{t:'2026-09-09',c:95},{t:'2026-09-10',c:97}]});
  assert.match(root.querySelector('.stock-chart-scrub').getAttribute('aria-valuetext'),/^2026-09-10/);dispose();
  for(const status of ['pending','failed','insufficient','source_changed','withdrawn'])assert.doesNotMatch(reading({status}).textContent,/being reviewed|Sources are available/);
+});
+
+test('column sorting toggles direction, keeps unknown values last and does not refetch',async()=>{
+ const root=setup();store.set('watchlist',['AAA','BBB','CCC']);let reads=0;
+ const rows=[{ticker:'AAA',price:10,market_cap:100,metrics:{ytd:{status:'ready',value:0}}},
+  {ticker:'BBB',price:9,market_cap:200,metrics:{ytd:{status:'ready',value:-12}}},
+  {ticker:'CCC',price:null,market_cap:null,metrics:{ytd:{status:'insufficient'}}}];
+ globalThis.fetch=async url=>{reads++;return Response.json(url==='/me/stock-research'?{items:rows.map(r=>item(r.ticker))}:{items:rows,overview:{items:rows}});};
+ const dispose=await watch.mount(root),order=()=>[...root.querySelectorAll('tbody tr')].map(n=>n.dataset.readingAnchor);
+ assert.deepEqual(order(),['BBB','AAA','CCC']);
+ const select=()=>root.querySelector('[data-sort=ytd]');select().click();assert.deepEqual(order(),['AAA','BBB','CCC']);
+ assert.equal(select().parentElement.getAttribute('aria-sort'),'descending');select().focus();select().click();
+ assert.deepEqual(order(),['BBB','AAA','CCC']);assert.equal(document.activeElement.dataset.readingKey,'sort:ytd');
+ assert.equal(select().parentElement.getAttribute('aria-sort'),'ascending');assert.equal(reads,2);
+ const table=root.querySelector('.watch-table-scroll');table.scrollLeft=380;
+ root.querySelector('[data-sort=ticker]').click();assert.equal(root.querySelector('.watch-table-scroll').scrollLeft,380);
+ assert.equal(root.querySelector('.watch-controls select'),null);
+ assert.deepEqual([...root.querySelectorAll('[data-mode]')].map(n=>n.dataset.mode),['list','reading','heatmap']);
+ assert.equal(root.querySelectorAll('[data-map-open]').length,3);dispose();
+});
+
+test('Explore has useful examples without watches, opens a seven-day feed and never generates on read',async()=>{
+ const {mount}=await import('../public/js/app/views/explore.js');
+ const root=setup();store.set('watchlist',[]);const calls=[];
+ globalThis.fetch=async(input,options)=>{calls.push({url:new URL(input,'https://ducky.test'),method:options.method});return Response.json({items:[]});};
+ const dispose=await mount(root);
+ assert.equal(root.querySelectorAll('.research-example').length,3);
+ assert.ok(root.querySelector('a[href="#/evidence/GLW?example=GLW"]'));
+ assert.equal(root.querySelector('.focus-filters select').value,'7');
+ assert.ok(root.querySelector('a[href="#/creators?scope=discover"]'));
+ assert.equal(root.querySelector('details.focus-tools'),null);
+ assert.equal(calls.length,1);assert.equal(calls[0].method,'GET');assert.equal(calls[0].url.searchParams.get('scope'),'all');dispose();
+});
+
+test('pending stock analysis still shows the saved information map without an extra fetch',async()=>{
+ const root=setup(),calls=[];globalThis.fetch=async input=>{calls.push(input);return Response.json(input.startsWith('/bars/')?{bars:[]}:
+  {ticker:'NEW',price:{price:22},evidence:{ticker:'NEW',nodes:[node()],analysis_status:'pending'}});};
+ const dispose=await stock.mount(root,{ticker:'NEW'});
+ assert.ok(root.querySelector('.stock-core-actions a[href="#/evidence/NEW"]'));
+ assert.ok(root.querySelector('.stock-information-map .evidence-node'));
+ assert.equal(root.querySelectorAll('.evidence-analysis').length,1);assert.equal(calls.length,2);dispose();
 });

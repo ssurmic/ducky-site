@@ -14,7 +14,7 @@ test('the bilingual same-origin trial shares the release graph while default nav
   const read=path=>new JSDOM(readFileSync('dist/'+path,'utf8')).window.document;
   const current=read(prefix+'app/index.html'),preview=read(prefix+'app/preview/index.html');
   assert.equal(Boolean(current.querySelector('.focus-nav')),normal.PRODUCT_FOCUS_ENABLED);
-  assert.deepEqual([...preview.querySelectorAll('.focus-nav [data-route]')].map(n=>n.dataset.route),['today','watchlist','explore']);
+  assert.deepEqual([...preview.querySelectorAll('.focus-nav [data-route]')].map(n=>n.dataset.route),['today','watchlist','explore','calendar','creators']);
   assert.match(preview.querySelector('[data-lang-toggle]').getAttribute('href'),/\/app\/preview\/$/);
   assert.ok(preview.querySelector('script[src^="/focus-config.js?v="]'));
   assert.equal(preview.querySelector('script[type="module"]').src,current.querySelector('script[type="module"]').src);

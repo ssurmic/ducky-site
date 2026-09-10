@@ -77,7 +77,7 @@
   {% set mobile_routes = ['watchlist', 'research-brief', 'calendar', 'boards'] if brief_enabled else navigation.mobile %}
   {% if cfg.get('product_focus', false) %}
   <nav class="app-nav focus-nav no-glossary" aria-label="{{ t('app.nav.label') }}">
-    {% for route, image in [('today','digest'), ('watchlist','watchlist'), ('explore','boards')] %}
+    {% for route, image in [('today','digest'),('watchlist','watchlist'),('explore','boards'),('calendar','calendar'),('creators','creators')] %}
     <a href="#/{{ route }}" data-route="{{ route }}" data-mobile-primary>{{ nav_icon(image) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
     {% endfor %}
   </nav>

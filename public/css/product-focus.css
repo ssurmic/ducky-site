@@ -66,3 +66,137 @@ body:has(.focus-nav) .watch-modes .btn{min-width:44px;}
  .focus-explore-link{padding:16px;gap:4px;}
  .focus-tool-links>.btn{max-width:100%;white-space:normal;}
 }
+
+/* Core destinations stay visible; supporting tools remain one click away. */
+.app-nav.focus-nav{grid-template-columns:repeat(5,minmax(0,1fr));}
+.research-examples{margin:24px 0 28px;}
+.research-examples>p{line-height:1.6;max-width:720px;}
+.research-example-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.research-example{position:relative;display:flex;flex-direction:column;gap:12px;padding:20px 22px;border:1px solid var(--border);border-radius:14px;text-decoration:none;color:var(--text);background:linear-gradient(125deg,color-mix(in srgb,var(--accent) 5%,var(--surface)),var(--surface));min-width:0;}
+.research-example>.app-icon{color:var(--accent-text,var(--accent));width:24px;height:24px;}
+.research-example strong{line-height:1.55;font-size:16px;padding-right:12px;}
+.research-example .small{line-height:1.6;}
+.example-arrow{position:absolute;right:16px;top:20px;color:var(--accent-text,var(--accent));}
+.research-example:hover,.focus-explore-link:hover{border-color:var(--accent);background:var(--surface-2);}
+.focus-explore-links{margin:14px 0;}
+.focus-explore-link>.app-icon{color:var(--muted);}
+.stock-core-actions{display:flex;gap:8px;flex-wrap:wrap;margin:-10px 0 22px;}
+.stock-core-actions>a{min-height:44px;}
+.stock-information-map{margin:28px 0;}
+.stock-information-map>.focus-heading{margin-bottom:16px;}
+.stock-information-map h2{font-size:20px;margin:0 0 6px;}
+.focus-stock{max-width:1180px;}
+/* Stance lanes: bullish left, facts in the middle, bearish right. */
+.evidence-map.evidence-lanes{--evidence-layout:lanes;display:flex;flex-direction:column;gap:30px;padding:20px;}
+.evidence-lanes .evidence-center{align-self:center;grid-row:auto!important;min-height:130px;width:150px;padding:14px;}
+.evidence-lanes .evidence-branches{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0;align-items:start;}
+.evidence-lanes .evidence-group{display:block;min-width:0;}
+.evidence-lanes .evidence-group-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--branch);font-size:14px;line-height:1.5;margin:0 0 12px;padding:12px 0;border-top:2px solid var(--branch);}
+.evidence-lanes .evidence-group-count{display:inline-flex;font-size:12px;}
+.evidence-lanes .evidence-group-nodes{display:flex;flex-direction:column;gap:12px;margin:0;}
+.evidence-lanes .evidence-node{grid-row:auto!important;grid-column:auto!important;padding:14px;}
+.evidence-lanes .evidence-node>strong{font-size:14px;line-height:1.65;}
+.evidence-author-group{display:flex;flex-direction:column;gap:8px;min-width:0;}
+.evidence-author-heading{display:flex;flex-direction:column;gap:2px;padding:0 2px;}
+.evidence-author-heading>a{display:flex;align-items:center;min-height:44px;color:var(--text);text-decoration:none;font-size:13px;font-weight:600;overflow-wrap:anywhere;}
+.evidence-author-heading>a:hover{text-decoration:underline;}
+.evidence-author-heading>.small{font-size:11px;line-height:1.5;}
+.evidence-repeat{font-size:11px;color:var(--muted);line-height:1.5;}
+.evidence-author-more>summary{min-height:44px;align-content:center;font-size:12px;color:var(--accent-text,var(--accent));cursor:pointer;}
+.evidence-author-more>.evidence-node{margin-top:8px;}
+@media(min-width:1000px){.app-nav.focus-nav{grid-template-columns:repeat(5,140px);}}
+@media(max-width:1099px){
+ .watch-research-entry{grid-template-columns:minmax(0,1fr) 125px;gap:12px 18px;}
+ .watch-research-columns{display:none;}
+ .watch-row-reading{grid-column:1;grid-row:2;}.watch-row-actions{grid-column:2;grid-row:2;}
+ .watch-research-entry>.watch-quote{grid-column:2;grid-row:1;}
+ .watch-inline-metrics{grid-template-columns:repeat(3,minmax(0,1fr));}
+}
+@media(max-width:800px){
+ .evidence-lanes .evidence-branches{grid-template-columns:1fr;gap:18px;}
+ .evidence-lanes .evidence-center{width:100%;min-height:0;border-radius:12px;display:flex;flex-direction:row;flex-wrap:wrap;gap:8px 16px;padding:12px;}
+ .evidence-lanes .evidence-center-info{flex-basis:100%;}
+ .evidence-lanes .evidence-connections{display:none;}
+ .evidence-map.evidence-lanes{padding:12px;gap:18px;}
+ .evidence-lanes .evidence-node>strong{-webkit-line-clamp:3;}
+ .evidence-workspace:has(.evidence-lanes) .evidence-tools{display:flex;}
+ .evidence-workspace:has(.evidence-lanes) .evidence-filter-select{display:block;width:100%;flex:1;}
+ .evidence-workspace:has(.evidence-lanes) .evidence-filters{display:none;}
+}
+@media(max-width:600px){
+ .app-nav.focus-nav>a{padding-inline:3px;gap:3px;font-size:10px;min-width:0;}
+ .research-example-grid{grid-template-columns:1fr;gap:8px;}
+ .research-example{display:grid;grid-template-columns:24px minmax(0,1fr);gap:6px 12px;padding:14px 32px 14px 14px;}
+ .research-example>.app-icon{grid-row:1/3;}.research-example strong{font-size:14px;}
+ .research-example .small{grid-column:2;font-size:11px;}
+ .research-examples{margin:20px 0;}
+ .watch-research-entry{padding:14px;grid-template-columns:minmax(0,1fr) 102px;gap:8px;}
+ .watch-row-reading{grid-column:1/-1;grid-row:2;}
+ .watch-row-actions{grid-column:1/-1;grid-row:3;flex-direction:row;justify-content:space-between;}
+ .watch-row-actions .watch-map-link{padding:8px 12px;}
+ .watch-row-actions .stock-open{min-width:90px;}
+ .watch-inline-metrics{grid-template-columns:repeat(2,minmax(0,1fr));}
+ .stock-core-actions{gap:4px;}.stock-core-actions .btn{font-size:12px;padding:7px 10px;}
+ .focus-stock .evidence-analysis{margin:16px 0;}.stock-information-map{margin:20px 0;}
+}
+/* A real compact table keeps the same columns and sorting on every screen. */
+.watch-table-scroll{overflow:auto;max-width:100%;border:1px solid var(--border);border-radius:12px;scroll-padding-left:130px;}
+.watch-compact-table{width:100%;min-width:1300px;border-collapse:separate;border-spacing:0;font-size:12px;table-layout:fixed;}
+.watch-compact-table th,.watch-compact-table td{border-bottom:1px solid var(--border);padding:12px;vertical-align:top;text-align:right;background:var(--surface);}
+.watch-compact-table th{font-weight:500;}
+.watch-compact-table tr:nth-child(even)>*{background:var(--surface-2);}
+.watch-compact-table thead th{position:sticky;top:0;z-index:2;background:var(--surface-2);padding:0 8px;vertical-align:middle;height:48px;color:var(--muted);}
+.watch-compact-table tr>:first-child{position:sticky;left:0;z-index:1;width:130px;text-align:left;border-right:1px solid var(--border);}
+.watch-compact-table thead tr>:first-child{z-index:3;}
+.watch-compact-table tr>:nth-child(2){width:110px;}.watch-compact-table tr>:nth-child(3){width:280px;text-align:left;}
+.watch-compact-table tr>:nth-child(4){width:90px;}
+.watch-compact-table tr:last-child td,.watch-compact-table tr:last-child th{border-bottom:0;}
+.watch-compact-table .stock-name{max-width:100%;min-height:44px;gap:2px;}
+.watch-compact-table .stock-name strong{font-size:15px;}
+.watch-compact-table .watch-company{font-size:10px;max-width:105px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.watch-compact-table .watch-map-link{display:flex;flex-direction:row;justify-content:flex-start;gap:5px;font-size:11px;min-height:44px;padding:5px 0;margin:0;border:0;width:fit-content;}
+.watch-compact-table .watch-map-link .app-icon{width:16px;height:16px;}
+.watch-quote-cell>strong,.watch-quote-cell>span,.watch-quote-cell>small{display:block;margin-bottom:5px;}
+.watch-quote-cell>strong{font-size:15px;}.watch-quote-cell>small{font-size:10px;line-height:1.5;}
+.watch-compact-table .watch-change{font-size:12px;}
+.watch-compact-table .watch-metric-value{font-size:14px;}.watch-compact-table .watch-metric-note,.watch-compact-table .watch-metric-status{font-size:10px;}
+.watch-sort{appearance:none;background:transparent;border:0;font:inherit;color:inherit;cursor:pointer;min-height:44px;padding:7px 2px;width:100%;text-align:inherit;white-space:normal;}
+.watch-sort:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:4px;}
+.watch-compact-table th[aria-sort]:not([aria-sort=none]){color:var(--accent-text,var(--accent));}
+.watch-inline-reading>summary{display:flex;gap:4px;align-items:flex-start;min-height:44px;cursor:pointer;list-style:none;font-size:12px;line-height:1.7;}
+.watch-inline-reading>summary::after{content:'⌄';color:var(--muted);margin-left:auto;}
+.watch-inline-reading>summary>span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.watch-inline-reading[open]>summary>span{display:none;}
+.watch-inline-reading[open]>summary{min-height:24px;}.watch-inline-reading[open]>summary::after{content:'⌃';}
+.watch-inline-reading .stock-one-sentence{font-size:12px;line-height:1.7;margin:0;}
+.watch-inline-reading .stock-reading>p:last-child{font-size:10px;line-height:1.5;margin-bottom:0;}
+.watch-inline-reading .stock-open{font-size:11px;}
+@media(max-width:600px){
+ .watch-table-scroll{scroll-padding-left:104px;border-radius:10px;}
+ .watch-compact-table{min-width:1200px;font-size:11px;}
+ .watch-compact-table th,.watch-compact-table td{padding:8px;}
+ .watch-compact-table tr>:first-child{width:104px;}
+ .watch-compact-table tr>:nth-child(2){width:88px;}.watch-compact-table tr>:nth-child(3){width:240px;}
+ .watch-compact-table .watch-company{max-width:86px;}
+ .watch-compact-table .stock-name strong{font-size:14px;}.watch-quote-cell>strong{font-size:13px;}
+ .watchlist-view .watch-controls{gap:6px;}.watch-modes .btn{min-height:44px;}
+}
+@media(max-width:600px){
+ .watch-compact-table tbody tr>:first-child{position:sticky;}
+ .watch-compact-table tr>:first-child{width:114px;}
+ .watch-compact-table .stock-name{padding-right:38px;}
+ .watch-compact-table .watch-company{max-width:52px;font-size:9px;}
+ .watch-compact-table .watch-map-link{position:absolute;right:2px;top:12px;width:44px;min-height:44px;justify-content:center;border:1px solid color-mix(in srgb,var(--accent) 30%,var(--border));border-radius:8px;}
+ .watch-compact-table .watch-map-link>span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);}
+ .watch-compact-table .watch-map-link .app-icon{width:18px;height:18px;}
+ .watch-quote-cell>strong,.watch-quote-cell>span,.watch-quote-cell>small{margin-bottom:3px;}
+ .watchlist-view .watch-session{margin-block:10px;}
+}
+@media(min-width:801px){
+ .evidence-lanes .evidence-center{width:400px;max-width:100%;min-height:0;display:grid;grid-template-columns:1fr 1.3fr;gap:4px 16px;border-radius:16px;text-align:left;padding:12px 18px;}
+ .evidence-lanes .evidence-center>.mono{grid-column:1;grid-row:1;font-size:22px;}
+ .evidence-lanes .evidence-price{grid-column:2;grid-row:1/3;}
+ .evidence-lanes .evidence-center-info{grid-column:1;grid-row:2;}
+ .evidence-lanes .evidence-water-caption{grid-column:1/-1;justify-self:start;min-height:24px;}
+}
+@media(max-width:600px){.stock-core-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}.stock-core-actions>a{min-width:0;justify-content:center;}}

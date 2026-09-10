@@ -3,7 +3,7 @@ import {freeGuide,quotaNote} from '../experience.js';
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
 import { overviewView, layoutOverview } from "../watchlist-overview.js";
 import { companyContext } from "../company-context.js";
-import {researchRow,replaceReading,syncSourceDialog} from '../stock-reading.js';
+import {reading,researchRow,replaceReading,syncSourceDialog} from '../stock-reading.js';
 import { icon } from "../icons.js";
 import { symbolPicker } from "../symbol-picker.js";
 import { s } from "../strings.js";
@@ -27,9 +27,9 @@ export async function mount(root) {
   let overview = null, selected = null, disposed = false, loading = true;
   const focused=window.DUCKY?.PRODUCT_FOCUS_ENABLED===true;
   let research=new Map(),researchFailed=false,loadSeq=0,membershipAvailable=false;
-  let view = "list", query = "", sort = "market_cap", area = 'equal', candidate = null, adding = false;
-  try { view = localStorage.getItem("ducky-watch-view") === "heatmap" ? "heatmap" : "list"; } catch {}
-  if(focused)view='reading';
+  let view = "list", query = "", sort = "market_cap", sortDirection = "desc", area = 'equal', candidate = null, adding = false;
+  // Each entry starts on List, consistently on desktop and phone.
+  // List combines prices, the shared overview and a direct information-map action.
   try { area = localStorage.getItem('ducky-watch-area') === 'cap' ? 'cap' : 'equal'; } catch {}
   const inflight = new Map();   // finding watchlist.js:118 — ticker -> in-flight fetch promise (dedup)
   const head = el("div.view-head", el("h1", s("watch.title")), el("span.count.mono", { id: "watch-count" }));
@@ -49,9 +49,9 @@ export async function mount(root) {
   const detail = el('section.watch-detail', {hidden:true, 'aria-label':s('watch.details')});
   const layout = el('div.watch-layout', list, detail);
   const modes = el('div.watch-modes', {'role':'group','aria-label':s('watch.display')});
-  for (const mode of (focused?['reading','list','heatmap']:['list','heatmap'])) modes.append(el('button.btn.btn-ghost.btn-sm', {type:'button',
+  for (const mode of (focused?['list','reading','heatmap']:['list','heatmap'])) modes.append(el('button.btn.btn-ghost.btn-sm', {type:'button',
     'data-mode':mode, 'aria-pressed':String(view===mode), onclick:()=>{
-      view=mode; try { localStorage.setItem('ducky-watch-view',view); } catch {} render();
+      view=mode;render();
     }},s('watch.view_'+mode)));
   const offer = el('div.watch-search-offer',{hidden:true,'aria-live':'polite'});
   const filter = el('input.input.watch-filter',{type:'search',placeholder:s('watch.filter'), 'aria-label':s('watch.filter'),autocomplete:'off',spellcheck:'false',
@@ -64,7 +64,7 @@ export async function mount(root) {
   filterPicker.wrap.classList.add('watch-search');unsubs.push(filterPicker.dispose);
   const sorting = el('select.input',{'aria-label':s('watch.sort'),onchange:()=>{sort=sorting.value;render();}},
     ...['market_cap','change_pct','ytd','drawdown','relative','iv_hv','attention','degen','ticker'].map(key=>el('option',{value:key},s('watch.sort_'+key))));
-  const controls = el('div.watch-controls',modes,filterPicker.wrap,sorting,el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:load},s('watch.refresh')));
+  const controls = el('div.watch-controls',modes,filterPicker.wrap,...(focused?[]:[sorting]),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:load},s('watch.refresh')));
   function renderOffer() {
     clear(offer);
     offer.hidden=!candidate||(store.get('watchlist')||[]).includes(candidate.ticker);
@@ -151,8 +151,10 @@ export async function mount(root) {
       if(!ordered.length)list.append(el('p.muted',s('focus.no_matching_stocks')));
       return;
     }
-    clear(list).append(overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
-      {view,query,sort,area,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
+    const tableLeft=list.querySelector('.watch-table-scroll')?.scrollLeft||0;
+    replaceReading(list,overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
+      {view,query,sort,sortDirection,onSort:key=>{sortDirection=key===sort?(sortDirection==='desc'?'asc':'desc'):key==='ticker'?'asc':'desc';sort=key;render();},area,renderResearch:focused?t=>reading({...research.get(t),ticker:t,...(!research.has(t)?{status:researchFailed?'read_failed':'pending'}:{})}):null,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
+    const scroll=list.querySelector('.watch-table-scroll');if(scroll)scroll.scrollLeft=tableLeft;
     for(const disclosure of list.querySelectorAll('details[data-disclosure]'))disclosure.open=openDisclosures.has(disclosure.dataset.disclosure);
     if(focusedMap)[...list.querySelectorAll('[data-map-open]')].find(n=>n.dataset.mapOpen===focusedMap)?.focus({preventScroll:true});
     layoutOverview(list);
