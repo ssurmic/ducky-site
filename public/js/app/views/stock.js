@@ -56,14 +56,19 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
       company.textContent=typeof result.price?.company==='string'?result.price.company:'';company.hidden=!company.textContent||company.textContent===ticker;
       clear(body);const doc=result.evidence||{ticker,nodes:[],analysis_status:'pending'};
       body.append(compactPrice(result.price),analysisPanel(doc,{formatTime:localTime}));
-      const important=(doc.nodes||[]).filter(n=>n.priority==='direct'&&n.intent!=='mention');
+      const available=(doc.nodes||[]).filter(n=>n.intent!=='mention');
+      const direct=available.filter(n=>n.priority==='direct'),important=direct.length?direct:available;
       const sources=el('section.stock-key-evidence',el('h2',s('focus.key_sources')));
       // Always retain the first opposed record among the three visible sources.
       const selected=important.slice(0,3),opposed=important.find(n=>n.stance==='counter');
       if(opposed&&!selected.includes(opposed))selected.splice(Math.min(2,selected.length),1,opposed);
       if(!selected.length)sources.append(el('p.muted',s('focus.no_research')));
-      for(const node of selected)sources.append(el('button.stock-source-card',{type:'button',onclick:()=>detail(node)},
-        el('span.small.muted',s(node.stance==='counter'?(node.kind==='creator'?'focus.counter_view':'focus.counter_record'):'focus.source_record')+' · '+localTime(node.published_at)),el('strong',pick(node.title)),el('span.small',s('focus.read_source')+' →')));
+      for(const node of selected){
+        const authors=node.kind==='creator'?[...new Set((node.evidence||[]).map(e=>e.author).filter(Boolean))].join(' · '):'';
+        const kind=s(node.stance==='counter'?(node.kind==='creator'?'focus.counter_view':'focus.counter_record'):node.kind==='creator'?'focus.creator_view':'focus.source_record');
+        sources.append(el('button.stock-source-card',{type:'button',onclick:()=>detail(node)},
+          el('span.small.muted',[authors,kind,localTime(node.published_at)].filter(Boolean).join(' · ')),el('strong',pick(node.title)),el('span.small',s('focus.read_source')+' →')));
+      }
       body.append(sources);
       const requested=query.get('source'),node=(doc.nodes||[]).find(n=>n.id===requested);
       if(node)detail(node);

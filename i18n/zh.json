@@ -4089,5 +4089,6 @@
   "app.focus.chart_pending": "历史价格正在准备，稍后可再查看。",
   "app.focus.chart_unavailable": "暂时无法读取历史价格。",
   "app.focus.research_read_failed": "暂时无法读取研究资料，请重试。",
-  "app.stockbrief.unready_claim_check_required": "这份简报需要重新核对依据。原始版本已保留，摘要暂时停止展示。"
+  "app.stockbrief.unready_claim_check_required": "这份简报需要重新核对依据。原始版本已保留，摘要暂时停止展示。",
+  "app.focus.creator_view": "作者观点"
 }

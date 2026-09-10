@@ -4089,5 +4089,6 @@
   "app.focus.chart_pending": "Historical prices are being prepared. Check again shortly.",
   "app.focus.chart_unavailable": "Historical prices could not be loaded.",
   "app.focus.research_read_failed": "Research could not be loaded. Please try again.",
-  "app.stockbrief.unready_claim_check_required": "This report needs another evidence check. Its original version is retained, and the summary is withheld while it is reviewed."
+  "app.stockbrief.unready_claim_check_required": "This report needs another evidence check. Its original version is retained, and the summary is withheld while it is reviewed.",
+  "app.focus.creator_view": "Creator viewpoint"
 }
