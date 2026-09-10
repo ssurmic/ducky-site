@@ -370,12 +370,16 @@ export async function mount(root,route={}){
         el('button.btn.btn-ghost',{type:'button',onclick:picker},s('evidence.switch_stock'))));return;
     }
     if(!ticker){host.append(el('p.empty',s('evidence.choose')));return;}
-    host.append(spinner());
+    const saved=version?null:api.peek('/evidence/'+ticker);
+    if(saved){displayed=saved;currentMap=mapView(saved,{onPickTicker:picker});host.append(currentMap);}
+    else host.append(spinner());
     try{
       const doc=await api.get('/evidence/'+ticker+(version?'?version='+encodeURIComponent(version):''),{signal:ctl.signal,silent402:true});
       if(!valid(id))return;
       if(!doc||doc.ticker!==ticker||!Array.isArray(doc.nodes))throw Error('invalid_response');
-      displayed=doc;clear(host);currentMap=mapView(doc,{archive:!!version,onPickTicker:picker});host.append(currentMap);
+      const state=currentMap?.readingState?.();
+      if(displayed&&material(displayed,'/evidence/'+ticker)!==material(doc,'/evidence/'+ticker))closeModal();
+      currentMap?.dispose?.();displayed=doc;clear(host);currentMap=mapView(doc,{archive:!!version,onPickTicker:picker,state});host.append(currentMap);
       const sourceId=!version?route.query?.get('source'):null;
       if(sourceId){
         const target=doc.nodes.find(n=>n.id===sourceId||(n.evidence||[]).some(e=>[e.id,e.point_id,e.legacy_claim_id,e.source_record_id].includes(sourceId)));
@@ -396,7 +400,10 @@ export async function mount(root,route={}){
       host.append(el('div.evidence-links',el('a.btn.btn-ghost.btn-sm',{href:'#/briefing?ticker='+ticker},s('nav.briefing')),
         el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+ticker},s('radar.chart')),historyButton,
         version?el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>load()},s('evidence.latest')):null),historyPanel);
-    }catch(error){if(valid(id)){clear(host);host.append(errorBox(error,()=>load(version)));}}
+    }catch(error){if(valid(id)){
+      if(!displayed||[401,402,403,404,410].includes(error.status)){currentMap?.dispose?.();currentMap=null;displayed=null;clear(host);}
+      host.prepend(errorBox(error,()=>load(version)));
+    }}
   }
   const unsubs=[store.subscribe('me',()=>{chosen=store.get('me')?.experience?.evidence?.selected||[];trialControls();load();})];
   const cleanup=()=>{root.removeEventListener('ducky:shared-read',updatePrice);alive=false;request++;currentMap?.dispose?.();currentMap=null;ctl.abort();unsubs.forEach(fn=>fn());closeModal();};

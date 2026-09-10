@@ -1,5 +1,12 @@
 # Change log
 
+## 2026-09-10 · Saved research appears before refresh (implemented)
+
+Watchlist, Today, stock briefs, stock pages and maps reuse recent reads in this login while
+fresh GETs run. Network errors retain dated content; withdrawals and access/session changes
+remove affected previews. Memory only, bounded to five minutes, with source links preserved.
+[Behavior and acceptance](reports/SAVED-READ-UX-2026-09-10.md).
+
 ## 2026-09-10 · Compact phone watchlist and sorting indicators (deployed)
 
 Replaced wrapping Unicode sort arrows with fixed-size chevrons and reduced phone
@@ -10,12 +17,13 @@ complete rows instead of two. Runtime `62974f8b` / Pages `d9110fac` passed exact
 main CI and production mobile-layout verification.
 [Acceptance and release](reports/WATCHLIST-DENSITY-2026-09-10.md).
 
-## 2026-09-10 · Repeated creator excerpt text (local verification)
+## 2026-09-10 · Repeated creator excerpt text (deployed)
 
 Reviewed creator excerpts now display an identical title and reason only once.
 Distinct reasons, conditions, dates, records and original-source links remain visible
 in both languages. This fixes the duplicated MRVL paragraph observed in the live
 Parkev Tatevosian video page. All 643 frontend tests, copy lint and 1,274 links passed.
+Exact main CI passed; dadfcc6c / Pages b66b1fc7 is live and five public assets match.
 [Acceptance and release status](reports/CREATOR-EXCERPT-DEDUP-2026-09-10.md).
 
 ## 2026-09-10 · Creator leaderboard and simulator copy (local verification)

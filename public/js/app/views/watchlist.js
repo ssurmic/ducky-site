@@ -24,9 +24,9 @@ export async function mount(root,{signal}={}) {
   const mountedEpoch=store.epoch();
   const unsubs = [];
   root.classList.add("watchlist-view");
-  let overview = null, selected = null, disposed = false, loading = true;
+  let overview = api.peek('/watchlist')?.overview||null, selected = null, disposed = false, loading = true;
   const focused=window.DUCKY?.PRODUCT_FOCUS_ENABLED===true;
-  let research=new Map(),researchFailed=false,researchLoading=true,loadSeq=0,membershipAvailable=false;
+  let research=new Map((api.peek('/me/stock-research')?.items||[]).map(item=>[item.ticker,item])),researchFailed=false,researchLoading=true,loadSeq=0,membershipAvailable=false;
   const missingResearch=()=>({status:researchLoading?'read_pending':researchFailed?'read_failed':'pending'});
   let view = "list", query = "", sort = "market_cap", sortDirection = "desc", area = 'equal', candidate = null, adding = false;
   // Each entry starts on List, consistently on desktop and phone.
@@ -42,6 +42,7 @@ export async function mount(root,{signal}={}) {
   const addOptions = el('details.watch-add-options', {open:!(store.get('watchlist')||[]).length},
     el('summary',s('watch.add')),el('p.view-intro.muted',s('watch.workflow')),form);
   const usage=el("div");
+  const readNotice=el('div',{'aria-live':'polite'});
   const list = el("div.watch-overview", { id: "watch-cards" });
   const resize=()=>layoutOverview(list);
   if(document.fonts)document.fonts.ready.then(()=>{if(!disposed)layoutOverview(list,true);});
@@ -90,7 +91,7 @@ export async function mount(root,{signal}={}) {
       card(selected,(store.get('snapshots') || {})[selected]));
   }
   head.append(addOptions);
-  root.append(head, freeGuide() || "", usage, controls, offer, layout,
+  root.append(head, freeGuide() || "", usage, controls, offer, readNotice, layout,
     el('div.chips',el('a.chip',{href:'#/updates'},s('updates.entry_title'))));
 
   async function onAdd(e) {
@@ -242,6 +243,7 @@ export async function mount(root,{signal}={}) {
     const mine=++loadSeq;
     let membershipReady=false;
     researchLoading=focused;
+    clear(readNotice);
     // Quotes/membership can render while the separately validated research read
     // is in flight. Source validation must not delay the first usable list.
     const current=()=>!disposed&&!signal?.aborted&&store.epoch()===epoch&&mine===loadSeq;
@@ -256,7 +258,10 @@ export async function mount(root,{signal}={}) {
     const readFailed=error=>{
       if(!current())return;
       diagnostic(error?.message==='invalid_research_response'?'invalid_response':api.readFailure(error).reason,error);
-      researchLoading=false;researchFailed=true;research=new Map();paintResearch();
+      researchLoading=false;researchFailed=true;
+      if([401,402,403].includes(error?.status))research=new Map();
+      else if(research.size)readNotice.append(el('p.small.muted',s('focus.summary_read_failed')));
+      paintResearch();
     };
     // Handle read/shape failures separately from rendering. A render exception
     // must not turn a valid accepted response into "no saved analysis".
@@ -266,6 +271,8 @@ export async function mount(root,{signal}={}) {
         readFailed(new Error('invalid_research_response'));return;
       }
       delete root.dataset.researchReadError;
+      for(const ticker of new Set([...research.keys(),...response.items.map(item=>item.ticker)]))
+        syncSourceDialog(ticker,response.items.find(item=>item.ticker===ticker)?.sources||[]);
       researchLoading=false;researchFailed=false;research=new Map(response.items.map(item=>[item.ticker,item]));paintResearch();
     },readFailed):Promise.resolve();
     try {
@@ -282,7 +289,8 @@ export async function mount(root,{signal}={}) {
       if (!current()) return;
       loading = false;
       membershipAvailable=false;
-      clear(list); list.appendChild(errorBox(err, load));
+      if(overview&&![401,402,403].includes(err.status)){membershipReady=true;render();readNotice.append(errorBox(err,load));}
+      else{clear(list);list.appendChild(errorBox(err,load));}
     }
     await researchTask;
   }

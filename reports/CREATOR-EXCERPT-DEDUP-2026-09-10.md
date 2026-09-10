@@ -1,6 +1,6 @@
 # Reviewed creator excerpts: repeated display text · 2026-09-10
 
-Status: local verification complete; publication and live acceptance pending.
+Status: deployed as dadfcc6c / Pages b66b1fc7; exact main CI and production assets verified. EN/ZH live acceptance follows below.
 
 ## Actual user path
 
@@ -34,3 +34,34 @@ unchanged. This display comparison does not run inference or alter historical da
 
 The QCOM temporal translation issue found during this walkthrough is a separate
 upstream source correction. This UI change does not fix or approve that claim.
+
+
+## Publication
+
+PR #26 merged as `dadfcc6c0eb44d32a5b701a274ebe83401bff192`. Exact main CI
+`34542001010` passed. Sync merges retained the separate compact-phone work and
+its actual release notes; only Change Log conflicts required resolution.
+
+Published with the existing authenticated Pages CLI after checking that the tested
+commit was still main. Pages `b66b1fc7`; asset graph `55be9c3e18113ff996df`.
+Production manifest, shared creator module, product CSS and both language app
+entries match the tested build byte for byte. The immediately previous graph was
+`e189f450e1fbbc112741` (compact phone release, Pages `d9110fac`).
+
+English production browser, 23:28 UTC: 45 watchlist rows, List before Overview,
+closing prices dated 9/10; current prices render before the shared analysis GET
+completes. The analysis finished loading and retained its own date. One click on
+Open QCOM research map opened the map; one claim click located its author/video.
+The MRVL excerpt `claim:9d2700927dbc748f1e527803` has one paragraph. The separate
+QCOM headline and reason still have two paragraphs, with original stated horizon,
+publication date and YouTube 2:26 link. Source data were not corrected by this UI patch.
+
+[Public asset hashes](creator-excerpt-dedup-20260910/assets-after.json).
+
+
+Chinese production browser, 23:29:38 UTC: the same MRVL point displays its Chinese
+paragraph once. The QCOM note and distinct reason remain two paragraphs; its
+`not until 2027.` horizon, 2:26 original video link and map deep link remain.
+Both language entries loaded `55be9c3e18113ff996df/main.js`. Desktop has no page
+horizontal overflow. The existing QCOM temporal error is explicitly still unresolved;
+no source-correction success is claimed.

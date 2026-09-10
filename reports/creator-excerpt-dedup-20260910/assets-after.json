@@ -1,0 +1,33 @@
+{
+  "at": "2026-09-10T23:27:17.165372+00:00",
+  "commit": "dadfcc6c0eb44d32a5b701a274ebe83401bff192",
+  "pages": "b66b1fc7",
+  "assets": [
+    {
+      "path": "app-release.json",
+      "match": true,
+      "sha256": "3a27c91aeec9fb7a2d06b675d388899b0eb44ab32e729b42bd20b0d57194c86f",
+      "version": "55be9c3e18113ff996df"
+    },
+    {
+      "path": "app-assets/55be9c3e18113ff996df/creator-spans.js",
+      "match": true,
+      "sha256": "e5d63976c3546a8bffffe50467f43e8a435b5a26479850a43705d2978fcaf4f3"
+    },
+    {
+      "path": "css/product-focus.css",
+      "match": true,
+      "sha256": "37e36107e57629d00b0ba5f26e3a5371b4205a92ba06b0d38b7e85144b12b767"
+    },
+    {
+      "path": "app/",
+      "match": true,
+      "sha256": "c54e79392c416e7d51fa20f593584b179cd244372d4c2af3eb618864f2351e5d"
+    },
+    {
+      "path": "en/app/",
+      "match": true,
+      "sha256": "871e452091f1c8a3a0f59feb191f8a6debfd1771bb40adaf23ccdbf2fd570485"
+    }
+  ]
+}
