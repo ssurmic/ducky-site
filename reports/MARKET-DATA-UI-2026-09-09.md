@@ -20,4 +20,18 @@ and clock-label refinements. Copy lint and 1,296 links passed. Browser fixture c
 readable reason text and the quote clock. Fixtures clearly state that prices are synthetic.
 These are viewport simulations, not physical-device or production quote observations.
 Backend findings and actual Yahoo/Finnhub measurements are in the backend repository's
-reports/MARKET-DATA-REPAIR-2026-09-09.md. Production acceptance is recorded after release.
+reports/MARKET-DATA-REPAIR-2026-09-09.md.
+
+Released `0c88e18e602d1eddcae958247583ee377178de21` after successful check run
+34435428072, as Pages `7595bac6`. The GitHub deployment workflow encountered the
+known absent production secret; the existing local Wrangler login published the build.
+No credentials were copied or newly granted. Production Chinese and English App return
+200 and graph `4dbbceb2d09d69422a81`; both changed modules match the build byte-for-byte.
+
+After backend `67043925` deployed, the shared 59-stock set has 59 current accepted
+closes and 57 YTD returns; CBRS/HONA lack the previous year-end anchor. The user's
+existing authenticated Chrome page shows 43 watches, the six screenshot stocks now
+have YTD, including negative values, and CBRS explicitly says 缺少年初基准价. AVGO's
+genuine Degen sample shortage remains visible. The user tab was refreshed to the new
+frontend. Optional quotes remain disabled pending provider display authorization;
+this release does not claim live full-market quotes or a measured end-to-end latency SLA.
