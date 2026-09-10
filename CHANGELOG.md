@@ -1,12 +1,12 @@
 # Change log
 
-## 2026-09-10 — Show the analysis date in collapsed watchlist rows (local acceptance)
+## 2026-09-10 — Show the analysis date in collapsed watchlist rows (deployed)
 
 The list now shows the saved analysis date and previous-version status before expansion,
 using the same source-bound reading metadata. Loading/failed reads do not acquire a false
 analysis timestamp. On the narrowest phones, the overview column fits beside the fixed
 stock/map column when scrolled into view. No extra requests or inference. 620 tests and
-EN/ZH light/dark 320/390px browser checks passed. [Acceptance](reports/VISIBLE-ANALYSIS-CLOCK-2026-09-10.md).
+EN/ZH light/dark 320/390px browser checks passed. Exact main CI passed; `de788804` / Pages `020b808c` is live and three asset hashes match. Live EN/ZH dates verified; a transient English read failure still needs diagnosis. [Acceptance](reports/VISIBLE-ANALYSIS-CLOCK-2026-09-10.md).
 
 ## 2026-09-10 — Show each full creator note once (deployed)
 

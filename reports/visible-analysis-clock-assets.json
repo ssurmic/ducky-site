@@ -1,0 +1,20 @@
+{
+  "module_version": "35efec1b78480422015b",
+  "files": [
+    {
+      "url": "/app-assets/35efec1b78480422015b/stock-reading.js",
+      "sha256": "3ed0ff03b6e01a0a1aac6bd4d52668d33b3292232553e7fb662b9ba87c003a52",
+      "bytes": 5809
+    },
+    {
+      "url": "/app-assets/35efec1b78480422015b/watchlist-overview.js",
+      "sha256": "8c025fd850fa5a68549fba6221025b70c7dea4ecc3fa63a55bd9032a8dc1be79",
+      "bytes": 18619
+    },
+    {
+      "url": "/css/product-focus.css?v=de788804",
+      "sha256": "ec2a188cc84c26c9e8876d44a6a91ab469a848aa43d6eddf6cd013596e9e31a4",
+      "bytes": 16184
+    }
+  ]
+}
