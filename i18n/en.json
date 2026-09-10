@@ -1521,7 +1521,7 @@
   "app.creatorrank.coverage": "Price coverage of matured samples",
   "app.creatorrank.method": "BACKTEST · Windows start after the view was first verified and recorded. Each uses a fixed 20-session horizon, not the creator’s actual holding period. Repeated mentions do not inflate independent samples.",
   "app.creatorrank.empty_title": "No rankings yet",
-  "app.creatorrank.empty_body": "Not enough evidence to rank creators yet. View their records below.",
+  "app.creatorrank.empty_body": "Not enough evidence to rank creators yet. Open Call history to see the records collected so far.",
   "app.creatorrank.truncated": "Some history is still missing, so rankings are unavailable.",
   "app.creatorrank.ranked": "Eligible for ranking",
   "app.creatorrank.collecting": "Collecting samples · unranked",
