@@ -23,7 +23,8 @@ const analysis={overview,sections:[{kind:'key_points',zh:'产能投放能否转�
 let watches=mode==='no-watch'?[]:['NVDA','AVGO','AMD','GLW'];
 const price=(ticker,i=0)=>({ticker,company:{NVDA:'NVIDIA Corporation',AVGO:'Broadcom Inc.',AMD:'Advanced Micro Devices, Inc.',GLW:'Corning Incorporated'}[ticker]||ticker,
  price:223.67+i*23,price_status:'ready',price_session:'2026-09-09',change_pct:i%2?3.2:-.91,market_cap:(5-i)*1e12});
-const stockSummary=ticker=>({ticker,status:mode==='pending'?'pending':'ready',records:3,as_of:clock,overview:mode==='pending'?null:overview,sources:nodes.slice(0,2)});
+const stockSummary=ticker=>({ticker,status:mode==='pending'?'pending':mode==='previous'?'refresh_pending':'ready',records:3,
+ as_of:mode==='previous'?previousClock:clock,overview:mode==='pending'?null:overview,sources:(mode==='previous'?previousNodes:nodes).slice(0,2)});
 const record=i=>({id:'change-'+i,ticker:i%2?'AVGO':'NVDA',kind:i===1?'revised':'added',state:i===3?'unavailable':'available',earlier_content:i===2,
  initial_coverage:false,published_at:i===2?'2026-08-20':today,observed_at:clock,available_at:clock,node:i===3?null:nodes[i%3]});
 window.fetch=async(input,options={})=>{
