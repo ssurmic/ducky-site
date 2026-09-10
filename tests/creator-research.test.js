@@ -23,6 +23,26 @@ test('creator history preserves versions and composes with following and stock s
  assert.equal(safeSource('https://youtube.com.evil.test/'),null);
 });
 
+test('expanded history shows a long note once while retaining qualifications and original evidence',async()=>{
+ const note='The creator discusses the company’s expected earnings and valuation using the prices available at publication. '+
+  'The view is conditional on demand improving and does not describe a completed trade. '.repeat(3);
+ const item={id:99,revision_id:99,kol_id:'talk',kol_name:'TALK',title:'Original video title',
+  url:'https://www.youtube.com/watch?v=source',published_at:'2026-09-03T03:29:00Z',recorded_at:'2026-09-10T10:36:00Z',
+  calls:[{sym:'AVGO',point_id:'long-note',note,condition_text:'Only if demand improves.',
+   horizon_text:'By the next earnings report.',evidence:'The complete original source excerpt.',start_seconds:973}]};
+ let requests=0;globalThis.fetch=async()=>{requests++;return new Response(JSON.stringify({items:[item]}),
+  {headers:{'content-type':'application/json'}});};
+ const root=document.createElement('section');document.body.append(root);await mountResearch(root,{});
+ const details=root.querySelector('.study-detail');details.open=true;
+ assert.equal(details.textContent.split(note).length-1,1);
+ assert.ok(details.textContent.includes('Only if demand improves.'));
+ assert.ok(details.textContent.includes('By the next earnings report.'));
+ assert.ok(details.textContent.includes('The complete original source excerpt.'));
+ assert.ok(details.textContent.includes('2026-09-10'));
+ assert.equal(details.querySelector('a').href,'https://www.youtube.com/watch?v=source&t=973');
+ assert.equal(requests,1);root.remove();
+});
+
 test('free creator research reads the server-scoped results',async()=>{
  store.set('me',{tier:'free'});let calls=0;globalThis.fetch=async url=>{calls++;assert.match(url,/^\/kol\/research/);return Response.json({items:[]});};
  const root=document.createElement('section');document.body.append(root);

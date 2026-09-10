@@ -1,5 +1,13 @@
 # Change log
 
+## 2026-09-10 — Show each full creator note once (implementation)
+
+Expanded call history repeated the same long note in both the reader and its shared
+claim-details component. The reader now renders that paragraph once while retaining
+conditions, horizons, reasons, original evidence and revision dates. Other readers
+keep their existing full-note behavior. All 619 frontend tests, copy lint and 1,274
+internal links passed. [Implementation and acceptance](reports/CREATOR-DETAILS-2026-09-10.md).
+
 ## 2026-09-10 — Show followed creators' history on the first page (deployed)
 
 Following now reaches the API before pagination, so other creators' recent records cannot

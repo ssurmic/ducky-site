@@ -36,7 +36,7 @@ export function claimQualifications(call) {
   return rows.children.length?rows:null;
 }
 
-export function claimDetails(call) {
+export function claimDetails(call, {includeNote=true}={}) {
   const facts=el('dl.creator-claim-facts');
   const stated=(key,value)=>facts.append(el('div',el('dt',s(key)),el('dd',value||s('creators.not_stated'))));
   const sourceWording=value=>value&&(value.length>90||(document.documentElement.lang?.startsWith('en')&&/[\u3400-\u9fff]/.test(value)))
@@ -51,7 +51,7 @@ export function claimDetails(call) {
   if(call.stated_price_text)stated('creatorclaim.stated_price',call.stated_price_text);
   return el('div.creator-claim-detail',
     ['retracted','superseded'].includes(call.attribution_status)?el('p.err',s('creatorclaim.superseded')):null,
-    pick(call.note)?el('p',pick(call.note)):null,facts);
+    includeNote&&pick(call.note)?el('p',pick(call.note)):null,facts);
 }
 
 export function priceContext(context) {
