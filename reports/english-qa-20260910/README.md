@@ -7,7 +7,7 @@ and release decisions; this workstream does not push or deploy.
 
 ## Changes
 
-- Revised 131 existing English strings and added seven labels, with matching Chinese
+- Revised 132 existing English strings and added seven labels, with matching Chinese
   keys. The [copy change record](copy-changes.json) contains every before/after pair.
   Labels and introductions use direct US English. Missing data, source review,
   original dates, losses and incomplete history remain explicit. The owner's
@@ -93,3 +93,5 @@ in their source language with the source-language notice.
 The coordinating production walkthrough identified these issues. This workstream
 implemented and tested fixes against the saved code and fixtures; it did not repeat
 the production browser session, send a test notification, or claim deployment.
+
+Final live acceptance also found that the empty leaderboard referred to records “below,” where no list was present. The message now names the visible Call history control. No ranking logic changed. The preceding complete suite passed 643/643 tests; this final copy correction also passed the build and copy lint.

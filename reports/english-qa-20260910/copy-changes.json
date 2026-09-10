@@ -688,5 +688,10 @@
     "key": "app.creatorlab.result_detail_single",
     "before": null,
     "after": "Max close drawdown {drawdown} · costs {fees} · {n} trade"
+  },
+  {
+    "key": "app.creatorrank.empty_body",
+    "before": "Not enough evidence to rank creators yet. View their records below.",
+    "after": "Not enough evidence to rank creators yet. Open Call history to see the records collected so far."
   }
 ]
