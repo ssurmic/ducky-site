@@ -124,7 +124,7 @@ The backend no longer requires an invented watch task for an indicator-only pack
 
 Frontend publication: [PR #9](https://github.com/ssurmic/ducky-site/pull/9), app `8d19f7d6e02a05e52fb9207112fe3f1b57ede093`, Pages `c353399b`. PR CI `34469829437` and exact main CI `34470116055` both passed; the public config and served CSS match the release. JavaScript module graph remains `7fb856aa26c6f941c953`. This frontend receipt does not certify backend deployment or full summary coverage; those receipts are in the central analysis-section report. Previous app `8b6aba6b0f67a6a1470d1e250de4f77f607984ac`, Pages `4abe5bfd`, remains the rollback reference.
 
-## Saved-research reading state (candidate, 11:27 UTC)
+## Saved-research reading state (published; candidate checks at 11:27 UTC)
 
 The signed-in list initially showed pending wording before its separate research response arrived.
 After the response, 27 of 43 rows contained accepted summaries. The cause was an ambiguous temporary
@@ -138,3 +138,12 @@ Eight synthetic 320/390×640 × EN/ZH × light/dark layouts had a 512px main are
 four rows in the table, three within the initial reading area, and no page overflow. The delayed
 four-stock result appeared without moving the first row. Screenshots checked 320px Chinese dark and
 390px English dark. These are viewport simulations, not real-device or population-performance claims.
+
+Published [PR #11](https://github.com/ssurmic/ducky-site/pull/11), app `533cd73da816fdbcf6ba933b268e5b15155f4dcb`,
+Pages `ce3835e3`, module graph `1cdf551933238f0208fb`. PR CI `34471511648` and exact main CI `34471677296`
+passed; public config matches. Live bilingual browser checks showed List selected first, Overview
+second, 43 direct map links and 28 source-bound paragraphs after the saved read arrived. English IV/HV
+descending sorting placed ORCL, QCOM and CEG first at this observation; this records UI behavior, not
+an investment ranking. NVDA's accepted paragraph came from the pre-deployment normal queue and is not
+credited to the loading-copy change. The browser was returned to Chinese Watchlist. Rollback is app
+`8d19f7d6e02a05e52fb9207112fe3f1b57ede093`, Pages `c353399b`.

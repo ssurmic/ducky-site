@@ -1,9 +1,11 @@
 # Change log
-## 2026-09-10 — Distinguish reading from unfinished generation (candidate)
+## 2026-09-10 — Distinguish reading from unfinished generation (deployed)
 
 Watchlist prices can arrive before the saved research response. Empty cells now say “Loading saved analysis…” during that read, then show the actual accepted, pending or failed state. Existing paragraphs remain visible during a refresh. Sorting and direct maps remain usable while research loads; no extra request or generation is added.
 
-The issue was observed on the signed-in production list: initially pending-looking cells subsequently became 27 accepted summaries out of 43 watched stocks. This is a point-in-time reading count, not population coverage. All 615 frontend tests, copy lint and 1,274 links passed. Eight synthetic 320/390×640 bilingual light/dark checks retained a 512px main viewport and first row at y=335.2, with no document overflow. A delayed response replaced four loading cells in place. Publication receipt follows in the visible-workflow report.
+The issue was observed on the signed-in production list: initially pending-looking cells subsequently became 27 accepted summaries out of 43 watched stocks. This is a point-in-time reading count, not population coverage. All 615 frontend tests, copy lint and 1,274 links passed. Eight synthetic 320/390×640 bilingual light/dark checks retained a 512px main viewport and first row at y=335.2, with no document overflow. A delayed response replaced four loading cells in place.
+
+[PR #11](https://github.com/ssurmic/ducky-site/pull/11) and exact main CI `34471677296` passed. App `533cd73d`, Pages `ce3835e3`, graph `1cdf551933238f0208fb` is published and its public config verified. Signed-in ZH/EN lists showed List first, Overview second, 43 direct maps and 28 accepted paragraphs, including NVDA's earlier normal retry. The IV/HV header sorted successfully. This UI change does not claim new research generation. Rollback: app `8d19f7d6`, Pages `c353399b`.
 
 ## 2026-09-10 — Summary details use the available space (deployed)
 
