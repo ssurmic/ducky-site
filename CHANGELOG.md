@@ -1,5 +1,13 @@
 # Change log
 
+## 2026-09-10 · Repeated creator excerpt text (local verification)
+
+Reviewed creator excerpts now display an identical title and reason only once.
+Distinct reasons, conditions, dates, records and original-source links remain visible
+in both languages. This fixes the duplicated MRVL paragraph observed in the live
+Parkev Tatevosian video page. All 643 frontend tests, copy lint and 1,274 links passed.
+[Acceptance and release status](reports/CREATOR-EXCERPT-DEDUP-2026-09-10.md).
+
 ## 2026-09-10 · Creator leaderboard and simulator copy (local verification)
 
 Simplified the leaderboard title, introduction and empty state. Simulator options

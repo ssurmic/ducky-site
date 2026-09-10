@@ -39,13 +39,16 @@ export function spanSection(rows,tickers=null,focus='',{inline=false}={}){
   if(!inline)section.append(el('h3',s('creators.shared_spans')));
   const more=items.length>6?el('details.creator-spans-more',el('summary',s('creators.more_spans',{n:items.length-6}))):null;
   for(const [i,row] of items.entries()){
+    const title=row.title?.[lang]||row.title?.zh||'',reason=row.reason?.[lang];
     const card=el('article',{'data-point-id':row.point_id||'',class:row.point_id===focus?'is-focused':'','tabindex':row.point_id===focus?-1:null},el('span.small.muted',String(row.published_at||'').slice(0,10)+' · $'+row.ticker+(row.intent==='mention'?' · '+s('creators.mention_only'):'')),
-      el('p',row.title?.[lang]||row.title?.zh||''));
+      el('p',title));
     if(['support','counter'].includes(row.stance)){
       card.classList.add('is-'+row.stance);
       card.prepend(el('span.cr-take',{class:row.stance==='support'?'cr-bull':'cr-bear'},s('creators.take_'+(row.stance==='support'?'bull':'bear'))));
     }
-    if(row.reason?.[lang])card.append(el('p.small',row.reason[lang]));
+    // Omit only repeated display text; distinct qualifications and source rows remain.
+    const text=value=>value.trim().replace(/\s+/g,' ');
+    if(reason&&text(reason)!==text(title))card.append(el('p.small',reason));
     const qualifications=claimQualifications(row);if(qualifications)card.append(qualifications);
     if(row.evidence)card.append(sourceExcerpt(row,{open:row.point_id===focus}));
     try{const url=new URL(row.source_url);if(url.protocol==='https:'&&['youtube.com','www.youtube.com','youtu.be'].includes(url.hostname)&&!url.username&&!url.password){
