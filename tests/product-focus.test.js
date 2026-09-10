@@ -72,6 +72,18 @@ test('one sentence retains the accepted date and exact source; unbound text is h
  assert.doesNotMatch(reading({...old,status:'source_changed'}).textContent,/conditional on spending/);
 });
 
+test('a longer attributed overview retains the complete mechanism and source without new requests',()=>{
+ const root=setup(),value=item();let requests=0;
+ globalThis.fetch=async()=>{requests++;throw Error('A saved paragraph must not request regeneration');};
+ value.overview={en:'Sample Author said on 2026-09-07: New memory orders may support demand, subject to circular financing, heavy spending and continued customer budgets; the source does not establish that current orders guarantee future revenue.',
+  zh:'示例作者认为订单可能支持需求，但保留循环融资、大规模投入和客户预算的条件。',citations:['source']};
+ const block=reading(value);root.append(block);
+ assert.equal(block.querySelector('.stock-one-sentence').firstChild.textContent,value.overview.en);
+ block.querySelector('.brief-citation').click();assert.equal(requests,0);
+ assert.equal(document.querySelector('#modal a[target=_blank]').href,'https://example.com/original');
+ closeModal();
+});
+
 test('old and unavailable content cannot appear as current quoted statements',()=>{
  setup();const old=today.changeCard({...change(),earlier_content:true});
  assert.match(old.textContent,/Earlier content added/);assert.match(old.textContent,/2026-09-09/);
