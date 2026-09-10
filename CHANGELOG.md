@@ -1,5 +1,13 @@
 # Change log
 
+## 2026-09-10 · Compact phone watchlist and sorting indicators
+
+Replaced wrapping Unicode sort arrows with fixed-size chevrons and reduced phone
+list typography and spacing. Full analysis, dates, fixed stock/map controls,
+16px inputs and 44px sorting targets remain. 643 tests, copy/link checks and
+eight bilingual/theme phone layouts passed; the same 393px fixture shows three
+complete rows instead of two. [Acceptance and release](reports/WATCHLIST-DENSITY-2026-09-10.md).
+
 ## 2026-09-10 · Creator leaderboard and simulator copy (local verification)
 
 Simplified the leaderboard title, introduction and empty state. Simulator options
