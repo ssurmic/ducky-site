@@ -3038,6 +3038,7 @@
   "app.stockbrief.state_insufficient": "资料不足，暂不判断",
   "app.stockbrief.insider_basis": "Form 4 代码 P 包含公开市场或私下买入。历史成交价未做复权，不能直接当作当前支撑位。",
   "app.stockbrief.topic_price": "价格记录",
+  "app.stockbrief.topic_price_position": "股价位置",
   "app.stockbrief.topic_digest_source": "相关新闻",
   "app.stockbrief.next_check": "下一步看什么",
   "app.stockbrief.dimension_technical": "技术与期权",

@@ -3038,6 +3038,7 @@
   "app.stockbrief.state_insufficient": "Insufficient evidence to judge",
   "app.stockbrief.insider_basis": "Form 4 code P includes open-market or private purchases. Historical transaction prices are unadjusted and do not establish current support.",
   "app.stockbrief.topic_price": "Price record",
+  "app.stockbrief.topic_price_position": "Price position",
   "app.stockbrief.topic_digest_source": "Related news",
   "app.stockbrief.next_check": "What to check next",
   "app.stockbrief.dimension_technical": "Technicals and options",
