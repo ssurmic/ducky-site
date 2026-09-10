@@ -17,6 +17,9 @@ const previousClock=new Date(Date.now()-3*86400000).toISOString();
 const previousNodes=nodes.map(n=>({...n,published_at:previousClock.slice(0,10),observed_at:previousClock,
  evidence:n.evidence.map(e=>({...e,published_at:previousClock.slice(0,10),observed_at:previousClock}))}));
 const overview={zh:'示例作者认为产能扩张可能带动订单，但另一作者提醒支出可能先压低利润率。',en:'Sample Author expects capacity growth to support orders, while Sample Cautious Author warns of near-term margin pressure.',citations:['first','second']};
+if(mode==='fidelity-overview')Object.assign(overview,{
+ zh:'Sample Research Author于2026-09-07表示：新增内存采购可能支持长期需求，但要保留循环融资、大规模资金投入以及客户支出能否延续的条件；Sample Cautious Author于2026-09-08表示：扩建支出可能先压低利润率，产能并不等于收入。',
+ en:'Sample Research Author said on 2026-09-07: New memory orders may support demand, subject to circular financing, heavy spending and continued customer budgets; Sample Cautious Author said on 2026-09-08: Capacity spending may pressure margins before revenue arrives.'});
 const analysis={overview,sections:[{kind:'key_points',zh:'产能投放能否转成订单，取决于客户支出。',en:'Converting new capacity into orders depends on customer spending.',citations:['first']},
  {kind:'risks',zh:'利润率可能先承压，不能把产能增加等同于收入。',en:'Margins may come under pressure first; capacity growth is not booked revenue.',citations:['second']},
  {kind:'watch',zh:'下一份财报需要核对订单和资本支出。',en:'Check orders and capital spending in the next earnings report.',citations:['first']}]};
