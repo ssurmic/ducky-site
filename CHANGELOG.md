@@ -1,9 +1,11 @@
 # Change log
-## 2026-09-10 — Summary details use the available space (candidate)
+## 2026-09-10 — Summary details use the available space (deployed)
 
 The shared stock analysis can contain two sections when there is no source-backed verification task. The reasons panel now fits the actual section count instead of reserving a blank third column; phone layout remains one column. Source links and old three-section records keep working without network work on expansion.
 
-615 frontend tests, copy lint and 1,274 links passed. Local 320/390×640 bilingual light/dark stock QA had no overflow; full-map checks and 1280×800 desktop confirmed one/two-column layouts. These are synthetic viewport tests, not physical devices. Backend generation and independent review acceptance are recorded in the central `ANALYSIS-SECTION-ROLES-2026-09-10.md` report. Publication is pending.
+615 frontend tests, copy lint and 1,274 links passed. Local 320/390×640 bilingual light/dark stock QA had no overflow; full-map checks and 1280×800 desktop confirmed one/two-column layouts. These are synthetic viewport tests, not physical devices. Backend generation and independent review acceptance are recorded in the central `ANALYSIS-SECTION-ROLES-2026-09-10.md` report.
+
+[PR #9](https://github.com/ssurmic/ducky-site/pull/9), its PR check and [exact main CI](https://github.com/ssurmic/ducky-site/actions/runs/34470116055) passed. Published app `8d19f7d6`, Pages `c353399b`; production config and the served responsive CSS were verified. JavaScript graph `7fb856aa26c6f941c953` is unchanged. Rollback: app `8b6aba6b`, Pages `4abe5bfd`. This publishes rendering support, not a claim that every stock already has a newly reviewed summary.
 
 ## 2026-09-10 — Singular author-history counts (deployed)
 

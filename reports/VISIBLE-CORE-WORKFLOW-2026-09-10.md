@@ -118,6 +118,8 @@ map route at the same widths, languages and themes, also without document overfl
 grouping, citations or API behavior changed. Publication is recorded above; this copy correction does
 not establish semantic correctness of every source card or completion of pending stock summaries.
 
-## Summary section follow-up (candidate, 11:01 UTC)
+## Summary section follow-up (published after 11:01 UTC candidate checks)
 
 The backend no longer requires an invented watch task for an indicator-only packet. Existing read code already accepts two sections and preserves their citations. CSS now uses occupied grid tracks, so two sections fill the width on desktop and stack on phones. 615 tests passed; the explicit two-section citation regression makes no request. Eight stock-page phone viewport combinations passed, with additional Chinese/English full-map checks; main height was 512px at 320×640. On arrival the stock heading/summary were at y=113/386.6; the map heading/summary at y=84/127. Expanded-view heading coordinates are not first-use measurements. Not a physical-phone or user-study receipt.
+
+Frontend publication: [PR #9](https://github.com/ssurmic/ducky-site/pull/9), app `8d19f7d6e02a05e52fb9207112fe3f1b57ede093`, Pages `c353399b`. PR CI `34469829437` and exact main CI `34470116055` both passed; the public config and served CSS match the release. JavaScript module graph remains `7fb856aa26c6f941c953`. This frontend receipt does not certify backend deployment or full summary coverage; those receipts are in the central analysis-section report. Previous app `8b6aba6b0f67a6a1470d1e250de4f77f607984ac`, Pages `4abe5bfd`, remains the rollback reference.
