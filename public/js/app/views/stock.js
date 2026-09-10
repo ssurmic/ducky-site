@@ -2,14 +2,14 @@ import {el,clear,spinner,toast} from '../ui.js';
 import {s} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
-import {analysisPanel,detail} from './evidence.js';
+import {analysisPanel,detail,mapView} from './evidence.js';
 import {pick,compactPrice,dayWindow,localTime,researchError,replaceReading,syncSourceDialog} from '../stock-reading.js';
 import {closingChart} from '../stock-price-chart.js';
 import {changeCard} from './today.js';
 
 export async function mount(root,{ticker,signal,query=new URLSearchParams()}={}){
   if(!/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker||'')){location.hash='#/explore';return;}
-  let disposed=false,followingBusy=false,lastEvidence=null;
+  let disposed=false,followingBusy=false,lastEvidence=null,currentMap=null;
   const epoch=store.epoch(),current=()=>!disposed&&!signal?.aborted&&store.epoch()===epoch;
   const shell=el('article.focus-stock'),body=el('div'),chart=el('section.focus-chart',el('h2',s('focus.price_history')),spinner());
   const from=['today','explore'].includes(query.get('from'))?query.get('from'):'watchlist';
@@ -25,7 +25,10 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
     catch(error){if(current()){toast(s('common.error',{msg:error.message}),'err');follow.disabled=false;}}
     finally{followingBusy=false;if(current())sync();}
   });
-  head.append(follow);shell.append(head,body,chart);root.append(shell);
+  const directTools=el('nav.stock-core-actions',{'aria-label':s('focus.deeper_research')},
+    ...[['evidence/','evidence'],['research/','history_short'],['creators?scope=discover&ticker=','creators_short'],['calendar?ticker=','calendar_short']].map(([route,key])=>
+      el('a.btn.btn-ghost',{href:'#/'+route+encodeURIComponent(ticker)},s('focus.'+key))));
+  head.append(follow);shell.append(head,directTools,body,chart);root.append(shell);
   const off=store.subscribe('watchlist',sync);
   const details=el('details.focus-history',el('summary',s('focus.research_history'))),historyBody=el('div');details.append(historyBody);shell.append(details);
   let historyCursor=null,historyLoaded=false,historyLoading=false;
@@ -70,7 +73,13 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
         el('span.small.muted',[authors,kind,at].filter(Boolean).join(' · ')),el('strong',pick(node.title)),el('span.small',s('focus.read_source')+' →')));
     }
     syncSourceDialog(ticker,[...(doc.analysis_nodes||[]),...(doc.nodes||[])]);
-    replaceReading(body,compactPrice(result.price),analysisPanel(doc,{formatTime:localTime}),sources);
+    const mapState=currentMap?.readingState?.();currentMap?.dispose?.();
+    currentMap=mapView(doc,{showAnalysis:false,state:mapState});
+    const mapSection=el('section.stock-information-map',el('header.focus-heading',el('div',el('h2',s('focus.evidence')),el('p.small.muted',s('focus.map_intro'))),
+      el('a.stock-open',{href:'#/evidence/'+ticker},s('focus.open_full_map')+' →')),currentMap);
+    replaceReading(body,compactPrice(result.price),analysisPanel(doc,{formatTime:localTime}),mapSection,
+      el('details.focus-tools',{'data-reading-key':ticker+':key-sources'},el('summary',s('focus.key_sources')),sources));
+    currentMap.refresh?.();
   }
   async function loadEvidence(){
     if(!lastEvidence){clear(body);body.append(spinner());}
@@ -106,5 +115,5 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
     if(current())renderPrices(response);
   }).catch(error=>{if(current()){clear(chart);chart.append(el('h2',s('focus.price_history')),el('p.muted',s('focus.chart_unavailable')));}});
   await Promise.all([loadEvidence(),priceTask]);
-  return()=>{disposed=true;off();root.removeEventListener('ducky:shared-read',updates);};
+  return()=>{disposed=true;off();currentMap?.dispose?.();root.removeEventListener('ducky:shared-read',updates);};
 }

@@ -45,10 +45,10 @@ test('phone navigation promotes enabled research and keeps displaced tools reach
   const nav=document.importNode(shell.querySelector('.app-nav'),true);document.body.append(nav);
   const primary=[...nav.querySelectorAll(':scope > [data-mobile-primary]')];
   if(nav.classList.contains('focus-nav')){
-   assert.deepEqual(primary.map(a=>a.dataset.route),['today','watchlist','explore']);
+   assert.deepEqual(primary.map(a=>a.dataset.route),['today','watchlist','explore','calendar','creators']);
    assert.equal(nav.querySelector('.nav-more'),null);
-   for(const route of ['today','watchlist','explore']){selectNavigation(route);assert.equal(nav.querySelector('[aria-current=page]').dataset.route,route);}
-   for(const route of ['opportunities','vibe','reports','calendar','creators']){selectNavigation(route);assert.equal(nav.querySelector('[aria-current=page]').dataset.route,'explore');}
+   for(const route of ['today','watchlist','explore','calendar','creators']){selectNavigation(route);assert.equal(nav.querySelector('[aria-current=page]').dataset.route,route);}
+   for(const route of ['opportunities','vibe','reports']){selectNavigation(route);assert.equal(nav.querySelector('[aria-current=page]').dataset.route,'explore');}
    nav.remove();continue;
   }
   assert.deepEqual(primary.map(a=>a.dataset.route),expected);

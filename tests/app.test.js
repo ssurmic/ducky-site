@@ -150,7 +150,7 @@ test('both app shells carry every navigation icon locally, including briefing an
   const html=readFileSync(`dist/${lang}app/index.html`,'utf8');const page=new JSDOM(html).window.document;
   const links=[...page.querySelectorAll('.app-nav a')];
   const focused=Boolean(page.querySelector('.focus-nav'));
-  if(focused){assert.deepEqual(links.map(a=>a.dataset.route),['today','watchlist','explore']);}
+  if(focused){assert.deepEqual(links.map(a=>a.dataset.route),['today','watchlist','explore','calendar','creators']);}
   else{
   assert.equal(new Set(links.map(a=>a.dataset.route)).size,15+(briefEnabled?1:0));
   assert.equal(links.filter(a=>a.dataset.route==='research-brief').length,briefEnabled?2:0);

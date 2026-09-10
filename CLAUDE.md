@@ -69,3 +69,19 @@ The main workflow is Today → stock → dated evidence; Watchlist and Stock bri
 Shared revalidation is an allowlisted GET operation: pause hidden/offline pages, honor account epochs and server access/source-withdrawal checks, preserve exact previous citations and the reader's expanded/focused state. Do not auto-replay search, history cursors, writes or settings. Backend workers own generation, retries, leases, reconciliation and shared version publication; frontend waiting copy must not claim those stages have succeeded.
 
 For future iterations, update [CHANGELOG.md](CHANGELOG.md), the dated acceptance report and the backend's SYSTEMDESIGN/WORKFLOW tracker. Distinguish a proposal, merged code, deployment and actual delivered content. Record measured results, unresolved failures and rollback references, without secrets or per-user data. Read the central repository's latest AGENTS.md for API-first acquisition, bounded model admission and recovery requirements.
+
+## Visible core workflow (owner, 2026-09-10, supersedes three-destination simplification)
+
+Keep Today, Watchlist, Explore, Calendar and Creators in primary navigation. The information map,
+source history and creator records are core capabilities, with a direct stock-page action and a
+watchlist-row action. A pending paragraph must not hide already available evidence.
+
+Watchlist enters List on desktop and phone; Overview is second. Put the saved overview in the list,
+sort through column-header buttons with explicit ascending/descending state, keep unknown values
+last, and preserve focus/scroll on updates. Phone tables scroll within their container with a fixed
+stock column; don't replace this with a separate sorting menu or shrink tap targets below 44px.
+
+Explore and first-use Today must offer useful, clearly labelled examples even with no subscriptions.
+Preserve historical case dates and losses. Evidence maps group bullish, factual/context and bearish
+records in separate lanes. Group authors by stable identity, retain each point/source/date, and label
+repeat source use without treating it as independent corroboration or merging opposing positions.
