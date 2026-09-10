@@ -283,7 +283,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         selector.addEventListener('change',()=>{selected=selector.value;renderContent();});content.append(el('div.evidence-controls',selector));
       }
       const target=el('section.creator-workspace');content.append(target);
-      if(tab==='research')mountResearch(target,{kolId:selected,query,tickers:stockFilter,allowedIds:mine?[...following]:null,point:initial.tab==='research'?initial.point:''});
+      if(tab==='research')mountResearch(target,{kolId:selected,query,tickers:stockFilter,following:mine,allowedIds:mine?[...following]:null,point:initial.tab==='research'?initial.point:''});
       if(tab==='lab')mountSimulation(target,{kolId:selected,tickers:stockFilter,allowedIds:mine?[...following]:null,state:labState,onStateChange:syncRoute});
       if(tab==='rank')mountLeaderboard(target,{onSelect:id=>{selected=id;mine=false;watched=false;stockTicker='';tab='research';render();}});
       return;

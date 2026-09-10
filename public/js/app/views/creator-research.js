@@ -76,13 +76,20 @@ export async function mountResearch(root, selection) {
     render();
     const params=new URLSearchParams();
     if(selection?.kolId)params.set('kol_id',selection.kolId);
+    if(selection?.following)params.set('following','true');
     if(selection?.tickers?.length===1)params.set('ticker',selection.tickers[0]);
     if(append && doc.next_cursor)params.set('before',doc.next_cursor);
     try {
       const next=await api.get('/kol/research'+(params.size?'?'+params.toString():''));
       if(!active() || request!==sequence)return;
       doc={...next,items:append?[...doc.items,...(next.items||[])]:next.items||[]};
-    } catch {if(!active() || request!==sequence)return;loadError=true;}
+    } catch (error) {
+      if(!active() || request!==sequence)return;
+      // A changed follow/access scope invalidates its old keyset cursor.
+      // Keep visible rows on failure, but Retry must start at the first page.
+      if(error.status===400 && [error.body?.error,error.body?.detail].includes('invalid_cursor'))doc.next_cursor=null;
+      loadError=true;
+    }
     loading=false;render();
   }
   function render() {
