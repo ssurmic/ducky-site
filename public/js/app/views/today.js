@@ -1,8 +1,13 @@
 import {el,clear,spinner} from '../ui.js';
 import {s} from '../strings.js';
 import * as api from '../api.js';
+import * as store from '../store.js';
 import {pick,stockHref,localTime,dayWindow,reading,researchError} from '../stock-reading.js';
 import {detail} from './evidence.js';
+
+// Remember only reading controls, never source text or an account's response.
+const readingStates=new Map();
+let readingEpoch=null;
 
 export function changeCard(item,{from='today'}={}){
   const available=item.state==='available'&&item.node;
@@ -24,7 +29,10 @@ export function changeCard(item,{from='today'}={}){
 }
 
 export async function mount(root,{signal,scope:initialScope='watchlist',embedded=false}={}){
-  let disposed=false,seq=0,cursor=null,scope=initialScope,days=1,query='',windowRange=dayWindow(),rows=[];
+  const epoch=store.epoch();
+  if(readingEpoch!==epoch){readingStates.clear();readingEpoch=epoch;}
+  const stateKey=initialScope+'|'+embedded,saved=readingStates.get(stateKey);
+  let disposed=false,seq=0,cursor=null,scope=initialScope,days=saved?.days||1,query=saved?.query||'',windowRange=dayWindow(),rows=[],pages=0;
   const main=el('section.focus-today'),feed=el('div.change-list'),status=el('div',{'aria-live':'polite'});
   const title=el('header.focus-heading',el('div',el('h1',s('focus.today')),el('p.muted',s('focus.today_intro'))),
     el('a.btn.btn-ghost',{href:'#/calendar'},s('focus.upcoming')));
@@ -32,6 +40,7 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   const search=el('input.input',{type:'search',maxlength:80,placeholder:s('focus.search_research'),'aria-label':s('focus.search_research')});
   const range=el('select.input',{'aria-label':s('focus.range'),onchange:()=>{days=Number(range.value);load();}},
     ...[1,7,30,365].map(n=>el('option',{value:n},s('focus.range_'+n))));
+  range.value=days;search.value=query;
   const filters=el('form.focus-filters',{onsubmit:e=>{e.preventDefault();query=search.value.trim();load();}},
     range,search,el('button.btn.btn-ghost',{type:'submit'},s('focus.search')));
   main.append(filters,status,feed);
@@ -42,17 +51,18 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   if(!embedded)main.append(summaries);
   async function load(append=false){
     const mine=++seq;
-    if(!append){cursor=null;rows=[];windowRange=dayWindow(new Date(),days);clear(feed);}
+    if(!append){cursor=null;rows=[];pages=0;windowRange=dayWindow(new Date(),days);clear(feed);}
     clear(status);status.append(spinner());more.disabled=true;
     const params=new URLSearchParams({...windowRange,scope,limit:'5',earlier:String(days!==1||!!query),...(cursor?{before:cursor}:{}),...(query?{q:query}:{})});
     try{
       const response=await api.get('/me/research-changes?'+params,{signal});
       if(disposed||signal?.aborted||mine!==seq)return;
       if(!Array.isArray(response?.items))throw new api.ApiError(502,{error:'invalid_research_response'});
-      rows.push(...(response.items||[]));cursor=response.next_cursor;clear(status);
+      rows.push(...(response.items||[]));cursor=response.next_cursor;pages++;clear(status);
       if(!rows.length)status.append(el('p.focus-empty',s(query?'focus.no_search_results':'focus.no_changes')));
       for(const item of response.items||[])feed.append(changeCard(item,{from:embedded?'explore':'today'}));
       more.hidden=!cursor;
+      return true;
     }catch(error){if(!disposed&&!signal?.aborted&&mine===seq){clear(status);status.append(researchError(error,()=>load(append)));}}
     finally{if(mine===seq)more.disabled=false;}
   }
@@ -70,6 +80,12 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
       el('a.ticker',{href:stockHref(item.ticker,'today')},item.ticker),reading(item),
       el('a.stock-open',{href:stockHref(item.ticker,'today')},s('focus.open_stock')+' →')));
   }).catch(()=>{if(!disposed&&!signal?.aborted)summaries.append(el('p.small.muted',s('focus.summary_read_failed')));});
-  await Promise.all([load(),summaryTask]);
-  return()=>{disposed=true;seq++;};
+  async function restoreReading(){
+    if(!await load())return;
+    // Revalidate sources when returning; old copied cards cannot bypass withdrawals.
+    for(let page=1;page<Math.min(saved?.pages||1,20)&&cursor&&!disposed&&!signal?.aborted;page++)
+      if(!await load(true))break;
+  }
+  await Promise.all([restoreReading(),summaryTask]);
+  return()=>{disposed=true;seq++;if(epoch===store.epoch())readingStates.set(stateKey,{days,query,pages});};
 }

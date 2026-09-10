@@ -73,6 +73,25 @@ test('malformed/failed research is not a successful empty day and late accounts 
  assert.equal(root.querySelector('.change-card'),null);dispose();
 });
 
+test('returning to research restores filters and pages through fresh source checks; another account starts clean',async()=>{
+ const root=setup(),calls=[];
+ globalThis.fetch=async input=>{const url=new URL(input,'https://ducky.test');calls.push(url);
+  if(url.pathname==='/me/stock-research')return Response.json({items:[]});
+  return Response.json({items:[change(url.searchParams.has('before')?2:1)],next_cursor:url.searchParams.has('before')?null:'second'});
+ };
+ let dispose=await today.mount(root);
+ const range=root.querySelector('select');range.value='365';range.dispatchEvent(new window.Event('change'));await pause();
+ root.querySelector('input[type=search]').value='specific author';root.querySelector('form').dispatchEvent(new window.Event('submit',{cancelable:true}));await pause();
+ [...root.querySelectorAll('button')].find(b=>b.textContent==='More records').click();await pause();dispose();root.replaceChildren();
+ const start=calls.length;dispose=await today.mount(root);
+ assert.equal(root.querySelector('select').value,'365');assert.equal(root.querySelector('input[type=search]').value,'specific author');
+ assert.equal(root.querySelectorAll('.change-card').length,2);
+ const reads=calls.slice(start).filter(u=>u.pathname==='/me/research-changes');
+ assert.equal(reads.length,2);assert.ok(reads.every(u=>u.searchParams.get('q')==='specific author'));assert.equal(reads[1].searchParams.get('before'),'second');
+ dispose();store.bumpEpoch();root.replaceChildren();dispose=await today.mount(root);
+ assert.equal(root.querySelector('select').value,'1');assert.equal(root.querySelector('input[type=search]').value,'');dispose();
+});
+
 test('watchlist defaults to readable research and a single stock destination',async()=>{
  const root=setup();globalThis.fetch=async url=>Response.json(url==='/me/stock-research'?{items:[item()]}:
   {items:[{ticker:'NVDA'}],overview:{items:[{ticker:'NVDA',company:'NVIDIA',price:98,price_status:'ready',price_session:'2026-09-09',change_pct:0}]}});
