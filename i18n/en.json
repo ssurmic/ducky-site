@@ -3987,5 +3987,20 @@
   "app.researchbrief.price_unavailable": "Price comparison is not ready. Missing values are shown as —.",
   "app.researchbrief.price_method": "How prices are compared",
   "app.researchbrief.price_method_detail": "The reference is the last completed daily close available when the source was published. It is not an intraday quote or trade price. The latest value is a recorded close, with its trading date shown. Change uses these unadjusted closes, without fees or dividends. It is stock price movement, not a trading return or the creator’s performance; a bearish view does not reverse the sign. Missing history or prices under review stay unavailable.",
-  "app.researchbrief.price_asof": "Comparison recorded at"
+  "app.researchbrief.price_asof": "Comparison recorded at",
+  "app.share.action": "Share",
+  "app.share.title": "Share summary card",
+  "app.share.card_label": "Share: {title}",
+  "app.share.card_type": "Information map · Summary",
+  "app.share.hint": "Send this image to a friend. No account needed to read it.",
+  "app.share.preparing": "Preparing image…",
+  "app.share.send": "Share image",
+  "app.share.save": "Save image",
+  "app.share.failed": "Couldn’t share. Save the image and send it instead.",
+  "app.share.unavailable": "This card couldn’t be prepared. Please try again later.",
+  "app.share.historical": "Historical record",
+  "app.share.dated": "Dated information. Check the source date.",
+  "app.share.saved": "Recorded {at}",
+  "app.share.snapshot_note": "One evidence item from a broader study. Read it with the original source.",
+  "app.share.scan_source": "Scan for source"
 }

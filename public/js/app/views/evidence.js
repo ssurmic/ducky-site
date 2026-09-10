@@ -1,3 +1,4 @@
+import {openCardShare} from '../card-share.js';
 import {exampleTickers,exampleMap} from '../evidence-examples.js';
 import {quotaNote} from '../experience.js';
 import {el,clear,spinner,errorBox,modal,closeModal,dateTime as time} from '../ui.js';
@@ -24,7 +25,7 @@ const position=v=>{const n=Math.floor(v);return Number.isFinite(n)?Math.floor(n/
 const factDescription=e=>e.topic==='price_gaps'?(e.data?.gaps?.length?e.data.gaps.map(g=>`${g.date} · $${g.lower}–$${g.upper}`).join(' / '):s('evidence.no_gaps')):factText(e);
 const missingLabel=k=>k.startsWith('ytd_')?s('evidence.missing_ytd',{benchmark:k.slice(4)}):k==='price_gaps'?s('evidence.missing_gaps'):has('stockbrief.missing_'+k)?s('stockbrief.missing_'+k):s('evidence.missing_other');
 
-export function detail(node,{analysisAt}={}){
+export function detail(node,{analysisAt,shareContext}={}){
   const body=el('div.evidence-detail',el('p.evidence-stance',{class:'is-'+node.stance},eventLabel(node)),
     analysisAt?el('p.data-notice',s('evidence.analysis_snapshot_source',{at:time(analysisAt)})):null,
     node.conditional?el('p.data-notice',s('evidence.conditional')):null,
@@ -57,6 +58,7 @@ export function detail(node,{analysisAt}={}){
     item.append(audit);body.append(item);
   }
   if(node.evidence_omitted)body.append(el('p.small.muted',s('evidence.more_sources',{n:node.evidence_omitted})));
+  if(shareContext)body.prepend(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>openCardShare(node,shareContext)},s('share.title')));
   modal(pick(node.title),body);
 }
 
@@ -204,7 +206,8 @@ export function mapView(doc,{archive=false,onPickTicker,example=false}={}){
       const eventAt=eventDate(node),shownDate=eventAt?s('evidence.event_short',{at:eventAt}):date(node.published_at||node.observed_at);
       const authors=[...new Set((node.evidence||[]).map(authorLabel).filter(Boolean))];
       const linked=node.kind==='creator'&&node.evidence?.length===1?evidenceTarget(node.evidence[0]):null;
-      const card=el('button.evidence-node',{type:'button',class:'is-'+node.stance+' source-'+identity,'data-source':identity,style:{gridColumn:i%2===0?'1':'3',gridRow:String(Math.floor(i/2)+1)},onclick:()=>{if(linked)location.hash=linked;else detail(node);}},
+      const shareContext={ticker:doc.ticker,recorded_at:doc.recorded_at,archive,example,status:doc.status};
+      const card=el('article.evidence-node',{class:'is-'+node.stance+' source-'+identity,'data-source':identity,style:{gridColumn:i%2===0?'1':'3',gridRow:String(Math.floor(i/2)+1)},onclick:()=>{if(linked)location.hash=linked;else detail(node,{shareContext});}},
         ['youtube','x','macro'].includes(identity)?el('span.evidence-source-watermark',{'aria-hidden':'true'},sourceMark(identity)):null,
         el('span.evidence-node-label',sourceBadge(identity),el('span.evidence-category',eventLabel(node))),
         el('strong',pick(node.title)),
@@ -216,6 +219,8 @@ export function mapView(doc,{archive=false,onPickTicker,example=false}={}){
         el('span.evidence-node-footer',el('span',shownDate),
           el('span.evidence-node-number',{'aria-hidden':'true'},String(nodes.indexOf(node)+1).padStart(2,'0')),
           el('span',s((node.evidence||[]).length===1?'evidence.source_single':'evidence.sources',{n:(node.evidence||[]).length})+' ↗')));
+      card.append(el('button.evidence-node-open',{type:'button','aria-label':pick(node.title)}),
+        el('button.evidence-share-trigger',{type:'button','aria-label':s('share.card_label',{title:pick(node.title)}),onclick:event=>{event.stopPropagation();openCardShare(node,shareContext);}},s('share.action')));
       groups.get(node.stance)?.list.append(card);
     }
     for(const {group,list}of groups.values()){if(list.childElementCount)branches.append(group);}

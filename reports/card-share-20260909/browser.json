@@ -1,0 +1,106 @@
+[
+  {
+    "lang": "en",
+    "theme": "light",
+    "width": 390,
+    "overflow": false,
+    "dialog": {
+      "x": 12,
+      "y": 43.5418701171875,
+      "width": 366,
+      "height": 572.671875
+    },
+    "image": {
+      "width": 960,
+      "height": 847
+    },
+    "download": "Ducky-NOK-2026-09-07.png",
+    "cancel": {
+      "calls": [
+        [
+          {
+            "name": "Ducky-NOK-2026-09-07.png",
+            "type": "image/png",
+            "size": 122703
+          }
+        ]
+      ],
+      "status": "",
+      "enabled": true
+    },
+    "downloadedBytes": 122703,
+    "focusRestored": true
+  },
+  {
+    "lang": "zh",
+    "theme": "dark",
+    "width": 320,
+    "overflow": false,
+    "dialog": {
+      "x": 12,
+      "y": 86.40916442871094,
+      "width": 296,
+      "height": 486.921875
+    },
+    "image": {
+      "width": 960,
+      "height": 847
+    },
+    "download": "Ducky-NOK-2026-09-07.png",
+    "focusRestored": true
+  },
+  {
+    "lang": "en",
+    "theme": "dark",
+    "width": 320,
+    "overflow": false,
+    "dialog": {
+      "x": 12,
+      "y": 74.4163818359375,
+      "width": 296,
+      "height": 510.921875
+    },
+    "image": {
+      "width": 960,
+      "height": 847
+    },
+    "download": "Ducky-NOK-2026-09-07.png",
+    "focusRestored": true
+  },
+  {
+    "lang": "zh",
+    "theme": "light",
+    "width": 390,
+    "overflow": false,
+    "dialog": {
+      "x": 12,
+      "y": 55.5438232421875,
+      "width": 366,
+      "height": 548.671875
+    },
+    "image": {
+      "width": 960,
+      "height": 847
+    },
+    "download": "Ducky-NOK-2026-09-07.png",
+    "focusRestored": true
+  },
+  {
+    "lang": "en",
+    "theme": "light",
+    "width": 1360,
+    "overflow": false,
+    "dialog": {
+      "x": 360,
+      "y": 65.92517852783203,
+      "width": 640,
+      "height": 777.90625
+    },
+    "image": {
+      "width": 960,
+      "height": 847
+    },
+    "download": "Ducky-NOK-2026-09-07.png",
+    "focusRestored": true
+  }
+]

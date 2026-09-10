@@ -3987,5 +3987,20 @@
   "app.researchbrief.price_unavailable": "价格对照暂未齐全，缺失项显示“—”。",
   "app.researchbrief.price_method": "价格如何对照",
   "app.researchbrief.price_method_detail": "发表参考价取来源发布时最近一个已完成交易日的收盘，不是原话时刻的盘中价或成交价。最新价格为已收录收盘，交易日期单独列出。涨跌按这两端未复权收盘计算，不含费用与股息；这是股价变化，不是交易收益或作者成绩，看空观点也不会把涨跌方向反过来。历史缺失或价格仍在核对时暂不计算。",
-  "app.researchbrief.price_asof": "对照记录于"
+  "app.researchbrief.price_asof": "对照记录于",
+  "app.share.action": "分享",
+  "app.share.title": "分享摘要卡",
+  "app.share.card_label": "分享：{title}",
+  "app.share.card_type": "信息导图 · 摘要卡",
+  "app.share.hint": "把图片发给朋友，无需注册就能看。",
+  "app.share.preparing": "正在生成图片…",
+  "app.share.send": "分享图片",
+  "app.share.save": "保存图片",
+  "app.share.failed": "暂时无法分享，请保存图片后发送。",
+  "app.share.unavailable": "暂时无法生成这张摘要卡，请稍后重试。",
+  "app.share.historical": "历史记录",
+  "app.share.dated": "资料有时效性，请核对原文日期。",
+  "app.share.saved": "资料收录于 {at}",
+  "app.share.snapshot_note": "单条信息摘要，不代表完整研究；请结合原文阅读。",
+  "app.share.scan_source": "扫码查看原文"
 }
