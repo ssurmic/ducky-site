@@ -1,5 +1,16 @@
 # Change log
 
+## 2026-09-10 — Recover a failed first research read (candidate)
+
+A failed initial saved-research request used to miss the automatic refresh registry.
+The mounted account/page can now retry that GET at most twice through the existing
+visible-page refresh schedule. Successful reads resume normal source revalidation;
+auth failures, cancellations, rate limits, searches, history and writes are excluded.
+The request deadline covers JSON body consumption, and watchlist diagnostics distinguish
+read, shape and rendering failures without logging response text or account data.
+List-first ordering, header sorting and dated source dialogs remain intact.
+[Tests, browser checks and delivery status](reports/INITIAL-RESEARCH-RECOVERY-2026-09-10.md).
+
 ## 2026-09-10 — Show the analysis date in collapsed watchlist rows (deployed)
 
 The list now shows the saved analysis date and previous-version status before expansion,

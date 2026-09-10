@@ -22,6 +22,7 @@ const analysis={overview,sections:[{kind:'key_points',zh:'产能投放能否转�
  {kind:'watch',zh:'下一份财报需要核对订单和资本支出。',en:'Check orders and capital spending in the next earnings report.',citations:['first']}]};
 if(mode==='no-watch-section')analysis.sections=analysis.sections.filter(p=>p.kind!=='watch');
 let watches=mode==='no-watch'?[]:['NVDA','AVGO','AMD','GLW'];
+let researchReads=0;
 const price=(ticker,i=0)=>({ticker,company:{NVDA:'NVIDIA Corporation',AVGO:'Broadcom Inc.',AMD:'Advanced Micro Devices, Inc.',GLW:'Corning Incorporated'}[ticker]||ticker,
  price:223.67+i*23,price_status:'ready',price_session:'2026-09-09',change_pct:i%2?3.2:-.91,market_cap:(5-i)*1e12,metrics:{ytd:{status:'ready',value:[20.1,-2,0,-12][i]},drawdown:{status:'ready',value:-5-i*5},relative:{status:'ready',value:-7+i*2,symbols:['SPY']},iv_hv:{status:i===2?'missing':'ready',value:i===2?null:.71+i*.25},attention:{status:'ready',value:75+i*5},degen:{status:'ready',value:48+i*4}}});
 const stockSummary=ticker=>({ticker,status:mode==='pending'?'pending':mode==='previous'?'refresh_pending':'ready',records:3,
@@ -36,6 +37,8 @@ window.fetch=async(input,options={})=>{
  if(mode==='failure'&&path.includes('research'))return Response.json({error:'fixture_unavailable'},{status:503});
  if(path==='/watchlist')return Response.json({items:watches.map(ticker=>({ticker})),overview:{items:watches.map(price),session:'2026-09-09'}});
  if(path==='/me/stock-research'){
+  researchReads++;
+  if(mode==='recover-first-read'&&researchReads===1)return Response.json({error:'fixture_first_read_unavailable'},{status:503});
   if(mode==='slow-research')await new Promise(resolve=>setTimeout(resolve,6000));
   return Response.json({items:watches.map(stockSummary),watchlist_count:watches.length});
  }

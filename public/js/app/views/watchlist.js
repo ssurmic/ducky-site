@@ -20,7 +20,7 @@ export function normalizeList(resp) {
   return arr.map((x) => (typeof x === "string" ? x : x && (x.ticker || x.symbol))).filter(Boolean).map((t) => String(t).toUpperCase());
 }
 
-export async function mount(root) {
+export async function mount(root,{signal}={}) {
   const mountedEpoch=store.epoch();
   const unsubs = [];
   root.classList.add("watchlist-view");
@@ -244,18 +244,34 @@ export async function mount(root) {
     researchLoading=focused;
     // Quotes/membership can render while the separately validated research read
     // is in flight. Source validation must not delay the first usable list.
-    const researchTask=focused?api.get('/me/stock-research').then(response=>{
-      if(disposed||store.epoch()!==epoch||mine!==loadSeq)return;
-      if(!Array.isArray(response?.items))throw new Error('invalid_research_response');
-      researchLoading=false;researchFailed=false;research=new Map(response.items.map(item=>[item.ticker,item]));if(membershipReady)render();
-    }).catch(()=>{
-      if(disposed||store.epoch()!==epoch||mine!==loadSeq)return;
-      researchLoading=false;researchFailed=true;research=new Map();if(membershipReady)render();
-    }):Promise.resolve();
+    const current=()=>!disposed&&!signal?.aborted&&store.epoch()===epoch&&mine===loadSeq;
+    const diagnostic=(stage,error)=>{
+      root.dataset.researchReadError=stage;
+      console.warn('Ducky research read', {stage,...api.readFailure(error)});
+    };
+    const paintResearch=()=>{
+      if(!membershipReady)return;
+      try{render();}catch(error){diagnostic('render',error);}
+    };
+    const readFailed=error=>{
+      if(!current())return;
+      diagnostic(error?.message==='invalid_research_response'?'invalid_response':api.readFailure(error).reason,error);
+      researchLoading=false;researchFailed=true;research=new Map();paintResearch();
+    };
+    // Handle read/shape failures separately from rendering. A render exception
+    // must not turn a valid accepted response into "no saved analysis".
+    const researchTask=focused?api.get('/me/stock-research',{signal}).then(response=>{
+      if(!current())return;
+      if(!Array.isArray(response?.items)||response.items.some(item=>!item||typeof item.ticker!=='string')){
+        readFailed(new Error('invalid_research_response'));return;
+      }
+      delete root.dataset.researchReadError;
+      researchLoading=false;researchFailed=false;research=new Map(response.items.map(item=>[item.ticker,item]));paintResearch();
+    },readFailed):Promise.resolve();
     try {
-      const response=await api.watchlist.list();
+      const response=await api.watchlist.list({signal});
       const items = normalizeList(response);
-      if (disposed || store.epoch() !== epoch||mine!==loadSeq) return;
+      if (!current()) return;
       overview = response?.overview || null;
       if(Number.isFinite(response?.cap))store.patch("me",{watch_cap:response.cap});
       loading = false;
@@ -263,7 +279,7 @@ export async function mount(root) {
       membershipReady=true;
       store.set("watchlist", items);
     } catch (err) {
-      if (disposed || store.epoch() !== epoch||mine!==loadSeq) return;
+      if (!current()) return;
       loading = false;
       membershipAvailable=false;
       clear(list); list.appendChild(errorBox(err, load));
@@ -301,11 +317,12 @@ export async function mount(root) {
   unsubs.push(store.subscribe("me", () => {render();renderDetail();}));
   const priceUpdate=event=>{
     const update=event.detail,response=update?.value;
-    if(disposed||mountedEpoch!==store.epoch())return;
+    if(disposed||signal?.aborted||mountedEpoch!==store.epoch())return;
     if(focused&&update?.path==='/me/stock-research'){
       if(loading||!membershipAvailable||!Array.isArray(response?.items))return;
       const watched=new Set(store.get('watchlist')||[]);
       research=new Map(response.items.filter(item=>watched.has(item.ticker)).map(item=>[item.ticker,item]));researchLoading=false;researchFailed=false;
+      delete root.dataset.researchReadError;
       for(const ticker of watched)syncSourceDialog(ticker,research.get(ticker)?.sources||[]);
       render();update.accepted=true;return;
     }
