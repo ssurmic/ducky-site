@@ -1,0 +1,57 @@
+{
+  "at": "2026-09-10T14:43:43.678040+00:00",
+  "frontend": "a3c03e394f64a8f51e66b1b5aa68fc74ca1daf0c",
+  "module_graph": "078b0b162fd0d9605403",
+  "items": [
+    {
+      "path": "config.js",
+      "expected_sha256": "55f4303603a70cba027639c48feb988dae761c60148c5ab6bb0a3c5dbc93645a",
+      "received_sha256": "55f4303603a70cba027639c48feb988dae761c60148c5ab6bb0a3c5dbc93645a",
+      "matches": true,
+      "exit_code": 0
+    },
+    {
+      "path": "app/",
+      "expected_sha256": "8a64af4636e0660335b9b1c06d1c057cf114680f24fa2c1d5a57cb36e95e64a6",
+      "received_sha256": "8a64af4636e0660335b9b1c06d1c057cf114680f24fa2c1d5a57cb36e95e64a6",
+      "matches": true,
+      "exit_code": 0
+    },
+    {
+      "path": "en/app/",
+      "expected_sha256": "7249339a3b411b5015428f91927143e803bcbe3d0e4693a96642dfd2e781b0e7",
+      "received_sha256": "7249339a3b411b5015428f91927143e803bcbe3d0e4693a96642dfd2e781b0e7",
+      "matches": true,
+      "exit_code": 0
+    },
+    {
+      "path": "app-assets/078b0b162fd0d9605403/views/creator-research.js",
+      "expected_sha256": "995729a92c3d87969bc97a1c659b91a54f1cb4558d606f69eb3909780491183f",
+      "received_sha256": "995729a92c3d87969bc97a1c659b91a54f1cb4558d606f69eb3909780491183f",
+      "matches": true,
+      "exit_code": 0
+    },
+    {
+      "path": "app-assets/078b0b162fd0d9605403/views/creators.js",
+      "expected_sha256": "2fb322299f8f8016fe0e1089ddc73ce7c1b182d5d5341ac30c62f5afddc3d42c",
+      "received_sha256": "2fb322299f8f8016fe0e1089ddc73ce7c1b182d5d5341ac30c62f5afddc3d42c",
+      "matches": true,
+      "exit_code": 0
+    },
+    {
+      "path": "app-assets/078b0b162fd0d9605403/views/creator-claim.js",
+      "expected_sha256": "08b5ef818b1b4e5445dd5e2caabb5b27ebdae7fd73e0c4eec9309d0c19b91e69",
+      "received_sha256": "08b5ef818b1b4e5445dd5e2caabb5b27ebdae7fd73e0c4eec9309d0c19b91e69",
+      "matches": true,
+      "exit_code": 0
+    },
+    {
+      "path": "css/product-focus.css",
+      "expected_sha256": "02a45465a18d83774aaf3f02d189db85aa6df947ed9dceeeaa67786e46d5aeac",
+      "received_sha256": "02a45465a18d83774aaf3f02d189db85aa6df947ed9dceeeaa67786e46d5aeac",
+      "matches": true,
+      "exit_code": 0
+    }
+  ],
+  "all_match": true
+}
