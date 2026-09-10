@@ -159,7 +159,7 @@ test('stock overview preserves opposing evidence and loads history only on expan
     analysis:{overview:item().overview,sections:[]}}});
  };
  const dispose=await stock.mount(root,{ticker:'NVDA'});assert.equal(calls.length,2);
- assert.equal(root.querySelectorAll('.stock-source-card').length,3);assert.match(root.querySelectorAll('.stock-source-card')[2].textContent,/Bearish viewpoint/);
+ assert.equal(root.querySelectorAll('.stock-source-card').length,3);assert.ok([...root.querySelectorAll('.stock-source-card')].some(card=>/Bearish viewpoint/.test(card.textContent)));
  assert.equal(root.querySelector('.focus-history').open,false);root.querySelector('.focus-history').open=true;await pause();
  assert.equal(calls.filter(p=>p==='/me/research-changes').length,1);dispose();
 });
@@ -171,4 +171,59 @@ test('price inspection retains losses, missing quotes and the actual closing dat
  const price=compactPrice({price:90,change_pct:-10,price_session:'2026-09-09'});assert.match(price.textContent,/-10/);assert.match(price.textContent,/2026-09-09/);
  assert.doesNotMatch(compactPrice({price:null,change_pct:null}).textContent,/0\.0/);
  const now=new Date(2026,8,10,0,30);assert.equal(new Date(dayWindow(now).since).getHours(),0);
+});
+
+const sharedUpdate=(root,path,value)=>{
+ const detail={path,value,accepted:false};root.dispatchEvent(new window.CustomEvent('ducky:shared-read',{detail}));return detail.accepted;
+};
+test('shared watchlist updates preserve reading focus and filters, and never restore removed stocks',async()=>{
+ const root=setup();let reads=0;
+ globalThis.fetch=async url=>{reads++;return Response.json(url==='/me/stock-research'?{items:[{ticker:'NVDA',status:'pending'}]}:
+  {items:['NVDA'],overview:{items:[{ticker:'NVDA',price:100}]}});};
+ const dispose=await watch.mount(root);const filter=root.querySelector('.watch-filter');filter.value='nvd';filter.dispatchEvent(new window.Event('input'));
+ root.querySelector('.stock-open').focus();
+ assert.ok(sharedUpdate(root,'/me/stock-research',{items:[item(),item('AMD')]}));
+ assert.match(root.textContent,/conditional on spending/);assert.equal(root.querySelectorAll('.stock-list-row').length,1);
+ assert.equal(root.querySelector('.watch-filter').value,'nvd');assert.equal(document.activeElement.dataset.readingKey,'NVDA:open');
+ assert.equal(reads,2);store.bumpEpoch();assert.equal(sharedUpdate(root,'/me/stock-research',{items:[]}),false);dispose();
+});
+
+test('Today adopts a completed summary without rerunning searches, and withholds withdrawn text',async()=>{
+ const root=setup();let reads=0;
+ globalThis.fetch=async url=>{reads++;return Response.json(url==='/me/stock-research'?{watchlist_count:1,items:[{ticker:'NVDA',status:'pending'}]}:{items:[change()],next_cursor:null});};
+ const dispose=await today.mount(root);assert.ok(root.querySelector('.focus-latest .stock-open'));
+ const search=root.querySelector('input[type=search]');search.value='my unsubmitted search';search.focus();
+ assert.ok(sharedUpdate(root,'/me/stock-research',{items:[item()]}));assert.equal(document.activeElement,search);
+ assert.match(root.querySelector('.focus-latest').textContent,/conditional on spending/);assert.equal(reads,2);
+ assert.ok(sharedUpdate(root,'/me/stock-research',{items:[{...item(),status:'withdrawn',sources:[]}]}));
+ assert.doesNotMatch(root.querySelector('.focus-latest').textContent,/conditional on spending/);
+ assert.match(root.querySelector('.focus-latest').textContent,/withdrawn/);assert.equal(search.value,'my unsubmitted search');dispose();
+});
+
+test('stock refresh keeps expanded reasons and exact source dialogs, closes withdrawn sources and retains inspected dates',async()=>{
+ const root=setup(),n=node(),summary=item();
+ const data={ticker:'NVDA',price:{price:100},evidence:{ticker:'NVDA',nodes:[n],analysis_status:'ready',analysis_generated_at:summary.as_of,
+  analysis:{overview:summary.overview,sections:[{kind:'key_points',...summary.overview}]}}};
+ globalThis.fetch=async url=>Response.json(url.startsWith('/bars/')?{bars:[{t:'2026-09-08',c:100},{t:'2026-09-09',c:95}]}:data);
+ const dispose=await stock.mount(root,{ticker:'NVDA'});
+ root.querySelector('.evidence-analysis-details').open=true;
+ const button=root.querySelector('.evidence-analysis-overview .brief-citation');button.focus();button.click();
+ assert.ok(sharedUpdate(root,'/stock-research/NVDA',{...data,price:{price:102}}));
+ assert.equal(document.querySelector('#modal').hidden,false);assert.equal(root.querySelector('.evidence-analysis-details').open,true);
+ closeModal();assert.equal(document.activeElement.dataset.readingKey,button.dataset.readingKey);
+ const slider=root.querySelector('.stock-chart-scrub');slider.value='0';slider.dispatchEvent(new window.Event('input'));slider.focus();
+ assert.ok(sharedUpdate(root,'/bars/NVDA?period=6mo',{bars:[{t:'2026-09-08',c:100},{t:'2026-09-09',c:95},{t:'2026-09-10',c:97}]}));
+ assert.match(document.activeElement.getAttribute('aria-valuetext'),/^2026-09-08/);
+ root.querySelector('.evidence-analysis-overview .brief-citation').click();
+ assert.ok(sharedUpdate(root,'/stock-research/NVDA',{...data,evidence:{ticker:'NVDA',nodes:[],analysis_status:'withdrawn'}}));
+ assert.equal(document.querySelector('#modal').hidden,true);assert.doesNotMatch(root.textContent,/conditional on spending/);dispose();
+});
+
+test('an untouched price chart follows the new close; unavailable summaries do not claim review is underway',async()=>{
+ const root=setup();globalThis.fetch=async url=>Response.json(url.startsWith('/bars/')?{bars:[{t:'2026-09-08',c:100},{t:'2026-09-09',c:95}]}:
+  {ticker:'NVDA',evidence:{nodes:[],analysis_status:'pending'}});
+ const dispose=await stock.mount(root,{ticker:'NVDA'});
+ sharedUpdate(root,'/bars/NVDA?period=6mo',{bars:[{t:'2026-09-08',c:100},{t:'2026-09-09',c:95},{t:'2026-09-10',c:97}]});
+ assert.match(root.querySelector('.stock-chart-scrub').getAttribute('aria-valuetext'),/^2026-09-10/);dispose();
+ for(const status of ['pending','failed','insufficient','source_changed','withdrawn'])assert.doesNotMatch(reading({status}).textContent,/being reviewed|Sources are available/);
 });

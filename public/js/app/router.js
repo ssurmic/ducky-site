@@ -116,7 +116,8 @@ export async function render() {
   clear(page);
   if(!PUBLIC.has(route.name)&&!['profile','billing','alerts','research-brief'].includes(route.name)){
     // Keep this outside the view's DOM so its local render cannot erase the notice.
-    sharedReadRefresh(root,{signal:controller.signal,reload:()=>{store.set('snapshots',{});render();}});
+    sharedReadRefresh(root,{signal:controller.signal,interval:window.DUCKY?.PRODUCT_FOCUS_ENABLED?30000:60000,
+      reload:()=>{store.set('snapshots',{});render();}});
   }
   let ret;
   try { ret = await mod.mount(page, route.params); }

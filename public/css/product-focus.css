@@ -18,10 +18,11 @@
 .focus-empty{padding:24px;border:1px solid var(--border);border-radius:14px;line-height:1.75;}
 .focus-latest{margin-top:44px;}
 .stock-list-row header{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;}
-.stock-name{display:flex;flex-direction:column;gap:6px;text-decoration:none;max-width:60%;}
+.stock-name{display:flex;flex-direction:column;gap:6px;text-decoration:none;max-width:60%;min-height:44px;justify-content:center;}
 .stock-name strong{font-size:19px;color:var(--text);}
 .stock-name span{font-size:12px;overflow-wrap:anywhere;}
-.stock-open{display:inline-block;min-height:36px;align-content:center;font-size:13px;text-decoration:none;color:var(--accent-text,var(--accent));}
+.stock-open{display:inline-flex;min-height:44px;align-items:center;font-size:13px;text-decoration:none;color:var(--accent-text,var(--accent));}
+body:has(.focus-nav) .watch-modes .btn{min-width:44px;}
 .stock-reading .brief-citation,.focus-stock .brief-citation{min-width:44px;min-height:44px;vertical-align:baseline;}
 .stock-price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
 .stock-price>strong{font-size:26px;font-weight:600;letter-spacing:-.03em;}

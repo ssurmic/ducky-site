@@ -3,7 +3,7 @@ import {el,clear,spinner} from '../ui.js';
 import {s} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
-import {reading,stockHref,researchError} from '../stock-reading.js';
+import {reading,stockHref,researchError,replaceReading,syncSourceDialog} from '../stock-reading.js';
 
 export async function mount(root,route={}){
   const query=route.query instanceof URLSearchParams?route.query:new URLSearchParams(route.query||'');
@@ -17,27 +17,39 @@ export async function mount(root,route={}){
     el('a.btn.btn-ghost',{href:'#/today'},s('nav.today'))),el('p.view-intro',s('focus.shared_briefs_intro')));
   const host=el('div.stock-briefs');root.append(host);
   const valid=id=>!disposed&&!controller.signal.aborted&&epoch===store.epoch()&&id===request;
+  let shown=[];
+  function renderResponse(response){
+    if(!Array.isArray(response?.items))throw new api.ApiError(502,{error:'invalid_research_response'});
+    const next=response.items.filter(item=>/^[A-Z][A-Z0-9.\-]{0,9}$/.test(item.ticker||''));
+    for(const ticker of new Set([...shown,...next.map(item=>item.ticker)]))
+      syncSourceDialog(ticker,next.find(item=>item.ticker===ticker)?.sources||[]);
+    shown=next.map(item=>item.ticker);
+    const content=[];
+    if(response.watchlist_count===0)content.push(el('p',s('stockbrief.empty')),
+      el('a.btn.btn-primary',{href:'#/watchlist'},s('briefing.edit_watchlist')));
+    else if(!next.length)content.push(el('p.muted',s('focus.analysis_waiting')));
+    else for(const item of next)content.push(el('article.card',{'data-reading-anchor':item.ticker},
+      el('h2',el('a',{href:stockHref(item.ticker),'data-reading-key':item.ticker+':name'},item.ticker)),reading(item),
+      el('a.stock-open',{href:stockHref(item.ticker),'data-reading-key':item.ticker+':open'},s('focus.open_stock')+' →')));
+    replaceReading(host,...content);
+  }
   async function load(){
     const id=++request;clear(host).append(spinner());
     try{
       const response=await api.get('/me/stock-research',{signal:controller.signal});
       if(!valid(id))return;
-      if(!Array.isArray(response?.items))throw new api.ApiError(502,{error:'invalid_research_response'});
-      clear(host);
-      if(response.watchlist_count===0)host.append(el('p',s('stockbrief.empty')),
-        el('a.btn.btn-primary',{href:'#/watchlist'},s('briefing.edit_watchlist')));
-      else if(!response.items.length)host.append(el('p.muted',s('focus.analysis_waiting')));
-      for(const item of response.items){
-        if(!/^[A-Z][A-Z0-9.\-]{0,9}$/.test(item.ticker||''))continue;
-        host.append(el('article.card',el('h2',el('a',{href:stockHref(item.ticker)},item.ticker)),
-          reading(item),el('a.stock-open',{href:stockHref(item.ticker)},s('focus.open_stock')+' →')));
-      }
+      renderResponse(response);
     }catch(error){if(valid(id))clear(host).append(researchError(error,load));}
   }
   root.append(el('details.focus-tools',el('summary',s('focus.deeper_research')),
     el('a.btn.btn-ghost',{href:'#/briefing?archive=1'},s('focus.past_stock_briefs'))));
   const off=store.subscribe('watchlist',load);
-  const cleanup=()=>{disposed=true;request++;controller.abort();off();};
+  const update=event=>{
+    if(!valid(request)||event.detail?.path!=='/me/stock-research')return;
+    try{renderResponse(event.detail.value);event.detail.accepted=true;}catch{}
+  };
+  root.addEventListener('ducky:shared-read',update);
+  const cleanup=()=>{disposed=true;request++;controller.abort();off();root.removeEventListener('ducky:shared-read',update);};
   route.signal?.addEventListener('abort',cleanup,{once:true});
   if(route.signal?.aborted)cleanup();else await load();
   return cleanup;

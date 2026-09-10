@@ -13,6 +13,7 @@ import {comparisonBadge,comparisonDetails} from '../comparison-context.js';
 import {sourceIdentity,nodeSourceIdentity,sourceBadge,sourceMark} from '../evidence-source.js';
 import {claimQualifications} from './creator-claim.js';
 import {ownershipEvent,eventLabel,eventDate} from '../evidence-event.js';
+import {material} from '../shared-read-refresh.js';
 
 const pick=v=>v?.[LANG==='en'?'en':'zh']||'';
 const original=v=>pick(v)||v?.en||v?.zh||'';
@@ -25,8 +26,9 @@ const position=v=>{const n=Math.floor(v);return Number.isFinite(n)?Math.floor(n/
 const factDescription=e=>e.topic==='price_gaps'?(e.data?.gaps?.length?e.data.gaps.map(g=>`${g.date} · $${g.lower}–$${g.upper}`).join(' / '):s('evidence.no_gaps')):factText(e);
 const missingLabel=k=>k.startsWith('ytd_')?s('evidence.missing_ytd',{benchmark:k.slice(4)}):k==='price_gaps'?s('evidence.missing_gaps'):has('stockbrief.missing_'+k)?s('stockbrief.missing_'+k):s('evidence.missing_other');
 
-export function detail(node,{analysisAt,shareContext,compact=window.DUCKY?.PRODUCT_FOCUS_ENABLED===true}={}){
-  const body=el('div.evidence-detail',el('p.evidence-stance',{class:'is-'+node.stance},eventLabel(node)),
+export function detail(node,{analysisAt,shareContext,readingTicker,compact=window.DUCKY?.PRODUCT_FOCUS_ENABLED===true}={}){
+  const body=el('div.evidence-detail',{'data-reading-ticker':readingTicker||'', 'data-reading-source':node.id||'',
+    'data-reading-proof':material(node,'/evidence/SOURCE')},el('p.evidence-stance',{class:'is-'+node.stance},eventLabel(node)),
     analysisAt?el('p.data-notice',s('evidence.analysis_snapshot_source',{at:time(analysisAt)})):null,
     node.conditional?el('p.data-notice',s('evidence.conditional')):null,
     pick(node.reason)?el('p',pick(node.reason)):null);
@@ -77,7 +79,9 @@ export function analysisPanel(doc,{formatTime=time}={}){
   if(data&&doc.analysis_generated_at)heading.append(el('p.evidence-analysis-time',s(previous?'evidence.analysis_previous_as_of':'evidence.analysis_as_of',{at:formatTime(doc.analysis_generated_at)})));
   panel.append(heading);
   const refs=part=>el('span.evidence-analysis-citations',...(part?.citations||[]).flatMap(id=>{
-    const i=nodes.findIndex(n=>n.id===id);return i<0?[]:[el('button.brief-citation',{type:'button',onclick:()=>detail(nodes[i],previous?{analysisAt:doc.analysis_generated_at}:{}),'aria-label':s(previous?'evidence.analysis_snapshot_citation':'evidence.citation',{n:i+1})},String(i+1))];
+    const i=nodes.findIndex(n=>n.id===id);return i<0?[]:[el('button.brief-citation',{type:'button',
+      'data-reading-key':`${doc.ticker}:analysis:${part.kind||'overview'}:${id}`,
+      onclick:()=>detail(nodes[i],{readingTicker:doc.ticker,...(previous?{analysisAt:doc.analysis_generated_at}:{})}),'aria-label':s(previous?'evidence.analysis_snapshot_citation':'evidence.citation',{n:i+1})},String(i+1))];
   }));
   if(data){
     if(previous)panel.append(el('p.evidence-analysis-status',{role:'status'},s('evidence.analysis_refresh_pending')));
@@ -86,7 +90,8 @@ export function analysisPanel(doc,{formatTime=time}={}){
     for(const part of data.sections||[]){
       if(['key_points','risks','watch'].includes(part.kind)&&pick(part))body.append(el('section',{class:'is-'+part.kind},el('h3',s('evidence.analysis_'+part.kind)),el('p',pick(part),refs(part))));
     }
-    if(body.childElementCount)panel.append(el('details.evidence-analysis-details',el('summary',s('evidence.analysis_button')),body));
+    if(body.childElementCount)panel.append(el('details.evidence-analysis-details',{'data-reading-key':`${doc.ticker}:reasons`},
+      el('summary',{'data-reading-key':`${doc.ticker}:reasons-toggle`},s('evidence.analysis_button')),body));
   }else{
     if(summary)panel.append(el('p.evidence-analysis-overview',pick(summary),refs(summary)));
     const state=['failed','insufficient','source_changed','withdrawn'].includes(doc.analysis_status)?doc.analysis_status:'pending';

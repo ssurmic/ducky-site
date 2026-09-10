@@ -4014,7 +4014,7 @@
   "app.focus.today_intro": "先看与你的股票有关的新变化。",
   "app.focus.explore": "发现",
   "app.focus.explore_intro": "找一只股票，或看看正在出现的新观点。",
-  "app.focus.analysis_waiting": "资料已收录，一句话分析还在核对。",
+  "app.focus.analysis_waiting": "摘要暂未就绪。",
   "app.focus.no_research": "暂时没有可展示的研究结论。",
   "app.focus.summary_read_failed": "研究结论暂时无法读取，请稍后刷新。",
   "app.focus.read_source": "查看依据",
@@ -4093,5 +4093,12 @@
   "app.focus.chart_unavailable": "暂时无法读取历史价格。",
   "app.focus.research_read_failed": "暂时无法读取研究资料，请重试。",
   "app.stockbrief.unready_claim_check_required": "这份简报需要重新核对依据。原始版本已保留，摘要暂时停止展示。",
-  "app.focus.creator_view": "作者观点"
+  "app.focus.creator_view": "作者观点",
+  "app.focus.analysis_unavailable": "本次摘要未能完成，请稍后再看。",
+  "app.focus.analysis_insufficient": "现有资料不足以形成可靠摘要。",
+  "app.focus.analysis_source_changed": "来源已有变化，当前摘要暂不可用。",
+  "app.focus.analysis_withdrawn": "这份摘要已撤回。",
+  "app.focus.source_updated": "这条来源已有变化，请打开更新后的内容。",
+  "app.focus.market_data": "市场数据",
+  "app.focus.source_recorded": "记录于 {date}"
 }

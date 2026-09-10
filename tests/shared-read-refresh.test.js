@@ -107,3 +107,22 @@ test('delayed public Radar data is revalidated without bearer credentials or mut
  assert.equal(requests.length,3);assert.ok(requests.every(({url,options})=>url===path&&options.method==='GET'&&!options.headers.Authorization));
  ctl.abort();await watch.check();assert.equal(requests.length,3);store.set('token',null);
 });
+
+test('shared stock reads adopt new summaries with GETs; nested queue clocks stay quiet',async()=>{
+ for(const path of ['/me/stock-research','/stock-research/NVDA'])assert.ok(refreshable(path));
+ for(const path of ['/me/stock-research?q=x','/stock-research/NVDA?version=old','/stock-research/NVDA?cursor=old','/me/research-changes?scope=all'])assert.ok(!refreshable(path));
+ const before={ticker:'AVGO',price:{price:100,quote_at:'2026-09-10T08:00:00Z'},evidence:evidence()},after=structuredClone(before);
+ after.evidence.coverage.jobs.pending--;after.evidence.checked_at='later';after.evidence.nodes[0].recorded_at='later';after.evidence.analysis_status='retry';
+ assert.equal(material(before,'/stock-research/AVGO'),material(after,'/stock-research/AVGO'));
+ after.evidence.nodes=[];assert.notEqual(material(before,'/stock-research/AVGO'),material(after,'/stock-research/AVGO'));
+ store.bumpEpoch();store.set('me',{tier:'pro'});hidden=false;
+ const root=document.createElement('main'),watch=sharedReadRefresh(root,{reload:()=>assert.fail('No full-page reload')});
+ let current={items:[{ticker:'AVGO',status:'pending'}]},reads=[];
+ globalThis.fetch=async(url,options)=>{reads.push([url,options.method]);return response(current);};
+ await api.get('/me/stock-research');let adopted;
+ root.addEventListener('ducky:shared-read',event=>{adopted=event.detail.value;event.detail.accepted=true;});
+ current={items:[{ticker:'AVGO',status:'ready',overview:{en:'A source-linked summary'}}]};await watch.check();
+ assert.deepEqual(adopted,current);assert.equal(root.querySelector('aside').hidden,true);
+ current={items:[]};await watch.check();assert.deepEqual(adopted,current);
+ assert.deepEqual(reads,[['/me/stock-research','GET'],['/me/stock-research','GET'],['/me/stock-research','GET']]);watch.stop();
+});
