@@ -149,7 +149,9 @@ export async function mountResearch(root, selection) {
       const timeline=el('dl.evidence-timeline');
       for(const [key,value] of [['creators.first_seen',dateTime(post.first_seen_at)],['creators.version_recorded',dateTime(post.recorded_at)],['creators.base_close',window.base_d?window.base_d+' · '+px(window.base_px):'—'],['creators.end_close',out.end_d?out.end_d+' · '+px(out.end_px):'—']])
         timeline.append(el('div',el('dt',s(key)),el('dd',value)));
-      details.append(claimDetails(call));
+      // This reader already renders the full note when its heading is a preview.
+      // Keep qualifications here without repeating that same paragraph.
+      details.append(claimDetails(call,{includeNote:false}));
       details.append(timeline);
       if(post.provenance==='legacy_import') row.append(el('p.muted.small',s('creators.legacy_import')));
       if(out.status==='ready') {
