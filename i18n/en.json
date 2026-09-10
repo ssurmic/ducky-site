@@ -4128,5 +4128,10 @@
   "app.focus.calendar_short": "Calendar",
   "app.evidence.author_points_single": "1 record",
   "app.evidence.author_sources_single": "1 original source",
-  "app.evidence.author_more_single": "Show 1 more record from this author"
+  "app.evidence.author_more_single": "Show 1 more record from this author",
+  "app.watch.saved_quote": "Saved quote",
+  "app.watch.mixed_quote_note": "Quotes show their own time. Daily metrics use the {date} close.",
+  "app.watch.analysis_price": "Price used in the saved analysis",
+  "app.release.available": "An updated version of Ducky is available.",
+  "app.release.open_latest": "Open latest version"
 }

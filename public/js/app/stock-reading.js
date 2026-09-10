@@ -1,7 +1,7 @@
 // Shared presentation of one reviewed stock conclusion, with its own clock.
 import {el,clear,px,pct,dateTime,errorBox,closeModal,toast} from './ui.js';
 import {s,LANG} from './strings.js';
-import {currentQuote} from './watchlist-overview.js';
+import {displayQuote,quoteLabel,quoteTime} from './watchlist-overview.js';
 import {detail} from './views/evidence.js';
 import {material} from './shared-read-refresh.js';
 
@@ -59,11 +59,11 @@ export function reading(item,{citations=true}={}){
 }
 export function compactPrice(row){
   if(!row)return el('p.small.muted',s('focus.price_missing'));
-  const fresh=currentQuote(row),value=fresh||row;
+  const fresh=displayQuote(row),value=fresh||row;
   const valid=Number.isFinite(value.price)&&value.price>0;
   const wrap=el('div.stock-price',el('strong.mono',valid?px(value.price):'—'),
     Number.isFinite(value.change_pct)?el('span.mono',{class:value.change_pct>0?'pos':value.change_pct<0?'neg':''},pct(value.change_pct)):null);
-  wrap.append(el('small.muted',fresh?s('focus.quote_date',{date:localTime(fresh.quote_at)}):
+  wrap.append(el('small.muted',fresh?quoteLabel(fresh)+' · '+quoteTime(fresh):
     valid?s(row.price_status==='retained'?'focus.saved_close_date':'focus.close_date',{date:row.price_session||'—'}):s('focus.price_missing')));
   if(fresh)wrap.append(el('details.stock-price-source',el('summary',s('focus.price_source')),
     el('p.small',fresh.provider+' · '+fresh.feed),el('p.small',s('focus.quote_date',{date:dateTime(fresh.quote_at)}))));

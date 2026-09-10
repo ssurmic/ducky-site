@@ -8,8 +8,18 @@ export function currentQuote(row, now=Date.now()) {
   const q=row.quote, age=now-Date.parse(q?.quote_at);
   return q?.status==='current'&&finite(q.price)&&q.price>0&&age>=0&&age<=180000?q:null;
 }
-const quoteTime=q=>new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{
-  hour:'2-digit',minute:'2-digit',timeZone:'America/New_York',timeZoneName:'short'}).format(new Date(q.quote_at));
+// Keep the newest dated value during provider outages/after the close. Never
+// replace a completed day's close with an earlier intraday trade on that day.
+export function displayQuote(row, now=Date.now()) {
+  const q=row?.quote, at=Date.parse(q?.quote_at);
+  if(!q||!['current','stale'].includes(q.status)||!finite(q.price)||q.price<=0||!finite(at)||at>now)return null;
+  const session=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(at));
+  if(finite(row.price)&&row.price>0&&row.price_session&&session<=row.price_session)return null;
+  return q;
+}
+export const quoteLabel=q=>s(q?.status==='current'&&Date.now()-Date.parse(q.quote_at)<=180000?'watch.latest_quote':'watch.saved_quote');
+export const quoteTime=q=>new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{
+  month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'America/New_York',timeZoneName:'short'}).format(new Date(q.quote_at));
 const retained = row => row.price_status === 'retained';
 const savedLabel = row => s('watch.saved_close', {date:row.price_session || '—'});
 export const weighted = row => row.market_cap_status === 'ready' && finite(row.market_cap) && row.market_cap > 0 && row.security_type !== 'ETF';
@@ -112,7 +122,7 @@ export function overviewView(rows, options) {
   const label=r=>(LANG==='zh'?r.label_zh:r.label_en) || r.industry || (LANG==='zh'?r.sector_zh:r.sector) || s('company.unknown');
   const title=r=>`${r.ticker} · ${r.company || ''} · ${label(r)} · ${pct(r.change_pct,2)} · ${r.price_session || session || '—'} · ${s('watch.cap')}: ${capText(r.market_cap)} ${r.market_cap_currency || ''}${retained(r)?' · '+savedLabel(r):''}`;
   const button=(r,compact=false)=>{
-    const quote=compact?null:currentQuote(r);
+    const quote=compact?null:displayQuote(r);
     const shown=quote||r;
     const cells=compact?[]:metricKeys.map(key=>metricCell(key,r.metrics?.[key]));
     const identity=el('span.watch-identity',el('span.watch-identity-title',el('strong',r.ticker),
@@ -123,11 +133,11 @@ export function overviewView(rows, options) {
     return el('div.watch-row-entry',{class:compact?'':'watch-rich-entry'},el('button.watch-row', {type:'button','data-open':r.ticker,
       'aria-pressed':String(selected===r.ticker),'aria-label':title(quote?{...r,change_pct:quote.change_pct,price_session:quoteTime(quote)}:r)+(quote?' · '+s('watch.latest_quote'):'')+(compact?'':' · '+cells.map(c=>[...c.children].map(n=>n.textContent).join(' · ')).join(' · ')),onclick:()=>onSelect(r.ticker)},
       identity,...cells,...(compact?[price,change,el('span.mono.watch-row-cap',capText(r.market_cap))]:[
-        el('span.watch-quote',el('span.watch-metric-label',s(quote?'watch.latest_quote':'watch.close')),price,change,
-          quote?el('small.watch-metric-note',{title:quote.provider+' · '+quote.feed},s('watch.latest_quote')+' · '+quoteTime(quote)):null)])),
+        el('span.watch-quote',el('span.watch-metric-label',quote?quoteLabel(quote):s('watch.close')),price,change,
+          quote?el('small.watch-metric-note',{title:quote.provider+' · '+quote.feed},quoteLabel(quote)+' · '+quoteTime(quote)):null)])),
       el('a.watch-map-link',{href:'#/evidence/'+encodeURIComponent(r.ticker),'aria-label':s('watch.open_stock_map',{ticker:r.ticker}),'data-map-open':r.ticker},icon('evidence'),el('span',s('watch.open_map'))));
   };
-  if(view!=='heatmap')root.append(el('p.muted.small.watch-session',session?s('watch.close_session',{date:session}):s('watch.summary_pending')));
+  if(view!=='heatmap')root.append(el('p.muted.small.watch-session',filtered.some(r=>displayQuote(r))?s('watch.mixed_quote_note',{date:session||'—'}):session?s('watch.close_session',{date:session}):s('watch.summary_pending')));
   if(!filtered.length) {root.append(el('p.empty',s('watch.no_match')));return root;}
   if(filtered.some(retained))root.append(el('p.muted.small.watch-retained-note',{role:'status'},s('watch.retained_note')));
   if(view==='heatmap') {
@@ -180,7 +190,7 @@ export function overviewView(rows, options) {
         sortHeader('market_cap',s('watch.cap')),...metricKeys.map(key=>sortHeader(key,metricLabel(key))))));
       const body=el('tbody');
       for(const row of filtered){
-        const q=currentQuote(row),shown=q||row;
+        const q=displayQuote(row),shown=q||row;
         const reading=renderResearch(row.ticker),preview=reading.querySelector('.stock-one-sentence')?.firstChild?.textContent||reading.querySelector('p')?.textContent||'';
         const analysisDate=reading.querySelector('.stock-analysis-date')?.textContent;
         const overview=el('details.watch-inline-reading',{'data-reading-key':row.ticker+':overview'},
@@ -191,7 +201,7 @@ export function overviewView(rows, options) {
           el('th',{scope:'row'},el('a.stock-name',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':name'},el('strong',row.ticker),el('span.watch-company',row.company||row.ticker)),
             el('a.watch-map-link',{href:'#/evidence/'+encodeURIComponent(row.ticker),'data-map-open':row.ticker,'data-reading-key':row.ticker+':map','aria-label':s('watch.open_stock_map',{ticker:row.ticker})},icon('evidence'),el('span',s('watch.open_map')))),
           el('td.watch-quote-cell',el('strong.mono',px(shown.price)),el('span.watch-change',{class:'watch-'+changeClass(shown.change_pct)},pct(shown.change_pct,2)),
-            el('small.muted',q?quoteTime(q):row.price_session||session||'—')),
+            el('small.muted',q?quoteLabel(q)+' · '+quoteTime(q):row.price_session||session||'—')),
           el('td.watch-overview-cell',overview),el('td.mono',row.security_type==='ETF'?'ETF':capText(row.market_cap)),
           ...metricKeys.map(key=>el('td',metricCell(key,row.metrics?.[key])))));
       }
@@ -210,7 +220,7 @@ export function overviewView(rows, options) {
 }
 
 export function sortRows(rows,key,direction='desc'){
-  const value=row=>metricKeys.includes(key)?metricSortValue(row,key):['price','change_pct'].includes(key)?(currentQuote(row)||row)[key]:row[key];
+  const value=row=>metricKeys.includes(key)?metricSortValue(row,key):['price','change_pct'].includes(key)?(displayQuote(row)||row)[key]:row[key];
   return rows.sort((a,b)=>{
     if(key==='ticker')return a.ticker.localeCompare(b.ticker)*(direction==='asc'?1:-1);
     const x=value(a),y=value(b);
