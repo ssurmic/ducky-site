@@ -29,13 +29,14 @@ function setup(){closeModal();store.bumpEpoch();store.set('me',{user_id:12,tier:
 
 test('stock briefs reuse the exact shared paragraph and original citations with one cached read',async()=>{
  const root=setup(),calls=[];
+ const config=window.DUCKY;window.DUCKY={SHARED_STOCK_BRIEFS_ENABLED:true};
  globalThis.fetch=async(input,options)=>{calls.push([input,options.method]);return Response.json({watchlist_count:1,items:[item()]});};
  const dispose=await briefs.mountStockBriefs(root);
  assert.equal(calls.length,1);assert.equal(calls[0][0],'/me/stock-research');assert.equal(calls[0][1],'GET');
  assert.match(root.textContent,/conditional on spending/);
  root.querySelector('.brief-citation').click();assert.equal(calls.length,1);
  assert.ok(root.querySelector('a[href="#/briefing?archive=1"]'));
- closeModal();dispose();
+ closeModal();dispose();window.DUCKY=config;
 });
 
 test('shared brief read failures and account changes cannot expose an earlier paragraph',async()=>{
@@ -44,6 +45,14 @@ test('shared brief read failures and account changes cannot expose an earlier pa
  root=setup();let finish;globalThis.fetch=async()=>await new Promise(resolve=>finish=resolve);
  const pending=briefs.mountStockBriefs(root);await pause();store.bumpEpoch();finish(Response.json({items:[item()]}));
  dispose=await pending;assert.doesNotMatch(root.textContent,/conditional on spending/);dispose();
+});
+
+test('a late stock detail response is discarded after the account epoch changes',async()=>{
+ const root=setup();let finish;
+ globalThis.fetch=async input=>input.startsWith('/bars/')?Response.json({bars:[]}):await new Promise(resolve=>finish=resolve);
+ const pending=stock.mount(root,{ticker:'NVDA'});await pause();store.bumpEpoch();
+ finish(Response.json({ticker:'NVDA',price:{company:'Old account result'},evidence:{nodes:[],analysis_status:'pending'}}));
+ const dispose=await pending;assert.doesNotMatch(root.textContent,/Old account result/);dispose();
 });
 
 test('three destinations and stock deep links survive sign-in without arbitrary queries',()=>{

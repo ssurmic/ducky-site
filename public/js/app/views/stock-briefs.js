@@ -98,7 +98,7 @@ export function reportCard(row,{onHistory,archive=false}={}){
 
 export async function mountStockBriefs(root,route={}){
   const params=route.query instanceof URLSearchParams?route.query:new URLSearchParams(route.query||'');
-  if(window.DUCKY?.PRODUCT_FOCUS_ENABLED===true&&params.get('archive')!=='1'){
+  if((window.DUCKY?.PRODUCT_FOCUS_ENABLED===true||window.DUCKY?.SHARED_STOCK_BRIEFS_ENABLED===true)&&params.get('archive')!=='1'){
     const shared=await import('./shared-briefs.js');return shared.mount(root,route);
   }
   const ticker=String(params.get('ticker')||'').toUpperCase();

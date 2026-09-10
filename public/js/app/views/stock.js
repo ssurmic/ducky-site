@@ -10,6 +10,7 @@ import {changeCard} from './today.js';
 export async function mount(root,{ticker,signal,query=new URLSearchParams()}={}){
   if(!/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker||'')){location.hash='#/explore';return;}
   let disposed=false,followingBusy=false;
+  const epoch=store.epoch(),current=()=>!disposed&&!signal?.aborted&&store.epoch()===epoch;
   const shell=el('article.focus-stock'),body=el('div'),chart=el('section.focus-chart',el('h2',s('focus.price_history')),spinner());
   const from=['today','explore'].includes(query.get('from'))?query.get('from'):'watchlist';
   const company=el('p.small.muted',{hidden:true});
@@ -17,12 +18,12 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
   const follow=el('button.btn.btn-ghost',{type:'button'});
   const sync=()=>{const watched=(store.get('watchlist')||[]).includes(ticker);follow.textContent=s(watched?'focus.unfollow_stock':'focus.follow_stock');follow.disabled=followingBusy;};
   sync();follow.addEventListener('click',async()=>{
-    if(followingBusy)return;followingBusy=true;sync();
+    if(followingBusy||!current())return;followingBusy=true;sync();
     const watched=(store.get('watchlist')||[]).includes(ticker);
-    try{await (watched?api.watchlist.remove(ticker):api.watchlist.add(ticker));if(disposed||signal?.aborted)return;
+    try{await (watched?api.watchlist.remove(ticker):api.watchlist.add(ticker));if(!current())return;
       store.set('watchlist',watched?(store.get('watchlist')||[]).filter(t=>t!==ticker):[...new Set([...(store.get('watchlist')||[]),ticker])]);}
-    catch(error){if(!disposed){toast(s('common.error',{msg:error.message}),'err');follow.disabled=false;}}
-    finally{followingBusy=false;if(!disposed)sync();}
+    catch(error){if(current()){toast(s('common.error',{msg:error.message}),'err');follow.disabled=false;}}
+    finally{followingBusy=false;if(current())sync();}
   });
   head.append(follow);shell.append(head,body,chart);root.append(shell);
   const off=store.subscribe('watchlist',sync);
@@ -34,13 +35,13 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
     const progress=spinner();historyBody.append(progress);
     try{
       const response=await api.get('/me/research-changes?'+params,{signal});
-      if(disposed||signal?.aborted)return;
+      if(!current())return;
       if(!Array.isArray(response?.items))throw new api.ApiError(502,{error:'invalid_research_response'});
       progress.remove();historyLoaded=true;historyCursor=response.next_cursor;
       if(!response.items?.length)historyBody.append(el('p.muted',s('focus.history_empty')));
       for(const item of response.items||[])historyBody.append(changeCard(item,{from}));
       if(historyCursor){const more=el('button.btn.btn-ghost',{type:'button',onclick:()=>{more.remove();loadHistory();}},s('focus.more_changes'));historyBody.append(more);}
-    }catch(error){if(!disposed&&!signal?.aborted){progress.remove();historyBody.append(researchError(error,loadHistory));}}
+    }catch(error){if(current()){progress.remove();historyBody.append(researchError(error,loadHistory));}}
     finally{historyLoading=false;}
   }
   details.addEventListener('toggle',()=>{if(details.open&&!historyLoaded)loadHistory();});
@@ -51,7 +52,7 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
     clear(body);body.append(spinner());
     try{
       const result=await api.get('/stock-research/'+encodeURIComponent(ticker),{signal});
-      if(disposed||signal?.aborted)return;
+      if(!current())return;
       if(result?.ticker!==ticker||!Object.hasOwn(result,'evidence')||(result.evidence&&!Array.isArray(result.evidence.nodes)))throw new api.ApiError(502,{error:'invalid_research_response'});
       company.textContent=typeof result.price?.company==='string'?result.price.company:'';company.hidden=!company.textContent||company.textContent===ticker;
       clear(body);const doc=result.evidence||{ticker,nodes:[],analysis_status:'pending'};
@@ -72,15 +73,15 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
       body.append(sources);
       const requested=query.get('source'),node=(doc.nodes||[]).find(n=>n.id===requested);
       if(node)detail(node);
-    }catch(error){if(!disposed&&!signal?.aborted){clear(body);body.append(researchError(error,loadEvidence));}}
+    }catch(error){if(current()){clear(body);body.append(researchError(error,loadEvidence));}}
   }
   const priceTask=api.get('/bars/'+encodeURIComponent(ticker)+'?period=6mo',{signal}).then(response=>{
-    if(disposed||signal?.aborted)return;clear(chart);
+    if(!current())return;clear(chart);
     chart.append(el('h2',s('focus.price_history')));
     if(api.isAccepted(response)){chart.append(el('p.muted',s('focus.chart_pending')));return;}
     if(!Array.isArray(response)&&!Array.isArray(response?.bars)&&!Array.isArray(response?.items))throw new api.ApiError(502,{error:'invalid_price_response'});
     chart.append(closingChart(response));
-  }).catch(error=>{if(!disposed&&!signal?.aborted){clear(chart);chart.append(el('h2',s('focus.price_history')),el('p.muted',s('focus.chart_unavailable')));}});
+  }).catch(error=>{if(current()){clear(chart);chart.append(el('h2',s('focus.price_history')),el('p.muted',s('focus.chart_unavailable')));}});
   await Promise.all([loadEvidence(),priceTask]);
   return()=>{disposed=true;off();};
 }
