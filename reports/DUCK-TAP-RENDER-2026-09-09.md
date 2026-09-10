@@ -25,4 +25,11 @@ Validation:
 - Screenshot and measurements: `duck-tap-20260909/`. This is desktop Safari plus responsive
   Chrome verification, not a physical iPhone/Safari rendering test.
 
-Production release and verification are recorded after deployment.
+Production release:
+
+- Runtime commit: `7edfc9aa7826166e36f6a3b50ed76b40e5cc639f`; GitHub Actions
+  run `34427300103` passed before release.
+- Cloudflare Pages deployment: `d75fba37`, served at `https://duckybot.app`.
+- Production Chrome at 393 × 750: 15 clicks retained one image, the stationary
+  button and no horizontal overflow. The duck was visually intact; the browser
+  error log was empty. Physical iPhone verification remains outstanding.
