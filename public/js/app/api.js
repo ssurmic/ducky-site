@@ -13,7 +13,15 @@ export class ApiError extends Error {
 
 let onUnauthorized = null, onPaymentRequired = null;
 const readObservers=new Set();
+const readFailureObservers=new Set();
 export function observeReads(fn){readObservers.add(fn);return()=>readObservers.delete(fn);}
+export function observeReadFailures(fn){readFailureObservers.add(fn);return()=>readFailureObservers.delete(fn);}
+// Safe diagnostic categories only: never expose a response body, token or URL query.
+export function readFailure(error){
+  const status=Number.isInteger(error?.status)?error.status:0;
+  const reason=error?.body?.reason||error?.body?.detail;
+  return {status,reason:['timeout','cancelled','network','session_changed'].includes(reason)?reason:status?'http':'unexpected'};
+}
 export function setUnauthorizedHandler(fn) { onUnauthorized = fn; }
 export function setPaymentRequiredHandler(fn) { onPaymentRequired = fn; }
 
@@ -29,6 +37,15 @@ async function parse(res) {
 
 /** request(method, path, {body, raw, auth=true}) → parsed JSON (or Response when raw). */
 export async function request(method, path, opts) {
+  const observers=method==='GET'&&opts?.observe!==false?[...readFailureObservers]:[];
+  try{return await performRequest(method,path,opts);}
+  catch(error){
+    for(const fn of observers){try{fn(path,readFailure(error),{auth:opts?.auth!==false});}catch{}}
+    throw error;
+  }
+}
+
+async function performRequest(method,path,opts){
   opts = opts || {};
   const headers = { Accept: "application/json" };
   if (opts.idempotencyKey) headers['Idempotency-Key'] = opts.idempotencyKey;
@@ -47,22 +64,27 @@ export async function request(method, path, opts) {
   // abort maps to ApiError(0,{detail:'network'}) so the existing offline handling + errorBox retry engage. An
   // optional opts.signal lets a caller (router cleanup) abort in-flight requests on view switch.
   const ctl = new AbortController();
-  const to = setTimeout(() => { try { ctl.abort(); } catch (e) { /* ignore */ } }, opts.timeout || 15000);
+  let timedOut=false;
+  const to = setTimeout(() => { timedOut=true;ctl.abort(); }, opts.timeout || 15000);
+  const abort=()=>ctl.abort();
   if (opts.signal) {
-    if (opts.signal.aborted) { try { ctl.abort(); } catch (e) { /* ignore */ } }
-    else opts.signal.addEventListener("abort", () => { try { ctl.abort(); } catch (e) { /* ignore */ } }, { once: true });
+    if (opts.signal.aborted) abort();
+    else opts.signal.addEventListener("abort", abort, { once: true });
   }
-  let res;
+  const transportError=()=>new ApiError(0,{detail:'network',reason:timedOut?'timeout':opts.signal?.aborted?'cancelled':'network'},path);
+  let res,data;
   try {
-    res = await fetch(base() + path, { method, headers, body, credentials: opts.credentials || "omit", cache: "no-store", signal: ctl.signal });
-  } catch (e) {
-    throw new ApiError(0, { detail: "network" }, path);
+    try{res = await fetch(base() + path, { method, headers, body, credentials: opts.credentials || "omit", cache: "no-store", signal: ctl.signal });}
+    catch{throw transportError();}
+    if (sessionChanged()) throw new ApiError(0, { detail: "session_changed" }, path);
+    if (opts.raw) return res;
+    // The deadline also covers reading the body, not just receipt of headers.
+    try{data = await parse(res);}catch{throw transportError();}
+    if(ctl.signal.aborted)throw transportError();
   } finally {
     clearTimeout(to);
+    opts.signal?.removeEventListener('abort',abort);
   }
-  if (sessionChanged()) throw new ApiError(0, { detail: "session_changed" }, path);
-  if (opts.raw) return res;
-  const data = await parse(res);
   if (sessionChanged()) throw new ApiError(0, { detail: "session_changed" }, path);
   if (res.status === 401 && opts.auth !== false) {
     if (onUnauthorized && !opts.skipUnauthorized && !(opts.preserveBadTelegram && data?.error === 'bad_telegram')) {
@@ -151,7 +173,7 @@ export const auth = {
 export const me = (opts) => get("/me", opts);
 export const symbols = (q, opts) => get("/public/symbols?q=" + encodeURIComponent(q), { ...opts, auth:false });
 export const watchlist = {
-  list: () => get("/watchlist"),
+  list: (opts) => get("/watchlist",opts),
   add: (t) => post("/watchlist", { ticker: t }),
   remove: (t) => del("/watchlist/" + encodeURIComponent(t)),
 };

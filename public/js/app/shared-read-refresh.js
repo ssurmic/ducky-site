@@ -53,6 +53,14 @@ export function sharedReadRefresh(root,{signal,reload,interval=60000}={}){
     if(!entries.has(path)&&entries.size>=12)return;
     entries.set(path,{signature:material(value,path),options});
   });
+  const initialResearch=path=>path==='/me/stock-research'||/^\/stock-research\/[A-Z][A-Z0-9.-]{0,9}$/.test(path);
+  const recoverable=error=>(error.status===0&&['network','timeout'].includes(error.reason))||[500,502,503,504,520,521,522,523,524].includes(error.status);
+  const offFailure=api.observeReadFailures((path,error,options)=>{
+    // A failed first read never reached observeReads. Give only these saved
+    // research GETs two recovery attempts; no login, search or write replay.
+    if(!active()||!initialResearch(path)||!recoverable(error)||entries.has(path)||entries.size>=12)return;
+    entries.set(path,{signature:null,options,initialRetries:2});
+  });
   const numericRead=path=>path==='/watchlist'||path==='/me/stock-research'||/^\/stock-research\/[A-Z][A-Z0-9.-]{0,9}$/.test(path)||/^\/bars\/[A-Z][A-Z0-9.-]{0,9}\?period=(?:3mo|6mo|1y|2y)$/.test(path);
   const pendingReads=()=>[...entries].filter(([path])=>!changed||numericRead(path));
   function schedule(){clearTimeout(timer);if(active()&&(!changed||pendingReads().length)){timer=setTimeout(check,Math.min(300000,interval*2**Math.min(failures,3)));timer.unref?.();}}
@@ -73,12 +81,16 @@ export function sharedReadRefresh(root,{signal,reload,interval=60000}={}){
         const update={path,value,accepted:false};
         if(numericRead(path))(root.querySelector('.route-page')||root).dispatchEvent(
           new window.CustomEvent('ducky:shared-read',{detail:update}));
-        if(update.accepted)entries.set(path,{...prior,signature});
+        if(update.accepted)entries.set(path,{options:prior.options,signature});
         else {changed=true;notice.hidden=false;root.dataset.freshness='earlier-version';}
       }
       failures=0;
     }catch(error){
       failures++;
+      if(prior.initialRetries&&entries.get(path)===prior){
+        if(!recoverable(api.readFailure(error))||prior.initialRetries<=1)entries.delete(path);
+        else entries.set(path,{...prior,initialRetries:prior.initialRetries-1});
+      }
       if(active()&&[401,402].includes(error.status)){
         changed=true;notice.hidden=false;notice.querySelector('p').textContent=s('refresh.access_changed');
         root.dataset.freshness='access-changed';root.querySelector('.route-page')?.setAttribute('hidden','');
@@ -87,7 +99,7 @@ export function sharedReadRefresh(root,{signal,reload,interval=60000}={}){
   }
   const visible=()=>{if(document.visibilityState!=='hidden')schedule();};
   document.addEventListener('visibilitychange',visible);
-  const stop=()=>{alive=false;clearTimeout(timer);off();document.removeEventListener('visibilitychange',visible);};
+  const stop=()=>{alive=false;clearTimeout(timer);off();offFailure();document.removeEventListener('visibilitychange',visible);};
   signal?.addEventListener('abort',stop,{once:true});
   schedule();return {check,stop};
 }

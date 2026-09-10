@@ -1,12 +1,23 @@
 # Change log
 
-## 2026-09-10 — Show the analysis date in collapsed watchlist rows (local acceptance)
+## 2026-09-10 — Recover a failed first research read (candidate)
+
+A failed initial saved-research request used to miss the automatic refresh registry.
+The mounted account/page can now retry that GET at most twice through the existing
+visible-page refresh schedule. Successful reads resume normal source revalidation;
+auth failures, cancellations, rate limits, searches, history and writes are excluded.
+The request deadline covers JSON body consumption, and watchlist diagnostics distinguish
+read, shape and rendering failures without logging response text or account data.
+List-first ordering, header sorting and dated source dialogs remain intact.
+[Tests, browser checks and delivery status](reports/INITIAL-RESEARCH-RECOVERY-2026-09-10.md).
+
+## 2026-09-10 — Show the analysis date in collapsed watchlist rows (deployed)
 
 The list now shows the saved analysis date and previous-version status before expansion,
 using the same source-bound reading metadata. Loading/failed reads do not acquire a false
 analysis timestamp. On the narrowest phones, the overview column fits beside the fixed
 stock/map column when scrolled into view. No extra requests or inference. 620 tests and
-EN/ZH light/dark 320/390px browser checks passed. [Acceptance](reports/VISIBLE-ANALYSIS-CLOCK-2026-09-10.md).
+EN/ZH light/dark 320/390px browser checks passed. Exact main CI passed; `de788804` / Pages `020b808c` is live and three asset hashes match. Live EN/ZH dates verified; a transient English read failure still needs diagnosis. [Acceptance](reports/VISIBLE-ANALYSIS-CLOCK-2026-09-10.md).
 
 ## 2026-09-10 — Show each full creator note once (deployed)
 
