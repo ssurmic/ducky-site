@@ -1,12 +1,12 @@
 # Change log
 
-## 2026-09-10 — Show each full creator note once (implementation)
+## 2026-09-10 — Show each full creator note once (deployed)
 
 Expanded call history repeated the same long note in both the reader and its shared
 claim-details component. The reader now renders that paragraph once while retaining
 conditions, horizons, reasons, original evidence and revision dates. Other readers
 keep their existing full-note behavior. All 619 frontend tests, copy lint and 1,274
-internal links passed. [Implementation and acceptance](reports/CREATOR-DETAILS-2026-09-10.md).
+internal links passed. App `a3c03e39` / Pages `008ba58b` passed exact main CI; seven public asset hashes and live EN/ZH source details verified. Original timestamps, video links and losses remain visible. Rollback: `92026a55` / Pages `7a25997b`. [Implementation and acceptance](reports/CREATOR-DETAILS-2026-09-10.md).
 
 ## 2026-09-10 — Show followed creators' history on the first page (deployed)
 
