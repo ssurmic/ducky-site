@@ -92,6 +92,21 @@ test('only one overview appears above the graph, with detailed analysis still av
  assert.equal(root.querySelector('.evidence-priority'),null);
  root.dispose();root.remove();
 });
+test('two evidence sections stay readable without inventing a watch item or fetching data',()=>{
+ let calls=0;globalThis.fetch=()=>{calls++;throw Error('shared evidence only');};
+ const d=fixture();d.analysis_status='ready';d.analysis_generated_at=d.checked_at;
+ d.analysis={overview:d.summary,sections:[
+  {kind:'key_points',en:'The reported orders are not confirmed.',citations:['n9']},
+  {kind:'risks',en:'The source does not establish future revenue.',citations:['n9']}]};
+ const root=analysisPanel(d);document.body.append(root);
+ root.querySelector('summary').click();
+ assert.equal(root.querySelectorAll('.evidence-analysis-body > section').length,2);
+ assert.equal(root.querySelector('.is-watch'),null);
+ assert.match(root.textContent,/The source does not establish future revenue/);
+ root.querySelector('.is-risks .brief-citation').click();
+ assert.match(document.querySelector('.modal-body').textContent,/Counter Author/);
+ closeModal();root.remove();assert.equal(calls,0);
+});
 test('an earlier analysis keeps its dated evidence while the graph shows a newer observation',()=>{
  let calls=0;globalThis.fetch=()=>{calls++;throw Error('snapshot interactions must stay local');};
  const d=fixture();d.analysis_status='refresh_pending';d.analysis_generated_at=d.checked_at;d.analysis_snapshot_id='historical-snapshot';

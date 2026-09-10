@@ -117,3 +117,7 @@ screenshots were visually reviewed. Viewport override was reset afterward. Full 
 map route at the same widths, languages and themes, also without document overflow. No source counts,
 grouping, citations or API behavior changed. Publication is recorded above; this copy correction does
 not establish semantic correctness of every source card or completion of pending stock summaries.
+
+## Summary section follow-up (candidate, 11:01 UTC)
+
+The backend no longer requires an invented watch task for an indicator-only packet. Existing read code already accepts two sections and preserves their citations. CSS now uses occupied grid tracks, so two sections fill the width on desktop and stack on phones. 615 tests passed; the explicit two-section citation regression makes no request. Eight stock-page phone viewport combinations passed, with additional Chinese/English full-map checks; main height was 512px at 320×640. On arrival the stock heading/summary were at y=113/386.6; the map heading/summary at y=84/127. Expanded-view heading coordinates are not first-use measurements. Not a physical-phone or user-study receipt.

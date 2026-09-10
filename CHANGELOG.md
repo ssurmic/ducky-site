@@ -1,4 +1,10 @@
 # Change log
+## 2026-09-10 — Summary details use the available space (candidate)
+
+The shared stock analysis can contain two sections when there is no source-backed verification task. The reasons panel now fits the actual section count instead of reserving a blank third column; phone layout remains one column. Source links and old three-section records keep working without network work on expansion.
+
+615 frontend tests, copy lint and 1,274 links passed. Local 320/390×640 bilingual light/dark stock QA had no overflow; full-map checks and 1280×800 desktop confirmed one/two-column layouts. These are synthetic viewport tests, not physical devices. Backend generation and independent review acceptance are recorded in the central `ANALYSIS-SECTION-ROLES-2026-09-10.md` report. Publication is pending.
+
 ## 2026-09-10 — Singular author-history counts (deployed)
 
 The signed-in English MU page exposed “1 records” and “1 original sources.” Author-group headings

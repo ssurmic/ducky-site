@@ -1475,7 +1475,7 @@ html[data-theme=dark] :is(.evidence-view,.evidence-detail){--source-youtube:#f18
 .evidence-analysis-details>summary{width:fit-content;min-height:44px;align-content:center;cursor:pointer;font-size:12px;color:var(--muted);padding:10px 0}
 .evidence-analysis-details>summary:hover,.evidence-analysis-details>summary:focus-visible{color:var(--text)}
 .evidence-analysis-details[open]>summary{color:var(--text)}
-.evidence-analysis-body{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;padding:16px 0;border-top:1px solid var(--border)}
+.evidence-analysis-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:20px;padding:16px 0;border-top:1px solid var(--border)}
 .evidence-analysis-body h3{font-size:12px;font-weight:650;margin:0 0 6px;color:var(--muted)}
 .evidence-analysis-body p{font-size:13px;line-height:1.8;margin:0}
 .evidence-analysis-body .is-risks h3{color:var(--evidence-counter)}
