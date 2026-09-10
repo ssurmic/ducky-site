@@ -30,3 +30,11 @@ Owner steering, 2026-09-10: continue implementing the product plan, connect UI a
 - Roll back the Pages deployment for the entire UI change. The existing `product_focus` config flag also permits restoring the prior navigation in a separately built release without changing source records.
 
 Final local gates after the touch-target and reading-anchor fixes: 609/609 JS tests, bilingual build, copy lint 3,225 files with zero failures, 1,266 link checks and 3/3 export tests. Temporary phone viewport overrides were reset after testing; the user's in-app panel itself remains narrow and is not counted as desktop validation.
+
+## Release receipt
+
+- GitHub PR #3 merged as `7cd5f6ab948e89e63b94ed51b68cc273c22c22ec`; PR CI 34454721812 and main CI 34454874523 both passed.
+- Published to production via Pages deployment `6a399330` (`https://6a399330.ducky-site.pages.dev`). Public config reports `VERSION=7cd5f6ab`, `PRODUCT_FOCUS_ENABLED=true`, `SHARED_STOCK_BRIEFS_ENABLED=true`; `/app-release.json` matches asset graph `b34ea3a8054015aeb192`.
+- Signed-in production English `/en/app/#/stock/GLW` was read after publication: actual closing price/date, the 08:25 UTC accepted shared analysis, its key citation sources and numeric observation dates, and historical chart were present. This is separate from synthetic UI coverage. A raw urllib request received HTTP 403; browser and curl validation succeeded.
+- Additional explicit desktop viewport test at 1280×800 inspected the stock layout and right-side source panel. Viewport override reset after completion. No physical-device check was performed.
+- Backend 08:28:39 UTC fixed-stock audit improved to 9/10 readable; NVDA still retry. GLW's completed production v20 used one review call / 24.25s, while MU used two calls / 188.97s. These are call times, not queue-inclusive latency or universal speed guarantees.
