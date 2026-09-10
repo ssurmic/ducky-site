@@ -1,5 +1,15 @@
 # Change log
 
+## 2026-09-10 · Compact phone watchlist and sorting indicators (deployed)
+
+Replaced wrapping Unicode sort arrows with fixed-size chevrons and reduced phone
+list typography and spacing. Full analysis, dates, fixed stock/map controls,
+16px inputs and 44px sorting targets remain. 643 tests, copy/link checks and
+eight bilingual/theme phone layouts passed; the same 393px fixture shows three
+complete rows instead of two. Runtime `62974f8b` / Pages `d9110fac` passed exact
+main CI and production mobile-layout verification.
+[Acceptance and release](reports/WATCHLIST-DENSITY-2026-09-10.md).
+
 ## 2026-09-10 · Repeated creator excerpt text (local verification)
 
 Reviewed creator excerpts now display an identical title and reason only once.
@@ -7,14 +17,6 @@ Distinct reasons, conditions, dates, records and original-source links remain vi
 in both languages. This fixes the duplicated MRVL paragraph observed in the live
 Parkev Tatevosian video page. All 643 frontend tests, copy lint and 1,274 links passed.
 [Acceptance and release status](reports/CREATOR-EXCERPT-DEDUP-2026-09-10.md).
-
-## 2026-09-10 · Compact phone watchlist and sorting indicators
-
-Replaced wrapping Unicode sort arrows with fixed-size chevrons and reduced phone
-list typography and spacing. Full analysis, dates, fixed stock/map controls,
-16px inputs and 44px sorting targets remain. 643 tests, copy/link checks and
-eight bilingual/theme phone layouts passed; the same 393px fixture shows three
-complete rows instead of two. [Acceptance and release](reports/WATCHLIST-DENSITY-2026-09-10.md).
 
 ## 2026-09-10 · Creator leaderboard and simulator copy (local verification)
 
