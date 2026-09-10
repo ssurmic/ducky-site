@@ -182,8 +182,10 @@ export function overviewView(rows, options) {
       for(const row of filtered){
         const q=currentQuote(row),shown=q||row;
         const reading=renderResearch(row.ticker),preview=reading.querySelector('.stock-one-sentence')?.firstChild?.textContent||reading.querySelector('p')?.textContent||'';
+        const analysisDate=reading.querySelector('.stock-analysis-date')?.textContent;
         const overview=el('details.watch-inline-reading',{'data-reading-key':row.ticker+':overview'},
-          el('summary',{'data-reading-key':row.ticker+':overview-toggle'},el('span',preview)),reading,
+          el('summary',{'data-reading-key':row.ticker+':overview-toggle'},el('span',
+            el('span.watch-reading-preview',preview),analysisDate?el('small.watch-reading-date',analysisDate):null)),reading,
           el('a.stock-open',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':open'},s('focus.open_stock')+' →'));
         body.append(el('tr',{'data-reading-anchor':row.ticker},
           el('th',{scope:'row'},el('a.stock-name',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':name'},el('strong',row.ticker),el('span.watch-company',row.company||row.ticker)),

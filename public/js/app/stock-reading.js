@@ -54,7 +54,7 @@ export function reading(item,{citations=true}={}){
     if(source)line.append(el('button.brief-citation',{type:'button',onclick:()=>detail(source,{readingTicker:item.ticker,...(item.status==='refresh_pending'?{analysisAt:item.as_of}:{})}),
       'data-reading-key':`${item.ticker}:citation:${id}`,'aria-label':s('focus.read_source')},String(item.sources.indexOf(source)+1)));
   }
-  wrap.append(line,el('p.small.muted',s(item.status==='refresh_pending'?'focus.previous_analysis':'focus.analysis_date',{date:localTime(item.as_of)})));
+  wrap.append(line,el('p.small.muted.stock-analysis-date',s(item.status==='refresh_pending'?'focus.previous_analysis':'focus.analysis_date',{date:localTime(item.as_of)})));
   return wrap;
 }
 export function compactPrice(row){
