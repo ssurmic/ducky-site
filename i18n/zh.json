@@ -4087,5 +4087,6 @@
   "app.focus.unfollow_stock": "取消关注",
   "app.focus.counter_view": "看空观点",
   "app.focus.chart_pending": "历史价格正在准备，稍后可再查看。",
-  "app.focus.chart_unavailable": "暂时无法读取历史价格。"
+  "app.focus.chart_unavailable": "暂时无法读取历史价格。",
+  "app.focus.research_read_failed": "暂时无法读取研究资料，请重试。"
 }

@@ -22,7 +22,7 @@
 .stock-name strong{font-size:19px;color:var(--text);}
 .stock-name span{font-size:12px;overflow-wrap:anywhere;}
 .stock-open{display:inline-block;min-height:36px;align-content:center;font-size:13px;text-decoration:none;color:var(--accent-text,var(--accent));}
-.stock-reading .brief-citation,.focus-stock .brief-citation{min-width:32px;min-height:36px;vertical-align:baseline;}
+.stock-reading .brief-citation,.focus-stock .brief-citation{min-width:44px;min-height:44px;vertical-align:baseline;}
 .stock-price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
 .stock-price>strong{font-size:26px;font-weight:600;letter-spacing:-.03em;}
 .stock-price>small{flex-basis:100%;font-size:11px;line-height:1.5;}

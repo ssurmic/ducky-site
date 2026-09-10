@@ -4087,5 +4087,6 @@
   "app.focus.unfollow_stock": "Unfollow stock",
   "app.focus.counter_view": "Bearish viewpoint",
   "app.focus.chart_pending": "Historical prices are being prepared. Check again shortly.",
-  "app.focus.chart_unavailable": "Historical prices could not be loaded."
+  "app.focus.chart_unavailable": "Historical prices could not be loaded.",
+  "app.focus.research_read_failed": "Research could not be loaded. Please try again."
 }

@@ -1,9 +1,9 @@
-import {el,clear,spinner,errorBox,toast} from '../ui.js';
+import {el,clear,spinner,toast} from '../ui.js';
 import {s} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
 import {analysisPanel,detail} from './evidence.js';
-import {pick,compactPrice,dayWindow,localTime} from '../stock-reading.js';
+import {pick,compactPrice,dayWindow,localTime,researchError} from '../stock-reading.js';
 import {closingChart} from '../stock-price-chart.js';
 import {changeCard} from './today.js';
 
@@ -39,7 +39,7 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
       if(!response.items?.length)historyBody.append(el('p.muted',s('focus.history_empty')));
       for(const item of response.items||[])historyBody.append(changeCard(item,{from}));
       if(historyCursor){const more=el('button.btn.btn-ghost',{type:'button',onclick:()=>{more.remove();loadHistory();}},s('focus.more_changes'));historyBody.append(more);}
-    }catch(error){if(!disposed&&!signal?.aborted){progress.remove();historyBody.append(errorBox(error,loadHistory));}}
+    }catch(error){if(!disposed&&!signal?.aborted){progress.remove();historyBody.append(researchError(error,loadHistory));}}
     finally{historyLoading=false;}
   }
   details.addEventListener('toggle',()=>{if(details.open&&!historyLoaded)loadHistory();});
@@ -65,7 +65,7 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
       body.append(sources);
       const requested=query.get('source'),node=(doc.nodes||[]).find(n=>n.id===requested);
       if(node)detail(node);
-    }catch(error){if(!disposed&&!signal?.aborted){clear(body);body.append(errorBox(error,loadEvidence));}}
+    }catch(error){if(!disposed&&!signal?.aborted){clear(body);body.append(researchError(error,loadEvidence));}}
   }
   const priceTask=api.get('/bars/'+encodeURIComponent(ticker)+'?period=6mo',{signal}).then(response=>{
     if(disposed||signal?.aborted)return;clear(chart);

@@ -1,10 +1,11 @@
 // Shared presentation of one reviewed stock conclusion, with its own clock.
-import {el,px,pct,dateTime} from './ui.js';
+import {el,px,pct,dateTime,errorBox} from './ui.js';
 import {s,LANG} from './strings.js';
 import {currentQuote} from './watchlist-overview.js';
 import {detail} from './views/evidence.js';
 
 export const pick=value=>value?.[LANG==='en'?'en':'zh']||'';
+export const researchError=(error,retry)=>errorBox(error?.status===0?error:new Error(s('focus.research_read_failed')),retry);
 export const stockHref=(ticker,from='watchlist')=>'#/stock/'+encodeURIComponent(ticker)+(['today','explore'].includes(from)?'?from='+from:'');
 export function localTime(value){
   if(typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value))return value;

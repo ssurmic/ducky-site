@@ -42,7 +42,7 @@ export function detail(node,{analysisAt,shareContext,compact=window.DUCKY?.PRODU
       event?.event_date?el('p.small.muted',s('evidence.event_date',{at:date(event.event_date)})):null,
       event?.filing_date?el('p.small.muted',s('evidence.filing_date',{at:date(event.filing_date)})):
         e.published_at?el('p.small.muted',s('evidence.published',{at:date(e.published_at)})):null,
-      el('p.small.muted',s('evidence.observed',{at:time(e.observed_at)})),
+      el('p.small.muted',compact?s('focus.first_observed',{date:time(e.observed_at)}):s('evidence.observed',{at:time(e.observed_at)})),
       e.retrieved_at?el('p.small.muted',s('evidence.retrieved',{at:Array.isArray(e.retrieved_at)?e.retrieved_at.map(time).join(' / '):time(e.retrieved_at)})):null,
       Number.isFinite(e.start_seconds)?el('p.small.muted',s('evidence.segment',{start:position(e.start_seconds),end:position(e.end_seconds)})):null);
     if(e.freshness==='stale')item.append(el('p.data-notice',s(event?'evidence.historical_event':'evidence.stale_source')));

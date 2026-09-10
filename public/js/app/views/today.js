@@ -1,7 +1,7 @@
-import {el,clear,spinner,errorBox} from '../ui.js';
+import {el,clear,spinner} from '../ui.js';
 import {s} from '../strings.js';
 import * as api from '../api.js';
-import {pick,stockHref,localTime,dayWindow,reading} from '../stock-reading.js';
+import {pick,stockHref,localTime,dayWindow,reading,researchError} from '../stock-reading.js';
 import {detail} from './evidence.js';
 
 export function changeCard(item,{from='today'}={}){
@@ -53,7 +53,7 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
       if(!rows.length)status.append(el('p.focus-empty',s(query?'focus.no_search_results':'focus.no_changes')));
       for(const item of response.items||[])feed.append(changeCard(item,{from:embedded?'explore':'today'}));
       more.hidden=!cursor;
-    }catch(error){if(!disposed&&!signal?.aborted&&mine===seq){clear(status);status.append(errorBox(error,()=>load(append)));}}
+    }catch(error){if(!disposed&&!signal?.aborted&&mine===seq){clear(status);status.append(researchError(error,()=>load(append)));}}
     finally{if(mine===seq)more.disabled=false;}
   }
   const summaryTask=embedded?Promise.resolve():api.get('/me/stock-research',{signal}).then(response=>{
