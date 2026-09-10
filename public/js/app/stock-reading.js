@@ -19,7 +19,7 @@ export function reading(item,{citations=true}={}){
     Array.isArray(refs)&&refs.length&&refs.every(id=>item.sources?.some(n=>n.id===id));
   const wrap=el('div.stock-reading');
   if(!accepted){
-    wrap.append(el('p.muted',s(item?.status==='read_failed'?'focus.summary_read_failed':item?.records?'focus.analysis_waiting':'focus.no_research')));
+    wrap.append(el('p.muted',s(item?.status==='read_failed'?'focus.summary_read_failed':item?.records===0?'focus.no_research':'focus.analysis_waiting')));
     return wrap;
   }
   const line=el('p.stock-one-sentence',pick(item.overview));

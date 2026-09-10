@@ -47,7 +47,9 @@ test('old and unavailable content cannot appear as current quoted statements',()
  setup();const old=today.changeCard({...change(),earlier_content:true});
  assert.match(old.textContent,/Earlier content added/);assert.match(old.textContent,/2026-09-09/);
  const removed=today.changeCard({...change(),state:'unavailable'});
- assert.doesNotMatch(removed.textContent,/Orders may recover/);assert.equal(removed.querySelector('button'),null);
+  assert.doesNotMatch(removed.textContent,/Orders may recover/);assert.equal(removed.querySelector('button'),null);
+  assert.equal(reading({status:'pending',records:0}).textContent,copy['app.focus.no_research']);
+  assert.equal(reading({status:'pending',records:null}).textContent,copy['app.focus.analysis_waiting']);
 });
 
 test('Today search reaches the backend, preserves pagination and performs no per-card requests',async()=>{
