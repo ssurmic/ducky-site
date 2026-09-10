@@ -10,6 +10,11 @@ Status: deployed to https://duckybot.app and checked in the signed-in production
   `20a803ee`, both product-focus/shared-brief flags enabled, asset graph `6041201b4b838345ae33`.
 - The production browser was reloaded with the new document before acceptance; changing only
   the hash route does not load a newly deployed app bundle into an already open tab.
+- Wording follow-up: PR #7, app `8b6aba6b0f67a6a1470d1e250de4f77f607984ac`, Pages `4abe5bfd`,
+  asset graph `7fb856aa26c6f941c953`. PR CI `34465010636` and exact main CI `34465506331` passed.
+  Existing local Pages authorization published this verified build; automatic publishing remains off.
+  Public config and signed-in EN MU verified at 10:23 UTC, including “1 record · 1 original source”.
+  Previous app `20a803ee` / Pages `1d9c25b3` remains the rollback reference for this wording patch.
 
 ## Owner correction and result
 
@@ -108,5 +113,7 @@ single original sources and the final single-record expansion now have proper EN
 The eight 320×650 / 390×650 × EN/ZH × light/dark synthetic stock-page checks showed no document
 overflow, 522px main viewport, correct source counts and the one-record disclosure. Four representative
 screenshots were visually reviewed. Viewport override was reset afterward. Full local frontend suite:
-614 passed; copy lint 3,259 files; link check 1,274 links. No source counts, grouping, citations or API
-behavior changed. Production publication remains separately recorded.
+614 passed; copy lint 3,259 files; link check 1,274 links. Eight additional checks covered the dedicated
+map route at the same widths, languages and themes, also without document overflow. No source counts,
+grouping, citations or API behavior changed. Publication is recorded above; this copy correction does
+not establish semantic correctness of every source card or completion of pending stock summaries.
