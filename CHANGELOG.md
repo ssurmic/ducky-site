@@ -1,11 +1,17 @@
 # Change log
-## 2026-09-10 — Restore visible maps, creator history and calendar (candidate)
+## 2026-09-10 — Restore visible maps, creator history and calendar (deployed)
 
 List is the default watchlist on desktop and phone, with the saved overview in a table column and
 clickable sorting headers. Stock rows and pages link directly to the information map; existing facts
 remain visible during summary preparation. Bullish/context/bearish lanes group authors and flag
 repeat sources without removing source history. Calendar and Creators return to primary navigation.
 Explore and first-use Today include clearly dated, clickable examples.
+
+Published in [PR #5](https://github.com/ssurmic/ducky-site/pull/5), app commit `20a803ee`,
+Pages `1d9c25b3`. Both PR/main CI passed. Production browser verified COST onboarding and cleanup,
+YTD sorting in both directions, NVDA's 118-record map and Investment TALK's author grouping.
+Validation: 614 full-suite tests, 48 focused tests after the final refinement, bilingual copy/link
+checks and three export tests. Reviewed-summary coverage remains partial.
 
 Acceptance, real COST onboarding steps and limits: [visible core workflow](reports/VISIBLE-CORE-WORKFLOW-2026-09-10.md).
 
