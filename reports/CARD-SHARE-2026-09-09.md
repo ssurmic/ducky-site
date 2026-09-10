@@ -30,4 +30,11 @@ Validation:
 - Browser measurements and historical teaching-example exports are in `card-share-20260909/`.
   These are existing public NOK examples, not a current recommendation or a private report.
 
-Release status: local verification complete; production verification will be appended after release.
+Released: site `c14ac6b`, Cloudflare Pages `be5df8bc`, app modules `12c95d44992bd5a73bec`.
+GitHub check run `34430409700` passed. Production `card-share.js`, `views/evidence.js` and
+`card-share.css` match the reviewed source byte for byte. Both local and online previews rendered.
+The existing authenticated Chrome session opened a real NOK creator card, displayed the Share
+summary card dialog and generated the image with the author, self-reported-action qualification,
+dates and source QR. No message was sent. The preview tab was left open for the owner.
+Apple Vision independently decoded the exported historical example's QR back to the exact Nokia
+source URL. No physical-phone or recipient-platform delivery is claimed.
