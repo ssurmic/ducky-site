@@ -3,7 +3,7 @@ import {freeGuide,quotaNote} from '../experience.js';
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
 import { overviewView, layoutOverview } from "../watchlist-overview.js";
 import { companyContext } from "../company-context.js";
-import {researchRow} from '../stock-reading.js';
+import {researchRow,replaceReading,syncSourceDialog} from '../stock-reading.js';
 import { icon } from "../icons.js";
 import { symbolPicker } from "../symbol-picker.js";
 import { s } from "../strings.js";
@@ -21,11 +21,12 @@ export function normalizeList(resp) {
 }
 
 export async function mount(root) {
+  const mountedEpoch=store.epoch();
   const unsubs = [];
   root.classList.add("watchlist-view");
   let overview = null, selected = null, disposed = false, loading = true;
   const focused=window.DUCKY?.PRODUCT_FOCUS_ENABLED===true;
-  let research=new Map(),researchFailed=false,loadSeq=0;
+  let research=new Map(),researchFailed=false,loadSeq=0,membershipAvailable=false;
   let view = "list", query = "", sort = "market_cap", area = 'equal', candidate = null, adding = false;
   try { view = localStorage.getItem("ducky-watch-view") === "heatmap" ? "heatmap" : "list"; } catch {}
   if(focused)view='reading';
@@ -140,18 +141,17 @@ export async function mount(root) {
     sorting.hidden=view==='heatmap'||view==='reading';
     const openDisclosures=new Set([...list.querySelectorAll('details[open][data-disclosure]')].map(n=>n.dataset.disclosure));
     const focusedMap=list.contains(document.activeElement)?document.activeElement?.dataset?.mapOpen:null;
-    clear(list);
-    if(loading && !overview){list.append(spinner());return;}
-    if (!items.length) {list.append(empty(s('watch.empty')));return;}
+    if(loading && !overview){clear(list).append(spinner());return;}
+    if (!items.length) {clear(list).append(empty(s('watch.empty')));return;}
     const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
     if(view==='reading'){
       const ordered=[...items].filter(t=>[t,rows.get(t)?.company||''].join(' ').toLowerCase().includes(query.trim().toLowerCase()))
         .sort((a,b)=>(rows.get(b)?.market_cap||0)-(rows.get(a)?.market_cap||0)||a.localeCompare(b));
-      list.append(el('div.stock-reading-list',...ordered.map(t=>researchRow(t,rows.get(t),research.get(t)||{status:researchFailed?'read_failed':'pending'}))));
+      replaceReading(list,el('div.stock-reading-list',...ordered.map(t=>researchRow(t,rows.get(t),research.get(t)||{status:researchFailed?'read_failed':'pending'}))));
       if(!ordered.length)list.append(el('p.muted',s('focus.no_matching_stocks')));
       return;
     }
-    list.append(overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
+    clear(list).append(overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
       {view,query,sort,area,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
     for(const disclosure of list.querySelectorAll('details[data-disclosure]'))disclosure.open=openDisclosures.has(disclosure.dataset.disclosure);
     if(focusedMap)[...list.querySelectorAll('[data-map-open]')].find(n=>n.dataset.mapOpen===focusedMap)?.focus({preventScroll:true});
@@ -255,11 +255,13 @@ export async function mount(root) {
       overview = response?.overview || null;
       if(Number.isFinite(response?.cap))store.patch("me",{watch_cap:response.cap});
       loading = false;
+      membershipAvailable=true;
       membershipReady=true;
       store.set("watchlist", items);
     } catch (err) {
       if (disposed || store.epoch() !== epoch||mine!==loadSeq) return;
       loading = false;
+      membershipAvailable=false;
       clear(list); list.appendChild(errorBox(err, load));
     }
     await researchTask;
@@ -295,15 +297,23 @@ export async function mount(root) {
   unsubs.push(store.subscribe("me", () => {render();renderDetail();}));
   const priceUpdate=event=>{
     const update=event.detail,response=update?.value;
-    if(disposed||update?.path!=='/watchlist'||!Array.isArray(response?.overview?.items))return;
+    if(disposed||mountedEpoch!==store.epoch())return;
+    if(focused&&update?.path==='/me/stock-research'){
+      if(loading||!membershipAvailable||!Array.isArray(response?.items))return;
+      const watched=new Set(store.get('watchlist')||[]);
+      research=new Map(response.items.filter(item=>watched.has(item.ticker)).map(item=>[item.ticker,item]));researchFailed=false;
+      for(const ticker of watched)syncSourceDialog(ticker,research.get(ticker)?.sources||[]);
+      render();update.accepted=true;return;
+    }
+    if(update?.path!=='/watchlist'||!Array.isArray(response?.overview?.items))return;
     const current=store.get('watchlist')||[],incoming=normalizeList(response);
     // Membership/cap changes still require the shared reload flow. A price
     // refresh never restores a removed ticker or replaces an open stock study.
     if(current.length!==incoming.length||current.some(t=>!incoming.includes(t))||
        (Number.isFinite(response.cap)&&response.cap!==store.get('me')?.watch_cap))return;
-    const focused=list.contains(document.activeElement)?document.activeElement?.dataset?.open:null;
+    const focusedButton=list.contains(document.activeElement)?document.activeElement?.dataset?.open:null;
     overview=response.overview;render();
-    if(focused)list.querySelector(`[data-open="${focused}"]`)?.focus({preventScroll:true});
+    if(focusedButton)list.querySelector(`[data-open="${focusedButton}"]`)?.focus({preventScroll:true});
     update.accepted=true;
   };
   root.addEventListener('ducky:shared-read',priceUpdate);

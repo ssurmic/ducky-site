@@ -14,7 +14,7 @@ export function closingPoints(payload){
   }
   return [...points.values()].sort((a,b)=>a.date.localeCompare(b.date));
 }
-export function closingChart(payload){
+export function closingChart(payload,{selectedDate}={}){
   const points=closingPoints(payload),figure=el('figure.stock-closing-chart');
   if(points.length<2)return el('p.muted',s('focus.chart_missing'));
   const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');
@@ -25,7 +25,8 @@ export function closingChart(payload){
   const dot=document.createElementNS(ns,'circle');dot.setAttribute('r','4');dot.setAttribute('class','stock-price-dot');svg.append(dot);
   const value=el('output.mono'),slider=el('input.stock-chart-scrub',{type:'range',min:0,max:points.length-1,value:points.length-1,step:1,'aria-label':s('focus.inspect_close')});
   const update=()=>{const i=Number(slider.value),point=points[i];value.textContent=point.date+' · '+px(point.close);slider.setAttribute('aria-valuetext',value.textContent);dot.setAttribute('cx',x(i));dot.setAttribute('cy',y(point.close));};
-  slider.addEventListener('input',update);update();
+  const selected=points.findIndex(p=>p.date===selectedDate);if(selected>=0){slider.value=selected;slider.dataset.scrubbed='true';}
+  slider.addEventListener('input',()=>{slider.dataset.scrubbed='true';update();});update();
   figure.append(svg,el('figcaption',value,el('span.small.muted',s('focus.chart_period',{start:points[0].date,end:points.at(-1).date}))),slider,
     el('p.small.muted',s('focus.chart_basis')));
   if(payload?.stale)figure.append(el('p.data-notice',s('focus.chart_stale')));

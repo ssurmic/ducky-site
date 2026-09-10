@@ -137,7 +137,7 @@ export function modal(title, body, actions) {
     else if (event.shiftKey && (document.activeElement === first || document.activeElement === box)) { event.preventDefault(); last.focus(); }
     else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
   };
-  modalState = {opener, shell, wasInert, keydown, scroller, scrollTop};
+  modalState = {opener, openerKey:opener?.dataset?.readingKey, shell, wasInert, keydown, scroller, scrollTop};
   if (shell) shell.inert = true;
   document.body.classList.add("modal-open");
   document.addEventListener("keydown", keydown);
@@ -146,12 +146,13 @@ export function modal(title, body, actions) {
 }
 export function closeModal() {
   if (modalState) {
-    const {opener, shell, wasInert, keydown, scroller, scrollTop} = modalState;
+    const {opener, openerKey, shell, wasInert, keydown, scroller, scrollTop} = modalState;
     document.removeEventListener("keydown", keydown);
     if (shell) shell.inert = !!wasInert;
     document.body.classList.remove("modal-open");
     modalState = null;
-    if (opener?.isConnected) opener.focus({preventScroll:true});
+    const target=opener?.isConnected?opener:openerKey?[...document.querySelectorAll('[data-reading-key]')].find(n=>n.dataset.readingKey===openerKey):null;
+    target?.focus({preventScroll:true});
     if (scroller) scroller.scrollTop = scrollTop;
   }
   const host = document.getElementById("modal");

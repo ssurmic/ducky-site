@@ -4014,7 +4014,7 @@
   "app.focus.today_intro": "Start with what changed for your stocks.",
   "app.focus.explore": "Explore",
   "app.focus.explore_intro": "Find a stock or explore new research.",
-  "app.focus.analysis_waiting": "Sources are available. The stock summary is being reviewed.",
+  "app.focus.analysis_waiting": "The stock summary is not ready yet.",
   "app.focus.no_research": "No reviewed stock summary is available yet.",
   "app.focus.summary_read_failed": "The stock summary could not be loaded. Please try again.",
   "app.focus.read_source": "Read the source",
@@ -4093,5 +4093,12 @@
   "app.focus.chart_unavailable": "Historical prices could not be loaded.",
   "app.focus.research_read_failed": "Research could not be loaded. Please try again.",
   "app.stockbrief.unready_claim_check_required": "This report needs another evidence check. Its original version is retained, and the summary is withheld while it is reviewed.",
-  "app.focus.creator_view": "Creator viewpoint"
+  "app.focus.creator_view": "Creator viewpoint",
+  "app.focus.analysis_unavailable": "The latest summary could not be completed. Check back later.",
+  "app.focus.analysis_insufficient": "There is not enough evidence for a reliable summary.",
+  "app.focus.analysis_source_changed": "Sources have changed. The summary is temporarily unavailable.",
+  "app.focus.analysis_withdrawn": "This summary has been withdrawn.",
+  "app.focus.source_updated": "This source has changed. Open it again to read the updated content.",
+  "app.focus.market_data": "Market data",
+  "app.focus.source_recorded": "Recorded {date}"
 }

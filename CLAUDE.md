@@ -61,3 +61,11 @@ and source-linked company events; keep the complete source records and full-day 
 Test macro/earnings collisions, more watched earnings than preview slots, both calendar grids and
 explicit category filters. Narrow month cells retain watched ticker labels when normal previews
 are hidden. This is presentation priority, not a change to dates, facts or investing algorithms.
+
+## Shared research and iteration records (owner, 2026-09-10)
+
+The main workflow is Today → stock → dated evidence; Watchlist and Stock briefs read the same saved stock analysis. Keep expensive acquisition/inference off reads and out of each viewer's session. Prices and deterministic metrics come from the backend's provider APIs/calculations, never from an LLM.
+
+Shared revalidation is an allowlisted GET operation: pause hidden/offline pages, honor account epochs and server access/source-withdrawal checks, preserve exact previous citations and the reader's expanded/focused state. Do not auto-replay search, history cursors, writes or settings. Backend workers own generation, retries, leases, reconciliation and shared version publication; frontend waiting copy must not claim those stages have succeeded.
+
+For future iterations, update [CHANGELOG.md](CHANGELOG.md), the dated acceptance report and the backend's SYSTEMDESIGN/WORKFLOW tracker. Distinguish a proposal, merged code, deployment and actual delivered content. Record measured results, unresolved failures and rollback references, without secrets or per-user data. Read the central repository's latest AGENTS.md for API-first acquisition, bounded model admission and recovery requirements.

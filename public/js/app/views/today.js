@@ -2,7 +2,7 @@ import {el,clear,spinner} from '../ui.js';
 import {s} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
-import {pick,stockHref,localTime,dayWindow,reading,researchError} from '../stock-reading.js';
+import {pick,stockHref,localTime,dayWindow,reading,researchError,replaceReading,syncSourceDialog} from '../stock-reading.js';
 import {detail} from './evidence.js';
 
 // Remember only reading controls, never source text or an account's response.
@@ -66,20 +66,33 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
     }catch(error){if(!disposed&&!signal?.aborted&&mine===seq){clear(status);status.append(researchError(error,()=>load(append)));}}
     finally{if(mine===seq)more.disabled=false;}
   }
-  const summaryTask=embedded?Promise.resolve():api.get('/me/stock-research',{signal}).then(response=>{
-    if(disposed||signal?.aborted)return;
+  let shown=[];
+  function renderSummaries(response){
     if(!Array.isArray(response?.items))throw new api.ApiError(502,{error:'invalid_research_response'});
-    const items=(response.items||[]).filter(i=>pick(i.overview));
+    const items=response.items.filter(i=>/^[A-Z][A-Z0-9.\-]{0,9}$/.test(i.ticker||''));
+    for(const ticker of new Set([...shown,...items.map(item=>item.ticker)]))
+      syncSourceDialog(ticker,items.find(item=>item.ticker===ticker)?.sources||[]);
+    shown=items.map(item=>item.ticker);
+    for(const node of [filters,status,feed,coverage])node.hidden=response.watchlist_count===0;
+    more.hidden=response.watchlist_count===0||!cursor;
     if(response.watchlist_count===0){
-      for(const node of [filters,status,feed,more,coverage])node.hidden=true;
-      summaries.append(el('p',s('focus.start_following')),el('a.btn.btn-primary',{href:'#/watchlist'},s('focus.add_stocks')));return;
+      replaceReading(summaries,el('p',s('focus.start_following')),el('a.btn.btn-primary',{href:'#/watchlist'},s('focus.add_stocks')));return;
     }
-    if(!items.length)return;
-    summaries.append(el('h2',s('focus.latest_views')),el('p.small.muted',s('focus.latest_views_note')));
-    for(const item of items.slice(0,3))summaries.append(el('article.stock-list-row',
-      el('a.ticker',{href:stockHref(item.ticker,'today')},item.ticker),reading(item),
-      el('a.stock-open',{href:stockHref(item.ticker,'today')},s('focus.open_stock')+' →')));
-  }).catch(()=>{if(!disposed&&!signal?.aborted)summaries.append(el('p.small.muted',s('focus.summary_read_failed')));});
+    const ready=items.filter(i=>['ready','refresh_pending'].includes(i.status)&&pick(i.overview));
+    const selected=(ready.length?ready:items).slice(0,3);
+    replaceReading(summaries,...(selected.length?[el('h2',s('focus.latest_views')),el('p.small.muted',s('focus.latest_views_note'))]:[]),
+      ...selected.map(item=>el('article.stock-list-row',{'data-reading-anchor':item.ticker},
+        el('a.ticker',{href:stockHref(item.ticker,'today'),'data-reading-key':item.ticker+':name'},item.ticker),reading(item),
+        el('a.stock-open',{href:stockHref(item.ticker,'today'),'data-reading-key':item.ticker+':open'},s('focus.open_stock')+' →'))));
+  }
+  const update=event=>{
+    if(embedded||disposed||signal?.aborted||epoch!==store.epoch()||event.detail?.path!=='/me/stock-research')return;
+    try{renderSummaries(event.detail.value);event.detail.accepted=true;}catch{}
+  };
+  root.addEventListener('ducky:shared-read',update);
+  const summaryTask=embedded?Promise.resolve():api.get('/me/stock-research',{signal}).then(response=>{
+    if(!disposed&&!signal?.aborted&&epoch===store.epoch())renderSummaries(response);
+  }).catch(()=>{if(!disposed&&!signal?.aborted&&epoch===store.epoch())summaries.append(el('p.small.muted',s('focus.summary_read_failed')));});
   async function restoreReading(){
     if(!await load())return;
     // Revalidate sources when returning; old copied cards cannot bypass withdrawals.
@@ -87,5 +100,5 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
       if(!await load(true))break;
   }
   await Promise.all([restoreReading(),summaryTask]);
-  return()=>{disposed=true;seq++;if(epoch===store.epoch())readingStates.set(stateKey,{days,query,pages});};
+  return()=>{disposed=true;seq++;root.removeEventListener('ducky:shared-read',update);if(epoch===store.epoch())readingStates.set(stateKey,{days,query,pages});};
 }
