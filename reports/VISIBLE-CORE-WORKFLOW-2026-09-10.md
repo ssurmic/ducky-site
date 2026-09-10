@@ -1,6 +1,15 @@
 # Visible core workflow — 2026-09-10
 
-Status: implemented and locally tested; production release receipt follows after CI and browser verification.
+Status: deployed to https://duckybot.app and checked in the signed-in production browser.
+
+## Release receipt
+
+- [PR #5](https://github.com/ssurmic/ducky-site/pull/5), source `c2212b0`, merged app
+  `20a803ee04d9297a5c0a724bc810e8af33ddee7c`; Pages deployment `1d9c25b3`.
+- PR CI `34458086858` and main CI `34458376470` passed. Public configuration reports
+  `20a803ee`, both product-focus/shared-brief flags enabled, asset graph `6041201b4b838345ae33`.
+- The production browser was reloaded with the new document before acceptance; changing only
+  the hash route does not load a newly deployed app bundle into an already open tab.
 
 ## Owner correction and result
 
@@ -30,8 +39,17 @@ On the signed-in production browser, searched COST from Explore, selected Costco
 it and opened its map through the old “Deeper research” disclosure. The watchlist increased by one.
 The existing backend subsequently supplied seven saved fact records (including price, volatility,
 option positioning and RSI), while its summary remained unavailable. This was a real new-stock
-browser action, not a synthetic API screenshot. The added stock is a temporary QA change, to be
-removed after the post-release check.
+browser action, not a synthetic API screenshot. After deployment, COST's heading actions and inline
+map exposed those seven records despite the pending overview. The temporary follow was then removed;
+the production watchlist returned to its original 43 stocks.
+
+In the released production watchlist, List was selected and Overview was second. Clicking YTD once
+placed SNDK, AEHR and AXTI first; clicking again placed OKLO, NKE and COIN first. These names record
+the observed order during acceptance, not an investment ranking. NVDA's released map retained all
+118 records across the three lanes. Expand all grouped Investment TALK's context records as 26 records
+from 13 original posts, with a local disclosure for the remaining 24 records. Opening it preserved
+individual dates and the notice that three records shared one original post; the author heading
+linked into that creator's history. These are presentation checks, not a new audit of every claim.
 
 Action counts below start from an already opened stock/list, excluding typing and scrolling:
 
@@ -47,7 +65,9 @@ These are action-path measurements, not a claim that every newly followed stock 
 
 ## Checks and practical limits
 
-- Full local Node suite: 614 passing; copy lint: 3,244 files, zero failures; link check: 1,274 links. A later source-repeat refinement was checked with the focused evidence tests; CI repeats the full gate.
+- Full local Node suite: 614 passing; final source-repeat refinement: 48 focused tests passing.
+  Merged-release copy lint: 3,157 files, zero failures; link check: 1,274 links; export tests: 3 passing.
+  Both CI runs repeated the required gates successfully.
 - Added regression coverage: sorting zero/loss/unknown in both directions, no extra reads, focus and
   horizontal position preservation, default mode order, examples with no watches, seven-day Explore,
   pending summary with existing map, author identity separation, opposing records, repeated source
