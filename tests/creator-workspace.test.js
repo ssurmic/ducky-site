@@ -98,7 +98,7 @@ test('lookup resumes after returning, polls automatically, and ignores results a
  const cleanup=mountSetup(root,{onFollow:()=>{}});await tick();
  assert.ok(root.textContent.includes('Results update automatically'));assert.equal(root.querySelector('input').value,'@creator');
  t.mock.timers.tick(999);await tick();assert.equal(reads,0);
- t.mock.timers.tick(1);await tick();assert.equal(reads,1);assert.ok(root.textContent.includes('Channel found'));
+ t.mock.timers.tick(1);await tick();assert.equal(reads,1);assert.ok(root.textContent.includes('Choose the matching channel'));
  cleanup();t.mock.timers.tick(30000);await tick();assert.equal(reads,1);root.remove();
 });
 
@@ -135,7 +135,7 @@ test('follow feedback persists and analysis completion is read automatically',as
  [...root.querySelectorAll('button')].find(b=>b.textContent===copy['app.creators.discover']).click();
  await tick();
  root.querySelector('.cr-chip').click();document.querySelector('dialog .btn-primary').click();await tick();
- assert.ok(root.querySelector('.creator-follow-success').textContent.includes('Added Joseph Carlson'));
+ assert.ok(root.querySelector('.creator-follow-success').textContent.includes("You're now following Joseph Carlson"));
  ready=true;t.mock.timers.tick(4000);await tick();await tick();
  assert.ok(root.querySelector('.creator-follow-success').textContent.includes('ready to read'));
  assert.ok(root.querySelector('.creator-page-heading').textContent.includes('Joseph Carlson'));assert.equal(root.querySelector('.creator-video-archive').open,true);cleanup();root.remove();

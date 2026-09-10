@@ -423,7 +423,10 @@
           tb.appendChild(tr);
         });
         if (reg && sc.regime_today) reg.textContent = (L.score_regime || "Today's regime") + ": " + (sc.regime_today.regime || "—") + " (" + (sc.regime_today.d || "") + ")";
-        if (disc) disc.textContent = sc.disclaimer || "";
+        if (disc) {
+          var disclaimer=String(sc.disclaimer || ''), bilingual=disclaimer.match(/^([\s\S]*[\u3400-\u9fff][\s\S]*?)\s+\/\s+([A-Za-z][\s\S]*)$/);
+          disc.textContent=bilingual?(auditZh?bilingual[1]:bilingual[2]):disclaimer;
+        }
         var nav = (sc.baskets && sc.baskets["ducky-all"]) || [];
         if (box) {
           box.innerHTML = "";

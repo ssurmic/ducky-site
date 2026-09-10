@@ -54,7 +54,7 @@ test('stale bars disclose their lag and scheduled retries stop on disposal',asyn
   globalThis.fetch=async url=>{if(url.includes('/public/company/'))return response({status:'pending'});calls++;return response({bars:[{...bar,t:'2026-09-01',c:279.91}],stale:true,expected_last_d:'2026-09-04'});};
   const r=root(),close=await mount(r,{ticker:'ALAB'});
   t.after(()=>{close();r.remove();});
-  assert.match(r.textContent,/not caught up.*2026-09-04/);assert.ok(r.querySelector('#chart-status button'));
+  assert.match(r.textContent,/haven't caught up.*2026-09-04/);assert.ok(r.querySelector('#chart-status button'));
   close();r.remove();t.mock.timers.tick(20000);await flush();assert.equal(calls,1);
 });
 

@@ -12,7 +12,11 @@ export function cleanMessage(text,language=LANG){
   .replace(/^\s*#{1,6}\s+/gm,'').replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'$1 ($2)').trim();
 }
 export function recordDocument(row,language=LANG){
- const extra=row.extra||{}, raw=(language==='zh'?extra.message_zh:extra.message_en)||extra.message_text||row.summary||'';
+ const extra=row.extra||{}, original=(language==='zh'?extra.message_zh:extra.message_en)||extra.message_text||row.summary||extra.message_zh||extra.message_en||'';
+ // Older shared reports store both languages in one original message. Select an
+ // existing portion; never translate or generate content while reading a record.
+ const bilingual=String(original).split(/\s*===CN===\s*/);
+ const raw=bilingual.length===2?(language==='zh'?bilingual[1]:bilingual[0]):String(original);
  const lines=raw.split('\n'),header=lines[0]||'';
  const report=REPORT_KINDS.has(row.kind), datedHeader=report && /\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}[–-]\d{2}\/\d{2}/.test(header) && header.length<190;
  let title=datedHeader?cleanMessage(header).replace(/\s*[·—–-]?\s*\d{4}-\d{2}-\d{2}.*$/,'').trim():'';
@@ -38,8 +42,17 @@ export function recordDocument(row,language=LANG){
   const parts=block.heading.split(/\s+\/\s+/);
   if(parts.length===2 && parts.some(p=>/[\u3400-\u9fff]/.test(p))){block.heading=parts.find(p=>language==='zh'?/[\u3400-\u9fff]/.test(p):!/[\u3400-\u9fff]/.test(p))||block.heading;}
  }
- const first=blocks.find(b=>b.text),lead=first?([first.heading,first.text].filter(Boolean).join(' · ')):'';
- return {title,raw,truncated:language==='zh'&&extra.message_zh?extra.translation_message_truncated:extra.message_truncated,hasBody:Boolean(extra.message_text||extra.message_en||extra.message_zh),blocks,lead:lead.length>170?lead.slice(0,170)+'…':lead,report,
+ // A few Chinese characters may be an attributed name inside English prose.
+ // Withhold Chinese prose only for our reports; original news/creator wording
+ // remains untouched. A missing English version is separate from a missing report.
+ const chineseProse=blocks.some(block=>{
+  const text=block.heading+' '+block.text,han=(text.match(/[\u3400-\u9fff]/g)||[]).length,latin=(text.match(/[a-z]/gi)||[]).length;
+  return han>0 && (han>latin || han>=4 && han/(han+latin)>.15);
+ });
+ const englishUnavailable=report && language==='en' && (chineseProse || (!raw.trim() && Boolean(String(original).trim())));
+ const first=blocks.find(b=>b.text),lead=englishUnavailable?s('reader.english_unavailable'):first?([first.heading,first.text].filter(Boolean).join(' · ')):'';
+ if(englishUnavailable)title=row.ticker?'$'+row.ticker:s(known[row.kind]?'reader.title_'+known[row.kind]:'radar.kind_'+row.kind);
+ return {title,raw:String(original),truncated:language==='zh'&&extra.message_zh?extra.translation_message_truncated:extra.message_truncated,hasBody:Boolean(extra.message_text||extra.message_en||extra.message_zh||englishUnavailable),blocks:englishUnavailable?[]:blocks,englishUnavailable,lead:lead.length>170?lead.slice(0,170)+'…':lead,report,
   language:language==='zh'&&extra.message_zh?'zh':language==='en'&&extra.message_en?'en':null};
 }
 function paragraph(text){
@@ -56,6 +69,7 @@ function paragraph(text){
 }
 export function renderDocument(doc){
  const body=el('div.record-prose');
+ if(doc.englishUnavailable)body.append(el('p.record-language-notice',s('reader.english_unavailable_detail')));
  for(const block of doc.blocks){const section=el('section');if(block.heading)section.append(el('h2',block.heading));
   for(const line of block.text.split('\n').filter(Boolean))section.append(paragraph(line));body.append(section);}
  return body;

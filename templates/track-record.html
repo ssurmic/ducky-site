@@ -152,7 +152,7 @@
 
     <div class="strip strip-bi">
       <p class="mono" lang="{{ html_lang }}"><span data-line="backtest">{{ t('footer.backtest_line') }}</span> <span data-line="affiliation">{{ t('footer.affiliation_line') }}</span></p>
-      <p class="mono" lang="{{ 'en' if is_zh else 'zh-CN' }}"><span data-line="backtest">{{ t2('footer.backtest_line') }}</span> <span data-line="affiliation">{{ t2('footer.affiliation_line') }}</span></p>
+      {% if is_zh %}<p class="mono" lang="en"><span data-line="backtest">{{ t2('footer.backtest_line') }}</span> <span data-line="affiliation">{{ t2('footer.affiliation_line') }}</span></p>{% endif %}
     </div>
   </div>
  <dialog class="track-dialog" id="track-dialog" aria-labelledby="track-dialog-title">

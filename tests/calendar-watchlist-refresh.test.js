@@ -42,7 +42,7 @@ test('failed or pending watchlist reads preserve saved membership and show an ex
  for(const status of [503,202]){
   const {root}=fixture(()=>response({retry_after:5},status));const close=await calendar.mount(root);
   assert.deepEqual(store.get('watchlist'),['NVDA']);
-  assert.match(root.querySelector('.calendar-watch-warning').textContent,/could not be updated.*1 stocks saved/);
+  assert.match(root.querySelector('.calendar-watch-warning').textContent,/Couldn't refresh.*saved in this browser \(1\)/);
   assert.ok(button(root,'app.common.retry'));assert.equal(root.querySelector('.event-scope-note'),null);
   assert.equal(root.querySelectorAll('.cal-bicell').length,14,'shared calendar remains usable');
   close();root.remove();

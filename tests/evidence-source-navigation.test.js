@@ -94,7 +94,7 @@ test('a map link opens the canonical position statement instead of the same-stoc
   const focused=root.querySelector('[data-point-id="'+point+'"].is-focused.is-support');assert.ok(focused);
   assert.ok(focused.closest('.cr-sections').open);assert.equal(focused.dataset.scrolled,'true');
   assert.match(root.querySelector('.cr-post-head').textContent,/\$INTC\s+bull/i);
-  assert.match(focused.textContent,/Self-reported action · Hold/);assert.match(focused.textContent,/Original outlook labelneutral/);
+  assert.match(focused.textContent,/Self-reported action · Hold/);assert.match(focused.textContent,/Original outlook labelNeutral/);
   assert.match(focused.textContent,/current ownership is not established/);
   assert.ok(!root.textContent.includes('OLD_NEUTRAL_DUPLICATE'));
   assert.equal(root.querySelectorAll('.creator-reviewed-spans article').length,2);
