@@ -3,6 +3,8 @@ import { calendarEventKey } from './calendar-model.js';
 // 402 → upsell hook. Views never call fetch() directly.
 import { CFG, LANG } from "./strings.js";
 import * as store from "./store.js";
+import * as readCache from './read-cache.js';
+export const peek=readCache.peek;
 
 export class ApiError extends Error {
   constructor(status, body, url) {
@@ -40,6 +42,7 @@ export async function request(method, path, opts) {
   const observers=method==='GET'&&opts?.observe!==false?[...readFailureObservers]:[];
   try{return await performRequest(method,path,opts);}
   catch(error){
+    if([401,402,403,404,410].includes(error.status)&&opts?.auth!==false)readCache.clear();
     for(const fn of observers){try{fn(path,readFailure(error),{auth:opts?.auth!==false});}catch{}}
     throw error;
   }
@@ -53,7 +56,10 @@ async function performRequest(method,path,opts){
   const epoch = store.epoch();
   // Bind reads to the page that started them, never the next route's observer.
   const observers=method==='GET'&&opts.observe!==false?[...readObservers]:[];
-  const observed=value=>{for(const fn of observers){try{fn(path,value,{auth:opts.auth!==false});}catch{}}return value;};
+  const observed=value=>{
+    if(method==='GET'&&opts.auth!==false)readCache.remember(path,value);
+    for(const fn of observers){try{fn(path,value,{auth:opts.auth!==false});}catch{}}return value;
+  };
   const sessionChanged = () => (opts.auth !== false || opts.bindSession) && (token !== store.get("token") || epoch !== store.epoch());
   if (opts.auth !== false && token) headers.Authorization = "Bearer " + token;
   let body;
@@ -102,6 +108,7 @@ async function performRequest(method,path,opts){
     return observed({ __accepted: true, retry_after: Number(r.retry_after || res.headers.get("Retry-After") || 5), body: r });
   }
   if (!res.ok) throw new ApiError(res.status, data, path);
+  if(method!=='GET'&&/^\/(?:watchlist|me\/evidence)(?:\/|$)/.test(path))readCache.clear();
   return observed(data);
 }
 

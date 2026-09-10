@@ -1,5 +1,12 @@
 # Change log
 
+## 2026-09-10 · Saved research appears before refresh (implemented)
+
+Watchlist, Today, stock briefs, stock pages and maps reuse recent reads in this login while
+fresh GETs run. Network errors retain dated content; withdrawals and access/session changes
+remove affected previews. Memory only, bounded to five minutes, with source links preserved.
+[Behavior and acceptance](reports/SAVED-READ-UX-2026-09-10.md).
+
 ## 2026-09-10 · Compact phone watchlist and sorting indicators (deployed)
 
 Replaced wrapping Unicode sort arrows with fixed-size chevrons and reduced phone

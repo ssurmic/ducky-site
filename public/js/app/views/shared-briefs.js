@@ -34,12 +34,15 @@ export async function mount(root,route={}){
     replaceReading(host,...content);
   }
   async function load(){
-    const id=++request;clear(host).append(spinner());
+    const id=++request;if(!shown.length)clear(host).append(spinner());
     try{
       const response=await api.get('/me/stock-research',{signal:controller.signal});
       if(!valid(id))return;
       renderResponse(response);
-    }catch(error){if(valid(id))clear(host).append(researchError(error,load));}
+    }catch(error){if(valid(id)){
+      if(!shown.length||[401,402,403].includes(error.status))clear(host);
+      host.prepend(researchError(error,load));
+    }}
   }
   root.append(el('details.focus-tools',el('summary',s('focus.deeper_research')),
     el('a.btn.btn-ghost',{href:'#/briefing?archive=1'},s('focus.past_stock_briefs'))));
@@ -51,6 +54,9 @@ export async function mount(root,route={}){
   root.addEventListener('ducky:shared-read',update);
   const cleanup=()=>{disposed=true;request++;controller.abort();off();root.removeEventListener('ducky:shared-read',update);};
   route.signal?.addEventListener('abort',cleanup,{once:true});
-  if(route.signal?.aborted)cleanup();else await load();
+  if(route.signal?.aborted)cleanup();else{
+    const saved=api.peek('/me/stock-research');if(saved)renderResponse(saved);
+    await load();
+  }
   return cleanup;
 }

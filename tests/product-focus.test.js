@@ -18,6 +18,7 @@ const {closingPoints,closingChart}=await import('../public/js/app/stock-price-ch
 const {parse}=await import('../public/js/app/router.js');
 const {safeTarget,takeTarget}=await import('../public/js/app/login-target.js');
 const {closeModal}=await import('../public/js/app/ui.js');
+const api=await import('../public/js/app/api.js');
 const pause=async()=>{for(let i=0;i<5;i++)await new Promise(r=>setTimeout(r,0));};
 function node(id='source',stance='support'){return {id,kind:'creator',priority:'direct',intent:'opinion',stance,conditional:true,
  title:{en:'Orders may recover if customers resume spending.',zh:'如果客户恢复支出，订单可能回升。'},published_at:'2026-09-09',
@@ -26,6 +27,52 @@ function item(ticker='NVDA'){return {ticker,status:'ready',as_of:'2026-09-09T22:
  overview:{en:'Sample Author expects orders to recover, conditional on spending.',zh:'作者认为订单可能恢复，取决于支出。',citations:['source']},sources:[node()]};}
 const change=(id=1)=>({id:'change:'+id,ticker:'NVDA',kind:'added',state:'available',node:node(),published_at:'2026-09-09',available_at:'2026-09-10T01:00:00Z'});
 function setup(){closeModal();store.bumpEpoch();store.set('me',{user_id:12,tier:'pro',access:{billing_enabled:false}});store.set('token','synthetic-only');store.set('watchlist',['NVDA']);const root=document.querySelector('main');root.replaceChildren();return root;}
+
+test('returning watchlist paints saved prices and research before either request completes',async()=>{
+ const root=setup();
+ globalThis.fetch=async url=>Response.json(url==='/me/stock-research'?{items:[item()]}:
+  {items:['NVDA'],overview:{items:[{ticker:'NVDA',price:98,price_session:'2026-09-09'}]}});
+ let dispose=await watch.mount(root);dispose();root.replaceChildren();
+ const pending=[];globalThis.fetch=async()=>await new Promise(resolve=>pending.push(resolve));
+ const mount=watch.mount(root);
+ assert.match(root.textContent,/conditional on spending/);assert.match(root.textContent,/98/);
+ assert.doesNotMatch(root.querySelector('.stock-reading').textContent,/Loading/);
+ await pause();for(const resolve of pending)resolve(Response.json({error:'offline'},{status:503}));
+ dispose=await mount;assert.match(root.textContent,/conditional on spending/);assert.ok(root.querySelector('.errbox'));dispose();
+});
+
+test('returning stock uses saved evidence while offline; a permission denial removes it',async()=>{
+ const root=setup();
+ globalThis.fetch=async url=>Response.json(url.startsWith('/bars/')?{bars:[]}:
+  {ticker:'NVDA',price:{price:98},evidence:{ticker:'NVDA',nodes:[node()],analysis_status:'ready',analysis_generated_at:item().as_of,analysis:{overview:item().overview,sections:[]}}});
+ let dispose=await stock.mount(root,{ticker:'NVDA'});dispose();root.replaceChildren();
+ let finish;globalThis.fetch=async url=>url.startsWith('/bars/')?Response.json({bars:[]}):await new Promise(resolve=>finish=resolve);
+ let pending=stock.mount(root,{ticker:'NVDA'});assert.match(root.textContent,/conditional on spending/);await pause();
+ finish(Response.json({error:'offline'},{status:503}));dispose=await pending;assert.match(root.textContent,/conditional on spending/);dispose();root.replaceChildren();
+ pending=stock.mount(root,{ticker:'NVDA'});await pause();finish(Response.json({error:'forbidden'},{status:403}));dispose=await pending;
+ assert.doesNotMatch(root.textContent,/conditional on spending/);assert.equal(api.peek('/stock-research/NVDA'),null);dispose();
+});
+
+test('fresh unavailable research clears a saved paragraph and closes its source dialog',async()=>{
+ const root=setup();let unavailable=false;
+ globalThis.fetch=async url=>Response.json(url==='/me/stock-research'?{items:[unavailable?{ticker:'NVDA',status:'source_changed',sources:[]}:item()]}:
+  {items:['NVDA'],overview:{items:[{ticker:'NVDA',price:98}]}});
+ const dispose=await watch.mount(root);
+ root.querySelector('.brief-citation').click();assert.ok(document.querySelector('.evidence-detail'));
+ unavailable=true;[...root.querySelectorAll('button')].find(b=>b.textContent===copy['app.watch.refresh']).click();await pause();
+ assert.doesNotMatch(root.textContent,/conditional on spending/);assert.equal(document.querySelector('.evidence-detail'),null);dispose();
+});
+
+test('a saved stock graph opens its map before the map request resolves, then respects withdrawal',async()=>{
+ const root=setup(),evidence=await import('../public/js/app/views/evidence.js');
+ globalThis.fetch=async()=>Response.json({ticker:'NVDA',price:{price:98},evidence:{ticker:'NVDA',nodes:[node()],analysis_status:'ready',analysis_generated_at:item().as_of,analysis:{overview:item().overview,sections:[]}}});
+ await api.get('/stock-research/NVDA');
+ let finish;globalThis.fetch=async()=>await new Promise(resolve=>finish=resolve);
+ const pending=evidence.mount(root,{ticker:'NVDA'});
+ assert.match(root.textContent,/Orders may recover if customers resume spending/);
+ await pause();finish(Response.json({ticker:'NVDA',nodes:[],analysis_status:'source_changed',analysis:null}));
+ const dispose=await pending;assert.doesNotMatch(root.textContent,/Orders may recover/);dispose();
+});
 
 test('stock briefs reuse the exact shared paragraph and original citations with one cached read',async()=>{
  const root=setup(),calls=[];
@@ -153,7 +200,7 @@ test('an explicitly empty watchlist shows onboarding, while unreadable research 
  assert.doesNotMatch(root.textContent,/Follow stocks you are researching/);dispose();
 });
 
-test('quotes render before slow research and failed membership is not erased by a late summary',async()=>{
+test('quotes render before slow research; a failed refresh retains saved rows and its error',async()=>{
  const root=setup();let finish;
  globalThis.fetch=async url=>url==='/me/stock-research'?await new Promise(r=>finish=r):Response.json({items:[{ticker:'NVDA'}],overview:{items:[{ticker:'NVDA',price:98,price_status:'ready',price_session:'2026-09-09'}]}});
  let pending=watch.mount(root);await pause();assert.match(root.querySelector('.watch-compact-table tbody tr').textContent,/98/);
@@ -166,7 +213,7 @@ test('quotes render before slow research and failed membership is not erased by 
  dispose();root.replaceChildren();
  globalThis.fetch=async url=>url==='/me/stock-research'?await new Promise(r=>finish=r):Response.json({error:'unavailable'},{status:503});
  pending=watch.mount(root);await pause();assert.ok(root.querySelector('.errbox'));
- finish(Response.json({items:[item()]}));dispose=await pending;assert.ok(root.querySelector('.errbox'));assert.equal(root.querySelector('.watch-compact-table tbody tr'),null);dispose();
+ finish(Response.json({items:[item()]}));dispose=await pending;assert.ok(root.querySelector('.errbox'));assert.ok(root.querySelector('.watch-compact-table tbody tr'));dispose();
 });
 
 test('stock overview preserves opposing evidence and loads history only on expansion',async()=>{

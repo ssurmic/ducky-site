@@ -89,7 +89,10 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
       renderEvidence(result);
       const requested=query.get('source'),node=(result.evidence?.nodes||[]).find(n=>n.id===requested);
       if(node)detail(node,{readingTicker:ticker});
-    }catch(error){if(current()){clear(body);body.append(researchError(error,loadEvidence));}}
+    }catch(error){if(current()){
+      if(!lastEvidence||[401,402,403,404,410].includes(error.status)){lastEvidence=null;currentMap?.dispose?.();currentMap=null;clear(body);}
+      body.prepend(researchError(error,loadEvidence));
+    }}
   }
   function renderPrices(response){
     if(!Array.isArray(response)&&!Array.isArray(response?.bars)&&!Array.isArray(response?.items)&&!api.isAccepted(response))throw new api.ApiError(502,{error:'invalid_price_response'});
@@ -111,6 +114,8 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
     }catch{} // Malformed updates stay under the existing explicit reload/error flow.
   };
   root.addEventListener('ducky:shared-read',updates);
+  const saved=api.peek('/stock-research/'+ticker);
+  if(saved)renderEvidence(saved);
   const priceTask=api.get('/bars/'+encodeURIComponent(ticker)+'?period=6mo',{signal}).then(response=>{
     if(current())renderPrices(response);
   }).catch(error=>{if(current()){clear(chart);chart.append(el('h2',s('focus.price_history')),el('p.muted',s('focus.chart_unavailable')));}});

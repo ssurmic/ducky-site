@@ -91,9 +91,14 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
     try{renderSummaries(event.detail.value);event.detail.accepted=true;}catch{}
   };
   root.addEventListener('ducky:shared-read',update);
+  const savedSummary=embedded?null:api.peek('/me/stock-research');
+  if(savedSummary)renderSummaries(savedSummary);
   const summaryTask=embedded?Promise.resolve():api.get('/me/stock-research',{signal}).then(response=>{
     if(!disposed&&!signal?.aborted&&epoch===store.epoch())renderSummaries(response);
-  }).catch(()=>{if(!disposed&&!signal?.aborted&&epoch===store.epoch())summaries.append(el('p.small.muted',s('focus.summary_read_failed')));});
+  }).catch(error=>{if(!disposed&&!signal?.aborted&&epoch===store.epoch()){
+    if([401,402,403].includes(error.status))clear(summaries);
+    summaries.append(el('p.small.muted',s('focus.summary_read_failed')));
+  }});
   async function restoreReading(){
     if(!await load())return;
     // Revalidate sources when returning; old copied cards cannot bypass withdrawals.
