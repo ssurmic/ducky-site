@@ -269,7 +269,7 @@ test('collapsed list exposes the analysis clock and distinguishes retained text 
   assert.equal(details.open,false);
   if(['ready','refresh_pending'].includes(status)){
    assert.equal(summary.querySelector('.watch-reading-date').textContent,details.querySelector('.stock-analysis-date').textContent);
-   assert.match(summary.textContent,status==='ready'?/Analysis as of.*2026/:/Previous analysis.*2026.*newer sources are under review/);
+   assert.match(summary.textContent,status==='ready'?/Analysis as of.*2026/:/Previous analysis.*2026.*newer sources still need review/);
    assert.equal(summary.querySelector('.watch-reading-preview').textContent,pick(base.overview));
    assert.equal(view.querySelectorAll('.brief-citation').length,1);
   }else{

@@ -1,0 +1,667 @@
+[
+  {
+    "key": "data.generated",
+    "before": "generated",
+    "after": "Updated"
+  },
+  {
+    "key": "ideas.h1",
+    "before": "Ducky's trades",
+    "after": "Research log"
+  },
+  {
+    "key": "ideas.lead",
+    "before": "The author’s research and trade log. Paper and actual trades are labeled separately.",
+    "after": "Research notes and trade records. Paper trades, live trades and format examples are labeled."
+  },
+  {
+    "key": "ideas.col_ticker",
+    "before": "ticker",
+    "after": "Ticker"
+  },
+  {
+    "key": "ideas.col_title",
+    "before": "title",
+    "after": "Title"
+  },
+  {
+    "key": "ideas.col_status",
+    "before": "status",
+    "after": "Status"
+  },
+  {
+    "key": "ideas.col_book",
+    "before": "book",
+    "after": "Record type"
+  },
+  {
+    "key": "ideas.col_opened",
+    "before": "opened",
+    "after": "Date opened"
+  },
+  {
+    "key": "ideas.col_outcome",
+    "before": "so far",
+    "after": "Change to date"
+  },
+  {
+    "key": "ideas.st_watching",
+    "before": "watching",
+    "after": "Watching"
+  },
+  {
+    "key": "ideas.st_opened",
+    "before": "opened",
+    "after": "Position opened"
+  },
+  {
+    "key": "ideas.st_added",
+    "before": "added",
+    "after": "Added"
+  },
+  {
+    "key": "ideas.st_trimmed",
+    "before": "trimmed",
+    "after": "Trimmed"
+  },
+  {
+    "key": "ideas.st_closed",
+    "before": "closed",
+    "after": "Closed"
+  },
+  {
+    "key": "ideas.st_invalidated",
+    "before": "invalidated",
+    "after": "Invalidated"
+  },
+  {
+    "key": "ideas.st_note",
+    "before": "note",
+    "after": "Note"
+  },
+  {
+    "key": "app.nav.chart",
+    "before": "Chart",
+    "after": "Charts & options"
+  },
+  {
+    "key": "app.foot.disclaimer",
+    "before": "Ducky records and alerts; nothing here is investment advice.",
+    "after": "Stock research and alerts. Nothing here is investment advice."
+  },
+  {
+    "key": "app.login.widget_hint",
+    "before": "Authorize in Telegram, then return here signed in.",
+    "after": "Finish signing in with Telegram, then return here."
+  },
+  {
+    "key": "app.login.qr_hint",
+    "before": "Point your phone camera at the code; no in-app scanner needed. Telegram opens; tap Start and this page signs you in.",
+    "after": "Scan with your phone's camera. Open the Telegram link and tap Start to sign in here."
+  },
+  {
+    "key": "app.nav.profile",
+    "before": "Me",
+    "after": "Profile"
+  },
+  {
+    "key": "app.creators.sub",
+    "before": "Read the takeaways, check the source, and compare what followed.",
+    "after": "See what finance creators are saying about stocks, with links to the original videos."
+  },
+  {
+    "key": "app.creators.take_neutral",
+    "before": "neutral",
+    "after": "Neutral"
+  },
+  {
+    "key": "app.creators.load_error",
+    "before": "Couldn't load",
+    "after": "Couldn't load creators. Try again."
+  },
+  {
+    "key": "app.calendar.sub",
+    "before": "Market closures, economic releases and earnings, dated in US Eastern time.",
+    "after": "Earnings, economic releases and market holidays. Event times are Eastern."
+  },
+  {
+    "key": "app.calendar.watchlist_unavailable",
+    "before": "Your watchlist could not be updated. Events are matched to the {n} stocks saved in this browser.",
+    "after": "Couldn't refresh your watchlist. Events use the watchlist saved in this browser ({n})."
+  },
+  {
+    "key": "app.calendar.t_opex",
+    "before": "OPEX",
+    "after": "Options expiration"
+  },
+  {
+    "key": "app.calendar.t_witching",
+    "before": "Quad witching",
+    "after": "Quarterly expiration"
+  },
+  {
+    "key": "app.calendar.partial",
+    "before": "Some calendar sources are unavailable. An empty date does not mean there are no events; check original announcements.",
+    "after": "Some calendar sources are unavailable. A blank date may still have events. Check the original announcements."
+  },
+  {
+    "key": "rev.creator_h",
+    "before": "Read finance video summaries",
+    "after": "Catch up on finance videos"
+  },
+  {
+    "key": "benefits.title",
+    "before": "A research workflow that follows the signal",
+    "after": "Follow a research lead through to the result"
+  },
+  {
+    "key": "benefits.alert_title",
+    "before": "Keep monitoring the conditions you define",
+    "after": "Set an alert for your conditions"
+  },
+  {
+    "key": "app.creators.research_error",
+    "before": "Could not load the backtest records. Please reopen this view.",
+    "after": "Couldn't load call history. Try opening it again."
+  },
+  {
+    "key": "app.creators.window_recorded",
+    "before": "From Ducky’s record",
+    "after": "From when Ducky recorded it"
+  },
+  {
+    "key": "app.creators.horizon",
+    "before": "Observation window",
+    "after": "Time after the view"
+  },
+  {
+    "key": "app.creators.no_studies",
+    "before": "No stock views are ready for backtesting. Video summaries remain available.",
+    "after": "No views have price comparisons yet. You can still read the video summaries."
+  },
+  {
+    "key": "app.creators.excess",
+    "before": "Excess vs SPY",
+    "after": "Difference vs. SPY"
+  },
+  {
+    "key": "app.creators.status_pending",
+    "before": "Window pending; waiting for subsequent sessions.",
+    "after": "This time window is still open."
+  },
+  {
+    "key": "app.creators.status_missing_history",
+    "before": "Insufficient history to establish the base session.",
+    "after": "Not enough price history to establish a starting close."
+  },
+  {
+    "key": "app.creators.status_time_unknown",
+    "before": "A reliable timestamp with timezone is missing.",
+    "after": "The source is missing a reliable date, time or timezone."
+  },
+  {
+    "key": "app.creators.status_corporate_action_review",
+    "before": "A large price discontinuity needs corporate-action review.",
+    "after": "A large price change needs a check for stock splits or other corporate actions."
+  },
+  {
+    "key": "app.creators.source_details",
+    "before": "Collection scope and dates",
+    "after": "Sources and dates"
+  },
+  {
+    "key": "app.creators.feed_limit",
+    "before": "This feed contains {n} recently collected posts, not a complete channel archive.",
+    "after": "Showing {n} recently collected posts. This is a sample of the channel history."
+  },
+  {
+    "key": "app.creators.not_stated",
+    "before": "Not explicit in the source",
+    "after": "Not stated in the source"
+  },
+  {
+    "key": "app.creators.review_pending",
+    "before": "Captions were retrieved, but the summary has not passed review.",
+    "after": "The transcript is available. The summary still needs review."
+  },
+  {
+    "key": "app.creators.source_pending",
+    "before": "Usable captions are not available yet. Video details and the original link are retained.",
+    "after": "We don't have a usable transcript yet. You can still open the original video."
+  },
+  {
+    "key": "app.creatorflow.choose",
+    "before": "Channel found. Select it to confirm the identity and follow.",
+    "after": "Choose the matching channel to follow it."
+  },
+  {
+    "key": "app.creatorflow.after_confirm",
+    "before": "Follow to read available summaries. New ones appear as they’re ready.",
+    "after": "Follow this creator to read available summaries and see new ones as they're ready."
+  },
+  {
+    "key": "app.creatorflow.follow_error",
+    "before": "Couldn’t follow. Please retry. You can follow up to 30 creators.",
+    "after": "Couldn't follow this creator. Try again. You can follow up to 30 creators."
+  },
+  {
+    "key": "app.creatorflow.analysis_queued",
+    "before": "Following · Summaries in progress",
+    "after": "Following · summaries waiting to start"
+  },
+  {
+    "key": "app.creatorflow.analysis_running",
+    "before": "Following · analyzing recent content",
+    "after": "Following · reviewing recent videos"
+  },
+  {
+    "key": "app.creatorflow.analysis_needs_source",
+    "before": "Captions are unavailable for some videos.",
+    "after": "A transcript isn't available for some videos."
+  },
+  {
+    "key": "app.creatorflow.analysis_needs_review",
+    "before": "Following · summary review incomplete",
+    "after": "Following · summary needs review"
+  },
+  {
+    "key": "app.creatorflow.analysis_no_recent_content",
+    "before": "Following · no recent videos retrieved",
+    "after": "Following · no recent videos collected"
+  },
+  {
+    "key": "app.creatorflow.analysis_not_requested",
+    "before": "Following · awaiting scheduled collection",
+    "after": "Following · no summary requested yet"
+  },
+  {
+    "key": "app.creatorflow.browse_title",
+    "before": "Not sure where to start? Pick a topic",
+    "after": "Pick a topic to find creators"
+  },
+  {
+    "key": "app.creatorflow.browse_hint",
+    "before": "Choose a channel, then confirm to follow.",
+    "after": "Choose a channel to preview, then follow it."
+  },
+  {
+    "key": "app.creatorflow.directory_hint",
+    "before": "Select an indexed channel from the suggestions.",
+    "after": "Choose a channel from the suggestions."
+  },
+  {
+    "key": "app.creatorflow.reconnecting",
+    "before": "Connection interrupted. Retrying… Your submitted task will continue.",
+    "after": "Connection lost. Reconnecting…"
+  },
+  {
+    "key": "app.creatorflow.added",
+    "before": "Added {name} to your followed creators.",
+    "after": "You're now following {name}."
+  },
+  {
+    "key": "app.creatorflow.analysis_auto",
+    "before": "Content status updates automatically. Completed summaries are ready to read.",
+    "after": "New summaries appear here when ready."
+  },
+  {
+    "key": "app.radar.outcome_history",
+    "before": "See historical records for subsequent prices.",
+    "after": "Open the historical record to see later prices."
+  },
+  {
+    "key": "app.chart.stale_bars",
+    "before": "Daily bars have not caught up to the last completed session, {date}. The page will retry briefly; you can also retry manually.",
+    "after": "Daily prices haven't caught up to {date}, the last completed trading day. We'll retry shortly. You can also retry now."
+  },
+  {
+    "key": "app.briefing.add_hint",
+    "before": "Add a stock to see its recorded developments and related creator views here.",
+    "after": "Add a stock to see its news, disclosures and creator views here."
+  },
+  {
+    "key": "app.briefing.calendar_partial",
+    "before": "The calendar is incomplete or awaiting a fresh export. Confirm timing with the source.",
+    "after": "Some calendar data is missing or out of date. Check the source for confirmed times."
+  },
+  {
+    "key": "app.briefing.market_stale",
+    "before": "Market context is missing or older than 26 hours. It may not reflect current discussion.",
+    "after": "Market context is missing or more than 26 hours old. It may not reflect the latest discussion."
+  },
+  {
+    "key": "app.calendar.holiday_brief",
+    "before": "The clock keeps running on options during a closure. Short-dated call and put buyers face time-value erosion and reopening gap risk.",
+    "after": "Time to expiration keeps shrinking while the market is closed. Short-dated calls and puts are exposed to time decay and a possible price gap when trading resumes."
+  },
+  {
+    "key": "app.calendar.kind_expiry",
+    "before": "Expiry",
+    "after": "Expiration"
+  },
+  {
+    "key": "home.intro",
+    "before": "Follow company announcements, insider trades and creator views for the stocks you watch. Check the original sources and compare what happened next.",
+    "after": "Keep up with company news, insider trades and finance creators for the stocks you watch. Read the original sources and see how prices changed afterward."
+  },
+  {
+    "key": "home.value1_body",
+    "before": "Follow insider purchases, company partnerships and oversold conditions for a concrete place to start.",
+    "after": "Find a starting point for research in insider purchases, company partnerships and oversold stocks."
+  },
+  {
+    "key": "home.value2_body",
+    "before": "Review the stocks, stance and reasoning in videos from creators you follow, with links to check the original.",
+    "after": "See which stocks a creator discusses, what they think and why. Jump to the video to check."
+  },
+  {
+    "key": "home.value3_body",
+    "before": "Compare events and views with subsequent prices. Review the full record, including declines and observation periods still in progress.",
+    "after": "See how prices moved after an event or a view. The record includes declines and periods that are still unfolding."
+  },
+  {
+    "key": "app.notify.test_channel",
+    "before": "Send {channel} test",
+    "after": "Send test message ({channel})"
+  },
+  {
+    "key": "app.opportunities.description",
+    "before": "Automatically review oversold readings, price drawdowns and volatility leads, with evidence and stock research.",
+    "after": "Find stocks with oversold readings, steep declines or low implied volatility, then check the research."
+  },
+  {
+    "key": "app.opportunities.empty_note",
+    "before": "Try another sector or broaden the market-cap and volatility filters. Unchecked stocks and missing data do not count as failed matches.",
+    "after": "Try a different sector or broaden the size and volatility filters. Stocks we haven't checked, or that lack data, aren't counted as failed matches."
+  },
+  {
+    "key": "desk.map_sub",
+    "before": "Pick a tool to see what you can investigate.",
+    "after": "Choose a tool to see what it does."
+  },
+  {
+    "key": "desk.preview_briefing",
+    "before": "A twice-daily stock brief combining flows, attention, technicals, options and sector context.",
+    "after": "Twice-daily stock briefs covering company events, social activity, charts, options and sector trends."
+  },
+  {
+    "key": "desk.preview_creators",
+    "before": "Read creator takeaways, open the source and review what followed.",
+    "after": "Read what creators said, check the video and see how prices changed afterward."
+  },
+  {
+    "key": "desk.preview_macro",
+    "before": "Examine the evidence behind liquidity and market conditions.",
+    "after": "See the data behind dollar liquidity and market conditions."
+  },
+  {
+    "key": "desk.preview_boards",
+    "before": "Dated insider, institutional, partnership and political disclosures with accessible history.",
+    "after": "Browse insider trades, fund holdings, partnerships and political disclosures by date."
+  },
+  {
+    "key": "desk.access.creators",
+    "before": "Follow up to 30 creators, with available summaries, sources and call history.",
+    "after": "Follow up to 30 creators and read available summaries, sources and call history."
+  },
+  {
+    "key": "desk.access.vibe",
+    "before": "Explore discussion activity and recorded community observations, with source coverage shown.",
+    "after": "See which stocks people are discussing and which sources are covered."
+  },
+  {
+    "key": "desk.title.screens",
+    "before": "Combined screens",
+    "after": "Stock screens"
+  },
+  {
+    "key": "app.evidence.empty",
+    "before": "No evidence is ready yet. The background worker will continue linking acquired sources; unavailable material remains missing.",
+    "after": "No sources are ready to show yet. Check back later."
+  },
+  {
+    "key": "desk.preview_evidence",
+    "before": "Inspect creator views, source records and missing evidence point by point.",
+    "after": "Check creator views against the source and see where evidence is missing."
+  },
+  {
+    "key": "app.evidence.more_sources",
+    "before": "Another {n} older sources repeating this thesis remain in the source archive.",
+    "after": "{n} older sources with the same argument are available in the archive."
+  },
+  {
+    "key": "app.chart.between_walls",
+    "before": "About +{call}% to the call wall and −{put}% to the put wall. This describes price room; an entry still needs price-action and risk checks.",
+    "after": "About +{call}% to the call wall and −{put}% to the put wall. Check price action and risk before using these reference levels."
+  },
+  {
+    "key": "app.creators.shared_spans_note",
+    "before": "Open a timestamp to see what the creator said.",
+    "after": "Open a timestamp to check what the creator said."
+  },
+  {
+    "key": "app.creators.mention_only",
+    "before": "Mention; no verified direction",
+    "after": "Mentioned; direction not verified"
+  },
+  {
+    "key": "app.creators.verified_view",
+    "before": "Verified view",
+    "after": "Source-checked view"
+  },
+  {
+    "key": "app.evidence.point_changed",
+    "before": "This point has changed or been withdrawn. Current verified content appears below.",
+    "after": "This view has changed or been withdrawn. Current source-checked content appears below."
+  },
+  {
+    "key": "desk.quote_note",
+    "before": "Daily closes follow trading sessions; weekends, holidays and unfinished sessions retain the prior close.",
+    "after": "Daily prices update after each trading day. Until then, you'll see the last available close."
+  },
+  {
+    "key": "app.reader.title_digest",
+    "before": "Upside-confluence digest",
+    "after": "Daily research roundup"
+  },
+  {
+    "key": "desk.preview_reports",
+    "before": "Read dated market reports, macro briefs and volatility scans, with original records available.",
+    "after": "Read market reports, macro briefs and volatility scans by date, with links to the originals."
+  },
+  {
+    "key": "app.creators.research_scope",
+    "before": "Counts cover loaded views, not the creator’s complete history. Price comparisons are prepared in the background.",
+    "after": "Counts cover the views loaded here, not the full channel history. Price comparisons may still be pending."
+  },
+  {
+    "key": "app.creators.study_intro",
+    "before": "Views and subsequent prices, ordered by publication.",
+    "after": "What creators said and how prices changed afterward, newest first."
+  },
+  {
+    "key": "app.creators.status_processing",
+    "before": "The price comparison is being prepared in the background. The view remains available.",
+    "after": "The price comparison is not ready yet. You can still read the view."
+  },
+  {
+    "key": "app.creators.same_time_mixed",
+    "before": "This publication has differing views. Prices refer to the view above.",
+    "after": "The creator expressed different views in this source. Prices are matched to the view shown above."
+  },
+  {
+    "key": "app.creators.group_count",
+    "before": "Creator–stock groups: {n} · Expand to read each view",
+    "after": "{n} creator and stock pairs · Expand a pair to read its views"
+  },
+  {
+    "key": "app.creators.target_missing",
+    "before": "The linked view was not found in the loaded records.",
+    "after": "This view wasn't found in the records loaded so far."
+  },
+  {
+    "key": "app.creators.no_matching_page",
+    "before": "No matches in this batch. Earlier records are available to load.",
+    "after": "No matches here. Load earlier records to keep looking."
+  },
+  {
+    "key": "community.body",
+    "before": "We’re building Ducky for the love of it. Tokens and data cost money, so if it helps you out, buy us a coffee.",
+    "after": "If Ducky helps with your research, buy the duck a coffee. It helps cover our data and running costs."
+  },
+  {
+    "key": "app.evidence.event_basis",
+    "before": "Direction describes the reported ownership event. Current holdings are not established.",
+    "after": "The label describes the ownership change in the filing. It does not confirm current holdings."
+  },
+  {
+    "key": "community.join_hint",
+    "before": "We read every suggestion. See new features and product demos in the group.",
+    "after": "Share feedback and see new features and demos in the group."
+  },
+  {
+    "key": "app.focus.explore_intro",
+    "before": "Find a stock and explore how its viewpoints and evidence have changed.",
+    "after": "Look up a stock to see the news, creator views and research behind it."
+  },
+  {
+    "key": "app.focus.summary_loading",
+    "before": "Loading saved analysis…",
+    "after": "Loading analysis…"
+  },
+  {
+    "key": "app.focus.open_stock",
+    "before": "Open stock",
+    "after": "View stock"
+  },
+  {
+    "key": "app.focus.previous_analysis",
+    "before": "Previous analysis · {date}; newer sources are under review",
+    "after": "Previous analysis · {date}; newer sources still need review"
+  },
+  {
+    "key": "app.focus.first_observed",
+    "before": "Source observed {date}",
+    "after": "First collected {date}"
+  },
+  {
+    "key": "app.focus.coverage_note",
+    "before": "Includes acquired, reviewed sources. Coverage is not exhaustive. Select a longer period to include older content added to the archive.",
+    "after": "Includes sources we have collected and reviewed. Coverage is incomplete. Choose a longer period to see older material added recently."
+  },
+  {
+    "key": "app.focus.start_following",
+    "before": "Follow the stocks you research to see their updates here.",
+    "after": "Add stocks to your watchlist to see their updates here."
+  },
+  {
+    "key": "app.focus.latest_views_note",
+    "before": "Each analysis keeps its original date. These are not necessarily new today.",
+    "after": "Each analysis keeps the date it was prepared. It may be from an earlier day."
+  },
+  {
+    "key": "app.focus.explore_creators",
+    "before": "Financial creators",
+    "after": "Finance creators"
+  },
+  {
+    "key": "app.focus.explore_creators_note",
+    "before": "Trace what an author said, when their view changed, and the original source.",
+    "after": "See what creators said, how their views changed and where to check the source."
+  },
+  {
+    "key": "app.focus.explore_company_events_note",
+    "before": "Explore company filings, insider transactions and their history.",
+    "after": "Look up company filings, insider trades and past disclosures."
+  },
+  {
+    "key": "app.focus.chart_stale",
+    "before": "Historical prices have not yet reached the latest completed session.",
+    "after": "Price history hasn't caught up to the latest completed trading day."
+  },
+  {
+    "key": "app.focus.research_history",
+    "before": "Research changes and history",
+    "after": "Research history"
+  },
+  {
+    "key": "app.focus.deeper_research",
+    "before": "Research in detail",
+    "after": "Keep researching"
+  },
+  {
+    "key": "app.focus.full_chart",
+    "before": "Technical chart and options",
+    "after": "Charts & options"
+  },
+  {
+    "key": "app.focus.counter_view",
+    "before": "Bearish viewpoint",
+    "after": "Bearish view"
+  },
+  {
+    "key": "app.focus.creator_view",
+    "before": "Creator viewpoint",
+    "after": "Creator view"
+  },
+  {
+    "key": "app.focus.analysis_insufficient",
+    "before": "There is not enough evidence for a reliable summary.",
+    "after": "There isn't enough evidence to write a reliable summary yet."
+  },
+  {
+    "key": "app.focus.examples_note",
+    "before": "Open a map to explore sources, viewpoints and subsequent prices. Historical examples keep their original dates and losses.",
+    "after": "Try a stock to see its sources, creator views and later prices. Historical examples include declines."
+  },
+  {
+    "key": "app.focus.example_nvda",
+    "before": "NVDA · Viewpoints and company facts",
+    "after": "NVDA · Creator views and company facts"
+  },
+  {
+    "key": "app.focus.example_nvda_note",
+    "before": "Explore recorded viewpoints, context and sources",
+    "after": "Read views alongside the sources behind them"
+  },
+  {
+    "key": "app.focus.explore_map_note",
+    "before": "Compare bullish views, bearish views and factual context for a stock.",
+    "after": "Compare bullish and bearish views with company facts."
+  },
+  {
+    "key": "app.evidence.group_note",
+    "before": "Records are grouped by author, with original sources and dates preserved. Repeated mentions are not independent evidence.",
+    "after": "Grouped by author, with original sources and dates. Repeated mentions do not count as independent evidence."
+  },
+  {
+    "key": "app.focus.map_intro",
+    "before": "Compare viewpoints with the facts. Open a card for its original source.",
+    "after": "Check creator views against company facts. Open a card to read its source."
+  },
+  {
+    "key": "app.reader.english_unavailable",
+    "before": null,
+    "after": "An English version isn't available. Open the report to read the original."
+  },
+  {
+    "key": "app.reader.english_unavailable_detail",
+    "before": null,
+    "after": "An English version isn't available. You can read the original below."
+  },
+  {
+    "key": "app.reader.original_zh",
+    "before": null,
+    "after": "Read original (Chinese)"
+  },
+  {
+    "key": "idea.original_title_zh",
+    "before": null,
+    "after": "Original title (Chinese)"
+  },
+  {
+    "key": "idea.record_title",
+    "before": null,
+    "after": "{ticker} research record"
+  }
+]

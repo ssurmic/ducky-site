@@ -16,7 +16,7 @@ test('verified mentions remain explicit, every passage is reachable and links ar
  assert.equal(section.querySelectorAll(':scope > article').length,6);
  assert.equal(section.querySelectorAll('details article').length,3);
  assert.equal(section.querySelector('details').open,false);
- assert.match(section.textContent,/Mention; no verified direction/);
+ assert.match(section.textContent,/Mentioned; direction not verified/);
  assert.ok(!section.textContent.includes('Must not publish'));
  assert.equal(section.querySelectorAll('a[href^="javascript:"]').length,0);
  assert.equal(spanSection(rows,['ORCL']),null);
@@ -55,7 +55,7 @@ test('a reviewed position statement remains reachable and supersedes its old neu
  const section=spanSection(post.reviewed_spans,null,'held-intc',{inline:true});
  const card=section.querySelector('[data-point-id="held-intc"].is-focused.is-support');assert.ok(card);
  assert.match(card.textContent,/Self-reported/);assert.match(card.textContent,/Hold/);
- assert.match(card.textContent,/Original outlook labelneutral/);assert.match(card.textContent,/current ownership is not established/);
+ assert.match(card.textContent,/Original outlook labelNeutral/);assert.match(card.textContent,/current ownership is not established/);
  assert.equal(card.querySelector('a[href^="https:"]').href,position.source_url);
  assert.equal(section.querySelectorAll('article').length,2);
 });

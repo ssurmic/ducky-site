@@ -45,7 +45,14 @@ export function num(v, digits) {
   const n = Number(v);
   return n.toLocaleString(LANG === "zh" ? "zh-CN" : "en-US", { minimumFractionDigits: digits ?? 2, maximumFractionDigits: digits ?? 2 });
 }
-export function px(v) { return v === null || v === undefined ? "—" : "$" + num(v, Number(v) >= 1000 ? 0 : 2); }
+export function px(v) {
+  if (v === null || v === undefined || v === '' || !Number.isFinite(Number(v))) return '—';
+  const n = Number(v), magnitude = Math.abs(n);
+  // A positive sub-cent quote must never look like an actual zero price.
+  if (magnitude > 0 && magnitude < .01) return '$' + n.toLocaleString(LANG === 'zh' ? 'zh-CN' : 'en-US',
+    {maximumSignificantDigits:4, ...(magnitude < .000001 ? {notation:'scientific'} : {})});
+  return '$' + num(n, n >= 1000 ? 0 : 2);
+}
 export function pct(v, digits) {
   if (v === null || v === undefined || Number.isNaN(Number(v))) return "—";
   const n = Number(v);

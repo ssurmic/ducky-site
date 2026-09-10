@@ -131,7 +131,7 @@ test('coverage is for loaded views and an older mature view arrives on the next 
  await new Promise(resolve=>setTimeout(resolve,0));
  assert.match(root.textContent,/Views loaded: 2 · Completed 20-day comparisons: 1/);
  assert.match(root.textContent,/-10.0%/);assert.equal(root.querySelectorAll('.study-row').length,2);
- assert.match(root.textContent,/not the creator’s complete history/);root.remove();
+ assert.match(root.textContent,/not the full channel history/);root.remove();
 });
 
 const groupedItem=(id,point,date,{creator='talk',ticker='AVGO',start=0,stance='bull',reference=100,latest=90,ret=-10,...extra}={})=>({
@@ -174,11 +174,11 @@ test('groups default closed, keep distinct returns and stay open when another pa
  await new Promise(resolve=>setTimeout(resolve,0));
  assert.equal(root.querySelectorAll('.study-group').length,2);assert.equal(root.querySelectorAll('.study-row').length,3);
  group=root.querySelector('.study-group');assert.equal(group.open,true);assert.equal(group.querySelectorAll('.study-row').length,2);
- assert.match(group.querySelector('summary').textContent,/differing views/);
+ assert.match(group.querySelector('summary').textContent,/expressed different views/);
  assert.match(group.querySelector('.study-group-views').textContent,/-10.0%/);
  assert.match(group.querySelector('.study-group-views').textContent,/Only after earnings/);
  assert.match(root.querySelectorAll('.study-group')[1].querySelector('summary').textContent,/—/);
- assert.match(root.textContent,/Views loaded: 3/);assert.match(root.textContent,/Creator–stock groups: 2/);
+ assert.match(root.textContent,/Views loaded: 3/);assert.match(root.textContent,/2 creator and stock pairs/);
  root.remove();
 });
 
@@ -222,7 +222,7 @@ test('an unmatched partial page does not claim that no stock views exist or load
  globalThis.fetch=async url=>{requests++;assert.equal(new URL(url,'https://ducky.test').searchParams.has('ticker'),false);
   return Response.json({items:[groupedItem(1,'unmatched','2026-09-03T00:00:00Z',{ticker:'TSLA'})],next_cursor:'older'});};
  const root=document.createElement('section');document.body.append(root);await mountResearch(root,{tickers:['AVGO','NKE']});
- assert.match(root.querySelector('.empty').textContent,/No matches in this batch/);
+ assert.match(root.querySelector('.empty').textContent,/No matches here/);
  assert.ok(!root.textContent.includes('No stock views are ready'));
  assert.ok([...root.querySelectorAll('button')].some(b=>b.textContent==='Load more views'));
  assert.equal(requests,1);root.remove();

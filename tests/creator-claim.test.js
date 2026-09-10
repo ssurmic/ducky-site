@@ -12,7 +12,7 @@ const {claimDetails,claimQualifications,priceContext,groundedClaim,sourceAt}=awa
 test('reviewed views survive omitted public quotations and keep missing qualifiers explicit',()=>{
  const call={extractor_version:'creator-claims-v1',evidence_verified:true,verification:'source_reviewed',source_hash:'abc',segment_ids:[2,3],evidence:'',action:'add',intent:'conditional',condition_text:'Only if sales improve'};
  assert.ok(groundedClaim(call));assert.equal(groundedClaim({...call,evidence_verified:false}),false);
- const node=claimDetails(call);assert.match(node.textContent,/Only if sales improve/);assert.match(node.textContent,/Not explicit in the source/);assert.match(node.textContent,/Conditional plan/);
+ const node=claimDetails(call);assert.match(node.textContent,/Only if sales improve/);assert.match(node.textContent,/Not stated in the source/);assert.match(node.textContent,/Conditional plan/);
  assert.equal(sourceAt('https://youtube.com/watch?v=abcdefghijk',2075.9),'https://youtube.com/watch?v=abcdefghijk&t=2075');
  assert.equal(sourceAt('https://youtube.com.evil.test/watch',12),null);
 });
@@ -33,7 +33,7 @@ test('corrected historical interpretation stays labeled and v2 retains source pr
 test('map and creator adapters preserve self-reported behavior separately from outlook',()=>{
  const basis='self_reported_position_behavior',data={action:'hold',source_stance:'neutral'};
  assert.equal(claimQualifications({basis,data}).textContent,claimQualifications({basis,...data}).textContent);
- assert.match(claimQualifications({basis,data}).textContent,/Original outlook labelneutral/);
+ assert.match(claimQualifications({basis,data}).textContent,/Original outlook labelNeutral/);
  assert.ok(!claimQualifications({basis}).textContent.includes('Original outlook label'));
  assert.equal(claimQualifications({basis:'verified_mention_no_direction',...data}),null);
 });

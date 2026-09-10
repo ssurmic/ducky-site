@@ -12,6 +12,7 @@
   var LIVE = CFG.API_BASE ? CFG.API_BASE.replace(/\/$/, "") + (root.getAttribute("data-path") || "/public/ideas.json") : null;
   var FALLBACK = root.getAttribute("data-fallback") || "/ideas.json";
   var DETAIL_BASE = root.getAttribute("data-detail-base") || "/ideas/";
+  var lang = document.documentElement.lang.startsWith('en') ? 'en' : 'zh';
   var $ = function (id) { return document.getElementById(id); };
 
   function fmt(s, vars) { return String(s || "").replace(/\{(\w+)\}/g, function (_, k) { return vars[k] != null ? vars[k] : "—"; }); }
@@ -24,6 +25,20 @@
   function dirLabel(d) { return d > 0 ? L.dir_up : d < 0 ? L.dir_down : L.dir_flat; }
   function illustrative(it) { return it.illustrative === true || /^example-/.test(it.slug || ''); }
   function price(value) { return Number(value).toFixed(2); }
+  function ideaTitle(it) {
+    var translated=it['title_'+lang] || (typeof it.title==='object' && it.title && it.title[lang]);
+    var original=typeof it.title==='string'?it.title:it.title?.zh || it.slug || '';
+    var missing=lang==='en' && !translated && /[\u3400-\u9fff]/.test(original);
+    return {text:translated || (missing?fmt(L.record_title,{ticker:it.ticker || it.slug}):original), original:missing?original:null};
+  }
+  function originalTitle(text) {
+    var details=el('details','idea-original-title');details.append(el('summary',null,L.original_title_zh),el('p',null,text));return details;
+  }
+  function readableTime(value) {
+    if (!value) return '—';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+    var date=new Date(value);return Number.isFinite(date.getTime())?date.toISOString().replace('T',' ').slice(0,16)+' UTC':value;
+  }
 
   // outcome so far from px fields: exit_px (closed) or last_px (open) vs entry_px
   function outcome(it) {
@@ -67,7 +82,7 @@
 
   function metaLine(j, cached) {
     var g = $("ideas-generated"), f = $("ideas-fixture");
-    if (g) g.textContent = (L.generated || "generated") + " " + (j.generated_at || j.as_of || "—") + (cached ? " · " + (L.static || "") : "");
+    if (g) { var generated=j.generated_at || j.as_of;g.textContent=(L.generated || 'Updated')+' ';var time=el('time',null,readableTime(generated));if(generated)time.setAttribute('datetime',generated);g.append(time);if(cached)g.append(' · '+(L.static || '')); }
     if (f && /fixture/i.test(String(j.note || ""))) { f.textContent = L.fixture || "FIXTURE"; f.className = "badge badge-placeholder"; f.title = j.note; }
   }
 
@@ -80,7 +95,7 @@
     ideas.forEach(function (it) {
       var tr = el("tr");
       var tdt = el("td"); tdt.appendChild(el("span", "tk", it.ticker || "—")); tr.appendChild(tdt);
-      var tdl = el("td", "summary"); var a = el("a", "idea-link", it.title || it.slug); a.href = detailHref(it.slug); tdl.appendChild(a); tr.appendChild(tdl);
+      var title=ideaTitle(it),tdl = el("td", "summary"); var a = el("a", "idea-link", title.text); a.href = detailHref(it.slug); tdl.appendChild(a);if(title.original)tdl.append(originalTitle(title.original));tr.appendChild(tdl);
       var tds = el("td"); tds.appendChild(statusPill(it.status)); tr.appendChild(tds);
       var tdb = el("td"); tdb.appendChild(illustrative(it)?el('span','badge badge-placeholder',L.illustration):bookPill(it.book)); tr.appendChild(tdb);
       tr.appendChild(el("td", "mono", it.opened_d || "—"));
@@ -95,11 +110,12 @@
     var slug = slugFromLocation();
     var it = (j.ideas || []).filter(function (x) { return x.slug === slug; })[0];
     var title = $("idea-title");
-    if (!it) { title.textContent = L.not_found || "Not found"; var e = $("idea-error"); if (e) { e.hidden = false; e.textContent = L.not_found; } return; }
-    var t0 = it.title || it.slug;
+    if (!it) { title.textContent = L.not_found || "Not found";root.querySelector('.idea-grid').hidden=true;return; }
+    var localizedTitle=ideaTitle(it),t0=localizedTitle.text;
     document.title = (it.ticker && t0.indexOf(it.ticker) !== 0 ? it.ticker + " · " : "") + t0 + " · Ducky Bot";
-    title.textContent = it.title || it.slug;
+    title.textContent = t0;
     var head = $("idea-head"); head.appendChild(bookPill(it.book)); head.appendChild(statusPill(it.status));
+    if(localizedTitle.original)head.append(originalTitle(localizedTitle.original));
     if(illustrative(it))head.appendChild(el('p','data-notice',L.illustration_note));
     if(it.lang && !document.documentElement.lang.startsWith(it.lang))head.appendChild(el('p','caption',L.source_language));
     var meta = $("idea-meta"); meta.innerHTML = "";

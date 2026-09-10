@@ -178,7 +178,7 @@ test('stock overview preserves opposing evidence and loads history only on expan
     analysis:{overview:item().overview,sections:[]}}});
  };
  const dispose=await stock.mount(root,{ticker:'NVDA'});assert.equal(calls.length,2);
- assert.equal(root.querySelectorAll('.stock-source-card').length,3);assert.ok([...root.querySelectorAll('.stock-source-card')].some(card=>/Bearish viewpoint/.test(card.textContent)));
+ assert.equal(root.querySelectorAll('.stock-source-card').length,3);assert.ok([...root.querySelectorAll('.stock-source-card')].some(card=>/Bearish view/.test(card.textContent)));
  assert.equal(root.querySelector('.focus-history').open,false);root.querySelector('.focus-history').open=true;await pause();
  assert.equal(calls.filter(p=>p==='/me/research-changes').length,1);dispose();
 });

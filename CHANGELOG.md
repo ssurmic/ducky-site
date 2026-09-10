@@ -1,5 +1,14 @@
 # Change log
 
+## 2026-09-10 · English walkthrough fixes (local verification)
+
+Revised 128 English labels and messages, made missing English reports explicit while
+retaining originals, and preserved sub-cent prices instead of showing false zeros.
+Calendar expiration labels, research-log titles/times and the English track-record
+disclaimer are clearer. All 642 tests, copy lint and 1,274 links passed. Source data,
+review gates and investing rules are unchanged. Deployment and browser acceptance
+remain separate. [Changes, checks and limits](reports/english-qa-20260910/README.md).
+
 ## 2026-09-10 · Quote clocks and long-open page recovery (released: da4449b4 / Pages39acb98a)
 
 Current list/stock/map prices share dated quote selection, retaining the newer valid quote on failure. Returning pages revalidate; healthy old releases offer an explicit update without losing forms or auth. Daily metrics and historical evidence retain their own dates. [Checks and limits](reports/MINUTE-QUOTES-MOBILE-UI-2026-09-10.md).

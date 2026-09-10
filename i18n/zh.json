@@ -4133,5 +4133,10 @@
   "app.watch.mixed_quote_note": "报价时间见各行；日线指标截至 {date} 收盘。",
   "app.watch.analysis_price": "原分析采用的价格",
   "app.release.available": "Ducky 有新版可用。",
-  "app.release.open_latest": "打开新版"
+  "app.release.open_latest": "打开新版",
+  "app.reader.english_unavailable": "暂无英文版本，可打开报告阅读原文。",
+  "app.reader.english_unavailable_detail": "暂无英文版本，可展开下方原文阅读。",
+  "app.reader.original_zh": "阅读中文原文",
+  "idea.original_title_zh": "中文原标题",
+  "idea.record_title": "{ticker} 研究记录"
 }

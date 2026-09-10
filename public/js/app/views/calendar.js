@@ -50,8 +50,8 @@ const MACRO_META = [
     impact: ["采购经理调查。50 是扩张与收缩的分界，需结合行业和分项数据查看。", "Purchasing managers survey. A reading of 50 separates expansion from contraction; review the sector and components as well."] },
 ];
 const STRUCT_ABBR = [
-  { re: /四巫|quad|witch/i, abbr: ["四巫", "Quad"] },
-  { re: /期权|OPEX|expir/i, abbr: ["OPEX", "OPEX"] },
+  { re: /四巫|quad|witch/i, abbr: ["四巫", "Quarterly expiration"] },
+  { re: /期权|OPEX|expir/i, abbr: ["OPEX", "Options expiration"] },
   { re: /月末|month.?end/i, abbr: ["月末", "Month-end"] },
   { re: /MSCI/i, abbr: ["MSCI", "MSCI"] },
   { re: /标普|S&P|SPX/i, abbr: ["标普", "S&P"] },
