@@ -12,7 +12,8 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
   let disposed=false,followingBusy=false;
   const shell=el('article.focus-stock'),body=el('div'),chart=el('section.focus-chart',el('h2',s('focus.price_history')),spinner());
   const from=['today','explore'].includes(query.get('from'))?query.get('from'):'watchlist';
-  const head=el('header.focus-heading',el('div',el('a.small.muted',{href:'#/'+from},'← '+s('nav.'+from)),el('h1',ticker)));
+  const company=el('p.small.muted',{hidden:true});
+  const head=el('header.focus-heading',el('div',el('a.small.muted',{href:'#/'+from},'← '+s('nav.'+from)),el('h1',ticker),company));
   const follow=el('button.btn.btn-ghost',{type:'button'});
   const sync=()=>{const watched=(store.get('watchlist')||[]).includes(ticker);follow.textContent=s(watched?'focus.unfollow_stock':'focus.follow_stock');follow.disabled=followingBusy;};
   sync();follow.addEventListener('click',async()=>{
@@ -52,6 +53,7 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
       const result=await api.get('/stock-research/'+encodeURIComponent(ticker),{signal});
       if(disposed||signal?.aborted)return;
       if(result?.ticker!==ticker||!Object.hasOwn(result,'evidence')||(result.evidence&&!Array.isArray(result.evidence.nodes)))throw new api.ApiError(502,{error:'invalid_research_response'});
+      company.textContent=typeof result.price?.company==='string'?result.price.company:'';company.hidden=!company.textContent||company.textContent===ticker;
       clear(body);const doc=result.evidence||{ticker,nodes:[],analysis_status:'pending'};
       body.append(compactPrice(result.price),analysisPanel(doc,{formatTime:localTime}));
       const important=(doc.nodes||[]).filter(n=>n.priority==='direct'&&n.intent!=='mention');

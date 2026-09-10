@@ -38,7 +38,7 @@ export function reportCard(row,{onHistory,archive=false}={}){
     el('div.stock-brief-head',el('h2',ticker?'$'+ticker:s('stockbrief.title')),
       el('span.chip',s('stockbrief.status_'+(row.status||'unavailable')))));
   if(!['ready','stale'].includes(row.status)||!row.report){
-    card.append(el('p.muted',s('stockbrief.unready_'+(row.status==='source_changed'?'source_changed':row.refresh?.status==='failed'?'failed':'pending'))));
+    card.append(el('p.muted',s('stockbrief.unready_'+(row.reason==='claim_check_required'?'claim_check_required':row.status==='source_changed'?'source_changed':row.refresh?.status==='failed'?'failed':'pending'))));
     if(ticker)card.append(el('a.btn.btn-ghost.btn-sm',{href:'#/research/'+ticker},s('stockbrief.evidence')));
     return card;
   }
