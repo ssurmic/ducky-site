@@ -24,7 +24,8 @@ test('recent provider quote is separate from the completed close and expires by 
  const map=overviewView([r],{view:'heatmap',area:'equal',session:'2026-09-08',onSelect:()=>{}});
  assert.match(map.querySelector('.watch-tile-price').textContent,/100/);
  const stale=overviewView([{...r,quote:{...r.quote,status:'stale'}}],{view:'list',onSelect:()=>{}});
- assert.match(stale.querySelector('.watch-row-price').textContent,/100/);
+ assert.match(stale.querySelector('.watch-row-price').textContent,/105/);
+ assert.match(stale.querySelector('.watch-quote').textContent,/Saved quote/);
 });
 
 test('missing YTD identifies the unavailable input instead of claiming a small sample',()=>{
@@ -276,4 +277,28 @@ test('collapsed list exposes the analysis clock and distinguishes retained text 
    assert.doesNotMatch(summary.textContent,/An attributed previous view|2026/);
   }
  }
+});
+
+test('saved quote remains useful after expiry but never replaces the same or newer daily close',async()=>{
+ const {displayQuote}=await import('../public/js/app/watchlist-overview.js');
+ const q={status:'stale',price:105,quote_at:'2026-09-10T19:40:00Z',provider:'yahoo',feed:'yahoo_regular_session'};
+ const r={price:100,price_session:'2026-09-09',quote:q},now=Date.parse('2026-09-10T20:10:00Z');
+ assert.equal(displayQuote(r,now),q);
+ assert.equal(displayQuote({...r,price_session:'2026-09-10'},now),null);
+ assert.equal(displayQuote({...r,price_session:'2026-09-11'},now),null);
+ assert.equal(displayQuote({...r,quote:{...q,price:NaN}},now),null);
+ assert.equal(displayQuote(r,Date.parse(q.quote_at)-1),null);
+ assert.equal(displayQuote({quote:q},now),q);
+});
+
+test('stock and map current-price labels agree without modifying saved analysis inputs',async()=>{
+ const {compactPrice}=await import('../public/js/app/stock-reading.js');
+ const {priceBadge}=await import('../public/js/app/evidence-context.js');
+ const q={status:'current',price:105,quote_at:new Date().toISOString(),provider:'yahoo',feed:'yahoo_regular_session'};
+ const r={price:100,price_session:'2020-01-01',quote:q};
+ const saved={price:{data:{price:90,price_session:'2020-01-01:CLOSED'}}};
+ const doc={ticker:'NVDA',display_price:r,market_context:saved};
+ assert.match(compactPrice(r).textContent,/105/);assert.match(priceBadge(doc).textContent,/105/);
+ assert.equal(saved.price.data.price,90);
+ assert.match(priceBadge({...doc,display_price:undefined}).textContent,/90/);
 });

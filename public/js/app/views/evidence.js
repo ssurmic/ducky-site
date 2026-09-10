@@ -333,8 +333,19 @@ export async function mount(root,route={}){
     }
   }
   trialControls();
-  const host=el('div');root.append(host);
+  const host=el('div');root.append(host);let displayed=null,archived=false;
+  const updatePrice=event=>{
+    const update=event.detail;
+    if(!valid()||archived||example||!displayed||update?.path!=='/evidence/'+ticker)return;
+    const unchanged=material({...displayed,display_price:null},update.path)===material({...update.value,display_price:null},update.path);
+    if(!unchanged)return; // Changed research keeps the explicit update notice.
+    displayed.display_price=update.value.display_price;
+    currentMap?.querySelector('.evidence-price')?.replaceWith(priceBadge(displayed));
+    update.accepted=true;
+  };
+  root.addEventListener('ducky:shared-read',updatePrice);
   async function load(version=null){
+    displayed=null;archived=!!version;
     const id=++request;closeModal();currentMap?.dispose?.();currentMap=null;clear(host);
     if(!store.get('me')){host.append(el('a.btn.btn-primary',{href:'#/login'},s('login.pw_btn')));return;}
     if(example){
@@ -364,7 +375,7 @@ export async function mount(root,route={}){
       const doc=await api.get('/evidence/'+ticker+(version?'?version='+encodeURIComponent(version):''),{signal:ctl.signal,silent402:true});
       if(!valid(id))return;
       if(!doc||doc.ticker!==ticker||!Array.isArray(doc.nodes))throw Error('invalid_response');
-      clear(host);currentMap=mapView(doc,{archive:!!version,onPickTicker:picker});host.append(currentMap);
+      displayed=doc;clear(host);currentMap=mapView(doc,{archive:!!version,onPickTicker:picker});host.append(currentMap);
       const sourceId=!version?route.query?.get('source'):null;
       if(sourceId){
         const target=doc.nodes.find(n=>n.id===sourceId||(n.evidence||[]).some(e=>[e.id,e.point_id,e.legacy_claim_id,e.source_record_id].includes(sourceId)));
@@ -388,7 +399,7 @@ export async function mount(root,route={}){
     }catch(error){if(valid(id)){clear(host);host.append(errorBox(error,()=>load(version)));}}
   }
   const unsubs=[store.subscribe('me',()=>{chosen=store.get('me')?.experience?.evidence?.selected||[];trialControls();load();})];
-  const cleanup=()=>{alive=false;request++;currentMap?.dispose?.();currentMap=null;ctl.abort();unsubs.forEach(fn=>fn());closeModal();};
+  const cleanup=()=>{root.removeEventListener('ducky:shared-read',updatePrice);alive=false;request++;currentMap?.dispose?.();currentMap=null;ctl.abort();unsubs.forEach(fn=>fn());closeModal();};
   route.signal?.addEventListener('abort',cleanup,{once:true});
   if(route.signal?.aborted)cleanup();else {
     if(store.get('me')&&!store.isPro())try{const r=await api.get('/me/evidence',{signal:ctl.signal});if(valid()){chosen=r.selected||[];if(JSON.stringify(chosen)!==JSON.stringify(store.get('me')?.experience?.evidence?.selected||[]))syncSelection();if(!example&&!route.ticker&&chosen.length){ticker=chosen[0];const name=heading.querySelector('strong.mono');if(name)name.textContent=ticker;}trialControls();}}catch(error){if(valid())trial.append(errorBox(error));}

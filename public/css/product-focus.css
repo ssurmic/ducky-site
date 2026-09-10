@@ -202,3 +202,6 @@ body:has(.focus-nav) .watch-modes .btn{min-width:44px;}
  .evidence-lanes .evidence-water-caption{grid-column:1/-1;justify-self:start;min-height:24px;}
 }
 @media(max-width:600px){.stock-core-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}.stock-core-actions>a{min-width:0;justify-content:center;}}
+
+.app-release-update:not([hidden]){display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 20px;padding:10px 14px;border:1px solid var(--border,#293747);border-radius:12px;font-size:14px;flex-wrap:wrap}
+.app-release-update button{flex-shrink:0}

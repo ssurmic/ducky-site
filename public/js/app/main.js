@@ -9,7 +9,10 @@ import {renderAccountAvatar} from "./account-avatar.js";
 import { s } from "./strings.js";
 import { rememberTarget, takeTarget, safeTarget, signedInTarget, needsEmailSetup } from "./login-target.js";
 
+import {watchRelease} from './release-recovery.js';
+
 async function boot() {
+  watchRelease(document.querySelector('.app-main')||document.body);
   tg.boot();
   api.setPaymentRequiredHandler(ui.upsell);
   document.body.classList.toggle("in-tg", tg.inTG);

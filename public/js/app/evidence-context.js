@@ -1,5 +1,6 @@
 import {el,modal,px,num,dateTime} from './ui.js';
 import {s} from './strings.js';
+import {displayQuote,quoteLabel,quoteTime} from './watchlist-overview.js';
 const finite=n=>typeof n==='number'&&Number.isFinite(n);
 const date=v=>typeof v==='string'?v.slice(0,10):'—';
 const savedQuote=q=>q?.data?.basis==='saved_provider_quote_not_live_tick'||/:(RTH|CLOSED)$/.test(q?.data?.price_session||'');
@@ -19,7 +20,10 @@ export function waterLevel(doc){
 }
 export function marketDetail(doc){
   const m=doc.market_context||{},quote=m.price,vol=m.volatility?.data||{},band=m.price_position?.data,level=waterLevel(doc);
+  const row=doc.display_price,latest=displayQuote(row);
   modal(s('evidence.market_title'),el('div.evidence-market-detail',
+    latest?el('section',el('p.evidence-market-price',px(latest.price)),el('p.small',quoteLabel(latest)+' · '+quoteTime(latest)),el('p.small.muted',latest.provider+' · '+latest.feed)):null,
+    row?el('h3',s('watch.analysis_price')):null,
     el('p.evidence-market-price',hasPrice(quote)?px(quote.data.price):'—'),
     el('p.small.muted',s(priceLabel(doc),{date:date(quote?.data?.price_session)})),
     el('p.small.muted',s(savedQuote(quote)?'evidence.saved_quote_note':'evidence.quote_note')),
@@ -34,6 +38,9 @@ export function marketDetail(doc){
     el('a.btn.btn-ghost',{href:'#/chart/'+encodeURIComponent(doc.ticker)},s('radar.chart'))));
 }
 export function priceBadge(doc){
+  const row=doc.display_price,latest=displayQuote(row);
+  if(latest||finite(row?.price)&&row.price>0)return el('button.evidence-price',{type:'button',onclick:()=>marketDetail(doc),'aria-label':s('evidence.market_title')},
+    el('strong.mono',px(latest?.price||row.price)),el('span',latest?quoteLabel(latest)+' · '+quoteTime(latest):s('watch.close_session',{date:row.price_session||'—'})));
   const q=doc.market_context?.price;
   return el('button.evidence-price',{type:'button',onclick:()=>marketDetail(doc),'aria-label':s('evidence.market_title')},
     el('strong.mono',hasPrice(q)?px(q.data.price):'—'),

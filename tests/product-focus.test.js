@@ -287,3 +287,20 @@ test('pending stock analysis still shows the saved information map without an ex
  assert.ok(root.querySelector('.stock-information-map .evidence-node'));
  assert.equal(root.querySelectorAll('.evidence-analysis').length,1);assert.equal(calls.length,2);dispose();
 });
+
+test('a quote-only map refresh preserves open author groups; source changes still require review',async()=>{
+ const evidence=await import('../public/js/app/views/evidence.js');
+ const root=setup();const at=new Date().toISOString();
+ const doc={ticker:'NVDA',nodes:[node()],status:'ready',analysis_status:'pending',display_price:{quote:{price:105,status:'current',quote_at:at,provider:'yahoo',feed:'yahoo_regular_session'}}};
+ globalThis.fetch=async input=>Response.json(String(input).startsWith('/evidence/')?doc:{items:[]});
+ const dispose=await evidence.mount(root,{ticker:'NVDA'});
+ const card=root.querySelector('.evidence-node');
+ const update={path:'/evidence/NVDA',value:{...doc,display_price:{quote:{...doc.display_price.quote,price:106}}},accepted:false};
+ root.dispatchEvent(new window.CustomEvent('ducky:shared-read',{detail:update}));
+ assert.equal(update.accepted,true);assert.match(root.querySelector('.evidence-price').textContent,/106/);
+ assert.equal(root.querySelector('.evidence-node'),card);
+ const changed={path:update.path,value:{...update.value,nodes:[]},accepted:false};
+ root.dispatchEvent(new window.CustomEvent('ducky:shared-read',{detail:changed}));assert.equal(changed.accepted,false);
+ dispose();
+ const late={...update,accepted:false};root.dispatchEvent(new window.CustomEvent('ducky:shared-read',{detail:late}));assert.equal(late.accepted,false);
+});

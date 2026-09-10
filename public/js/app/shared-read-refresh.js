@@ -43,7 +43,7 @@ export function material(value,path=''){
 
 export function sharedReadRefresh(root,{signal,reload,interval=60000}={}){
   delete root.dataset.freshness;
-  const epoch=store.epoch(),entries=new Map();let alive=true,running=false,timer=null,cursor=0,failures=0,changed=false;
+  const epoch=store.epoch(),entries=new Map();let alive=true,running=false,timer=null,cursor=0,failures=0,changed=false,lastAttempt=0;
   const active=()=>alive&&!signal?.aborted&&epoch===store.epoch()&&!!store.get('me');
   const notice=el('aside.shared-read-update',{hidden:true,role:'status'},el('p',s('refresh.changed')),
     el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{if(active())reload();}},s('refresh.load')));
@@ -68,7 +68,7 @@ export function sharedReadRefresh(root,{signal,reload,interval=60000}={}){
     clearTimeout(timer);if(!active()||running)return;
     const available=pendingReads();
     if(document.visibilityState==='hidden'||window.navigator?.onLine===false||!available.length){schedule();return;}
-    running=true;
+    running=true;lastAttempt=Date.now();
     const [path,prior]=available[cursor++%available.length];
     try{
       const value=await api.get(path,{...prior.options,signal,silent402:true,observe:false});
@@ -79,7 +79,7 @@ export function sharedReadRefresh(root,{signal,reload,interval=60000}={}){
         // Only the mounted view can accept its own cached numeric update. Other
         // endpoints retain the existing explicit reload/disclosure behaviour.
         const update={path,value,accepted:false};
-        if(numericRead(path))(root.querySelector('.route-page')||root).dispatchEvent(
+        if(numericRead(path)||/^\/evidence\/[A-Z][A-Z0-9.-]{0,9}$/.test(path))(root.querySelector('.route-page')||root).dispatchEvent(
           new window.CustomEvent('ducky:shared-read',{detail:update}));
         if(update.accepted)entries.set(path,{options:prior.options,signature});
         else {changed=true;notice.hidden=false;root.dataset.freshness='earlier-version';}
@@ -97,9 +97,10 @@ export function sharedReadRefresh(root,{signal,reload,interval=60000}={}){
       }
     }finally{running=false;schedule();}
   }
-  const visible=()=>{if(document.visibilityState!=='hidden')schedule();};
+  const visible=()=>{if(document.visibilityState!=='hidden'){if(Date.now()-lastAttempt>=30000)check();else schedule();}};
   document.addEventListener('visibilitychange',visible);
-  const stop=()=>{alive=false;clearTimeout(timer);off();offFailure();document.removeEventListener('visibilitychange',visible);};
+  window.addEventListener('pageshow',visible);window.addEventListener('online',visible);
+  const stop=()=>{alive=false;clearTimeout(timer);off();offFailure();document.removeEventListener('visibilitychange',visible);window.removeEventListener('pageshow',visible);window.removeEventListener('online',visible);};
   signal?.addEventListener('abort',stop,{once:true});
   schedule();return {check,stop};
 }

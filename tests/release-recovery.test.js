@@ -56,3 +56,28 @@ test('release identity reads only a content hash from the immutable graph path',
   assert.equal(moduleVersion('https://duckybot.app/app-assets/77db404861dc58974d8a/router.js'),'77db404861dc58974d8a');
   assert.equal(moduleVersion('https://duckybot.app/js/app/router.js?v=old'),null);
 });
+
+test('healthy old page checks on return and offers one update without losing a draft or session',async()=>{
+ const {watchRelease}=await import('../public/js/app/release-recovery.js');
+ const host=document.createElement('main');host.innerHTML='<input value="unfinished">';document.body.append(host);
+ let at=0,version='a'.repeat(20),calls=0,reloads=0;
+ const watch=watchRelease(host,{currentVersion:version,now:()=>at,fetchRelease:async()=>{calls++;return Response.json({version});},refresh:()=>reloads++});
+ await watch.ready;assert.equal(calls,1);assert.equal(host.querySelector('aside').hidden,true);
+ version='b'.repeat(20);await watch.check();assert.equal(calls,1);
+ at=61000;window.dispatchEvent(new window.Event('pageshow'));await new Promise(r=>setTimeout(r,0));
+ assert.equal(calls,2);assert.equal(host.querySelector('aside').hidden,false);assert.equal(reloads,0);
+ assert.equal(host.querySelector('input').value,'unfinished');
+ host.querySelector('button').click();host.querySelector('button').click();assert.equal(reloads,1);
+ at+=60000;await watch.check();assert.equal(calls,2);watch.stop();host.remove();
+});
+
+test('release checker survives invalid/network responses and cannot render after disposal',async()=>{
+ const {watchRelease}=await import('../public/js/app/release-recovery.js');
+ for(const fetchRelease of [async()=>{throw Error('offline');},async()=>Response.json({version:'<script>'})]){
+  const host=document.createElement('main');const watch=watchRelease(host,{currentVersion:'a'.repeat(20),fetchRelease});
+  await watch.ready;assert.equal(host.querySelector('aside').hidden,true);watch.stop();
+ }
+ let resolve;const host=document.createElement('main');
+ const watch=watchRelease(host,{currentVersion:'a'.repeat(20),fetchRelease:()=>new Promise(r=>resolve=r)});
+ watch.stop();resolve(Response.json({version:'b'.repeat(20)}));await watch.ready;assert.equal(host.children.length,0);
+});
