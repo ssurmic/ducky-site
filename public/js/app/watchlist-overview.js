@@ -183,8 +183,8 @@ export function overviewView(rows, options) {
     sortRows(filtered,sort,sortDirection);
     if(renderResearch){
       const sortHeader=(key,label)=>el('th',{scope:'col','aria-sort':sort===key?(sortDirection==='asc'?'ascending':'descending'):'none'},
-        el('button.watch-sort',{type:'button','data-sort':key,'data-reading-key':'sort:'+key,onclick:()=>onSort?.(key)},label,
-          el('span',{'aria-hidden':'true'},sort===key?(sortDirection==='asc'?' ↑':' ↓'):' ↕')));
+        el('button.watch-sort',{type:'button','data-sort':key,'data-reading-key':'sort:'+key,onclick:()=>onSort?.(key)},
+          el('span.watch-sort-label',label),el('span.watch-sort-icon',{'aria-hidden':'true'})));
       const table=el('table.watch-compact-table',el('thead',el('tr',sortHeader('ticker',s('watch.stock')),
         sortHeader('change_pct',s('watch.metric_quote')),el('th',{scope:'col'},s('watch.view_reading')),
         sortHeader('market_cap',s('watch.cap')),...metricKeys.map(key=>sortHeader(key,metricLabel(key))))));
