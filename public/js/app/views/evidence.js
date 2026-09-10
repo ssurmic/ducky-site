@@ -249,11 +249,11 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
         if(!bucket.author){for(const node of bucket.nodes)list.append(cards.get(node.id));continue;}
         const block=el('section.evidence-author-group',{'data-author':bucket.author.id},
           el('header.evidence-author-heading',el('a',{href:creatorTarget({selected:bucket.author.id,mine:false,ticker:doc.ticker}),'aria-label':bucket.author.name+' · '+s('evidence.author_archive')},bucket.author.name),
-            el('span.small.muted',s('evidence.author_points',{n:bucket.nodes.length})+(bucket.sources.size?' · '+s('evidence.author_sources',{n:bucket.sources.size}):''))));
+            el('span.small.muted',s(bucket.nodes.length===1?'evidence.author_points_single':'evidence.author_points',{n:bucket.nodes.length})+(bucket.sources.size?' · '+s(bucket.sources.size===1?'evidence.author_sources_single':'evidence.author_sources',{n:bucket.sources.size}):''))));
         for(const node of bucket.nodes.slice(0,2))block.append(cards.get(node.id));
         if(bucket.nodes.length>2){
           const rest=el('details.evidence-author-more',{'data-reading-key':doc.ticker+':author:'+stance+':'+bucket.author.id},
-            el('summary',s('evidence.author_more',{n:bucket.nodes.length-2})),...bucket.nodes.slice(2).map(n=>cards.get(n.id)));
+            el('summary',s(bucket.nodes.length===3?'evidence.author_more_single':'evidence.author_more',{n:bucket.nodes.length-2})),...bucket.nodes.slice(2).map(n=>cards.get(n.id)));
           rest.addEventListener('toggle',()=>connections.refresh());block.append(rest);
         }
         list.append(block);

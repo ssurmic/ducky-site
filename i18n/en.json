@@ -4124,5 +4124,8 @@
   "app.focus.open_full_map": "Full research map",
   "app.focus.history_short": "History",
   "app.focus.creators_short": "Creators",
-  "app.focus.calendar_short": "Calendar"
+  "app.focus.calendar_short": "Calendar",
+  "app.evidence.author_points_single": "1 record",
+  "app.evidence.author_sources_single": "1 original source",
+  "app.evidence.author_more_single": "Show 1 more record from this author"
 }

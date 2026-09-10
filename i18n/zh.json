@@ -4124,5 +4124,8 @@
   "app.focus.open_full_map": "完整信息导图",
   "app.focus.history_short": "历史记录",
   "app.focus.creators_short": "财经作者",
-  "app.focus.calendar_short": "投资日历"
+  "app.focus.calendar_short": "投资日历",
+  "app.evidence.author_points_single": "1 条记录",
+  "app.evidence.author_sources_single": "1 份原文",
+  "app.evidence.author_more_single": "再看这位作者的 1 条记录"
 }

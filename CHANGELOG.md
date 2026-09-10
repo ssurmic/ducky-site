@@ -1,4 +1,15 @@
 # Change log
+## 2026-09-10 — Singular author-history counts
+
+The signed-in English MU page exposed “1 records” and “1 original sources.” Author-group headings
+and the one-more-record disclosure now use singular translations; plural counts and Chinese remain
+consistent. This changes wording only, not records, grouping or source identities.
+
+Validation: 614 frontend tests; bilingual copy/link gates; 320×650 and 390×650 stock-page QA in both
+languages and light/dark themes. All eight checks had no document overflow and 522px main viewport;
+visible screenshots confirmed the single-source author group. These are synthetic viewport checks,
+not physical phones. Publishing status is recorded after CI.
+
 ## 2026-09-10 — Restore visible maps, creator history and calendar (deployed)
 
 List is the default watchlist on desktop and phone, with the saved overview in a table column and
