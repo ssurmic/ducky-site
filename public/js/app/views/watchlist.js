@@ -26,7 +26,8 @@ export async function mount(root) {
   root.classList.add("watchlist-view");
   let overview = null, selected = null, disposed = false, loading = true;
   const focused=window.DUCKY?.PRODUCT_FOCUS_ENABLED===true;
-  let research=new Map(),researchFailed=false,loadSeq=0,membershipAvailable=false;
+  let research=new Map(),researchFailed=false,researchLoading=true,loadSeq=0,membershipAvailable=false;
+  const missingResearch=()=>({status:researchLoading?'read_pending':researchFailed?'read_failed':'pending'});
   let view = "list", query = "", sort = "market_cap", sortDirection = "desc", area = 'equal', candidate = null, adding = false;
   // Each entry starts on List, consistently on desktop and phone.
   // List combines prices, the shared overview and a direct information-map action.
@@ -147,13 +148,13 @@ export async function mount(root) {
     if(view==='reading'){
       const ordered=[...items].filter(t=>[t,rows.get(t)?.company||''].join(' ').toLowerCase().includes(query.trim().toLowerCase()))
         .sort((a,b)=>(rows.get(b)?.market_cap||0)-(rows.get(a)?.market_cap||0)||a.localeCompare(b));
-      replaceReading(list,el('div.stock-reading-list',...ordered.map(t=>researchRow(t,rows.get(t),research.get(t)||{status:researchFailed?'read_failed':'pending'}))));
+      replaceReading(list,el('div.stock-reading-list',...ordered.map(t=>researchRow(t,rows.get(t),research.get(t)||missingResearch()))));
       if(!ordered.length)list.append(el('p.muted',s('focus.no_matching_stocks')));
       return;
     }
     const tableLeft=list.querySelector('.watch-table-scroll')?.scrollLeft||0;
     replaceReading(list,overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
-      {view,query,sort,sortDirection,onSort:key=>{sortDirection=key===sort?(sortDirection==='desc'?'asc':'desc'):key==='ticker'?'asc':'desc';sort=key;render();},area,renderResearch:focused?t=>reading({...research.get(t),ticker:t,...(!research.has(t)?{status:researchFailed?'read_failed':'pending'}:{})}):null,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
+      {view,query,sort,sortDirection,onSort:key=>{sortDirection=key===sort?(sortDirection==='desc'?'asc':'desc'):key==='ticker'?'asc':'desc';sort=key;render();},area,renderResearch:focused?t=>reading({...research.get(t),ticker:t,...(!research.has(t)?missingResearch():{})}):null,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
     const scroll=list.querySelector('.watch-table-scroll');if(scroll)scroll.scrollLeft=tableLeft;
     for(const disclosure of list.querySelectorAll('details[data-disclosure]'))disclosure.open=openDisclosures.has(disclosure.dataset.disclosure);
     if(focusedMap)[...list.querySelectorAll('[data-map-open]')].find(n=>n.dataset.mapOpen===focusedMap)?.focus({preventScroll:true});
@@ -240,15 +241,16 @@ export async function mount(root) {
     const epoch = store.epoch();
     const mine=++loadSeq;
     let membershipReady=false;
+    researchLoading=focused;
     // Quotes/membership can render while the separately validated research read
     // is in flight. Source validation must not delay the first usable list.
     const researchTask=focused?api.get('/me/stock-research').then(response=>{
       if(disposed||store.epoch()!==epoch||mine!==loadSeq)return;
       if(!Array.isArray(response?.items))throw new Error('invalid_research_response');
-      researchFailed=false;research=new Map(response.items.map(item=>[item.ticker,item]));if(membershipReady)render();
+      researchLoading=false;researchFailed=false;research=new Map(response.items.map(item=>[item.ticker,item]));if(membershipReady)render();
     }).catch(()=>{
       if(disposed||store.epoch()!==epoch||mine!==loadSeq)return;
-      researchFailed=true;research=new Map();if(membershipReady)render();
+      researchLoading=false;researchFailed=true;research=new Map();if(membershipReady)render();
     }):Promise.resolve();
     try {
       const response=await api.watchlist.list();
@@ -303,7 +305,7 @@ export async function mount(root) {
     if(focused&&update?.path==='/me/stock-research'){
       if(loading||!membershipAvailable||!Array.isArray(response?.items))return;
       const watched=new Set(store.get('watchlist')||[]);
-      research=new Map(response.items.filter(item=>watched.has(item.ticker)).map(item=>[item.ticker,item]));researchFailed=false;
+      research=new Map(response.items.filter(item=>watched.has(item.ticker)).map(item=>[item.ticker,item]));researchLoading=false;researchFailed=false;
       for(const ticker of watched)syncSourceDialog(ticker,research.get(ticker)?.sources||[]);
       render();update.accepted=true;return;
     }

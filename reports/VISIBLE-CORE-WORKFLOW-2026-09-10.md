@@ -123,3 +123,18 @@ not establish semantic correctness of every source card or completion of pending
 The backend no longer requires an invented watch task for an indicator-only packet. Existing read code already accepts two sections and preserves their citations. CSS now uses occupied grid tracks, so two sections fill the width on desktop and stack on phones. 615 tests passed; the explicit two-section citation regression makes no request. Eight stock-page phone viewport combinations passed, with additional Chinese/English full-map checks; main height was 512px at 320×640. On arrival the stock heading/summary were at y=113/386.6; the map heading/summary at y=84/127. Expanded-view heading coordinates are not first-use measurements. Not a physical-phone or user-study receipt.
 
 Frontend publication: [PR #9](https://github.com/ssurmic/ducky-site/pull/9), app `8d19f7d6e02a05e52fb9207112fe3f1b57ede093`, Pages `c353399b`. PR CI `34469829437` and exact main CI `34470116055` both passed; the public config and served CSS match the release. JavaScript module graph remains `7fb856aa26c6f941c953`. This frontend receipt does not certify backend deployment or full summary coverage; those receipts are in the central analysis-section report. Previous app `8b6aba6b0f67a6a1470d1e250de4f77f607984ac`, Pages `4abe5bfd`, remains the rollback reference.
+
+## Saved-research reading state (candidate, 11:27 UTC)
+
+The signed-in list initially showed pending wording before its separate research response arrived.
+After the response, 27 of 43 rows contained accepted summaries. The cause was an ambiguous temporary
+state, not evidence that all 43 summaries were absent. Missing cells now say “Loading saved analysis…”
+or “正在读取已有摘要…” while that read is pending; success/failure uses the actual returned state.
+Previously available paragraphs remain present during refresh. Price and map paths stay independent.
+
+615 tests, copy lint and 1,274 links passed. The slow-response regression checks early prices, a direct
+map and default List before research arrives, then the accepted paragraph and removal of loading copy.
+Eight synthetic 320/390×640 × EN/ZH × light/dark layouts had a 512px main area and first row y=335.2,
+four rows in the table, three within the initial reading area, and no page overflow. The delayed
+four-stock result appeared without moving the first row. Screenshots checked 320px Chinese dark and
+390px English dark. These are viewport simulations, not real-device or population-performance claims.

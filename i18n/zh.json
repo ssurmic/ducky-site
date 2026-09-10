@@ -4015,6 +4015,7 @@
   "app.focus.explore": "发现",
   "app.focus.explore_intro": "找一只股票，打开信息导图，看看观点和事实如何变化。",
   "app.focus.analysis_waiting": "摘要暂未就绪。",
+  "app.focus.summary_loading": "正在读取已有摘要…",
   "app.focus.no_research": "暂时没有可展示的研究结论。",
   "app.focus.summary_read_failed": "研究结论暂时无法读取，请稍后刷新。",
   "app.focus.read_source": "查看依据",
