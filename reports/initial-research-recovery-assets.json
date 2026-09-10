@@ -1,0 +1,32 @@
+{
+  "at": "2026-09-10T17:35:50.958768+00:00",
+  "commit": "680086e78f693a6638638ee791fbf6cd9fcb65de",
+  "pages": "31db4766",
+  "graph": "c73e7cdf8934961bc309",
+  "assets": [
+    {
+      "path": "/app-release.json",
+      "match": true,
+      "sha256": "d4e950ddcffd6fbe5fc410eff9f77eea18d749c267f313f7501cd299c9605393",
+      "bytes": 818
+    },
+    {
+      "path": "/app-assets/c73e7cdf8934961bc309/api.js",
+      "match": true,
+      "sha256": "6cb32065cf40bf92babd621f8e98e49ce0d65d810ae78508cd25fc70de3a7338",
+      "bytes": 15685
+    },
+    {
+      "path": "/app-assets/c73e7cdf8934961bc309/shared-read-refresh.js",
+      "match": true,
+      "sha256": "bcedd108323a80386203db6ba84f1e834748ab12c8704dff8bde3067ec3b8d93",
+      "bytes": 6897
+    },
+    {
+      "path": "/app-assets/c73e7cdf8934961bc309/views/watchlist.js",
+      "match": true,
+      "sha256": "50aacae609c8f2892cdf7f2ab15811bb61499986297542d442586f11a28a6646",
+      "bytes": 23135
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Change log
 
-## 2026-09-10 — Recover a failed first research read (candidate)
+## 2026-09-10 — Recover a failed first research read (deployed)
 
 A failed initial saved-research request used to miss the automatic refresh registry.
 The mounted account/page can now retry that GET at most twice through the existing
@@ -9,6 +9,11 @@ auth failures, cancellations, rate limits, searches, history and writes are excl
 The request deadline covers JSON body consumption, and watchlist diagnostics distinguish
 read, shape and rendering failures without logging response text or account data.
 List-first ordering, header sorting and dated source dialogs remain intact.
+PR #18 and exact main CI `34508908792` passed all 628 tests. App `680086e7` /
+Pages `31db4766` is live; four public assets match. Signed-in EN/ZH each loaded
+43 watched stocks and 27 dated paragraphs without a read error in these two trials.
+Synthetic first-failure recovery is verified; the earlier intermittent production
+error has not yet recurred with the new diagnostics, so its cause remains unproven.
 [Tests, browser checks and delivery status](reports/INITIAL-RESEARCH-RECOVERY-2026-09-10.md).
 
 ## 2026-09-10 — Show the analysis date in collapsed watchlist rows (deployed)
