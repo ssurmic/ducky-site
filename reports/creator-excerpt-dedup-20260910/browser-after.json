@@ -1,0 +1,28 @@
+{
+  "version": "55be9c3e18113ff996df",
+  "en_at": "2026-09-10T23:28:49.659Z",
+  "zh_at": "2026-09-10T23:29:38.829Z",
+  "video": "csGLgpoAvwk",
+  "creator": "parkev-tatevosian",
+  "watchlist_rows": 45,
+  "watchlist_price_session": "2026-09-10",
+  "mrvl": {
+    "point": "claim:9d2700927dbc748f1e527803",
+    "en_paragraphs": [
+      "Marvell is benefiting from AI data center demand with rising operating margins."
+    ],
+    "zh_paragraphs": [
+      "Marvell已开始受益于AI数据中心需求，运营利润率上升。"
+    ],
+    "original_second": 157
+  },
+  "qcom": {
+    "point": "claim:74596d2bdcaeae07b610f858",
+    "distinct_paragraphs_en": 2,
+    "distinct_paragraphs_zh": 2,
+    "original_second": 146,
+    "horizon": "not until 2027.",
+    "temporal_translation_unresolved": true
+  },
+  "desktop_only": true
+}
