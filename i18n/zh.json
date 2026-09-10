@@ -3166,6 +3166,7 @@
   "app.evidence.conditional": "这条观点有成立条件，请连同原文核对。",
   "app.evidence.condition_tag": "有条件",
   "app.evidence.recorded_data": "已记录的数据",
+  "app.evidence.creator_author": "博主 · {name}",
   "app.evidence.published": "发表 / 事件日期 · {at}",
   "app.evidence.observed": "首次收录 / 数据观测 · {at}",
   "app.evidence.retrieved": "数据获取 · {at}",

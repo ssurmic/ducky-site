@@ -16,6 +16,8 @@ import {ownershipEvent,eventLabel,eventDate} from '../evidence-event.js';
 const pick=v=>v?.[LANG==='en'?'en':'zh']||'';
 const original=v=>pick(v)||v?.en||v?.zh||'';
 const tickerOK=v=>/^[A-Z][A-Z0-9.\-]{0,9}$/.test(v||'');
+// A channel may be named "Ticker Symbol: YOU"; author identity is not a stock.
+const authorLabel=e=>e.author?(e.kind==='creator'?s('evidence.creator_author',{name:e.author}):e.author):'';
 const date=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}/.test(v)?v.slice(0,10):'—';
 function source(v){try{const u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch{return null;}}
 const position=v=>{const n=Math.floor(v);return Number.isFinite(n)?Math.floor(n/60)+':'+String(n%60).padStart(2,'0'):'';};
@@ -30,7 +32,7 @@ export function detail(node,{analysisAt}={}){
   for(const e of node.evidence||[]){
     const event=ownershipEvent(e);
     const explanation=e.kind==='fact'?factDescription(e):pick(e.reason)||pick(e.title);
-    const item=el('article.evidence-source',sourceBadge(sourceIdentity(e)),el('h3',e.author||s('evidence.recorded_data')),
+    const item=el('article.evidence-source',sourceBadge(sourceIdentity(e)),el('h3',authorLabel(e)||s('evidence.recorded_data')),
       original(e.original_title)?el('div.evidence-original',el('span.small.muted',s('evidence.original_only')),el('p',original(e.original_title))):null,
       explanation&&explanation!==pick(node.reason)?el('p',explanation):null,
       e.kind==='creator'?claimQualifications(e):null,
@@ -200,7 +202,7 @@ export function mapView(doc,{archive=false,onPickTicker,example=false}={}){
     for(const [i,node] of visible.entries()){
       const identity=nodeSourceIdentity(node);
       const eventAt=eventDate(node),shownDate=eventAt?s('evidence.event_short',{at:eventAt}):date(node.published_at||node.observed_at);
-      const authors=[...new Set((node.evidence||[]).map(e=>e.author).filter(Boolean))];
+      const authors=[...new Set((node.evidence||[]).map(authorLabel).filter(Boolean))];
       const linked=node.kind==='creator'&&node.evidence?.length===1?evidenceTarget(node.evidence[0]):null;
       const card=el('button.evidence-node',{type:'button',class:'is-'+node.stance+' source-'+identity,'data-source':identity,style:{gridColumn:i%2===0?'1':'3',gridRow:String(Math.floor(i/2)+1)},onclick:()=>{if(linked)location.hash=linked;else detail(node);}},
         ['youtube','x','macro'].includes(identity)?el('span.evidence-source-watermark',{'aria-hidden':'true'},sourceMark(identity)):null,

@@ -3166,6 +3166,7 @@
   "app.evidence.conditional": "This view is conditional. Check the condition against the original source.",
   "app.evidence.condition_tag": "Conditional",
   "app.evidence.recorded_data": "Recorded data",
+  "app.evidence.creator_author": "Creator · {name}",
   "app.evidence.published": "Published / event date · {at}",
   "app.evidence.observed": "First recorded / observed · {at}",
   "app.evidence.retrieved": "Retrieved · {at}",

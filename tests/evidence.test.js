@@ -15,6 +15,20 @@ function fixture(){return {ticker:'AVGO',status:'ready',checked_at:'2026-09-07T1
  nodes:Array.from({length:10},(_,i)=>({id:'n'+i,title:{en:'Point '+i,zh:'观点 '+i},kind:'creator',stance:i===9?'counter':i<5?'support':'context',conditional:i===9,
  published_at:'2026-09-04',evidence:[{id:'e'+i,kind:'creator',author:i===9?'Counter Author':'Source Author',source_url:'https://example.com/source',title:{en:'Source '+i,zh:'来源 '+i},
  start_seconds:70,end_seconds:90,published_at:'2026-09-04',observed_at:'2026-09-07T12:00:00Z'}]})),coverage:{corpus_documents:12,jobs:{pending:2}},missing:['price_gaps']};}
+test('a ticker-like channel name is labelled as creator on both layouts and keeps the CEG route',()=>{
+ const d=fixture();d.ticker='CEG';d.nodes=[{...d.nodes[0],title:{en:'CEG benefits from rising electricity prices.'},
+  evidence:[{...d.nodes[0].evidence[0],author:'Ticker Symbol: YOU',platform:'youtube',creator_id:'ticker-symbol-you',
+   post_id:'csv55UtVMZM',point_id:'claim:ceg',source_url:'https://www.youtube.com/watch?v=csv55UtVMZM&t=672s'}]}];
+ const root=mapView(d);document.body.append(root);
+ const card=root.querySelector('.evidence-node');
+ assert.equal(card.querySelector('.evidence-node-author').textContent,'Creator · Ticker Symbol: YOU');
+ assert.equal(card.querySelector('.evidence-mobile-author').textContent,'Creator · Ticker Symbol: YOU');
+ assert.equal(card.querySelector('.evidence-category').textContent,'Bullish');
+ assert.ok(card.classList.contains('is-support'));
+ assert.match(root.querySelector('.evidence-center').textContent,/CEG/);
+ card.click();assert.equal(location.hash,'#/creators?scope=discover&creator=ticker-symbol-you&post=csv55UtVMZM&point=claim%3Aceg');
+ root.dispose();root.remove();location.hash='#/evidence/AVGO';
+});
 test('historical ownership direction stays consistent across badge, filter, source and dates',()=>{
  const doc=fixture();doc.ticker='VST';doc.nodes=[{id:'exercise',kind:'record',stance:'support',
   title:{en:'Spouse exercised calls to acquire 5,000 VST shares'},published_at:'2026-01-23',
