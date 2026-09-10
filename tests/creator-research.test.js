@@ -207,3 +207,34 @@ test('an unmatched partial page does not claim that no stock views exist or load
  assert.ok([...root.querySelectorAll('button')].some(b=>b.textContent==='Load more views'));
  assert.equal(requests,1);root.remove();
 });
+
+test('Following uses a server page scope without sending personal creator IDs',async()=>{
+ store.set('me',{tier:'pro'});const requests=[];
+ globalThis.fetch=async url=>{const u=new URL(url,'https://ducky.test');requests.push(u);
+  assert.equal(u.searchParams.get('following'),'true');assert.equal(u.searchParams.has('allowed_ids'),false);
+  return Response.json(requests.length===1?{items:[groupedItem(1,'first','2026-09-03T00:00:00Z')],next_cursor:'followed-older'}:
+   {items:[groupedItem(2,'older','2026-08-01T00:00:00Z')]});};
+ const root=document.createElement('section');document.body.append(root);
+ await mountResearch(root,{following:true,allowedIds:['talk']});
+ assert.equal(root.querySelectorAll('.study-row').length,1);assert.equal(requests.length,1);
+ [...root.querySelectorAll('button')].find(b=>b.textContent==='Load more views').click();
+ await new Promise(resolve=>setTimeout(resolve,0));
+ assert.equal(requests[1].searchParams.get('before'),'followed-older');
+ assert.equal(root.querySelectorAll('.study-row').length,2);root.remove();
+});
+
+test('changed follow scope retries a fresh first page after invalid cursor, retaining rows until retry',async()=>{
+ store.set('me',{tier:'pro'});const requests=[];
+ globalThis.fetch=async url=>{const u=new URL(url,'https://ducky.test');requests.push(u);
+  if(requests.length===2)return Response.json({error:'invalid_cursor'},{status:400});
+  return Response.json({items:[groupedItem(requests.length,'view','2026-09-03T00:00:00Z')],next_cursor:requests.length===1?'stale':null});};
+ const root=document.createElement('section');document.body.append(root);
+ await mountResearch(root,{following:true,allowedIds:['talk']});
+ [...root.querySelectorAll('button')].find(b=>b.textContent==='Load more views').click();
+ await new Promise(resolve=>setTimeout(resolve,0));
+ assert.equal(requests.length,2);assert.equal(root.querySelectorAll('.study-row').length,1);
+ [...root.querySelectorAll('button')].find(b=>b.textContent==='Retry').click();
+ await new Promise(resolve=>setTimeout(resolve,0));
+ assert.equal(requests.length,3);assert.equal(requests[2].searchParams.has('before'),false);
+ assert.equal(requests[2].searchParams.get('following'),'true');root.remove();
+});

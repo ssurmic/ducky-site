@@ -97,3 +97,17 @@ test('an exact research point remains shareable through login and language route
  assert.equal(creatorRoute(new URLSearchParams(safe.split('?')[1])).point,'claim:accepted');
  assert.ok(!safeTarget(route+'&token=secret').includes('secret'));
 });
+
+test('Call history navigation sends Following to the server and Discover keeps the wider scope',async()=>{
+ store.set('me',{tier:'pro'});const requests=[];
+ globalThis.fetch=async(url,opts)=>{
+  assert.equal(opts.method,'GET');const parsed=new URL(url,'https://ducky.test');requests.push(parsed);
+  return Response.json({items:[],kols:[],posts:[],subs:[],analysis:{}});
+ };
+ const root=document.querySelector('#view');
+ let dispose=await mount(root,{query:new URLSearchParams('tab=research')});await tick();await tick();
+ assert.equal(requests.find(u=>u.pathname==='/kol/research').searchParams.get('following'),'true');
+ dispose();requests.length=0;
+ dispose=await mount(root,{query:new URLSearchParams('tab=research&scope=discover')});await tick();await tick();
+ assert.equal(requests.find(u=>u.pathname==='/kol/research').searchParams.has('following'),false);dispose();
+});

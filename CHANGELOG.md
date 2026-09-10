@@ -1,4 +1,11 @@
 # Change log
+
+## 2026-09-10 — Show followed creators' history on the first page (implementation)
+
+Following now reaches the API before pagination, so other creators' recent records cannot
+leave the first page empty. Later pages keep the same filter; a changed-scope cursor retries
+from the first page. Discover still includes unfollowed creators. Full frontend suite:
+618 passed; production deployment pending. [Evidence and acceptance](reports/CREATOR-HISTORY-PAGE-SCOPE-2026-09-10.md).
 ## 2026-09-10 — Distinguish reading from unfinished generation (deployed)
 
 Watchlist prices can arrive before the saved research response. Empty cells now say “Loading saved analysis…” during that read, then show the actual accepted, pending or failed state. Existing paragraphs remain visible during a refresh. Sorting and direct maps remain usable while research loads; no extra request or generation is added.
