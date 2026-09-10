@@ -1,14 +1,17 @@
 # Change log
-## 2026-09-10 — Singular author-history counts
+## 2026-09-10 — Singular author-history counts (deployed)
 
 The signed-in English MU page exposed “1 records” and “1 original sources.” Author-group headings
 and the one-more-record disclosure now use singular translations; plural counts and Chinese remain
 consistent. This changes wording only, not records, grouping or source identities.
 
-Validation: 614 frontend tests; bilingual copy/link gates; 320×650 and 390×650 stock-page QA in both
-languages and light/dark themes. All eight checks had no document overflow and 522px main viewport;
+Validation: 614 frontend tests; bilingual copy/link gates; 320×650 and 390×650 stock/map-page QA in both
+languages and light/dark themes. All sixteen checks had no document overflow and 522px main viewport;
 visible screenshots confirmed the single-source author group. These are synthetic viewport checks,
-not physical phones. Publishing status is recorded after CI.
+not physical phones. [PR #7](https://github.com/ssurmic/ducky-site/pull/7) and exact main CI passed.
+Published app `8b6aba6b`, Pages `4abe5bfd`; production config and the signed-in English MU page verified
+“1 record · 1 original source” at 10:23 UTC. The corrected MU source card remains readable while its
+whole-stock summary awaits review.
 
 ## 2026-09-10 — Restore visible maps, creator history and calendar (deployed)
 
