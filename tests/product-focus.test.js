@@ -79,6 +79,7 @@ test('old and unavailable content cannot appear as current quoted statements',()
   assert.doesNotMatch(removed.textContent,/Orders may recover/);assert.equal(removed.querySelector('button'),null);
   assert.equal(reading({status:'pending',records:0}).textContent,copy['app.focus.no_research']);
   assert.equal(reading({status:'pending',records:null}).textContent,copy['app.focus.analysis_waiting']);
+  assert.equal(reading({status:'read_pending',records:null}).textContent,copy['app.focus.summary_loading']);
 });
 
 test('Today search reaches the backend, preserves pagination and performs no per-card requests',async()=>{
@@ -144,7 +145,13 @@ test('quotes render before slow research and failed membership is not erased by 
  const root=setup();let finish;
  globalThis.fetch=async url=>url==='/me/stock-research'?await new Promise(r=>finish=r):Response.json({items:[{ticker:'NVDA'}],overview:{items:[{ticker:'NVDA',price:98,price_status:'ready',price_session:'2026-09-09'}]}});
  let pending=watch.mount(root);await pause();assert.match(root.querySelector('.watch-compact-table tbody tr').textContent,/98/);
- finish(Response.json({items:[item()]}));let dispose=await pending;dispose();root.replaceChildren();
+ assert.equal(root.querySelector('.stock-reading').textContent,copy['app.focus.summary_loading']);
+ assert.equal(root.querySelector('button[data-mode="list"]').getAttribute('aria-pressed'),'true');
+ assert.ok(root.querySelector('a[href="#/evidence/NVDA"]'));
+ finish(Response.json({items:[item()]}));let dispose=await pending;
+ assert.match(root.querySelector('.stock-one-sentence').textContent,/conditional on spending/);
+ assert.doesNotMatch(root.querySelector('.stock-reading').textContent,/Loading saved analysis/);
+ dispose();root.replaceChildren();
  globalThis.fetch=async url=>url==='/me/stock-research'?await new Promise(r=>finish=r):Response.json({error:'unavailable'},{status:503});
  pending=watch.mount(root);await pause();assert.ok(root.querySelector('.errbox'));
  finish(Response.json({items:[item()]}));dispose=await pending;assert.ok(root.querySelector('.errbox'));assert.equal(root.querySelector('.watch-compact-table tbody tr'),null);dispose();

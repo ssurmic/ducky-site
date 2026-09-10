@@ -4015,6 +4015,7 @@
   "app.focus.explore": "Explore",
   "app.focus.explore_intro": "Find a stock and explore how its viewpoints and evidence have changed.",
   "app.focus.analysis_waiting": "The stock summary is not ready yet.",
+  "app.focus.summary_loading": "Loading saved analysis…",
   "app.focus.no_research": "No reviewed stock summary is available yet.",
   "app.focus.summary_read_failed": "The stock summary could not be loaded. Please try again.",
   "app.focus.read_source": "Read the source",

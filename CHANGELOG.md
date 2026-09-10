@@ -1,4 +1,10 @@
 # Change log
+## 2026-09-10 — Distinguish reading from unfinished generation (candidate)
+
+Watchlist prices can arrive before the saved research response. Empty cells now say “Loading saved analysis…” during that read, then show the actual accepted, pending or failed state. Existing paragraphs remain visible during a refresh. Sorting and direct maps remain usable while research loads; no extra request or generation is added.
+
+The issue was observed on the signed-in production list: initially pending-looking cells subsequently became 27 accepted summaries out of 43 watched stocks. This is a point-in-time reading count, not population coverage. All 615 frontend tests, copy lint and 1,274 links passed. Eight synthetic 320/390×640 bilingual light/dark checks retained a 512px main viewport and first row at y=335.2, with no document overflow. A delayed response replaced four loading cells in place. Publication receipt follows in the visible-workflow report.
+
 ## 2026-09-10 — Summary details use the available space (deployed)
 
 The shared stock analysis can contain two sections when there is no source-backed verification task. The reasons panel now fits the actual section count instead of reserving a blank third column; phone layout remains one column. Source links and old three-section records keep working without network work on expansion.

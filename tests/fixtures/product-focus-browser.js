@@ -35,7 +35,10 @@ window.fetch=async(input,options={})=>{
  const path=url.pathname.replace('/qa-api','');
  if(mode==='failure'&&path.includes('research'))return Response.json({error:'fixture_unavailable'},{status:503});
  if(path==='/watchlist')return Response.json({items:watches.map(ticker=>({ticker})),overview:{items:watches.map(price),session:'2026-09-09'}});
- if(path==='/me/stock-research')return Response.json({items:watches.map(stockSummary),watchlist_count:watches.length});
+ if(path==='/me/stock-research'){
+  if(mode==='slow-research')await new Promise(resolve=>setTimeout(resolve,6000));
+  return Response.json({items:watches.map(stockSummary),watchlist_count:watches.length});
+ }
  if(path==='/me/research-changes'){
   const items=(mode==='empty'||mode==='no-watch'?[]:Array.from({length:url.searchParams.has('q')?1:3},(_,i)=>record(i)))
    .filter(row=>url.searchParams.get('earlier')!=='false'||!row.earlier_content);

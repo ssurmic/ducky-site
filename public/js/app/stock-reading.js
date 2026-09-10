@@ -43,7 +43,7 @@ export function reading(item,{citations=true}={}){
     Array.isArray(refs)&&refs.length&&refs.every(id=>item.sources?.some(n=>n.id===id));
   const wrap=el('div.stock-reading');
   if(!accepted){
-    const state={read_failed:'summary_read_failed',failed:'analysis_unavailable',insufficient:'analysis_insufficient',
+    const state={read_pending:'summary_loading',read_failed:'summary_read_failed',failed:'analysis_unavailable',insufficient:'analysis_insufficient',
       source_changed:'analysis_source_changed',withdrawn:'analysis_withdrawn'}[item?.status];
     wrap.append(el('p.muted',s(state?'focus.'+state:item?.records===0?'focus.no_research':'focus.analysis_waiting')));
     return wrap;

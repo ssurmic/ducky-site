@@ -81,6 +81,10 @@ sort through column-header buttons with explicit ascending/descending state, kee
 last, and preserve focus/scroll on updates. Phone tables scroll within their container with a fixed
 stock column; don't replace this with a separate sorting menu or shrink tap targets below 44px.
 
+Distinguish an unfinished read of saved research from a backend generation state. Prices and map
+actions can render first; loading text must not claim the summary is missing. Once the response
+arrives, use its actual status and sources. Do not erase accepted text merely to show refresh loading.
+
 Explore and first-use Today must offer useful, clearly labelled examples even with no subscriptions.
 Preserve historical case dates and losses. Evidence maps group bullish, factual/context and bearish
 records in separate lanes. Group authors by stable identity, retain each point/source/date, and label
