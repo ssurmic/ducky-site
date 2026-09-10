@@ -149,10 +149,14 @@ test('both app shells carry every navigation icon locally, including briefing an
  for(const lang of ['', 'en/']) {
   const html=readFileSync(`dist/${lang}app/index.html`,'utf8');const page=new JSDOM(html).window.document;
   const links=[...page.querySelectorAll('.app-nav a')];
+  const focused=Boolean(page.querySelector('.focus-nav'));
+  if(focused){assert.deepEqual(links.map(a=>a.dataset.route),['today','watchlist','explore']);}
+  else{
   assert.equal(new Set(links.map(a=>a.dataset.route)).size,15+(briefEnabled?1:0));
   assert.equal(links.filter(a=>a.dataset.route==='research-brief').length,briefEnabled?2:0);
   assert.ok(page.querySelectorAll('.nav-more-panel a').length>=16);
   assert.equal(page.querySelectorAll('.nav-desktop-tree[data-group=boards] .nav-tree-links a').length,7);
+  }
   for(const a of links){assert.ok(a.textContent.trim());if(!a.closest('.nav-tree-links'))assert.ok(a.querySelector('svg[aria-hidden="true"] use'));}
   for(const use of page.querySelectorAll('.app-nav use')) {
    const ref=use.getAttribute('href');
@@ -161,8 +165,8 @@ test('both app shells carry every navigation icon locally, including briefing an
    assert.ok(target?.querySelector('path,rect,circle,line,polyline,polygon,ellipse'),ref);
    assert.equal(page.querySelectorAll(`[id="${ref.slice(1)}"]`).length,1);
   }
-  assert.ok(page.querySelector('.app-nav [data-route="briefing"] use[href="#ducky-icon-briefing"]'));
-  assert.ok(page.querySelector('.nav-more summary'));
+  if(!focused){assert.ok(page.querySelector('.app-nav [data-route="briefing"] use[href="#ducky-icon-briefing"]'));
+  assert.ok(page.querySelector('.nav-more summary'));}
  }
 });
 

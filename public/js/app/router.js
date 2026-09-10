@@ -9,6 +9,9 @@ import { selectNavigation } from './navigation.js';
 import {sharedReadRefresh} from './shared-read-refresh.js';
 
 const ROUTES = {
+  today: () => import('./views/today.js'),
+  explore: () => import('./views/explore.js'),
+  stock: () => import('./views/stock.js'),
   ...(window.DUCKY?.RESEARCH_BRIEF_ENABLED === true ? { 'research-brief': () => import('./views/research-brief.js') } : {}),
   reports: () => import('./views/boards.js'),
   record: () => import('./views/record.js'),
@@ -39,6 +42,8 @@ const ROUTES = {
 const PUBLIC = new Set(["login", "forgot", "reset", "register", "oauth"]);
 export function isPublic(hash) { return PUBLIC.has(parse(hash).name); }
 let current = null, cleanup = null, seq = 0, controller = null;
+const scrollPositions=new Map();
+let previousPageKey=null;
 
 export function parse(hash) {
   // finding router.js:20 — strip the query string BEFORE matching, else '#/profile?next=billing' yields the
@@ -50,13 +55,13 @@ export function parse(hash) {
   let query;
   try { query = new URLSearchParams(qi === -1 ? "" : raw.slice(qi + 1)); } catch (e) { query = new URLSearchParams(); }
   const parts = path.split("/").filter(Boolean);
-  let name = parts[0] === "ducky" ? "evidence" : parts[0] || "watchlist";
+  let name = parts[0] === "ducky" ? "evidence" : parts[0] || (window.DUCKY?.PRODUCT_FOCUS_ENABLED?'today':'watchlist');
   if(name==='billing' && !store.billingEnabled()){name='profile';query=new URLSearchParams();}
   if(name==='record'){let id='';try{id=decodeURIComponent(parts[1]||'');}catch{} return {name,params:{id,query}};}
-  if (name === "chart" || name === "research" || name === "evidence") return { name, params: { ticker: (parts[1] || "").toUpperCase(), query } };
+  if (name === "stock" || name === "chart" || name === "research" || name === "evidence") return { name, params: { ticker: (parts[1] || "").toUpperCase(), query } };
   if(name==='boards' && ['liquidity','digest','hiring','volscan'].includes(query.get('board')))return {name:'reports',params:{query}};
   if (ROUTES[name]) return { name, params: { query } };
-  return { name: "watchlist", params: { query } };
+  return { name: window.DUCKY?.PRODUCT_FOCUS_ENABLED?'today':'watchlist', params: { query } };
 }
 
 export function go(hash) { if (location.hash !== hash) location.hash = hash; else render(); }
@@ -65,6 +70,11 @@ export async function render() {
   const root = document.getElementById("view");
   if (!root) return;
   let route = parse(location.hash);
+  const main = root.closest('.app-main');
+  if(previousPageKey&&main){
+    scrollPositions.set(previousPageKey,main.scrollTop);
+    if(scrollPositions.size>20)scrollPositions.delete(scrollPositions.keys().next().value);
+  }
   const authed = !!store.get("me");
   if (!authed && !PUBLIC.has(route.name)) {
     rememberTarget(location.hash);
@@ -83,7 +93,8 @@ export async function render() {
   selectNavigation(route.name, route.params.query);
   document.body.setAttribute("data-route", route.name);
   clear(root);
-  const main = root.closest(".app-main");
+  const pageKey=store.epoch()+'|'+location.hash;
+  previousPageKey=pageKey;
   if (main) main.scrollTop = 0;
   tg.hideMain(); tg.hideBack();
   // Each navigation owns its DOM: late responses cannot replace the next page.
@@ -115,6 +126,7 @@ export async function render() {
   }
   if (my !== seq) { if (typeof ret === "function") ret(); return; }
   cleanup = typeof ret === "function" ? ret : null;
+  if(main&&window.DUCKY?.PRODUCT_FOCUS_ENABLED)main.scrollTop=scrollPositions.get(pageKey)||0;
   // Telegram chrome
   if (route.name === "billing" && typeof mod.mainButton === "function") {
     const mb = mod.mainButton();

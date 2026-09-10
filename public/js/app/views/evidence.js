@@ -25,7 +25,7 @@ const position=v=>{const n=Math.floor(v);return Number.isFinite(n)?Math.floor(n/
 const factDescription=e=>e.topic==='price_gaps'?(e.data?.gaps?.length?e.data.gaps.map(g=>`${g.date} · $${g.lower}–$${g.upper}`).join(' / '):s('evidence.no_gaps')):factText(e);
 const missingLabel=k=>k.startsWith('ytd_')?s('evidence.missing_ytd',{benchmark:k.slice(4)}):k==='price_gaps'?s('evidence.missing_gaps'):has('stockbrief.missing_'+k)?s('stockbrief.missing_'+k):s('evidence.missing_other');
 
-export function detail(node,{analysisAt,shareContext}={}){
+export function detail(node,{analysisAt,shareContext,compact=window.DUCKY?.PRODUCT_FOCUS_ENABLED===true}={}){
   const body=el('div.evidence-detail',el('p.evidence-stance',{class:'is-'+node.stance},eventLabel(node)),
     analysisAt?el('p.data-notice',s('evidence.analysis_snapshot_source',{at:time(analysisAt)})):null,
     node.conditional?el('p.data-notice',s('evidence.conditional')):null,
@@ -42,7 +42,7 @@ export function detail(node,{analysisAt,shareContext}={}){
       event?.event_date?el('p.small.muted',s('evidence.event_date',{at:date(event.event_date)})):null,
       event?.filing_date?el('p.small.muted',s('evidence.filing_date',{at:date(event.filing_date)})):
         e.published_at?el('p.small.muted',s('evidence.published',{at:date(e.published_at)})):null,
-      el('p.small.muted',s('evidence.observed',{at:time(e.observed_at)})),
+      el('p.small.muted',compact?s('focus.first_observed',{date:time(e.observed_at)}):s('evidence.observed',{at:time(e.observed_at)})),
       e.retrieved_at?el('p.small.muted',s('evidence.retrieved',{at:Array.isArray(e.retrieved_at)?e.retrieved_at.map(time).join(' / '):time(e.retrieved_at)})):null,
       Number.isFinite(e.start_seconds)?el('p.small.muted',s('evidence.segment',{start:position(e.start_seconds),end:position(e.end_seconds)})):null);
     if(e.freshness==='stale')item.append(el('p.data-notice',s(event?'evidence.historical_event':'evidence.stale_source')));
@@ -53,8 +53,8 @@ export function detail(node,{analysisAt,shareContext}={}){
     else item.append(el('p.small.muted',s(e.kind==='fact'?'evidence.saved_calculation':'evidence.no_source_link')));
     const audit=el('details',el('summary',s('evidence.record_details')),
       el('p.small.muted',s('evidence.linked',{at:time(node.recorded_at)})),
-      e.source_hash?el('p.evidence-hash.mono',e.source_hash):null);
-    if(e.kind==='fact')audit.append(el('pre.evidence-facts',JSON.stringify(e.data,null,2)));
+      !compact&&e.source_hash?el('p.evidence-hash.mono',e.source_hash):null);
+    if(!compact&&e.kind==='fact')audit.append(el('pre.evidence-facts',JSON.stringify(e.data,null,2)));
     item.append(audit);body.append(item);
   }
   if(node.evidence_omitted)body.append(el('p.small.muted',s('evidence.more_sources',{n:node.evidence_omitted})));
@@ -62,7 +62,7 @@ export function detail(node,{analysisAt,shareContext}={}){
   modal(pick(node.title),body);
 }
 
-export function analysisPanel(doc){
+export function analysisPanel(doc,{formatTime=time}={}){
   // A read of the saved snapshot: opening its reasons never requests inference.
   const previous=doc.analysis_status==='refresh_pending';
   // Never resolve an earlier analysis against the latest values for the same IDs.
@@ -74,7 +74,7 @@ export function analysisPanel(doc){
   const summary=!['source_changed','withdrawn','refresh_pending'].includes(doc.analysis_status)&&pick(doc.summary)?doc.summary:null;
   const panel=el('section.evidence-analysis',{class:data||summary?'':'is-pending','aria-label':s('evidence.analysis_title')});
   const heading=el('header.evidence-analysis-heading',el('h2',icon('briefing'),s('evidence.analysis_title')));
-  if(data&&doc.analysis_generated_at)heading.append(el('p.evidence-analysis-time',s(previous?'evidence.analysis_previous_as_of':'evidence.analysis_as_of',{at:time(doc.analysis_generated_at)})));
+  if(data&&doc.analysis_generated_at)heading.append(el('p.evidence-analysis-time',s(previous?'evidence.analysis_previous_as_of':'evidence.analysis_as_of',{at:formatTime(doc.analysis_generated_at)})));
   panel.append(heading);
   const refs=part=>el('span.evidence-analysis-citations',...(part?.citations||[]).flatMap(id=>{
     const i=nodes.findIndex(n=>n.id===id);return i<0?[]:[el('button.brief-citation',{type:'button',onclick:()=>detail(nodes[i],previous?{analysisAt:doc.analysis_generated_at}:{}),'aria-label':s(previous?'evidence.analysis_snapshot_citation':'evidence.citation',{n:i+1})},String(i+1))];

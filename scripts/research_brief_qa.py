@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--port',type=int,default=8920)
 parser.add_argument('--baseline',action='store_true')
+parser.add_argument('--product-focus',action='store_true')
 args = parser.parse_args()
 DIST = (Path('/tmp/ducky-brief-baseline-20260909') if args.baseline else ROOT / 'dist').resolve()
 
@@ -35,7 +36,7 @@ class Handler(SimpleHTTPRequestHandler):
             body = body.replace('</head>', '<script src="/vendor/lightweight-charts/lightweight-charts.standalone.production.js"></script><script type="module" src="/qa-main.js"></script></head>')
             self.out(body,'text/html; charset=utf-8'); return
         if url.path == '/qa-main.js':
-            module = (ROOT / 'tests/fixtures/research-brief-browser.js').read_text()
+            module = (ROOT / 'tests/fixtures' / ('product-focus-browser.js' if args.product_focus else 'research-brief-browser.js')).read_text()
             module = module.replace('/*QA_BASELINE*/false',str(args.baseline).lower())
             version = json.loads((DIST / 'app-release.json').read_text())['version']
             module = module.replace("'/js/app/", "'/app-assets/" + version + '/')

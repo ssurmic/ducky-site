@@ -43,6 +43,7 @@
 <link rel="stylesheet" href="/css/creator-discovery.css">
 <link rel="stylesheet" href="/css/card-share.css">
 <link rel="stylesheet" href="/css/chart.css">
+<link rel="stylesheet" href="/css/product-focus.css">
 <link rel="preload" href="/fonts/Manrope-variable-d0639be4.woff2" as="font" type="font/woff2" crossorigin>
 </head>
 <body class="lang-{{ lang }} page-{{ page }}">
@@ -74,6 +75,13 @@
   {%- endmacro %}
   {% set brief_enabled = cfg.get('research_brief_preview', false) %}
   {% set mobile_routes = ['watchlist', 'research-brief', 'calendar', 'boards'] if brief_enabled else navigation.mobile %}
+  {% if cfg.get('product_focus', false) %}
+  <nav class="app-nav focus-nav no-glossary" aria-label="{{ t('app.nav.label') }}">
+    {% for route, image in [('today','digest'), ('watchlist','watchlist'), ('explore','boards')] %}
+    <a href="#/{{ route }}" data-route="{{ route }}" data-mobile-primary>{{ nav_icon(image) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
+    {% endfor %}
+  </nav>
+  {% else %}
   <nav class="app-nav no-glossary" aria-label="{{ t('app.nav.label') }}">
     {% for route in mobile_routes %}
     {% if route == 'research-brief' %}
@@ -104,6 +112,7 @@
       </div>
     </details>
   </nav>
+  {% endif %}
 
   <main class="app-main" id="main" tabindex="-1" data-glossary>
     <p id="profile-reminder" class="profile-reminder" hidden>{{ t('app.profile.recovery_reminder') }} <a href="#/profile">{{ t('app.profile.recovery_action') }}</a></p>

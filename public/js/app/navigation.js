@@ -1,5 +1,10 @@
 // Shared selection logic for direct links and in-page radar filters.
 export function selectNavigation(name, query=new URLSearchParams()) {
+  if(document.querySelector('.focus-nav')){
+    name=name==='stock'&&['today','explore'].includes(query.get('from'))?query.get('from'):
+      ['today','watchlist','explore'].includes(name)?name:
+      ['stock','evidence','chart','research','alerts','updates'].includes(name)?'watchlist':'explore';
+  }
   if(name==='updates')name='alerts';
   if(name==='degen')name='vibe';
   if(name==='boards' && query.get('board')==='social')name='vibe';
