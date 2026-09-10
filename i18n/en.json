@@ -1512,15 +1512,15 @@
   "app.creatorlab.result_detail": "Max close drawdown {drawdown} · costs {fees} · {n} trades",
   "app.creatorlab.comparison_hint": "Reducing a position can miss a rebound. Compare the rules you selected.",
   "app.creatorrank.tab": "Leaderboard",
-  "app.creatorrank.title": "Recorded view leaderboard",
-  "app.creatorrank.intro": "Compare views with price direction after 20 sessions.",
+  "app.creatorrank.title": "Creator leaderboard",
+  "app.creatorrank.intro": "See how prices moved in the 20 trading sessions after each recorded view.",
   "app.creatorrank.qualified": "Creators meeting the threshold",
   "app.creatorrank.minimum": "Complete distinct episodes",
   "app.creatorrank.period": "Span between recorded views",
   "app.creatorrank.days": "days",
   "app.creatorrank.coverage": "Price coverage of matured samples",
   "app.creatorrank.method": "BACKTEST · Windows start after the view was first verified and recorded. Each uses a fixed 20-session horizon, not the creator’s actual holding period. Repeated mentions do not inflate independent samples.",
-  "app.creatorrank.empty_title": "A record comes before a rank",
+  "app.creatorrank.empty_title": "No rankings yet",
   "app.creatorrank.empty_body": "Not enough evidence to rank creators yet. View their records below.",
   "app.creatorrank.truncated": "Some history is still missing, so rankings are unavailable.",
   "app.creatorrank.ranked": "Eligible for ranking",
@@ -4138,5 +4138,7 @@
   "app.reader.english_unavailable_detail": "An English version isn't available. You can read the original below.",
   "app.reader.original_zh": "Read original (Chinese)",
   "idea.original_title_zh": "Original title (Chinese)",
-  "idea.record_title": "{ticker} research record"
+  "idea.record_title": "{ticker} research record",
+  "app.creators.trading_days_single": "+{n} trading day",
+  "app.creatorlab.result_detail_single": "Max close drawdown {drawdown} · costs {fees} · {n} trade"
 }

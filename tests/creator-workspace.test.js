@@ -33,6 +33,19 @@ test('simulation selects earliest verified version, never a revised successful t
  assert.equal(simulationRows([{id:1,revision_id:3,first_verified_revision_id:2,calls:[{stance:'bull'}]}]).length,0);
 });
 
+test('simulation uses singular day and trade labels only for a count of one',async()=>{
+ const prior=store.get('me');store.set('me',null);
+ const root=document.createElement('main');document.body.append(root);
+ try {
+  await mountSimulation(root,{state:{demo:true,config:{...cfg}}});
+  const cadence=root.querySelector('[aria-label="'+copy['app.creatorlab.cadence']+'"]');
+  assert.deepEqual([...cadence.options].map(o=>o.textContent),['+1 trading day','+5 trading days','+20 trading days']);
+  const results=[...root.querySelectorAll('.creator-sim-results article > p')].map(p=>p.textContent);
+  assert.ok(results.some(text=>/· 0 trades$/.test(text)));assert.ok(results.some(text=>/· 1 trade$/.test(text)));
+  assert.ok(results.some(text=>/· 20 trades$/.test(text)));assert.ok(results.every(text=>!/\b1 trades\b/.test(text)));
+ } finally {root.remove();store.set('me',prior);}
+});
+
 test('identity dialog never subscribes before affirmative confirmation, including cancel',async()=>{
  let calls=0,followed=0;const creator={name:'Same Name',channel_id:'UCabc',url:'https://www.youtube.com/channel/UCabc',recent:[{title:'Finance example',published_at:'2025-01-01'}]};
  confirmCreator(creator,async()=>{calls++;return {kol_id:'test',subscribed:true};},()=>followed++);

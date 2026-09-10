@@ -663,5 +663,30 @@
     "key": "idea.record_title",
     "before": null,
     "after": "{ticker} research record"
+  },
+  {
+    "key": "app.creatorrank.title",
+    "before": "Recorded view leaderboard",
+    "after": "Creator leaderboard"
+  },
+  {
+    "key": "app.creatorrank.intro",
+    "before": "Compare views with price direction after 20 sessions.",
+    "after": "See how prices moved in the 20 trading sessions after each recorded view."
+  },
+  {
+    "key": "app.creatorrank.empty_title",
+    "before": "A record comes before a rank",
+    "after": "No rankings yet"
+  },
+  {
+    "key": "app.creators.trading_days_single",
+    "before": null,
+    "after": "+{n} trading day"
+  },
+  {
+    "key": "app.creatorlab.result_detail_single",
+    "before": null,
+    "after": "Max close drawdown {drawdown} · costs {fees} · {n} trade"
   }
 ]

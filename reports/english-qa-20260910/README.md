@@ -1,12 +1,13 @@
 # English website QA · September 10, 2026
 
-Status: implementation and automated checks complete in the isolated
-`codex/english-qa-20260910` worktree, based on `a0492756`. Not deployed by this workstream.
-The coordinating agent owns production browser acceptance and release decisions.
+Status: the initial revision was merged as `fc595b5`; the coordinating agent reports
+it deployed. A bounded creator-page follow-up is locally verified on that base and
+awaits its own release. The coordinating agent owns production browser acceptance
+and release decisions; this workstream does not push or deploy.
 
 ## Changes
 
-- Revised 128 existing English strings and added five labels, with matching Chinese
+- Revised 131 existing English strings and added seven labels, with matching Chinese
   keys. The [copy change record](copy-changes.json) contains every before/after pair.
   Labels and introductions use direct US English. Missing data, source review,
   original dates, losses and incomplete history remain explicit. The owner's
@@ -38,6 +39,26 @@ The coordinating agent owns production browser acceptance and release decisions.
 No request-time model calls, new acquisition, account mutations, or translations
 were added. Source records and static data exports were not edited. The generated
 `public/calendar.json` change was restored after the build.
+
+## Creator-page follow-up
+
+The post-deployment walkthrough found three remaining awkward leaderboard strings
+and singular-count errors in the fictional portfolio simulator. The title now says
+**Creator leaderboard**, its introduction names the 20 trading sessions after each
+recorded view, and the empty state says **No rankings yet**. Existing sample,
+coverage and time-span thresholds are unchanged.
+
+Simulator cadence options use **+1 trading day**, and a result with one transaction
+uses **1 trade**. Zero and multiple transactions keep the plural. The same singular
+day label is reused by the one-session price comparison in report details. This
+only selects copy using the existing `_single` key convention; simulation inputs,
+calculations and output counts are unchanged. Added keys also exist in Chinese.
+
+The focused creator, navigation and record suites passed **48/48**, including one
+new singular/plural regression. The follow-up build rendered **22 pages**, copy
+lint passed, and the generated calendar export was restored. The original full
+642-test result below belongs to the initial revision; this follow-up does not
+claim a new full-suite run or a browser check.
 
 ## Verification
 

@@ -64,7 +64,7 @@ export async function mountSimulation(root,{kolId='',allowedIds=null,tickers=nul
     form.append(input('capital','creatorlab.capital',1,1e9),input('cash','creatorlab.cash',0,100),input('stock','creatorlab.stock',0,100),allocation,el('p.muted.small',s('creatorlab.other_hint')));
     function toggle(key,label){const n=el('input',{type:'checkbox',checked:config[key]});n.addEventListener('change',()=>{config[key]=n.checked;update();});return el('label.creator-toggle',n,el('span',s(label)));}
     form.append(el('h3',s('creatorlab.dca_title')),toggle('dca','creatorlab.dca_toggle'),input('budget','creatorlab.budget',0,100));
-    const cadence=el('select.input',{'aria-label':s('creatorlab.cadence')},...[1,5,20].map(n=>el('option',{value:n,selected:config.cadence===n},s('creators.trading_days',{n}))));cadence.addEventListener('change',()=>{config.cadence=Number(cadence.value);update();});
+    const cadence=el('select.input',{'aria-label':s('creatorlab.cadence')},...[1,5,20].map(n=>el('option',{value:n,selected:config.cadence===n},s(n===1?'creators.trading_days_single':'creators.trading_days',{n}))));cadence.addEventListener('change',()=>{config.cadence=Number(cadence.value);update();});
     form.append(el('label.creator-field',el('span',s('creatorlab.cadence')),cadence),el('p.muted.small',s('creatorlab.budget_hint')),el('h3',s('creatorlab.reaction_title')),toggle('reduce','creatorlab.reduce'),input('trim','creatorlab.trim',0,100),toggle('pause','creatorlab.pause'),toggle('accelerate','creatorlab.accelerate'),input('fee','creatorlab.fee',0,100),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{config={...DEFAULT_CONFIG};render();}},s('creatorlab.reset')));
     root.append(el('details.creator-lab-method',el('summary',s('creatorlab.method_title')),el('p.muted.small',s('creatorlab.method')),el('p.muted.small',s('creatorlab.privacy'))));
     function update(){
@@ -78,7 +78,7 @@ export async function mountSimulation(root,{kolId='',allowedIds=null,tickers=nul
       let result;try{result=simulate(points,config,demo?'bear':active.call.stance);}catch{output.append(el('p.err',s('creatorlab.invalid')));return;}
       output.append(el('p.small.muted',s('creatorlab.window')+' '+points[0].d+' → '+points.at(-1).d),comparisonChart(result,config.capital),el('p.creator-lab-difference',s('creatorlab.difference',{value:(result[2].value<result[0].value?'-':'+')+px(Math.abs(result[2].value-result[0].value))})));
       const table=el('div.creator-sim-results');
-      for(const r of result)table.append(el('article',el('h4',s('creatorlab.mode_'+r.mode)),metric(s('creatorlab.final'),px(r.value),r.ret),metric(s('creatorlab.change'),pct(r.ret),r.ret),el('p.small',s('creatorlab.result_detail',{drawdown:pct(r.drawdown),fees:px(r.cost),n:r.trades}))));
+      for(const r of result)table.append(el('article',el('h4',s('creatorlab.mode_'+r.mode)),metric(s('creatorlab.final'),px(r.value),r.ret),metric(s('creatorlab.change'),pct(r.ret),r.ret),el('p.small',s(r.trades===1?'creatorlab.result_detail_single':'creatorlab.result_detail',{drawdown:pct(r.drawdown),fees:px(r.cost),n:r.trades}))));
       output.append(table,el('p.muted.small',s('creatorlab.comparison_hint')));
     }
     update();

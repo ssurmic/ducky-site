@@ -1,5 +1,14 @@
 # Change log
 
+## 2026-09-10 · Creator leaderboard and simulator copy (local verification)
+
+Simplified the leaderboard title, introduction and empty state. Simulator options
+and results now distinguish one trading day/trade from plural counts; the day label
+is shared with one-session report comparisons. Ranking thresholds and simulation
+calculations are unchanged. The focused 48-test suite, 22-page build and copy lint
+passed. Cumulative English QA: 131 revised strings and seven new bilingual labels.
+[Acceptance and release status](reports/english-qa-20260910/README.md).
+
 ## 2026-09-10 · English walkthrough fixes (local verification)
 
 Revised 128 English labels and messages, made missing English reports explicit while
