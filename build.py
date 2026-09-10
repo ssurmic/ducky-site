@@ -550,6 +550,7 @@ def write_config_js(cfg: dict, version: str) -> None:
         "FEED_JSON": cfg.get("feed_json", "/feed.json"), "PRICES": None, "VERSION": version,
         "BILLING_ENABLED": False,
         "RESEARCH_BRIEF_ENABLED": cfg.get("research_brief_preview") is True,
+        "PRODUCT_FOCUS_ENABLED": cfg.get("product_focus") is True,
     }
     body = json.dumps(data, ensure_ascii=False, indent=2)
     (DIST / "config.js").write_text(
@@ -610,6 +611,8 @@ def load_video_example():
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--api-base", help="override api_base from site.config.json")
+    ap.add_argument("--product-focus", action=argparse.BooleanOptionalAction, default=None,
+                    help="preview the simplified Today / Watchlist / Explore workflow")
     ap.add_argument("--research-brief-preview", action=argparse.BooleanOptionalAction, default=None,
                     help="override the Research Brief site setting (absent setting: disabled)")
     args = ap.parse_args()
@@ -623,6 +626,7 @@ def main() -> None:
 
     cfg, tables, version = load_config(args.api_base), load_i18n(), git_sha()
     cfg["research_brief_preview"] = research_brief_enabled(cfg, args.research_brief_preview)
+    if args.product_focus is not None:cfg["product_focus"] = args.product_focus
     pages, env, liq, track_n = page_targets(), make_env(), load_liquidity(), load_track_n()
     track_stats = load_track_stats()   # §5.3.4/5 — graceful {'ok': False} when the notary JSON is absent
     video_example = load_video_example()

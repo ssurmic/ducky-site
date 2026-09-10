@@ -3,6 +3,7 @@ import {freeGuide,quotaNote} from '../experience.js';
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
 import { overviewView, layoutOverview } from "../watchlist-overview.js";
 import { companyContext } from "../company-context.js";
+import {researchRow} from '../stock-reading.js';
 import { icon } from "../icons.js";
 import { symbolPicker } from "../symbol-picker.js";
 import { s } from "../strings.js";
@@ -23,8 +24,11 @@ export async function mount(root) {
   const unsubs = [];
   root.classList.add("watchlist-view");
   let overview = null, selected = null, disposed = false, loading = true;
+  const focused=window.DUCKY?.PRODUCT_FOCUS_ENABLED===true;
+  let research=new Map(),researchFailed=false,loadSeq=0;
   let view = "list", query = "", sort = "market_cap", area = 'equal', candidate = null, adding = false;
   try { view = localStorage.getItem("ducky-watch-view") === "heatmap" ? "heatmap" : "list"; } catch {}
+  if(focused)view='reading';
   try { area = localStorage.getItem('ducky-watch-area') === 'cap' ? 'cap' : 'equal'; } catch {}
   const inflight = new Map();   // finding watchlist.js:118 — ticker -> in-flight fetch promise (dedup)
   const head = el("div.view-head", el("h1", s("watch.title")), el("span.count.mono", { id: "watch-count" }));
@@ -44,7 +48,7 @@ export async function mount(root) {
   const detail = el('section.watch-detail', {hidden:true, 'aria-label':s('watch.details')});
   const layout = el('div.watch-layout', list, detail);
   const modes = el('div.watch-modes', {'role':'group','aria-label':s('watch.display')});
-  for (const mode of ['list','heatmap']) modes.append(el('button.btn.btn-ghost.btn-sm', {type:'button',
+  for (const mode of (focused?['reading','list','heatmap']:['list','heatmap'])) modes.append(el('button.btn.btn-ghost.btn-sm', {type:'button',
     'data-mode':mode, 'aria-pressed':String(view===mode), onclick:()=>{
       view=mode; try { localStorage.setItem('ducky-watch-view',view); } catch {} render();
     }},s('watch.view_'+mode)));
@@ -133,13 +137,20 @@ export async function mount(root) {
     if (cnt) cnt.textContent = cap ? s("watch.count", { n: items.length, cap }) : String(items.length);
     if (selected && !items.includes(selected)) {selected=null;renderDetail();}
     modes.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.mode===view)));
-    sorting.hidden=view==='heatmap';
+    sorting.hidden=view==='heatmap'||view==='reading';
     const openDisclosures=new Set([...list.querySelectorAll('details[open][data-disclosure]')].map(n=>n.dataset.disclosure));
     const focusedMap=list.contains(document.activeElement)?document.activeElement?.dataset?.mapOpen:null;
     clear(list);
     if(loading && !overview){list.append(spinner());return;}
     if (!items.length) {list.append(empty(s('watch.empty')));return;}
     const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
+    if(view==='reading'){
+      const ordered=[...items].filter(t=>[t,rows.get(t)?.company||''].join(' ').toLowerCase().includes(query.trim().toLowerCase()))
+        .sort((a,b)=>(rows.get(b)?.market_cap||0)-(rows.get(a)?.market_cap||0)||a.localeCompare(b));
+      list.append(el('div.stock-reading-list',...ordered.map(t=>researchRow(t,rows.get(t),research.get(t)||{status:researchFailed?'read_failed':'pending'}))));
+      if(!ordered.length)list.append(el('p.muted',s('focus.no_matching_stocks')));
+      return;
+    }
     list.append(overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
       {view,query,sort,area,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
     for(const disclosure of list.querySelectorAll('details[data-disclosure]'))disclosure.open=openDisclosures.has(disclosure.dataset.disclosure);
@@ -225,19 +236,33 @@ export async function mount(root) {
     // finding watchlist.js:123 — a /watchlist response in flight when logout() wipes the store would
     // otherwise repopulate it; capture the epoch and drop the write if the session changed.
     const epoch = store.epoch();
+    const mine=++loadSeq;
+    let membershipReady=false;
+    // Quotes/membership can render while the separately validated research read
+    // is in flight. Source validation must not delay the first usable list.
+    const researchTask=focused?api.get('/me/stock-research').then(response=>{
+      if(disposed||store.epoch()!==epoch||mine!==loadSeq)return;
+      if(!Array.isArray(response?.items))throw new Error('invalid_research_response');
+      researchFailed=false;research=new Map(response.items.map(item=>[item.ticker,item]));if(membershipReady)render();
+    }).catch(()=>{
+      if(disposed||store.epoch()!==epoch||mine!==loadSeq)return;
+      researchFailed=true;research=new Map();if(membershipReady)render();
+    }):Promise.resolve();
     try {
-      const response = await api.watchlist.list();
+      const response=await api.watchlist.list();
       const items = normalizeList(response);
-      if (disposed || store.epoch() !== epoch) return;
+      if (disposed || store.epoch() !== epoch||mine!==loadSeq) return;
       overview = response?.overview || null;
       if(Number.isFinite(response?.cap))store.patch("me",{watch_cap:response.cap});
       loading = false;
+      membershipReady=true;
       store.set("watchlist", items);
     } catch (err) {
-      if (disposed || store.epoch() !== epoch) return;
+      if (disposed || store.epoch() !== epoch||mine!==loadSeq) return;
       loading = false;
       clear(list); list.appendChild(errorBox(err, load));
     }
+    await researchTask;
   }
 
   function loadSnapshot(t, force) {

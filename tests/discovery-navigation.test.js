@@ -24,6 +24,12 @@ test('new destinations survive sign-in and radar links select one matching categ
  assert.equal(safeTarget('#/boards?board=insider&token=secret'),'#/boards?board=insider');
  const shell=new JSDOM(readFileSync('dist/app/index.html','utf8')).window.document;
  const nav=document.importNode(shell.querySelector('.app-nav'),true);document.body.append(nav);
+ if(nav.classList.contains('focus-nav')){
+  selectNavigation('boards',new URLSearchParams('board=insider'));
+  assert.equal(nav.querySelector('[aria-current=page]').dataset.route,'explore');
+  selectNavigation('stock');assert.equal(nav.querySelector('[aria-current=page]').dataset.route,'watchlist');
+  nav.remove();return;
+ }
  selectNavigation('boards',new URLSearchParams('board=insider'));
  assert.ok(nav.querySelector('.nav-desktop-tree[data-group=boards]').open);
  assert.equal(nav.querySelector('.nav-desktop-tree[data-group=boards] [aria-current=page]').dataset.board,'insider');
@@ -38,6 +44,13 @@ test('phone navigation promotes enabled research and keeps displaced tools reach
   const shell=new JSDOM(readFileSync(`dist/${prefix}app/index.html`,'utf8')).window.document;
   const nav=document.importNode(shell.querySelector('.app-nav'),true);document.body.append(nav);
   const primary=[...nav.querySelectorAll(':scope > [data-mobile-primary]')];
+  if(nav.classList.contains('focus-nav')){
+   assert.deepEqual(primary.map(a=>a.dataset.route),['today','watchlist','explore']);
+   assert.equal(nav.querySelector('.nav-more'),null);
+   for(const route of ['today','watchlist','explore']){selectNavigation(route);assert.equal(nav.querySelector('[aria-current=page]').dataset.route,route);}
+   for(const route of ['opportunities','vibe','reports','calendar','creators']){selectNavigation(route);assert.equal(nav.querySelector('[aria-current=page]').dataset.route,'explore');}
+   nav.remove();continue;
+  }
   assert.deepEqual(primary.map(a=>a.dataset.route),expected);
   assert.ok(nav.querySelector('.nav-more-panel [data-route=alerts]'));
   assert.equal(Boolean(nav.querySelector('.nav-more-panel [data-route=evidence]')),briefEnabled);

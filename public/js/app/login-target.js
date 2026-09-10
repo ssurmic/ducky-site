@@ -11,6 +11,11 @@ const SIMPLE = new Set(["watchlist", "alerts", "billing", "profile", "creators",
 export function safeTarget(hash) {
   if (typeof hash !== "string" || hash.length > 2048) return null;
   const path = hash.split("?")[0];
+  if(path==='#/today'||path==='#/explore')return path;
+  if(/^#\/stock\/[A-Za-z][A-Za-z0-9.-]{0,9}$/.test(path)){
+    const from=new URLSearchParams(hash.split('?')[1]||'').get('from');
+    return path.toUpperCase().replace('#/STOCK/','#/stock/')+(['today','explore'].includes(from)?'?from='+from:'');
+  }
   if (path === '#/research-brief' && window.DUCKY?.RESEARCH_BRIEF_ENABLED === true) {
     const q = new URLSearchParams(hash.split('?')[1] || ''), target = new URLSearchParams();
     const ticker = (q.get('ticker') || '').toUpperCase(), creator = q.get('creator') || '';
@@ -92,7 +97,7 @@ export function rememberTarget(hash) {
   catch (_) { /* Sign-in still works when browser storage is unavailable. */ }
 }
 
-export function takeTarget(fallback = "#/watchlist") {
+export function takeTarget(fallback = window.DUCKY?.PRODUCT_FOCUS_ENABLED?"#/today":"#/watchlist") {
   try {
     const raw = window.sessionStorage.getItem(KEY);
     window.sessionStorage.removeItem(KEY);
