@@ -2,6 +2,7 @@ import {el} from './ui.js';
 import {evidenceLink} from './evidence-link.js';
 import {s} from './strings.js';
 import {groundedClaim,claimQualifications} from './views/creator-claim.js';
+import {readingOrder} from './reading-order.js';
 
 export function verifiedSpans(post){
   return (post.reviewed_spans||[]).filter(row=>['attributed_opinion','verified_mention_no_direction','self_reported_position_behavior'].includes(row.basis));
@@ -31,8 +32,8 @@ export function viewpointTake(post,focus=''){
   const directions=new Set([...rows.map(row=>({support:'bull',counter:'bear'}[row.stance])),...legacyCalls(post).map(row=>row.stance)].filter(x=>['bull','bear'].includes(x)));
   return directions.size===1?[...directions][0]:'neutral';
 }
-export function spanSection(rows,tickers=null,focus='',{inline=false}={}){
-  const items=verifiedSpans({reviewed_spans:rows}).filter(row=>!tickers||tickers.includes(row.ticker));
+export function spanSection(rows,tickers=null,focus='',{inline=false,preferredTickers=null}={}){
+  const items=readingOrder(verifiedSpans({reviewed_spans:rows}).filter(row=>!tickers||tickers.includes(row.ticker)),{point:focus,tickers:preferredTickers});
   if(!items.length)return null;
   const lang=document.documentElement.lang?.startsWith('en')?'en':'zh';
   const section=el('section.creator-reviewed-spans',{class:inline?'is-inline':''});

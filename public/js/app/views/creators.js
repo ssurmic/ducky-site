@@ -421,7 +421,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         if(fullSummary)art.appendChild(el("p.cr-sum", conciseSummary(fullSummary,isZh)));
         const detail = el("details.cr-sections",el("summary",s(fullSummary?"creators.read_summary":"creatordiscovery.excerpts")),el("p.cr-attribution.muted.small", s("creators.attribution", { name: p.kol_name || p.kol_id || "—" })),el("p",fullSummary));
         if(focusedPost)detail.open=true;
-        const spans=spanSection(points,null,focusedPoint,{inline:true});if(spans)detail.append(spans);
+        const spans=spanSection(points,null,focusedPoint,{inline:true,preferredTickers:stockFilter});if(spans)detail.append(spans);
         if (grounded && legacyCalls(p).length) detail.append(callChips(legacyCalls(p),isZh,p.url,p.kol_id));
         if (reviewed && sections.length) {
 

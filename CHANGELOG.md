@@ -1,5 +1,12 @@
 # Change log
 
+## 2026-09-10 · Show actual viewpoints before repeated mentions (local verification)
+
+Map and author previews no longer let generic mentions displace substantive records.
+Stock-scoped creator excerpts lead with that stock while retaining the full source
+context and exact linked points. All dates, records and separate stance lanes remain.
+660 tests and copy/link checks pass; [release evidence](reports/CREATOR-READING-ORDER-2026-09-10.md).
+
 ## 2026-09-10 · Following a stock preserves existing summaries (deployed)
 
 Following/unfollowing preserves unaffected dated research; an already-read new stock can reuse
