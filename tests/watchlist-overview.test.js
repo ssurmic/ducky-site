@@ -251,6 +251,20 @@ test('metric sorting puts valid zero and losses ahead of missing or stale compar
  assert.deepEqual([...view.querySelectorAll('button.watch-row')].map(n=>n.dataset.open),['FLAT','LOSS','MISSING','OLD']);
 });
 
+test('retained YTD stays readable and sortable with its original date; other stale metrics stay unknown',async()=>{
+ const {metricSortValue}=await import('../public/js/app/watchlist-metrics.js');
+ const saved={value:-10,status:'retained',reason:'empty_close_update',as_of:'2026-09-10',start:'2025-12-31',recorded_at:'2026-09-10T23:00:00.000000+00:00',failed_at:'2026-09-11T01:00:00Z'};
+ const rows=[{...row('LOSS',1e9),metrics:{ytd:saved}},{...row('FLAT',1e9),metrics:{ytd:{...saved,value:0}}},{...row('UNKNOWN',1e9),metrics:{ytd:{status:'missing'}}}];
+ const view=overviewView(rows,{view:'list',sort:'ytd',onSelect:()=>{}});
+ assert.deepEqual([...view.querySelectorAll('button.watch-row')].map(n=>n.dataset.open),['FLAT','LOSS','UNKNOWN']);
+ assert.match(view.querySelector('[data-open="LOSS"] [data-metric=ytd]').textContent,/-10.0%.*Saved return.*2026-09-10/);
+ assert.match(view.querySelector('.watch-metric-method').textContent,/Saved 2026-09-10 23:00:00 UTC/);
+ assert.match(view.querySelector('.watch-metric-method').textContent,/latest close update is unavailable/);
+ assert.doesNotMatch(view.querySelector('.watch-metric-method').textContent,/01:00:00/);
+ assert.equal(metricSortValue({metrics:{iv_hv:{value:2,status:'retained'}}},'iv_hv'),null);
+ assert.equal(metricSortValue({metrics:{ytd:{value:2,status:'stale'}}},'ytd'),null);
+});
+
 
 test('long reference baskets stay compact while all members remain in the disclosure',()=>{
  const symbols=['AAA','BBB','CCC','DDD','EEE','FFF'];

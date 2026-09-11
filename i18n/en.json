@@ -4140,5 +4140,7 @@
   "idea.original_title_zh": "Original title (Chinese)",
   "idea.record_title": "{ticker} research record",
   "app.creators.trading_days_single": "+{n} trading day",
-  "app.creatorlab.result_detail_single": "Max close drawdown {drawdown} · costs {fees} · {n} trade"
+  "app.creatorlab.result_detail_single": "Max close drawdown {drawdown} · costs {fees} · {n} trade",
+  "app.watch.ytd_retained": "Saved return",
+  "app.watch.ytd_retained_detail": "The latest close update is unavailable. Showing the return calculated from the last complete set of prices."
 }

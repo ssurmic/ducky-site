@@ -4140,5 +4140,7 @@
   "idea.original_title_zh": "中文原标题",
   "idea.record_title": "{ticker} 研究记录",
   "app.creators.trading_days_single": "+{n} 交易日",
-  "app.creatorlab.result_detail_single": "最大收盘回撤 {drawdown} · 成本 {fees} · {n} 次交易"
+  "app.creatorlab.result_detail_single": "最大收盘回撤 {drawdown} · 成本 {fees} · {n} 次交易",
+  "app.watch.ytd_retained": "上次计算",
+  "app.watch.ytd_retained_detail": "最新收盘数据暂缺，保留上次完整数据计算的结果。"
 }
