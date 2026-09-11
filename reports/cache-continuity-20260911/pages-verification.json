@@ -1,0 +1,32 @@
+{
+  "observed_at": "2026-09-11T06:14:52.807887+00:00",
+  "commit": "a3c16e71e07f79f3d83f52253b2f7cd41aa9278a",
+  "graph": "637968b1378ba16af9e3",
+  "deployment": "d67bd897",
+  "assets": [
+    {
+      "path": "app-release.json",
+      "status": 200,
+      "sha256": "8f4285258fd3db08c33b7754ee6188630628f3180bfe3f631502a996bd3ae03f",
+      "matches_build": true
+    },
+    {
+      "path": "app-assets/637968b1378ba16af9e3/read-cache.js",
+      "status": 200,
+      "sha256": "bf217c89f531d81506b5c5dd5099fd57b0ee82699654fa978dcbae6e57e9e961",
+      "matches_build": true
+    },
+    {
+      "path": "app-assets/637968b1378ba16af9e3/api.js",
+      "status": 200,
+      "sha256": "f108be8460314f15b4ff79ba112315f703355c874e60474b412a878501db3ae7",
+      "matches_build": true
+    },
+    {
+      "path": "app-assets/637968b1378ba16af9e3/views/watchlist.js",
+      "status": 200,
+      "sha256": "1b72a3ed3550c7470a762446266ad6354216783ec897dff62bc7134972553f36",
+      "matches_build": true
+    }
+  ]
+}

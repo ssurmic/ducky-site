@@ -1,0 +1,36 @@
+{
+  "release": "a3c16e71e07f79f3d83f52253b2f7cd41aa9278a",
+  "app_graph": "637968b1378ba16af9e3",
+  "observation_window_utc": "2026-09-11T06:14/06:18",
+  "environment": "Authenticated production Chrome, EN and ZH desktop",
+  "watch_count": 50,
+  "english_analysis_as_of_rows": 46,
+  "note": "This literal date-label count excludes previous-analysis labels and is not a content-quality completeness score.",
+  "price_session": "2026-09-10",
+  "aapl_original_analysis": "2026-09-10T23:38:00Z",
+  "checks": {
+    "map_one_click_from_list": true,
+    "return_preserves_summary_and_date": true,
+    "refresh_preserves_summary_and_date": true,
+    "zh_server_read_returns_same_dated_summary": true,
+    "production_script_matches_new_graph": true
+  },
+  "follow_msft": {
+    "outcome": "rejected_watch_limit",
+    "membership_changed": false,
+    "note": "Account was at 50/50; did not remove existing user stocks or change quota. First-follow success and failure continuity verified with isolated browser fixture instead."
+  },
+  "isolated_browser": {
+    "en_desktop_first_follow_pending_reads": "passed",
+    "zh_390px_first_follow_pending_reads": "passed",
+    "network_timeout_preserves_summary_and_map": "passed",
+    "zh_390px_repeat": {
+      "method": "same-origin fixture iframe with explicit 390px CSS width",
+      "measured_inner_width": 390,
+      "first_follow_pending_reads_summary": "visible",
+      "after_release_summary": "visible",
+      "console_errors": []
+    }
+  },
+  "cleanup": "All three owned test tabs closed; viewport override reset; owned local QA server stopped. No successful production membership mutation."
+}
