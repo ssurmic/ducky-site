@@ -1,11 +1,20 @@
 # Change log
 
-## Preserve stock scope in source return links · 2026-09-10
+## Group repeated creator wording · 2026-09-10 (local verification)
+
+Identical viewpoints from the same video share one headline, with every original
+record, excerpt and map link available on expansion. Different qualifications
+remain separate. Both languages explain repeat source use; exact point links open
+their record. 677 tests and 12 browser layouts passed; publication is pending.
+[Behavior and acceptance](reports/CREATOR-REPEATED-VIEWS-2026-09-10.md).
+
+## Preserve stock scope in source return links · 2026-09-10 (deployed)
 
 Direct source links now retain the current stock when opening the creator's
 record, matching ordinary map-card clicks. No additional request or model work
 is introduced. All 670 frontend tests and 12 bilingual/theme viewport checks
-passed; publication is pending.
+passed. PR37 / main `35a5713c` / Pages `23cf155b` passed exact CI, public asset
+verification and live English/Chinese source-to-creator navigation.
 [Bug and acceptance](reports/MAP-SOURCE-RETURN-2026-09-10.md).
 
 ## 2026-09-10 · Daily stock analysis and financial creator aggregation (deployed)
