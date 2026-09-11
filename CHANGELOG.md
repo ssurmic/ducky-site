@@ -1,8 +1,8 @@
 # Change log
 
-## 2026-09-10 · Daily stock analysis and financial creator aggregation
+## 2026-09-10 · Daily stock analysis and financial creator aggregation (deployed)
 
-Homepage search/share titles now use the owner’s daily stock analysis positioning. Both descriptions explain financial creator aggregation with original sources. The copy check permits only the full approved English descriptor while retaining the trading-call bans. [Validation and release](reports/SEARCH-POSITIONING-2026-09-10.md).
+Homepage search/share titles now use the owner’s daily stock analysis positioning. Both descriptions explain financial creator aggregation with original sources. The copy check permits only the full approved English descriptor while retaining the trading-call bans. PR36 / main `d5aa72c9` / Pages `63125cd9` passed 669 tests and live bilingual metadata checks. [Validation and release](reports/SEARCH-POSITIONING-2026-09-10.md).
 
 ## Read sources in the stock page · 2026-09-10 (implementation)
 
