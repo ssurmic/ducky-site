@@ -26,6 +26,10 @@ test('exact creator/post/point link survives sign-in without carrying private va
  const href=evidenceTarget({creator_id:'talk',post_id:'abcdefghijk',point_id:'claim:abc'});
  assert.equal(href,'#/creators?scope=discover&creator=talk&post=abcdefghijk&point=claim%3Aabc');
  assert.equal(safeTarget(href+'&token=secret&cash=99'),href);
+ const scoped=evidenceTarget({creator_id:'talk',post_id:'abcdefghijk',point_id:'claim:abc'},{ticker:'UBER'});
+ assert.equal(safeTarget(scoped+'&token=secret'),scoped);
+ assert.equal(creatorRoute(new URLSearchParams(scoped.split('?')[1])).ticker,'UBER');
+ assert.equal(evidenceTarget({creator_id:'talk',post_id:'abcdefghijk',point_id:'claim:abc'},{ticker:'UBER&token=secret'}),href);
  assert.equal(evidenceTarget({creator_id:'../oops',post_id:'abcdefghijk'}),null);
  assert.equal(creatorTarget(creatorRoute(new URLSearchParams('creator=talk&post=../../x'))),'#/creators?creator=talk');
 });
