@@ -1,11 +1,12 @@
 # Change log
 
-## Preserve stock scope in source return links · 2026-09-10
+## Preserve stock scope in source return links · 2026-09-10 (deployed)
 
 Direct source links now retain the current stock when opening the creator's
 record, matching ordinary map-card clicks. No additional request or model work
 is introduced. All 670 frontend tests and 12 bilingual/theme viewport checks
-passed; publication is pending.
+passed. PR37 / main `35a5713c` / Pages `23cf155b` passed exact CI, public asset
+verification and live English/Chinese source-to-creator navigation.
 [Bug and acceptance](reports/MAP-SOURCE-RETURN-2026-09-10.md).
 
 ## 2026-09-10 · Daily stock analysis and financial creator aggregation (deployed)
