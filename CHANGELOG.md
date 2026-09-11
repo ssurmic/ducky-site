@@ -1,11 +1,12 @@
 # Change log
 
-## 2026-09-10 · Use the fluffy homepage duck in search and browser icons
+## 2026-09-10 · Use the fluffy homepage duck in search and browser icons (deployed)
 
 The favicon and installation icon now use the homepage's original 1254px green
 duck at one stable URL. Legacy favicon paths redirect to it, and builds no longer
 regenerate the older vector icon. 660 frontend tests, asset checks and copy/link
-checks passed. Search-result changes still depend on Google's next crawl.
+checks passed. Exact main CI passed; Pages `f6960534` is live and ten public paths
+passed verification. Search-result changes still depend on Google's next crawl.
 [Acceptance and publication status](reports/FLUFFY-FAVICON-2026-09-10.md).
 
 ## 2026-09-10 · Show actual viewpoints before repeated mentions (deployed)
