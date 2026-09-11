@@ -60,7 +60,9 @@ test('first watchlist paints the just-followed saved overview while its first re
   assert.ok(root.querySelector('a[href="#/evidence/NVDA"]'));
  }finally{
   for(const resolve of pending)resolve(Response.json({error:'offline'},{status:503}));
-  const dispose=await mount;dispose();
+  const dispose=await mount;
+  try{assert.match(root.textContent,/conditional on spending/);assert.ok(root.querySelector('a[href="#/evidence/NVDA"]'));}
+  finally{dispose();}
  }
 });
 

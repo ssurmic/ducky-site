@@ -52,6 +52,13 @@ NVDA sections remain ineligible. This does not claim all three production result
   checks: 72 passed in 1.44 seconds. These use isolated inputs, not production inference.
 - Production release, browser observations and limitations will be appended after delivery.
 
+The actual isolated-browser first-follow scenario passed with both list GETs held open:
+EN desktop and ZH 390 px displayed the cached dated overview and direct map link before
+either GET completed. Releasing after the network deadline exposed a further first-entry
+edge: the membership error path retained only a cached price list, not a cached summary.
+It now retains either on ordinary read failure; the strengthened regression asserts the
+summary and map link remain after the failure as well. Access denial still clears them.
+
 ## Rollback and scope
 
 Frontend rollback baseline: main `960ebb021b25258a29e24d31c8108d7d410ff7ce`.

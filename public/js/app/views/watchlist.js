@@ -298,7 +298,7 @@ export async function mount(root,{signal}={}) {
       if (!current()) return;
       loading = false;
       membershipAvailable=false;
-      if(overview&&![401,402,403].includes(err.status)){membershipReady=true;render();readNotice.append(errorBox(err,load));}
+      if((overview||research.size)&&![401,402,403].includes(err.status)){membershipReady=true;render();readNotice.append(errorBox(err,load));}
       else{clear(list);list.appendChild(errorBox(err,load));}
     }
     await researchTask;
