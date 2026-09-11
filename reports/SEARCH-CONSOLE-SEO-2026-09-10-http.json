@@ -1,0 +1,152 @@
+{
+  "checked_at": "2026-09-11T02:26:04.674012+00:00",
+  "canonical_public_urls": 14,
+  "checked_paths": 23,
+  "passed": true,
+  "pages": [
+    {
+      "path": "/",
+      "status": 200,
+      "lang": "en",
+      "canonical": "https://duckybot.app/en/",
+      "indexable": true,
+      "matches_build": true
+    },
+    {
+      "path": "/en/",
+      "status": 200,
+      "lang": "en",
+      "canonical": "https://duckybot.app/en/",
+      "indexable": true,
+      "matches_build": true
+    },
+    {
+      "path": "/zh/",
+      "status": 200,
+      "lang": "zh-CN",
+      "canonical": "https://duckybot.app/zh/",
+      "indexable": true,
+      "matches_build": true
+    },
+    {
+      "path": "/app/",
+      "status": 200,
+      "lang": "en",
+      "canonical": "https://duckybot.app/en/app/",
+      "indexable": false,
+      "matches_build": true
+    },
+    {
+      "path": "/en/app/",
+      "status": 200,
+      "lang": "en",
+      "canonical": "https://duckybot.app/en/app/",
+      "indexable": false,
+      "matches_build": true
+    },
+    {
+      "path": "/zh/app/",
+      "status": 200,
+      "lang": "zh-CN",
+      "canonical": "https://duckybot.app/zh/app/",
+      "indexable": false,
+      "matches_build": true
+    },
+    {
+      "path": "/en/disclaimer/",
+      "status": 200,
+      "lang": "en",
+      "canonical": "https://duckybot.app/en/disclaimer/",
+      "indexable": true,
+      "matches_build": true
+    },
+    {
+      "path": "/zh/disclaimer/",
+      "status": 200,
+      "lang": "zh-CN",
+      "canonical": "https://duckybot.app/zh/disclaimer/",
+      "indexable": true,
+      "matches_build": true
+    },
+    {
+      "path": "/en/ideas/",
+      "status": 200,
+      "lang": "en",
+      "canonical": "https://duckybot.app/en/ideas/",
+      "indexable": true,
+      "matches_build": true
+    },
+    {
+      "path": "/zh/ideas/",
+      "status": 200,
+      "lang": "zh-CN",
+      "canonical": "https://duckybot.app/zh/ideas/",
+      "indexable": true,
+      "matches_build": true
+    },
+    {
+      "path": "/en/privacy/",
+      "status": 200,
+      "lang": "en",
+      "canonical": "https://duckybot.app/en/privacy/",
+      "indexable": true,
+      "matches_build": true
+    },
+    {
+      "path": "/zh/privacy/",
+      "status": 200,
+      "lang": "zh-CN",
+      "canonical": "https://duckybot.app/zh/privacy/",
+      "indexable": true,
+      "matches_build": true
+    },
+    {
+      "path": "/en/research-records/",
+      "status": 200,
+      "lang": "en",
+      "canonical": "https://duckybot.app/en/research-records/",
+      "indexable": true,
+      "matches_build": true
+    },
+    {
+      "path": "/zh/research-records/",
+      "status": 200,
+      "lang": "zh-CN",
+      "canonical": "https://duckybot.app/zh/research-records/",
+      "indexable": true,
+      "matches_build": true
+    },
+    {
+      "path": "/en/track-record/",
+      "status": 200,
+      "lang": "en",
+      "canonical": "https://duckybot.app/en/track-record/",
+      "indexable": true,
+      "matches_build": true
+    },
+    {
+      "path": "/zh/track-record/",
+      "status": 200,
+      "lang": "zh-CN",
+      "canonical": "https://duckybot.app/zh/track-record/",
+      "indexable": true,
+      "matches_build": true
+    },
+    {
+      "path": "/en/trending/",
+      "status": 200,
+      "lang": "en",
+      "canonical": "https://duckybot.app/en/trending/",
+      "indexable": true,
+      "matches_build": true
+    },
+    {
+      "path": "/zh/trending/",
+      "status": 200,
+      "lang": "zh-CN",
+      "canonical": "https://duckybot.app/zh/trending/",
+      "indexable": true,
+      "matches_build": true
+    }
+  ]
+}
