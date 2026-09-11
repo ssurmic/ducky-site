@@ -1,8 +1,13 @@
 // Accessible asynchronous combobox. Selecting a result never submits a watch.
 import { el, clear } from './ui.js';
-import { s } from './strings.js';
+import { s,LANG } from './strings.js';
 import * as api from './api.js';
 let sequence = 0;
+export function businessLabel(row,lang=LANG){
+  if(lang!=='en')return row.industry||row.sector||'';
+  const label=row.industry_en||row.sector_en||row.industry||row.sector||'';
+  return /[\u3400-\u9fff]/.test(label)?'':label;
+}
 
 export function symbolPicker(input, watched = () => [], options = {}) {
   const id = 'symbol-options-' + (++sequence);
@@ -37,8 +42,9 @@ export function symbolPicker(input, watched = () => [], options = {}) {
         rows=Array.isArray(doc?.items)?doc.items:[]; clear(list);
         rows.forEach((r,i)=>{
           const exists=watched().includes(r.ticker);
+          const label=businessLabel(r);
           const item=el('div.symbol-option',{id:id+'-'+i,role:'option','aria-selected':'false','aria-disabled':String(exists&&!options.allowWatched)},
-            el('strong.mono',r.ticker), el('span.symbol-name',r.name, r.industry || r.sector ? el('small.muted',r.industry || r.sector) : null),
+            el('strong.mono',r.ticker), el('span.symbol-name',r.name,label?el('small.muted',label):null),
             el('span.symbol-exchange.muted.small',exists?s('watch.following'):r.exchange||r.kind||''));
           item.addEventListener('pointerdown',e=>e.preventDefault());
           item.addEventListener('click',()=>select(i)); list.append(item);

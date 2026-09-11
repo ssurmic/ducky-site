@@ -4,7 +4,10 @@ import { calendarEventKey } from './calendar-model.js';
 import { CFG, LANG } from "./strings.js";
 import * as store from "./store.js";
 import * as readCache from './read-cache.js';
-export const peek=readCache.peek;
+import {resource,record} from './read-diagnostics.js';
+export {record as readDiagnostic} from './read-diagnostics.js';
+export const peek=path=>{const value=readCache.peek(path);record(value?'cache_hit':'cache_miss',{resource:resource(path)});return value;};
+let requestSequence=0;
 
 export class ApiError extends Error {
   constructor(status, body, url) {
@@ -39,9 +42,12 @@ async function parse(res) {
 
 /** request(method, path, {body, raw, auth=true}) → parsed JSON (or Response when raw). */
 export async function request(method, path, opts) {
+  const started=Date.now(),request_id=++requestSequence,kind=resource(path);
+  if(kind)record('request',{resource:kind,request_id});
   const observers=method==='GET'&&opts?.observe!==false?[...readFailureObservers]:[];
-  try{return await performRequest(method,path,opts);}
+  try{return await performRequest(method,path,{...opts,diagnostic:{started,request_id,resource:kind}});}
   catch(error){
+    if(kind)record('failure',{resource:kind,request_id,elapsed_ms:Date.now()-started,...readFailure(error)});
     if([401,402,403,404,410].includes(error.status)&&opts?.auth!==false)readCache.clear();
     for(const fn of observers){try{fn(path,readFailure(error),{auth:opts?.auth!==false});}catch{}}
     throw error;
@@ -92,6 +98,12 @@ async function performRequest(method,path,opts){
     opts.signal?.removeEventListener('abort',abort);
   }
   if (sessionChanged()) throw new ApiError(0, { detail: "session_changed" }, path);
+  if(opts.diagnostic?.resource){
+    const server=res.headers.get('server-timing')?.match(/projection;dur=([\d.]+)/);
+    record('response',{...opts.diagnostic,status:res.status,elapsed_ms:Date.now()-opts.diagnostic.started,
+      trace_id:res.headers.get('x-ducky-read-id'),server_ms:server?Number(server[1]):undefined,
+      items:Array.isArray(data?.items)?data.items.length:undefined});
+  }
   if (res.status === 401 && opts.auth !== false) {
     if (onUnauthorized && !opts.skipUnauthorized && !(opts.preserveBadTelegram && data?.error === 'bad_telegram')) {
       const recovered = await onUnauthorized({token,epoch,retry:!opts.sessionRetried});
@@ -108,7 +120,11 @@ async function performRequest(method,path,opts){
     return observed({ __accepted: true, retry_after: Number(r.retry_after || res.headers.get("Retry-After") || 5), body: r });
   }
   if (!res.ok) throw new ApiError(res.status, data, path);
-  if(method!=='GET'&&/^\/(?:watchlist|me\/evidence)(?:\/|$)/.test(path))readCache.clear();
+  if(method!=='GET'){
+    readCache.membershipMutation(method,path,opts.body,data);
+    if(/^\/watchlist(?:\/|$)/.test(path))record('membership_changed',{resource:'watchlist',status:res.status,request_id:opts.diagnostic?.request_id});
+    if(/^\/me\/evidence(?:\/|$)/.test(path))readCache.clear();
+  }
   return observed(data);
 }
 

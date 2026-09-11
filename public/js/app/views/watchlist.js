@@ -28,6 +28,13 @@ export async function mount(root,{signal}={}) {
   const focused=window.DUCKY?.PRODUCT_FOCUS_ENABLED===true;
   let research=new Map((api.peek('/me/stock-research')?.items||[]).map(item=>[item.ticker,item])),researchFailed=false,researchLoading=true,loadSeq=0,membershipAvailable=false;
   const missingResearch=()=>({status:researchLoading?'read_pending':researchFailed?'read_failed':'pending'});
+  let lastPaint='';
+  function reportPaint(){
+    const items=list.querySelectorAll('[data-reading-anchor]').length;
+    const readable=list.querySelectorAll('.stock-one-sentence').length;
+    const key=[view,items,readable,researchLoading,researchFailed].join('|');
+    if(key!==lastPaint){lastPaint=key;api.readDiagnostic('render',{resource:'watchlist',items,readable});}
+  }
   let view = "list", query = "", sort = "market_cap", sortDirection = "desc", area = 'equal', candidate = null, adding = false;
   // Each entry starts on List, consistently on desktop and phone.
   // List combines prices, the shared overview and a direct information-map action.
@@ -151,11 +158,13 @@ export async function mount(root,{signal}={}) {
         .sort((a,b)=>(rows.get(b)?.market_cap||0)-(rows.get(a)?.market_cap||0)||a.localeCompare(b));
       replaceReading(list,el('div.stock-reading-list',...ordered.map(t=>researchRow(t,rows.get(t),research.get(t)||missingResearch()))));
       if(!ordered.length)list.append(el('p.muted',s('focus.no_matching_stocks')));
+      reportPaint();
       return;
     }
     const tableLeft=list.querySelector('.watch-table-scroll')?.scrollLeft||0;
     replaceReading(list,overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
       {view,query,sort,sortDirection,onSort:key=>{sortDirection=key===sort?(sortDirection==='desc'?'asc':'desc'):key==='ticker'?'asc':'desc';sort=key;render();},area,renderResearch:focused?t=>reading({...research.get(t),ticker:t,...(!research.has(t)?missingResearch():{})}):null,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
+    reportPaint();
     const scroll=list.querySelector('.watch-table-scroll');if(scroll)scroll.scrollLeft=tableLeft;
     for(const disclosure of list.querySelectorAll('details[data-disclosure]'))disclosure.open=openDisclosures.has(disclosure.dataset.disclosure);
     if(focusedMap)[...list.querySelectorAll('[data-map-open]')].find(n=>n.dataset.mapOpen===focusedMap)?.focus({preventScroll:true});

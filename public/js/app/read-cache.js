@@ -47,6 +47,14 @@ export function peek(path){
   if(Date.now()-entry.at>MAX_AGE||Date.now()<entry.at){remove(path);return null;}
   return JSON.parse(entry.text);
 }
+function graphOverview(ticker,doc){
+  const nodes=doc?.analysis_status==='refresh_pending'?doc.analysis_nodes||[]:doc?.nodes||[];
+  const refs=doc?.analysis?.overview?.citations||[];
+  const accepted=['ready','refresh_pending'].includes(doc?.analysis_status)&&refs.length&&refs.every(id=>nodes.some(n=>n.id===id));
+  return {ticker,status:doc?.analysis_status||'pending',overview:accepted?doc.analysis.overview:null,
+    sources:accepted?nodes.filter(n=>refs.includes(n.id)):[],as_of:doc?.analysis_generated_at,
+    version:doc?.analysis_evidence_version,records:doc?.nodes?.length??null};
+}
 export function remember(path,value){
   if(!current()||!allowed(path)||!valid(path,value))return;
   // A full authoritative graph also refreshes its overview. This prevents a
@@ -56,12 +64,7 @@ export function remember(path,value){
     const ticker=match[2],doc=match[1]==='stock-research'?value.evidence:value;
     const list=peek('/me/stock-research');
     if(list){
-      const nodes=doc?.analysis_status==='refresh_pending'?doc.analysis_nodes||[]:doc?.nodes||[];
-      const refs=doc?.analysis?.overview?.citations||[];
-      const accepted=['ready','refresh_pending'].includes(doc?.analysis_status)&&refs.length&&refs.every(id=>nodes.some(n=>n.id===id));
-      list.items=list.items.map(item=>item.ticker!==ticker?item:{ticker,status:doc?.analysis_status||'pending',
-        overview:accepted?doc.analysis.overview:null,sources:accepted?nodes.filter(n=>refs.includes(n.id)):[],
-        as_of:doc?.analysis_generated_at,version:doc?.analysis_evidence_version,records:doc?.nodes?.length??null});
+      list.items=list.items.map(item=>item.ticker!==ticker?item:graphOverview(ticker,doc));
       put('/me/stock-research',list,entries.get('/me/stock-research').at);
     }
     remove('/'+(match[1]==='evidence'?'stock-research':'evidence')+'/'+ticker);
@@ -76,14 +79,47 @@ export function remember(path,value){
   }
   put(path,value);
 }
+export function membershipChanged(tickers){
+  if(!current())return;
+  const wanted=new Set(tickers);
+  const saved=peek('/watchlist');
+  if(saved){
+    saved.items=[...wanted];
+    saved.overview.items=saved.overview.items.filter(item=>wanted.has(item.ticker));
+    put('/watchlist',saved,entries.get('/watchlist').at);
+  }
+  const research=peek('/me/stock-research');
+  if(research){
+    let at=entries.get('/me/stock-research').at;
+    research.items=research.items.filter(item=>wanted.has(item.ticker));
+    for(const ticker of wanted){
+      if(research.items.some(item=>item.ticker===ticker))continue;
+      const doc=peek('/evidence/'+ticker),item=graphOverview(ticker,doc);
+      if(item.overview){
+        research.items.push(item);
+        at=Math.min(at,entries.get('/evidence/'+ticker)?.at??entries.get('/stock-research/'+ticker)?.at??at);
+      }
+    }
+    research.watchlist_count=wanted.size;
+    put('/me/stock-research',research,at);
+  }
+}
+export function membershipMutation(method,path,body,result){
+  if(path==='/watchlist'&&method==='POST'){
+    const ticker=result?.ticker||body?.ticker;
+    if(/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker||''))membershipChanged([...new Set([...(store.get('watchlist')||[]),ticker])]);
+  }else if(method==='DELETE'&&/^\/watchlist\/[A-Z][A-Z0-9.-]{0,9}$/.test(path)){
+    const ticker=path.slice('/watchlist/'.length);
+    membershipChanged((store.get('watchlist')||[]).filter(t=>t!==ticker));
+    remove('/stock-research/'+ticker);remove('/evidence/'+ticker);
+  }
+}
 for(const key of ['token','me'])store.subscribe(key,current);
 let membership='';
 store.subscribe('watchlist',()=>{
   const next=[...(store.get('watchlist')||[])].sort().join('|');
   if(next!==membership){
-    const saved=peek('/watchlist');
-    const incoming=(saved?.items||[]).map(item=>typeof item==='string'?item:item?.ticker||item?.symbol).filter(Boolean).sort().join('|');
-    if(!saved||incoming!==next){forget('/watchlist');forget('/me/stock-research');}
+    membershipChanged(store.get('watchlist')||[]);
     membership=next;
   }
 });
