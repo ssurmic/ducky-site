@@ -141,11 +141,11 @@ test('stale membership reads cannot resurrect a stock after successful deletion'
 
 test('other layouts offer a direct way back to selection; server quota rejection shows the actual cap without upsell',async()=>{
  const {root,dispose}=await setup(['AAA'],{cap:2});let upsells=0;
- const upsell=()=>upsells++;window.addEventListener('ducky:upsell',upsell);
+ api.setPaymentRequiredHandler(()=>upsells++);
  try{
   root.querySelector('[data-mode=reading]').click();root.querySelector('.watch-bulk-actions button').click();assert.ok(root.querySelector('[data-watch-select=AAA]'));
   globalThis.fetch=async(url,opts)=>opts.method==='POST'?Response.json({error:'watch_limit',cap:1},{status:402}):Response.json(url==='/watchlist'?{items:['AAA'],cap:1,overview:{items:[{ticker:'AAA'}]}}:{items:[]});
   const form=root.querySelector('form');form.querySelector('input').value='BBB';form.dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));await pause();
   assert.equal(store.get('me').watch_cap,1);assert.equal(root.querySelector('.watch-capacity').hidden,false);assert.equal(root.querySelector('form button').disabled,true);assert.equal(upsells,0);
- }finally{dispose();window.removeEventListener('ducky:upsell',upsell);}
+ }finally{dispose();api.setPaymentRequiredHandler(null);}
 });

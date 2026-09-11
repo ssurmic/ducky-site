@@ -1,0 +1,65 @@
+[
+  {
+    "heading": "My watchlist",
+    "overflow": 0,
+    "route": "#/watchlist",
+    "runtime": "",
+    "wrongWatchControls": false
+  },
+  {
+    "heading": "Stock briefs",
+    "overflow": 0,
+    "route": "#/briefing",
+    "runtime": "",
+    "wrongWatchControls": false
+  },
+  {
+    "heading": "NVDA",
+    "overflow": 0,
+    "route": "#/chart/NVDA",
+    "runtime": "",
+    "wrongWatchControls": false
+  },
+  {
+    "heading": "Investment calendar",
+    "overflow": 0,
+    "route": "#/calendar",
+    "runtime": "",
+    "wrongWatchControls": false
+  },
+  {
+    "heading": "Oversold stocks",
+    "overflow": 0,
+    "route": "#/opportunities",
+    "runtime": "",
+    "wrongWatchControls": false
+  },
+  {
+    "heading": "Custom alerts",
+    "overflow": 0,
+    "route": "#/alerts",
+    "runtime": "",
+    "wrongWatchControls": false
+  },
+  {
+    "heading": "Finance creators",
+    "overflow": 0,
+    "route": "#/creators",
+    "runtime": "",
+    "wrongWatchControls": false
+  },
+  {
+    "heading": "Profile",
+    "overflow": 0,
+    "route": "#/profile",
+    "runtime": "",
+    "wrongWatchControls": false
+  },
+  {
+    "heading": "Profile",
+    "overflow": 0,
+    "route": "#/billing",
+    "runtime": "",
+    "wrongWatchControls": false
+  }
+]

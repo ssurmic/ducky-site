@@ -20,6 +20,7 @@ Deletion uses the existing idempotent DELETE endpoint, sequentially and only for
 - Isolated browser fixture allows in-memory membership writes only in the explicit watchlist-management case. All other fixtures still reject writes. No production connection or real member changes.
 - Browser: 320×650 and 390×650, EN/ZH, light/dark; all 8 layouts show 50/50, 51 checkboxes, no document overflow, 522px app content height, 44×44 checkbox targets and 16px search input. First stock starts at 446px (465px for 320px English); two rows are partly or fully visible before scrolling. Desktop 1440×900 checked.
 - Browser interaction: selected 2 → removed 2 → 48/50 → added one back → 49/50. Filtered select-all chose only AMD. Keyboard Space selected a stock; review disclosed its ticker. Native clear-selection restored the empty selection. Phone and desktop screenshots/viewport measurements are local evidence under reports/watchlist-selection-20260911/.
+- Route smoke checks at 390×650 covered watchlist, briefing, chart, calendar, oversold radar, alerts, creators, profile and billing (billing-disabled fixture routes to Profile). All rendered their expected heading with zero document overflow; non-watchlist routes had no selection controls. This is layout isolation evidence, not full data-coverage acceptance.
 - Viewport simulation only; no physical phone or touch emulation claimed. Real-account QA must stop at selection/clear, since no particular user stock has been chosen for actual deletion.
 
 ## Release / rollback
