@@ -206,8 +206,8 @@ export const me = (opts) => get("/me", opts);
 export const symbols = (q, opts) => get("/public/symbols?q=" + encodeURIComponent(q), { ...opts, auth:false });
 export const watchlist = {
   list: (opts) => get("/watchlist",opts),
-  add: (t) => post("/watchlist", { ticker: t }),
-  remove: (t) => del("/watchlist/" + encodeURIComponent(t)),
+  add: (t, opts) => post("/watchlist", { ticker: t }, opts),
+  remove: (t, opts) => del("/watchlist/" + encodeURIComponent(t), opts),
 };
 export const snapshot = (t, o) => getWithRetry("/snapshot/" + encodeURIComponent(t), o);
 export const bars = (t, period) => get("/bars/" + encodeURIComponent(t) + "?period=" + encodeURIComponent(period || "6mo"));

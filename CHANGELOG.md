@@ -1,5 +1,9 @@
 # Change log
 
+## Watchlist removal and capacity · 2026-09-11 (local verified)
+
+Select stocks with left-side checkboxes, review selected tickers and remove them together. Full accounts see their limit and how to free space before adding. Failed removals remain selected for retry; confirmed removals release slots immediately. 694 frontend tests and bilingual phone checks passed. [Acceptance and release](reports/WATCHLIST-SELECTION-2026-09-11.md).
+
 ## Today navigation and expandable stock analyses · 2026-09-11 (deployed)
 
 The signed-in duck returns to Watchlist. Today orders stock analyses by their actual update dates, exposes the complete list, and supports per-record expansion with sources. 685 tests, both languages and phone themes passed. PR41 / main `e0457434` / Pages `2308f071` are live. [Acceptance and release](reports/TODAY-NAVIGATION-2026-09-11.md).

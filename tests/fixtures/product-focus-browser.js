@@ -25,6 +25,7 @@ const analysis={overview,sections:[{kind:'key_points',zh:'产能投放能否转�
  {kind:'watch',zh:'下一份财报需要核对订单和资本支出。',en:'Check orders and capital spending in the next earnings report.',citations:['first']}]};
 if(mode==='no-watch-section')analysis.sections=analysis.sections.filter(p=>p.kind!=='watch');
 let watches=mode==='no-watch'?[]:['NVDA','AVGO','AMD','GLW'];
+if(mode==='watchlist-management')watches=['NVDA','AVGO','AMD','GLW',...Array.from({length:46},(_,i)=>'TEST'+String(i).padStart(2,'0'))];
 if(mode==='today-large')watches=['AAPL','AEHR','ALAB','AMD','AVGO','GLW','NVDA','TSLA'];
 let researchReads=0;
 const price=(ticker,i=0)=>({ticker,company:{NVDA:'NVIDIA Corporation',AVGO:'Broadcom Inc.',AMD:'Advanced Micro Devices, Inc.',GLW:'Corning Incorporated'}[ticker]||ticker,
@@ -37,10 +38,19 @@ const record=i=>({id:'change-'+i,ticker:i%2?'AVGO':'NVDA',kind:i===1?'revised':'
 window.fetch=async(input,options={})=>{
  const url=new URL(String(input),location.origin);requests.push({path:url.pathname+url.search,method:options.method||'GET'});
  if(url.origin!==location.origin)throw Error('External traffic forbidden in synthetic fixture');
- if((options.method||'GET')!=='GET')throw Error('Writes forbidden in synthetic fixture');
- const path=url.pathname.replace('/qa-api','');
+ const path=url.pathname.replace('/qa-api',''),method=options.method||'GET';
+ if(method!=='GET'){
+  if(mode==='watchlist-management'&&method==='DELETE'&&/^\/watchlist\/[A-Z0-9]+$/.test(path)){
+   const ticker=path.split('/').at(-1),removed=watches.includes(ticker);watches=watches.filter(t=>t!==ticker);return Response.json({ticker,removed});
+  }
+  if(mode==='watchlist-management'&&method==='POST'&&path==='/watchlist'){
+   const {ticker}=JSON.parse(options.body);if(watches.length>=50)return Response.json({error:'watch_limit',cap:50},{status:402});
+   const added=!watches.includes(ticker);if(added)watches.push(ticker);return Response.json({ticker,added});
+  }
+  throw Error('Writes forbidden in synthetic fixture');
+ }
  if(mode==='failure'&&path.includes('research'))return Response.json({error:'fixture_unavailable'},{status:503});
- if(path==='/watchlist')return Response.json({items:watches.map(ticker=>({ticker})),overview:{items:watches.map(price),session:'2026-09-09'}});
+ if(path==='/watchlist')return Response.json({cap:50,items:watches.map(ticker=>({ticker})),overview:{items:watches.map(price),session:'2026-09-09'}});
  if(path==='/me/stock-research'){
   researchReads++;
   if(mode==='recover-first-read'&&researchReads===1)return Response.json({error:'fixture_first_read_unavailable'},{status:503});

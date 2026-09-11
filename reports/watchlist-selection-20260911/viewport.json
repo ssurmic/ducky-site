@@ -1,0 +1,138 @@
+[
+  {
+    "checkboxes": 51,
+    "count": "50/50 stocks",
+    "firstRowTop": 464.7734375,
+    "height": 650,
+    "inputFont": "16px",
+    "lang": "en",
+    "mainHeight": 522,
+    "overflow": 0,
+    "tap": [
+      44,
+      44
+    ],
+    "theme": "light",
+    "visibleRows": 2,
+    "width": 320
+  },
+  {
+    "checkboxes": 51,
+    "count": "50/50 stocks",
+    "firstRowTop": 464.7734375,
+    "height": 650,
+    "inputFont": "16px",
+    "lang": "en",
+    "mainHeight": 522,
+    "overflow": 0,
+    "tap": [
+      44,
+      44
+    ],
+    "theme": "dark",
+    "visibleRows": 2,
+    "width": 320
+  },
+  {
+    "checkboxes": 51,
+    "count": "50/50 只",
+    "firstRowTop": 445.578125,
+    "height": 650,
+    "inputFont": "16px",
+    "lang": "zh-CN",
+    "mainHeight": 522,
+    "overflow": 0,
+    "tap": [
+      44,
+      44
+    ],
+    "theme": "light",
+    "visibleRows": 2,
+    "width": 320
+  },
+  {
+    "checkboxes": 51,
+    "count": "50/50 只",
+    "firstRowTop": 445.578125,
+    "height": 650,
+    "inputFont": "16px",
+    "lang": "zh-CN",
+    "mainHeight": 522,
+    "overflow": 0,
+    "tap": [
+      44,
+      44
+    ],
+    "theme": "dark",
+    "visibleRows": 2,
+    "width": 320
+  },
+  {
+    "checkboxes": 51,
+    "count": "50/50 stocks",
+    "firstRowTop": 445.578125,
+    "height": 650,
+    "inputFont": "16px",
+    "lang": "en",
+    "mainHeight": 522,
+    "overflow": 0,
+    "tap": [
+      44,
+      44
+    ],
+    "theme": "light",
+    "visibleRows": 2,
+    "width": 390
+  },
+  {
+    "checkboxes": 51,
+    "count": "50/50 stocks",
+    "firstRowTop": 445.578125,
+    "height": 650,
+    "inputFont": "16px",
+    "lang": "en",
+    "mainHeight": 522,
+    "overflow": 0,
+    "tap": [
+      44,
+      44
+    ],
+    "theme": "dark",
+    "visibleRows": 2,
+    "width": 390
+  },
+  {
+    "checkboxes": 51,
+    "count": "50/50 只",
+    "firstRowTop": 445.578125,
+    "height": 650,
+    "inputFont": "16px",
+    "lang": "zh-CN",
+    "mainHeight": 522,
+    "overflow": 0,
+    "tap": [
+      44,
+      44
+    ],
+    "theme": "light",
+    "visibleRows": 2,
+    "width": 390
+  },
+  {
+    "checkboxes": 51,
+    "count": "50/50 只",
+    "firstRowTop": 445.578125,
+    "height": 650,
+    "inputFont": "16px",
+    "lang": "zh-CN",
+    "mainHeight": 522,
+    "overflow": 0,
+    "tap": [
+      44,
+      44
+    ],
+    "theme": "dark",
+    "visibleRows": 2,
+    "width": 390
+  }
+]
