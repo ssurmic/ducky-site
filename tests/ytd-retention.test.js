@@ -18,7 +18,7 @@ for(const lang of ['en','zh'])test(`saved YTD uses ${lang} copy, original dates 
  assert.equal(run.status,0,run.stderr);
  const rendered=JSON.parse(run.stdout);
  assert.match(rendered.cell,/0.0%/);
- assert.match(rendered.cell,lang==='zh'?/上次计算 · 2026-09-10/:/Last saved calculation · 2026-09-10/);
+ assert.match(rendered.cell,lang==='zh'?/上次计算2026-09-10/:/Saved return2026-09-10/);
  assert.match(rendered.details,/2026-09-10 23:00:00 UTC/);
  assert.match(rendered.details,lang==='zh'?/最新收盘数据暂缺/:/latest close update is unavailable/);
  assert.doesNotMatch(run.stderr,/Missing translation/);

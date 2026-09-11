@@ -36,7 +36,9 @@ export function metricCell(key,m={}) {
     el('span.watch-metric-label',metricLabel(key)),
     el('strong.watch-metric-value',{class:tone},value),
     el('span.watch-metric-note',valid?note:status),
-    valid&&!ready?el('span.watch-metric-status',status+' · '+date(m.as_of)):null);
+    valid&&!ready?key==='ytd'&&state==='retained'?
+      el('span.watch-metric-status',status,el('time.watch-metric-date',{datetime:m.as_of},date(m.as_of))):
+      el('span.watch-metric-status',status+' · '+date(m.as_of)):null);
 }
 
 export function metricMethods(rows){

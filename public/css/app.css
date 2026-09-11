@@ -1632,6 +1632,7 @@ html[data-theme=dark] .study-group{--study-bull:#47df98;--study-bear:#f18b9b}
 .watch-metric-label{display:none;color:var(--muted);font-size:11px;font-weight:400;line-height:1.4}
 .watch-metric-note{color:var(--muted);font-size:12px;line-height:1.4;overflow-wrap:anywhere}
 .watch-metric-status{color:var(--muted);font-size:12px;line-height:1.4}
+.watch-metric-date{display:block;white-space:nowrap}
 .watch-rich-entry .watch-row-price{font-size:16px;line-height:1.3}
 .watch-rich-entry .watch-change{font-size:11px;line-height:1.35;padding:3px 6px;align-self:flex-end}
 .watch-rich-entry .watch-columns{min-height:44px;font-size:12px;line-height:1.5;padding-block:12px}
