@@ -1,12 +1,14 @@
 # Change log
 
-## 2026-09-10 · Following a stock preserves existing summaries (implemented)
+## 2026-09-10 · Following a stock preserves existing summaries (deployed)
 
 Following/unfollowing preserves unaffected dated research; an already-read new stock can reuse
 its summary and citations. Bounded cache/HTTP/render logs correlate with backend read receipts.
-English symbol search uses English business labels. Exact release and browser acceptance follow.
+English symbol search supports separate English business labels. PR28 / main `8d2ca66f` / Pages
+`69e1817f` passed 658 tests. Live follow/remove/return retained 41 summaries, restoring the original
+45 watches after the test. [Release and workflow evidence](reports/SAVED-READ-UX-2026-09-10.md).
 
-## 2026-09-10 · Saved research appears before refresh (implemented)
+## 2026-09-10 · Saved research appears before refresh (deployed)
 
 Watchlist, Today, stock briefs, stock pages and maps reuse recent reads in this login while
 fresh GETs run. Network errors retain dated content; withdrawals and access/session changes
