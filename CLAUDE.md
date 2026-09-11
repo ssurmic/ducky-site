@@ -96,3 +96,8 @@ repeat source use without treating it as independent corroboration or merging op
 ## Search and default language (owner, 2026-09-10)
 
 English is the default at all no-prefix HTML routes; `/en/` remains the canonical English URL and `/zh/` is Chinese. Keep language toggles and reciprocal hreflang tags. The sitemap contains only canonical, indexable public pages; account/preview shells, generic record placeholders and 404s stay out. Do not stamp every build date as a content lastmod. The Google ownership meta tag is intentionally public and must remain after verification. Indexing and rankings require separate Search Console evidence.
+
+
+## Search positioning (owner, 2026-09-10)
+
+Use “Ducky Bot | All-in-One Daily Stock Analysis Tool” as the English homepage search/share title and describe financial key opinion leader aggregation in its description. The Chinese equivalent is “Ducky Bot | 一站式每日美股分析工具”. The complete English product descriptor is the only new exception to the standalone ALL-IN copy ban; trading instructions remain banned. This is metadata wording, not a promise of complete daily coverage or a change to research delivery.
