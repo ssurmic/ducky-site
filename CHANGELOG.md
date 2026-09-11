@@ -1,8 +1,8 @@
 # Change log
 
-## 2026-09-10 · English default and Google Search Console
+## 2026-09-10 · English default and Google Search Console (deployed)
 
-Root routes now serve English, /en/ remains the canonical English URL and /zh/ holds Chinese. Language links, installation manifests and legacy recovery links retain the intended language. Public pages declare reciprocal language alternatives; the sitemap omits account shells and placeholders. Google verification and brand metadata are included. [Checks and publication status](reports/SEARCH-CONSOLE-SEO-2026-09-10.md).
+Root routes now serve English, /en/ remains the canonical English URL and /zh/ holds Chinese. Language links, installation manifests and legacy recovery links retain the intended language. Public pages declare reciprocal language alternatives; the sitemap omits account shells and placeholders. Search Console HTML-tag verification succeeded, the sitemap reports 14 discovered pages, and root/en/zh recrawl requests were accepted. The original fluffy duck favicon is verified live. Main `679a32c1` / Pages `0efeb36c` passed 664 tests and the 23-URL production audit. [Checks and publication status](reports/SEARCH-CONSOLE-SEO-2026-09-10.md).
 
 ## 2026-09-10 · Use the fluffy homepage duck in search and browser icons
 
