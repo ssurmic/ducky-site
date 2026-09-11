@@ -79,6 +79,7 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
       el('a.stock-open',{href:'#/evidence/'+ticker},s('focus.open_full_map')+' →')),currentMap);
     replaceReading(body,compactPrice(result.price),analysisPanel(doc,{formatTime:localTime}),mapSection,
       el('details.focus-tools',{'data-reading-key':ticker+':key-sources'},el('summary',s('focus.key_sources')),sources));
+    api.readDiagnostic('render',{resource:'stock_research',items:doc.nodes.length,readable:doc.analysis?1:0});
     currentMap.refresh?.();
   }
   async function loadEvidence(){

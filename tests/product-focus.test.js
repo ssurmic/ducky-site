@@ -19,6 +19,7 @@ const {parse}=await import('../public/js/app/router.js');
 const {safeTarget,takeTarget}=await import('../public/js/app/login-target.js');
 const {closeModal}=await import('../public/js/app/ui.js');
 const api=await import('../public/js/app/api.js');
+const {businessLabel}=await import('../public/js/app/symbol-picker.js');
 const pause=async()=>{for(let i=0;i<5;i++)await new Promise(r=>setTimeout(r,0));};
 function node(id='source',stance='support'){return {id,kind:'creator',priority:'direct',intent:'opinion',stance,conditional:true,
  title:{en:'Orders may recover if customers resume spending.',zh:'如果客户恢复支出，订单可能回升。'},published_at:'2026-09-09',
@@ -27,6 +28,12 @@ function item(ticker='NVDA'){return {ticker,status:'ready',as_of:'2026-09-09T22:
  overview:{en:'Sample Author expects orders to recover, conditional on spending.',zh:'作者认为订单可能恢复，取决于支出。',citations:['source']},sources:[node()]};}
 const change=(id=1)=>({id:'change:'+id,ticker:'NVDA',kind:'added',state:'available',node:node(),published_at:'2026-09-09',available_at:'2026-09-10T01:00:00Z'});
 function setup(){closeModal();store.bumpEpoch();store.set('me',{user_id:12,tier:'pro',access:{billing_enabled:false}});store.set('token','synthetic-only');store.set('watchlist',['NVDA']);const root=document.querySelector('main');root.replaceChildren();return root;}
+
+test('stock search shows the selected language without translating source identities',()=>{
+ const row={industry:'应用软件',industry_en:'Application software',name:'Adobe Inc.'};
+ assert.equal(businessLabel(row,'en'),'Application software');assert.equal(businessLabel(row,'zh'),'应用软件');
+ assert.equal(businessLabel({industry:'应用软件'},'en'),'');assert.equal(row.name,'Adobe Inc.');
+});
 
 test('returning watchlist paints saved prices and research before either request completes',async()=>{
  const root=setup();
@@ -72,6 +79,31 @@ test('a saved stock graph opens its map before the map request resolves, then re
  assert.match(root.textContent,/Orders may recover if customers resume spending/);
  await pause();finish(Response.json({ticker:'NVDA',nodes:[],analysis_status:'source_changed',analysis:null}));
  const dispose=await pending;assert.doesNotMatch(root.textContent,/Orders may recover/);dispose();
+});
+
+test('add from a new stock then return to watchlist: previous research remains while only the new ticker is pending',async()=>{
+ const root=setup(),calls=[];
+ const prices={items:['NVDA'],overview:{items:[{ticker:'NVDA',price:98,price_session:'2026-09-09'}]}};
+ globalThis.fetch=async(url,opts)=>{calls.push([url,opts.method]);
+  if(opts.method==='POST')return Response.json({ticker:'AMD',added:true});
+  if(url==='/watchlist')return Response.json(prices);
+  if(url==='/me/stock-research')return Response.json({items:[item()],watchlist_count:1});
+  if(url.startsWith('/bars/'))return Response.json({bars:[]});
+  return Response.json({ticker:'AMD',price:null,evidence:{ticker:'AMD',nodes:[],analysis_status:'pending'}});
+ };
+ let dispose=await watch.mount(root);dispose();root.replaceChildren();
+ dispose=await stock.mount(root,{ticker:'AMD'});
+ [...root.querySelectorAll('button')].find(b=>b.textContent===copy['app.focus.follow_stock']).click();await pause();
+ assert.deepEqual(store.get('watchlist'),['NVDA','AMD']);dispose();root.replaceChildren();
+ const pending=[];globalThis.fetch=async(url,opts)=>{calls.push([url,opts.method]);return await new Promise(resolve=>pending.push([url,resolve]));};
+ const mount=watch.mount(root);
+ assert.match(root.textContent,/conditional on spending/);assert.equal(root.querySelectorAll('tbody tr').length,2);
+ assert.equal(root.querySelectorAll('.stock-one-sentence').length,1);
+ assert.ok(root.querySelector('a[href="#/evidence/AMD"]'));
+ await pause();for(const [url,resolve] of pending)resolve(Response.json(url==='/watchlist'?{...prices,items:['NVDA','AMD']}:
+  {items:[item(),{ticker:'AMD',status:'pending',records:0}],watchlist_count:2}));
+ dispose=await mount;assert.match(root.textContent,/conditional on spending/);assert.equal(root.querySelectorAll('.stock-one-sentence').length,1);
+ assert.equal(calls.filter(c=>c[1]==='POST').length,1);assert.ok(calls.every(c=>['GET','POST'].includes(c[1])));dispose();
 });
 
 test('stock briefs reuse the exact shared paragraph and original citations with one cached read',async()=>{

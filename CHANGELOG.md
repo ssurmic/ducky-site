@@ -1,5 +1,11 @@
 # Change log
 
+## 2026-09-10 · Following a stock preserves existing summaries (implemented)
+
+Following/unfollowing preserves unaffected dated research; an already-read new stock can reuse
+its summary and citations. Bounded cache/HTTP/render logs correlate with backend read receipts.
+English symbol search uses English business labels. Exact release and browser acceptance follow.
+
 ## 2026-09-10 · Saved research appears before refresh (implemented)
 
 Watchlist, Today, stock briefs, stock pages and maps reuse recent reads in this login while

@@ -55,5 +55,29 @@ test('membership updates retain the matching received list but removed tickers c
  setup();cache.remember('/watchlist',{items:['NVDA','AMD'],overview:{items:[]}});
  store.set('watchlist',['NVDA','AMD']);assert.ok(cache.peek('/watchlist'));
  cache.remember('/me/stock-research',list);store.set('watchlist',['AMD']);
- assert.equal(cache.peek('/watchlist'),null);assert.equal(cache.peek('/me/stock-research'),null);
+ assert.deepEqual(cache.peek('/watchlist').items,['AMD']);assert.deepEqual(cache.peek('/me/stock-research').items,[]);
+});
+
+test('adding one ticker preserves other saved summaries without manufacturing a new one',()=>{
+ setup();cache.remember('/watchlist',{items:['NVDA'],overview:{items:[{ticker:'NVDA',price:98}]}});
+ cache.remember('/me/stock-research',list);
+ cache.membershipMutation('POST','/watchlist',{ticker:'AMD'},{ticker:'AMD'});
+ store.set('watchlist',['NVDA','AMD']);
+ assert.deepEqual(cache.peek('/watchlist').items,['NVDA','AMD']);
+ assert.equal(cache.peek('/me/stock-research').items[0].overview.en,'Conditional finding');
+ assert.equal(cache.peek('/me/stock-research').items.some(i=>i.ticker==='AMD'),false);
+ assert.equal(cache.peek('/me/stock-research').watchlist_count,2);
+});
+
+test('following a stock whose graph was already read reuses its dated summary and citations',()=>{
+ setup();cache.remember('/me/stock-research',list);
+ cache.remember('/stock-research/AMD',{ticker:'AMD',price:null,evidence:{...graph,ticker:'AMD'}});
+ cache.membershipMutation('POST','/watchlist',{ticker:'AMD'},{ticker:'AMD'});
+ store.set('watchlist',['NVDA','AMD']);
+ const added=cache.peek('/me/stock-research').items.find(i=>i.ticker==='AMD');
+ assert.deepEqual(added.overview,item.overview);assert.equal(added.as_of,'2026-09-09');
+ assert.deepEqual(added.sources,[{id:'a'}]);
+ cache.membershipMutation('DELETE','/watchlist/AMD');store.set('watchlist',['NVDA']);
+ assert.deepEqual(cache.peek('/me/stock-research').items.map(i=>i.ticker),['NVDA']);
+ assert.equal(cache.peek('/stock-research/AMD'),null);
 });

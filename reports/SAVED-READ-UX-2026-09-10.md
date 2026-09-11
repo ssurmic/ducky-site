@@ -16,7 +16,8 @@ reuse the same complete graph. Prices and original analysis timestamps remain se
 The preview cache is memory-only, at most 32 entries / 8 MiB / five minutes since that read. No
 localStorage, sessionStorage or service-worker copy of private research is created. It is scoped
 to auth epoch, token, user identity, tier, effective-access policy and evidence selection. Logout,
-account/access changes and successful membership/selection mutations invalidate previews.
+account/access changes and evidence-selection mutations invalidate previews. Membership changes
+update only affected rows and preserve other saved summaries.
 
 Ordinary network failure preserves accepted content and displays the read error. An authoritative
 withdrawal, source-change or unavailable result replaces old content and invalidates corresponding
@@ -41,3 +42,25 @@ Backend companion: request-local source read reuse measured 61 identical project
 before / 0.784s after, with 55 readable summaries. That is server projection time, not browser p95.
 Source fidelity failures and missing summaries remain visible and require their original review
 workflow. No model/provider/admission/retry-budget configuration was changed.
+
+## Watchlist membership and read diagnostics · 2026-09-10
+
+Following one stock must preserve other saved summaries. The frontend updates membership
+without clearing the whole authenticated read cache. A newly followed stock may reuse its
+already-read complete graph; missing content remains pending, and the original read expiry,
+analysis date and citations remain. Fresh GETs still replace revoked or changed content.
+
+Shared research responses carry `X-Ducky-Read-ID` and `Server-Timing: projection;dur=…`.
+One `ducky_shared_read` backend receipt records the same ID, resource, status, elapsed time,
+read-only source count, memo checks/reuse, item count and readable count. Browser diagnostics
+separately record cache hit/miss, HTTP response/failure and actual rendered counts; a successful
+HTTP request is not proof that the page displayed a summary. The browser ring is limited to
+100 entries; logs omit tokens, account identifiers, tickers, URLs and source/prose bodies.
+CORS exposes the response headers without an extra request header or network call.
+
+English symbol search now receives separate English sector/industry display fields. Legacy
+Chinese-only labels are omitted in English during a rolling release; source names and search
+ranking are unchanged. Local checks: 657 frontend tests before the final reuse regression,
+5,153 backend tests / 6 skipped before the final additive symbol test, and 9 final focused
+backend tests. The local backend count includes a separate unshipped source-note candidate;
+exact CI and runtime/browser acceptance are recorded separately.
