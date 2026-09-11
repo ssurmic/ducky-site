@@ -4056,7 +4056,7 @@
   "app.focus.start_following": "关注你在研究的股票，相关变化会汇集到这里。",
   "app.focus.add_stocks": "添加股票",
   "app.focus.latest_views": "最近的股票分析",
-  "app.focus.latest_views_note": "保留各自的分析日期，不把旧结论当成今日新增。",
+  "app.focus.latest_views_note": "按分析更新时间排列，展开查看完整摘要和来源。",
   "app.focus.find_stock": "搜索股票代码或公司名称",
   "app.focus.explore_creators": "财经作者",
   "app.focus.explore_creators_note": "查作者说过什么、何时改口，以及对应原文。",
@@ -4145,5 +4145,10 @@
   "app.creators.trading_days_single": "+{n} 交易日",
   "app.creatorlab.result_detail_single": "最大收盘回撤 {drawdown} · 成本 {fees} · {n} 次交易",
   "app.watch.ytd_retained": "上次计算",
-  "app.watch.ytd_retained_detail": "最新收盘数据暂缺，保留上次完整数据计算的结果。"
+  "app.watch.ytd_retained_detail": "最新收盘数据暂缺，保留上次完整数据计算的结果。",
+  "app.focus.recent_changes": "研究动态",
+  "app.focus.expand": "展开",
+  "app.focus.collapse": "收起",
+  "app.focus.show_all_analyses": "展开全部 {count} 只股票",
+  "app.focus.show_fewer_analyses": "收起股票列表"
 }

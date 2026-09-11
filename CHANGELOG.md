@@ -1,5 +1,9 @@
 # Change log
 
+## Today navigation and expandable stock analyses · 2026-09-11 (validated locally)
+
+The signed-in duck returns to Watchlist. Today orders stock analyses by their actual update dates, exposes the complete list, and supports per-record expansion with sources. Both languages and phone themes are covered. [Acceptance and release](reports/TODAY-NAVIGATION-2026-09-11.md).
+
 ## Group repeated creator wording · 2026-09-10 (deployed)
 
 Identical viewpoints from the same video share one headline, with every original

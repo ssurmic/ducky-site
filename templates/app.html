@@ -50,7 +50,7 @@
 <a class="skip" href="#main">{{ t('app.nav.skip') }}</a>
 <div class="app-shell" id="app">
   <header class="app-top">
-    <a class="brand" href="{{ url('/') }}" title="{{ t('app.nav.home') }}"><img class="avatar-mark" src="/duck-head-cutout-v1.png" alt="" width="40" height="40" loading="eager" fetchpriority="high" decoding="sync"> {{ t('app.brand') }}</a>
+    <a class="brand" href="#/watchlist" data-home-href="{{ url('/') }}" data-home-label="{{ t('app.nav.home') }}" data-watchlist-label="{{ t('app.nav.watchlist') }}" title="{{ t('app.nav.watchlist') }}"><img class="avatar-mark" src="/duck-head-cutout-v1.png" alt="" width="40" height="40" loading="eager" fetchpriority="high" decoding="sync"> {{ t('app.brand') }}</a>
     <span class="spacer"></span>
     <a class="lang-toggle mono" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" lang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle>{{ t('app.nav.lang') }}</a>
     <a class="account-avatar" id="account-avatar" href="#/profile" hidden aria-label="{{ t('app.account.profile') }}"></a>
