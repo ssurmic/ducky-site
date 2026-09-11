@@ -1,9 +1,10 @@
 # Change log
 
-## Read sources in the stock page · 2026-09-10 (implementation)
+## Read sources in the stock page · 2026-09-10 (deployed)
 
 Map cards open their saved evidence in place, with the original source first and a stock-scoped
 creator link. Exact repeated prose appears once; conditions, dates and history remain accessible.
+Main `0a754d8f` / Pages `ef8e64f3` passed 668 tests, exact CI and EN/ZH live checks.
 [Behavior and acceptance](reports/SOURCE-READING-CONTEXT-2026-09-10.md).
 
 ## Saved YTD · 2026-09-10 (deployed)

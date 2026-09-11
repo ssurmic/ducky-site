@@ -1,0 +1,26 @@
+{
+  "observed_at": "2026-09-11T03:14:29.352715+00:00",
+  "commit": "0a754d8fb6ea8a34d71d86867682a8480eeb86f4",
+  "deployment": "ef8e64f3",
+  "graph": "c9905f1e1dec77d9441f",
+  "assets": [
+    {
+      "path": "app-release.json",
+      "status": 200,
+      "sha256": "911c9b690ca639c3e952b00ab0f717c086a7d279361bb10ea88310d0647b4805",
+      "matches_build": true
+    },
+    {
+      "path": "app-assets/c9905f1e1dec77d9441f/views/evidence.js",
+      "status": 200,
+      "sha256": "ec8fd45bdde578f2801b7ece7948c29cd286823ee0dab3a2fd076ee187707858",
+      "matches_build": true
+    },
+    {
+      "path": "app-assets/c9905f1e1dec77d9441f/creator-route.js",
+      "status": 200,
+      "sha256": "4b81857ba0e76bb0d088b10219718b74377c4bec00e97734be08554f8edb5a7f",
+      "matches_build": true
+    }
+  ]
+}
