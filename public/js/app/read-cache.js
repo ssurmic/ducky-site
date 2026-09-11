@@ -4,7 +4,8 @@
 import * as store from './store.js';
 
 const entries=new Map(),MAX_AGE=5*60*1000,MAX_BYTES=8*1024*1024;
-let owner=null,bytes=0;
+let owner=null,bytes=0,mutationVersion=0;
+export const membershipVersion=()=>mutationVersion;
 const scope=()=>JSON.stringify([store.epoch(),store.get('token'),store.get('me')?.user_id,
   store.get('me')?.tier,store.get('me')?.access,store.get('me')?.experience?.evidence]);
 function current(){
@@ -16,6 +17,19 @@ export function clear(){entries.clear();bytes=0;}
 function remove(path){bytes-=entries.get(path)?.size||0;entries.delete(path);}
 export function forget(path){current();remove(path);}
 const stockPath=/^\/(stock-research|evidence)\/([A-Z][A-Z0-9.-]{0,9})$/;
+export function unavailable(path){
+  if(!current())return;
+  remove(path);
+  const match=path.match(stockPath);
+  if(!match)return;
+  const ticker=match[2];
+  remove('/stock-research/'+ticker);remove('/evidence/'+ticker);
+  const list=peek('/me/stock-research');
+  if(list){
+    list.items=list.items.map(item=>item.ticker===ticker?graphOverview(ticker,null):item);
+    put('/me/stock-research',list,entries.get('/me/stock-research').at);
+  }
+}
 export function allowed(path){return path==='/watchlist'||path==='/me/stock-research'||stockPath.test(path);}
 function valid(path,value){
   if(!value||value.__accepted)return false;
@@ -88,9 +102,9 @@ export function membershipChanged(tickers){
     saved.overview.items=saved.overview.items.filter(item=>wanted.has(item.ticker));
     put('/watchlist',saved,entries.get('/watchlist').at);
   }
-  const research=peek('/me/stock-research');
-  if(research){
-    let at=entries.get('/me/stock-research').at;
+  const research=peek('/me/stock-research')||{items:[],watchlist_count:wanted.size};
+  {
+    let at=entries.get('/me/stock-research')?.at??Date.now();
     research.items=research.items.filter(item=>wanted.has(item.ticker));
     for(const ticker of wanted){
       if(research.items.some(item=>item.ticker===ticker))continue;
@@ -101,14 +115,20 @@ export function membershipChanged(tickers){
       }
     }
     research.watchlist_count=wanted.size;
-    put('/me/stock-research',research,at);
+    // A first-time follower may have read a stock before ever opening this
+    // list. Reuse only actual graph reads, keeping their original expiry.
+    if(research.items.length||entries.has('/me/stock-research'))put('/me/stock-research',research,at);
   }
 }
 export function membershipMutation(method,path,body,result){
   if(path==='/watchlist'&&method==='POST'){
     const ticker=result?.ticker||body?.ticker;
-    if(/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker||''))membershipChanged([...new Set([...(store.get('watchlist')||[]),ticker])]);
+    if(/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker||'')){
+      mutationVersion++;
+      membershipChanged([...new Set([...(store.get('watchlist')||[]),ticker])]);
+    }
   }else if(method==='DELETE'&&/^\/watchlist\/[A-Z][A-Z0-9.-]{0,9}$/.test(path)){
+    mutationVersion++;
     const ticker=path.slice('/watchlist/'.length);
     membershipChanged((store.get('watchlist')||[]).filter(t=>t!==ticker));
     remove('/stock-research/'+ticker);remove('/evidence/'+ticker);

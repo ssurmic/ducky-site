@@ -48,7 +48,10 @@ export async function request(method, path, opts) {
   try{return await performRequest(method,path,{...opts,diagnostic:{started,request_id,resource:kind}});}
   catch(error){
     if(kind)record('failure',{resource:kind,request_id,elapsed_ms:Date.now()-started,...readFailure(error)});
-    if([401,402,403,404,410].includes(error.status)&&opts?.auth!==false)readCache.clear();
+    if(opts?.auth!==false){
+      if([401,402,403].includes(error.status))readCache.clear();
+      else if([404,410].includes(error.status))readCache.unavailable(path);
+    }
     for(const fn of observers){try{fn(path,readFailure(error),{auth:opts?.auth!==false});}catch{}}
     throw error;
   }
@@ -60,6 +63,7 @@ async function performRequest(method,path,opts){
   if (opts.idempotencyKey) headers['Idempotency-Key'] = opts.idempotencyKey;
   const token = store.get("token");
   const epoch = store.epoch();
+  const membershipVersion=readCache.membershipVersion();
   // Bind reads to the page that started them, never the next route's observer.
   const observers=method==='GET'&&opts.observe!==false?[...readObservers]:[];
   const observed=value=>{
@@ -98,6 +102,11 @@ async function performRequest(method,path,opts){
     opts.signal?.removeEventListener('abort',abort);
   }
   if (sessionChanged()) throw new ApiError(0, { detail: "session_changed" }, path);
+  // A successful follow/unfollow fences older membership-dependent reads.
+  // Do not let their payload reach either the cache or a mounted view.
+  if(res.ok&&method==='GET'&&opts.auth!==false&&['/watchlist','/me/stock-research'].includes(path)
+      &&membershipVersion!==readCache.membershipVersion())
+    throw new ApiError(0,{detail:'read_superseded',reason:'cancelled'},path);
   if(opts.diagnostic?.resource){
     const server=res.headers.get('server-timing')?.match(/projection;dur=([\d.]+)/);
     record('response',{...opts.diagnostic,status:res.status,elapsed_ms:Date.now()-opts.diagnostic.started,

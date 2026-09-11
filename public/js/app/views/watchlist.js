@@ -150,7 +150,7 @@ export async function mount(root,{signal}={}) {
     sorting.hidden=view==='heatmap'||view==='reading';
     const openDisclosures=new Set([...list.querySelectorAll('details[open][data-disclosure]')].map(n=>n.dataset.disclosure));
     const focusedMap=list.contains(document.activeElement)?document.activeElement?.dataset?.mapOpen:null;
-    if(loading && !overview){clear(list).append(spinner());return;}
+    if(loading && !overview && !research.size){clear(list).append(spinner());return;}
     if (!items.length) {clear(list).append(empty(s('watch.empty')));return;}
     const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
     if(view==='reading'){
@@ -329,7 +329,13 @@ export async function mount(root,{signal}={}) {
     return p;
   }
 
-  unsubs.push(store.subscribe("watchlist", render));
+  unsubs.push(store.subscribe("watchlist",()=>{
+    // Membership changes can contribute a just-read stock graph while the
+    // list request is pending. Existing authoritative rows keep precedence.
+    for(const item of api.peek('/me/stock-research')?.items||[])
+      if(!research.has(item.ticker))research.set(item.ticker,item);
+    render();
+  }));
   unsubs.push(store.subscribe("snapshots", renderDetail));
   unsubs.push(store.subscribe("me", () => {render();renderDetail();}));
   const priceUpdate=event=>{

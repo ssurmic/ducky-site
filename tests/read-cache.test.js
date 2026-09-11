@@ -81,3 +81,18 @@ test('following a stock whose graph was already read reuses its dated summary an
  assert.deepEqual(cache.peek('/me/stock-research').items.map(i=>i.ticker),['NVDA']);
  assert.equal(cache.peek('/stock-research/AMD'),null);
 });
+
+test('first follow can reuse a stock graph before the watchlist research endpoint was ever read',()=>{
+ setup();store.set('watchlist',[]);
+ const original=Date.now;let now=1000000;Date.now=()=>now;
+ try{
+  cache.remember('/stock-research/NVDA',{ticker:'NVDA',price:null,evidence:graph});
+  now+=299000;
+  cache.membershipMutation('POST','/watchlist',{ticker:'NVDA'},{ticker:'NVDA'});
+  store.set('watchlist',['NVDA']);
+  const saved=cache.peek('/me/stock-research');
+  assert.deepEqual(saved?.items[0].overview,item.overview);
+  assert.equal(saved.items[0].as_of,item.as_of);
+  now+=1001;assert.equal(cache.peek('/me/stock-research'),null);
+ }finally{Date.now=original;}
+});
