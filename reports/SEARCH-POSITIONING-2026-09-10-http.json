@@ -1,0 +1,33 @@
+{
+  "checked_at": "2026-09-11T04:15:41.121600+00:00",
+  "source_commit": "d5aa72c958fd45c39933f101d876b2efef0a884e",
+  "results": [
+    {
+      "url": "https://duckybot.app/",
+      "title": "Ducky Bot | All-in-One Daily Stock Analysis Tool",
+      "description": "Daily US stock analysis with financial key opinion leader aggregation. Compare creator views, company events and technical indicators, with original sources.",
+      "canonical": "https://duckybot.app/en/",
+      "html_sha256": "6e267ffbe718357dc88ab213f243aa7f52632db23542b29ae7f9aa31944a9e93",
+      "matches_validated_build": true,
+      "share_language_verification_icon_checks": "passed"
+    },
+    {
+      "url": "https://duckybot.app/en/",
+      "title": "Ducky Bot | All-in-One Daily Stock Analysis Tool",
+      "description": "Daily US stock analysis with financial key opinion leader aggregation. Compare creator views, company events and technical indicators, with original sources.",
+      "canonical": "https://duckybot.app/en/",
+      "html_sha256": "6e267ffbe718357dc88ab213f243aa7f52632db23542b29ae7f9aa31944a9e93",
+      "matches_validated_build": true,
+      "share_language_verification_icon_checks": "passed"
+    },
+    {
+      "url": "https://duckybot.app/zh/",
+      "title": "Ducky Bot | 一站式每日美股分析工具",
+      "description": "一站式每日美股分析与财经博主观点聚合。结合公司事件、技术指标和自选股研究，比较不同观点，核对日期与原文来源。",
+      "canonical": "https://duckybot.app/zh/",
+      "html_sha256": "04f111969371ba20f03a392fdfaba4f4cf077d21c98f7e5675208944845e62ca",
+      "matches_validated_build": true,
+      "share_language_verification_icon_checks": "passed"
+    }
+  ]
+}

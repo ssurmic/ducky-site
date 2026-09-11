@@ -17,7 +17,8 @@ acquisition, model admission or background scheduling.
 - Both map layouts and five source identifiers (node, evidence ID, point ID,
   retained claim ID and source-record ID) retain the stock, creator, post and
   current point. The login return sanitizer preserves the allowed link fields.
-- 40 related tests passed, then all 669 frontend tests passed. Copy lint and
+- 40 related tests passed, then all 669 frontend tests passed (670 after integrating
+  the independently released search-positioning changes). Copy lint and
   1,878 internal links passed.
 - Local synthetic browser checks covered English and Chinese, light and dark,
   at 320×650, 393×650 and 1100×650. All 12 layouts opened the source dialog,

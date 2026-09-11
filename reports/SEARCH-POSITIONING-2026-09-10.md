@@ -15,7 +15,7 @@ This changes the three authored metadata keys in each locale. Landing content, r
 
 ## Publication
 
-Release checks and deployment receipts pending. Previous production: `ef8e64f3-de30-4c54-899c-bc4e39fc6bf8`, source `0a754d8`. The title update is not a claim that Google has reindexed or will use the exact title. The homepage indexing requests from the earlier SEO release were accepted; repeating requests does not improve their priority.
+PR36 passed CI `34561347062` and merged as `d5aa72c958fd45c39933f101d876b2efef0a884e`. Cloudflare Pages `63125cd9` is live. Root, /en/ and /zh/ returned the exact validated HTML and passed title, description, share metadata, canonical, reciprocal language, verification and favicon checks; see `SEARCH-POSITIONING-2026-09-10-http.json`. The in-app browser also displayed the new live English page title. Exact-main CI `34561475948` passed. Previous production: `ef8e64f3-de30-4c54-899c-bc4e39fc6bf8`, source `0a754d8`. The title update is not a claim that Google has reindexed or will use the exact title. The homepage indexing requests from the earlier SEO release were accepted; repeating requests does not improve their priority.
 
 ## Analytics navigation
 
