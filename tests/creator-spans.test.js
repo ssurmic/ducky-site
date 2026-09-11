@@ -75,3 +75,18 @@ test('caption correction is labelled and the exact original remains separately a
  assert.equal(sourceExcerpt({evidence:raw}).querySelector('details'),null);
  assert.equal(sourceExcerpt({...row,evidence_reading:{...row.evidence_reading,version:'unknown'}}).querySelector('blockquote').textContent,raw);
 });
+test('stock-scoped previews lead with its actual views while retaining other stocks and exact source links',()=>{
+ const row=(id,ticker,basis='attributed_opinion')=>({point_id:id,ticker,basis,stance:'context',title:{en:id},source_url:'https://www.youtube.com/watch?v=source&t=81s'});
+ const rows=[row('meta','META','verified_mention_no_direction'),...Array.from({length:6},(_,i)=>row('mrvl'+i,'MRVL')),
+  row('qcom-mention','QCOM','verified_mention_no_direction'),row('qcom-cpu','QCOM'),row('qcom-risk','QCOM')];
+ const before=JSON.stringify(rows),section=spanSection(rows,null,'',{inline:true,preferredTickers:['QCOM']});
+ const ids=selector=>[...section.querySelectorAll(selector)].map(n=>n.dataset.pointId);
+ assert.deepEqual(ids(':scope > article').slice(0,3),['qcom-cpu','qcom-risk','qcom-mention']);
+ assert.equal(ids('article').length,rows.length);assert.ok(ids('article').includes('meta'));
+ assert.equal(section.querySelector('[data-point-id="qcom-cpu"] a').href,rows[8].source_url);
+ assert.equal(JSON.stringify(rows),before);
+ const focused=spanSection(rows,null,'meta',{inline:true,preferredTickers:['QCOM']});
+ assert.equal(focused.querySelector(':scope > article').dataset.pointId,'meta');
+ assert.ok(focused.querySelector(':scope > article').classList.contains('is-focused'));
+ assert.deepEqual([...spanSection(rows).querySelectorAll(':scope > article')].map(n=>n.dataset.pointId),Array.from({length:6},(_,i)=>'mrvl'+i));
+});

@@ -1,5 +1,6 @@
 // Presentation only: retain every node, revision, source and stance. Never infer
 // agreement, average opposing views, or treat repeat mentions as corroboration.
+import {readingOrder} from './reading-order.js';
 export function authorIdentity(node){
   const sources=node.kind==='creator'?(node.evidence||[]):[];
   if(!sources.length||sources.some(e=>!e.creator_id))return null;
@@ -32,5 +33,5 @@ export function groupAuthors(nodes){
     const group=groups.get(key);group.nodes.push(node);
     for(const e of node.evidence||[]){const source=originalSourceKey(e);if(source)group.sources.add(source);}
   }
-  return [...groups.values()];
+  return [...groups.values()].map(group=>({...group,nodes:readingOrder(group.nodes)}));
 }

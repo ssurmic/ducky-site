@@ -15,6 +15,7 @@ import {sourceIdentity,nodeSourceIdentity,sourceBadge,sourceMark} from '../evide
 import {claimQualifications} from './creator-claim.js';
 import {ownershipEvent,eventLabel,eventDate} from '../evidence-event.js';
 import {material} from '../shared-read-refresh.js';
+import {readingOrder} from '../reading-order.js';
 
 const pick=v=>v?.[LANG==='en'?'en':'zh']||'';
 const original=v=>pick(v)||v?.en||v?.zh||'';
@@ -203,7 +204,7 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
   view.append(el('div.evidence-map-footer',total,more));
   function paint(){
     controls.forEach(([key,b])=>b.setAttribute('aria-pressed',String(key===scope)));filterSelect.value=scope;
-    const filtered=nodes.filter(n=>scope==='all'||n.stance===scope);
+    const filtered=readingOrder(nodes.filter(n=>scope==='all'||n.stance===scope));
     // Balanced first screen; selecting All never silently buries opposition.
     const first=[];
     if(scope==='all'){for(const stance of ['support','counter','context'])first.push(...filtered.filter(n=>n.stance===stance).slice(0,2));}

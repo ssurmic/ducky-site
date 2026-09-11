@@ -31,3 +31,16 @@ test('stance lanes retain opposing records and group expanded author history wit
  assert.ok(root.querySelector('.is-counter .evidence-node'));assert.equal(calls,0);
  root.dispose();root.remove();
 });
+test('real viewpoints stay in the first map preview and author preview before generic mentions',()=>{
+ const mentions=Array.from({length:4},(_,i)=>({...node('mention'+i),intent:'mention'}));
+ const facts=[node('cpu'),node('customer')],nodes=[...mentions,...facts,node('bull','support'),node('bear','counter')];
+ const before=JSON.stringify(nodes),root=mapView({ticker:'QCOM',nodes});document.body.append(root);
+ const visible=()=>[...root.querySelectorAll('.is-context .evidence-author-group > article')].map(n=>n.dataset.readingAnchor);
+ assert.deepEqual(visible(),['cpu','customer']);
+ assert.ok(root.querySelector('.is-support .evidence-node'));assert.ok(root.querySelector('.is-counter .evidence-node'));
+ root.querySelector('.evidence-map-footer button').click();
+ assert.deepEqual(visible(),['cpu','customer']);
+ assert.equal(root.querySelectorAll('.evidence-node').length,nodes.length);
+ assert.deepEqual([...root.querySelectorAll('.is-context details article')].map(n=>n.dataset.readingAnchor),mentions.map(n=>n.id));
+ assert.equal(JSON.stringify(nodes),before);root.dispose();root.remove();
+});
