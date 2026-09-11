@@ -1,5 +1,13 @@
 # Change log
 
+## Preserve stock scope in source return links · 2026-09-10
+
+Direct source links now retain the current stock when opening the creator's
+record, matching ordinary map-card clicks. No additional request or model work
+is introduced. All 669 frontend tests and 12 bilingual/theme viewport checks
+passed; publication is pending.
+[Bug and acceptance](reports/MAP-SOURCE-RETURN-2026-09-10.md).
+
 ## Read sources in the stock page · 2026-09-10 (deployed)
 
 Map cards open their saved evidence in place, with the original source first and a stock-scoped
