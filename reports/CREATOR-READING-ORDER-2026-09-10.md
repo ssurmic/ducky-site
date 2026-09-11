@@ -20,3 +20,29 @@ Local regression: 660 tests passed, including actual-view previews, retained
 opposition, expanded mention history, preferred stock context, explicit deep links,
 unchanged input and source URLs. Copy lint and 1,274 links pass. Exact CI, release
 and actual bilingual browser acceptance are recorded below when observed.
+
+
+## Release and browser acceptance
+
+PR30 merged as `e08402696589a3e2a382d40d679a76a8bcb34c83`. Exact main CI
+`34550400896` passed 660 tests, copy lint and 1,274 links. Published Pages
+`e3a15d95` with app graph `5172c81791e2187d2e95`; both language entry pages,
+manifest and three changed modules byte-match the tested local build.
+
+Actual signed-in Chrome: prior QCOM map showed two generic mentions in the first
+author cards. After publication, its first two cards contain data-center views.
+Expanding all still renders all 19 records; the two generic mentions remain under
+the same author and bearish records retain their lane. The QCOM-scoped English
+author feed now starts with its three substantive views, then its two mentions;
+all 12 excerpts and the other stocks remain available. Corrected source excerpts
+retain their original dates and exact video links. This is desktop-browser evidence,
+not a real-phone or user-study claim.
+
+The separately invalid QCOM derived summary remains pending under the backend's
+source guard while source cards stay readable; ordering does not certify every
+claim or trigger generation.
+
+The Chinese feed likewise starts with the same three QCOM point IDs and retains
+all 12 excerpts. Its map preview shows the same two data-center records. Following
+“$QCOM 看空” opens the exact corrected margin source dialog, with publication /
+observation / retrieval dates and the 2:17–2:39 original video range intact.
