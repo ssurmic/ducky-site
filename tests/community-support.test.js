@@ -5,7 +5,7 @@ import {JSDOM} from 'jsdom';
 import {mountDuckCommunity} from '../public/js/duck-community.js';
 const wallet='0x799d72a921fe14a4589fcb539731f8b198d55944';
 for(const lang of ['zh','en'])test('support preserves the exact owner destination and handles clipboard permission failures: '+lang,async()=>{
- const dom=new JSDOM(readFileSync(`dist/${lang==='en'?'en/':''}index.html`,'utf8'));
+ const dom=new JSDOM(readFileSync(`dist/${lang==='en'?'en/':'zh/'}index.html`,'utf8'));
  const doc=dom.window.document,root=doc.querySelector('[data-duck-community]');
  assert.equal(doc.querySelectorAll('#community').length,1);
  assert.ok(root.closest('[data-home-hero]'),'support belongs in the former duck greeting slot');

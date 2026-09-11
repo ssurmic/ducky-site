@@ -31,7 +31,7 @@ class Handler(SimpleHTTPRequestHandler):
         if url.path == '/qa-frame':
             query = parse_qs(url.query)
             lang = 'en' if query.get('lang') == ['en'] else 'zh'
-            body = (DIST / ('en/app/index.html' if lang == 'en' else 'app/index.html')).read_text()
+            body = (DIST / ('en/app/index.html' if lang == 'en' else 'zh/app/index.html')).read_text()
             body = re.sub(r'<script(?![^>]*type="application/json")[^>]*>.*?</script>','',body,flags=re.S)
             body = body.replace('</head>', '<script src="/vendor/lightweight-charts/lightweight-charts.standalone.production.js"></script><script type="module" src="/qa-main.js"></script></head>')
             self.out(body,'text/html; charset=utf-8'); return

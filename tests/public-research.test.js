@@ -21,7 +21,7 @@ test('readable records retain every closed, open and losing position and compose
  assert.equal(rows.filter(r=>!r.hidden).length,rows.length);
 });
 test('homepage previews all tools without private research and keeps sourced examples',()=>{
- for(const prefix of ['', 'en/']) {
+ for(const prefix of ['zh/', 'en/']) {
   const d=new JSDOM(readFileSync(`dist/${prefix}index.html`,'utf8')).window.document;
   assert.equal(d.querySelectorAll('.desk-feature').length,14);
   assert.equal(d.querySelectorAll('.member-preview-card script,.member-preview-card template,.member-preview-card [data-ticker]').length,0);
@@ -35,7 +35,7 @@ test('homepage previews all tools without private research and keeps sourced exa
  }
 });
 test('storefront opens the app without pricing or upgrade offers in both languages',()=>{
- for(const prefix of ['', 'en/']) {
+ for(const prefix of ['zh/', 'en/']) {
   const d=new JSDOM(readFileSync(`dist/${prefix}index.html`,'utf8')).window.document;
   assert.equal(d.querySelector('#pricing,.desk-plan,.public-pro-panel,.feature-access'),null);
   assert.equal(d.querySelector('a[href*="#/billing"],a[href$="#pricing"]'),null);

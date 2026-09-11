@@ -43,7 +43,7 @@ DISCLAIMER_LINES = {
     "zh.backtest": "回测为模拟结果",
     "zh.affiliation": "与 Telegram、美国证监会（SEC）或文中提到的任何发行人均无关联",
 }
-MUST_HAVE_DISCLAIMER = ["index.html", "en/index.html"]
+MUST_HAVE_DISCLAIMER = ["index.html", "en/index.html", "zh/index.html"]
 TEXT_EXT = {".html", ".js", ".css", ".xml", ".txt", ".json", ".webmanifest", ".svg", ""}
 
 
@@ -217,7 +217,7 @@ def main() -> int:
             errors.append(f"{rel}: missing")
             continue
         text = p.read_text(encoding="utf-8")
-        locale = "en" if rel.startswith("en/") else "zh"
+        locale = "zh" if rel.startswith("zh/") else "en"
         for name, needle in DISCLAIMER_LINES.items():
             if not name.startswith(locale + "."):
                 continue

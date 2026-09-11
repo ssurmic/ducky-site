@@ -10,6 +10,7 @@ import { s } from "./strings.js";
 import { rememberTarget, takeTarget, safeTarget, signedInTarget, needsEmailSetup } from "./login-target.js";
 
 import {watchRelease} from './release-recovery.js';
+import {legacyAuthLocaleTarget} from './locale-route.js';
 
 async function boot() {
   watchRelease(document.querySelector('.app-main')||document.body);
@@ -63,4 +64,6 @@ function showBootError(e) {
   console.error(e);
   document.getElementById('view')?.replaceChildren(ui.errorBox(e,()=>location.reload()));
 }
-boot().catch(showBootError);
+const legacyTarget = legacyAuthLocaleTarget(location);
+if (legacyTarget) location.replace(legacyTarget);
+else boot().catch(showBootError);

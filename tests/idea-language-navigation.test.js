@@ -4,8 +4,8 @@ import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 
 for (const lang of ['zh', 'en']) test(`${lang} idea language controls retain the selected record`, () => {
-  const prefix = lang === 'en' ? 'en/' : '';
-  const other = lang === 'en' ? '' : 'en/';
+  const prefix = lang === 'en' ? 'en/' : 'zh/';
+  const other = lang === 'en' ? 'zh/' : 'en/';
   const dom = new JSDOM(readFileSync(`dist/${prefix}idea/index.html`, 'utf8'), {
     url: `https://ducky.test/${prefix}ideas/example-smh-kindex-2026-08/#idea-thesis`, runScripts: 'outside-only',
   });

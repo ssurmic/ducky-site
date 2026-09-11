@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-09-10 · English default and Google Search Console
+
+Root routes now serve English, /en/ remains the canonical English URL and /zh/ holds Chinese. Language links, installation manifests and legacy recovery links retain the intended language. Public pages declare reciprocal language alternatives; the sitemap omits account shells and placeholders. Google verification and brand metadata are included. [Checks and publication status](reports/SEARCH-CONSOLE-SEO-2026-09-10.md).
+
 ## 2026-09-10 · Use the fluffy homepage duck in search and browser icons
 
 The favicon and installation icon now use the homepage's original 1254px green

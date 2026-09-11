@@ -131,7 +131,7 @@ export async function mount(root, { query } = {}) {
   const rails = el("section.rails");
   const panel = el("section.pay-panel", { hidden: true });
   const ordersBox = el("section.orders", el("h2", s("billing.orders")), spinner());
-  const foot = el("p.muted.small.billing-foot", s("billing.disclaimer") + " ", el("a", { href: (LANG === "zh" ? "" : "/en") + "/disclaimer/" }, s("billing.disclaimer_link")));
+  const foot = el("p.muted.small.billing-foot", s("billing.disclaimer") + " ", el("a", { href: (LANG === "zh" ? "/zh" : "/en") + "/disclaimer/" }, s("billing.disclaimer_link")));
   const comparison=el('section.experience-comparison',
     el('article.card',el('h2',s('experience.plan_free')),el('p',s('experience.plan_free_detail')),
       el('p.small.muted',s('experience.plan_no_card')),el('a.btn.btn-ghost',{href:'#/watchlist'},s('experience.plan_free_cta'))),
