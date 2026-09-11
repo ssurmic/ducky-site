@@ -1,8 +1,9 @@
 # Change log
 
-## Saved YTD · 2026-09-10 (implementation)
+## Saved YTD · 2026-09-10 (deployed)
 
 Retained YTD values show their original dates in English and Chinese and remain sortable.
+Main `0cd9fa23` / Pages `2811c752` passed 667 tests, exact CI and bilingual browser checks.
 [Contract and acceptance](reports/YTD-RETENTION-2026-09-10.md).
 
 ## 2026-09-10 · English default and Google Search Console (deployed)
