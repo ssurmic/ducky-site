@@ -1,5 +1,10 @@
 # Change log
 
+## Saved YTD · 2026-09-10 (implementation)
+
+Retained YTD values show their original dates in English and Chinese and remain sortable.
+[Contract and acceptance](reports/YTD-RETENTION-2026-09-10.md).
+
 ## 2026-09-10 · Show actual viewpoints before repeated mentions (deployed)
 
 Map and author previews no longer let generic mentions displace substantive records.

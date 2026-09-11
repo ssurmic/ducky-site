@@ -8,7 +8,7 @@ const stateCopy={missing:'watch.metric_missing',not_observed:'watch.metric_uncov
 const date=at=>at?.slice(0,10)||'—';
 export const metricLabel=key=>s(copy[key]);
 export const metricSortValue=(row,key)=>{
-  const m=row.metrics?.[key];return m?.status==='ready'&&finite(m.value)?m.value:null;
+  const m=row.metrics?.[key];return (m?.status==='ready'||key==='ytd'&&m?.status==='retained')&&finite(m.value)?m.value:null;
 };
 
 export function metricCell(key,m={}) {
@@ -31,7 +31,7 @@ export function metricCell(key,m={}) {
   if(key==='degen')note=s('watch.metric_score');
   const state=m.status||'missing';
   const reasonCopy={anchor_missing:'watch.ytd_anchor_missing',latest_session_missing:'watch.ytd_close_pending',adjustment_vintage_mismatch:'watch.ytd_adjustment_pending'};
-  const status=ready?'':s(key==='ytd'&&reasonCopy[m.reason]||stateCopy[state]||stateCopy.missing);
+  const status=ready?'':s(key==='ytd'&&state==='retained'?'watch.ytd_retained':key==='ytd'&&reasonCopy[m.reason]||stateCopy[state]||stateCopy.missing);
   return el('span.watch-metric',{'data-metric':key,'data-status':state},
     el('span.watch-metric-label',metricLabel(key)),
     el('strong.watch-metric-value',{class:tone},value),
@@ -50,6 +50,7 @@ export function metricMethods(rows){
           m.recorded_at?' · '+s('watch.metric_saved',{date:m.recorded_at.replace('T',' ').replace(/\..*|\+00:00|Z/g,'')+' UTC'}):'',
           key==='iv_hv'&&finite(m.iv)&&finite(m.hv)?` · IV ${m.iv}% / HV20 ${m.hv}% · ${s('watch.metric_expiry',{date:m.expiry||'—'})}`:'',
           key==='relative'&&m.symbols?.length?' · '+m.symbols.join(' / '):'',
-          key==='ytd'&&m.start?' · '+m.start+' → '+date(m.as_of):'')];})),
+          key==='ytd'&&m.start?' · '+m.start+' → '+date(m.as_of):'',
+          key==='ytd'&&m.status==='retained'?' · '+s('watch.ytd_retained_detail'):'')];})),
       el('a',{href:'#/evidence/'+encodeURIComponent(row.ticker)},s('watch.open_map')))));
 }
