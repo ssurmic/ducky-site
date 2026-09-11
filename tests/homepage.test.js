@@ -5,7 +5,7 @@ import {JSDOM} from 'jsdom';
 import {mountHomepage} from '../public/js/homepage.js';
 
 function fixture(query='',lang='zh',reduced=false){
- const dom=new JSDOM(readFileSync(lang==='en'?'dist/en/index.html':'dist/index.html','utf8'),{url:'https://duckybot.app/'+(lang==='en'?'en/':'')+query,pretendToBeVisual:true,runScripts:'outside-only'});
+ const dom=new JSDOM(readFileSync(lang==='en'?'dist/en/index.html':'dist/zh/index.html','utf8'),{url:'https://duckybot.app/'+(lang==='en'?'en/':'zh/')+query,pretendToBeVisual:true,runScripts:'outside-only'});
  const {window:w}=dom,doc=w.document;
  const media=new w.EventTarget();media.matches=reduced;
  w.matchMedia=q=>q.includes('reduced')?media:{matches:true,addEventListener(){},removeEventListener(){}};
@@ -20,7 +20,7 @@ function fixture(query='',lang='zh',reduced=false){
 }
 
 test('the public homepage works before JS with dated, attributed examples and the full loss-inclusive paths',()=>{
- const doc=new JSDOM(readFileSync('dist/index.html','utf8')).window.document;
+ const doc=new JSDOM(readFileSync('dist/zh/index.html','utf8')).window.document;
  const cases=JSON.parse(readFileSync('public/media/ducky-demo-cases-2026-09-07.json','utf8')).cases;
  assert.equal(doc.querySelector('[data-home-review]').hidden,true);
  assert.equal(doc.querySelectorAll('.home-story:not([hidden])').length,1);
@@ -33,7 +33,7 @@ test('the public homepage works before JS with dated, attributed examples and th
   assert.equal(story.querySelector('.home-change').classList.contains('is-negative'),data.return_pct<0);
  }
  assert.ok(doc.querySelector('.home-demo-note').textContent.includes('历史推送')||doc.querySelector('.home-demo-note').textContent.includes('当时的推送'));
- assert.equal(doc.querySelector('.home-cta a').getAttribute('href'),'/app/#/register');
+ assert.equal(doc.querySelector('.home-cta a').getAttribute('href'),'/zh/app/#/register');
 });
 
 test('stock tabs support keyboard order, one visible panel and independent evidence disclosure',()=>{

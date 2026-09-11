@@ -5,6 +5,18 @@
 Retained YTD values show their original dates in English and Chinese and remain sortable.
 [Contract and acceptance](reports/YTD-RETENTION-2026-09-10.md).
 
+## 2026-09-10 · English default and Google Search Console
+
+Root routes now serve English, /en/ remains the canonical English URL and /zh/ holds Chinese. Language links, installation manifests and legacy recovery links retain the intended language. Public pages declare reciprocal language alternatives; the sitemap omits account shells and placeholders. Google verification and brand metadata are included. [Checks and publication status](reports/SEARCH-CONSOLE-SEO-2026-09-10.md).
+
+## 2026-09-10 · Use the fluffy homepage duck in search and browser icons
+
+The favicon and installation icon now use the homepage's original 1254px green
+duck at one stable URL. Legacy favicon paths redirect to it, and builds no longer
+regenerate the older vector icon. 660 frontend tests, asset checks and copy/link
+checks passed. Search-result changes still depend on Google's next crawl.
+[Acceptance and publication status](reports/FLUFFY-FAVICON-2026-09-10.md).
+
 ## 2026-09-10 · Show actual viewpoints before repeated mentions (deployed)
 
 Map and author previews no longer let generic mentions displace substantive records.

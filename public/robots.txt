@@ -1,6 +1,6 @@
 User-agent: *
 Allow: /
-Disallow: /app/
+# Account shells may be crawled so their HTML noindex directive can be read.
 Disallow: /go/
 
 Sitemap: https://duckybot.app/sitemap.xml

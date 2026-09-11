@@ -10,7 +10,7 @@ Design authority: `ducky-bot/SYSTEMDESIGN.md` §5. Agent rules: `CLAUDE.md`.
 
 ```sh
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt   # or use ducky-bot's venv
-python3 build.py                      # → dist/  (zh at /, en at /en/, config.js, _headers, sitemap.xml)
+python3 build.py                      # → dist/  (English at / and /en/, Chinese at /zh/, config.js, _headers, sitemap.xml)
 python3 build.py --api-base http://localhost:8787   # point config.js + CSP connect-src at a local API
 python3 scripts/lint_copy.py          # compliance lint (banned strings, N beside win-rates, disclaimer)
 python3 scripts/check_links.py        # internal links + anchors

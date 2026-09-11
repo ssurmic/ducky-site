@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+{% if cfg.get('google_site_verification') %}
+<meta name="google-site-verification" content="{{ cfg.google_site_verification }}">
+{% endif %}
+{% if not indexable %}
+<meta name="robots" content="noindex, follow">
+{% endif %}
 <title>{% block title %}{{ t('meta.title') }}{% endblock %}</title>
 <meta name="description" content="{% block description %}{{ t('meta.description') }}{% endblock %}">
 <link rel="canonical" href="{{ canonical }}">
@@ -12,6 +18,18 @@
 <link rel="alternate" hreflang="x-default" href="{{ x_default }}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ducky Bot">
+{% if page == 'index' %}
+<script type="application/ld+json">{{ {
+  "@context": "https://schema.org",
+  "@graph": [
+    {"@type": "WebSite", "@id": cfg.site_url + "/#website", "name": "Ducky Bot",
+     "url": cfg.site_url + "/", "inLanguage": ["en", "zh-CN"],
+     "publisher": {"@id": cfg.site_url + "/#organization"}},
+    {"@type": "Organization", "@id": cfg.site_url + "/#organization", "name": "Ducky Bot",
+     "url": cfg.site_url + "/", "logo": cfg.site_url + "/duck-head-cutout-v1.png"}
+  ]
+}|tojson }}</script>
+{% endif %}
 <meta property="og:title" content="{% block og_title %}{{ t('meta.og_title') }}{% endblock %}">
 <meta property="og:description" content="{{ self.description() }}">
 <meta property="og:url" content="{{ canonical }}">
@@ -21,8 +39,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
-<link rel="icon" href="/duck-head-cutout-v1.png" type="image/png">
-<link rel="alternate icon" href="/duck-head-cutout-v1.png" type="image/png">
+<link rel="icon" href="/duck-head-cutout-v1.png" type="image/png" sizes="1254x1254">
 <link rel="apple-touch-icon" href="/duck-head-cutout-v1.png">
 <link rel="preload" as="image" href="/duck-head-cutout-v1.png">
 <link rel="manifest" href="{{ url('/manifest.webmanifest') }}">

@@ -1,2 +1,7 @@
 # Cloudflare Pages redirects — www → apex (301). /go/* is a Pages Function (functions/go/, later pack), not a redirect.
 https://www.duckybot.app/* https://duckybot.app/:splat 301
+
+# Retained browser/search icon entry points use the exact homepage brand image.
+/favicon.ico /duck-head-cutout-v1.png 301
+/favicon.svg /duck-head-cutout-v1.png 301
+/favicon.png /duck-head-cutout-v1.png 301

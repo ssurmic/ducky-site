@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {JSDOM} from 'jsdom';
 import {readFileSync} from 'node:fs';
-const dom=new JSDOM('<main class="app-main"><div id="view"></div></main>',{url:'https://ducky.test/app/#/oauth'});
+const dom=new JSDOM('<main class="app-main"><div id="view"></div></main>',{url:'https://ducky.test/en/app/#/oauth'});
 for(const key of ['window','document','Node','MutationObserver','location','history'])globalThis[key]=dom.window[key];
 globalThis.requestAnimationFrame=fn=>setTimeout(fn,0);
 const strings=document.createElement('script');strings.id='ducky-strings';

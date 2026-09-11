@@ -8,7 +8,7 @@ import path from 'node:path';
 function files(dir){return readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?files(path.join(dir,e.name)):[path.join(dir,e.name)]);}
 for(const lang of ['zh','en'])test(`${lang}: generated app ships every translation, including alerts, creators and TA`,()=>{
  const table=JSON.parse(readFileSync(`i18n/${lang}.json`));
- const dom=new JSDOM(readFileSync(`dist/${lang==='en'?'en/':''}app/index.html`,'utf8'));
+ const dom=new JSDOM(readFileSync(`dist/${lang==='en'?'en/':'zh/'}app/index.html`,'utf8'));
  const embedded=JSON.parse(dom.window.document.querySelector('#ducky-strings').textContent);
  const navigation=JSON.parse(readFileSync('product-navigation.json'));
  for(const {key} of navigation.radar){

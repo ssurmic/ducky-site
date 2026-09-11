@@ -79,7 +79,7 @@ test('homepage separates oversold research from the complete legacy method archi
  const home=new JSDOM(readFileSync('dist/index.html','utf8')).window.document;
  assert.ok(home.querySelector('#features'));
  assert.equal(home.querySelectorAll('.proof-curve').length,0);
- assert.ok(home.querySelector('.proof-archive a[href="/track-record/"]'));
+ assert.ok(home.querySelector('.proof-archive a[href="/en/track-record/"]'));
  const track=new JSDOM(readFileSync('dist/track-record/index.html','utf8')).window.document;
  assert.ok(track.querySelector('details#legacy-simulation #equity'));
  assert.ok(track.querySelector('#ledger'));
