@@ -6,9 +6,9 @@ This changes the three authored metadata keys in each locale. Landing content, r
 
 ## Validation
 
-- 669 frontend tests passed, including the narrowly scoped compliance regression.
+- 669 local frontend tests passed, including the narrowly scoped compliance regression. Initial PR CI `34561204611` hit an existing diagnostics test that mistook timestamp milliseconds `.999Z` for the synthetic user ID `999`. The assertion now rejects the actual private field names and retains private-text checks; production diagnostics code is unchanged. Final CI receipts follow.
 - Copy lint: 3,469 files passed. Internal links: 1,878 passed.
-- All three homepage outputs contain the intended title, description and sharing title; English aliases and language alternatives are retained.
+- All three homepage outputs contain the intended title, description and sharing title; English aliases and language alternatives are retained. In-app browser checks confirmed both new page titles, with desktop English, 390×650 Chinese and 320×650 English screenshots. These are browser viewport checks; the visible landing content and layout were not edited.
 - No Google Analytics tag was found in source or live root/en/zh/app HTML. Search Console verification does not install website analytics.
 - The signed-in Search Console Performance page showed “Processing data, please check again in a day or so”; no traffic counts were available. Missing data must not be reported as zero.
 - The supplied search screenshot shows an old Ducky TradeBot title. This indicates that the displayed title has not caught up with the live site. The duck image is already recognizable there; the screenshot alone cannot identify the cached favicon version. Small-icon rendering loses fur detail even with a high-resolution original.
