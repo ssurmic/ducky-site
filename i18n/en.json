@@ -4150,5 +4150,18 @@
   "app.focus.expand": "Details",
   "app.focus.collapse": "Close",
   "app.focus.show_all_analyses": "Show all {count} stocks",
-  "app.focus.show_fewer_analyses": "Show fewer stocks"
+  "app.focus.show_fewer_analyses": "Show fewer stocks",
+  "app.watch.select_stock": "Select {ticker}",
+  "app.watch.select_visible": "Select all visible stocks",
+  "app.watch.selected_count": "{count} selected · Review",
+  "app.watch.selection_hint": "Select stocks to remove",
+  "app.watch.clear_selection": "Clear selection",
+  "app.watch.remove_selected": "Remove selected ({count})",
+  "app.watch.removing": "Removing…",
+  "app.watch.removed_count": "Removed {count} from your watchlist.",
+  "app.watch.remove_incomplete": "Removed {removed}; {remaining} removals are unconfirmed. They remain selected so you can retry.",
+  "app.watch.full_note": "Your watchlist has reached its {cap}-stock limit. Select and remove stocks to make room for new ones.",
+  "app.watch.full_button": "At limit",
+  "app.watch.manage": "Select stocks",
+  "app.watch.add_unavailable": "This stock could not be added. Refresh and try again."
 }

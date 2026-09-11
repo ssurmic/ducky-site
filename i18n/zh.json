@@ -4150,5 +4150,18 @@
   "app.focus.expand": "展开",
   "app.focus.collapse": "收起",
   "app.focus.show_all_analyses": "展开全部 {count} 只股票",
-  "app.focus.show_fewer_analyses": "收起股票列表"
+  "app.focus.show_fewer_analyses": "收起股票列表",
+  "app.watch.select_stock": "选择 {ticker}",
+  "app.watch.select_visible": "全选当前列表",
+  "app.watch.selected_count": "已选 {count} 只 · 查看",
+  "app.watch.selection_hint": "勾选股票可批量移除",
+  "app.watch.clear_selection": "取消选择",
+  "app.watch.remove_selected": "移除所选（{count}）",
+  "app.watch.removing": "正在移除…",
+  "app.watch.removed_count": "已从自选股移除 {count} 只。",
+  "app.watch.remove_incomplete": "已移除 {removed} 只，其余 {remaining} 只尚未确认移除。保留选择，可重试。",
+  "app.watch.full_note": "自选股已达 {cap} 只上限。勾选不再关注的股票并移除后，即可继续添加。",
+  "app.watch.full_button": "已满额",
+  "app.watch.manage": "勾选股票",
+  "app.watch.add_unavailable": "暂时无法添加，请刷新后重试。"
 }

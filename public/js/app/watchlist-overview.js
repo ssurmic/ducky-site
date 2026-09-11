@@ -116,7 +116,7 @@ function mapInspector(frame, label, session) {
 }
 
 export function overviewView(rows, options) {
-  const {view,query='',sort='market_cap',selected,session,previous,onSelect,area='cap',onAreaChange,renderResearch,onSort,sortDirection=sort==='ticker'?'asc':'desc'}=options;
+  const {view,query='',sort='market_cap',selected,session,previous,onSelect,area='cap',onAreaChange,renderResearch,onSort,selection,sortDirection=sort==='ticker'?'asc':'desc'}=options;
   const root=el('div.watch-summary');
   const filtered=rows.filter(r=>[r.ticker,r.company,r.label_zh,r.label_en,r.industry].some(x=>String(x || '').toLowerCase().includes(query.trim().toLowerCase())));
   const label=r=>(LANG==='zh'?r.label_zh:r.label_en) || r.industry || (LANG==='zh'?r.sector_zh:r.sector) || s('company.unknown');
@@ -182,12 +182,21 @@ export function overviewView(rows, options) {
   } else {
     sortRows(filtered,sort,sortDirection);
     if(renderResearch){
+      const selectBox=(ticker=null)=>{
+        const all=filtered.every(row=>selection.checked.has(row.ticker));
+        const input=el('input',{type:'checkbox',checked:ticker?selection.checked.has(ticker):all,disabled:selection.disabled,
+          'aria-label':s(ticker?'watch.select_stock':'watch.select_visible',{ticker}),'data-watch-select':ticker||'all',
+          'data-reading-key':'select:'+(ticker||'all'),onchange:event=>selection.toggle(ticker?[ticker]:filtered.map(row=>row.ticker),event.target.checked)});
+        if(!ticker)input.indeterminate=!all&&filtered.some(row=>selection.checked.has(row.ticker));
+        return el('label.watch-select',input);
+      };
       const sortHeader=(key,label)=>el('th',{scope:'col','aria-sort':sort===key?(sortDirection==='asc'?'ascending':'descending'):'none'},
         el('button.watch-sort',{type:'button','data-sort':key,'data-reading-key':'sort:'+key,onclick:()=>onSort?.(key)},
           el('span.watch-sort-label',label),el('span.watch-sort-icon',{'aria-hidden':'true'})));
       const table=el('table.watch-compact-table',el('thead',el('tr',sortHeader('ticker',s('watch.stock')),
         sortHeader('change_pct',s('watch.metric_quote')),el('th',{scope:'col'},s('watch.view_reading')),
         sortHeader('market_cap',s('watch.cap')),...metricKeys.map(key=>sortHeader(key,metricLabel(key))))));
+      if(selection){table.classList.add('watch-selectable');table.querySelector('th').prepend(selectBox());}
       const body=el('tbody');
       for(const row of filtered){
         const q=displayQuote(row),shown=q||row;
@@ -197,8 +206,8 @@ export function overviewView(rows, options) {
           el('summary',{'data-reading-key':row.ticker+':overview-toggle'},el('span',
             el('span.watch-reading-preview',preview),analysisDate?el('small.watch-reading-date',analysisDate):null)),reading,
           el('a.stock-open',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':open'},s('focus.open_stock')+' →'));
-        body.append(el('tr',{'data-reading-anchor':row.ticker},
-          el('th',{scope:'row'},el('a.stock-name',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':name'},el('strong',row.ticker),el('span.watch-company',row.company||row.ticker)),
+        body.append(el('tr',{'data-reading-anchor':row.ticker,class:selection?.checked.has(row.ticker)?'is-selected':''},
+          el('th',{scope:'row'},selection?selectBox(row.ticker):null,el('a.stock-name',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':name'},el('strong',row.ticker),el('span.watch-company',row.company||row.ticker)),
             el('a.watch-map-link',{href:'#/evidence/'+encodeURIComponent(row.ticker),'data-map-open':row.ticker,'data-reading-key':row.ticker+':map','aria-label':s('watch.open_stock_map',{ticker:row.ticker})},icon('evidence'),el('span',s('watch.open_map')))),
           el('td.watch-quote-cell',el('strong.mono',px(shown.price)),el('span.watch-change',{class:'watch-'+changeClass(shown.change_pct)},pct(shown.change_pct,2)),
             el('small.muted',q?quoteLabel(q)+' · '+quoteTime(q):row.price_session||session||'—')),
