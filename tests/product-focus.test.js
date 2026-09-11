@@ -48,6 +48,64 @@ test('returning watchlist paints saved prices and research before either request
  dispose=await mount;assert.match(root.textContent,/conditional on spending/);assert.ok(root.querySelector('.errbox'));dispose();
 });
 
+test('first watchlist paints the just-followed saved overview while its first reads are pending',async()=>{
+ const root=setup();store.set('watchlist',[]);
+ globalThis.fetch=async(url,opts)=>Response.json(opts.method==='POST'?{ticker:'NVDA',added:true}:
+  {ticker:'NVDA',price:null,evidence:{ticker:'NVDA',nodes:[node()],analysis_status:'ready',analysis_generated_at:item().as_of,analysis:{overview:item().overview,sections:[]}}});
+ await api.get('/stock-research/NVDA');await api.watchlist.add('NVDA');store.set('watchlist',['NVDA']);
+ const pending=[];globalThis.fetch=async()=>new Promise(resolve=>pending.push(resolve));
+ const mount=watch.mount(root);
+ try{
+  assert.match(root.textContent,/conditional on spending/);
+  assert.ok(root.querySelector('a[href="#/evidence/NVDA"]'));
+ }finally{
+  for(const resolve of pending)resolve(Response.json({error:'offline'},{status:503}));
+  const dispose=await mount;dispose();
+ }
+});
+
+test('adding a previously read ticker paints its saved overview before the list reload completes',async()=>{
+ const root=setup();
+ globalThis.fetch=async url=>Response.json(url==='/me/stock-research'?{items:[item()]}:
+  {items:['NVDA'],overview:{items:[{ticker:'NVDA',price:98}]}});
+ const dispose=await watch.mount(root);
+ globalThis.fetch=async()=>Response.json({ticker:'AMD',price:null,evidence:{ticker:'AMD',nodes:[node()],analysis_status:'ready',analysis_generated_at:item().as_of,analysis:{overview:item('AMD').overview,sections:[]}}});
+ await api.get('/stock-research/AMD');
+ const pending=[];globalThis.fetch=async(url,opts)=>opts.method==='POST'?Response.json({ticker:'AMD',added:true}):new Promise(resolve=>pending.push(resolve));
+ root.querySelector('form.add-row input').value='AMD';
+ root.querySelector('form.add-row').dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));
+ await pause();
+ try{assert.equal(root.querySelectorAll('.stock-one-sentence').length,2);}
+ finally{
+  for(const resolve of pending)resolve(Response.json({error:'offline'},{status:503}));
+  await pause();dispose();
+ }
+});
+
+test('reads started before a membership mutation cannot restore the old list or erase saved summaries',async()=>{
+ setup();const cache=await import('../public/js/app/read-cache.js');
+ cache.remember('/me/stock-research',{items:[item()],watchlist_count:1});
+ const pending=[];globalThis.fetch=async(url,opts)=>opts.method==='POST'?Response.json({ticker:'AMD',added:true}):new Promise(resolve=>pending.push([url,resolve]));
+ const reads=['/watchlist','/me/stock-research'].map(path=>api.get(path).then(()=>({accepted:true}),error=>({error})));
+ await api.watchlist.add('AMD');store.set('watchlist',['NVDA','AMD']);
+ for(const [url,resolve] of pending)resolve(Response.json(url==='/watchlist'?{items:['NVDA'],overview:{items:[]}}:{items:[],watchlist_count:1}));
+ const results=await Promise.all(reads);
+ assert.ok(results.every(result=>api.readFailure(result.error).reason==='cancelled'));
+ assert.equal(api.peek('/me/stock-research').items[0].overview.en,item().overview.en);
+});
+
+test('one missing stock removes only its saved research, leaving other stock summaries readable',async()=>{
+ for(const status of [404,410]){
+  setup();const cache=await import('../public/js/app/read-cache.js');
+  cache.remember('/me/stock-research',{items:[item(),item('AMD')],watchlist_count:2});
+  globalThis.fetch=async()=>Response.json({error:'unavailable'},{status});
+  await assert.rejects(api.get('/stock-research/AMD'));
+  const saved=api.peek('/me/stock-research');
+  assert.equal(saved?.items.find(row=>row.ticker==='NVDA')?.overview.en,item().overview.en);
+  assert.ok(!saved.items.find(row=>row.ticker==='AMD')?.overview);
+ }
+});
+
 test('returning stock uses saved evidence while offline; a permission denial removes it',async()=>{
  const root=setup();
  globalThis.fetch=async url=>Response.json(url.startsWith('/bars/')?{bars:[]}:
