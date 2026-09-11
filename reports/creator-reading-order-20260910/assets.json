@@ -1,0 +1,35 @@
+{
+  "version": "5172c81791e2187d2e95",
+  "files": [
+    {
+      "path": "app/index.html",
+      "matches": true,
+      "sha256": "ec56a1e29eccd19f1c2c3a764777abbf8da05578484045deef5690e0c9d23d6b"
+    },
+    {
+      "path": "en/app/index.html",
+      "matches": true,
+      "sha256": "5aaf7e4090c3680da8b22b24c37fda0cec81d817505c6eb6d98fab8416584463"
+    },
+    {
+      "path": "app-release.json",
+      "matches": true,
+      "sha256": "fd3b6f11b32902f8e3d0909be48251ad5d3463084a7da4622683e3e449a35521"
+    },
+    {
+      "path": "app-assets/5172c81791e2187d2e95/views/evidence.js",
+      "matches": true,
+      "sha256": "2a1ac77a9d6468d0c9b0d87c987415a16474ad3de799622013facf0568f56657"
+    },
+    {
+      "path": "app-assets/5172c81791e2187d2e95/reading-order.js",
+      "matches": true,
+      "sha256": "6809c6aa4aefef2fc4be943af966ae5708b065d2fdc5cbdc67f9fa4cd4066e99"
+    },
+    {
+      "path": "app-assets/5172c81791e2187d2e95/creator-spans.js",
+      "matches": true,
+      "sha256": "b0c4018ace697175a0c66b28f679d72143e579430626bb018707dde6a3645225"
+    }
+  ]
+}
