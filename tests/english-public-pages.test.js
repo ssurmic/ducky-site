@@ -2,7 +2,8 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
-const source=JSON.parse(readFileSync('public/ideas.json','utf8'));
+// Keep the clock-formatting fixture fixed when the nightly source export changes.
+const source={...JSON.parse(readFileSync('public/ideas.json','utf8')),generated_at:'2026-09-09T21:45:00Z'};
 async function ideas(page='ideas',data=source,suffix=''){
  const dom=new JSDOM(readFileSync(`dist/en/${page}/index.html`,'utf8'),{url:`https://ducky.test/en/${page}/${suffix}`,runScripts:'outside-only'});
  dom.window.fetch=async()=>({ok:true,json:async()=>data});dom.window.eval(readFileSync('public/js/ideas.js','utf8'));
