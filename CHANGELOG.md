@@ -1,11 +1,12 @@
 # Change log
 
-## Group repeated creator wording · 2026-09-10 (local verification)
+## Group repeated creator wording · 2026-09-10 (deployed)
 
 Identical viewpoints from the same video share one headline, with every original
 record, excerpt and map link available on expansion. Different qualifications
 remain separate. Both languages explain repeat source use; exact point links open
-their record. 677 tests and 12 browser layouts passed; publication is pending.
+their record. 677 tests and 12 browser layouts passed. PR38 / main `960ebb02` /
+Pages `7609ecf0` passed exact CI, public asset verification and live EN/ZH checks.
 [Behavior and acceptance](reports/CREATOR-REPEATED-VIEWS-2026-09-10.md).
 
 ## Preserve stock scope in source return links · 2026-09-10 (deployed)

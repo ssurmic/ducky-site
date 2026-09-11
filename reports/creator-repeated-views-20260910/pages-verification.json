@@ -1,0 +1,25 @@
+{
+  "observed_at": "2026-09-11T04:47:38.653856+00:00",
+  "commit": "960ebb021b25258a29e24d31c8108d7d410ff7ce",
+  "graph": "251540f1d2e6670431b8",
+  "assets": [
+    {
+      "path": "app-release.json",
+      "status": 200,
+      "sha256": "e6a30a09a6f3c023706b29f47dd7cb6be4838b0ef9acfe4efa14da7a0d9ad42a",
+      "matches_build": true
+    },
+    {
+      "path": "app-assets/251540f1d2e6670431b8/creator-spans.js",
+      "status": 200,
+      "sha256": "4c50996f4593104a6e108e40e593fda2c5af4f79ba2181644f3d97de20a70886",
+      "matches_build": true
+    },
+    {
+      "path": "app-assets/251540f1d2e6670431b8/creator-span-groups.js",
+      "status": 200,
+      "sha256": "4f78560b0b40ce7287ba1e28f449db05d696f1bdb64e1534ba4f3dab2e764649",
+      "matches_build": true
+    }
+  ]
+}
