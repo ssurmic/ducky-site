@@ -45,3 +45,6 @@
 
 /en/*
   Cache-Control: no-cache, must-revalidate
+
+/zh/*
+  Cache-Control: no-cache, must-revalidate

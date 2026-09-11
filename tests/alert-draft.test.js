@@ -65,7 +65,7 @@ test('changing the creator search drops a late lookup for the previous name',asy
 
 test('both built app pages embed every localized app key, including dynamic translator messages',()=>{
  for(const lang of ['zh','en']){
-  const page=new JSDOM(readFileSync('dist/'+(lang==='en'?'en/':'')+'app/index.html','utf8')).window.document;
+  const page=new JSDOM(readFileSync('dist/'+(lang==='en'?'en/':'zh/')+'app/index.html','utf8')).window.document;
   const embedded=JSON.parse(page.querySelector('#ducky-strings').textContent);
   const expected=JSON.parse(readFileSync('i18n/'+lang+'.json','utf8'));
   for(const [key,value] of Object.entries(expected))if(key.startsWith('app.'))assert.equal(embedded[key.slice(4)],value,lang+': '+key);

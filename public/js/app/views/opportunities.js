@@ -273,7 +273,7 @@ function methodCard() {
   return el('details.card.opportunity-method', el('summary', label('method')),
     el('p', label('catalog_rule')), el('p', label('discovery_rule')), el('p', label('priority_note')),
     el('p.small.muted', label('discovery_not_strategy')),
-    el('a', {href:(LANG === 'en' ? '/en' : '') + '/research-records/'}, label('backtest')));
+    el('a', {href:(LANG === 'en' ? '/en' : '/zh') + '/research-records/'}, label('backtest')));
 }
 function paywall() {
   return el('section.card', el('h2', label('lock_title')), el('p', label('lock_note')), link('#/billing', 'nav.billing'));

@@ -5,7 +5,7 @@ import {JSDOM} from 'jsdom';
 import {mountStockDemo} from '../public/js/home-demo.js';
 const tick=()=>new Promise(resolve=>setTimeout(resolve,0));
 function fixture(fetcher){
- const dom=new JSDOM(readFileSync('dist/index.html','utf8'),{url:'https://duckybot.app'});
+ const dom=new JSDOM(readFileSync('dist/zh/index.html','utf8'),{url:'https://duckybot.app'});
  globalThis.document=dom.window.document;
  const root=document.querySelector('[data-home-demo]');
  return {dom,root,dispose:mountStockDemo(root,fetcher),submit(){root.querySelector('form').dispatchEvent(new dom.window.Event('submit',{cancelable:true}));}};

@@ -40,7 +40,7 @@ test('new destinations survive sign-in and radar links select one matching categ
 test('phone navigation promotes enabled research and keeps displaced tools reachable in More',()=>{
  const briefEnabled=readFileSync('dist/config.js','utf8').includes('"RESEARCH_BRIEF_ENABLED": true');
  const expected=briefEnabled?['watchlist','research-brief','calendar','boards']:['watchlist','calendar','evidence','boards'];
- for(const prefix of ['', 'en/']){
+ for(const prefix of ['zh/', 'en/']){
   const shell=new JSDOM(readFileSync(`dist/${prefix}app/index.html`,'utf8')).window.document;
   const nav=document.importNode(shell.querySelector('.app-nav'),true);document.body.append(nav);
   const primary=[...nav.querySelectorAll(':scope > [data-mobile-primary]')];
@@ -101,7 +101,7 @@ test('price decoration rejects malformed, mismatched and missing quotes without 
  assert.equal(quoteModel({...doc,bars:[...doc.bars,doc.bars[1]]},'AAA'),null);
 });
 test('homepage tour opens each named tool and keeps billing hidden in both languages',()=>{
- for(const prefix of ['','en/']){
+ for(const prefix of ['zh/','en/']){
   const page=new JSDOM(readFileSync(`dist/${prefix}index.html`,'utf8')).window.document;
   const tour=page.querySelector('[data-product-tour]'),cleanup=mountTour(tour);
   for(const button of tour.querySelectorAll('[data-tool]')){

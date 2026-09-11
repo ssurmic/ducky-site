@@ -11,7 +11,7 @@ const catalog=JSON.parse(readFileSync('product-navigation.json'));
 const routes=catalog.public_groups.flatMap(group=>group.routes);
 const tick=()=>new Promise(resolve=>setTimeout(resolve,0));
 function fixture({lang='zh',phone=false,query=''}={}){
- const dom=new JSDOM(readFileSync(`dist/${lang==='en'?'en/':''}index.html`,'utf8'),{url:`https://duckybot.app/${lang==='en'?'en/':''}${query}`,pretendToBeVisual:true});
+ const dom=new JSDOM(readFileSync(`dist/${lang==='en'?'en/':'zh/'}index.html`,'utf8'),{url:`https://duckybot.app/${lang==='en'?'en/':'zh/'}${query}`,pretendToBeVisual:true});
  const w=dom.window,doc=w.document,media=new w.EventTarget();media.matches=phone;
  w.matchMedia=q=>q.includes('700px')?media:{matches:q.includes('reduced'),addEventListener(){},removeEventListener(){}};
  const scrolled=[];w.HTMLElement.prototype.scrollIntoView=function(){scrolled.push(this.id);};
@@ -86,7 +86,7 @@ test('research launched from the menu opens a dialog and returns focus to its st
 });
 
 test('shared public navigation is present on secondary pages and does not enter the application shell',()=>{
- for(const prefix of ['','en/']){
+ for(const prefix of ['zh/','en/']){
   for(const route of ['track-record','privacy','disclaimer']){
    const doc=new JSDOM(readFileSync(`dist/${prefix}${route}/index.html`,'utf8')).window.document;
    assert.equal(doc.querySelectorAll('[data-feature-link]').length,14);

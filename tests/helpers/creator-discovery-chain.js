@@ -7,7 +7,7 @@ import {JSDOM} from 'jsdom';
 
 export async function registerDiscoveryChain(lang) {
   const dom=new JSDOM(`<html lang="${lang}" data-lang="${lang}"><body></body></html>`,
-    {url:'https://ducky.test/'+(lang==='en'?'en/':'')+'app/#/creators?scope=discover'});
+    {url:'https://ducky.test/'+(lang==='en'?'en/':'zh/')+'app/#/creators?scope=discover'});
   for(const key of ['window','document','Node','location','history'])globalThis[key]=dom.window[key];
   globalThis.requestAnimationFrame=fn=>fn();
   dom.window.HTMLElement.prototype.scrollIntoView=()=>{};

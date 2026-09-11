@@ -10,7 +10,7 @@ test('the bilingual same-origin trial shares the release graph while default nav
  assert.equal(trial.PRODUCT_FOCUS_ENABLED,true);
  assert.equal(normal.SHARED_STOCK_BRIEFS_ENABLED,true);
  assert.equal(normal.API_BASE,trial.API_BASE);
- for(const prefix of ['', 'en/']){
+ for(const prefix of ['zh/', 'en/']){
   const read=path=>new JSDOM(readFileSync('dist/'+path,'utf8')).window.document;
   const current=read(prefix+'app/index.html'),preview=read(prefix+'app/preview/index.html');
   assert.equal(Boolean(current.querySelector('.focus-nav')),normal.PRODUCT_FOCUS_ENABLED);

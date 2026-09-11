@@ -28,7 +28,7 @@ export async function mount(root, { query = new URLSearchParams() } = {}) {
   root.appendChild(card);
   if (["localhost", "127.0.0.1"].includes(location.hostname) && api.base() === "https://api.duckybot.app") {
     card.append(el("p.errbox", s("recovery.preview")), el("a.btn.btn-primary", {
-      href: "https://duckybot.app/" + (LANG === "en" ? "en/" : "") + "app/#/forgot"
+      href: "https://duckybot.app/" + (LANG === "en" ? "en/" : "zh/") + "app/#/forgot"
     }, s("recovery.live")));
     return;
   }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""build.py — render ducky-site: Jinja2 × {zh, en} → dist/ (zh at /, en at /en/).
+"""build.py — render ducky-site: English at / and /en/, Chinese at /zh/.
 
 Usage:  python3 build.py [--api-base URL]
 
@@ -46,7 +46,9 @@ TRACK_JSON = PUBLIC / "track-record.json"
 LIQ_EVENT = "2026-04-08"                 # first 🟢 ABUNDANT print of 2026 (SYSTEMDESIGN §5.2 A)
 LIQ_ABUNDANT = 80                        # regime threshold drawn on the sparkline
 BRAND_ASSETS = ("avatar-group.jpg", "mascot.svg", "og.svg")   # must land in dist/ (§5.1 avatar rule)
-LANGS = ("zh", "en")                     # zh is the default, no-prefix locale
+LANGS = ("en", "zh")
+DEFAULT_LANG = "en"  # No-prefix URLs serve the same English HTML as canonical /en/ URLs.
+NOINDEX_PAGES = {"app", "idea", "404"}  # Account shell, record placeholder and error page.
 HREFLANG = {"zh": "zh-CN", "en": "en"}
 HTML_LANG = {"zh": "zh-CN", "en": "en"}
 ASSET_RE = re.compile(r'((?:href|src)=")(/[^"?#]+\.(?:css|js|svg|woff2|webmanifest|png|webp|jpg|jpeg|json))(")')
@@ -142,7 +144,7 @@ def load_home_stories() -> list[dict]:
 
 
 def lang_prefix(lang: str) -> str:
-    return "" if lang == "zh" else f"/{lang}"
+    return f"/{lang}"
 
 
 def page_url(lang: str, rel: str) -> str:
@@ -539,9 +541,10 @@ def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, versi
         "cfg": cfg, "prices": cfg["prices"], "channel_url": channel_url, "has_channel": bool(channel_url),
         "bot_url": f"https://t.me/{cfg['bot']}", "miniapp_url": f"https://t.me/{cfg['bot']}/{cfg['miniapp']}",
         "canonical": cfg["site_url"] + page_url(lang, rel),
+        "indexable": page not in NOINDEX_PAGES,
         "alt_url": page_url(other, rel),
         "hreflang": {HREFLANG[l]: cfg["site_url"] + page_url(l, rel) for l in LANGS},
-        "x_default": cfg["site_url"] + page_url("zh", rel),
+        "x_default": cfg["site_url"] + page_url(DEFAULT_LANG, rel),
         "og_image": cfg["site_url"] + cfg.get("og_image", "/og.svg"),
         "version": version, "build_date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
     }
@@ -563,19 +566,19 @@ def write_config_js(cfg: dict, version: str, filename: str = 'config.js') -> Non
         f"window.DUCKY = Object.freeze({body});\n", encoding="utf-8")
 
 
-def write_sitemap(cfg: dict, pages: list[tuple[str, str]], today: str) -> None:
+def write_sitemap(cfg: dict, pages: list[tuple[str, str]]) -> None:
     lines = ['<?xml version="1.0" encoding="UTF-8"?>',
              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
              'xmlns:xhtml="http://www.w3.org/1999/xhtml">']
-    for _, rel in pages:
-        if rel == "404.html":
+    for tpl_name, rel in pages:
+        if Path(tpl_name).stem in NOINDEX_PAGES:
             continue
         alts = "".join(f'<xhtml:link rel="alternate" hreflang="{HREFLANG[l]}" '
                        f'href="{cfg["site_url"]}{page_url(l, rel)}"/>' for l in LANGS)
-        alts += f'<xhtml:link rel="alternate" hreflang="x-default" href="{cfg["site_url"]}{page_url("zh", rel)}"/>'
+        alts += f'<xhtml:link rel="alternate" hreflang="x-default" href="{cfg["site_url"]}{page_url(DEFAULT_LANG, rel)}"/>'
         for lang in LANGS:
             lines.append(f'  <url><loc>{cfg["site_url"]}{page_url(lang, rel)}</loc>'
-                         f'<lastmod>{today}</lastmod>{alts}</url>')
+                         f'{alts}</url>')
     lines.append("</urlset>")
     (DIST / "sitemap.xml").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -595,6 +598,8 @@ def write_manifests(tables):
         out = DIST / lang_prefix(lang).strip("/") / "manifest.webmanifest"
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
+        if lang == DEFAULT_LANG:
+            shutil.copyfile(out, DIST / "manifest.webmanifest")
 
 
 def load_video_example():
@@ -669,6 +674,10 @@ def main() -> None:
             out = DIST / lang_prefix(lang).strip("/") / rel
             out.parent.mkdir(parents=True, exist_ok=True)
             out.write_text(html, encoding="utf-8")
+            if lang == DEFAULT_LANG:
+                alias = DIST / rel
+                alias.parent.mkdir(parents=True, exist_ok=True)
+                alias.write_text(html, encoding="utf-8")
             count += 1
             if tpl_name=='app.html' and cfg.get('product_focus_preview') is True:
                 # Same-origin, opt-in reading trial. Default navigation stays
@@ -682,6 +691,10 @@ def main() -> None:
                 preview_out=DIST/lang_prefix(lang).strip('/')/'app/preview/index.html'
                 preview_out.parent.mkdir(parents=True,exist_ok=True)
                 preview_out.write_text(preview_html,encoding='utf-8')
+                if lang == DEFAULT_LANG:
+                    alias = DIST / 'app/preview/index.html'
+                    alias.parent.mkdir(parents=True, exist_ok=True)
+                    alias.write_text(preview_html, encoding='utf-8')
                 count+=1
 
     write_config_js(cfg, version)
@@ -692,7 +705,7 @@ def main() -> None:
     n_imports = version_module_imports(version)
     headers = env.get_template("_headers.tpl").render(cfg=cfg)
     (DIST / "_headers").write_text(headers.rstrip() + "\n", encoding="utf-8")
-    write_sitemap(cfg, pages, datetime.now(timezone.utc).strftime("%Y-%m-%d"))
+    write_sitemap(cfg, pages)
     print(f"build.py: rendered {count} pages ({len(pages)} templates × {len(LANGS)} langs) "
           f"→ {DIST.relative_to(ROOT)}/  version={version}  api_base={cfg['api_base']}  "
           f"app modules={app_version}  legacy imports versioned={n_imports}")

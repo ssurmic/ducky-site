@@ -7,7 +7,7 @@ const noon=Date.parse('2026-09-08T17:00:00Z');
 const value=(ticker,now=noon,day='2026-09-04',price=100)=>({ticker,last_d:day,bars:[{t:day,c:price}],session_context:{basis:'completed_regular_session',price_session:day,expected_session:day,status:'current',checked_at:new Date(now).toISOString()}});
 const response=body=>new Response(JSON.stringify(body),{headers:{'content-type':'application/json'}});
 const flush=async()=>{for(let i=0;i<8;i++)await new Promise(r=>setTimeout(r,0));};
-function fixture(lang=''){
+function fixture(lang='zh/'){
  const dom=new JSDOM(readFileSync(`dist/${lang}index.html`,'utf8'),{url:'https://ducky.test/',pretendToBeVisual:true});
   const doc=dom.window.document,root=doc.querySelector('[data-duck-orbit]');
   // The build embeds today's real closes. A fixed-clock test must not compare
@@ -27,7 +27,7 @@ test('verified close uses completed sessions and expires the verification, not t
  assert.equal(quoteModel({...input,session_context:{...input.session_context,basis:'recorded_provider_quote'}},'NVDA',{now:noon}).status,'unchecked');
 });
 test('homepage keeps the close label, retries an outage online, and drops late work on dispose',async t=>{
- for(const lang of ['', 'en/']){
+ for(const lang of ['zh/', 'en/']){
   const {dom,root}=fixture(lang);let offline=true,calls=0,resolve,clock=noon;
   const cleanup=mountQuotes(root,{now:()=>clock,fetcher:async(url,opts)=>{
    calls++;assert.equal(opts.credentials,'omit');assert.ok(!opts.headers);assert.equal(opts.method,undefined);
@@ -39,7 +39,7 @@ test('homepage keeps the close label, retries an outage online, and drops late w
   t.after(()=>{cleanup();dom.window.close();});
   await flush();assert.equal(calls,3);
   for(const card of root.querySelectorAll('[data-quote]')){
-   assert.match(card.querySelector('[data-quote-date]').textContent,lang?/close/:/收盘/);
+   assert.match(card.querySelector('[data-quote-date]').textContent,lang==='en/'?/close/:/收盘/);
    assert.equal(card.querySelector('[data-quote-status]').dataset.state,'unavailable');
   }
   offline=false;dom.window.dispatchEvent(new dom.window.Event('online'));await flush();

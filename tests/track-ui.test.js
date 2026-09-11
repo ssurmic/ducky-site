@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 for(const lang of ['zh','en'])test('ledger retains every result while filters and evidence dialogs are usable: '+lang,async()=>{
- const dom=new JSDOM(readFileSync('dist/'+(lang==='en'?'en/':'')+'track-record/index.html','utf8'),{url:'https://duckybot.app/track-record/',runScripts:'outside-only'}),w=dom.window,d=w.document;
+ const dom=new JSDOM(readFileSync('dist/'+(lang==='en'?'en/':'zh/')+'track-record/index.html','utf8'),{url:'https://duckybot.app/track-record/',runScripts:'outside-only'}),w=dom.window,d=w.document;
  w.HTMLDialogElement.prototype.showModal=function(){this.open=true;};
  w.HTMLDialogElement.prototype.close=function(){this.open=false;this.dispatchEvent(new w.Event('close'));};
  const data=JSON.parse(readFileSync('public/track-record.json','utf8')),before=JSON.stringify(data);

@@ -5,7 +5,7 @@
 truth; this one only points at it.
 
 ## Rules that CI enforces
-- `python3 build.py` renders `templates/*.html` × {zh, en} → `dist/` (zh, no prefix) and `dist/en/`. Copy lives
+- `python3 build.py` renders `templates/*.html` × {zh, en} → `dist/en/` and `dist/zh/`, with English aliases at `dist/`. Copy lives
   only in `i18n/zh.json` + `i18n/en.json` (flat keys). The build fails if the two key sets differ.
 - `scripts/lint_copy.py` fails on: `ALL-IN` `买这只` `目标价` `满仓` `buy now` `现在买` `建议买入`; any
   `data-winrate` without an integer `data-n` (the landing's K-index N comes from `public/track-record.json`
@@ -52,7 +52,7 @@ Record viewport simulation, touch emulation and physical-device checks separatel
 | App / Mini App pack | `templates/app.html`, `public/js/app/**`, `public/vendor/**` |
 | Go-links pack | `functions/**` (`/go/<slug>` Pages Function) |
 
-Later packs add pages by dropping `templates/<name>.html` (rendered to `/<name>/` and `/en/<name>/`) and adding
+Later packs add pages by dropping `templates/<name>.html` (rendered to `/en/<name>/` and `/zh/<name>/`, plus a no-prefix English alias) and adding
 their keys to **both** i18n files. `window.DUCKY` (from generated `dist/config.js`) exposes `API_BASE`, `BOT`,
 `MINIAPP`, `CHANNEL`, `TRACK_JSON`, `FEED_JSON`, `PRICES`, `VERSION`.
 
@@ -92,3 +92,7 @@ Explore and first-use Today must offer useful, clearly labelled examples even wi
 Preserve historical case dates and losses. Evidence maps group bullish, factual/context and bearish
 records in separate lanes. Group authors by stable identity, retain each point/source/date, and label
 repeat source use without treating it as independent corroboration or merging opposing positions.
+
+## Search and default language (owner, 2026-09-10)
+
+English is the default at all no-prefix HTML routes; `/en/` remains the canonical English URL and `/zh/` is Chinese. Keep language toggles and reciprocal hreflang tags. The sitemap contains only canonical, indexable public pages; account/preview shells, generic record placeholders and 404s stay out. Do not stamp every build date as a content lastmod. The Google ownership meta tag is intentionally public and must remain after verification. Indexing and rankings require separate Search Console evidence.
