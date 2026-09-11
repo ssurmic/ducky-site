@@ -1,3 +1,12 @@
+// Stay in the authenticated app when using its brand/home link.
+export function renderBrandNavigation(me) {
+  const brand=document.querySelector('.app-top .brand');
+  if(!brand)return;
+  brand.setAttribute('href',me?'#/watchlist':brand.dataset.homeHref);
+  brand.title=me?brand.dataset.watchlistLabel:brand.dataset.homeLabel;
+  brand.setAttribute('aria-label',brand.title);
+}
+
 // Shared selection logic for direct links and in-page radar filters.
 export function selectNavigation(name, query=new URLSearchParams()) {
   if(document.querySelector('.focus-nav')){

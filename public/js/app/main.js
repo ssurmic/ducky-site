@@ -11,6 +11,7 @@ import { rememberTarget, takeTarget, safeTarget, signedInTarget, needsEmailSetup
 
 import {watchRelease} from './release-recovery.js';
 import {legacyAuthLocaleTarget} from './locale-route.js';
+import {renderBrandNavigation} from './navigation.js';
 
 async function boot() {
   watchRelease(document.querySelector('.app-main')||document.body);
@@ -20,7 +21,7 @@ async function boot() {
 
   const logoutBtn = document.getElementById("logout");
   if (logoutBtn) logoutBtn.addEventListener("click", (e) => { e.preventDefault(); auth.logout(); });
-  store.subscribe("me", (me) => { renderAccountAvatar(me); ui.renderTierBadge(); if (logoutBtn) logoutBtn.hidden = !me || tg.inTG; });
+  store.subscribe("me", (me) => { renderBrandNavigation(me); renderAccountAvatar(me); ui.renderTierBadge(); if (logoutBtn) logoutBtn.hidden = !me || tg.inTG; });
 
   await restoreAndStart();
 }
@@ -53,6 +54,7 @@ async function restoreAndStart() {
   const renderReminder = me => { if (reminder) reminder.hidden = !needsEmailSetup(me); };
   store.subscribe("me", renderReminder);
   renderReminder(store.get("me"));
+  renderBrandNavigation(store.get('me'));
   ui.renderTierBadge();
   const logoutBtn = document.getElementById('logout');
   if (logoutBtn) logoutBtn.hidden = !ok || tg.inTG;

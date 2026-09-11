@@ -1,0 +1,56 @@
+[
+  {
+    "from": "watchlist",
+    "brand": "#/watchlist",
+    "hash": "#/watchlist",
+    "overflow": false
+  },
+  {
+    "from": "briefing",
+    "brand": "#/watchlist",
+    "hash": "#/watchlist",
+    "overflow": false
+  },
+  {
+    "from": "chart/NVDA",
+    "brand": "#/watchlist",
+    "hash": "#/watchlist",
+    "overflow": false
+  },
+  {
+    "from": "calendar",
+    "brand": "#/watchlist",
+    "hash": "#/watchlist",
+    "overflow": false
+  },
+  {
+    "from": "boards",
+    "brand": "#/watchlist",
+    "hash": "#/watchlist",
+    "overflow": false
+  },
+  {
+    "from": "alerts",
+    "brand": "#/watchlist",
+    "hash": "#/watchlist",
+    "overflow": false
+  },
+  {
+    "from": "creators",
+    "brand": "#/watchlist",
+    "hash": "#/watchlist",
+    "overflow": false
+  },
+  {
+    "from": "profile",
+    "brand": "#/watchlist",
+    "hash": "#/watchlist",
+    "overflow": false
+  },
+  {
+    "from": "billing",
+    "brand": "#/watchlist",
+    "hash": "#/watchlist",
+    "overflow": false
+  }
+]

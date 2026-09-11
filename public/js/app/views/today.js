@@ -1,6 +1,6 @@
 import {el,clear,spinner} from '../ui.js';
 import {researchExamples} from '../research-examples.js';
-import {s} from '../strings.js';
+import {s,LANG} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
 import {pick,stockHref,localTime,dayWindow,reading,researchError,replaceReading,syncSourceDialog} from '../stock-reading.js';
@@ -9,23 +9,50 @@ import {detail} from './evidence.js';
 // Remember only reading controls, never source text or an account's response.
 const readingStates=new Map();
 let readingEpoch=null;
+const SUMMARY_PREVIEW=5;
+const timestamp=value=>typeof value==='string'&&Number.isFinite(Date.parse(value))?Date.parse(value):-Infinity;
+
+// Reading order only: actual analysis dates, never ticker order or a trade score.
+export function latestAnalyses(items){
+  return [...items].sort((a,b)=>{
+    const left=timestamp(a.as_of),right=timestamp(b.as_of);
+    return left===right?0:left>right?-1:1;
+  });
+}
+const disclosureHint=()=>el('span.today-disclosure-hint',{'aria-hidden':'true'},
+  el('span.today-expand-label',s('focus.expand')),el('span.today-collapse-label',s('focus.collapse')),el('span.today-chevron'));
+
+function analysisCard(item){
+  const body=reading(item),preview=body.querySelector('.stock-one-sentence')?.cloneNode(true);
+  preview?.querySelectorAll('button').forEach(button=>button.remove());
+  const key='analysis:'+item.ticker,analysisDate=body.querySelector('.stock-analysis-date');
+  return el('details.today-analysis.stock-list-row',{'data-reading-anchor':key,'data-reading-key':key},
+    el('summary',{'data-reading-key':key+':toggle'},el('span.today-analysis-top',el('strong.ticker',item.ticker),
+      analysisDate?el('span.small.muted',analysisDate.textContent):null),
+      el('span.today-analysis-preview',preview?.textContent||body.textContent),disclosureHint()),
+    el('div.today-analysis-body',body,el('div.focus-actions',
+      el('a.stock-open',{href:stockHref(item.ticker,'today'),'data-reading-key':item.ticker+':open'},s('focus.open_stock')+' →'),
+      el('a.stock-open',{href:'#/evidence/'+encodeURIComponent(item.ticker),'data-reading-key':item.ticker+':map'},s('watch.open_map')+' →'))));
+}
 
 export function changeCard(item,{from='today'}={}){
   const available=item.state==='available'&&item.node;
   const label=!available?'focus.record_unavailable':item.kind==='revised'?'focus.record_revised':
     item.earlier_content?'focus.earlier_content':item.initial_coverage?'focus.coverage_added':'focus.record_added';
   const node=item.node,authors=[...new Set((node?.evidence||[]).map(e=>e.author).filter(Boolean))];
-  const article=el('article.change-card',el('div.change-meta',el('a.ticker',{href:stockHref(item.ticker,from)},item.ticker),
-    el('span.change-kind',s(label)),node?.conditional?el('span.change-kind',s('focus.conditional')):null),
-    available?el('h3',pick(node.title)):el('p.muted',s('focus.unavailable_detail')),
-    el('p.small.muted',[authors.join(' · '),s('focus.source_published',{date:localTime(item.published_at)})].filter(Boolean).join(' · ')));
-  article.append(el('div.focus-actions',
+  const key='change:'+item.id;
+  const article=el('details.change-card',{'data-reading-anchor':key,'data-reading-key':key},
+    el('summary',{'data-reading-key':key+':toggle'},el('span.change-meta',el('strong.ticker',item.ticker),
+      el('span.change-kind',s(label)),available&&node.conditional?el('span.change-kind',s('focus.conditional')):null),
+      el('span.change-title',available?pick(node.title):s('focus.unavailable_detail')),
+      el('span.small.muted.change-byline',[authors.join(' · '),s('focus.source_published',{date:localTime(item.published_at)})].filter(Boolean).join(' · ')),disclosureHint()));
+  article.append(el('div.change-body',el('div.focus-actions',
     available?el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>detail(node)},s('focus.read_source')):null,
     el('a.btn.btn-ghost.btn-sm',{href:stockHref(item.ticker,from)},s('focus.open_stock'))),
-    el('details.change-clocks',el('summary',s('focus.record_dates')),
+    el('details.change-clocks',{'data-reading-key':key+':dates'},el('summary',{'data-reading-key':key+':dates-toggle'},s('focus.record_dates')),
       el('p.small',s('focus.first_observed',{date:localTime(item.observed_at)})),
       el('p.small',s('focus.readable_since',{date:localTime(item.available_at)})),
-      el('p.small.muted',s('focus.clock_note'))));
+      el('p.small.muted',s('focus.clock_note')))));
   return article;
 }
 
@@ -34,8 +61,13 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   if(readingEpoch!==epoch){readingStates.clear();readingEpoch=epoch;}
   const stateKey=initialScope+'|'+embedded,saved=readingStates.get(stateKey);
   let disposed=false,seq=0,cursor=null,scope=initialScope,days=saved?.days||initialDays,query=saved?.query||'',windowRange=dayWindow(),rows=[],pages=0;
+  let showAll=!!saved?.showAll,lastSummary=null,watchlistEmpty=false;
+  const restoreDisclosures=host=>{
+    for(const node of host.querySelectorAll('details[data-reading-key]'))if(saved?.opened?.includes(node.dataset.readingKey))node.open=true;
+  };
   const main=el('section.focus-today'),feed=el('div.change-list'),status=el('div',{'aria-live':'polite'});
-  const title=el('header.focus-heading',el('div',el('h1',s('focus.today')),el('p.muted',s('focus.today_intro'))),
+  const now=new Date(),date=new Intl.DateTimeFormat(LANG==='en'?'en-US':'zh-CN',{month:'long',day:'numeric',weekday:'long'}).format(now);
+  const title=el('header.focus-heading.today-heading',el('div',el('p.today-date',date),el('h1',s('focus.today')),el('p.muted',s('focus.today_intro'))),
     el('a.btn.btn-ghost',{href:'#/calendar'},s('focus.upcoming')));
   if(!embedded)main.append(title);
   const search=el('input.input',{type:'search',maxlength:80,placeholder:s('focus.search_research'),'aria-label':s('focus.search_research')});
@@ -44,10 +76,11 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   range.value=days;search.value=query;
   const filters=el('form.focus-filters',{onsubmit:e=>{e.preventDefault();query=search.value.trim();load();}},
     range,search,el('button.btn.btn-ghost',{type:'submit'},s('focus.search')));
-  main.append(filters,status,feed);
+  const updates=el('section.today-updates',el('h2.today-section-title',s('focus.recent_changes')),filters,status,feed);
+  main.append(updates);
   const more=el('button.btn.btn-ghost',{type:'button',hidden:true,onclick:()=>load(true)},s('focus.more_changes'));
   const coverage=el('p.small.muted',s('focus.coverage_note'));
-  main.append(more,coverage);root.append(main);
+  updates.append(more,coverage);root.append(main);
   const summaries=el('section.focus-latest');
   if(!embedded)main.append(summaries);
   async function load(append=false){
@@ -63,6 +96,8 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
       if(!rows.length)status.append(el('p.focus-empty',s(query?'focus.no_search_results':'focus.no_changes')));
       for(const item of response.items||[])feed.append(changeCard(item,{from:embedded?'explore':'today'}));
       more.hidden=!cursor;
+      if(watchlistEmpty)more.hidden=true;
+      restoreDisclosures(feed);
       return true;
     }catch(error){if(!disposed&&!signal?.aborted&&mine===seq){clear(status);status.append(researchError(error,()=>load(append)));}}
     finally{if(mine===seq)more.disabled=false;}
@@ -74,17 +109,21 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
     for(const ticker of new Set([...shown,...items.map(item=>item.ticker)]))
       syncSourceDialog(ticker,items.find(item=>item.ticker===ticker)?.sources||[]);
     shown=items.map(item=>item.ticker);
-    for(const node of [filters,status,feed,coverage])node.hidden=response.watchlist_count===0;
-    more.hidden=response.watchlist_count===0||!cursor;
+    watchlistEmpty=response.watchlist_count===0;
+    updates.hidden=watchlistEmpty;
+    for(const node of [filters,status,feed,coverage])node.hidden=watchlistEmpty;
+    more.hidden=watchlistEmpty||!cursor;
+    lastSummary=response;
     if(response.watchlist_count===0){
       replaceReading(summaries,el('p',s('focus.start_following')),el('a.btn.btn-primary',{href:'#/watchlist'},s('focus.add_stocks')),researchExamples());return;
     }
-    const ready=items.filter(i=>['ready','refresh_pending'].includes(i.status)&&pick(i.overview));
-    const selected=(ready.length?ready:items).slice(0,3);
-    replaceReading(summaries,...(selected.length?[el('h2',s('focus.latest_views')),el('p.small.muted',s('focus.latest_views_note'))]:[]),
-      ...selected.map(item=>el('article.stock-list-row',{'data-reading-anchor':item.ticker},
-        el('a.ticker',{href:stockHref(item.ticker,'today'),'data-reading-key':item.ticker+':name'},item.ticker),reading(item),
-        el('a.stock-open',{href:stockHref(item.ticker,'today'),'data-reading-key':item.ticker+':open'},s('focus.open_stock')+' →'))));
+    const ordered=latestAnalyses(items),selected=showAll?ordered:ordered.slice(0,SUMMARY_PREVIEW);
+    replaceReading(summaries,...(items.length?[el('header.today-section-heading',el('div',
+      el('h2.today-section-title',s('focus.latest_views'),el('span.today-count',String(items.length))),
+      el('p.small.muted',s('focus.latest_views_note')))),el('div.today-analysis-list',...selected.map(analysisCard))]:[]),
+      ...(items.length>SUMMARY_PREVIEW?[el('button.btn.btn-ghost.today-show-all',{type:'button','aria-expanded':String(showAll),
+        'data-reading-key':'analyses:all',onclick:()=>{showAll=!showAll;renderSummaries(lastSummary);}},
+        s(showAll?'focus.show_fewer_analyses':'focus.show_all_analyses',{count:items.length}))]:[]));
   }
   const update=event=>{
     if(embedded||disposed||signal?.aborted||epoch!==store.epoch()||event.detail?.path!=='/me/stock-research')return;
@@ -106,5 +145,7 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
       if(!await load(true))break;
   }
   await Promise.all([restoreReading(),summaryTask]);
-  return()=>{disposed=true;seq++;root.removeEventListener('ducky:shared-read',update);if(epoch===store.epoch())readingStates.set(stateKey,{days,query,pages});};
+  restoreDisclosures(summaries);
+  return()=>{disposed=true;seq++;root.removeEventListener('ducky:shared-read',update);if(epoch===store.epoch())readingStates.set(stateKey,{days,query,pages,showAll,
+    opened:[...main.querySelectorAll('details[open][data-reading-key]')].map(node=>node.dataset.readingKey)});};
 }
