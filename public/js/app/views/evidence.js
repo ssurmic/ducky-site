@@ -12,7 +12,7 @@ import {evidenceTarget,creatorTarget} from '../creator-route.js';
 import {groupAuthors,sourceOccurrences,originalSourceKey} from '../evidence-grouping.js';
 import {comparisonBadge,comparisonDetails} from '../comparison-context.js';
 import {sourceIdentity,nodeSourceIdentity,sourceBadge,sourceMark} from '../evidence-source.js';
-import {claimQualifications} from './creator-claim.js';
+import {claimQualifications,sourceAt} from './creator-claim.js';
 import {ownershipEvent,eventLabel,eventDate} from '../evidence-event.js';
 import {material} from '../shared-read-refresh.js';
 import {readingOrder} from '../reading-order.js';
@@ -33,13 +33,13 @@ export function detail(node,{analysisAt,shareContext,readingTicker,compact=windo
     'data-reading-proof':material(node,'/evidence/SOURCE')},el('p.evidence-stance',{class:'is-'+node.stance},eventLabel(node)),
     analysisAt?el('p.data-notice',s('evidence.analysis_snapshot_source',{at:time(analysisAt)})):null,
     node.conditional?el('p.data-notice',s('evidence.conditional')):null,
-    pick(node.reason)?el('p',pick(node.reason)):null);
+    pick(node.reason)&&pick(node.reason)!==pick(node.title)?el('p',pick(node.reason)):null);
   for(const e of node.evidence||[]){
     const event=ownershipEvent(e);
     const explanation=e.kind==='fact'?factDescription(e):pick(e.reason)||pick(e.title);
     const item=el('article.evidence-source',sourceBadge(sourceIdentity(e)),el('h3',authorLabel(e)||s('evidence.recorded_data')),
       original(e.original_title)?el('div.evidence-original',el('span.small.muted',s('evidence.original_only')),el('p',original(e.original_title))):null,
-      explanation&&explanation!==pick(node.reason)?el('p',explanation):null,
+      explanation&&![pick(node.reason),pick(node.title)].includes(explanation)?el('p',explanation):null,
       e.kind==='creator'?claimQualifications(e):null,
       e.kind==='fact'?comparisonDetails(e):null,
       event?el('p.evidence-event-basis',s('evidence.event_basis')):null,
@@ -51,10 +51,18 @@ export function detail(node,{analysisAt,shareContext,readingTicker,compact=windo
       Number.isFinite(e.start_seconds)?el('p.small.muted',s('evidence.segment',{start:position(e.start_seconds),end:position(e.end_seconds)})):null);
     if(e.freshness==='stale')item.append(el('p.data-notice',s(event?'evidence.historical_event':'evidence.stale_source')));
     const href=source(e.source_url);
-    const internal=evidenceTarget(e);
-    if(internal)item.append(el('a.btn.btn-primary.btn-sm',{href:internal,onclick:()=>closeModal()},s('evidence.creator_context')));
-    if(href)item.append(el('a.btn.btn-ghost.btn-sm',{href,target:'_blank',rel:'noopener noreferrer'},s('evidence.open_source')+' ↗'));
-    else item.append(el('p.small.muted',s(e.kind==='fact'?'evidence.saved_calculation':'evidence.no_source_link')));
+    const internal=evidenceTarget(e,{ticker:readingTicker});
+    const creatorLink=internal?el('a.btn.btn-sm',{class:compact?'btn-ghost':'btn-primary',href:internal,onclick:()=>closeModal()},s('evidence.creator_context')):null;
+    const actions=compact?el('div'):item;
+    if(!compact&&creatorLink)actions.append(creatorLink);
+    if(href)actions.append(el('a.btn.btn-sm',{class:compact?'btn-primary':'btn-ghost',href:compact?(sourceAt(href,e.start_seconds)||href):href,target:'_blank',rel:'noopener noreferrer'},s('evidence.open_source')+' ↗'));
+    else actions.append(el('p.small.muted',s(e.kind==='fact'?'evidence.saved_calculation':'evidence.no_source_link')));
+    if(compact){
+      if(creatorLink)actions.append(creatorLink);
+      // Put the source action beside its identity, before long qualifications
+      // and acquisition dates push it below a short phone viewport.
+      item.querySelector('h3').after(actions);
+    }
     const audit=el('details',el('summary',s('evidence.record_details')),
       el('p.small.muted',s('evidence.linked',{at:time(node.recorded_at)})),
       !compact&&e.source_hash?el('p.evidence-hash.mono',e.source_hash):null);
@@ -62,7 +70,7 @@ export function detail(node,{analysisAt,shareContext,readingTicker,compact=windo
     item.append(audit);body.append(item);
   }
   if(node.evidence_omitted)body.append(el('p.small.muted',s('evidence.more_sources',{n:node.evidence_omitted})));
-  if(shareContext)body.prepend(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>openCardShare(node,shareContext)},s('share.title')));
+  if(shareContext)body.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>openCardShare(node,shareContext)},s('share.title')));
   modal(pick(node.title),body);
 }
 
@@ -228,7 +236,12 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
       const linked=node.kind==='creator'&&node.evidence?.length===1?evidenceTarget(node.evidence[0]):null;
       const shareContext={ticker:doc.ticker,recorded_at:doc.recorded_at,archive,example,status:doc.status};
       const repeats=node.kind==='creator'?Math.max(0,...(node.evidence||[]).map(e=>occurrences.get(originalSourceKey(e))||0)):0;
-      const card=el('article.evidence-node',{class:'is-'+node.stance+' source-'+identity,'data-source':identity,'data-reading-anchor':node.id,onclick:()=>{if(linked)location.hash=linked;else detail(node,{shareContext,readingTicker:doc.ticker});}},
+      const card=el('article.evidence-node',{class:'is-'+node.stance+' source-'+identity,'data-source':identity,'data-reading-anchor':node.id,onclick:()=>{
+        // Keep the stock and reading position while checking a source. The
+        // dialog and author heading retain explicit routes to creator history.
+        if(linked&&window.DUCKY?.PRODUCT_FOCUS_ENABLED!==true)location.hash=linked;
+        else detail(node,{shareContext,readingTicker:doc.ticker});
+      }},
         ['youtube','x','macro'].includes(identity)?el('span.evidence-source-watermark',{'aria-hidden':'true'},sourceMark(identity)):null,
         el('span.evidence-node-label',sourceBadge(identity),el('span.evidence-category',eventLabel(node))),
         el('strong',pick(node.title)),

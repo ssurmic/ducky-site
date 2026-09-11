@@ -31,7 +31,7 @@ export function creatorTarget(state) {
   return '#/creators' + (query.size ? '?' + query : '');
 }
 
-export function evidenceTarget(evidence){
+export function evidenceTarget(evidence,{ticker}={}){
   if(!/^[A-Za-z0-9_-]{1,100}$/.test(evidence?.creator_id||'') || !/^[A-Za-z0-9_-]{1,128}$/.test(evidence?.post_id||''))return null;
-  return creatorTarget({tab:'feed',mine:false,selected:evidence.creator_id,post:evidence.post_id,point:evidence.point_id});
+  return creatorTarget({tab:'feed',mine:false,ticker,selected:evidence.creator_id,post:evidence.post_id,point:evidence.point_id});
 }

@@ -29,6 +29,34 @@ test('a ticker-like channel name is labelled as creator on both layouts and keep
  card.click();assert.equal(location.hash,'#/creators?scope=discover&creator=ticker-symbol-you&post=csv55UtVMZM&point=claim%3Aceg');
  root.dispose();root.remove();location.hash='#/evidence/AVGO';
 });
+test('focused map checks a creator in place, retaining the stock, original segment and return focus',()=>{
+ const previous=window.DUCKY;window.DUCKY={...previous,PRODUCT_FOCUS_ENABLED:true};
+ const before=location.hash,doc=fixture();let calls=0,root;
+ globalThis.fetch=()=>{calls++;throw Error('Opening a saved source must not fetch');};
+ const node=doc.nodes[0];node.evidence[0]={...node.evidence[0],creator_id:'source-author',post_id:'abcdefghijk',
+  point_id:'claim:source',source_url:'https://www.youtube.com/watch?v=abcdefghijk',
+  condition_text:'If the stated order is confirmed.',horizon_text:'Over the next year.'};
+ node.reason=node.title;node.evidence[0].reason=node.title;
+ doc.nodes=[node];
+ try{
+  root=mapView(doc);document.body.append(root);
+  const button=root.querySelector('.evidence-node-open');button.focus();button.click();
+  const dialog=document.querySelector('[role="dialog"]');
+  assert.ok(dialog);assert.equal(location.hash,before);assert.equal(calls,0);
+  assert.equal(dialog.textContent.split(node.title.en).length-1,1,'identical title/reason is shown once');
+  assert.match(dialog.textContent,/If the stated order is confirmed/);
+  assert.match(dialog.textContent,/Over the next year/);
+  assert.match(dialog.textContent,/2026-09-04/);
+  assert.equal(dialog.querySelector('a[target="_blank"]').href,'https://www.youtube.com/watch?v=abcdefghijk&t=70');
+  assert.equal(dialog.querySelector('a').target,'_blank','the original source is the first source action');
+  const creator=dialog.querySelector('a[href^="#/creators"]');
+  assert.equal(creator.getAttribute('href'),'#/creators?scope=discover&ticker=AVGO&creator=source-author&post=abcdefghijk&point=claim%3Asource');
+  document.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+  assert.equal(document.querySelector('[role="dialog"]'),null);
+  assert.equal(document.activeElement,button);assert.equal(location.hash,before);
+  assert.match(root.querySelector('.evidence-author-heading a').href,/ticker=AVGO&creator=source-author/);
+ }finally{closeModal();root?.dispose();root?.remove();window.DUCKY=previous;}
+});
 test('historical ownership direction stays consistent across badge, filter, source and dates',()=>{
  const doc=fixture();doc.ticker='VST';doc.nodes=[{id:'exercise',kind:'record',stance:'support',
   title:{en:'Spouse exercised calls to acquire 5,000 VST shares'},published_at:'2026-01-23',
