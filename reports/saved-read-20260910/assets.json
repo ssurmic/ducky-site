@@ -1,0 +1,35 @@
+{
+  "version": "1b55a934e9e6412c5be5",
+  "assets": [
+    {
+      "path": "app-release.json",
+      "match": true,
+      "sha256": "058a2914a446269e452f9cbdd81a0e52528c34f2ead8ed9ec2c66d4ef3d9f18e"
+    },
+    {
+      "path": "en/app/index.html",
+      "match": true,
+      "sha256": "db2f603e171546699ed2c6a829b0559295879aeca9945337c44a277435aa6c55"
+    },
+    {
+      "path": "app/index.html",
+      "match": true,
+      "sha256": "557f1f3db1531921e59c438d887ca80ed409dc7eeedb59bdc6d6506683020042"
+    },
+    {
+      "path": "app-assets/1b55a934e9e6412c5be5/read-cache.js",
+      "match": true,
+      "sha256": "7f3a33d6465f74c4281882b8553232e50904872acc8a9e608ed55ae222335998"
+    },
+    {
+      "path": "app-assets/1b55a934e9e6412c5be5/read-diagnostics.js",
+      "match": true,
+      "sha256": "bb5f7343220b99c1febb2f0c4a1d3a68d533b6a38e4865e52d9117ad7890b490"
+    },
+    {
+      "path": "app-assets/1b55a934e9e6412c5be5/views/watchlist.js",
+      "match": true,
+      "sha256": "7732ae257fa824aca75e8cfe24a93329d37d3433ee77247a56760d70626c1eef"
+    }
+  ]
+}

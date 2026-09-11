@@ -1,6 +1,6 @@
 # Saved research reads · 2026-09-10
 
-Status: implemented and locally verified; release/browser acceptance follows when completed.
+Status: frontend deployed and production add/remove/return workflow verified. Backend companion deployment is recorded in its linked report.
 
 The owner wants existing analysis to display while updates run in the background. Previously each
 route initialized a blank analysis map, and a failed watchlist research read erased accepted text.
@@ -64,3 +64,34 @@ ranking are unchanged. Local checks: 657 frontend tests before the final reuse r
 5,153 backend tests / 6 skipped before the final additive symbol test, and 9 final focused
 backend tests. The local backend count includes a separate unshipped source-note candidate;
 exact CI and runtime/browser acceptance are recorded separately.
+
+
+## Production release and actual workflow
+
+PR27 / main `c32754e4` first shipped saved reads as Pages `016f76d5` (graph
+`ff0a0ed0b97c639bdb43`). PR28 fixes the remaining blanket membership invalidation:
+main `8d2ca66f4bb3ec645cc7dcc6934852a5b855f43b`, Pages `69e1817f`, graph
+`1b55a934e9e6412c5be5`. Both PR CI `34545702304` and exact main CI `34545847535`
+passed **658 tests**, copy lint and 1,274 links. Six public entry/module/manifest files
+byte-match the deployed build. [Asset receipt](saved-read-20260910/assets.json).
+
+Actual authenticated Chrome walkthrough, 2026-09-11 approximately 00:21–00:24 UTC
+(September 10 local time), 1695px desktop viewport:
+
+| Step | Observed result |
+| --- | --- |
+| Fresh Chinese entry | List first, Overview second; 45 rows and 41 readable summaries after the initial read |
+| Explore → search ADBE → select | Stock page has a direct and embedded research map; 19 records; dated 9/10 close; missing summary is explicit |
+| Follow ADBE → return to Watchlist | 46 rows, the same 41 summaries, no list-wide loading text; ADBE alone has no summary |
+| Switch to English | Same 46 rows / 41 summaries and List-first order |
+| Unfollow test stock → return | Original 45 rows restored; 41 summaries remain; ADBE absent |
+| Manual refresh | 45 rows / 41 summaries remain visible |
+| Stock-row map action | One click opens NVDA map with existing summary, source dates and 9/10 price |
+| ADBE map → creator evidence | Opens the exact video and reviewed passage with a 19:45 original-video link |
+
+The test subscription was removed; all original subscriptions remained. DOM observations
+verify visible behavior; the deferred-request regression separately proves rendering occurs
+before the fresh GET resolves. This was not a physical-phone test or a browser p95 measurement.
+Cold language entry still needs a network read. Backend facts, source review coverage and
+minute-quote continuity are separate acceptance criteria. Some original-source summaries
+remain unavailable; cache preservation does not fabricate or approve them.
