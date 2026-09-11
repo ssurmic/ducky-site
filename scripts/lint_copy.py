@@ -21,7 +21,9 @@ ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
 I18N = ROOT / "i18n"
 
-BANNED = re.compile(r"ALL-IN|买这只|目标价|满仓|buy now|现在买|建议买入", re.IGNORECASE)
+# Owner-approved product descriptor (2026-09-10), not a trading instruction.
+# Keep the exception limited to the complete requested phrase.
+BANNED = re.compile(r"ALL-IN(?!-One Daily Stock Analysis Tool\b)|买这只|目标价|满仓|buy now|现在买|建议买入", re.IGNORECASE)
 # §5.1 brand + "how we describe the tech" rules — separate from the compliance strings above. The product is
 # "Ducky Bot" (owner correction, 2026-09-07); the tech is "AI-backed / AI 驱动" and nothing more; no competitor names. vendor/ is skipped.
 BANNED_IMPL = re.compile(
