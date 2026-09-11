@@ -181,6 +181,10 @@ def make_env() -> Environment:
 def version_assets(html: str, version: str, app_version: str) -> str:
     def replace(match):
         path = match.group(2)
+        # The brand image already has a versioned filename. Keep the favicon URL
+        # stable for search crawlers, and share its cached bytes with the hero/nav.
+        if path == "/duck-head-cutout-v1.png":
+            return match.group(0)
         if path.startswith("/js/app/"):
             path = path.replace("/js/app/", f"/app-assets/{app_version}/", 1)
             return f"{match.group(1)}{path}{match.group(3)}"
@@ -643,8 +647,7 @@ def main() -> None:
     for name in BRAND_ASSETS:
         if not (DIST / name).is_file():
             fail(f"brand asset public/{name} missing from dist/ (SYSTEMDESIGN §5.1 avatar rule)")
-    # favicon.svg is the legacy fallback path: always the same bytes as mascot.svg
-    shutil.copyfile(DIST / "mascot.svg", DIST / "favicon.svg")
+    # Legacy favicon paths redirect to the same fluffy homepage duck in _redirects.
     font = PUBLIC / "fonts" / "JetBrainsMono-sub.woff2"
     if not font.exists():
         print("build.py: note: public/fonts/JetBrainsMono-sub.woff2 missing — system mono fallback "

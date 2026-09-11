@@ -16,8 +16,11 @@ truth; this one only points at it.
   "AI-backed / AI 驱动 / AI 引擎" only — no model, hardware, storage or competitor names in user-facing copy.
 - The 🌊 liquidity receipt card + `/track-record/#liquidity` render from `public/receipts/liquidity-2026.json` and
   `liquidity-score-2026.csv` at build time (`build.py: load_liquidity`, `tf()` = `t()` + `str.format`).
-- Brand mark: `public/avatar-group.jpg` circle-cropped (`.avatar-mark`, neon-green halo) in nav / hero / app header;
-  `public/mascot.svg` for favicon, OG (`public/og.svg`), 404 and empty states. `favicon.svg` is a copy of `mascot.svg`.
+- Brand mark: `public/duck-head-cutout-v1.png` is the owner's fluffy green homepage duck,
+  shared by nav, hero, app, favicon and installation icons. Keep its versioned filename URL
+  stable (no per-release query); legacy `/favicon.ico`, `/favicon.svg` and `/favicon.png`
+  redirect to it. Do not regenerate favicon.svg from the older vector mascot. A future
+  changed brand image needs a new versioned filename and coordinated reference updates.
 - **No third-party scripts on the landing.** CSP is `script-src 'self' https://telegram.org` (only the Login
   Widget in `/app/` is whitelisted). No analytics, no fonts from Google, no CDN. Everything is self-hosted.
 - No inline `<script>` (CSP has no `'unsafe-inline'` for scripts). Inline `style=""` is allowed.
