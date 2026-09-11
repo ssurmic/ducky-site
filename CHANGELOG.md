@@ -8,6 +8,10 @@ is introduced. All 669 frontend tests and 12 bilingual/theme viewport checks
 passed; publication is pending.
 [Bug and acceptance](reports/MAP-SOURCE-RETURN-2026-09-10.md).
 
+## 2026-09-10 · Daily stock analysis and financial creator aggregation
+
+Homepage search/share titles now use the owner’s daily stock analysis positioning. Both descriptions explain financial creator aggregation with original sources. The copy check permits only the full approved English descriptor while retaining the trading-call bans. [Validation and release](reports/SEARCH-POSITIONING-2026-09-10.md).
+
 ## Read sources in the stock page · 2026-09-10 (deployed)
 
 Map cards open their saved evidence in place, with the original source first and a stock-scoped

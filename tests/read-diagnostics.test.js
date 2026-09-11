@@ -9,7 +9,9 @@ test('diagnostics retain bounded numeric receipts and matching IDs without priva
    elapsed_ms:18,server_ms:4,trace_id:'a'.repeat(32),token:'private-token',ticker:'NVDA',user_id:999,body:'source text',url:'/private?secret=x'});
   const events=recent();assert.equal(events.length,100);
   assert.equal(events.at(-1).trace_id,'a'.repeat(32));assert.equal(events.at(-1).server_ms,4);
-  assert.doesNotMatch(JSON.stringify(events),/private-token|NVDA|999|source text|secret/);
+  // A legitimate timestamp can end in .999Z; check the private field itself.
+  for(const event of events) for(const key of ['token','ticker','user_id','body','url']) assert.equal(Object.hasOwn(event,key),false);
+  assert.doesNotMatch(JSON.stringify(events),/private-token|NVDA|source text|secret/);
   record('failure',{resource:'watchlist',reason:'provider secret',trace_id:'token-in-header'});
   assert.equal(recent().at(-1).reason,undefined);assert.equal(recent().at(-1).trace_id,undefined);
   assert.equal(resource('/me/profile'),null);assert.equal(resource('/evidence/NVDA?version=history'),null);
