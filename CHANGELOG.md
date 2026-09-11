@@ -1,8 +1,8 @@
 # Change log
 
-## Watchlist removal and capacity · 2026-09-11 (local verified)
+## Watchlist removal and capacity · 2026-09-11 (deployed)
 
-Select stocks with left-side checkboxes, review selected tickers and remove them together. Full accounts see their limit and how to free space before adding. Failed removals remain selected for retry; confirmed removals release slots immediately. 694 frontend tests and bilingual phone checks passed. [Acceptance and release](reports/WATCHLIST-SELECTION-2026-09-11.md).
+Select stocks with left-side checkboxes, review selected tickers and remove them together. Full accounts see their limit and how to free space before adding. Failed removals remain selected for retry; confirmed removals release slots immediately. 694 frontend tests and bilingual phone checks passed. PR42 / main `5c86ada1` / Pages `b2489ad9` passed CI, asset verification and signed-in EN/ZH selection checks. [Acceptance and release](reports/WATCHLIST-SELECTION-2026-09-11.md).
 
 ## Today navigation and expandable stock analyses · 2026-09-11 (deployed)
 

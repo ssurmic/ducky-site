@@ -1,6 +1,6 @@
 # Watchlist selection and capacity · 2026-09-11
 
-Status: local implementation and regression checks complete; publication receipt to follow.
+Status: deployed and verified in the signed-in production app.
 
 ## Problem and behavior
 
@@ -25,4 +25,8 @@ Deletion uses the existing idempotent DELETE endpoint, sequentially and only for
 
 ## Release / rollback
 
-Pending publication. Baseline main before this change: 2853d67; prior production Pages: 2308f071. Reverting this change restores the previous list, retaining server membership.
+Published via PR42, merge `5c86ada199807308ebb0218a272640a3c2def404`, Pages `b2489ad9`, app graph `e23c9971cde64aa70769`. Final PR CI `34631849510` and exact-main CI `34632038238` passed. Eight production HTTP checks passed: root/EN/ZH app shells match after removing the existing host-injected Cloudflare beacon, and versioned CSS plus changed modules match byte for byte. This change does not configure analytics.
+
+Signed-in EN/ZH production QA confirmed 50/50, 50 stock checkboxes plus select-all, the proactive limit note, and disabled add actions. Individual selection enabled Remove selected (1); select-all displayed Remove selected (50). Both were cleared successfully, leaving membership at 50 and the session intact. At 390×650 there was no document overflow and checkbox targets measured 44×44. No production membership write was made. The language toggle had a normal asynchronous membership read; initial 3-second locator waiting expired, then the completed page passed.
+
+Baseline main before this change: 2853d67; prior production Pages: 2308f071. Reverting this change restores the previous UI, retaining server membership.
