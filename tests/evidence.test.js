@@ -57,6 +57,34 @@ test('focused map checks a creator in place, retaining the stock, original segme
   assert.match(root.querySelector('.evidence-author-heading a').href,/ticker=AVGO&creator=source-author/);
  }finally{closeModal();root?.dispose();root?.remove();window.DUCKY=previous;}
 });
+test('direct source links retain stock context when returning to the creator, including retained link aliases',async()=>{
+ const previous=window.DUCKY;
+ try{
+  for(const compact of [true,false])for(const identity of ['node','id','point_id','legacy_claim_id','source_record_id']){
+   store.bumpEpoch();store.set('me',{tier:'pro',user_id:8888});
+   window.DUCKY={...previous,PRODUCT_FOCUS_ENABLED:compact};
+   const doc=fixture(),node=doc.nodes[0],calls=[];
+   node.evidence[0]={...node.evidence[0],creator_id:'source-author',post_id:'abcdefghijk',
+    point_id:'claim:current',id:'source-record',legacy_claim_id:'legacy:old',source_record_id:'record:old'};
+   doc.nodes=[node];
+   const sourceId=identity==='node'?node.id:node.evidence[0][identity];
+   globalThis.fetch=async(url,options)=>{
+    assert.equal(options.method,'GET');assert.equal(url,'/evidence/AVGO');calls.push(url);return response(doc);
+   };
+   const root=document.createElement('main');document.body.append(root);
+   let cleanup;
+   try{
+    cleanup=await mount(root,{ticker:'AVGO',query:new URLSearchParams({source:sourceId})});
+    const dialog=document.querySelector('[role="dialog"]');assert.ok(dialog,identity);
+    const href=dialog.querySelector('a[href^="#/creators"]').getAttribute('href');
+    assert.equal(href,'#/creators?scope=discover&ticker=AVGO&creator=source-author&post=abcdefghijk&point=claim%3Acurrent');
+    assert.equal(safeTarget(href+'&token=discarded'),href);
+    assert.equal(dialog.querySelector('[data-reading-ticker]').dataset.readingTicker,'AVGO');
+    assert.deepEqual(calls,['/evidence/AVGO'],'source opening does not fetch creator data or regenerate research');
+   }finally{cleanup?.();closeModal();root.remove();}
+  }
+ }finally{window.DUCKY=previous;store.bumpEpoch();store.set('me',null);}
+});
 test('historical ownership direction stays consistent across badge, filter, source and dates',()=>{
  const doc=fixture();doc.ticker='VST';doc.nodes=[{id:'exercise',kind:'record',stance:'support',
   title:{en:'Spouse exercised calls to acquire 5,000 VST shares'},published_at:'2026-01-23',

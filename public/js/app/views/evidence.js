@@ -397,7 +397,7 @@ export async function mount(root,route={}){
       const sourceId=!version?route.query?.get('source'):null;
       if(sourceId){
         const target=doc.nodes.find(n=>n.id===sourceId||(n.evidence||[]).some(e=>[e.id,e.point_id,e.legacy_claim_id,e.source_record_id].includes(sourceId)));
-        if(target)detail(target);else host.prepend(el('p.data-notice',s('evidence.linked_missing')));
+        if(target)detail(target,{readingTicker:doc.ticker});else host.prepend(el('p.data-notice',s('evidence.linked_missing')));
       }
       const historyPanel=el('div.evidence-history');let cursor=null;
       const historyButton=el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:async()=>{

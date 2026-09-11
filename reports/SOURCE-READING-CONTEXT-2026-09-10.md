@@ -1,6 +1,6 @@
 # Read a map source without losing the stock · 2026-09-10
 
-Status: implemented; final CI and production acceptance pending.
+Status: deployed; exact-main CI, public assets and bilingual production reading checks passed.
 
 The live UBER stock map opened a single creator card by navigating to the full
 creator workspace. The destination preserved its point ID but omitted the stock
@@ -50,4 +50,34 @@ verbatim `if if` condition and a figurative UBER paraphrase; the source context 
 be reviewed before changing either. No retries, budgets, cooldowns or source
 approvals were reset. This UI fix does not certify those summaries as recovered.
 
-Release and actual bilingual production checks will be appended after observation.
+## Release and production acceptance
+
+PR [35](https://github.com/ssurmic/ducky-site/pull/35), implementation `2babac54`,
+merged main `0a754d8fb6ea8a34d71d86867682a8480eeb86f4`.
+PR CI `34557203335` and exact-main CI `34557326944` passed.
+Pages `ef8e64f3`, graph `c9905f1e1dec77d9441f`: the public release manifest,
+evidence module and creator-route module byte-match the built release.
+[Asset receipt](source-reading-context-20260910/pages-verification.json).
+Rollback target: previous Pages `2811c752` / main `0cd9fa23`.
+
+Actual EN and ZH UBER checks after publication stayed on `#/stock/UBER` when the
+Meet Kevin card was opened. Original source links use video `xRKScH37m9A` at
+445 seconds; the dialog preserves publication/collection/retrieval dates and the
+7:25–7:34 passage. The secondary creator link retains UBER, creator, post and exact
+point. Escape closes both language dialogs and restores the clicked card's focus.
+The stock page displayed the 2026-09-10 close and 17 records, while explicitly
+showing the unavailable analysis. No follow/unfollow or source content was changed.
+
+The already-open English tab initially still ran the prior loaded JavaScript;
+changing only its hash did not load the new release. Reloading the document loaded
+the verified release and the new behavior. This check does not claim that existing
+tabs hot-swap their running code without a reload.
+
+## Operational boundary
+
+At 20:14 PDT, a read-only DGX check confirmed independent systemd scheduling.
+The market quote and watchlist price jobs had successfully exited; video ASR/model
+queue units were starting, while backup had completed at 19:34. These observations
+are job status, not proof that every source or summary is delivered. Production
+scheduling does not require a continuously running development agent. The local
+synthetic preview is stopped at closeout; production timers are left unchanged.
