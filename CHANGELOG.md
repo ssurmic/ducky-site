@@ -1,8 +1,8 @@
 # Change log
 
-## Today navigation and expandable stock analyses · 2026-09-11 (validated locally)
+## Today navigation and expandable stock analyses · 2026-09-11 (deployed)
 
-The signed-in duck returns to Watchlist. Today orders stock analyses by their actual update dates, exposes the complete list, and supports per-record expansion with sources. Both languages and phone themes are covered. [Acceptance and release](reports/TODAY-NAVIGATION-2026-09-11.md).
+The signed-in duck returns to Watchlist. Today orders stock analyses by their actual update dates, exposes the complete list, and supports per-record expansion with sources. 685 tests, both languages and phone themes passed. PR41 / main `e0457434` / Pages `2308f071` are live. [Acceptance and release](reports/TODAY-NAVIGATION-2026-09-11.md).
 
 ## Group repeated creator wording · 2026-09-10 (deployed)
 

@@ -1,6 +1,6 @@
 # Today navigation and disclosures · 2026-09-11
 
-Status: local implementation and acceptance complete; publication receipt pending.
+Status: deployed and verified in the signed-in production app.
 
 ## Changes
 
@@ -24,3 +24,9 @@ The Today layout adds a dated heading, distinct update/analysis sections, compac
 ## Publication and rollback
 
 Previous production: source `a3c16e71`, Pages `d67bd897-bd1b-4ab2-8ba1-9f0a6b435cb3`. Only the frontend requires release. No database migration, backend deployment or investment algorithm change is involved.
+
+Published through PR41, merge `e0457434a835e22ac9ad7296a7a6924bc7e8abaf`, Pages `2308f071`. PR CI `34577395976` and exact-main CI `34577557292` passed. Production serves app graph `06fff310cec2056a30be`. Six HTTP checks passed against the release build; the three HTML shells differ only by an existing Cloudflare-injected beacon, while versioned CSS and modules match byte for byte. This change does not configure analytics.
+
+The real signed-in page previously exposed three analyses and linked the brand to `/zh/`. After release it shows five analyses initially, with a complete-list control; expansion reveals every returned stock and source citations. Clicking the duck returns to Watchlist while signed in, and returning to Today restores the expanded list and row. No watchlist, subscription, credential, notification or research record was modified during browser acceptance.
+
+English production acceptance also confirmed the localized Show all control and a signed-in brand click returning to Watchlist.

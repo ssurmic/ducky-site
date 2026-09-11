@@ -1,0 +1,55 @@
+{
+  "source": "e0457434a835e22ac9ad7296a7a6924bc7e8abaf",
+  "deployment": "2308f071",
+  "app_graph": "06fff310cec2056a30be",
+  "checks": [
+    {
+      "path": "app/",
+      "status": 200,
+      "raw_matches_build": false,
+      "matches_build_excluding_edge_beacon": true,
+      "edge_beacons": 1,
+      "sha256": "97b5b312ce5e1c772b1a1f9739e63eb2b75e7875230a4f752b52c8cd33019cf1"
+    },
+    {
+      "path": "en/app/",
+      "status": 200,
+      "raw_matches_build": false,
+      "matches_build_excluding_edge_beacon": true,
+      "edge_beacons": 1,
+      "sha256": "97b5b312ce5e1c772b1a1f9739e63eb2b75e7875230a4f752b52c8cd33019cf1"
+    },
+    {
+      "path": "zh/app/",
+      "status": 200,
+      "raw_matches_build": false,
+      "matches_build_excluding_edge_beacon": true,
+      "edge_beacons": 1,
+      "sha256": "84b335d6d78d7fa39734626447edecaa17636f84f8ea67546e34a23ff302ee30"
+    },
+    {
+      "path": "app-assets/06fff310cec2056a30be/views/today.js",
+      "status": 200,
+      "raw_matches_build": true,
+      "matches_build_excluding_edge_beacon": true,
+      "edge_beacons": 0,
+      "sha256": "ed6de5ebd72b7a5015d59a3dccc431ce46e26fe5af4443a4aabf01953d5e220b"
+    },
+    {
+      "path": "app-assets/06fff310cec2056a30be/navigation.js",
+      "status": 200,
+      "raw_matches_build": true,
+      "matches_build_excluding_edge_beacon": true,
+      "edge_beacons": 0,
+      "sha256": "a08797540e0171911beddb4a46ecc9fc27173c5b59a35eaf3706fc8e8f32645a"
+    },
+    {
+      "path": "css/product-focus.css?v=e0457434",
+      "status": 200,
+      "raw_matches_build": true,
+      "matches_build_excluding_edge_beacon": true,
+      "edge_beacons": 0,
+      "sha256": "ffe3dd83af1133a56b1bf293478fc1370f3b513e6cb4d6c1d8c3b7635bd84c4f"
+    }
+  ]
+}
