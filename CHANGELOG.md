@@ -1,5 +1,30 @@
 # Change log
 
+## Creators open on their latest views; insider column reads local Form 4 records · 2026-09-12 (branch `codex/creators-latest-views-20260912`)
+
+Owner feedback on the live app: the creators page made you pick a creator first and listed videos whose
+summary was still being prepared ("no full summary yet", "request a summary"); the watchlist showed
+"data pending" for insider buying, option walls and support wherever a stock's brief text was awaiting a
+recheck, even though those are local records.
+
+- **Creators, "My creators"**: the default view is each followed creator's latest views, one line each
+  (stock, direction, the creator's claim, date, video), newest creator first, four lines per creator
+  with the rest behind one disclosure. A line opens the source in a card: the video, its attributed
+  views with the chosen one focused, the full reviewed summary with timestamps, the original video at
+  that moment, and the same exits as before (view history, simulate, research map). The creator's
+  name opens that creator's page as before. No creator picker, no "include unverified" toggle, no
+  "request a summary" button; discovered videos without a reviewed summary are listed nowhere (an
+  exact source link still reaches them with their date and original link).
+- **Watchlist insider column**: read from the archived Form 4 records for exactly the watched stocks
+  (`/radar/archive.json?kind=insider&start=…&tickers=…&fields=signals`, last twelve months, records
+  held for date review skipped). "None" is claimed only on a complete page; the brief's copy of the same
+  filings is the fallback when the archive read fails. Option walls and support now also read a brief's
+  last saved facts while its text is pending (`facts_status: dated`, ducky-bot PR #89), so a pending
+  brief no longer turns three columns into "data pending".
+- Tests: `tests/creator-latest-views.test.js` (new), `watchlist-signals.test.js` extended;
+  `tests/app.test.js` no longer looks for the removed toggle. Nine new `app.creators.*` keys; the four
+  `request_*` keys removed.
+
 ## Quote age, one price per stock, honest 13F pages and a lighter boot · 2026-09-12 (deployed)
 
 Follow-up to the same-day read-path audit ([report](reports/UX-UPGRADE-2026-09-12.md), "Third round").

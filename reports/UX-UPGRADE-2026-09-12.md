@@ -186,6 +186,34 @@ multi-symbol quote endpoint or provider (rotation is ⌈N/50⌉ minutes today); 
 (about 0.86 list reads per second per process); `modulepreload` for the default route's five-level import
 chain; ETag/304 for the shared projections; list virtualization above ~100 rows.
 
+## Fourth round: creators open on views, pending items hidden, insider column from local records (2026-09-12)
+
+Owner feedback on the live app after the third-round release:
+
+- **Creators.** "Don't make me pick a creator; open on their latest views like the watchlist does, one
+  per line, and one more tap gives me the original with its summary." The "My creators" tab now lists
+  every followed creator with their latest attributed views (stock, direction, the creator's own
+  claim, date, video), four per creator with the rest folded, newest creator first; a line opens a
+  card with the video, its views (the chosen one focused), the full reviewed summary with timestamps,
+  the original video at that moment, and the existing exits (view history, simulate, research map).
+  The creator's name opens the creator page as before. The "choose creators" disclosure, the "include
+  unverified records" toggle and the "request a summary" button are gone.
+- **Queued items are not for readers.** Videos discovered but not yet summarised ("no full summary
+  yet", "summary not ready") no longer appear in any list; an exact source link still reaches them
+  with their date and original link. `filterPosts` no longer admits discovered sources without a
+  reviewed summary.
+- **"None" versus "data pending" in the signal columns.** The insider column read the stock brief's
+  copy of Form 4 facts, and a brief awaiting a source recheck (after the 13F backfill, most of the
+  list) carries no facts at all, so insider, option walls and support all read "pending" while the
+  Form 4 records themselves were local and up to date. The column now reads the archived Form 4
+  records for exactly the watched stocks (`kind=insider`, last twelve months, date-review holds
+  skipped); "none" is claimed only when that page is complete; the brief's copy is the fallback.
+  Option walls and support read a brief's last saved facts while its text is pending (backend PR #89,
+  `facts_status: dated`).
+
+Verified with the local mock (creators list, detail card, watchlist columns at 1280 and 375 px) and the
+unit suites; the production creators page needs a signed-in session, which was not used.
+
 ## Validation
 
 - Frontend (third round): 734 tests pass (`npm test`), `lint_copy` and `check_links` OK; backend

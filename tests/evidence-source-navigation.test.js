@@ -15,9 +15,10 @@ const {filterPosts,hasGroundedCalls,hasReviewedSummary}=await import('../public/
 const store=await import('../public/js/app/store.js');
 const tick=()=>new Promise(r=>setImmediate(r));
 
-test('a discovered new upload is visible without being promoted to a reviewed opinion',()=>{
+test('a discovered new upload stays out of every list until reviewed, and is never promoted to an opinion',()=>{
  const post={kol_id:'jin',summary:{quality:'unverified',source:{kind:'metadata',status:'discovered',discovery_version:'creator-discovery-v1',channel_id:'channel'}},tickers:[]};
- assert.equal(filterPosts([post],{following:new Set(['jin']),mine:true,archive:false}).length,1);
+ assert.equal(filterPosts([post],{following:new Set(['jin']),mine:true,archive:false}).length,0);
+ assert.equal(filterPosts([post],{following:new Set(['jin']),mine:true,archive:true}).length,1);   // only an exact source link reaches it
  assert.equal(hasGroundedCalls(post),false);assert.equal(hasReviewedSummary(post),false);
  assert.equal(filterPosts([{...post,summary:{quality:'unverified'}}],{following:new Set(['jin']),mine:true,archive:false}).length,0);
 });
@@ -76,7 +77,7 @@ test('unfollowed old source loads by exact index, focuses expanded point, and sc
  dispose();root.replaceChildren();
  dispose=await mount(root,{query:new URLSearchParams(location.hash.split('?')[1])});
  assert.ok(!root.querySelector('.is-focused-source'));
- assert.match(root.querySelector('.cr-feed').textContent,/Recent post/);
+ assert.match(root.querySelector('.creator-latest-views').textContent,/The creator discusses demand|Recent post/);
  assert.equal(calls.filter(path=>path==='/kol/feed').length,1);
  assert.ok(!location.hash.includes('post='));
  } finally {dispose();root.remove();}

@@ -27,27 +27,32 @@ const gapText=n=>!finite(n)?'':Math.abs(n)<0.05?s('watch.signal_at_price'):s(n<0
 // Strikes are whole or half dollars; print them without a spurious ".00".
 const strike=v=>Number.isInteger(v)?'$'+new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US').format(v):px(v);
 
-// One stock brief (ticker-brief/2): facts carry topic, data, observed_at and source_at.
+const validTxn=t=>finite(t?.price)&&finite(t?.shares)&&t.price>0&&t.shares>0;
+const link=v=>{try{const u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password?u.href:'';}catch{return '';}};
+const owner=o=>({name:o?.name||o?.reporter_name||'',role:o?.role||o?.title||o?.relationship||''});
+// Reported purchases → one insider signal: filings (buyer, role, shares × price, value, link), totals
+// and the volume-weighted price of the purchases (a historical transaction price, not support).
+function insiderFrom(filings,{status='ready',as_of='',complete=true}={}){
+  const purchases=filings.flatMap(f=>f.transactions);
+  const shares=purchases.reduce((sum,t)=>sum+t.shares,0),value=purchases.reduce((sum,t)=>sum+t.price*t.shares,0);
+  const people=filings.flatMap(f=>f.owners);
+  return {status:filings.length?'ready':status,count:filings.length,value,shares,average:shares>0?value/shares:null,filings,
+    latest:newest(filings.map(f=>f.date)),owners:[...new Set(people.map(o=>o.name).filter(Boolean))],
+    roles:[...new Set(people.map(o=>o.role).filter(Boolean))],as_of:as_of||newest(filings.map(f=>f.date)),complete};
+}
+
+// One stock brief (ticker-brief/2): facts carry topic, data, observed_at and source_at. A brief whose
+// own text is pending still ships its last deterministic facts (`facts_status: dated`).
 export function briefSignals(item){
   const facts=Array.isArray(item?.evidence)?item.evidence:null;
   if(!facts)return {insider:{status:'missing'},walls:{status:'missing'},support:{status:'missing'}};
+  const dated=item?.facts_status==='dated';
   const price=facts.find(f=>f.topic==='price')?.data?.price;
   const insiderFacts=facts.filter(f=>f.topic==='reported_insider_purchase');
-  const validTxn=t=>finite(t?.price)&&finite(t?.shares)&&t.price>0&&t.shares>0;
-  const purchases=insiderFacts.flatMap(f=>(f.data?.transactions||[]).filter(validTxn));
-  const link=v=>{try{const u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password?u.href:'';}catch{return '';}};
   const filings=insiderFacts.map(f=>{const txns=(f.data?.transactions||[]).filter(validTxn);
-    return {date:day(f.source_at||f.observed_at),owners:(Array.isArray(f.data?.owners)?f.data.owners:[]).map(o=>({name:o?.name||'',role:o?.role||''})).filter(o=>o.name),
+    return {date:day(f.source_at||f.observed_at),owners:(Array.isArray(f.data?.owners)?f.data.owners:[]).map(owner).filter(o=>o.name),
       transactions:txns.map(x=>({price:x.price,shares:x.shares,date:day(x.date)})),value:txns.reduce((sum,x)=>sum+x.price*x.shares,0),url:link(f.source_url)};});
-  const people=insiderFacts.flatMap(f=>Array.isArray(f.data?.owners)?f.data.owners:[]);
-  const shares=purchases.reduce((sum,t)=>sum+t.shares,0),value=purchases.reduce((sum,t)=>sum+t.price*t.shares,0);
-  const insider={status:insiderFacts.length?'ready':'none',count:insiderFacts.length,value,shares,
-    // Volume-weighted price of the reported purchases; a historical transaction price, not support.
-    average:shares>0?value/shares:null,filings,
-    latest:newest(insiderFacts.map(f=>f.source_at||f.observed_at)),
-    owners:[...new Set(people.map(o=>o?.name).filter(Boolean))],
-    roles:[...new Set(people.map(o=>o?.role).filter(Boolean))],
-    as_of:newest(insiderFacts.map(f=>f.observed_at))};
+  const insider={...insiderFrom(filings,{status:'none',as_of:newest(insiderFacts.map(f=>f.observed_at))}),dated,source:'brief'};
   const options=facts.find(f=>f.topic==='option_concentrations'),w=options?.data||{};
   const walls={status:finite(w.call_wall)||finite(w.put_wall)?'ready':'none',
     call:finite(w.call_wall)?w.call_wall:null,put:finite(w.put_wall)?w.put_wall:null,flip:finite(w.flip)?w.flip:null,
@@ -58,8 +63,28 @@ export function briefSignals(item){
   if(finite(w.put_wall))refs.push({key:'put_wall',value:w.put_wall,gap:gap(w.put_wall,current)});
   if(finite(band.low))refs.push({key:'range_low',value:band.low,gap:gap(band.low,current)});
   const support={status:refs.length?'ready':'none',refs,low:finite(band.low)?band.low:null,high:finite(band.high)?band.high:null,
-    price:current,sessions:finite(band.sessions)?band.sessions:20,as_of:newest([options?.observed_at,position?.observed_at])};
-  return {insider,walls,support};
+    price:current,sessions:finite(band.sessions)?band.sessions:20,as_of:newest([options?.observed_at,position?.observed_at]),dated};
+  return {insider,walls:{...walls,dated},support};
+}
+
+// Archived Form 4 records for exactly the watched stocks (the same local records the insider board
+// reads, scanned every few minutes), so "none" never waits for a brief to be regenerated. Records
+// held for date review are skipped, as the brief does. "None" is only claimed on a complete page.
+export function insiderSignals(doc,{months=12,now=Date.now()}={}){
+  const since=new Date(now-months*30.5*864e5).toISOString().slice(0,10);
+  const rows=(Array.isArray(doc?.items)?doc.items:[]).filter(row=>row?.kind==='insider'&&!row.extra?.facts?.date_review_required&&day(row.ts||row.published_at)>=since);
+  const byTicker=new Map();
+  for(const row of rows){
+    const ticker=String(row.ticker||'').toUpperCase();if(!ticker)continue;
+    const facts=row.extra?.facts||{},txns=(Array.isArray(facts.transactions)?facts.transactions:[]).filter(validTxn);
+    if(!txns.length)continue;
+    const filing={date:day(row.ts||row.published_at),owners:(Array.isArray(facts.owners)?facts.owners:[]).map(owner).filter(o=>o.name),
+      transactions:txns.map(x=>({price:x.price,shares:x.shares,date:day(x.date)})),value:txns.reduce((sum,x)=>sum+x.price*x.shares,0),url:link(row.source_url||row.extra?.source_url)};
+    if(!byTicker.has(ticker))byTicker.set(ticker,[]);
+    byTicker.get(ticker).push(filing);
+  }
+  const loaded=Array.isArray(doc?.items)&&!doc.partial;
+  return {loaded,byTicker,complete:loaded&&!doc.next_cursor,count:rows.length,since};
 }
 
 // Archived 13F records ordered newest first; only reported-share increases or new positions.
@@ -95,19 +120,23 @@ export function fundSignals(doc){
   return {loaded,byTicker,since,count:rows.length,filings:filings.size,complete:loaded&&!doc.next_cursor};
 }
 
-export function buildSignals(briefs,funds,tickers=[]){
+export function buildSignals(briefs,funds,tickers=[],insiders=null){
   const briefItems=new Map((Array.isArray(briefs?.items)?briefs.items:[]).filter(i=>i?.ticker).map(i=>[String(i.ticker).toUpperCase(),i]));
-  const archive=fundSignals(funds);
+  const archive=fundSignals(funds),filings=insiderSignals(insiders);
   const out=new Map();
-  for(const ticker of new Set([...tickers,...briefItems.keys(),...archive.byTicker.keys()])){
-    const fund=archive.byTicker.get(ticker);
-    out.set(ticker,{...briefSignals(briefItems.get(ticker)),
+  for(const ticker of new Set([...tickers,...briefItems.keys(),...archive.byTicker.keys(),...filings.byTicker.keys()])){
+    const fund=archive.byTicker.get(ticker),brief=briefSignals(briefItems.get(ticker));
+    // The archived filings decide the insider column whenever that page loaded; the brief's copy of
+    // the same records is the fallback, so a pending brief never turns "none" into "pending".
+    const insider=filings.loaded?{...insiderFrom(filings.byTicker.get(ticker)||[],{status:filings.complete?'none':'missing',complete:filings.complete}),source:'archive',since:filings.since}:brief.insider;
+    out.set(ticker,{...brief,insider,
       funds:fund?{...fund,since:archive.since,complete:archive.complete,count:archive.count}:
         {status:archive.loaded?'none':'missing',since:archive.since,complete:archive.complete,count:archive.count,adds:[]},
       briefed:briefItems.has(ticker)});
   }
-  out.meta={since:archive.since,count:archive.count,filings:archive.filings,complete:archive.complete,loaded:archive.loaded||briefItems.size>0,
-    as_of:newest([...briefItems.values()].map(i=>i.generated_at||i.checked_at||i.as_of))};
+  out.meta={since:archive.since,count:archive.count,filings:archive.filings,complete:archive.complete,loaded:archive.loaded||briefItems.size>0||filings.loaded,
+    insider_since:filings.since,insider_complete:filings.complete,
+    as_of:newest([...briefItems.values()].map(i=>i.facts_as_of||i.generated_at||i.checked_at||i.as_of))};
   return out;
 }
 
