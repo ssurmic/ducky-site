@@ -1320,7 +1320,7 @@
   "app.register.unsent": "Account created, but the verification email could not be sent. Use “Resend code” on this page.",
   "app.profile.code_label": "Email verification code",
   "privacy.title": "Privacy and your account",
-  "privacy.updated": "Updated September 8, 2026",
+  "privacy.updated": "Updated September 11, 2026",
   "privacy.account_title": "Account information",
   "privacy.account": "Ducky stores your account identifier, login methods, email and its verification status, language, and any profile details you provide. Passwords are stored as salted scrypt hashes, not readable passwords. We use this information to sign you in, recover your account and manage your subscription.",
   "privacy.google_title": "Signing in with Google",
@@ -4234,5 +4234,14 @@
   "app.tour.example_date": "Dated example · Published {date}",
   "privacy.trial_title": "Pro trial and tutorial progress",
   "privacy.trial": "We retain a one-time email claim marker after account deletion to prevent the same email receiving another trial. The marker is protected with a server-held HMAC key; it is not a plain email address. Tutorial progress is deleted with the account. We record step starts, completions, skips and failure categories, without mouse trajectories or source text.",
-  "app.trial.renew_signal": "Renew my existing Signal plan"
+  "app.trial.renew_signal": "Renew my existing Signal plan",
+  "analytics.title": "Help improve Ducky",
+  "analytics.notice": "Allow Google Analytics to measure visits and page use? You can change your choice in Privacy.",
+  "analytics.details": "Details",
+  "analytics.allow": "Allow",
+  "analytics.decline": "No thanks",
+  "analytics.manage": "Change analytics choice",
+  "privacy.analytics_title": "Optional website analytics",
+  "privacy.analytics": "With your permission, Google Analytics measures visits and page use using cookies. Google receives page categories, site language, the referring website, device and browser information, and cookie identifiers. We do not send account identifiers, email addresses, login credentials, watchlists, query strings or research contents. App pages are grouped by section, without stock or record identifiers. Google may process this information outside your country. Your choice and analytics cookies expire after 180 days. You can decline or withdraw permission here; this stops future collection on this browser and removes its analytics cookies, without affecting your Ducky account or deleting data already collected. We do not load the Google tag before you agree, and we do not enable advertising personalization or Google Signals.",
+  "privacy.analytics_google": "How Google uses information from sites that use its services"
 }

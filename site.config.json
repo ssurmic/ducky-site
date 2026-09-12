@@ -2,6 +2,7 @@
   "domain": "duckybot.app",
   "site_url": "https://duckybot.app",
   "google_site_verification": "lXU_klAJbU-flSHyOvoOvSctGjCnH7ZOjtFIQJxlvCQ",
+  "ga4_measurement_id": "",
   "bot": "DuckyduckyTradeBot",
   "miniapp": "app",
   "channel": null,

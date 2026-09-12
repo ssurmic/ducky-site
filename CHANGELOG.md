@@ -1,5 +1,14 @@
 # Change log
 
+## GA4 onboarding · 2026-09-11 (prepared, awaiting account terms)
+
+Prepared consent-gated page views for English, Chinese and app sections, with no raw
+account, query, stock or research data. Refreshes do not duplicate views; declining
+or withdrawing consent stops collection. The measurement ID remains empty, so the
+integration is disabled. Account creation awaits the owner's acceptance of Google's
+terms; no Analytics property, data stream, deployment or received events are claimed.
+[Setup and acceptance state](reports/GA4-ONBOARDING-2026-09-11.md).
+
 ## Bilingual interactive onboarding · 2026-09-11 (deployed)
 
 New verified accounts receive a skippable, animated tour of real stock/map/chart controls,

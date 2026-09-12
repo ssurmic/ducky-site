@@ -31,6 +31,7 @@
 <script src="/vendor/telegram-web-app.js"></script>
 <script src="/vendor/qrcode-generator.min.js" defer></script>
 <script src="/config.js" defer></script>
+{% include "_partials/analytics-head.html" %}
 <script src="/js/glossary.js" defer></script>
 <script src="/vendor/lightweight-charts/lightweight-charts.standalone.production.js" defer></script>
 <script src="/js/lang.js" defer></script>
@@ -117,7 +118,7 @@
   <main class="app-main" id="main" tabindex="-1" data-glossary>
     <p id="profile-reminder" class="profile-reminder" hidden>{{ t('app.profile.recovery_reminder') }} <a href="#/profile">{{ t('app.profile.recovery_action') }}</a></p>
     <div class="app-view" id="view" aria-live="polite"><div class="spinner-row" role="status"><span class="spinner" aria-hidden="true"></span><span class="muted">{{ t('app.common.loading') }}</span></div></div>
-    <p class="app-foot">{% if cfg.get('support_url') %}<a href="{{ cfg.support_url }}" target="_blank" rel="noopener noreferrer">☕ {{ t('nav.coffee') }}</a> · {% endif %}{{ t('app.foot.disclaimer') }} <a href="{{ url('/disclaimer/') }}">{{ t('app.billing.disclaimer_link') }}</a></p>
+    <p class="app-foot">{% if cfg.get('support_url') %}<a href="{{ cfg.support_url }}" target="_blank" rel="noopener noreferrer">☕ {{ t('nav.coffee') }}</a> · {% endif %}{{ t('app.foot.disclaimer') }} <a href="{{ url('/disclaimer/') }}">{{ t('app.billing.disclaimer_link') }}</a> · <a href="{{ url('/privacy/') }}{% if cfg.get('ga4_measurement_id') %}#analytics{% endif %}">{{ t('privacy.title') }}</a></p>
     <noscript><p class="errbox">{{ t('app.noscript') }}</p></noscript>
   </main>
 
@@ -125,5 +126,6 @@
 </div>
 <div id="toasts" aria-live="polite" aria-atomic="false"></div>
 <div id="modal" hidden></div>
+{% include "_partials/analytics-choice.html" %}
 </body>
 </html>

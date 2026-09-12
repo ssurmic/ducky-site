@@ -93,6 +93,8 @@ export async function render() {
   store.set("route", route);
   selectNavigation(route.name, route.params.query);
   document.body.setAttribute("data-route", route.name);
+  // Only the route category crosses into analytics; never pass account/query/stock data.
+  window.dispatchEvent(new window.CustomEvent('ducky:page', { detail: { route: route.name } }));
   clear(root);
   const pageKey=store.epoch()+'|'+location.hash;
   previousPageKey=pageKey;

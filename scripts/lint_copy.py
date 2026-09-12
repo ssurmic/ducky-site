@@ -6,7 +6,8 @@ Checks (exit 1 on any failure):
   2. every element carrying data-winrate also carries data-n="<integer>" (a real N, not a caveat string)
   3. both disclaimer lines exist in dist/index.html and dist/en/index.html (zh + en variants)
   4. no private identifiers leak into the public site (supergroup chat id, personal email, private handles)
-  5. no third-party <script src="http…"> on any page (landing has no third-party scripts)
+  5. no unconditional third-party <script src="http…"> in HTML; the owner-authorized GA4
+     tag is loaded by the first-party analytics bootstrap only after consent
   6. brand + implementation terms banned from user-facing copy (SYSTEMDESIGN.md §5.1): the retired trading-brand name, model /
      hardware / storage names, competitor names — checked everywhere in dist/ except vendor/ and the nightly
      data exports (track-record.json, feed.json, ideas.json)
@@ -234,7 +235,7 @@ def main() -> int:
     n_win = sum(len(TAG_WITH_WINRATE.findall(p.read_text(encoding="utf-8"))) for p in files if p.suffix == ".html")
     print(f"lint_copy: OK — {len(files)} files scanned, 0 banned strings, 0 implementation/brand terms, "
           f"{n_win} win-rate tags all carry an integer data-n, disclaimer lines present in {', '.join(MUST_HAVE_DISCLAIMER)}, "
-          f"no third-party scripts, EN config free of Chinese, ZH config free of untranslated English, no hardcoded CJK in templates")
+          f"no unconditional third-party scripts, EN config free of Chinese, ZH config free of untranslated English, no hardcoded CJK in templates")
     return 0
 
 

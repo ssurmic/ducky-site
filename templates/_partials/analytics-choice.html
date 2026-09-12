@@ -1,0 +1,11 @@
+{% if cfg.get('ga4_measurement_id') %}
+<section id="analytics-choice" class="analytics-choice" aria-labelledby="analytics-title" hidden>
+  <div><h2 id="analytics-title">{{ t('analytics.title') }}</h2>
+    <p>{{ t('analytics.notice') }} <a href="{{ url('/privacy/') }}#analytics">{{ t('analytics.details') }}</a></p>
+  </div>
+  <div class="analytics-actions">
+    <button type="button" data-analytics-choice="denied">{{ t('analytics.decline') }}</button>
+    <button type="button" data-analytics-choice="granted">{{ t('analytics.allow') }}</button>
+  </div>
+</section>
+{% endif %}

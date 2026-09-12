@@ -6,6 +6,12 @@
 {% for key in ['account','google','x','sessions','service','providers','delete'] %}
 <h2>{{ t('privacy.' + key + '_title') }}</h2><p>{{ t('privacy.' + key) }}</p>
 {% endfor %}
+{% if cfg.get('ga4_measurement_id') %}
+<h2 id="analytics">{{ t('privacy.analytics_title') }}</h2>
+<p>{{ t('privacy.analytics') }}</p>
+<p><a href="https://policies.google.com/technologies/partner-sites" rel="noopener noreferrer">{{ t('privacy.analytics_google') }}</a></p>
+<button class="btn btn-ghost" type="button" data-analytics-manage>{{ t('analytics.manage') }}</button>
+{% endif %}
 {% if cfg.trial_access %}<h2>{{ t('privacy.trial_title') }}</h2><p>{{ t('privacy.trial') }}</p>{% endif %}
 <p>{{ t('privacy.contact') }}: <a href="{{ tg('privacy') }}" rel="noopener">@{{ cfg.bot }}</a></p>
 <p><a href="{{ url('/') }}">{{ t('disc.back') }}</a></p>

@@ -1320,7 +1320,7 @@
   "app.register.unsent": "账号已创建，但验证码邮件未能发出。请在此页面重新发送验证码。",
   "app.profile.code_label": "邮箱验证码",
   "privacy.title": "隐私与账号数据",
-  "privacy.updated": "更新于 2026 年 9 月 8 日",
+  "privacy.updated": "更新于 2026 年 9 月 11 日",
   "privacy.account_title": "账号信息",
   "privacy.account": "Ducky 保存账号标识、登录方式、邮箱及验证状态、语言，以及你填写的资料。密码以加盐 scrypt 哈希保存，不保存可读取的明文密码。这些信息用于登录、找回账号和管理订阅。",
   "privacy.google_title": "使用 Google 登录",
@@ -4234,5 +4234,14 @@
   "app.tour.example_date": "带日期的示例 · 发表时间 {date}",
   "privacy.trial_title": "Pro 试用和引导进度",
   "privacy.trial": "账号删除后，我们保留一次性的邮箱领取标记，用于防止同一邮箱重复领取试用。标记使用服务端持有的 HMAC 密钥保护，不保存为明文邮箱。引导进度随账号删除。我们记录步骤开始、完成、跳过和失败类别，不采集鼠标轨迹或原文内容。",
-  "app.trial.renew_signal": "续费原有 Signal 套餐"
+  "app.trial.renew_signal": "续费原有 Signal 套餐",
+  "analytics.title": "帮助改进 Ducky",
+  "analytics.notice": "允许 Google Analytics 统计访问量和页面使用情况吗？你可以随时在隐私页面更改选择。",
+  "analytics.details": "了解详情",
+  "analytics.allow": "允许",
+  "analytics.decline": "暂不允许",
+  "analytics.manage": "更改访问统计设置",
+  "privacy.analytics_title": "可选的网站访问统计",
+  "privacy.analytics": "经你同意后，Google Analytics 使用 Cookie 统计访问量和页面使用情况。Google 会收到页面类别、网站语言、来源网站、设备与浏览器信息，以及 Cookie 标识。我们不发送账号标识、邮箱、登录凭据、自选股、网址查询参数或研究正文。应用内页面按功能分组，不包含股票或记录标识。Google 可能在你所在国家以外处理这些信息。你的选择和统计 Cookie 在 180 天后过期。你可以在此拒绝或撤回同意，停止此浏览器后续的统计并清除统计 Cookie；这不会影响 Ducky 账号，也不会删除已经收集的数据。在你同意前，我们不会加载 Google 统计代码，也不会启用广告个性化或 Google Signals。",
+  "privacy.analytics_google": "Google 如何使用来自其合作网站的信息"
 }

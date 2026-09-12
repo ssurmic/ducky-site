@@ -86,6 +86,8 @@ def load_config(api_base: str | None) -> dict:
     for key in ("domain", "site_url", "bot", "miniapp", "api_base", "prices"):
         if key not in cfg:
             fail(f"site.config.json missing '{key}'")
+    if cfg.get('ga4_measurement_id') and (not isinstance(cfg['ga4_measurement_id'], str) or not re.fullmatch(r'G-[A-Z0-9]+', cfg['ga4_measurement_id'])):
+        fail('ga4_measurement_id must be a public GA4 measurement ID or empty to disable analytics')
     p = cfg["prices"]
     for tier in ("signal", "pro"):
         m, a = p[tier]["monthly_usd"], p[tier]["annual_usd"]
@@ -560,6 +562,8 @@ def write_config_js(cfg: dict, version: str, filename: str = 'config.js') -> Non
         "RESEARCH_BRIEF_ENABLED": cfg.get("research_brief_preview") is True,
         "PRODUCT_FOCUS_ENABLED": cfg.get("product_focus") is True,
         "SHARED_STOCK_BRIEFS_ENABLED": True,
+        "GA4_MEASUREMENT_ID": cfg.get("ga4_measurement_id", ""),
+        "GA4_ORIGIN": cfg["site_url"],
     }
     body = json.dumps(data, ensure_ascii=False, indent=2)
     (DIST / filename).write_text(
