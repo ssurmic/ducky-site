@@ -314,3 +314,10 @@ body:has(.focus-nav) .watch-modes .btn{min-width:44px;}
 
 .app-release-update:not([hidden]){display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 20px;padding:10px 14px;border:1px solid var(--border,#293747);border-radius:12px;font-size:14px;flex-wrap:wrap}
 .app-release-update button{flex-shrink:0}
+
+/* Older-source revisions stay readable but do not lead the period feed. */
+.change-older{margin-top:14px;border-top:1px solid var(--border);padding-top:10px}
+.change-older>summary{cursor:pointer;color:var(--muted);font-size:.92rem;list-style:none;display:flex;align-items:center;gap:8px}
+.change-older>summary::before{content:'';width:0;height:0;border:5px solid transparent;border-left-color:currentColor;transition:transform .15s}
+.change-older[open]>summary::before{transform:rotate(90deg)}
+.change-older>p{margin:6px 0 10px}

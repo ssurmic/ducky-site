@@ -4034,6 +4034,8 @@
   "app.focus.record_revised": "Revised record",
   "app.focus.earlier_content": "Earlier content added",
   "app.focus.coverage_added": "New to our coverage",
+  "app.focus.older_updates": "Older sources updated ({count})",
+  "app.focus.older_updates_note": "Sources published before this period whose records changed recently.",
   "app.focus.record_added": "New research",
   "app.focus.unavailable_detail": "This record is no longer part of the current evidence. Open the stock for the latest sources.",
   "app.focus.source_published": "Source published {date}",

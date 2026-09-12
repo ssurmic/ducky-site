@@ -482,3 +482,23 @@ test('a quote-only map refresh preserves open author groups; source changes stil
  dispose();
  const late={...update,accepted:false};root.dispatchEvent(new window.CustomEvent('ducky:shared-read',{detail:late}));assert.equal(late.accepted,false);
 });
+
+test('Today leads with sources published in the period and folds older revised records under one disclosure',async()=>{
+ const root=setup();
+ const fresh={...change(1),published_at:new Date().toISOString().slice(0,10)};
+ const old={...change(2),kind:'revised',published_at:'2026-04-30'};
+ globalThis.fetch=async input=>{const url=new URL(input,'https://ducky.test');
+  if(url.pathname==='/me/stock-research')return Response.json({items:[item()]});
+  return Response.json({items:[old,fresh],next_cursor:null});};
+ const dispose=await today.mount(root);
+ assert.equal(root.querySelectorAll('.today-updates > .change-list > .change-card').length,1);
+ assert.match(root.querySelector('.today-updates > .change-list').textContent,/New research/);
+ const older=root.querySelector('.change-older');
+ assert.equal(older.hidden,false);assert.equal(older.open,false);
+ assert.match(older.querySelector('summary').textContent,/Older sources updated \(1\)/);
+ assert.equal(older.querySelectorAll('.change-card').length,1);assert.match(older.textContent,/Revised record/);
+ assert.equal(today.isFreshChange({published_at:'2026-04-30'},dayWindow(new Date(),7).since),false);
+ assert.equal(today.isFreshChange({published_at:new Date().toISOString()},dayWindow(new Date(),1).since),true);
+ assert.equal(today.isFreshChange({published_at:null},dayWindow().since),false);
+ dispose();
+});

@@ -1,5 +1,14 @@
 # Change log
 
+## Today leads with sources published in the period · 2026-09-12
+
+The research-updates feed on Today and Explore is ordered by record availability, so a re-projected
+Form 4 from April rendered as "Revised record" at the top of "Past 7 days" and a fresh video sat
+below it. `views/today.js` now keeps a record in the main feed only when its source was published
+inside the selected period (`isFreshChange`, calendar-day comparison in the viewer's zone) and folds
+the rest under one closed disclosure, "Older sources updated (N)", with a one-line note; pagination
+keeps filling both. No request or API change. Test in `tests/product-focus.test.js`.
+
 ## One gated release path for the Direct Upload Pages project · 2026-09-12 (deployed)
 
 `scripts/deploy_pages.sh` publishes the reviewed `main` tip: it refuses unless HEAD equals
