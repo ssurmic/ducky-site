@@ -128,6 +128,10 @@ export async function mountResearch(root, selection) {
       const stances=new Set(group.rows.filter(r=>r.post.published_at===latestPost.published_at).map(r=>normalizedStance(r.call.stance)));
       if(stances.size>1)summary.append(el('span.small.muted.study-group-mixed',s('creators.same_time_mixed')));
       if(latestCall.condition_text||latestCall.conditional||latestCall.intent==='conditional')summary.append(el('span.small.study-group-conditional',s('creators.conditional_view')));
+      // A settled 20-session result reads on the closed card too, in the same color grammar as the rows.
+      const latestWindow=latestCall.price_context?.publication_20;
+      if(latestWindow?.status==='ready'&&Number.isFinite(latestWindow.ret))summary.append(el('span.study-group-result',{class:latestWindow.ret<0?'neg':latestWindow.ret>0?'pos':''},
+        el('span.small.muted',s('creators.twenty_day_result')),el('strong.mono',pct(latestWindow.ret))));
       summary.append(eventPriceSnapshot(latestCall.price_context),el('span.study-group-expand',
         el('span',s('creators.group_views',{n:group.rows.length})),el('span',{'aria-hidden':'true'},'⌄')));
       const body=el('div.study-group-views');wrapper.append(summary,body);
@@ -158,6 +162,9 @@ export async function mountResearch(root, selection) {
         row.append(el('p.study-window',s('creators.twenty_day_result')+' ',el('strong.mono',{class:out.ret<0?'neg':out.ret>0?'pos':''},pct(out.ret))));
       }
       if(status!=='ready')row.append(el('p.study-status',s(status==='pending'?'creators.twenty_day_pending':'creators.status_'+status)));
+      // Verified directional views can be taken straight into the simulator, pre-selected.
+      if(selection?.onSimulate&&['bull','bear'].includes(stance)&&call.comparison_eligible!==false)
+        row.append(el('button.btn.btn-ghost.btn-sm.study-simulate',{type:'button',onclick:()=>selection.onSimulate(post,call)},s('creatorlab.simulate_post')));
       const evidence=el('div.cr-evidence',
         call.evidence?el('blockquote',call.evidence):el('p.small.muted',s('creatorclaim.source_link')),
         el('p.muted.small',s('creators.version_recorded')+' '+dateTime(post.recorded_at)));

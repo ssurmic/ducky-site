@@ -409,3 +409,12 @@ test('all fifty watched stocks remain reachable through the visible selector wit
  assert.equal(document.querySelector('.modal-body'),null);assert.equal(requests,1);
  cleanup();root.remove();
 });
+
+test('syncing the account selection on mount does not fetch the same map twice',async()=>{
+ store.set('me',{tier:'free',experience:{evidence:{selected:[],cap:3}}});const calls=[];
+ globalThis.fetch=async url=>{calls.push(String(url));return response(String(url)==='/me/evidence'?{selected:['AVGO']}:fixture());};
+ const root=document.createElement('div');document.body.append(root);const cleanup=await mount(root,{ticker:'AVGO'});
+ assert.deepEqual(calls,['/me/evidence','/evidence/AVGO']);
+ assert.deepEqual(store.get('me').experience.evidence.selected,['AVGO']);
+ cleanup();root.remove();
+});

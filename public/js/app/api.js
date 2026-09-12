@@ -7,6 +7,25 @@ import * as readCache from './read-cache.js';
 import {resource,record} from './read-diagnostics.js';
 export {record as readDiagnostic} from './read-diagnostics.js';
 export const peek=path=>{const value=readCache.peek(path);record(value?'cache_hit':'cache_miss',{resource:resource(path)});return value;};
+export const peekAt=path=>readCache.peekAt(path);
+// Re-announce a read the session already holds, so the mounted page's shared
+// revalidation tracks that path without a second network round trip.
+export function announceRead(path,value,options={auth:true}){for(const fn of readObservers){try{fn(path,value,options);}catch{}}}
+// The boot sequence reads /watchlist; the first page mounted after it may reuse that response
+// (once per session epoch, only while it is seconds old). Every later entry revalidates, as the
+// read cache promises. Returns {value, at} or null.
+const bootReads=new Map();
+export function bootRead(path,maxAge=10000){
+  const epoch=store.epoch();
+  if(bootReads.get(path)===epoch)return null;
+  bootReads.set(path,epoch);
+  const at=readCache.peekAt(path);
+  if(at===null||Date.now()-at>maxAge)return null;
+  const value=readCache.peek(path);
+  if(!value)return null;
+  announceRead(path,value);
+  return {value,at};
+}
 let requestSequence=0;
 
 export class ApiError extends Error {
@@ -243,6 +262,8 @@ export const kol = {
   mine: () => get("/me/kols"),
   sub: (id) => post("/kol/" + encodeURIComponent(id) + "/sub", {}),
   unsub: (id) => del("/kol/" + encodeURIComponent(id) + "/sub"),
+  // Pro: ask for this creator's pending summaries; the server applies its own cooldown (429).
+  analyze: (id, opts) => post("/kol/" + encodeURIComponent(id) + "/analyze", {}, opts),
 };
 export const signals = {
   // shared firehose boards (Radar) — public, compliance-scrubbed, filterable by kind CSV

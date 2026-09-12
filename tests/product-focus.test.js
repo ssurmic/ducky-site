@@ -235,7 +235,9 @@ test('old and unavailable content cannot appear as current quoted statements',()
 
 test('Today search reaches the backend, preserves pagination and performs no per-card requests',async()=>{
  const root=setup(),calls=[];
- globalThis.fetch=async(input,options)=>{const url=new URL(input,'https://ducky.test');calls.push([url,options.method]);
+ globalThis.fetch=async(input,options)=>{const url=new URL(input,'https://ducky.test');
+  // The saved-quote decoration read is not a per-card request.
+  if(url.pathname!=='/watchlist')calls.push([url,options.method]);
   if(url.pathname==='/me/stock-research')return Response.json({items:[item()]});
   return Response.json({items:[change(url.searchParams.has('q')?99:1)],next_cursor:url.searchParams.has('before')?null:'next'});
  };
@@ -336,7 +338,7 @@ const sharedUpdate=(root,path,value)=>{
 };
 test('shared watchlist updates preserve reading focus and filters, and never restore removed stocks',async()=>{
  const root=setup();let reads=0;
- globalThis.fetch=async url=>{reads++;return Response.json(url==='/me/stock-research'?{items:[{ticker:'NVDA',status:'pending'}]}:
+ globalThis.fetch=async url=>{if(!/^\/(briefing|radar)\//.test(url))reads++;return Response.json(url==='/me/stock-research'?{items:[{ticker:'NVDA',status:'pending'}]}:
   {items:['NVDA'],overview:{items:[{ticker:'NVDA',price:100}]}});};
  const dispose=await watch.mount(root);const filter=root.querySelector('.watch-filter');filter.value='nvd';filter.dispatchEvent(new window.Event('input'));
  root.querySelector('[data-map-open]').focus();
@@ -348,7 +350,7 @@ test('shared watchlist updates preserve reading focus and filters, and never res
 
 test('Today adopts a completed summary without rerunning searches, and withholds withdrawn text',async()=>{
  const root=setup();let reads=0;
- globalThis.fetch=async url=>{reads++;return Response.json(url==='/me/stock-research'?{watchlist_count:1,items:[{ticker:'NVDA',status:'pending'}]}:{items:[change()],next_cursor:null});};
+ globalThis.fetch=async url=>{if(url!=='/watchlist')reads++;return Response.json(url==='/me/stock-research'?{watchlist_count:1,items:[{ticker:'NVDA',status:'pending'}]}:{items:[change()],next_cursor:null});};
  const dispose=await today.mount(root);assert.ok(root.querySelector('.focus-latest .stock-open'));
  const search=root.querySelector('input[type=search]');search.value='my unsubmitted search';search.focus();
  assert.ok(sharedUpdate(root,'/me/stock-research',{items:[item()]}));assert.equal(document.activeElement,search);
@@ -363,7 +365,7 @@ test('Today sorts the full stock list by analysis time and exposes every stock w
  const items=['AAPL','AEHR','ALAB','AMD','GLW','NVDA','TSLA'].map((ticker,i)=>({...item(ticker),as_of:`2026-09-${String(i+1).padStart(2,'0')}T22:00:00Z`}));
  items.push({...item('ZZZ'),status:'pending',as_of:null,overview:null,sources:[]});
  assert.deepEqual(today.latestAnalyses([{ticker:'bad',as_of:'broken'},...items]).map(i=>i.ticker),['TSLA','NVDA','GLW','AMD','ALAB','AEHR','AAPL','bad','ZZZ']);
- globalThis.fetch=async url=>{reads++;return Response.json(url==='/me/stock-research'?{items,watchlist_count:8}:{items:[change()],next_cursor:null});};
+ globalThis.fetch=async url=>{if(url!=='/watchlist')reads++;return Response.json(url==='/me/stock-research'?{items,watchlist_count:8}:{items:[change()],next_cursor:null});};
  const dispose=await today.mount(root);
  const tickers=()=>[...root.querySelectorAll('.today-analysis .ticker')].map(n=>n.textContent);
  assert.deepEqual(tickers(),['TSLA','NVDA','GLW','AMD','ALAB']);
@@ -430,7 +432,7 @@ test('column sorting toggles direction, keeps unknown values last and does not r
  const rows=[{ticker:'AAA',price:10,market_cap:100,metrics:{ytd:{status:'ready',value:0}}},
   {ticker:'BBB',price:9,market_cap:200,metrics:{ytd:{status:'ready',value:-12}}},
   {ticker:'CCC',price:null,market_cap:null,metrics:{ytd:{status:'insufficient'}}}];
- globalThis.fetch=async url=>{reads++;return Response.json(url==='/me/stock-research'?{items:rows.map(r=>item(r.ticker))}:{items:rows,overview:{items:rows}});};
+ globalThis.fetch=async url=>{if(!/^\/(briefing|radar)\//.test(url))reads++;return Response.json(url==='/me/stock-research'?{items:rows.map(r=>item(r.ticker))}:{items:rows,overview:{items:rows}});};
  const dispose=await watch.mount(root),order=()=>[...root.querySelectorAll('tbody tr')].map(n=>n.dataset.readingAnchor);
  assert.deepEqual(order(),['BBB','AAA','CCC']);
  const select=()=>root.querySelector('[data-sort=ytd]');select().click();assert.deepEqual(order(),['AAA','BBB','CCC']);

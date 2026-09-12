@@ -11,6 +11,7 @@
 <meta name="description" content="{{ t('app.description') }}">
 <meta name="robots" content="noindex">
 <link rel="canonical" href="{{ canonical }}">
+<link rel="preconnect" href="{{ cfg.api_base }}" crossorigin>
 {% for hl, href in hreflang.items() %}
 <link rel="alternate" hreflang="{{ hl }}" href="{{ href }}">
 {% endfor %}
@@ -28,7 +29,7 @@
 <link rel="manifest" href="{{ url('/manifest.webmanifest') }}">
 <link rel="stylesheet" href="/css/site.css">
 <link rel="stylesheet" href="/css/app.css">
-<script src="/vendor/telegram-web-app.js"></script>
+<script src="/vendor/telegram-web-app.js" defer></script>
 <script src="/vendor/qrcode-generator.min.js" defer></script>
 <script src="/config.js" defer></script>
 <script src="/js/glossary.js" defer></script>

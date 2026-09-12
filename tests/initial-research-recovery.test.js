@@ -34,7 +34,8 @@ test('first failed research read recovers in place without writes, lost focus or
  assert.equal(document.activeElement.dataset.readingKey,'NVDA:map');
  assert.equal(root.querySelector('aside').hidden,true);
  assert.deepEqual(requests.filter(([path])=>path==='/me/stock-research'),[['/me/stock-research','GET'],['/me/stock-research','GET']]);
- assert.ok(requests.every(([path,method])=>method==='GET'&&['/watchlist','/me/stock-research'].includes(path)));
+ // Signal columns add two shared read-only pages; still no writes and no per-ticker fetches.
+ assert.ok(requests.every(([path,method])=>method==='GET'&&(['/watchlist','/me/stock-research'].includes(path)||path.startsWith('/briefing/stocks?')||path.startsWith('/radar/archive.json?'))));
  assert.doesNotMatch(JSON.stringify(warnings),/sensitive|fixture/);
  refresh.stop();dispose();
 });

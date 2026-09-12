@@ -10,7 +10,8 @@ import {factText} from './stock-briefs.js';
 import {waterLevel,marketDetail,priceBadge} from '../evidence-context.js';
 import {icon} from '../icons.js';
 import {evidenceTarget,creatorTarget} from '../creator-route.js';
-import {groupAuthors,sourceOccurrences,originalSourceKey} from '../evidence-grouping.js';
+import {groupAuthors,sourceOccurrences,originalSourceKey,authorIdentity} from '../evidence-grouping.js';
+import {topicGroups} from '../evidence-topics.js';
 import {comparisonBadge,comparisonDetails} from '../comparison-context.js';
 import {sourceIdentity,nodeSourceIdentity,sourceBadge,sourceMark} from '../evidence-source.js';
 import {claimQualifications,sourceAt} from './creator-claim.js';
@@ -27,6 +28,8 @@ const date=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}/.test(v)?v.slice(0,10):'�
 function source(v){try{const u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch{return null;}}
 const position=v=>{const n=Math.floor(v);return Number.isFinite(n)?Math.floor(n/60)+':'+String(n%60).padStart(2,'0'):'';};
 const factDescription=e=>e.topic==='price_gaps'?(e.data?.gaps?.length?e.data.gaps.map(g=>`${g.date} · $${g.lower}–$${g.upper}`).join(' / '):s('evidence.no_gaps')):factText(e);
+const TOPIC_PREVIEW=3;
+const isMention=n=>n.intent==='mention'||n.basis==='verified_mention_no_direction';
 const missingLabel=k=>k.startsWith('ytd_')?s('evidence.missing_ytd',{benchmark:k.slice(4)}):k==='price_gaps'?s('evidence.missing_gaps'):has('stockbrief.missing_'+k)?s('stockbrief.missing_'+k):s('evidence.missing_other');
 
 export function detail(node,{analysisAt,shareContext,readingTicker,compact=window.DUCKY?.PRODUCT_FOCUS_ENABLED===true}={}){
@@ -121,7 +124,18 @@ export function connectMap(map,center,branches){
   const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');
   svg.setAttribute('class','evidence-connections');svg.setAttribute('aria-hidden','true');svg.setAttribute('focusable','false');
   map.prepend(svg);
+  let relation={origin:null,targets:[]};
   function shape(tag,attrs){const n=document.createElementNS(ns,tag);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,String(v));svg.append(n);}
+  // Dashed links between the focused card and records from the same source or author.
+  function drawRelations(box){
+    const origin=relation.origin;if(!origin?.isConnected)return;
+    const a=origin.getBoundingClientRect();if(!a.width||!a.height)return;
+    for(const target of relation.targets){
+      const b=target.getBoundingClientRect();if(!b.width||!b.height)continue;
+      const ax=a.left-box.left+a.width/2,ay=a.top-box.top+a.height/2,bx=b.left-box.left+b.width/2,by=b.top-box.top+b.height/2,mx=(ax+bx)/2;
+      shape('path',{class:'evidence-relation',d:`M ${ax} ${ay} C ${mx} ${ay}, ${mx} ${by}, ${bx} ${by}`});
+    }
+  }
   function draw(){
     clear(svg);if(!map.isConnected)return;
     const box=map.getBoundingClientRect(),root=center.getBoundingClientRect();
@@ -132,12 +146,24 @@ export function connectMap(map,center,branches){
     const groups=layout==='tree'?[...branches.querySelectorAll('.evidence-group')]:[];
     if(layout==='lanes'){
       for(const group of branches.querySelectorAll('.evidence-group')){
-        const h=group.querySelector('.evidence-group-heading').getBoundingClientRect();
+        const heading=group.querySelector('.evidence-group-heading');if(!heading)continue;
+        const h=heading.getBoundingClientRect();if(!h.width&&!h.height)continue;
         const x=h.left-box.left+h.width/2,y=h.top-box.top;
         const rx=root.left-box.left+root.width/2,ry=root.bottom-box.top;
         const tone=['support','counter','context'].find(k=>group.classList.contains('is-'+k));
         shape('path',{class:'evidence-wire is-'+tone,d:`M ${rx} ${ry} C ${rx} ${ry+16}, ${x} ${y-16}, ${x} ${y}`});
+        // One spine per lane; every displayed card hangs from it with a stub and a port.
+        const shown=[...group.querySelectorAll('.evidence-node')].map(card=>card.getBoundingClientRect()).filter(b=>b.width&&b.height);
+        if(!shown.length)continue;
+        const sx=h.left-box.left+5,last=shown.at(-1);
+        shape('path',{class:'evidence-wire evidence-leaf-trunk is-'+tone,d:`M ${sx} ${h.bottom-box.top} V ${last.top-box.top+Math.min(26,last.height/2)}`});
+        for(const b of shown){
+          const cy=b.top-box.top+Math.min(26,b.height/2),cx=b.left-box.left;
+          shape('path',{class:'evidence-wire evidence-stub is-'+tone,d:`M ${sx} ${cy} H ${cx}`});
+          shape('circle',{class:'evidence-port is-'+tone,cx,cy,r:3});
+        }
       }
+      drawRelations(box);
       return;
     }
     if(layout==='tree'&&cards.length){
@@ -176,8 +202,17 @@ export function connectMap(map,center,branches){
   const observer=typeof ResizeObserver==='undefined'?null:new ResizeObserver(draw);
   return {
     refresh(){observer?.disconnect();observer?.observe(map);observer?.observe(center);branches.querySelectorAll('.evidence-node,.evidence-group-heading').forEach(n=>observer?.observe(n));draw();},
-    dispose(){observer?.disconnect();clear(svg);}
+    dispose(){observer?.disconnect();relation={origin:null,targets:[]};clear(svg);},
+    relate(origin,targets){relation={origin:origin||null,targets:Array.isArray(targets)?targets:[]};draw();}
   };
+}
+
+// Three retained-record counts side by side. Widths compare counts only, never confidence or odds.
+function balanceBar(nodes){
+  const lanes=['support','context','counter'],counts=Object.fromEntries(lanes.map(k=>[k,nodes.filter(n=>n.stance===k).length]));
+  return el('div.evidence-balance',{role:'img','aria-label':s('evidence.balance_label')+' · '+lanes.map(k=>s('evidence.'+k)+' '+counts[k]).join(' · ')},
+    el('span.evidence-balance-bar',...lanes.map(k=>el('span',{class:'is-'+k,style:{flexGrow:String(counts[k]||0.02)}}))),
+    el('span.evidence-balance-legend',...lanes.map(k=>el('span',{class:'is-'+k},String(counts[k])))));
 }
 
 export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalysis=true,state}={}){
@@ -208,13 +243,29 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
     onPickTicker?el('button.evidence-stock-trigger',{type:'button',onclick:onPickTicker,'aria-label':s('evidence.change_ticker',{ticker:doc.ticker})},doc.ticker,el('span',{'aria-hidden':'true'},'⌄')):null,
     example?el('span.small',s('experience.historical')):priceBadge(doc),example?null:el('button.evidence-water-caption',{type:'button',onclick:()=>marketDetail(doc)},s('evidence.water_short')),
     el('div.evidence-center-info',el('span.small.muted',s(nodes.length===1?'evidence.recorded_single':'evidence.recorded_count',{n:nodes.length})),
+      balanceBar(nodes),
       pending?el('span.evidence-mobile-state',s('evidence.queue_short',{n:pending})):null));
   if(level!==null){center.style.setProperty('--water-height',Math.round(level*100)+'%');center.style.setProperty('--water-color',`hsl(${Math.round(35+level*125)} 40% 48%)`);}
   const map=el('div.evidence-map.evidence-lanes',center,branches);view.append(map);
   const connections=connectMap(map,center,branches);view.dispose=()=>connections.dispose();view.refresh=()=>connections.refresh();
-  const total=el('p.small.muted',{'aria-live':'polite'});
-  const more=el('button.btn.btn-ghost',{type:'button',onclick:()=>{limit=nodes.length;paint();}},s('evidence.show_all'));
-  view.append(el('div.evidence-map-footer',total,more));
+  const total=el('p.small.muted',{'aria-live':'polite'}),STEP=12;
+  // Expansion is gradual: a step of records first, everything on request. Both keep every viewpoint.
+  const step=el('button.btn.btn-ghost',{type:'button','data-reading-key':doc.ticker+':show-more',onclick:()=>{limit=Math.min(nodes.length,limit+STEP);paint();}},s('evidence.show_more',{n:STEP}));
+  const more=el('button.btn.btn-ghost',{type:'button','data-reading-key':doc.ticker+':show-all',onclick:()=>{limit=nodes.length;paint();}},s('evidence.show_all'));
+  view.append(el('div.evidence-map-footer',total,el('div.evidence-map-actions',step,more)));
+  let cards=new Map();
+  // Hovering or focusing a card lights up records from the same original source or author.
+  function relate(id){
+    const origin=id?cards.get(id):null,key=origin?.dataset.sourceKey||'',author=origin?.dataset.author||'';
+    const related=[];
+    for(const card of cards.values()){
+      const same=!!origin&&card!==origin&&((!!key&&card.dataset.sourceKey===key)||(!!author&&card.dataset.author===author));
+      card.classList.toggle('is-related',same);card.classList.toggle('is-origin',card===origin);
+      if(same)related.push(card);
+    }
+    map.classList.toggle('has-focus',related.length>0);
+    connections.relate(related.length?origin:null,related);
+  }
   function paint(){
     controls.forEach(([key,b])=>b.setAttribute('aria-pressed',String(key===scope)));filterSelect.value=scope;
     const filtered=readingOrder(nodes.filter(n=>scope==='all'||n.stance===scope));
@@ -233,7 +284,7 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
     const visible=ordered.slice(0,limit);
     center.style.gridRow='1 / '+(Math.min(3,Math.ceil(visible.length/2))+1);
     map.classList.toggle('is-empty',!visible.length);
-    const cards=new Map();
+    cards=new Map();
     for(const node of visible){
       const identity=nodeSourceIdentity(node);
       const eventAt=eventDate(node),shownDate=eventAt?s('evidence.event_short',{at:eventAt}):date(node.published_at||node.observed_at);
@@ -241,7 +292,10 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
       const linked=node.kind==='creator'&&node.evidence?.length===1?evidenceTarget(node.evidence[0]):null;
       const shareContext={ticker:doc.ticker,recorded_at:doc.recorded_at,archive,example,status:doc.status};
       const repeats=node.kind==='creator'?Math.max(0,...(node.evidence||[]).map(e=>occurrences.get(originalSourceKey(e))||0)):0;
-      const card=el('article.evidence-node',{class:'is-'+node.stance+' source-'+identity,'data-source':identity,'data-reading-anchor':node.id,onclick:()=>{
+      const sourceKey=(node.evidence||[]).map(originalSourceKey).find(Boolean)||'',authorId=authorIdentity(node)?.id||'';
+      const card=el('article.evidence-node',{class:'is-'+node.stance+' source-'+identity,'data-source':identity,'data-reading-anchor':node.id,
+        ...(sourceKey?{'data-source-key':sourceKey}:{}),...(authorId?{'data-author':authorId}:{}),
+        onpointerenter:()=>relate(node.id),onpointerleave:()=>relate(null),onfocusin:()=>relate(node.id),onfocusout:()=>relate(null),onclick:()=>{
         // Keep the stock and reading position while checking a source. The
         // dialog and author heading retain explicit routes to creator history.
         if(linked&&window.DUCKY?.PRODUCT_FOCUS_ENABLED!==true)location.hash=linked;
@@ -263,16 +317,44 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
         el('button.evidence-share-trigger',{type:'button','aria-label':s('share.card_label',{title:pick(node.title)}),onclick:event=>{event.stopPropagation();openCardShare(node,shareContext);}},s('share.action')));
       cards.set(node.id,card);
     }
+    const authorBlock=(bucket,stance)=>{
+      const block=el('section.evidence-author-group',{'data-author':bucket.author.id},
+        el('header.evidence-author-heading',el('a',{href:creatorTarget({selected:bucket.author.id,mine:false,ticker:doc.ticker}),'aria-label':bucket.author.name+' · '+s('evidence.author_archive')},bucket.author.name),
+          el('span.small.muted',s(bucket.nodes.length===1?'evidence.author_points_single':'evidence.author_points',{n:bucket.nodes.length})+(bucket.sources.size?' · '+s(bucket.sources.size===1?'evidence.author_sources_single':'evidence.author_sources',{n:bucket.sources.size}):''))));
+      for(const node of bucket.nodes.slice(0,2))block.append(cards.get(node.id));
+      if(bucket.nodes.length>2){
+        const rest=el('details.evidence-author-more',{'data-reading-key':doc.ticker+':author:'+stance+':'+bucket.author.id},
+          el('summary',s(bucket.nodes.length===3?'evidence.author_more_single':'evidence.author_more',{n:bucket.nodes.length-2})),...bucket.nodes.slice(2).map(n=>cards.get(n.id)));
+        rest.addEventListener('toggle',()=>connections.refresh());block.append(rest);
+      }
+      return block;
+    };
     for(const [stance,{group,list}]of groups){
+      const records=[],authors=[],mentions=[];
       for(const bucket of groupAuthors(visible.filter(n=>n.stance===stance))){
-        if(!bucket.author){for(const node of bucket.nodes)list.append(cards.get(node.id));continue;}
-        const block=el('section.evidence-author-group',{'data-author':bucket.author.id},
-          el('header.evidence-author-heading',el('a',{href:creatorTarget({selected:bucket.author.id,mine:false,ticker:doc.ticker}),'aria-label':bucket.author.name+' · '+s('evidence.author_archive')},bucket.author.name),
-            el('span.small.muted',s(bucket.nodes.length===1?'evidence.author_points_single':'evidence.author_points',{n:bucket.nodes.length})+(bucket.sources.size?' · '+s(bucket.sources.size===1?'evidence.author_sources_single':'evidence.author_sources',{n:bucket.sources.size}):''))));
-        for(const node of bucket.nodes.slice(0,2))block.append(cards.get(node.id));
-        if(bucket.nodes.length>2){
-          const rest=el('details.evidence-author-more',{'data-reading-key':doc.ticker+':author:'+stance+':'+bucket.author.id},
-            el('summary',s(bucket.nodes.length===3?'evidence.author_more_single':'evidence.author_more',{n:bucket.nodes.length-2})),...bucket.nodes.slice(2).map(n=>cards.get(n.id)));
+        if(!bucket.author){records.push(...bucket.nodes);continue;}
+        // Once the reader expands, authors who only mention the stock fold together.
+        // Their records, dates and repeat-source labels are all still inside.
+        (limit>6&&bucket.nodes.every(isMention)?mentions:authors).push(bucket);
+      }
+      if(mentions.length<2)authors.push(...mentions);
+      for(const bucket of authors)list.append(authorBlock(bucket,stance));
+      if(mentions.length>=2){
+        const count=mentions.reduce((n,b)=>n+b.nodes.length,0);
+        const fold=el('details.evidence-mentions',{'data-reading-key':doc.ticker+':mentions:'+stance},
+          el('summary',s('evidence.mentions_fold',{n:count,authors:mentions.length})),...mentions.map(b=>authorBlock(b,stance)));
+        fold.addEventListener('toggle',()=>connections.refresh());list.append(fold);
+      }
+      // Recorded facts and events fold by topic; a lone record in a lane needs no heading.
+      const topics=topicGroups(records);
+      for(const topic of topics){
+        if(topics.length===1&&topic.nodes.length===1){list.append(cards.get(topic.nodes[0].id));continue;}
+        const block=el('section.evidence-topic-group',{'data-topic':topic.key},
+          el('header.evidence-topic-heading',el('span',s('evidence.topic_'+topic.key)),el('span.evidence-topic-count',String(topic.nodes.length))));
+        for(const node of topic.nodes.slice(0,TOPIC_PREVIEW))block.append(cards.get(node.id));
+        if(topic.nodes.length>TOPIC_PREVIEW){
+          const rest=el('details.evidence-topic-more',{'data-reading-key':doc.ticker+':topic:'+stance+':'+topic.key},
+            el('summary',s(topic.nodes.length===TOPIC_PREVIEW+1?'evidence.topic_more_single':'evidence.topic_more',{n:topic.nodes.length-TOPIC_PREVIEW})),...topic.nodes.slice(TOPIC_PREVIEW).map(n=>cards.get(n.id)));
           rest.addEventListener('toggle',()=>connections.refresh());block.append(rest);
         }
         list.append(block);
@@ -283,7 +365,9 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
     reset.hidden=scope==='all';
     if(!filtered.length)branches.append(el('p.empty',s('evidence.no_match')));
     total.textContent=s('evidence.showing',{shown:Math.min(limit,filtered.length),total:filtered.length});
-    more.hidden=filtered.length<=limit;connections.refresh();
+    const remaining=filtered.length-limit;
+    step.hidden=remaining<=STEP;more.hidden=remaining<=0;
+    relate(null);connections.refresh();
   }
   paint();
   view.append(el('p.small.muted',s('evidence.group_note')));
@@ -331,9 +415,14 @@ export async function mount(root,route={}){
   if(stocks.length)favorites.append(el('button.evidence-all-stocks',{type:'button',onclick:picker,'aria-haspopup':'dialog'},s('evidence.all_watchlist',{n:stocks.length}),' ⌄'));
   root.append(favorites);
   const trial=el('div.evidence-trial');root.append(trial);
+  let syncing=false;
   function syncSelection(){
     const me=store.get('me');if(!me)return;
-    store.set('me',{...me,experience:{...me.experience,evidence:{...me.experience?.evidence,selected:chosen}}});
+    // The account store echoes the selection this page already holds; the mount below and the
+    // removal handler decide themselves whether a reload is needed.
+    syncing=true;
+    try{store.set('me',{...me,experience:{...me.experience,evidence:{...me.experience?.evidence,selected:chosen}}});}
+    finally{syncing=false;}
   }
   function trialControls(){
     clear(trial);
@@ -346,7 +435,7 @@ export async function mount(root,route={}){
       for(const t of chosen)personal.append(el('div.evidence-selection',el('a',{href:'#/evidence/'+t},t),
         el('button',{type:'button','aria-label':s('experience.remove_map',{ticker:t}),onclick:async e=>{
           e.currentTarget.disabled=true;
-          try{const r=await api.del('/me/evidence/'+t,{signal:ctl.signal});if(!valid())return;chosen=r.selected;syncSelection();trialControls();}
+          try{const r=await api.del('/me/evidence/'+t,{signal:ctl.signal});if(!valid())return;chosen=r.selected;syncSelection();trialControls();load();}
           catch(error){if(valid())host.prepend(errorBox(error));}
         }},'×')));
       trial.append(personal);
@@ -381,7 +470,7 @@ export async function mount(root,route={}){
         try{
           const r=await api.post('/me/evidence/'+ticker,{}, {signal:ctl.signal});if(!valid(id))return;
           if(r.status!=='ready'){note.textContent=s('experience.map_unavailable');return;}
-          chosen=r.selected||chosen;syncSelection();trialControls();
+          chosen=r.selected||chosen;syncSelection();trialControls();load();
         }catch(error){if(valid(id)&&error.status!==402)host.append(errorBox(error));}
         finally{action.disabled=false;}
       }},s('experience.add_map',{ticker}));
@@ -426,7 +515,7 @@ export async function mount(root,route={}){
       host.prepend(errorBox(error,()=>load(version)));
     }}
   }
-  const unsubs=[store.subscribe('me',()=>{chosen=store.get('me')?.experience?.evidence?.selected||[];trialControls();load();})];
+  const unsubs=[store.subscribe('me',()=>{if(syncing)return;chosen=store.get('me')?.experience?.evidence?.selected||[];trialControls();load();})];
   const cleanup=()=>{root.removeEventListener('ducky:shared-read',updatePrice);alive=false;request++;currentMap?.dispose?.();currentMap=null;ctl.abort();unsubs.forEach(fn=>fn());closeModal();};
   route.signal?.addEventListener('abort',cleanup,{once:true});
   if(route.signal?.aborted)cleanup();else {

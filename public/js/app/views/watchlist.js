@@ -2,7 +2,8 @@ import {tourEvent,tourTarget} from '../tour-events.js';
 import {freeGuide,quotaNote} from '../experience.js';
 // views/watchlist.js — add ticker · list of 全景 mini-cards from /snapshot · remove.
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
-import { overviewView, layoutOverview } from "../watchlist-overview.js";
+import { overviewView, layoutOverview, retimeQuotes } from "../watchlist-overview.js";
+import { buildSignals } from "../watchlist-signals.js";
 import { companyContext } from "../company-context.js";
 import {reading,researchRow,replaceReading,syncSourceDialog} from '../stock-reading.js';
 import { icon } from "../icons.js";
@@ -15,6 +16,14 @@ import { unpackSnapshot, reusableSnapshot } from "../snapshot-model.js";
 import { el, clear, toast, spinner, empty, errorBox, lock, num, px, pct, int, signClass } from "../ui.js";
 
 const TICKER_RE = /^[A-Z][A-Z0-9.\-]{0,9}$/;
+// Signal columns read compact projections: saved brief facts for the four topics the list shows, and the
+// newest 13F share increases for exactly the watched stocks (fifty per page) rather than the market-wide
+// newest page, which one large filing can fill by itself.
+export const BRIEFS_PATH='/briefing/stocks?fields=signals';
+const FUNDS_PAGE=50;
+export const fundsPath=tickers=>'/radar/archive.json?kind=13f&direction=1&limit=200&content=all&fields=signals&tickers='+tickers.map(encodeURIComponent).join(',');
+// Above this many stocks, typing in the filter rebuilds the table on a short debounce.
+const LARGE_LIST=60;
 
 export function normalizeList(resp) {
   const arr = Array.isArray(resp) ? resp : (resp && (resp.items || resp.watchlist || resp.tickers)) || [];
@@ -26,9 +35,12 @@ export async function mount(root,{signal}={}) {
   const mountedEpoch=store.epoch();
   const unsubs = [];
   root.classList.add("watchlist-view");
-  let overview = api.peek('/watchlist')?.overview||null, selected = null, disposed = false, loading = true;
+  let overview = api.peek('/watchlist')?.overview||null, overviewReceived=api.peekAt('/watchlist'), selected = null, disposed = false, loading = true;
   const focused=window.DUCKY?.PRODUCT_FOCUS_ENABLED===true;
   let research=new Map((api.peek('/me/stock-research')?.items||[]).map(item=>[item.ticker,item])),researchFailed=false,researchLoading=true,loadSeq=0,membershipAvailable=false;
+  // Disclosure/options references beside each row: saved brief facts plus the archived 13F page.
+  let signals=new Map(),briefsDoc=null,fundsDoc=null;
+  const rebuildSignals=()=>{signals=buildSignals(briefsDoc,fundsDoc,store.get('watchlist')||[]);};
   const missingResearch=()=>({status:researchLoading?'read_pending':researchFailed?'read_failed':'pending'});
   let lastPaint='';
   function reportPaint(){
@@ -81,8 +93,11 @@ export async function mount(root,{signal}={}) {
       view=mode;render();
     }},s('watch.view_'+mode)));
   const offer = el('div.watch-search-offer',{hidden:true,'aria-live':'polite'});
+  let filterTimer=null;
   const filter = el('input.input.watch-filter',{type:'search',placeholder:s('watch.filter'), 'aria-label':s('watch.filter'),autocomplete:'off',spellcheck:'false',
-    oninput:()=>{query=filter.value;candidate=null;render();}});
+    oninput:()=>{query=filter.value;candidate=null;clearTimeout(filterTimer);
+      if((store.get('watchlist')||[]).length>LARGE_LIST)filterTimer=setTimeout(()=>{filterTimer=null;if(!disposed)render();},120);else render();}});
+  unsubs.push(()=>clearTimeout(filterTimer));
   const filterPicker = symbolPicker(filter,()=>store.get('watchlist')||[],{
     allowWatched:true,
     onSelect:row=>{candidate=row;query=filter.value;render();},
@@ -91,7 +106,7 @@ export async function mount(root,{signal}={}) {
   filterPicker.wrap.classList.add('watch-search');unsubs.push(filterPicker.dispose);
   const sorting = el('select.input',{'aria-label':s('watch.sort'),onchange:()=>{sort=sorting.value;render();}},
     ...['market_cap','change_pct','ytd','drawdown','relative','iv_hv','attention','degen','ticker'].map(key=>el('option',{value:key},s('watch.sort_'+key))));
-  const controls = el('div.watch-controls',modes,filterPicker.wrap,...(focused?[]:[sorting]),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:load},s('watch.refresh')));
+  const controls = el('div.watch-controls',modes,filterPicker.wrap,...(focused?[]:[sorting]),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>load()},s('watch.refresh')));
   function renderOffer() {
     clear(offer);
     offer.hidden=!candidate||(store.get('watchlist')||[]).includes(candidate.ticker);
@@ -212,7 +227,7 @@ export async function mount(root,{signal}={}) {
     sorting.hidden=view==='heatmap'||view==='reading';
     const openDisclosures=new Set([...list.querySelectorAll('details[open][data-disclosure]')].map(n=>n.dataset.disclosure));
     const focusedMap=list.contains(document.activeElement)?document.activeElement?.dataset?.mapOpen:null;
-    if(loading && !overview && !research.size){clear(list).append(spinner());return;}
+    if(loading && !overview && !research.size){clear(list).append(skeleton(items.length));return;}
     if (!items.length) {clear(list).append(empty(s('watch.empty')));return;}
     const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
     if(view==='reading'){
@@ -225,12 +240,30 @@ export async function mount(root,{signal}={}) {
     }
     const tableLeft=list.querySelector('.watch-table-scroll')?.scrollLeft||0;
     replaceReading(list,overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
-      {view,query,sort,sortDirection,selection:focused?{checked,disabled:removing||adding,toggle:(tickers,value)=>{if(removing||adding)return;for(const t of tickers)value?checked.add(t):checked.delete(t);render();}}:null,onSort:key=>{sortDirection=key===sort?(sortDirection==='desc'?'asc':'desc'):key==='ticker'?'asc':'desc';sort=key;render();},area,renderResearch:focused?t=>reading({...research.get(t),ticker:t,...(!research.has(t)?missingResearch():{})}):null,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
+      {view,query,sort,sortDirection,quoteReceived:overviewReceived,selection:focused?{checked,disabled:removing||adding,toggle:(tickers,value)=>{if(removing||adding)return;for(const t of tickers)value?checked.add(t):checked.delete(t);render();}}:null,onSort:key=>{sortDirection=key===sort?(sortDirection==='desc'?'asc':'desc'):key==='ticker'?'asc':'desc';sort=key;render();},area,signals:focused?signals:null,renderResearch:focused?t=>reading({...research.get(t),ticker:t,...(!research.has(t)?missingResearch():{})}):null,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
     reportPaint();
-    const scroll=list.querySelector('.watch-table-scroll');if(scroll)scroll.scrollLeft=tableLeft;
+    const scroll=list.querySelector('.watch-table-scroll');
+    if(scroll){scroll.scrollLeft=tableLeft;const shade=()=>scroll.classList.toggle('is-scrolled',scroll.scrollLeft>2);shade();scroll.addEventListener('scroll',shade,{passive:true});}
     for(const disclosure of list.querySelectorAll('details[data-disclosure]'))disclosure.open=openDisclosures.has(disclosure.dataset.disclosure);
     if(focusedMap)[...list.querySelectorAll('[data-map-open]')].find(n=>n.dataset.mapOpen===focusedMap)?.focus({preventScroll:true});
     layoutOverview(list);
+  }
+
+  // The list keeps its shape while the first read is in flight: a few muted rows, not a bare spinner.
+  function skeleton(count){
+    const rows=Math.min(8,Math.max(3,count||0));
+    return el('div.watch-skeleton',{role:'status','aria-busy':'true','aria-label':s('common.loading')},
+      ...Array.from({length:rows},()=>el('div.watch-skeleton-row',el('span.watch-skeleton-cell.is-name'),el('span.watch-skeleton-cell.is-price'),el('span.watch-skeleton-cell.is-text'))));
+  }
+
+  // Newest 13F adds for exactly these stocks, fifty per page. Pages are merged; a failed page
+  // leaves its stocks unknown rather than reported as "none".
+  async function readFunds(tickers){
+    const pages=[];for(let i=0;i<tickers.length;i+=FUNDS_PAGE)pages.push(tickers.slice(i,i+FUNDS_PAGE));
+    const docs=await Promise.all(pages.map(page=>api.get(fundsPath(page),{signal,silent402:true,observe:false}).catch(()=>null)));
+    if(!docs.some(doc=>Array.isArray(doc?.items)))return null;
+    return {items:docs.flatMap(doc=>Array.isArray(doc?.items)?doc.items:[]),next_cursor:docs.find(doc=>doc?.next_cursor)?.next_cursor||null,
+      partial:docs.some(doc=>!Array.isArray(doc?.items)),tickers};
   }
 
   function card(t, snap) {
@@ -307,12 +340,13 @@ export async function mount(root,{signal}={}) {
   function rsWord(x) { return enumWord(x, { "领先": "watch.rs_leading", "leading": "watch.rs_leading", "落后": "watch.rs_lagging", "lagging": "watch.rs_lagging", "同步": "watch.rs_inline", "持平": "watch.rs_inline", "相当": "watch.rs_inline", "inline": "watch.rs_inline" }); }
   function regimeWord(x) { return enumWord(x, { "positive": "watch.regime_pos", "偏多": "watch.regime_pos", "negative": "watch.regime_neg", "偏空": "watch.regime_neg", "neutral": "watch.regime_neutral", "中性": "watch.regime_neutral" }); }
 
-  async function load() {
+  async function load({reuseRecent=false}={}) {
     // finding watchlist.js:123 — a /watchlist response in flight when logout() wipes the store would
     // otherwise repopulate it; capture the epoch and drop the write if the session changed.
     const epoch = store.epoch();
     const mine=++loadSeq;
-    let membershipReady=false;
+    let membershipReady=false,settleMembership;
+    const membershipSettled=new Promise(resolve=>{settleMembership=resolve;});
     researchLoading=focused;
     clear(readNotice);
     // Quotes/membership can render while the separately validated research read
@@ -346,11 +380,29 @@ export async function mount(root,{signal}={}) {
         syncSourceDialog(ticker,response.items.find(item=>item.ticker===ticker)?.sources||[]);
       researchLoading=false;researchFailed=false;research=new Map(response.items.map(item=>[item.ticker,item]));paintResearch();
     },readFailed):Promise.resolve();
+    // Signal columns read compact shared pages. They never delay prices or membership, a failure
+    // leaves the columns in their dated "pending" state rather than blank rows, and they stay out of
+    // the shared revalidation budget reserved for prices and saved research. The 13F page needs the
+    // membership first when the session does not hold it yet.
+    const signalTask=focused?(async()=>{
+      const briefsRead=api.get(BRIEFS_PATH,{signal,silent402:true,observe:false}).catch(()=>null);
+      let tickers=store.get('watchlist')||[];
+      if(!tickers.length){await membershipSettled;tickers=store.get('watchlist')||[];}
+      const [briefs,funds]=await Promise.all([briefsRead,tickers.length?readFunds(tickers):Promise.resolve(null)]);
+      if(!current())return;
+      if(Array.isArray(briefs?.items))briefsDoc=briefs;
+      if(funds)fundsDoc=funds;
+      rebuildSignals();paintResearch();
+    })():Promise.resolve();
     try {
-      const response=await api.watchlist.list({signal});
+      // The first mount after boot reuses the boot sequence's seconds-old /watchlist read (one
+      // duplicate request and preflight less); every later entry revalidates.
+      const boot=reuseRecent?api.bootRead('/watchlist'):null;
+      const response=boot?boot.value:await api.watchlist.list({signal});
       const items = normalizeList(response);
       if (!current()) return;
       overview = response?.overview || null;
+      overviewReceived=boot?boot.at:Date.now();
       if(Number.isFinite(response?.cap))store.patch("me",{watch_cap:response.cap});
       loading = false;
       membershipAvailable=true;
@@ -360,10 +412,12 @@ export async function mount(root,{signal}={}) {
       if (!current()) return;
       loading = false;
       membershipAvailable=false;
-      if((overview||research.size)&&![401,402,403].includes(err.status)){membershipReady=true;render();readNotice.append(errorBox(err,load));}
-      else{clear(list);list.appendChild(errorBox(err,load));}
+      if((overview||research.size)&&![401,402,403].includes(err.status)){membershipReady=true;render();readNotice.append(errorBox(err,()=>load()));}
+      else{clear(list);list.appendChild(errorBox(err,()=>load()));}
+    } finally {
+      settleMembership();
     }
-    await researchTask;
+    await Promise.all([researchTask,signalTask]);
   }
 
   function loadSnapshot(t, force) {
@@ -376,7 +430,8 @@ export async function mount(root,{signal}={}) {
     if (!snaps[t]?.ok) store.patch("snapshots", { [t]: { pending: true } });
     const p = (async () => {
       try {
-        const r = await api.snapshot(t, { tries: 6, onWait: () => { if (!disposed && store.epoch() === epoch) store.patch("snapshots", { [t]: { pending: true } }); } });
+        // Detail reads stay out of the shared revalidation budget, which is reserved for prices and saved research.
+        const r = await api.snapshot(t, { tries: 6, observe: false, onWait: () => { if (!disposed && store.epoch() === epoch) store.patch("snapshots", { [t]: { pending: true } }); } });
         if (disposed || store.epoch() !== epoch) return;   // logged out mid-flight — don't repopulate the wiped store
         const snap = unpackSnapshot(r);
         store.patch("snapshots", { [t]: api.isAccepted(r) ? { ok: false, error: { message: s("common.building") } } : snap });
@@ -411,6 +466,10 @@ export async function mount(root,{signal}={}) {
       for(const ticker of watched)syncSourceDialog(ticker,research.get(ticker)?.sources||[]);
       render();update.accepted=true;return;
     }
+    if(focused&&update?.path==='/briefing/stocks'){
+      if(!Array.isArray(response?.items))return;
+      briefsDoc=response;rebuildSignals();render();update.accepted=true;return;
+    }
     if(update?.path!=='/watchlist'||!Array.isArray(response?.overview?.items))return;
     const current=store.get('watchlist')||[],incoming=normalizeList(response);
     // Membership/cap changes still require the shared reload flow. A price
@@ -418,13 +477,17 @@ export async function mount(root,{signal}={}) {
     if(current.length!==incoming.length||current.some(t=>!incoming.includes(t))||
        (Number.isFinite(response.cap)&&response.cap!==store.get('me')?.watch_cap))return;
     const focusedButton=list.contains(document.activeElement)?document.activeElement?.dataset?.open:null;
-    overview=response.overview;render();
+    overview=response.overview;overviewReceived=Date.now();render();
     if(focusedButton)list.querySelector(`[data-open="${focusedButton}"]`)?.focus({preventScroll:true});
     update.accepted=true;
   };
   root.addEventListener('ducky:shared-read',priceUpdate);
   unsubs.push(()=>root.removeEventListener('ducky:shared-read',priceUpdate));
+  // Quote clocks advance between reads ("2 min ago" → "5 min ago", latest → saved) without a re-render.
+  const clock=setInterval(()=>{if(!disposed&&document.visibilityState!=='hidden')retimeQuotes(list);},20000);
+  clock.unref?.();
+  unsubs.push(()=>clearInterval(clock));
   render();
-  await load();
+  await load({reuseRecent:true});
   return () => {disposed=true;root.classList.remove("watchlist-view");unsubs.forEach((u) => u());};
 }

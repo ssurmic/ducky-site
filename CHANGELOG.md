@@ -1,5 +1,91 @@
 # Change log
 
+## Quote age, one price per stock, honest 13F pages and a lighter boot · 2026-09-12 (branch `codex/ux-upgrade-20260912`, third round)
+
+Follow-up to the same-day read-path audit ([report](reports/UX-UPGRADE-2026-09-12.md), "Third round").
+
+- **Quote clocks**: each quote line reads "Latest quote · just now / N min ago / N h ago" (the print's own
+  New York time beyond six hours), timed from the server's `age_seconds` plus elapsed time since arrival and
+  re-timed every 20 s in place; after 180 s it reads "Saved quote" (`quoteNote`, `retimeQuotes`;
+  `currentQuote`, which nothing used, is removed).
+- **One number per stock**: map tiles, breadth and tooltips use the same displayed value as the list rows;
+  the map heading says when quotes are shown. YTD is labelled "Year to date · adjusted" and the prices
+  method note names the basis difference.
+- **13F column**: reads `/radar/archive.json?…&fields=signals&tickers=…` for exactly the watched stocks
+  (fifty per page, merged) instead of the market-wide newest page; option lines are dropped, one amended
+  report per fund and quarter counts once, implausible quarter-end marks are withheld; "No adds in tracked
+  funds' 13F filings" appears only when the page was complete, otherwise "Not in the latest {n} 13F
+  records"; the method line counts filings. Requires ducky-bot `perf/read-path-20260912` for the filter
+  (older backends ignore the parameters and return the previous page shape).
+- **Briefs**: `/briefing/stocks?fields=signals` (same backend branch) returns only the four fact topics
+  the columns read.
+- **Boot and polling**: the per-stock `/snapshot/{T}` fan-out at boot is removed; the first page after
+  boot reuses the boot `/watchlist` read once (`api.bootRead`) while later entries still revalidate;
+  `served_at` and quote `checked_at` are not treated as new data; watchlist detail snapshot reads carry
+  `observe:false`; a skeleton replaces the loading spinner; the filter debounces rebuilds above 60 stocks;
+  the research map no longer double-fetches on a free account's selection sync; the app shell preconnects
+  to the API origin and defers the Telegram SDK.
+- Tests: 734 pass (`tests/watchlist-overview.test.js`, `watchlist-signals.test.js`,
+  `shared-read-refresh.test.js`, `evidence.test.js`, `initial-research-recovery.test.js` updated or
+  extended); `lint_copy`, `check_links` OK. Five new `app.watch.*` keys; `app.watch.signal_funds_none_since`
+  removed.
+
+## Watchlist signals, research-map folding, richer Today and simulator entry · 2026-09-12 (branch, not merged or deployed)
+
+UX pass over the signed-in app on `codex/ux-upgrade-20260912`; no API, model or investing-algorithm change.
+
+- **Watchlist list** gains four sortable signal columns between Market cap and YTD: insider buying
+  (Yes/No with reported value, filing count, latest date and owners), 13F adds (fund name, report period,
+  filing date), option walls (call/put strikes with distance to price and expiry) and support references
+  (nearest recorded reference below price plus a 20-day closing-range bar). `watchlist-signals.js`
+  derives them from two shared, read-only pages, `GET /briefing/stocks` (saved stock-brief facts) and
+  `GET /radar/archive.json?kind=13f&direction=1` (newest reported-share increases), so the list route
+  and the shared revalidation budget are untouched. Unknown values sort last; a methodology disclosure
+  states each source, window and limit. Copy never calls a level a target, floor or guarantee.
+- **Research map**: recorded facts and events inside a lane fold by topic (filings & ownership, price &
+  technicals, relative performance, options & volatility, discussion, macro, other) with three cards
+  visible per topic and the rest behind one disclosure; after expansion, authors who only mention the
+  stock fold into one closed group; expansion is gradual (twelve more, or all). Each lane draws a spine
+  with a stub and port per displayed card; hovering or focusing a card highlights records from the same
+  original source or author and links them with dashed wires; the center card shows the retained-record
+  balance across lanes. Every record, number, stance and repeat-source label is retained.
+- **Today** asks for twelve records per page, reads the newest publication first inside a page, widens
+  once from an empty "Today" to the past seven days with a visible note, and decorates cards with the
+  record's stance rail, source mark, author initial and the saved watchlist quote; the header shows a
+  small stats strip. The quote read (`GET /watchlist`, already shared and cached) never blocks the feed.
+- **Creators**: the simulator tab reads "Simulate a view"; each verified post offers "Simulate this view",
+  which opens the simulator on that exact recorded view; an empty simulator explains what it needs and
+  offers the fictional scenario once; pending videos render as quiet rows and Pro accounts can request a
+  creator's summaries (`POST /kol/{id}/analyze`, server cooldown respected).
+- **Shell**: the five-tab bar lights the tab a route belongs to (stock briefs light Watchlist; account and
+  sign-in pages light nothing instead of Explore); a short page entrance; stale three-column nav rules,
+  orphaned watchlist research-row rules and the removed creator journey stepper are deleted.
+- **Owner review round (same day)**: every one-sentence analysis (watchlist Overview mode, Today rows, the
+  inline table reading) now lists its cited records under the sentence — number, stance, author, title, date,
+  and a "Latest" mark on the newest — instead of two floating footnote numbers; inline numbers shrink to
+  26px because the list rows carry the 44px targets. Insider buying shows the volume-weighted average
+  purchase price and share count. The 13F column reads "Fund adds" with a plain hint under every signal
+  header ("13F quarterly holdings, shares up", "Form 4 filings, 12 months", …) and "13F filed" dates.
+  Leaderboard rows gain an agreement bar against the 50% mark with N beside it and direct "Call history /
+  Simulate a view" actions; call-history cards show a settled 20-session result on the closed card and a
+  "Simulate this view" step on every verified directional view. Today re-reads its first page once a minute
+  while visible and adds newly published records in place (no search or cursor replay).
+
+- **Second review round**: every signal header has a "?" that opens a plain-language explanation (what the
+  column is, where it comes from, its limits) instead of a hint line; the 13F column reads "Large fund adds /
+  大基金加仓"; each signal cell is one button that opens a flashcard listing the records behind the number
+  (insider filings with buyer, role, shares × price, value and source link; fund adds with share change,
+  quarter-end reported price, the report quarter's close range and source link; option walls and support
+  references), ending in the same two exits — "View all filings" (or "Open chart") and "Open research map".
+  13F report periods read as quarters ("2026 Q2"); the fund cell shows the quarter close range when the
+  backend supplies `facts.quarter_price_range` (read-time derivation in `radar_archive.page()`, backend
+  branch `feat/13f-quarter-price-range-20260912`). Signal columns have fixed widths so cells never squeeze;
+  notes clamp to two lines; the table grows to 1860px and scrolls.
+
+Tests: 730 frontend tests (21 new across `watchlist-signals`, `evidence-topics`, `today-feed`,
+`creator-simulation-target`, `focus-navigation`, `stock-citations`), bilingual build, copy lint, link check
+and Python checks pass. Acceptance and open items: [reports/UX-UPGRADE-2026-09-12.md](reports/UX-UPGRADE-2026-09-12.md).
+
 ## Today leads with sources published in the period · 2026-09-12 (deployed)
 
 The research-updates feed on Today and Explore is ordered by record availability, so a re-projected
