@@ -38,14 +38,14 @@ test('unfollowed old source loads by exact index, focuses expanded point, and sc
  store.set('me',{tier:'pro',user_id:1});const calls=[];
  const ready={quality:'no_call',en:'The creator discusses demand.',source:{kind:'transcript',status:'ready',summary_reviewed:true}};
  const recent={id:2,kol_id:'other',kol_name:'Other',platform_post_id:'recent',title:'Recent post',summary:ready,calls:[],tickers:['NVDA']};
- const old={id:1,kol_id:'talk',kol_name:'Talk',platform_post_id:'abcdefghijk',title:'Old source',summary:{...ready,quality:'unverified'},
+ const old={id:1,kol_id:'talk',kol_name:'Talk',platform_post_id:'abcdefghijk',url:'https://www.youtube.com/watch?v=abcdefghijk',title:'Old source',summary:{...ready,quality:'unverified'},
   calls:[{sym:'AVGO',stance:'bear',evidence:'A legacy draft selected a different statement.',note:{en:'Obsolete duplicated AVGO card'}}],tickers:['AVGO'],
   reviewed_spans:[{basis:'attributed_opinion',intent:'opinion',stance:'support',ticker:'AVGO',point_id:'claim:abc',
-   title:{en:'Customer concentration is falling'},evidence:'Broadcom is diversifying its customers.',source_url:'https://www.youtube.com/watch?v=abcdefghijk&t=634',start_seconds:634}]};
+   title:{en:'Customer concentration is falling'},evidence:'Broadcom is diversifying its customers.',source_hash:'exact-source-hash',source_url:'https://www.youtube.com/watch?v=abcdefghijk&t=634',start_seconds:634}]};
  globalThis.fetch=async(url,options)=>{
   assert.ok(!options?.method||options.method==='GET');calls.push(url);
   return Response.json(url==='/kol/feed'?{kols:[{id:'other',name:'Other'}],posts:[recent]}:
-   url==='/kol/talk/posts/abcdefghijk'?{creator:{id:'talk',name:'Talk'},post:old}:
+   url==='/kol/talk/posts/abcdefghijk'?{creator:{id:'talk',name:'Talk',platform:'youtube'},post:old}:
    url==='/me/kols'?{subs:['other'],analysis:{}}:{items:[]});
  };
  const root=document.createElement('main');document.body.append(root);
@@ -65,6 +65,13 @@ test('unfollowed old source loads by exact index, focuses expanded point, and sc
  assert.equal(focused.querySelector('a').href,'https://www.youtube.com/watch?v=abcdefghijk&t=634');
  assert.equal(focused.dataset.scrolled,'true');assert.ok(focused.querySelector('details').open);
  assert.match(focused.textContent,/Customer concentration is falling/);
+ const video=root.querySelector('[data-tour="video.open"]');assert.ok(video);
+ assert.equal(video.dataset.post,'abcdefghijk');assert.match(video.href,/t=634/);
+ let outcome;const observe=event=>{if(event.detail.step==='video')outcome=event.detail;};
+ document.addEventListener('ducky:tour-progress',observe);
+ video.addEventListener('click',event=>event.preventDefault(),{once:true});video.click();
+ document.removeEventListener('ducky:tour-progress',observe);
+ assert.equal(outcome.outcome,'external_link_opened');assert.equal(outcome.sourceHash,'exact-source-hash');
  root.querySelector('[data-creator-scope="following"]').click();await tick();
  dispose();root.replaceChildren();
  dispose=await mount(root,{query:new URLSearchParams(location.hash.split('?')[1])});

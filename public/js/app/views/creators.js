@@ -168,7 +168,12 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       if(completed)refresh({automatic:true});else if(changed)renderContent();
     },onError:()=>{const node=card.querySelector('.creator-sync-note');if(node)node.textContent=s('creatorflow.reconnecting');}});
   const posts = (doc && doc.posts) || [];
-  if(linkedSource?.post){const i=posts.findIndex(p=>p.kol_id===initial.selected&&p.platform_post_id===initial.post);if(i<0)posts.push(linkedSource.post);else posts[i]=linkedSource.post;}
+  if(linkedSource?.post){
+    // Exact-source responses carry the platform on the creator, not the post row.
+    const post={...linkedSource.post,platform:linkedSource.post.platform||linkedSource.creator?.platform};
+    const i=posts.findIndex(p=>p.kol_id===initial.selected&&p.platform_post_id===initial.post);
+    if(i<0)posts.push(post);else posts[i]=post;
+  }
   let focusedPost=initial.post,focusedPoint=initial.point;
   let archive = false;
   // Explicit stock links retain their ticker; discovery can also use current watchlist symbols.
