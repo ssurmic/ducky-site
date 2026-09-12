@@ -1,5 +1,13 @@
 # Change log
 
+## Bilingual interactive onboarding · 2026-09-11 (release preparation)
+
+New verified accounts receive a skippable, animated tour of real stock/map/chart controls,
+then source/video/calendar/disclosure chapters. Help resumes or replays saved progress.
+Onboarding works with billing closed and never claims an ungranted trial. Current bulk
+watchlist management and navigation remain. 705 tests pass; browser evidence covers both
+engines and short phone layouts. [Acceptance](reports/open-onboarding/README.md).
+
 ## Watchlist removal and capacity · 2026-09-11 (deployed)
 
 Select stocks with left-side checkboxes, review selected tickers and remove them together. Full accounts see their limit and how to free space before adding. Failed removals remain selected for retry; confirmed removals release slots immediately. 694 frontend tests and bilingual phone checks passed. PR42 / main `5c86ada1` / Pages `b2489ad9` passed CI, asset verification and signed-in EN/ZH selection checks. [Acceptance and release](reports/WATCHLIST-SELECTION-2026-09-11.md).

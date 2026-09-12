@@ -1,0 +1,7 @@
+Frontend unit tests: 705 passed
+Backend selftest: 5343 passed, 25 skipped; ALL GREEN
+Backend architecture: 0 failures, 0 warnings
+Focused lifecycle: 53 passed
+HTTP API smoke: 13/13 passed
+Open-mode browser flows: 8/8 passed; 320/390/430 x 660 and 1440 x 1000; Chromium/WebKit
+Physical devices: not tested

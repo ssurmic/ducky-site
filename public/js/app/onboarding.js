@@ -77,7 +77,10 @@ export function startOnboarding(){
       if(stopped||uid!==account||store.epoch()!==epoch)return;
       progress=value;
       try{window.localStorage?.setItem('ducky-tour-change',String(Date.now()));}catch{}
-      if(action==='pause')hide();else render();
+      if(action==='pause')hide();else{
+        if(['start','restart'].includes(action)&&location.hash!==stepRoute(progress))location.hash=stepRoute(progress);
+        render();
+      }
     }catch(error){if(uid===account&&!stopped)failure(error);}
     finally{
       busy=false;if(visible)card.querySelectorAll('button').forEach(b=>b.disabled=false);
@@ -113,7 +116,7 @@ export function startOnboarding(){
     }
     if(note)card.append(el('p.tour-notice',{role:'status'},note));
     if(progress.status==='new'){
-      card.append(el('h2',s('tour.welcome')),el('p',s('tour.welcome_body')),
+      card.append(el('h2',s('tour.welcome')),el('p',s(progress.trial_ends_at?'tour.welcome_body':'tour.welcome_open')),
         button('tour.start',()=>{void save('start');},true),button('tour.later',()=>save('pause')));return;
     }
     if(['chapter_done','finished','paused'].includes(progress.status)){

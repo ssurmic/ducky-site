@@ -30,7 +30,8 @@ test('full archive filters and pagination are sent to the server, not applied on
  assert.equal(url.searchParams.get('start'),'2026-08-01');assert.equal(url.searchParams.get('end'),'2026-09-05');
  assert.equal(url.searchParams.get('before'),'42');assert.equal(url.searchParams.get('content'),'missing');
 });
-test('event categories, canonical links and explicit excerpt mode stay usable',async()=>{
+test('event categories, canonical links and explicit excerpt mode stay usable',async t=>{
+ t.mock.method(Date,'now',()=>now);
  globalThis.fetch=async url=>response(String(url).includes('radar-history')?{items:[{board:'insider',ticker:'TTMI',ts:'2026-08-26T12:00:00Z',summary:{en:'Historical receipt'},body:{en:'Identity unverified'}}]}:{items:sample});
  const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams()});
  assert.equal(root.querySelector('.signal-screen'),null);

@@ -54,6 +54,30 @@ test('expired account cannot read retained in-memory research',()=>{
  store.set('me',{user_id:11,tier:'free',entitlement:{capabilities:{research:false}}});assert.equal(cache.peek('/evidence/NVDA'),null);
 });
 
+test('open-access welcome does not promise a trial and Start opens Watchlist',async()=>{
+ location.hash='#/briefing';
+ const {stop}=setup();
+ try{
+  await next();
+  const card=document.querySelector('.tour-card');
+  assert.match(card.textContent,/Welcome to Ducky/);
+  assert.doesNotMatch(card.textContent,/15-day Pro trial|Trial ends/);
+  card.querySelector('[data-tour-action="tour.start"]').click();
+  await next();assert.equal(location.hash,'#/watchlist');
+ }finally{stop();}
+});
+
+test('existing accounts only open the tour when they request it',async()=>{
+ const p={...progress(),eligible:false};
+ store.set('me',{user_id:14,tier:'pro',onboarding_enabled:true,entitlement:{capabilities:{research:true}}});
+ globalThis.fetch=async()=>Response.json(p);
+ const stop=startOnboarding();
+ try{
+  await next();assert.equal(document.querySelector('.tour-card').hidden,true);
+  document.querySelector('.tour-help').click();assert.equal(document.querySelector('.tour-card').hidden,false);
+ }finally{stop();}
+});
+
 test('phone instructions stay outside the target at keyboard and landscape heights',async()=>{
  const {tourPlacement}=await import('../public/js/app/onboarding.js');
  for(const width of [320,390,430,844])for(const height of [320,420,844]){

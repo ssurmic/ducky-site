@@ -4168,6 +4168,7 @@
   "app.tour.help": "使用引导",
   "app.tour.welcome": "先加一只你关注的股票",
   "app.tour.welcome_body": "15 天 Pro 试用已开始。先花约两分钟，找到这只股票的研究、来源和图表。",
+  "app.tour.welcome_open": "欢迎来到 Ducky。先加一只股票，再跟着高亮提示，找到它的研究、原文和图表。随时可以跳过，或稍后继续。",
   "app.tour.until": "试用截止：{date}",
   "app.tour.start": "开始引导",
   "app.tour.later": "稍后再看",

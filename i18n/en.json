@@ -4168,6 +4168,7 @@
   "app.tour.help": "Product tour",
   "app.tour.welcome": "Start with a stock you follow",
   "app.tour.welcome_body": "Your 15-day Pro trial has started. Spend about two minutes finding a stock’s research, sources and chart.",
+  "app.tour.welcome_open": "Welcome to Ducky. Add a stock, then follow the highlights to explore its research, original sources and chart. You can skip or continue later.",
   "app.tour.until": "Trial ends {date}",
   "app.tour.start": "Start tour",
   "app.tour.later": "Maybe later",
