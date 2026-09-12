@@ -1,3 +1,4 @@
+import {tourEvent,tourTarget} from '../tour-events.js';
 import {canReadStock,stockResearchEntry} from '../experience.js';
 import { companyContext } from "../company-context.js";
 import { symbolPicker } from "../symbol-picker.js";
@@ -69,11 +70,12 @@ export async function mount(root, params) {
   const picker = symbolPicker(input);
   const form = el("form.add-row.chart-search", { id:'chart-search',hidden:!!ticker, onsubmit: (e) => { e.preventDefault(); const t = input.value.trim().toUpperCase().replace(/^\$/, ""); if (TICKER_RE.test(t)) location.hash = "#/chart/" + t; } },
     picker.wrap, el("button.btn.btn-primary", { type: "submit" }, s("chart.go")));
+  let tourChanged=false;
   const periodRow = el("div.seg.mono", { role: "group", "aria-label": s("chart.period") },
-    PERIODS.map((p) => { const lk = !allowed(p); return el("button", { type: "button", "data-period": p, disabled: lk ? "" : null, "data-locked": lk ? "" : null, "aria-disabled": lk ? "true" : null, 'aria-pressed':String(p===period),'aria-label':s('chart.period_'+p), title: lk ? s("chart.lock") : s('chart.period_'+p), class: p === period ? "on" : "", onclick: lk ? null : () => { period = p; periodRow.querySelectorAll("button").forEach((b) => {b.classList.toggle("on", b.dataset.period === p);b.setAttribute('aria-pressed',String(b.dataset.period===p));}); draw(); } }, s("chart.period_short_" + p) + (lk ? " 🔒" : "")); }));
+    PERIODS.map((p) => { const lk = !allowed(p); return el("button", { type: "button", "data-period": p, disabled: lk ? "" : null, "data-locked": lk ? "" : null, "aria-disabled": lk ? "true" : null, 'aria-pressed':String(p===period),'aria-label':s('chart.period_'+p), title: lk ? s("chart.lock") : s('chart.period_'+p), class: p === period ? "on" : "", onclick: lk ? null : () => { tourChanged=true; period = p; periodRow.querySelectorAll("button").forEach((b) => {b.classList.toggle("on", b.dataset.period === p);b.setAttribute('aria-pressed',String(b.dataset.period===p));}); draw(); } }, s("chart.period_short_" + p) + (lk ? " 🔒" : "")); }));
   const intervalRow=el('div.seg.chart-interval',{role:'group','aria-label':s('chart.interval')},
     ['day','week','month'].map(k=>el('button',{type:'button','data-interval':k,'aria-label':s('chart.'+k),'aria-pressed':String(k===interval),class:k===interval?'on':'',onclick:()=>{
-      interval=k;intervalRow.querySelectorAll('button').forEach(b=>{b.classList.toggle('on',b.dataset.interval===k);b.setAttribute('aria-pressed',String(b.dataset.interval===k));});draw();
+      tourChanged=true;interval=k;intervalRow.querySelectorAll('button').forEach(b=>{b.classList.toggle('on',b.dataset.interval===k);b.setAttribute('aria-pressed',String(b.dataset.interval===k));});draw();
     }},s('chart.short_'+k))));
   const controls=el('div.chart-controls',el('div.chart-control',el('span.small.muted',s('chart.period')),periodRow),
     el('div.chart-control',el('span.small.muted',s('chart.interval')),intervalRow),
@@ -119,6 +121,7 @@ export async function mount(root, params) {
   const workspace=el('div.chart-workspace',{hidden:!ticker},ohlc,
     el('div.chart-main',host,el('div.chart-tools',axes,zoomControls)),references,
     el('div.chart-reference-settings',optionControls,optionNotes),overlayStatus);
+  tourTarget(controls,'chart.controls',{ticker});
   root.append(head, form, controls, workspace, status, companyHost);
   const showCompany=(p,rs)=>{companyHost.replaceChildren(companyContext(p,rs));companyName.textContent=p?.company||'';};
   if (ticker) api.company(ticker).then(p=>{if(alive) showCompany(p);}).catch(()=>{if(alive) showCompany(null);});
@@ -229,6 +232,7 @@ export async function mount(root, params) {
     macdHist?.setData(histogram.map(p=>({...p,color:p.value>=0?palette.histUp:palette.histDown})));
     macdSig?.setData(m.signal);macdLineS?.setData(m.macd);
     plottedBars=bars;
+    if(tourChanged&&bars.length){tourChanged=false;tourEvent('chart',{ticker,bars:bars.length,changed:true});}
     // Size all panes together after creating them; adding MACD must not squeeze RSI.
     chart.panes().forEach((pane,index)=>pane.setStretchFactor([4,1,1][index] || 1));
   }

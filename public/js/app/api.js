@@ -112,6 +112,7 @@ async function performRequest(method,path,opts){
     throw new ApiError(401, data, path);
   }
   if (res.status === 402) {
+    if(data?.error==='subscription_required'&&opts.auth!==false)document.dispatchEvent(new window.CustomEvent('ducky:access-denied'));
     if (onPaymentRequired && !opts.silent402) onPaymentRequired(data || {});
     throw new ApiError(402, data, path);
   }
@@ -246,6 +247,7 @@ export const calendar = {
   // or hasn't shipped the route yet, fall back to the static file built into the site so the
   // calendar NEVER goes blank. Never throws — worst case an empty (but valid) doc.
   feed: async () => {
+    if(store.get('me')?.access?.mode==='trial')return get('/calendar',{silent402:true});
     // Fetch BOTH the live API and the static fallback, then MERGE — neither alone is complete:
     // the API has live earnings (and, once fully deployed, everything), the static fallback carries the
     // verified macro schedule (FOMC/CPI/NFP/PCE). Merging is correct whether the API is stale or fresh.
@@ -268,7 +270,7 @@ export const calendar = {
     out.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
     return { ...sourceState, events: out, as_of: (apiDoc && apiDoc.as_of) || undefined, source: "merged", partial: !!apiDoc?.partial };
   },
-  _raw: () => get("/public/calendar.json", { auth: false }),
+  _raw: () => store.get('me')?.access?.mode==='trial'?get('/calendar'):get('/public/calendar.json', {auth:false}),
 };
 export const push = {
   config: (opts) => get("/push/config", { ...opts, auth: false }),   // {enabled, vapid_public} — public key isn't secret

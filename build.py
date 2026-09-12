@@ -532,7 +532,7 @@ def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, versi
 
     return {
         "navigation": json.loads((ROOT / "product-navigation.json").read_text()),
-        "desk_quotes": {row['ticker']: row for row in json.loads((ROOT / cfg['desk_prices']).read_text())['quotes']},
+        "desk_quotes": {} if cfg.get('trial_access') else {row['ticker']: row for row in json.loads((ROOT / cfg['desk_prices']).read_text())['quotes']},
         "app_strings": {k[4:]:v for k,v in table.items() if k.startswith("app.")},
         "app_icon_sprite": app_icon_sprite() if page == "app" else "",
         "lang": lang, "html_lang": HTML_LANG[lang], "other_lang": other, "is_zh": lang == "zh",
@@ -555,7 +555,8 @@ def write_config_js(cfg: dict, version: str, filename: str = 'config.js') -> Non
         "API_BASE": cfg["api_base"], "BOT": cfg["bot"], "MINIAPP": cfg["miniapp"],
         "CHANNEL": cfg.get("channel"), "TRACK_JSON": cfg.get("track_json", "/track-record.json"),
         "FEED_JSON": cfg.get("feed_json", "/feed.json"), "PRICES": None, "VERSION": version,
-        "BILLING_ENABLED": False,
+        "BILLING_ENABLED": cfg.get("trial_access") is True,
+        "TRIAL_ACCESS_ENABLED": cfg.get("trial_access") is True,
         "RESEARCH_BRIEF_ENABLED": cfg.get("research_brief_preview") is True,
         "PRODUCT_FOCUS_ENABLED": cfg.get("product_focus") is True,
         "SHARED_STOCK_BRIEFS_ENABLED": True,
@@ -621,20 +622,27 @@ def load_video_example():
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--api-base", help="override api_base from site.config.json")
+    ap.add_argument("--trial-access", action=argparse.BooleanOptionalAction, default=None,
+                    help="build the trial product; deployment still requires backend activation")
     ap.add_argument("--product-focus", action=argparse.BooleanOptionalAction, default=None,
                     help="preview the simplified Today / Watchlist / Explore workflow")
     ap.add_argument("--research-brief-preview", action=argparse.BooleanOptionalAction, default=None,
                     help="override the Research Brief site setting (absent setting: disabled)")
     args = ap.parse_args()
 
-    # refresh the static calendar fallback (deterministic index rebalances) so dates roll forward
+    cfg = load_config(args.api_base)
+    if args.trial_access is not None: cfg["trial_access"] = args.trial_access
+    if type(cfg.get('trial_access', False)) is not bool:
+        fail('trial_access must be a boolean')
+    # Trial builds cannot regenerate a current public calendar.
     try:
         import subprocess
-        subprocess.run([sys.executable, str(ROOT / "scripts" / "gen_calendar.py")], check=True)
+        if not cfg.get('trial_access'):
+            subprocess.run([sys.executable, str(ROOT / "scripts" / "gen_calendar.py")], check=True)
     except Exception as e:  # noqa: BLE001
         print(f"[build] gen_calendar skipped: {e}")
 
-    cfg, tables, version = load_config(args.api_base), load_i18n(), git_sha()
+    tables, version = load_i18n(), git_sha()
     cfg["research_brief_preview"] = research_brief_enabled(cfg, args.research_brief_preview)
     if args.product_focus is not None:cfg["product_focus"] = args.product_focus
     pages, env, liq, track_n = page_targets(), make_env(), load_liquidity(), load_track_n()
@@ -648,6 +656,9 @@ def main() -> None:
     sanitize_public_payloads(DIST)
     from creator_public_access import sanitize_creator_catalog
     sanitize_creator_catalog(DIST)
+    if cfg.get('trial_access'):
+        from trial_public import sanitize
+        sanitize(DIST)
     app_version = publish_app_modules(retain_history=True)
     for name in BRAND_ASSETS:
         if not (DIST / name).is_file():

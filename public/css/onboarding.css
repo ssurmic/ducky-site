@@ -1,0 +1,13 @@
+.tour-card{position:fixed;z-index:10012;right:18px;bottom:18px;width:min(360px,calc(100vw - 24px));padding:16px;border:1px solid var(--border,#607065);border-radius:18px;background:var(--bg,#fff);color:var(--text,#14251a);box-shadow:0 12px 48px #0004;max-height:calc(100dvh - 32px);overflow:auto;overscroll-behavior:contain;box-sizing:border-box}
+.tour-card[hidden],.tour-ring[hidden],.tour-help[hidden]{display:none}
+.tour-heading{display:flex;align-items:center;gap:8px}.tour-heading strong{flex:1}.tour-heading .btn{padding:6px 10px}
+.tour-card h2{font-size:18px;line-height:1.35;margin:10px 0}.tour-card p{font-size:14px;line-height:1.5;margin:8px 0}
+.tour-card .btn{min-height:44px;white-space:normal;margin:3px 3px 3px 0}.tour-actions{display:flex;flex-wrap:wrap}.tour-card .tour-expiry,.tour-card .tour-chapter{font-size:12px;opacity:.8}.tour-notice{border-left:3px solid #66be7c;padding-left:8px}
+.tour-ring{position:fixed;z-index:10011;border:3px solid #38a76a;border-radius:10px;pointer-events:none;box-shadow:0 0 0 9999px #00170e55;box-sizing:border-box;transition:top .18s,left .18s,width .18s,height .18s}
+.tour-help{position:fixed;bottom:calc(76px + env(safe-area-inset-bottom));right:12px;z-index:40;min-height:44px;padding:8px 12px;border-radius:24px;border:1px solid var(--border,#9aa);background:var(--bg,#fff);color:var(--text,#14251a);font:inherit;font-size:13px}.tour-visible .tour-help{visibility:hidden}
+.trial-banner{padding:8px 14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:1px solid var(--border,#9aa);font-size:13px}.trial-banner[hidden]{display:none}
+@media(max-width:699px){.tour-card{right:12px;bottom:calc(76px + env(safe-area-inset-bottom));padding:12px}.tour-card p{font-size:13px}.tour-ring{border-radius:16px}.tour-ring:after{content:'';position:absolute;right:-8px;top:-8px;width:18px;height:18px;border-radius:50%;background:#69cd91;animation:tour-tap 1.4s ease-out 2}}
+@keyframes tour-tap{0%{box-shadow:0 0 0 0 #69cd9166}100%{box-shadow:0 0 0 14px #69cd9100}}
+@media(prefers-reduced-motion:reduce){.tour-ring{transition:none}.tour-ring:after{animation:none}}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .tour-card,:root:not([data-theme=light]) .tour-help{background:#16231d;color:#edf6ef}}
+[data-theme=dark] .tour-card,[data-theme=dark] .tour-help{background:#16231d;color:#edf6ef}

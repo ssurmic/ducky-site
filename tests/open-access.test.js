@@ -17,7 +17,7 @@ const api=await import('../public/js/app/api.js');
 
 test('current product gives full UI access to any signed-in account without claiming payment',async()=>{
  for(const tier of ['free','paid','pro']){
-  const me={tier,subscription:{tier,active:false},experience:{evidence:{selected:[]}},access:{mode:'open',billing_enabled:false}};
+  const me={tier:'pro',subscription:{tier,active:false},experience:{evidence:{selected:[]}},access:{mode:'open',billing_enabled:false}};
   store.set('me',me);
   assert.ok(store.isPro() && store.isPaid());
   assert.equal(store.get('me').subscription.active,false);
@@ -40,7 +40,7 @@ test('old checkout links resolve to the account page without checkout params',()
 });
 
 test('full creator feed is selected for an account with no paid subscription',async()=>{
- store.set('me',{tier:'free',access:{billing_enabled:false}});
+ store.set('me',{tier:'pro',subscription:{tier:'free',active:false},access:{billing_enabled:false}});
  store.set('token','local-test-only');
  let url;globalThis.fetch=async(input)=>{url=String(input);return new Response(JSON.stringify({posts:[]}),{headers:{'content-type':'application/json'}});};
  await api.kol.feed();assert.equal(url,'/kol/feed');

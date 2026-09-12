@@ -1,3 +1,4 @@
+import {tourEvent} from '../tour-events.js';
 import {s,LANG} from '../strings.js';
 import {el,clear,errorBox} from '../ui.js';
 import * as api from '../api.js';
@@ -25,5 +26,9 @@ export async function mount(root,route={}){
   if(row.extra?.message_en && row.extra?.message_zh)for(const language of ['zh','en'])controls.append(el('button.btn.btn-ghost.btn-sm',{type:'button','data-language':language,onclick:()=>render(language)},language==='zh'?'中文':'English'));
   page.append(el('nav.record-breadcrumb',{'aria-label':s('reader.location')},el('a',{href:'#/'+parent},s('nav.'+parent)),el('span',{'aria-hidden':'true'},'/'),el('span',s('reader.record'))),
    controls,content);root.append(page);render(LANG);
+  if(['insider','cluster'].includes(row.kind)&&content.querySelector('.radar-purchase-rule')){
+    const source=content.querySelector('[data-source-record]');
+    if(source){source.dataset.tour='insider.open';source.addEventListener('click',()=>tourEvent('insider',{record:row.id,outcome:'external_link_opened'}));}
+  }
  }catch(e){if(!route.signal?.aborted && epoch===store.epoch()){if(e.status===404){root.append(el('p',s('reader.unavailable')),el('a.btn.btn-ghost',{href:'#/reports'},s('nav.reports')));}else root.append(errorBox(e,()=>{clear(root);mount(root,route);}));}}
 }

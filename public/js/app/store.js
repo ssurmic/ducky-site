@@ -43,6 +43,7 @@ function emit(key) {
 
 // Billing is a product policy, separate from the historical subscription in /me.
 export function billingEnabled() { return state.me?.access?.billing_enabled ?? (window.DUCKY?.BILLING_ENABLED !== false); }
-export function tier() { return state.me && !billingEnabled() ? 'pro' : (state.me && state.me.tier) || "free"; }
+export function tier() { return state.me?.entitlement?.tier || state.me?.tier || 'free'; }
+export function canResearch() { return !!state.me && (state.me.entitlement?.capabilities?.research ?? true); }
 export function isPro() { return tier() === "pro"; }
 export function isPaid() { const t = tier(); return t === "pro" || t === "paid"; }

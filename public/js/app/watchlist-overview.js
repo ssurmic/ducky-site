@@ -135,7 +135,7 @@ export function overviewView(rows, options) {
       identity,...cells,...(compact?[price,change,el('span.mono.watch-row-cap',capText(r.market_cap))]:[
         el('span.watch-quote',el('span.watch-metric-label',quote?quoteLabel(quote):s('watch.close')),price,change,
           quote?el('small.watch-metric-note',{title:quote.provider+' · '+quote.feed},quoteLabel(quote)+' · '+quoteTime(quote)):null)])),
-      el('a.watch-map-link',{href:'#/evidence/'+encodeURIComponent(r.ticker),'aria-label':s('watch.open_stock_map',{ticker:r.ticker}),'data-map-open':r.ticker},icon('evidence'),el('span',s('watch.open_map'))));
+      el('a.watch-map-link',{href:'#/evidence/'+encodeURIComponent(r.ticker),'aria-label':s('watch.open_stock_map',{ticker:r.ticker}),'data-map-open':r.ticker,'data-tour':'stock.map','data-ticker':r.ticker},icon('evidence'),el('span',s('watch.open_map'))));
   };
   if(view!=='heatmap')root.append(el('p.muted.small.watch-session',filtered.some(r=>displayQuote(r))?s('watch.mixed_quote_note',{date:session||'—'}):session?s('watch.close_session',{date:session}):s('watch.summary_pending')));
   if(!filtered.length) {root.append(el('p.empty',s('watch.no_match')));return root;}
@@ -199,7 +199,7 @@ export function overviewView(rows, options) {
           el('a.stock-open',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':open'},s('focus.open_stock')+' →'));
         body.append(el('tr',{'data-reading-anchor':row.ticker},
           el('th',{scope:'row'},el('a.stock-name',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':name'},el('strong',row.ticker),el('span.watch-company',row.company||row.ticker)),
-            el('a.watch-map-link',{href:'#/evidence/'+encodeURIComponent(row.ticker),'data-map-open':row.ticker,'data-reading-key':row.ticker+':map','aria-label':s('watch.open_stock_map',{ticker:row.ticker})},icon('evidence'),el('span',s('watch.open_map')))),
+            el('a.watch-map-link',{href:'#/evidence/'+encodeURIComponent(row.ticker),'data-map-open':row.ticker,'data-tour':'stock.map','data-ticker':row.ticker,'data-reading-key':row.ticker+':map','aria-label':s('watch.open_stock_map',{ticker:row.ticker})},icon('evidence'),el('span',s('watch.open_map')))),
           el('td.watch-quote-cell',el('strong.mono',px(shown.price)),el('span.watch-change',{class:'watch-'+changeClass(shown.change_pct)},pct(shown.change_pct,2)),
             el('small.muted',q?quoteLabel(q)+' · '+quoteTime(q):row.price_session||session||'—')),
           el('td.watch-overview-cell',overview),el('td.mono',row.security_type==='ETF'?'ETF':capText(row.market_cap)),

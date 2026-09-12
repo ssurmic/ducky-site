@@ -1,3 +1,4 @@
+import {tourEvent,tourTarget} from '../tour-events.js';
 import {freeGuide,quotaNote} from '../experience.js';
 // views/watchlist.js — add ticker · list of 全景 mini-cards from /snapshot · remove.
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
@@ -21,6 +22,7 @@ export function normalizeList(resp) {
 }
 
 export async function mount(root,{signal}={}) {
+  if(!store.canResearch()){const manager=await import('./watchlist-manager.js');return manager.mount(root,{signal});}
   const mountedEpoch=store.epoch();
   const unsubs = [];
   root.classList.add("watchlist-view");
@@ -46,6 +48,7 @@ export async function mount(root,{signal}={}) {
   const picker = symbolPicker(input, () => store.get("watchlist") || []);
   unsubs.push(picker.dispose);
   const form = el("form.add-row", { onsubmit: onAdd }, picker.wrap, addBtn);
+  tourTarget(form,"watchlist.add");
   const addOptions = el('details.watch-add-options', {open:!(store.get('watchlist')||[]).length},
     el('summary',s('watch.add')),el('p.view-intro.muted',s('watch.workflow')),form);
   const usage=el("div");
@@ -98,6 +101,7 @@ export async function mount(root,{signal}={}) {
       card(selected,(store.get('snapshots') || {})[selected]));
   }
   head.append(addOptions);
+  tourTarget(head,'watchlist.home');
   root.append(head, freeGuide() || "", usage, controls, offer, readNotice, layout,
     el('div.chips',el('a.chip',{href:'#/updates'},s('updates.entry_title'))));
 
@@ -120,6 +124,7 @@ export async function mount(root,{signal}={}) {
       toast(result?.added === false ? s("watch.following") : s("watch.added", { t:result?.ticker || t }), "ok");
       tg.haptic("success");
       await load();
+      tourEvent('add',{ticker:result?.ticker||t});
 
     } catch (err) {
       if(disposed||store.epoch()!==epoch)return;
@@ -181,7 +186,7 @@ export async function mount(root,{signal}={}) {
       el("a.btn.btn-ghost.btn-sm", { href: "#/chart/" + t }, s("watch.chart")),
       el("button.btn.btn-ghost.btn-sm.danger", { type: "button", "aria-label": s("watch.remove") + " " + t, onclick: () => onRemove(t) }, "✕"));
     c.appendChild(head);
-    c.append(el('a.watch-evidence-entry',{href:'#/evidence/'+encodeURIComponent(t),'aria-label':s('watch.open_stock_map',{ticker:t})},
+    c.append(el('a.watch-evidence-entry',{href:'#/evidence/'+encodeURIComponent(t),'aria-label':s('watch.open_stock_map',{ticker:t}),'data-tour':'stock.map','data-ticker':t},
       icon('evidence'),el('span',el('strong',s('evidence.title')),el('span',s('watch.map_description'))),el('span',{'aria-hidden':'true'},'→')));
     c.append(el('a.btn.btn-ghost.btn-sm.watch-research',{href:'#/research/'+encodeURIComponent(t)},s('watch.research_record')));
     if (!snap) { c.appendChild(spinner()); return c; }

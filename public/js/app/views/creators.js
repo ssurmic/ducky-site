@@ -1,3 +1,4 @@
+import {tourEvent,tourTarget} from '../tour-events.js';
 import {discoveryPreview} from './creator-discovery.js';
 import {creatorStarters} from './creator-starters.js';
 import {quotaNote} from '../experience.js';
@@ -420,7 +421,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         const fullSummary = reviewed?(pickSummary(p.summary,isZh) || pickSummary(sections[0],isZh)):'';
         if(fullSummary)art.appendChild(el("p.cr-sum", conciseSummary(fullSummary,isZh)));
         const detail = el("details.cr-sections",el("summary",s(fullSummary?"creators.read_summary":"creatordiscovery.excerpts")),el("p.cr-attribution.muted.small", s("creators.attribution", { name: p.kol_name || p.kol_id || "—" })),el("p",fullSummary));
-        if(focusedPost)detail.open=true;
+        if(focusedPost){detail.open=true;if(fullSummary||points.length)queueMicrotask(()=>{if(detail.isConnected)tourEvent('source',{post:p.platform_post_id,sourceHash:source.source_hash||points[0]?.source_hash});});}
         const spans=spanSection(points,null,focusedPoint,{inline:true,preferredTickers:stockFilter});if(spans)detail.append(spans);
         if (grounded && legacyCalls(p).length) detail.append(callChips(legacyCalls(p),isZh,p.url,p.kol_id));
         if (reviewed && sections.length) {
@@ -441,7 +442,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       if(p.title)audit.append(el('p.creator-original-title',p.title));
       audit.append(sourceFacts);(art.querySelector(".cr-sections") || art).append(audit);
       const actions=el('div.evidence-controls.creator-page-actions');
-      if (safeSource(p.url)) actions.appendChild(el("a.cr-orig", { href: p.url, target: "_blank", rel: "noopener noreferrer" }, s("creators.orig") + " ↗"));
+      const focusedSeconds=points.find(v=>v.point_id===focusedPoint)?.start_seconds;
+      if (safeSource(p.url)) actions.appendChild(el("a.cr-orig", { href: Number.isFinite(focusedSeconds)?atTime(p.url,focusedSeconds):p.url, target: "_blank", rel: "noopener noreferrer",'data-tour':(reviewed||points.length)&&p.platform==='youtube'?'video.open':null,'data-post':p.platform_post_id,onclick:()=>{if(p.platform==='youtube')tourEvent('video',{outcome:'external_link_opened',post:p.platform_post_id,sourceHash:source.source_hash||points[0]?.source_hash});} }, s("creators.orig") + " ↗"));
       if(grounded) actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected=p.kol_id;tab='research';renderContent();}},s('creators.research')),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected=p.kol_id;tab='lab';renderContent();}},s('creatorlab.tab')));
       art.append(actions);
       feed.appendChild(art);
