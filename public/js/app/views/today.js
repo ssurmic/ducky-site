@@ -12,6 +12,20 @@ let readingEpoch=null;
 const SUMMARY_PREVIEW=5;
 const timestamp=value=>typeof value==='string'&&Number.isFinite(Date.parse(value))?Date.parse(value):-Infinity;
 
+const dayOf=value=>{
+  if(typeof value!=='string')return '';
+  if(/^\d{4}-\d{2}-\d{2}$/.test(value))return value;
+  const date=new Date(value);
+  if(!Number.isFinite(date.getTime()))return '';
+  return [date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('-');
+};
+// A record leads the feed only when its SOURCE was published inside the selected period;
+// revisions of months-old filings are still readable, but folded away under one disclosure.
+export function isFreshChange(item,since){
+  const day=dayOf(item?.published_at);
+  return !!day&&day>=dayOf(since);
+}
+
 // Reading order only: actual analysis dates, never ticker order or a trade score.
 export function latestAnalyses(items){
   return [...items].sort((a,b)=>{
@@ -66,6 +80,9 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
     for(const node of host.querySelectorAll('details[data-reading-key]'))if(saved?.opened?.includes(node.dataset.readingKey))node.open=true;
   };
   const main=el('section.focus-today'),feed=el('div.change-list'),status=el('div',{'aria-live':'polite'});
+  const olderList=el('div.change-list'),olderSummary=el('summary',{'data-reading-key':'changes:older-toggle'},s('focus.older_updates',{count:0}));
+  const older=el('details.change-older',{hidden:true,'data-reading-key':'changes:older'},olderSummary,el('p.small.muted',s('focus.older_updates_note')),olderList);
+  let olderCount=0;
   const now=new Date(),date=new Intl.DateTimeFormat(LANG==='en'?'en-US':'zh-CN',{month:'long',day:'numeric',weekday:'long'}).format(now);
   const title=el('header.focus-heading.today-heading',el('div',el('p.today-date',date),el('h1',s('focus.today')),el('p.muted',s('focus.today_intro'))),
     el('a.btn.btn-ghost',{href:'#/calendar'},s('focus.upcoming')));
@@ -80,12 +97,12 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   main.append(updates);
   const more=el('button.btn.btn-ghost',{type:'button',hidden:true,onclick:()=>load(true)},s('focus.more_changes'));
   const coverage=el('p.small.muted',s('focus.coverage_note'));
-  updates.append(more,coverage);root.append(main);
+  updates.append(older,more,coverage);root.append(main);
   const summaries=el('section.focus-latest');
   if(!embedded)main.append(summaries);
   async function load(append=false){
     const mine=++seq;
-    if(!append){cursor=null;rows=[];pages=0;windowRange=dayWindow(new Date(),days);clear(feed);}
+    if(!append){cursor=null;rows=[];pages=0;windowRange=dayWindow(new Date(),days);clear(feed);clear(olderList);olderCount=0;older.hidden=true;}
     clear(status);status.append(spinner());more.disabled=true;
     const params=new URLSearchParams({...windowRange,scope,limit:'5',earlier:String(days!==1||!!query),...(cursor?{before:cursor}:{}),...(query?{q:query}:{})});
     try{
@@ -94,10 +111,14 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
       if(!Array.isArray(response?.items))throw new api.ApiError(502,{error:'invalid_research_response'});
       rows.push(...(response.items||[]));cursor=response.next_cursor;pages++;clear(status);
       if(!rows.length)status.append(el('p.focus-empty',s(query?'focus.no_search_results':'focus.no_changes')));
-      for(const item of response.items||[])feed.append(changeCard(item,{from:embedded?'explore':'today'}));
+      for(const item of response.items||[]){
+        const card=changeCard(item,{from:embedded?'explore':'today'});
+        if(isFreshChange(item,windowRange.since)){feed.append(card);continue;}
+        olderList.append(card);olderCount++;olderSummary.textContent=s('focus.older_updates',{count:olderCount});older.hidden=false;
+      }
       more.hidden=!cursor;
       if(watchlistEmpty)more.hidden=true;
-      restoreDisclosures(feed);
+      restoreDisclosures(feed);restoreDisclosures(older);
       return true;
     }catch(error){if(!disposed&&!signal?.aborted&&mine===seq){clear(status);status.append(researchError(error,()=>load(append)));}}
     finally{if(mine===seq)more.disabled=false;}

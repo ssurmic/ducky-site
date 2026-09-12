@@ -4034,6 +4034,8 @@
   "app.focus.record_revised": "记录修订",
   "app.focus.earlier_content": "较早内容补录",
   "app.focus.coverage_added": "新收录的资料",
+  "app.focus.older_updates": "较早来源的更新（{count}）",
+  "app.focus.older_updates_note": "来源发布于本时段之前、记录最近有更新的资料。",
   "app.focus.record_added": "新增资料",
   "app.focus.unavailable_detail": "原记录已不在当前有效资料中。进入股票页查看最新依据。",
   "app.focus.source_published": "来源发布于 {date}",
