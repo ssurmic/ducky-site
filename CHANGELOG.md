@@ -1,13 +1,15 @@
 # Change log
 
-## Today leads with sources published in the period · 2026-09-12
+## Today leads with sources published in the period · 2026-09-12 (deployed)
 
 The research-updates feed on Today and Explore is ordered by record availability, so a re-projected
 Form 4 from April rendered as "Revised record" at the top of "Past 7 days" and a fresh video sat
 below it. `views/today.js` now keeps a record in the main feed only when its source was published
 inside the selected period (`isFreshChange`, calendar-day comparison in the viewer's zone) and folds
 the rest under one closed disclosure, "Older sources updated (N)", with a one-line note; pagination
-keeps filling both. No request or API change. Test in `tests/product-focus.test.js`.
+keeps filling both. No request or API change. Test in `tests/product-focus.test.js`. Released through
+`scripts/deploy_pages.sh`: main `713f0fcb` → Pages `cfca997c` at 2026-09-12 08:19 UTC; verified in the
+browser (Explore, Past 7 days: "Older sources updated (5)" folded, no April filings in the main feed).
 
 ## One gated release path for the Direct Upload Pages project · 2026-09-12 (deployed)
 
@@ -21,7 +23,7 @@ published the three commits (`#46`, the 2026-09-12 notary data, `#49`) that had 
 on a Pages token the repository does not have; until an operator adds one, this script is the
 release path from any machine with a wrangler login.
 
-## Allow the Cloudflare Web Analytics beacon through the CSP · 2026-09-12
+## Allow the Cloudflare Web Analytics beacon through the CSP · 2026-09-12 (deployed)
 
 Cloudflare Pages injects `https://static.cloudflareinsights.com/beacon.min.js` on every
 response, but the site CSP only admitted `'self'` and `https://telegram.org`, so every
@@ -30,7 +32,8 @@ page view has ever reached Cloudflare Web Analytics. `script-src` now admits the
 `connect-src` admits its POST to `https://cloudflareinsights.com`; nothing else in the policy
 changed. `tests/headers-csp.test.js` pins the rendered `dist/_headers`. The pinned string in
 the backend `SYSTEMDESIGN.md` §5 changes in the same set. Not deployed by this change: the
-Pages project is Direct Upload, so a merge alone does not publish.
+Pages project is Direct Upload, so a merge alone does not publish. Released with main `43de210b` →
+Pages `eef06b96` at 07:29 UTC; the beacon loaded (HTTP 200) with no CSP violation in the console.
 
 ## Shared design and continuation references · 2026-09-12
 
