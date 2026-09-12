@@ -11,18 +11,26 @@ const store=await import('../public/js/app/store.js');
 const {mount}=await import('../public/js/app/views/watchlist.js');
 const row=(ticker,cap,change=0)=>({ticker,company:ticker+' Company',market_cap:cap,market_cap_status:'ready',market_cap_currency:'USD',market_cap_as_of:'2026-09-07T00:00:00Z',price:100,price_status:'ready',change_pct:change});
 
-test('recent provider quote is separate from the completed close and expires by its trade clock',async()=>{
- const {currentQuote}=await import('../public/js/app/watchlist-overview.js');
- const at=Date.now();const r={...row('NVDA',1e9),quote:{status:'current',price:105,change_pct:null,quote_at:new Date(at).toISOString(),provider:'alpaca',feed:'iex'}};
- assert.equal(currentQuote(r,at)?.price,105);
- assert.equal(currentQuote(r,at+180001),null);
- assert.equal(currentQuote(r,at-1),null);
- const list=overviewView([r],{view:'list',session:'2026-09-08',onSelect:()=>{}});
+test('a provider quote shows its age, turns into a saved quote after three minutes and drives the map too',async()=>{
+ const {quoteAgeSeconds,quoteLabel,quoteAgeText,retimeQuotes}=await import('../public/js/app/watchlist-overview.js');
+ const at=Date.now();const r={...row('NVDA',1e9),quote:{status:'current',price:105,change_pct:1.5,quote_at:new Date(at-30000).toISOString(),age_seconds:20,provider:'alpaca',feed:'iex'}};
+ // Server age plus time since the response arrived; the browser clock alone is the fallback.
+ assert.equal(Math.round(quoteAgeSeconds(r.quote,at,at-10000)),30);
+ assert.equal(Math.round(quoteAgeSeconds(r.quote,at)),30);
+ assert.equal(quoteLabel(r.quote,30),'Latest quote');assert.equal(quoteLabel(r.quote,181),'Saved quote');
+ assert.equal(quoteAgeText(r.quote,30),'just now');assert.equal(quoteAgeText(r.quote,150),'2 min ago');assert.equal(quoteAgeText(r.quote,7200),'2 h ago');
+ assert.match(quoteAgeText(r.quote,7*3600),/GMT|E[DS]T|AM|PM/);   // the print's own New York time, in either UI language
+ const list=overviewView([r],{view:'list',session:'2026-09-08',onSelect:()=>{},quoteReceived:at-10000});
  assert.match(list.querySelector('.watch-row-price').textContent,/105/);
- assert.match(list.querySelector('.watch-quote').textContent,/Latest quote/);
  assert.doesNotMatch(list.querySelector('.watch-change').textContent,/0\.00/); // no inherited daily change
+ const note=list.querySelector('.watch-quote-time');assert.match(note.textContent,/Latest quote · just now/);
+ assert.match(note.title,/alpaca · iex/);
+ retimeQuotes(list,at+200000);assert.match(note.textContent,/Saved quote · 3 min ago/);
+ // The map shows the same number as the list, and says so.
  const map=overviewView([r],{view:'heatmap',area:'equal',session:'2026-09-08',onSelect:()=>{}});
- assert.match(map.querySelector('.watch-tile-price').textContent,/100/);
+ assert.match(map.querySelector('.watch-tile-price').textContent,/105/);assert.match(map.querySelector('.watch-tile-change').textContent,/1\.50/);
+ assert.ok(map.querySelector('.watch-tile').classList.contains('watch-up'));
+ assert.match(map.querySelector('.watch-session').textContent,/Quotes show their own time/);
  const stale=overviewView([{...r,quote:{...r.quote,status:'stale'}}],{view:'list',onSelect:()=>{}});
  assert.match(stale.querySelector('.watch-row-price').textContent,/105/);
  assert.match(stale.querySelector('.watch-quote').textContent,/Saved quote/);
@@ -126,8 +134,8 @@ test('initial watchlist loading is not rendered as missing market data',async()=
  globalThis.fetch=async()=>{await pending;return new Response(JSON.stringify({items:[row('ONE',10)],overview:{items:[row('ONE',10)],session:'2026-09-04'}}),{headers:{'content-type':'application/json'}});};
  store.set('me',{tier:'pro',watch_cap:50});store.set('watchlist',['ONE']);store.set('snapshots',{});
  const root=document.querySelector('main'),mounted=mount(root);
- assert.ok(root.querySelector('.spinner-row'));assert.equal(root.querySelector('.watch-summary'),null);
- complete();const dispose=await mounted;assert.ok(root.querySelector('.watch-summary'));
+ assert.ok(root.querySelector('.watch-skeleton'));assert.equal(root.querySelector('.watch-skeleton-row').childElementCount,3);assert.equal(root.querySelector('.watch-summary'),null);
+ complete();const dispose=await mounted;assert.ok(root.querySelector('.watch-summary'));assert.equal(root.querySelector('.watch-skeleton'),null);
  dispose();root.replaceChildren();
 });
 
@@ -315,4 +323,24 @@ test('stock and map current-price labels agree without modifying saved analysis 
  assert.match(compactPrice(r).textContent,/105/);assert.match(priceBadge(doc).textContent,/105/);
  assert.equal(saved.price.data.price,90);
  assert.match(priceBadge({...doc,display_price:undefined}).textContent,/90/);
+});
+
+test('the first mount after boot reuses the boot read of /watchlist once and still revalidates it',async()=>{
+ const api=await import('../public/js/app/api.js');const {sharedReadRefresh}=await import('../public/js/app/shared-read-refresh.js');
+ Object.defineProperty(document,'visibilityState',{get:()=>'visible',configurable:true});
+ store.bumpEpoch();store.set('token','synthetic-only');store.set('me',{tier:'pro',watch_cap:50});store.set('watchlist',[]);store.set('snapshots',{});
+ let value={items:['AVGO'],cap:50,overview:{items:[{...row('AVGO',1e9),quote:{status:'current',price:101,change_pct:0.5,quote_at:new Date().toISOString(),age_seconds:5}}],session:'2026-09-08'}};
+ const calls=[];globalThis.fetch=async url=>{calls.push(String(url));return Response.json(String(url)==='/watchlist'?value:{snapshot:{ok:false}});};
+ await api.watchlist.list();store.set('watchlist',['AVGO']);   // the boot sequence's read
+ const root=document.querySelector('main');root.replaceChildren();
+ const refresh=sharedReadRefresh(root,{reload:()=>assert.fail('automatic reload')});
+ const dispose=await mount(root);
+ assert.deepEqual(calls,['/watchlist']);assert.match(root.querySelector('.watch-row-price').textContent,/101/);
+ assert.match(root.querySelector('.watch-quote-time').textContent,/Latest quote · just now/);
+ value={...value,overview:{...value.overview,items:[{...value.overview.items[0],quote:{...value.overview.items[0].quote,price:102}}]}};
+ await refresh.check();assert.deepEqual(calls,['/watchlist','/watchlist']);assert.match(root.querySelector('.watch-row-price').textContent,/102/);
+ dispose();
+ // A later entry revalidates instead of reusing the seconds-old response.
+ const again=await mount(root);assert.equal(calls.filter(u=>u==='/watchlist').length,3);again();
+ refresh.stop();root.replaceChildren();
 });

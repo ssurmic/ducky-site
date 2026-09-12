@@ -2,12 +2,9 @@ import { el, pct, px } from './ui.js';
 import { s, LANG } from './strings.js';
 import { icon } from './icons.js';
 import {metricKeys,metricCell,metricLabel,metricMethods,metricSortValue} from './watchlist-metrics.js';
+import {signalKeys,signalCell,signalLabel,signalHelpButton,signalSortValue,signalMethods} from './watchlist-signals.js';
 
 const finite = n => typeof n === 'number' && Number.isFinite(n);
-export function currentQuote(row, now=Date.now()) {
-  const q=row.quote, age=now-Date.parse(q?.quote_at);
-  return q?.status==='current'&&finite(q.price)&&q.price>0&&age>=0&&age<=180000?q:null;
-}
 // Keep the newest dated value during provider outages/after the close. Never
 // replace a completed day's close with an earlier intraday trade on that day.
 export function displayQuote(row, now=Date.now()) {
@@ -17,9 +14,42 @@ export function displayQuote(row, now=Date.now()) {
   if(finite(row.price)&&row.price>0&&row.price_session&&session<=row.price_session)return null;
   return q;
 }
-export const quoteLabel=q=>s(q?.status==='current'&&Date.now()-Date.parse(q.quote_at)<=180000?'watch.latest_quote':'watch.saved_quote');
+// Every surface (list rows, map tiles, breadth) shows the same number for a stock.
+export const display=row=>displayQuote(row)||row;
+// Quote age in seconds. With the server's own age and the moment the response arrived, the
+// browser clock only measures time since arrival; otherwise it compares trade clocks directly.
+export function quoteAgeSeconds(q, now=Date.now(), received=null) {
+  if(finite(q?.age_seconds)&&finite(received)&&received<=now)return q.age_seconds+(now-received)/1000;
+  const at=Date.parse(q?.quote_at);
+  return finite(at)?Math.max(0,(now-at)/1000):null;
+}
+export const quoteFresh=(q,age)=>q?.status==='current'&&finite(age)&&age<=180;
+export const quoteLabel=(q,age=quoteAgeSeconds(q))=>s(quoteFresh(q,age)?'watch.latest_quote':'watch.saved_quote');
 export const quoteTime=q=>new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{
   month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'America/New_York',timeZoneName:'short'}).format(new Date(q.quote_at));
+// Relative age up to six hours, then the New York time of the print itself.
+export function quoteAgeText(q, age=quoteAgeSeconds(q)) {
+  if(!finite(age))return quoteTime(q);
+  if(age<60)return s('watch.quote_age_now');
+  if(age<3600)return s('watch.quote_age_minutes',{n:Math.floor(age/60)});
+  if(age<6*3600)return s('watch.quote_age_hours',{n:Math.floor(age/3600)});
+  return quoteTime(q);
+}
+// One clock line per quote. Data attributes let the view re-time it without a re-render.
+export function quoteNote(q, {received=null, tag='small.muted'}={}) {
+  const age=quoteAgeSeconds(q,Date.now(),received);
+  return el(tag+'.watch-quote-time',{'data-quote-at':q.quote_at,'data-quote-status':q.status||'',
+    'data-quote-age':finite(q.age_seconds)?String(q.age_seconds):'','data-quote-received':finite(received)?String(received):'',
+    title:[q.provider,q.feed,quoteTime(q)].filter(Boolean).join(' · ')},quoteLabel(q,age)+' · '+quoteAgeText(q,age));
+}
+export function retimeQuotes(root, now=Date.now()) {
+  for(const node of root.querySelectorAll('.watch-quote-time[data-quote-at]')){
+    const q={quote_at:node.dataset.quoteAt,status:node.dataset.quoteStatus,age_seconds:node.dataset.quoteAge===''?null:Number(node.dataset.quoteAge)};
+    const received=node.dataset.quoteReceived===''?null:Number(node.dataset.quoteReceived);
+    const age=quoteAgeSeconds(q,now,received),text=quoteLabel(q,age)+' · '+quoteAgeText(q,age);
+    if(node.textContent!==text)node.textContent=text;
+  }
+}
 const retained = row => row.price_status === 'retained';
 const savedLabel = row => s('watch.saved_close', {date:row.price_session || '—'});
 export const weighted = row => row.market_cap_status === 'ready' && finite(row.market_cap) && row.market_cap > 0 && row.security_type !== 'ETF';
@@ -42,7 +72,7 @@ export function heatColor(value) {
 
 function breadth(rows) {
   const counts={up:0,down:0,flat:0,unknown:0};
-  for(const row of rows)counts[changeClass(row.change_pct)]++;
+  for(const row of rows)counts[changeClass(display(row).change_pct)]++;
   return el('div.watch-breadth',
     el('div.watch-breadth-labels',...Object.entries(counts).filter(([,n])=>n).map(([kind,n])=>
       el('span',{class:'watch-'+kind},el('i',{'aria-hidden':'true'}),s('watch.breadth_'+kind,{n})))),
@@ -94,13 +124,14 @@ function mapInspector(frame, label, session) {
   function show(row,node,event) {
     if(event?.pointerType==='touch'||dismissed===node)return;
     hide();active=node;activeRow=row;
+    const shown=display(row),quote=shown!==row?shown:null;
     tip.replaceChildren(
-      el('div.watch-tip-heading',el('strong',row.ticker),el('span.mono',{class:'watch-'+changeClass(row.change_pct)},pct(row.change_pct,2))),
+      el('div.watch-tip-heading',el('strong',row.ticker),el('span.mono',{class:'watch-'+changeClass(shown.change_pct)},pct(shown.change_pct,2))),
       el('div.watch-tip-company',row.company || row.ticker),
       el('div.muted.small',label(row)),
-      el('dl.watch-tip-facts',el('dt',s('watch.close')),el('dd.mono',px(row.price)),el('dt',s('watch.cap')),el('dd.mono',capText(row.market_cap)+' '+(row.market_cap_currency || ''))),
-      el('div.watch-tip-date',row.price_session || session || s('watch.summary_pending')));
-    if(retained(row))tip.append(el('p.watch-saved-note',savedLabel(row)),el('p.small',s('watch.retained_note')));
+      el('dl.watch-tip-facts',el('dt',quote?quoteLabel(quote):s('watch.close')),el('dd.mono',px(shown.price)),el('dt',s('watch.cap')),el('dd.mono',capText(row.market_cap)+' '+(row.market_cap_currency || ''))),
+      el('div.watch-tip-date',quote?quoteAgeText(quote)+' · '+quoteTime(quote):row.price_session || session || s('watch.summary_pending')));
+    if(!quote&&retained(row))tip.append(el('p.watch-saved-note',savedLabel(row)),el('p.small',s('watch.retained_note')));
     tip.hidden=false;node.setAttribute('aria-describedby',tip.id);
     const box=frame.getBoundingClientRect(),cell=node.getBoundingClientRect(),rect=tip.getBoundingClientRect();
     const x=event?.clientX ?? cell.left+cell.width/2,y=event?.clientY ?? cell.top+cell.height/2;
@@ -116,13 +147,14 @@ function mapInspector(frame, label, session) {
 }
 
 export function overviewView(rows, options) {
-  const {view,query='',sort='market_cap',selected,session,previous,onSelect,area='cap',onAreaChange,renderResearch,onSort,selection,sortDirection=sort==='ticker'?'asc':'desc'}=options;
+  const {view,query='',sort='market_cap',selected,session,previous,onSelect,area='cap',onAreaChange,renderResearch,onSort,selection,signals=null,sortDirection=sort==='ticker'?'asc':'desc',quoteReceived=null}=options;
   const root=el('div.watch-summary');
   const filtered=rows.filter(r=>[r.ticker,r.company,r.label_zh,r.label_en,r.industry].some(x=>String(x || '').toLowerCase().includes(query.trim().toLowerCase())));
   const label=r=>(LANG==='zh'?r.label_zh:r.label_en) || r.industry || (LANG==='zh'?r.sector_zh:r.sector) || s('company.unknown');
-  const title=r=>`${r.ticker} · ${r.company || ''} · ${label(r)} · ${pct(r.change_pct,2)} · ${r.price_session || session || '—'} · ${s('watch.cap')}: ${capText(r.market_cap)} ${r.market_cap_currency || ''}${retained(r)?' · '+savedLabel(r):''}`;
+  const title=r=>{const d=display(r),quote=d!==r?d:null;return `${r.ticker} · ${r.company || ''} · ${label(r)} · ${pct(d.change_pct,2)} · ${quote?quoteLabel(quote)+' · '+quoteTime(quote):r.price_session || session || '—'} · ${s('watch.cap')}: ${capText(r.market_cap)} ${r.market_cap_currency || ''}${!quote&&retained(r)?' · '+savedLabel(r):''}`;};
+  const anyQuote=filtered.some(r=>displayQuote(r));
   const button=(r,compact=false)=>{
-    const quote=compact?null:displayQuote(r);
+    const quote=displayQuote(r);
     const shown=quote||r;
     const cells=compact?[]:metricKeys.map(key=>metricCell(key,r.metrics?.[key]));
     const identity=el('span.watch-identity',el('span.watch-identity-title',el('strong',r.ticker),
@@ -131,19 +163,19 @@ export function overviewView(rows, options) {
     const price=el('span.mono.watch-row-price',px(shown.price),!quote&&retained(r)?el('small.watch-saved-note',s('watch.saved_value')):null);
     const change=el('span.mono.watch-change',{class:'watch-'+changeClass(shown.change_pct)},pct(shown.change_pct,2));
     return el('div.watch-row-entry',{class:compact?'':'watch-rich-entry'},el('button.watch-row', {type:'button','data-open':r.ticker,
-      'aria-pressed':String(selected===r.ticker),'aria-label':title(quote?{...r,change_pct:quote.change_pct,price_session:quoteTime(quote)}:r)+(quote?' · '+s('watch.latest_quote'):'')+(compact?'':' · '+cells.map(c=>[...c.children].map(n=>n.textContent).join(' · ')).join(' · ')),onclick:()=>onSelect(r.ticker)},
+      'aria-pressed':String(selected===r.ticker),'aria-label':title(r)+(compact?'':' · '+cells.map(c=>[...c.children].map(n=>n.textContent).join(' · ')).join(' · ')),onclick:()=>onSelect(r.ticker)},
       identity,...cells,...(compact?[price,change,el('span.mono.watch-row-cap',capText(r.market_cap))]:[
         el('span.watch-quote',el('span.watch-metric-label',quote?quoteLabel(quote):s('watch.close')),price,change,
-          quote?el('small.watch-metric-note',{title:quote.provider+' · '+quote.feed},quoteLabel(quote)+' · '+quoteTime(quote)):null)])),
+          quote?quoteNote(quote,{received:quoteReceived,tag:'small.watch-metric-note'}):null)])),
       el('a.watch-map-link',{href:'#/evidence/'+encodeURIComponent(r.ticker),'aria-label':s('watch.open_stock_map',{ticker:r.ticker}),'data-map-open':r.ticker,'data-tour':'stock.map','data-ticker':r.ticker},icon('evidence'),el('span',s('watch.open_map'))));
   };
-  if(view!=='heatmap')root.append(el('p.muted.small.watch-session',filtered.some(r=>displayQuote(r))?s('watch.mixed_quote_note',{date:session||'—'}):session?s('watch.close_session',{date:session}):s('watch.summary_pending')));
+  if(view!=='heatmap')root.append(el('p.muted.small.watch-session',anyQuote?s('watch.mixed_quote_note',{date:session||'—'}):session?s('watch.close_session',{date:session}):s('watch.summary_pending')));
   if(!filtered.length) {root.append(el('p.empty',s('watch.no_match')));return root;}
   if(filtered.some(retained))root.append(el('p.muted.small.watch-retained-note',{role:'status'},s('watch.retained_note')));
   if(view==='heatmap') {
     const panel=el('section.watch-map-panel'),frame=el('div.watch-map-frame');
     panel.append(el('div.watch-map-heading',el('div',el('h2',s('watch.map_title')),
-      el('p.muted.small.watch-session',session?s('watch.quote_session',{date:session}):s('watch.summary_pending'))),breadth(filtered)));
+      el('p.muted.small.watch-session',anyQuote?s('watch.mixed_quote_note',{date:session||'—'}):session?s('watch.quote_session',{date:session}):s('watch.summary_pending'))),breadth(filtered)));
     if(onAreaChange)panel.append(el('div.watch-map-scale',{role:'group','aria-label':s('watch.area')},
       ...['equal','cap'].map(mode=>el('button.btn.btn-ghost.btn-sm',{type:'button','data-area':mode,'aria-pressed':String(area===mode),onclick:()=>onAreaChange(mode)},s('watch.area_'+mode)))));
     const map=el('div.watch-treemap',{'aria-label':s('watch.view_heatmap'),class:area==='equal'?'is-equal':''});
@@ -152,35 +184,36 @@ export function overviewView(rows, options) {
     mapRows.set(map,filtered);
     const tiles=area==='equal'?[...filtered].sort((a,b)=>a.ticker.localeCompare(b.ticker)):treemap(filtered);
     for(const r of tiles) {
+      const d=display(r);
       const tile=el('button.watch-tile',{type:'button','data-open':r.ticker, 'aria-label':title(r),
-        'aria-pressed':String(selected===r.ticker),class:'watch-'+changeClass(r.change_pct),
+        'aria-pressed':String(selected===r.ticker),class:'watch-'+changeClass(d.change_pct),
         style:area==='equal'?{}:{left:r.x/10+'%',top:r.y/6+'%',width:r.w/10+'%',height:r.h/6+'%'},onclick:()=>onSelect(r.ticker),
         onpointerenter:event=>inspector.show(r,tile,event),
         // Touch also focuses a button. Opening a hover layer at that point can
         // consume the first tap; keyboard focus still gets its full inspector.
         onfocus:()=>inspector.focus(r,tile),onblur:inspector.blur},
         el('span.watch-tile-sector',label(r)),el('strong',r.ticker),
-        el('span.mono.watch-tile-change',pct(r.change_pct,2)),el('span.mono.watch-tile-price',px(r.price),retained(r)?el('small.watch-saved-note',s('watch.saved_value')):null),el('span.watch-tile-company',r.company || ''),
+        el('span.mono.watch-tile-change',pct(d.change_pct,2)),el('span.mono.watch-tile-price',px(d.price),d===r&&retained(r)?el('small.watch-saved-note',s('watch.saved_value')):null),el('span.watch-tile-company',r.company || ''),
         el('span.watch-tile-cap',s('watch.cap')+' '+capText(r.market_cap)));
-      tile.style.setProperty('--tile-color',heatColor(r.change_pct));
+      tile.style.setProperty('--tile-color',heatColor(d.change_pct));
       map.append(tile);
     }
     if(tiles.length){frame.append(map,inspector.tip);panel.append(frame);}
     panel.append(el('div.watch-legend',el('span.small',s(area==='equal'?'watch.equal_legend':'watch.map_legend')),
       el('div.watch-color-scale',...[-5,-2,0,2,5].map(n=>el('span.mono',{style:{background:heatColor(n)}},`${n>0?'+':''}${n}%`))),
-      filtered.some(r=>!finite(r.change_pct))?el('span.small.watch-legend-missing',s('watch.missing_price')):null));
+      filtered.some(r=>!finite(display(r).change_pct))?el('span.small.watch-legend-missing',s('watch.missing_price')):null));
     // Every small cell also has an accessible, minimum-size text target.
     if(tiles.length&&area!=='equal') panel.append(el('details.watch-small-tiles',{open:true},el('summary',s('watch.small_tiles'),' ',el('span.watch-small-count.mono')),
       el('div.watch-small-list',...tiles.map(r=>el('button.watch-small-stock',{type:'button','data-open':r.ticker,
         'aria-pressed':String(selected===r.ticker),'aria-label':title(r),onclick:()=>onSelect(r.ticker)},
-        el('span.watch-small-dot',{'aria-hidden':'true',style:{background:heatColor(r.change_pct)}}),
-        el('strong',r.ticker),el('span.mono',{class:'watch-'+changeClass(r.change_pct)},pct(r.change_pct,2)))))));
+        el('span.watch-small-dot',{'aria-hidden':'true',style:{background:heatColor(display(r).change_pct)}}),
+        el('strong',r.ticker),el('span.mono',{class:'watch-'+changeClass(display(r).change_pct)},pct(display(r).change_pct,2)))))));
     root.append(panel);
     const omitted=area==='equal'?[]:filtered.filter(r=>!weighted(r));
     if(omitted.length) root.append(el('section.watch-unweighted',el('h2',s('watch.unweighted')),
       el('p.muted.small',s('watch.unweighted_note')),...omitted.map(r=>button(r,true))));
   } else {
-    sortRows(filtered,sort,sortDirection);
+    sortRows(filtered,sort,sortDirection,{signals});
     if(renderResearch){
       const selectBox=(ticker=null)=>{
         const all=filtered.every(row=>selection.checked.has(row.ticker));
@@ -195,7 +228,9 @@ export function overviewView(rows, options) {
           el('span.watch-sort-label',label),el('span.watch-sort-icon',{'aria-hidden':'true'})));
       const table=el('table.watch-compact-table',el('thead',el('tr',sortHeader('ticker',s('watch.stock')),
         sortHeader('change_pct',s('watch.metric_quote')),el('th',{scope:'col'},s('watch.view_reading')),
-        sortHeader('market_cap',s('watch.cap')),...metricKeys.map(key=>sortHeader(key,metricLabel(key))))));
+        sortHeader('market_cap',s('watch.cap')),...signalKeys.map((key,i)=>{const th=sortHeader(key,signalLabel(key));th.classList.add('watch-signal-col');th.dataset.signal=key;if(!i)th.classList.add('is-first');
+          th.append(signalHelpButton(key,signals?.meta||{}));return th;}),
+        ...metricKeys.map(key=>sortHeader(key,metricLabel(key))))));
       if(selection){table.classList.add('watch-selectable');table.querySelector('th').prepend(selectBox());}
       const body=el('tbody');
       for(const row of filtered){
@@ -210,11 +245,13 @@ export function overviewView(rows, options) {
           el('th',{scope:'row'},selection?selectBox(row.ticker):null,el('a.stock-name',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':name'},el('strong',row.ticker),el('span.watch-company',row.company||row.ticker)),
             el('a.watch-map-link',{href:'#/evidence/'+encodeURIComponent(row.ticker),'data-map-open':row.ticker,'data-tour':'stock.map','data-ticker':row.ticker,'data-reading-key':row.ticker+':map','aria-label':s('watch.open_stock_map',{ticker:row.ticker})},icon('evidence'),el('span',s('watch.open_map')))),
           el('td.watch-quote-cell',el('strong.mono',px(shown.price)),el('span.watch-change',{class:'watch-'+changeClass(shown.change_pct)},pct(shown.change_pct,2)),
-            el('small.muted',q?quoteLabel(q)+' · '+quoteTime(q):row.price_session||session||'—')),
+            q?quoteNote(q,{received:quoteReceived}):el('small.muted',row.price_session||session||'—')),
           el('td.watch-overview-cell',overview),el('td.mono',row.security_type==='ETF'?'ETF':capText(row.market_cap)),
+          ...signalKeys.map((key,i)=>el('td.watch-signal-cell',{class:i?'':'is-first','data-signal':key},signalCell(key,signals?.get(row.ticker),{ticker:row.ticker}))),
           ...metricKeys.map(key=>el('td',metricCell(key,row.metrics?.[key])))));
       }
       table.append(body);root.append(el('div.watch-table-scroll',{tabindex:0,'aria-label':s('watch.display')},table),metricMethods(filtered));
+      if(signals)root.append(signalMethods(signals));
     }
     else root.append(el('div.watch-table.watch-rich-table',el('div.watch-row-entry.watch-columns-entry.watch-rich-entry',
       el('div.watch-row.watch-columns',el('span',s('watch.stock')),...metricKeys.map(key=>el('span',metricLabel(key))),
@@ -228,8 +265,8 @@ export function overviewView(rows, options) {
   return root;
 }
 
-export function sortRows(rows,key,direction='desc'){
-  const value=row=>metricKeys.includes(key)?metricSortValue(row,key):['price','change_pct'].includes(key)?(displayQuote(row)||row)[key]:row[key];
+export function sortRows(rows,key,direction='desc',{signals=null}={}){
+  const value=row=>signalKeys.includes(key)?signalSortValue(signals?.get(row.ticker),key):metricKeys.includes(key)?metricSortValue(row,key):['price','change_pct'].includes(key)?(displayQuote(row)||row)[key]:row[key];
   return rows.sort((a,b)=>{
     if(key==='ticker')return a.ticker.localeCompare(b.ticker)*(direction==='asc'?1:-1);
     const x=value(a),y=value(b);

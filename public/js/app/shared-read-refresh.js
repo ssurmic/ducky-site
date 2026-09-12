@@ -17,6 +17,7 @@ export function refreshable(path){
 export function material(value,path=''){
   const evidence=/^\/evidence\/[A-Z][A-Z0-9.-]{0,9}(?:\?|$)/.test(path);
   const stock=/^\/stock-research\/[A-Z][A-Z0-9.-]{0,9}$/.test(path);
+  const watchlist=path==='/watchlist';
   function content(v,depth=0,inEvidence=evidence){
     if(Array.isArray(v))return v.map(item=>content(item,depth+1,inEvidence));
     if(!v||typeof v!=='object')return v;
@@ -27,7 +28,9 @@ export function material(value,path=''){
       v={...v,analysis_status:state};
     }
     return Object.fromEntries(Object.keys(v).sort().filter(key=>{
-      if(['age_seconds','ttl_seconds','server_time','retry_after'].includes(key))return false;
+      // Serving clocks (`served_at`, quote `checked_at`) change on every response without new data.
+      if(['age_seconds','ttl_seconds','server_time','served_at','retry_after'].includes(key))return false;
+      if(watchlist&&key==='checked_at')return false;
       if(!inEvidence)return true;
       // Reprojection/check clocks and cross-ticker queue progress do not change
       // the research being read. Never rely on graph ID alone: read-time source

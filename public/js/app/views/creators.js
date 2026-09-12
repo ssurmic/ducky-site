@@ -184,6 +184,20 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   mergeDiscovery();
   let selected=kols.some(k=>k.id===initial.selected)?initial.selected:'', tab=initial.tab, shown=30;
   const labState={demo:initial.demo}, histories={}, archiveOpen=new Set();
+  // Pending summaries can be requested once per creator per visit; the server keeps its own cooldown.
+  const requested=new Set();
+  function requestSummary(kolId){
+    const button=el('button.btn.btn-ghost.btn-sm.creator-request-summary',{type:'button',disabled:requested.has(kolId),onclick:async()=>{
+      if(button.disabled||disposed||epoch!==store.epoch())return;button.disabled=true;
+      try{await api.kol.analyze(kolId);if(disposed||epoch!==store.epoch())return;requested.add(kolId);toast(s('creators.request_sent'),'ok');}
+      catch(error){
+        if(disposed||epoch!==store.epoch())return;
+        if(error.status===429){requested.add(kolId);toast(s('creators.request_cooldown'));}
+        else{button.disabled=false;toast(s('creators.request_failed'),'err');}
+      }
+    }},s('creators.request_summary'));
+    return button;
+  }
   const pageProgress=progressPoll({interval:30000,active:()=>!sourceOnly&&!disposed&&canRead(selected)&&epoch===store.epoch()&&root.isConnected&&!!selected&&tab==='feed',
     read:()=>api.get('/kol/'+encodeURIComponent(selected)+'/page'),
     onValue:page=>{if(page.kol_id!==selected)return;const old=doc.pages?.[selected];if(page.content_hash===old?.content_hash&&page.status===old?.status)return;
@@ -289,9 +303,11 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         selector.addEventListener('change',()=>{selected=selector.value;renderContent();});content.append(el('div.evidence-controls',selector));
       }
       const target=el('section.creator-workspace');content.append(target);
-      if(tab==='research')mountResearch(target,{kolId:selected,query,tickers:stockFilter,following:mine,allowedIds:mine?[...following]:null,point:initial.tab==='research'?initial.point:''});
+      const simulateView=(post,call)=>{selected=post.kol_id;tab='lab';labState.post=post.platform_post_id||post.id||'';labState.point=call?.point_id||'';renderContent();};
+      if(tab==='research')mountResearch(target,{kolId:selected,query,tickers:stockFilter,following:mine,allowedIds:mine?[...following]:null,point:initial.tab==='research'?initial.point:'',onSimulate:simulateView});
       if(tab==='lab')mountSimulation(target,{kolId:selected,tickers:stockFilter,allowedIds:mine?[...following]:null,state:labState,onStateChange:syncRoute});
-      if(tab==='rank')mountLeaderboard(target,{onSelect:id=>{selected=id;mine=false;watched=false;stockTicker='';tab='research';render();}});
+      if(tab==='rank')mountLeaderboard(target,{onSelect:id=>{selected=id;mine=false;watched=false;stockTicker='';tab='research';render();},
+        onSimulate:id=>{selected=id;mine=false;watched=false;stockTicker='';tab='lab';labState.post='';labState.point='';render();}});
       return;
     }
     const stats=stockPosts.filter(p=>(!mine || following.has(p.kol_id)) && (!selected || p.kol_id===selected));
@@ -395,7 +411,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       const reviewed = hasReviewedSummary(p);
       const meta = evidenceMeta(p);
       const points=verifiedSpans(p);
-      const art = el("article.cr-post");
+      const art = el("article.cr-post",{class:reviewed||points.length?'':'is-pending'});
       if(focusedPost)art.classList.add('is-focused-source');
       const head = el("div.cr-post-head",el("b.cr-who", (p.kol_name || p.kol_id || "")));
       const identities=tickerViews(p);
@@ -438,6 +454,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         const status = meta.source?.status;
         const statusKey = {discovered:'source_pending',too_long:'too_long',too_dense:'too_dense',processing:'review_pending',review_unavailable:'review_pending',model_unavailable:'review_pending',source_unavailable:'source_pending',asr_unavailable:'source_pending',asr_timeout:'source_pending'}[status] || 'archive_hint';
         art.appendChild(el("p.muted.small", discoveredSource(p)?s('creators.new_source_pending',{date:String(p.published_at||'').slice(0,10)}):s('creators.'+statusKey)));
+        if(store.isPro()&&p.kol_id)art.appendChild(requestSummary(p.kol_id));
       }
 
       if(focusedPost&&focusedPoint&&!p.reviewed_spans?.some(v=>v.point_id===focusedPoint))art.append(el('p.data-notice',s('evidence.point_changed')));
@@ -449,7 +466,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       const actions=el('div.evidence-controls.creator-page-actions');
       const focusedSeconds=points.find(v=>v.point_id===focusedPoint)?.start_seconds;
       if (safeSource(p.url)) actions.appendChild(el("a.cr-orig", { href: Number.isFinite(focusedSeconds)?atTime(p.url,focusedSeconds):p.url, target: "_blank", rel: "noopener noreferrer",'data-tour':(reviewed||points.length)&&p.platform==='youtube'?'video.open':null,'data-post':p.platform_post_id,onclick:()=>{if(p.platform==='youtube')tourEvent('video',{outcome:'external_link_opened',post:p.platform_post_id,sourceHash:source.source_hash||points[0]?.source_hash});} }, s("creators.orig") + " ↗"));
-      if(grounded) actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected=p.kol_id;tab='research';renderContent();}},s('creators.research')),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected=p.kol_id;tab='lab';renderContent();}},s('creatorlab.tab')));
+      if(grounded) actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected=p.kol_id;tab='research';renderContent();}},s('creators.research')),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{selected=p.kol_id;tab='lab';labState.post=p.platform_post_id||p.id||'';labState.point=points.find(v=>['bull','bear'].includes(v.stance))?.point_id||points[0]?.point_id||'';renderContent();}},s('creatorlab.simulate_post')));
       art.append(actions);
       feed.appendChild(art);
     }

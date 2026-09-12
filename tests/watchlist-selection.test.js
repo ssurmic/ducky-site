@@ -20,7 +20,9 @@ async function setup(tickers=['AAA','BBB','CCC'],{cap=50,write,signal}={}){
  const root=document.querySelector('main');root.replaceChildren();document.querySelector('#toasts').replaceChildren();
  let server=[...tickers];const requests=[];
  globalThis.fetch=async(url,opts={})=>{
-  const method=opts.method||'GET';requests.push({url,method});
+  const method=opts.method||'GET';
+  // Signal columns read two shared pages; membership tests count only list/research/write requests.
+  if(!/^\/(briefing|radar)\//.test(url))requests.push({url,method});
   if(method!=='GET'){
    if(write)return write(url,opts);
    if(method==='DELETE'){const ticker=url.split('/').at(-1);server=server.filter(t=>t!==ticker);return Response.json({ticker,removed:true});}

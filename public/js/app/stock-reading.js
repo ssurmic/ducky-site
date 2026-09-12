@@ -49,13 +49,36 @@ export function reading(item,{citations=true}={}){
     return wrap;
   }
   const line=el('p.stock-one-sentence',pick(item.overview));
+  const cited=[];
   if(citations)for(const id of item.overview.citations||[]){
     const source=item.sources?.find(n=>n.id===id);
-    if(source)line.append(el('button.brief-citation',{type:'button',onclick:()=>detail(source,{readingTicker:item.ticker,...(item.status==='refresh_pending'?{analysisAt:item.as_of}:{})}),
+    if(!source)continue;cited.push(source);
+    line.append(el('button.brief-citation',{type:'button',onclick:()=>detail(source,{readingTicker:item.ticker,...(item.status==='refresh_pending'?{analysisAt:item.as_of}:{})}),
       'data-reading-key':`${item.ticker}:citation:${id}`,'aria-label':s('focus.read_source')},String(item.sources.indexOf(source)+1)));
   }
-  wrap.append(line,el('p.small.muted.stock-analysis-date',s(item.status==='refresh_pending'?'focus.previous_analysis':'focus.analysis_date',{date:localTime(item.as_of)})));
+  wrap.append(line);
+  if(cited.length)wrap.append(citationList(item,cited));
+  wrap.append(el('p.small.muted.stock-analysis-date',s(item.status==='refresh_pending'?'focus.previous_analysis':'focus.analysis_date',{date:localTime(item.as_of)})));
   return wrap;
+}
+const dateOnly=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}/.test(v)?v.slice(0,10):'—';
+// The cited records spelled out under the sentence: who, which way, when, and which one is newest.
+// Each row is the same stored source the inline number opens; nothing is re-fetched or inferred.
+export function citationList(item,cited){
+  const stamp=n=>Date.parse(n.published_at||n.observed_at)||0,newest=Math.max(0,...cited.map(stamp));
+  const list=el('ol.stock-citations',{'aria-label':s('focus.cited_sources')});
+  for(const source of cited){
+    const authors=[...new Set((source.evidence||[]).map(e=>e.author).filter(Boolean))];
+    const stance=['support','counter','context'].includes(source.stance)?source.stance:'context';
+    list.append(el('li',el('button.stock-citation',{type:'button','data-reading-key':`${item.ticker}:cited:${source.id}`,
+      onclick:()=>detail(source,{readingTicker:item.ticker,...(item.status==='refresh_pending'?{analysisAt:item.as_of}:{})})},
+      el('span.stock-citation-n',String(item.sources.indexOf(source)+1)),
+      el('span.stock-citation-text',el('span.stock-citation-who',el('span.stock-citation-stance',{class:'is-'+stance},s('evidence.'+stance)),el('span',authors.join(' · ')||s('evidence.recorded_data'))),
+        el('span.stock-citation-title',pick(source.title))),
+      el('span.stock-citation-when',el('span',dateOnly(source.published_at||source.observed_at)),
+        cited.length>1&&newest&&stamp(source)===newest?el('span.stock-citation-latest',s('focus.latest_source')):null))));
+  }
+  return list;
 }
 export function compactPrice(row){
   if(!row)return el('p.small.muted',s('focus.price_missing'));

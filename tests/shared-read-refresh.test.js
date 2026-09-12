@@ -126,3 +126,16 @@ test('shared stock reads adopt new summaries with GETs; nested queue clocks stay
  current={items:[]};await watch.check();assert.deepEqual(adopted,current);
  assert.deepEqual(reads,[['/me/stock-research','GET'],['/me/stock-research','GET'],['/me/stock-research','GET']]);watch.stop();
 });
+
+test('serving clocks never count as new data: snapshot served_at and watchlist quote checked_at are ignored',()=>{
+ const snapshot={ticker:'NVDA',served_at:'2026-09-12T20:00:00Z',snapshot:{spot:100}};
+ assert.equal(material(snapshot,'/snapshot/NVDA'),material({...snapshot,served_at:'2026-09-12T20:00:30Z'},'/snapshot/NVDA'));
+ assert.notEqual(material(snapshot,'/snapshot/NVDA'),material({...snapshot,snapshot:{spot:101}},'/snapshot/NVDA'));
+ const list={items:['NVDA'],overview:{items:[{ticker:'NVDA',price:98,quote:{price:100,quote_at:'2026-09-12T19:59:00Z',checked_at:'2026-09-12T20:00:00Z',age_seconds:60,status:'current'}}]}};
+ const later=structuredClone(list);later.overview.items[0].quote.checked_at='2026-09-12T20:01:00Z';later.overview.items[0].quote.age_seconds=120;
+ assert.equal(material(list,'/watchlist'),material(later,'/watchlist'));
+ const moved=structuredClone(list);moved.overview.items[0].quote.price=101;
+ assert.notEqual(material(list,'/watchlist'),material(moved,'/watchlist'));
+ const relabelled=structuredClone(list);relabelled.overview.items[0].quote.status='stale';
+ assert.notEqual(material(list,'/watchlist'),material(relabelled,'/watchlist'));
+});

@@ -53,8 +53,9 @@ export async function establish(resp) {
 }
 
 /** finding auth.js:22 — collapse the boot waterfall: /me and /watchlist are independent after auth, so fire
- *  them together instead of serially, then prefetch every watchlist snapshot in parallel (L2 hits, §18.2.4)
- *  so the dashboard paints from the warmed store instead of a 4-deep serial chain. */
+ *  them together instead of serially. The list paints from the shared /watchlist overview (prices, changes,
+ *  metrics), which the read cache keeps for the first route; per-stock snapshots load when a row is opened,
+ *  so boot no longer fans out one authenticated /snapshot request per watched stock. */
 async function hydrate() {
   const epoch = store.epoch(), token = store.get("token");
   const [me, wl] = await Promise.all([
@@ -64,11 +65,7 @@ async function hydrate() {
   if (!me || typeof me !== 'object' || Array.isArray(me)) throw new api.ApiError(502,{error:'session_unavailable'});
   if (epoch !== store.epoch() || token !== store.get("token")) throw new api.ApiError(0,{detail:"session_changed"});
   store.set("me", me);
-  if (wl) {
-    const tickers = normalizeWatch(wl);
-    store.set("watchlist", tickers);
-    prefetchSnapshots(tickers);               // fire-and-forget, all in parallel
-  }
+  if (wl) store.set("watchlist", normalizeWatch(wl));
   return me;
 }
 
@@ -76,20 +73,6 @@ async function hydrate() {
 function normalizeWatch(resp) {
   const arr = Array.isArray(resp) ? resp : (resp && (resp.items || resp.watchlist || resp.tickers)) || [];
   return arr.map((x) => (typeof x === "string" ? x : x && (x.ticker || x.symbol))).filter(Boolean).map((t) => String(t).toUpperCase());
-}
-
-/** §18.2.4 prefetch: warm store.snapshots for every watchlist ticker in parallel (L2 hits). Unwraps the
- *  {ticker, snapshot:{…}} envelope like the views do; guarded by the session epoch so a logout mid-flight drops it. */
-function prefetchSnapshots(tickers) {
-  if(!store.canResearch())return;
-  const epoch = store.epoch();
-  for (const t of tickers || []) {
-    api.snapshot(t, { tries: 1, silent402: true }).then((r) => {
-      if (store.epoch() !== epoch || !store.canResearch() || api.isAccepted(r)) return;
-      const snap = r && r.snapshot ? r.snapshot : r;
-      store.patch("snapshots", { [t]: snap });
-    }).catch(() => { /* non-fatal: the view fetches on mount */ });
-  }
 }
 
 export function logout() {

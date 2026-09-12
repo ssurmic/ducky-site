@@ -45,6 +45,13 @@ function put(path,value,at=Date.now()){
   while(entries.size>=32||bytes+size>MAX_BYTES)remove(entries.keys().next().value);
   entries.set(path,{text,size,at});bytes+=size;
 }
+// When a cached read arrived, or null. Views use it to avoid repeating a read the
+// boot sequence just made and to time quotes from their server-stamped age.
+export function peekAt(path){
+  if(!current())return null;
+  const entry=entries.get(path);
+  return entry&&Date.now()-entry.at<=MAX_AGE&&Date.now()>=entry.at?entry.at:null;
+}
 export function peek(path){
   if(!current())return null;
   const entry=entries.get(path);

@@ -44,17 +44,20 @@ export async function mountSimulation(root,{kolId='',allowedIds=null,tickers=nul
     catch{if(root.isConnected){clear(root);root.append(el('p.err',s('creators.research_error')));}return;}
   }
   if(epoch!==store.epoch()||!root.isConnected)return;
-  active=rows[0] || null;render();
+  // A post or point named by the caller opens that recorded view; otherwise the first verified row.
+  const targeted=rows.filter(r=>state.post&&[r.post.id,r.post.platform_post_id].map(String).includes(String(state.post)));
+  active=targeted.find(r=>state.point&&r.call.point_id===state.point)||targeted[0]||rows[0]||null;render();
   function render() {
     state.config=config;state.demo=demo;state.horizon=horizon;onStateChange();
     clear(root);
     root.append(el('div.creator-lab-intro',el('div',el('p.eyebrow',s('creatorlab.eyebrow')),el('h2',s('creatorlab.title')),el('p.muted',s('creatorlab.intro'))),el('span.evidence-badge',demo?s('creatorlab.demo_badge'):s('creatorlab.simulation_badge'))));
     const chooser=el('div.evidence-controls');
     if(rows.length){const select=el('select.input',{'aria-label':s('creatorlab.opinion')},...rows.map((r,i)=>el('option',{value:i,selected:active===r},r.post.kol_name+' · '+r.call.sym+' · '+s('creators.take_'+r.call.stance)+' · '+dateTime(r.post.recorded_at))));select.addEventListener('change',()=>{active=rows[Number(select.value)];demo=false;render();});chooser.append(select);}
-    chooser.append(el('button.btn.btn-ghost.btn-sm',{type:'button','aria-pressed':String(demo),onclick:()=>{demo=!demo;render();}},s(demo?'creatorlab.leave_demo':'creatorlab.try_demo')));
+    if(rows.length||demo)chooser.append(el('button.btn.btn-ghost.btn-sm',{type:'button','aria-pressed':String(demo),onclick:()=>{demo=!demo;render();}},s(demo?'creatorlab.leave_demo':'creatorlab.try_demo')));
     const period=el('select.input',{'aria-label':s('creators.horizon')},...[5,20].map(n=>el('option',{value:n,selected:horizon===String(n)},s('creators.trading_days',{n}))));period.addEventListener('change',()=>{horizon=period.value;render();});chooser.append(period);root.append(chooser);
     if(demo)root.append(el('p.creator-demo-notice',s('creatorlab.demo_notice')));
-    else if(!active)root.append(el('p.creator-demo-notice',s('creatorlab.no_data')));
+    else if(!active)root.append(el('div.creator-lab-empty',el('h3',s('creatorlab.empty_title')),el('p.muted',s('creatorlab.no_data')),el('p.small.muted',s('creatorlab.empty_hint')),
+      el('button.btn.btn-primary',{type:'button',onclick:()=>{demo=true;render();}},s('creatorlab.try_demo'))));
     else {root.append(el('div.creator-lab-source',el('b',active.post.kol_name+' · $'+active.call.sym),el('blockquote',active.call.evidence),el('p.small',s('creatorlab.recorded')+' '+dateTime(active.post.recorded_at))));const url=safeSource(active.post.url);if(url)root.append(el('a',{href:url,target:'_blank',rel:'noopener noreferrer'},s('creators.orig')+' ↗'));}
     const layout=el('div.creator-lab-layout'),form=el('form.creator-lab-config'),output=el('section.creator-lab-output',{'aria-live':'polite'});const settings=el('details.creator-sim-settings',el('summary',s('creatorpage.adjust')),form);layout.append(output,settings);root.append(layout);
     form.addEventListener('submit',e=>e.preventDefault());
