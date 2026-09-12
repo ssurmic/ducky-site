@@ -8,6 +8,7 @@ import { googleLogin } from '../google-login.js';
 
 export async function mount(root, { signal } = {}) {
   const card = el("section.card.login", el("h1", s("register.title")), el("p.muted", s("register.sub")));
+  if(window.DUCKY?.TRIAL_ACCESS_ENABLED)card.append(el('p',s('trial.register')),el('p.small.muted',s('trial.privacy')));
   const google = googleLogin({signal});card.append(google.element);
   const form = el("form.login-block");
   const email = el("input.input", { type: "email", name: "email", autocomplete: "email", maxlength: "254", required: "" });

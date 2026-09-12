@@ -136,14 +136,15 @@ export async function mount(root, { query } = {}) {
     el('article.card',el('h2',s('experience.plan_free')),el('p',s('experience.plan_free_detail')),
       el('p.small.muted',s('experience.plan_no_card')),el('a.btn.btn-ghost',{href:'#/watchlist'},s('experience.plan_free_cta'))),
     el('article.card',el('h2',s('experience.plan_pro')),el('p',s('experience.plan_pro_detail')),el('p',s('experience.plan_depth'))));
-  root.append(head, comparison, picker, currencyPicker, toggle, tiers, renewal, rails, panel, ordersBox, foot);
+  const trialNote=el('section.card',el('h2',s('trial.offer')),el('p',s('trial.offer_body')),el('p',s('trial.early_payment')));
+  root.append(head, store.get('me')?.access?.mode==='trial'?trialNote:comparison, picker, currencyPicker, toggle, tiers, renewal, rails, panel, ordersBox, foot);
 
   function price(p) {
     return localizedPrice(p, selected.months, selected.currency);
   }
   function renderTiers() {
     clear(tiers);
-    for (const id of ["pro"]) {
+    for (const id of [selected.tier]) {
       const p = plans && plans[id];
       tiers.appendChild(el("article.card.tier-card", { "data-tier": id },
         el("h3", tierName(id)),
@@ -152,7 +153,7 @@ export async function mount(root, { query } = {}) {
     }
   }
   function railQuote(r) {
-    const p = plans?.pro, annual = orderMonths(r, selected.months) === 12;
+    const p = plans?.[selected.tier], annual = orderMonths(r, selected.months) === 12;
     const amount = isCnyRail(r) ? p?.annual_cny : r === "stars" ? (annual ? p?.stars_annual : p?.stars_monthly) : (annual ? p?.annual_usd : p?.monthly_usd);
     return { amount, unit: isCnyRail(r) ? "CNY" : r === "stars" ? "Stars" : "USD", annual };
   }
@@ -302,6 +303,17 @@ export async function mount(root, { query } = {}) {
       plans = normalizePlans(null);
       picker.appendChild(el("p.errbox", s("billing.catalog_unavailable")));
     }
+  }
+  if(me.legacy_signal_renewal){
+    try{
+      const legacy=normalizePlans(await api.get('/billing/renewal'));
+      if(legacy.paid){
+        plans={...plans,paid:legacy.paid};
+        renewal.append(el('label',el('input',{type:'checkbox',onchange:event=>{
+          selected.tier=event.currentTarget.checked?'paid':'pro';renderTiers();renderRails();
+        }}),s('trial.renew_signal')));
+      }
+    }catch{renewal.append(el('p',s('billing.catalog_unavailable')));}
   }
   if(plans?.limits){
     for(const [i,tier] of ['free','pro'].entries()){

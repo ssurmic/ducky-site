@@ -6,6 +6,7 @@
     "test": "${DUCKY_TEST_PYTHON:-python3} build.py && node --test tests/*.test.js"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "jsdom": "^29.1.1"
   }
 }

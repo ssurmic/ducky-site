@@ -72,7 +72,7 @@ export function compactPrice(row){
 export function researchRow(ticker,row,item){
   return el('article.stock-list-row',{'data-reading-anchor':ticker},
     el('header',el('a.stock-name',{href:stockHref(ticker),'data-reading-key':`${ticker}:name`},el('strong',ticker),el('span.muted',row?.company||'')),compactPrice(row)),
-    reading({...item,ticker}),el('a.stock-open',{href:'#/evidence/'+encodeURIComponent(ticker),'data-reading-key':`${ticker}:map`},s('watch.open_map')+' →'),el('a.stock-open',{href:stockHref(ticker),'data-reading-key':`${ticker}:open`},s('focus.open_stock')+' →'));
+    reading({...item,ticker}),el('a.stock-open',{href:'#/evidence/'+encodeURIComponent(ticker),'data-reading-key':`${ticker}:map`,'data-tour':'stock.map','data-ticker':ticker},s('watch.open_map')+' →'),el('a.stock-open',{href:stockHref(ticker),'data-reading-key':`${ticker}:open`},s('focus.open_stock')+' →'));
 }
 
 export function dayWindow(now=new Date(),days=1){

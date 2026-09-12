@@ -81,13 +81,20 @@ done
 
 # Maintain the homepage fallback from the same public stored-close API. Failure
 # retains the last-good file and is reported after the other notary files push.
-if ! "$PY" scripts/export_desk_prices.py --current --output public/desk-prices.json; then
+TRIAL_ACCESS="$("$PY" -c 'import json; print("1" if json.load(open("site.config.json")).get("trial_access") else "0")')"
+if [ "$TRIAL_ACCESS" = 1 ]; then
+  # Sanitize BEFORE a public git commit, not just before Pages upload.
+  "$PY" trial_public.py public
+elif ! "$PY" scripts/export_desk_prices.py --current --output public/desk-prices.json; then
   log "homepage close refresh failed; retained last-good prices"
   QUOTE_FAILED=1
 fi
 
 # 3. commit only on diff
 git add -- public/track-record.json public/feed.json public/ideas.json public/week-ahead.json public/desk-prices.json 2>/dev/null || true
+if [ "$TRIAL_ACCESS" = 1 ]; then
+  git add -u -- public
+fi
 if git diff --cached --quiet; then
   log "no change — nothing to notarize"
   exit "$QUOTE_FAILED"

@@ -1,3 +1,4 @@
+import {tourEvent,tourTarget} from '../tour-events.js';
 import {openCardShare} from '../card-share.js';
 import {exampleTickers,exampleMap} from '../evidence-examples.js';
 import {quotaNote} from '../experience.js';
@@ -52,7 +53,7 @@ export function detail(node,{analysisAt,shareContext,readingTicker,compact=windo
     if(e.freshness==='stale')item.append(el('p.data-notice',s(event?'evidence.historical_event':'evidence.stale_source')));
     const href=source(e.source_url);
     const internal=evidenceTarget(e,{ticker:readingTicker});
-    const creatorLink=internal?el('a.btn.btn-sm',{class:compact?'btn-ghost':'btn-primary',href:internal,onclick:()=>closeModal()},s('evidence.creator_context')):null;
+    const creatorLink=internal?el('a.btn.btn-sm',{'data-tour':'source.original','data-post':e.post_id,'data-source':node.id,class:compact?'btn-ghost':'btn-primary',href:internal,onclick:()=>closeModal()},s('evidence.creator_context')):null;
     const actions=compact?el('div'):item;
     if(!compact&&creatorLink)actions.append(creatorLink);
     if(href)actions.append(el('a.btn.btn-sm',{class:compact?'btn-primary':'btn-ghost',href:compact?(sourceAt(href,e.start_seconds)||href):href,target:'_blank',rel:'noopener noreferrer'},s('evidence.open_source')+' ↗'));
@@ -72,6 +73,10 @@ export function detail(node,{analysisAt,shareContext,readingTicker,compact=windo
   if(node.evidence_omitted)body.append(el('p.small.muted',s('evidence.more_sources',{n:node.evidence_omitted})));
   if(shareContext)body.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>openCardShare(node,shareContext)},s('share.title')));
   modal(pick(node.title),body);
+  if(body.textContent.trim()&&(node.evidence||[]).length){
+    tourEvent('node',{ticker:readingTicker,source:node.id});
+    if(readingTicker==='NVDA'&&node.evidence.some(e=>e.kind==='creator'&&e.post_id))tourEvent('opinion',{ticker:readingTicker,source:node.id});
+  }
 }
 
 export function analysisPanel(doc,{formatTime=time}={}){
@@ -254,7 +259,7 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
         el('span.evidence-node-footer',el('span',shownDate),
           el('span.evidence-node-number',{'aria-hidden':'true'},String(nodes.indexOf(node)+1).padStart(2,'0')),
           el('span',s((node.evidence||[]).length===1?'evidence.source_single':'evidence.sources',{n:(node.evidence||[]).length})+' ↗')));
-      card.append(el('button.evidence-node-open',{type:'button','aria-label':pick(node.title),'data-reading-key':doc.ticker+':node:'+node.id}),
+      card.append(el('button.evidence-node-open',{type:'button','aria-label':pick(node.title),'data-reading-key':doc.ticker+':node:'+node.id,'data-tour':doc.ticker==='NVDA'&&(node.evidence||[]).some(e=>e.kind==='creator'&&e.post_id)?'node.open opinion.open':'node.open','data-source':node.id,'data-ticker':doc.ticker}),
         el('button.evidence-share-trigger',{type:'button','aria-label':s('share.card_label',{title:pick(node.title)}),onclick:event=>{event.stopPropagation();openCardShare(node,shareContext);}},s('share.action')));
       cards.set(node.id,card);
     }
@@ -303,6 +308,7 @@ export async function mount(root,route={}){
   const valid=id=>alive&&!ctl.signal.aborted&&epoch===store.epoch()&&(id==null||id===request);
   let chosen=store.get('me')?.experience?.evidence?.selected||[];
   let example=exampleTickers.includes(route.query?.get('example'))?route.query.get('example'):null;
+  const tourSnapshot=route.query?.get('tour_snapshot')||null;
   let ticker=example||String(route.ticker||chosen[0]||'').toUpperCase();
   if(!tickerOK(ticker))ticker=(store.get('watchlist')||[]).find(tickerOK)||'';
   function picker(){
@@ -358,7 +364,7 @@ export async function mount(root,route={}){
     update.accepted=true;
   };
   root.addEventListener('ducky:shared-read',updatePrice);
-  async function load(version=null){
+  async function load(version=tourSnapshot){
     displayed=null;archived=!!version;
     const id=++request;closeModal();currentMap?.dispose?.();currentMap=null;clear(host);
     if(!store.get('me')){host.append(el('a.btn.btn-primary',{href:'#/login'},s('login.pw_btn')));return;}
@@ -394,6 +400,7 @@ export async function mount(root,route={}){
       const state=currentMap?.readingState?.();
       if(displayed&&material(displayed,'/evidence/'+ticker)!==material(doc,'/evidence/'+ticker))closeModal();
       currentMap?.dispose?.();displayed=doc;clear(host);currentMap=mapView(doc,{archive:!!version,onPickTicker:picker,state});host.append(currentMap);
+      if(doc.nodes.length){tourTarget(currentMap,'map.ready',{ticker:doc.ticker});tourEvent('map',{ticker:doc.ticker});}
       const sourceId=!version?route.query?.get('source'):null;
       if(sourceId){
         const target=doc.nodes.find(n=>n.id===sourceId||(n.evidence||[]).some(e=>[e.id,e.point_id,e.legacy_claim_id,e.source_record_id].includes(sourceId)));
@@ -412,7 +419,7 @@ export async function mount(root,route={}){
         finally{historyButton.disabled=false;}
       }},s('evidence.history'));
       host.append(el('div.evidence-links',el('a.btn.btn-ghost.btn-sm',{href:'#/briefing?ticker='+ticker},s('nav.briefing')),
-        el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+ticker},s('radar.chart')),historyButton,
+        el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+ticker,'data-tour':'chart.controls','data-ticker':ticker},s('radar.chart')),historyButton,
         version?el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>load()},s('evidence.latest')):null),historyPanel);
     }catch(error){if(valid(id)){
       if(!displayed||[401,402,403,404,410].includes(error.status)){currentMap?.dispose?.();currentMap=null;displayed=null;clear(host);}
@@ -424,7 +431,7 @@ export async function mount(root,route={}){
   route.signal?.addEventListener('abort',cleanup,{once:true});
   if(route.signal?.aborted)cleanup();else {
     if(store.get('me')&&!store.isPro())try{const r=await api.get('/me/evidence',{signal:ctl.signal});if(valid()){chosen=r.selected||[];if(JSON.stringify(chosen)!==JSON.stringify(store.get('me')?.experience?.evidence?.selected||[]))syncSelection();if(!example&&!route.ticker&&chosen.length){ticker=chosen[0];const name=heading.querySelector('strong.mono');if(name)name.textContent=ticker;}trialControls();}}catch(error){if(valid())trial.append(errorBox(error));}
-    if(valid())await load();
+    if(valid())await load(route.query?.get('tour_snapshot')||null);
   }
   return cleanup;
 }

@@ -7,6 +7,15 @@
 {% endblock %}
 {% block content %}
 {% include "_partials/homepage-hero.html" %}
+{% if cfg.trial_access %}
+<section class="section" id="pricing"><div class="wrap narrow">
+  <h2>{{ t('app.trial.offer') }}</h2><p>{{ t('app.trial.register') }}</p>
+  <p>Pro · ${{ cfg.prices.pro.monthly_usd }} / {{ t('app.billing.monthly') }} · ${{ cfg.prices.pro.annual_usd }} / {{ t('app.billing.annual') }}</p>
+  <p>{{ t('app.trial.offer_body') }}</p>
+  <a class="btn btn-primary" href="{{ url('/app/') }}#/register">{{ t('app.register.link') }}</a>
+  <a class="btn" href="{{ url('/app/') }}#/billing">{{ t('app.trial.manage') }}</a>
+</div></section>
+{% endif %}
 {% include "_partials/product-desk.html" %}
 {% include "_partials/product-demo-video.html" %}
 {% include "_partials/stock-workspace.html" %}

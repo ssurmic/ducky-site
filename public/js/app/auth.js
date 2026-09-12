@@ -81,10 +81,11 @@ function normalizeWatch(resp) {
 /** §18.2.4 prefetch: warm store.snapshots for every watchlist ticker in parallel (L2 hits). Unwraps the
  *  {ticker, snapshot:{…}} envelope like the views do; guarded by the session epoch so a logout mid-flight drops it. */
 function prefetchSnapshots(tickers) {
+  if(!store.canResearch())return;
   const epoch = store.epoch();
   for (const t of tickers || []) {
     api.snapshot(t, { tries: 1, silent402: true }).then((r) => {
-      if (store.epoch() !== epoch || api.isAccepted(r)) return;
+      if (store.epoch() !== epoch || !store.canResearch() || api.isAccepted(r)) return;
       const snap = r && r.snapshot ? r.snapshot : r;
       store.patch("snapshots", { [t]: snap });
     }).catch(() => { /* non-fatal: the view fetches on mount */ });

@@ -1,0 +1,2 @@
+[gen_calendar] wrote 42 deterministic events → /Users/zizhaozhang/dev/ducky-site-trial-onboarding-20260910/public/calendar.json
+build.py: rendered 22 pages (10 templates × 2 langs) → dist/  version=960ebb02  api_base=https://api.duckybot.app  app modules=5f572a26ed8d5ac05e4f  legacy imports versioned=503

@@ -11,7 +11,7 @@ const scope=()=>JSON.stringify([store.epoch(),store.get('token'),store.get('me')
 function current(){
   const next=scope();
   if(next!==owner){clear();owner=next;}
-  return !!store.get('me')&&!!store.get('token');
+  return store.canResearch()&&!!store.get('token');
 }
 export function clear(){entries.clear();bytes=0;}
 function remove(path){bytes-=entries.get(path)?.size||0;entries.delete(path);}

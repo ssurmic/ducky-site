@@ -355,7 +355,7 @@ export function itemRow(it, {standalone=false, language=LANG}={}){
     const wrap=el('article.radar-record',{'data-record-id':it.id || '',class:!readable(it)?'radar-record-missing':''});
     const detail=el('div.radar-detail');
     const disclosure=el('span.radar-disclosure',s('reader.open')+' ↗');
-    const title=el(standalone?'header.record-heading':'a.radar-record-toggle',standalone?{}:{href:recordHref(it)},
+    const title=el(standalone?'header.record-heading':'a.radar-record-toggle',standalone?{}:{href:recordHref(it),'data-tour':['insider','cluster'].includes(it.kind)&&doc.hasBody?'insider.open':null},
       el(standalone?'div.radar-record-meta':'span.radar-record-meta',el(standalone?'h1.radar-ticker':'strong.radar-ticker',doc.title),
         kind===doc.title?null:el('span.radar-kind',kind),el('time.muted',{datetime:it.ts},it.extra?.date_precision==='day'?String(it.ts || '').slice(0,10):standalone?dateTime(it.ts):String(it.ts || '').slice(11,16)+' UTC')),
       (it.issuer_name || it.company)?el('span.radar-company-name',it.issuer_name || it.company):null,
@@ -411,7 +411,7 @@ export function itemRow(it, {standalone=false, language=LANG}={}){
     if(it.company_source)actions.append(el('a.btn.btn-ghost.btn-sm',{href:it.company_source,target:'_blank',rel:'noopener noreferrer'},s('radar.company_profile')+' ↗'));
     let source=false;
     try{const url=new URL(it.extra?.source_url || it.extra?.url || it.source_url);if(url.protocol==='https:'){
-      source=true;actions.append(el('a.btn.btn-ghost.btn-sm',{href:url.href,target:'_blank',rel:'noopener noreferrer'},s(it.archived?'radar.reference_link':'boards.source')+' ↗'));}}
+      source=true;actions.append(el('a.btn.btn-ghost.btn-sm',{'data-source-record':it.id,href:url.href,target:'_blank',rel:'noopener noreferrer'},s(it.archived?'radar.reference_link':'boards.source')+' ↗'));}}
     catch{}
     if(!source)detail.append(el('p.radar-time-note.muted',s('radar.source_missing')));
     detail.append(actions);wrap.append(title,detail);return wrap;

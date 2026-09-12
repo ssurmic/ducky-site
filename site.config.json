@@ -6,6 +6,7 @@
   "miniapp": "app",
   "channel": null,
   "api_base": "https://api.duckybot.app",
+  "trial_access": false,
   "research_brief_preview": true,
   "product_focus_preview": true,
   "product_focus": true,

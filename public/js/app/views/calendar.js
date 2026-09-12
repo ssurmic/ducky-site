@@ -1,3 +1,4 @@
+import {tourEvent,tourTarget} from '../tour-events.js';
 import {evidenceLink} from '../evidence-link.js';
 import { eventResearchSession, eventHint, safeSource } from "../calendar-event.js";
 import {sourceDay, effectiveTiming} from '../source-event.js';
@@ -323,7 +324,7 @@ export async function mount(root, route={}) {
         const mine = hasContextAccess && evs.some(evHasMine);
         const wknd = dt.getDay() === 0 || dt.getDay() === 6;
         const cell = el("button.cal-cell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : "") + (evs.some(e=>e.type==="holiday") ? ".cal-closed" : "") + (evs.some(e=>e.type==="early_close") ? ".cal-early" : ""),
-          { type: "button", "aria-label": iso + ", " + previewDescription(evs), "aria-pressed": String(iso === selected), "data-date":iso, "aria-haspopup":"dialog" });
+          { type: "button", "aria-label": iso + ", " + previewDescription(evs), "aria-pressed": String(iso === selected), "data-date":iso,"data-tour":evs.length?"calendar.day":null, "aria-haspopup":"dialog" });
         cell.appendChild(el("span.cal-dnum", String(day)));
         if (evs.length) { cell.appendChild(miniBars(evs)); cell.appendChild(el("span.cal-event-count", String(evs.length))); }
         // Phone month cells hide the regular preview. Preserve watched earnings
@@ -370,7 +371,7 @@ export async function mount(root, route={}) {
           const session = evs.find(e => ["holiday", "early_close"].includes(e.type));
           const weekday = new Intl.DateTimeFormat(isZh ? "zh-CN" : "en-US", {weekday:"short"}).format(d);
           const cell = el("button.cal-bicell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : "") + (session?.type === "holiday" ? ".cal-closed" : "") + (session?.type === "early_close" ? ".cal-early" : ""),
-            {type:"button", "data-date":iso, "aria-label":dateLabel(iso) + ", " + previewDescription(evs), "aria-pressed":String(iso === selected), "aria-haspopup":"dialog"});
+            {type:"button", "data-date":iso,"data-tour":evs.length?"calendar.day":null, "aria-label":dateLabel(iso) + ", " + previewDescription(evs), "aria-pressed":String(iso === selected), "aria-haspopup":"dialog"});
           const date = el("div.cal-bidate", el("span.cal-bidnum", String(d.getDate())), el("span.cal-biweekday", iso === todayIso ? s("calendar.today") : weekday));
           cell.append(date);
           if (evs.length) cell.append(pills(evs));
@@ -399,6 +400,7 @@ export async function mount(root, route={}) {
       cell.setAttribute("aria-pressed", String(active));
     }
     const host = modal(dateLabel(iso), dayDetail(iso));
+    if(dayEvents(iso).length&&host.querySelector('a[target="_blank"]'))tourEvent('calendar',{date:iso,ids:dayEvents(iso).map(e=>e.id)});
     host.querySelector(".modal-box").classList.add("calendar-dialog");
   }
 

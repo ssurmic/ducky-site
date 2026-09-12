@@ -1,3 +1,5 @@
+import {startOnboarding} from './onboarding.js';
+import {startEntitlements} from './entitlements.js';
 // main.js — boot: tg → auth → router. Entry point for /app/ (website dashboard + Telegram Mini App).
 import * as tg from "./tg.js";
 import * as auth from "./auth.js";
@@ -23,6 +25,8 @@ async function boot() {
   if (logoutBtn) logoutBtn.addEventListener("click", (e) => { e.preventDefault(); auth.logout(); });
   store.subscribe("me", (me) => { renderBrandNavigation(me); renderAccountAvatar(me); ui.renderTierBadge(); if (logoutBtn) logoutBtn.hidden = !me || tg.inTG; });
 
+  startEntitlements();
+  startOnboarding();
   await restoreAndStart();
 }
 

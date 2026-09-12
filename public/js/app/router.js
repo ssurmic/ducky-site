@@ -1,8 +1,9 @@
+import {s} from './strings.js';
 // router.js — hash routes #/login #/watchlist #/alerts #/chart/<T> #/billing.
 // Owns the Telegram MainButton (billing only) and BackButton (any non-root route).
 import * as store from "./store.js";
 import * as tg from "./tg.js";
-import { clear, errorBox, spinner, closeModal } from "./ui.js";
+import { clear, errorBox, spinner, closeModal, el } from "./ui.js";
 import { rememberTarget, takeTarget } from "./login-target.js";
 import { showModuleRecovery } from "./release-recovery.js";
 import { selectNavigation } from './navigation.js';
@@ -114,10 +115,15 @@ export async function render() {
   if (my !== seq) return;
   current = route;
   clear(page);
-  if(!PUBLIC.has(route.name)&&!['profile','billing','alerts','research-brief'].includes(route.name)){
+  if(store.canResearch()&&!PUBLIC.has(route.name)&&!['profile','billing','alerts','research-brief'].includes(route.name)){
     // Keep this outside the view's DOM so its local render cannot erase the notice.
     sharedReadRefresh(root,{signal:controller.signal,interval:window.DUCKY?.PRODUCT_FOCUS_ENABLED?30000:60000,
       reload:()=>{store.set('snapshots',{});render();}});
+  }
+  if(authed&&!store.canResearch()&&!['profile','billing','watchlist','alerts'].includes(route.name)){
+    page.append(el('section.card',el('h1',s('trial.ended')),el('p',s('trial.manager_note')),
+      el('a.btn.btn-primary',{href:'#/billing'},s('trial.manage')),el('a.btn.btn-ghost',{href:'#/watchlist'},s('tour.return'))));
+    return;
   }
   let ret;
   try { ret = await mod.mount(page, route.params); }
