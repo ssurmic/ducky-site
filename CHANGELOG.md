@@ -1,8 +1,13 @@
 # Change log
 
-## Quote age, one price per stock, honest 13F pages and a lighter boot · 2026-09-12 (branch `codex/ux-upgrade-20260912`, third round)
+## Quote age, one price per stock, honest 13F pages and a lighter boot · 2026-09-12 (deployed)
 
 Follow-up to the same-day read-path audit ([report](reports/UX-UPGRADE-2026-09-12.md), "Third round").
+Released together with the entry below through `scripts/deploy_pages.sh`: main `855c1b83` (PR #53) → Pages
+`19d270f3` at 2026-09-12 21:52 UTC; the live `config.js` serves VERSION `855c1b83` and the sign-in page
+renders with the deferred Telegram SDK. The 13F `tickers=`/`fields=signals` reads need ducky-bot PR #86
+deployed on the host; until then the backend ignores both parameters and the column falls back to the
+previous market-wide page shape.
 
 - **Quote clocks**: each quote line reads "Latest quote · just now / N min ago / N h ago" (the print's own
   New York time beyond six hours), timed from the server's `age_seconds` plus elapsed time since arrival and
@@ -30,7 +35,7 @@ Follow-up to the same-day read-path audit ([report](reports/UX-UPGRADE-2026-09-1
   extended); `lint_copy`, `check_links` OK. Five new `app.watch.*` keys; `app.watch.signal_funds_none_since`
   removed.
 
-## Watchlist signals, research-map folding, richer Today and simulator entry · 2026-09-12 (branch, not merged or deployed)
+## Watchlist signals, research-map folding, richer Today and simulator entry · 2026-09-12 (deployed)
 
 UX pass over the signed-in app on `codex/ux-upgrade-20260912`; no API, model or investing-algorithm change.
 
