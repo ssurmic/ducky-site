@@ -12,6 +12,7 @@ test('built OAuth boot renders the authenticated destination with stale legacy m
  const legacy=await import('../public/js/app/store.js');
  legacy.set('me',null);
  const shell=readFileSync('dist/app/index.html','utf8');
+ document.body.prepend(new JSDOM(shell).window.document.querySelector('.app-top'));
  const entry=/src="(\/app-assets\/[a-f0-9]+\/main\.js)"/.exec(shell)?.[1];
  assert.ok(entry,'the app entry must use a content-addressed path');
  const calls=[];
@@ -23,4 +24,13 @@ test('built OAuth boot renders the authenticated destination with stale legacy m
  assert.equal(active.get('me').user_id,12);
  assert.equal(legacy.get('me'),null);
  assert.equal(calls.filter(url=>url.endsWith('/auth/session')).length,1);
+ const brand=document.querySelector('.app-top .brand');
+ assert.equal(brand.getAttribute('href'),'#/watchlist');
+ const token=active.get('token');
+ brand.click();
+ await new Promise(r=>setTimeout(r,10));
+ assert.equal(location.hash,'#/watchlist');
+ assert.equal(active.get('token'),token);
+ assert.equal(active.get('me').user_id,12);
+ assert.equal(calls.some(url=>url.endsWith('/auth/logout')),false);
 });

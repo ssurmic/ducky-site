@@ -48,6 +48,66 @@ test('returning watchlist paints saved prices and research before either request
  dispose=await mount;assert.match(root.textContent,/conditional on spending/);assert.ok(root.querySelector('.errbox'));dispose();
 });
 
+test('first watchlist paints the just-followed saved overview while its first reads are pending',async()=>{
+ const root=setup();store.set('watchlist',[]);
+ globalThis.fetch=async(url,opts)=>Response.json(opts.method==='POST'?{ticker:'NVDA',added:true}:
+  {ticker:'NVDA',price:null,evidence:{ticker:'NVDA',nodes:[node()],analysis_status:'ready',analysis_generated_at:item().as_of,analysis:{overview:item().overview,sections:[]}}});
+ await api.get('/stock-research/NVDA');await api.watchlist.add('NVDA');store.set('watchlist',['NVDA']);
+ const pending=[];globalThis.fetch=async()=>new Promise(resolve=>pending.push(resolve));
+ const mount=watch.mount(root);
+ try{
+  assert.match(root.textContent,/conditional on spending/);
+  assert.ok(root.querySelector('a[href="#/evidence/NVDA"]'));
+ }finally{
+  for(const resolve of pending)resolve(Response.json({error:'offline'},{status:503}));
+  const dispose=await mount;
+  try{assert.match(root.textContent,/conditional on spending/);assert.ok(root.querySelector('a[href="#/evidence/NVDA"]'));}
+  finally{dispose();}
+ }
+});
+
+test('adding a previously read ticker paints its saved overview before the list reload completes',async()=>{
+ const root=setup();
+ globalThis.fetch=async url=>Response.json(url==='/me/stock-research'?{items:[item()]}:
+  {items:['NVDA'],overview:{items:[{ticker:'NVDA',price:98}]}});
+ const dispose=await watch.mount(root);
+ globalThis.fetch=async()=>Response.json({ticker:'AMD',price:null,evidence:{ticker:'AMD',nodes:[node()],analysis_status:'ready',analysis_generated_at:item().as_of,analysis:{overview:item('AMD').overview,sections:[]}}});
+ await api.get('/stock-research/AMD');
+ const pending=[];globalThis.fetch=async(url,opts)=>opts.method==='POST'?Response.json({ticker:'AMD',added:true}):new Promise(resolve=>pending.push(resolve));
+ root.querySelector('form.add-row input').value='AMD';
+ root.querySelector('form.add-row').dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));
+ await pause();
+ try{assert.equal(root.querySelectorAll('.stock-one-sentence').length,2);}
+ finally{
+  for(const resolve of pending)resolve(Response.json({error:'offline'},{status:503}));
+  await pause();dispose();
+ }
+});
+
+test('reads started before a membership mutation cannot restore the old list or erase saved summaries',async()=>{
+ setup();const cache=await import('../public/js/app/read-cache.js');
+ cache.remember('/me/stock-research',{items:[item()],watchlist_count:1});
+ const pending=[];globalThis.fetch=async(url,opts)=>opts.method==='POST'?Response.json({ticker:'AMD',added:true}):new Promise(resolve=>pending.push([url,resolve]));
+ const reads=['/watchlist','/me/stock-research'].map(path=>api.get(path).then(()=>({accepted:true}),error=>({error})));
+ await api.watchlist.add('AMD');store.set('watchlist',['NVDA','AMD']);
+ for(const [url,resolve] of pending)resolve(Response.json(url==='/watchlist'?{items:['NVDA'],overview:{items:[]}}:{items:[],watchlist_count:1}));
+ const results=await Promise.all(reads);
+ assert.ok(results.every(result=>api.readFailure(result.error).reason==='cancelled'));
+ assert.equal(api.peek('/me/stock-research').items[0].overview.en,item().overview.en);
+});
+
+test('one missing stock removes only its saved research, leaving other stock summaries readable',async()=>{
+ for(const status of [404,410]){
+  setup();const cache=await import('../public/js/app/read-cache.js');
+  cache.remember('/me/stock-research',{items:[item(),item('AMD')],watchlist_count:2});
+  globalThis.fetch=async()=>Response.json({error:'unavailable'},{status});
+  await assert.rejects(api.get('/stock-research/AMD'));
+  const saved=api.peek('/me/stock-research');
+  assert.equal(saved?.items.find(row=>row.ticker==='NVDA')?.overview.en,item().overview.en);
+  assert.ok(!saved.items.find(row=>row.ticker==='AMD')?.overview);
+ }
+});
+
 test('returning stock uses saved evidence while offline; a permission denial removes it',async()=>{
  const root=setup();
  globalThis.fetch=async url=>Response.json(url.startsWith('/bars/')?{bars:[]}:
@@ -296,6 +356,45 @@ test('Today adopts a completed summary without rerunning searches, and withholds
  assert.ok(sharedUpdate(root,'/me/stock-research',{items:[{...item(),status:'withdrawn',sources:[]}]}));
  assert.doesNotMatch(root.querySelector('.focus-latest').textContent,/conditional on spending/);
  assert.match(root.querySelector('.focus-latest').textContent,/withdrawn/);assert.equal(search.value,'my unsubmitted search');dispose();
+});
+
+test('Today sorts the full stock list by analysis time and exposes every stock without extra reads',async()=>{
+ const root=setup();let reads=0;
+ const items=['AAPL','AEHR','ALAB','AMD','GLW','NVDA','TSLA'].map((ticker,i)=>({...item(ticker),as_of:`2026-09-${String(i+1).padStart(2,'0')}T22:00:00Z`}));
+ items.push({...item('ZZZ'),status:'pending',as_of:null,overview:null,sources:[]});
+ assert.deepEqual(today.latestAnalyses([{ticker:'bad',as_of:'broken'},...items]).map(i=>i.ticker),['TSLA','NVDA','GLW','AMD','ALAB','AEHR','AAPL','bad','ZZZ']);
+ globalThis.fetch=async url=>{reads++;return Response.json(url==='/me/stock-research'?{items,watchlist_count:8}:{items:[change()],next_cursor:null});};
+ const dispose=await today.mount(root);
+ const tickers=()=>[...root.querySelectorAll('.today-analysis .ticker')].map(n=>n.textContent);
+ assert.deepEqual(tickers(),['TSLA','NVDA','GLW','AMD','ALAB']);
+ root.querySelector('.today-show-all').click();
+ assert.deepEqual(tickers(),['TSLA','NVDA','GLW','AMD','ALAB','AEHR','AAPL','ZZZ']);
+ assert.equal(root.querySelector('.today-show-all').getAttribute('aria-expanded'),'true');
+ assert.equal(root.querySelector('[data-reading-key="analysis:ZZZ"] .today-analysis-top .small'),null);
+ const row=root.querySelector('.today-analysis');assert.equal(row.open,false);
+ row.querySelector('summary').click();assert.equal(row.open,true);
+ assert.ok(row.querySelector('.brief-citation'));assert.ok(row.querySelector('a[href="#/evidence/TSLA"]'));
+ root.querySelector('.change-card>summary').click();assert.equal(root.querySelector('.change-card').open,true);
+ assert.equal(reads,2);dispose();
+});
+
+test('Today preserves expanded stocks on refresh and return, but never carries another account’s reading state',async()=>{
+ const root=setup(),items=['AAPL','AEHR','ALAB','AMD','GLW','NVDA'].map(item);
+ globalThis.fetch=async url=>Response.json(url==='/me/stock-research'?{items,watchlist_count:6}:{items:[change()],next_cursor:null});
+ let dispose=await today.mount(root);root.querySelector('.today-show-all').click();
+ let toggle=root.querySelector('[data-reading-key="analysis:NVDA:toggle"]');toggle.click();toggle.focus();
+ root.querySelector('.change-card>summary').click();
+ assert.ok(sharedUpdate(root,'/me/stock-research',{items,watchlist_count:6}));
+ assert.equal(root.querySelector('[data-reading-key="analysis:NVDA"]').open,true);
+ assert.equal(document.activeElement.dataset.readingKey,'analysis:NVDA:toggle');
+ dispose();root.replaceChildren();dispose=await today.mount(root);
+ assert.equal(root.querySelectorAll('.today-analysis').length,6);
+ assert.equal(root.querySelector('[data-reading-key="analysis:NVDA"]').open,true);
+ assert.equal(root.querySelector('.change-card').open,true);
+ assert.ok(sharedUpdate(root,'/me/stock-research',{items:items.map(i=>i.ticker==='NVDA'?{...i,status:'withdrawn',sources:[]}:i),watchlist_count:6}));
+ assert.doesNotMatch(root.querySelector('[data-reading-key="analysis:NVDA"]').textContent,/conditional on spending/);
+ dispose();setup();dispose=await today.mount(root);
+ assert.equal(root.querySelectorAll('.today-analysis').length,5);assert.equal(root.querySelector('.change-card').open,false);dispose();
 });
 
 test('stock refresh keeps expanded reasons and exact source dialogs, closes withdrawn sources and retains inspected dates',async()=>{

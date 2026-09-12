@@ -1,11 +1,20 @@
 # Change log
 
-## Group repeated creator wording · 2026-09-10 (local verification)
+## Watchlist removal and capacity · 2026-09-11 (deployed)
+
+Select stocks with left-side checkboxes, review selected tickers and remove them together. Full accounts see their limit and how to free space before adding. Failed removals remain selected for retry; confirmed removals release slots immediately. 694 frontend tests and bilingual phone checks passed. PR42 / main `5c86ada1` / Pages `b2489ad9` passed CI, asset verification and signed-in EN/ZH selection checks. [Acceptance and release](reports/WATCHLIST-SELECTION-2026-09-11.md).
+
+## Today navigation and expandable stock analyses · 2026-09-11 (deployed)
+
+The signed-in duck returns to Watchlist. Today orders stock analyses by their actual update dates, exposes the complete list, and supports per-record expansion with sources. 685 tests, both languages and phone themes passed. PR41 / main `e0457434` / Pages `2308f071` are live. [Acceptance and release](reports/TODAY-NAVIGATION-2026-09-11.md).
+
+## Group repeated creator wording · 2026-09-10 (deployed)
 
 Identical viewpoints from the same video share one headline, with every original
 record, excerpt and map link available on expansion. Different qualifications
 remain separate. Both languages explain repeat source use; exact point links open
-their record. 677 tests and 12 browser layouts passed; publication is pending.
+their record. 677 tests and 12 browser layouts passed. PR38 / main `960ebb02` /
+Pages `7609ecf0` passed exact CI, public asset verification and live EN/ZH checks.
 [Behavior and acceptance](reports/CREATOR-REPEATED-VIEWS-2026-09-10.md).
 
 ## Preserve stock scope in source return links · 2026-09-10 (deployed)

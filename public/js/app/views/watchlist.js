@@ -38,6 +38,11 @@ export async function mount(root,{signal}={}) {
     if(key!==lastPaint){lastPaint=key;api.readDiagnostic('render',{resource:'watchlist',items,readable});}
   }
   let view = "list", query = "", sort = "market_cap", sortDirection = "desc", area = 'equal', candidate = null, adding = false;
+  const checked=new Set();
+  let removing=false;
+  const currentSession=()=>!disposed&&!signal?.aborted&&store.epoch()===mountedEpoch;
+  const watchCap=()=>Number.isFinite(store.get('me')?.watch_cap)?store.get('me').watch_cap:null;
+  const isFull=()=>watchCap()!==null&&(store.get('watchlist')||[]).length>=watchCap();
   // Each entry starts on List, consistently on desktop and phone.
   // List combines prices, the shared overview and a direct information-map action.
   try { area = localStorage.getItem('ducky-watch-area') === 'cap' ? 'cap' : 'equal'; } catch {}
@@ -52,6 +57,16 @@ export async function mount(root,{signal}={}) {
   const addOptions = el('details.watch-add-options', {open:!(store.get('watchlist')||[]).length},
     el('summary',s('watch.add')),el('p.view-intro.muted',s('watch.workflow')),form);
   const usage=el("div");
+  const capacity=el('p.watch-capacity',{hidden:true,role:'status'});
+  const selectionCount=el('summary',{'aria-live':'polite'});
+  const selectionNames=el('p.watch-selection-names');
+  const selectionReview=el('details.watch-selection-review',selectionCount,selectionNames);
+  const selectionHint=el('span.watch-selection-count',s('watch.selection_hint'));
+  const removeBtn=el('button.btn.btn-ghost.danger.watch-remove-selected',{type:'button',disabled:true,onclick:()=>removeTickers([...checked])});
+  const clearSelection=el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{checked.clear();render();}},s('watch.clear_selection'));
+  const manageBtn=el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{view='list';render();list.querySelector('[data-watch-select]')?.focus({preventScroll:true});}},s('watch.manage'));
+  const bulk=el('div.watch-bulk',{hidden:!focused},selectionHint,selectionReview,el('div.watch-bulk-actions',manageBtn,clearSelection,removeBtn));
+  const removeResult=el('p.watch-remove-result',{hidden:true,role:'status'});
   const readNotice=el('div',{'aria-live':'polite'});
   const list = el("div.watch-overview", { id: "watch-cards" });
   const resize=()=>layoutOverview(list);
@@ -83,7 +98,7 @@ export async function mount(root,{signal}={}) {
     if(offer.hidden)return;
     const row=candidate;
     offer.append(el('div',el('strong',row.ticker),el('span.muted',row.name||row.company||''),el('p',s('watch.not_followed'))),
-      el('button.btn.btn-primary.btn-sm',{type:'button',disabled:adding,onclick:()=>addTicker(row.ticker,false)},s(adding?'watch.adding':'watch.add_to_watchlist')));
+      el('button.btn.btn-primary.btn-sm',{type:'button',disabled:adding||removing||isFull(),onclick:()=>addTicker(row.ticker,false)},s(isFull()?'watch.full_button':adding?'watch.adding':'watch.add_to_watchlist')));
   }
   function selectTicker(t) {
     selected=t;render();renderDetail();loadSnapshot(t,false);
@@ -102,7 +117,7 @@ export async function mount(root,{signal}={}) {
   }
   head.append(addOptions);
   tourTarget(head,'watchlist.home');
-  root.append(head, freeGuide() || "", usage, controls, offer, readNotice, layout,
+  root.append(head, freeGuide() || "", usage, capacity, controls, offer, bulk, removeResult, readNotice, layout,
     el('div.chips',el('a.chip',{href:'#/updates'},s('updates.entry_title'))));
 
   async function onAdd(e) {
@@ -112,11 +127,12 @@ export async function mount(root,{signal}={}) {
     await addTicker(t,true);
   }
   async function addTicker(t,fromForm) {
-    if(adding||disposed)return;
+    if(adding||removing||!currentSession())return;
     if ((store.get("watchlist") || []).includes(t)) { toast(s("watch.following")); return; }
-    const epoch=store.epoch();adding=true;addBtn.disabled=true;renderOffer();
+    if(isFull()){toast(s('watch.full_note',{cap:watchCap()}));return;}
+    const epoch=store.epoch();adding=true;render();
     try {
-      const result = await api.watchlist.add(t);
+      const result = await api.watchlist.add(t,{signal,silent402:true});
       if(disposed||store.epoch()!==epoch)return;
       if(fromForm){input.value = ""; picker.reset();}
       filterPicker.reset();
@@ -128,17 +144,45 @@ export async function mount(root,{signal}={}) {
 
     } catch (err) {
       if(disposed||store.epoch()!==epoch)return;
-      if (err.status !== 402) toast(s("common.error", { msg: err.message }), "err");
-    } finally { adding=false;if(!disposed){addBtn.disabled=false;renderOffer();} }
+      if(err.body?.error==='watch_limit'){
+        if(Number.isFinite(err.body.cap))store.patch('me',{watch_cap:err.body.cap});
+        toast(s('watch.full_note',{cap:err.body.cap??watchCap()??'—'}));await load();
+      }else if(err.status===402)toast(s('watch.add_unavailable'),'err');
+      else toast(s("common.error", { msg: err.message }), "err");
+    } finally { adding=false;if(currentSession())render(); }
   }
 
   async function onRemove(t) {
-    try {
-      await api.watchlist.remove(t);
-      toast(s("watch.removed", { t }));
-      tg.haptic("light");
-      store.set("watchlist", store.get("watchlist").filter((x) => x !== t));
-    } catch (err) { toast(s("common.error", { msg: err.message }), "err"); }
+    return removeTickers([t]);
+  }
+
+  async function removeTickers(tickers){
+    if(removing||adding||!currentSession())return;
+    const targets=[...new Set(tickers)].filter(t=>(store.get('watchlist')||[]).includes(t));
+    if(!targets.length)return;
+    removing=true;removeResult.hidden=true;render();
+    let removed=0;
+    try{
+      // Existing idempotent endpoint; bounded sequential writes, never one reload per stock.
+      for(const ticker of targets){
+        if(!currentSession())return;
+        const result=await api.watchlist.remove(ticker,{signal});
+        if(!currentSession())return;
+        if(result?.ticker!==ticker||typeof result?.removed!=='boolean')throw new Error('invalid_remove_response');
+        checked.delete(ticker);research.delete(ticker);syncSourceDialog(ticker,[]);
+        store.set('watchlist',(store.get('watchlist')||[]).filter(t=>t!==ticker));
+        removed++;
+      }
+      if(currentSession()){removeResult.textContent=s('watch.removed_count',{count:removed});removeResult.hidden=false;tg.haptic('light');}
+    }catch(error){
+      if(!currentSession())return;
+      // Stop on failure. Keep every unconfirmed stock selected for a deliberate retry.
+      targets.slice(removed).filter(t=>(store.get('watchlist')||[]).includes(t)).forEach(t=>checked.add(t));
+      removeResult.textContent=s('watch.remove_incomplete',{removed,remaining:targets.length-removed});removeResult.hidden=false;
+    }finally{
+      removing=false;
+      if(currentSession())render();
+    }
   }
 
   function render() {
@@ -147,15 +191,28 @@ export async function mount(root,{signal}={}) {
     const me = store.get("me") || {};
     // finding watchlist.js:54 — GET /me serves the cap top-level as watch_cap (app.py), never me.caps.watches.
     const cap = me.watch_cap;
+    for(const ticker of checked)if(!items.includes(ticker))checked.delete(ticker);
+    const full=isFull();
+    capacity.hidden=!full;capacity.textContent=full?s('watch.full_note',{cap}):'';
+    addBtn.disabled=adding||removing||full;
+    addBtn.textContent=s(full?'watch.full_button':adding?'watch.adding':'watch.add');
+    bulk.hidden=!focused||!items.length;
+    selectionHint.hidden=!!checked.size;selectionReview.hidden=!checked.size;
+    selectionCount.textContent=s('watch.selected_count',{count:checked.size});
+    selectionNames.textContent=[...checked].join(' · ');
+    removeBtn.disabled=!checked.size||removing||adding;
+    removeBtn.textContent=s(removing?'watch.removing':'watch.remove_selected',{count:checked.size});
+    clearSelection.hidden=!checked.size;clearSelection.disabled=removing||adding;
+    manageBtn.hidden=view==='list';manageBtn.disabled=removing||adding;
     clear(usage);if(!store.isPaid())usage.append(quotaNote("watches",items.length,cap)||"");
     const cnt = document.getElementById("watch-count");
-    if (cnt) cnt.textContent = cap ? s("watch.count", { n: items.length, cap }) : String(items.length);
+    if (cnt) cnt.textContent = Number.isFinite(cap) ? s("watch.count", { n: items.length, cap }) : String(items.length);
     if (selected && !items.includes(selected)) {selected=null;renderDetail();}
     modes.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.mode===view)));
     sorting.hidden=view==='heatmap'||view==='reading';
     const openDisclosures=new Set([...list.querySelectorAll('details[open][data-disclosure]')].map(n=>n.dataset.disclosure));
     const focusedMap=list.contains(document.activeElement)?document.activeElement?.dataset?.mapOpen:null;
-    if(loading && !overview){clear(list).append(spinner());return;}
+    if(loading && !overview && !research.size){clear(list).append(spinner());return;}
     if (!items.length) {clear(list).append(empty(s('watch.empty')));return;}
     const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
     if(view==='reading'){
@@ -168,7 +225,7 @@ export async function mount(root,{signal}={}) {
     }
     const tableLeft=list.querySelector('.watch-table-scroll')?.scrollLeft||0;
     replaceReading(list,overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
-      {view,query,sort,sortDirection,onSort:key=>{sortDirection=key===sort?(sortDirection==='desc'?'asc':'desc'):key==='ticker'?'asc':'desc';sort=key;render();},area,renderResearch:focused?t=>reading({...research.get(t),ticker:t,...(!research.has(t)?missingResearch():{})}):null,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
+      {view,query,sort,sortDirection,selection:focused?{checked,disabled:removing||adding,toggle:(tickers,value)=>{if(removing||adding)return;for(const t of tickers)value?checked.add(t):checked.delete(t);render();}}:null,onSort:key=>{sortDirection=key===sort?(sortDirection==='desc'?'asc':'desc'):key==='ticker'?'asc':'desc';sort=key;render();},area,renderResearch:focused?t=>reading({...research.get(t),ticker:t,...(!research.has(t)?missingResearch():{})}):null,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
     reportPaint();
     const scroll=list.querySelector('.watch-table-scroll');if(scroll)scroll.scrollLeft=tableLeft;
     for(const disclosure of list.querySelectorAll('details[data-disclosure]'))disclosure.open=openDisclosures.has(disclosure.dataset.disclosure);
@@ -303,7 +360,7 @@ export async function mount(root,{signal}={}) {
       if (!current()) return;
       loading = false;
       membershipAvailable=false;
-      if(overview&&![401,402,403].includes(err.status)){membershipReady=true;render();readNotice.append(errorBox(err,load));}
+      if((overview||research.size)&&![401,402,403].includes(err.status)){membershipReady=true;render();readNotice.append(errorBox(err,load));}
       else{clear(list);list.appendChild(errorBox(err,load));}
     }
     await researchTask;
@@ -334,7 +391,13 @@ export async function mount(root,{signal}={}) {
     return p;
   }
 
-  unsubs.push(store.subscribe("watchlist", render));
+  unsubs.push(store.subscribe("watchlist",()=>{
+    // Membership changes can contribute a just-read stock graph while the
+    // list request is pending. Existing authoritative rows keep precedence.
+    for(const item of api.peek('/me/stock-research')?.items||[])
+      if(!research.has(item.ticker))research.set(item.ticker,item);
+    render();
+  }));
   unsubs.push(store.subscribe("snapshots", renderDetail));
   unsubs.push(store.subscribe("me", () => {render();renderDetail();}));
   const priceUpdate=event=>{

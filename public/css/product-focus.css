@@ -17,6 +17,67 @@
 .change-clocks summary,.focus-tools>summary,.focus-history>summary{cursor:pointer;min-height:44px;display:list-item;align-content:center;}
 .focus-empty{padding:24px;border:1px solid var(--border);border-radius:14px;line-height:1.75;}
 .focus-latest{margin-top:44px;}
+.today-heading{padding:8px 0 22px;border-bottom:1px solid var(--border);margin-bottom:24px;}
+.today-heading .today-date{color:var(--accent-text,var(--accent));font-size:12px;font-weight:600;}
+.today-heading h1{margin:6px 0;font-size:32px;}
+.today-section-title{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:600;margin:0;}
+.today-section-heading p{margin:8px 0 16px;line-height:1.6;}
+.today-count{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:24px;padding:0 7px;border-radius:7px;background:var(--surface-2);font-size:12px;color:var(--muted);}
+.today-updates .focus-filters{margin:14px 0 18px;}
+.today-updates .change-list{gap:10px;}
+.today-updates>.small{margin:14px 0 0;line-height:1.65;}
+.today-updates>.btn{margin-top:14px;}
+.today-updates .focus-empty{margin:0;padding:18px;background:var(--surface-2);font-size:14px;}
+.change-card{padding:0;border:1px solid var(--border);border-radius:12px;background:var(--surface);overflow:hidden;}
+.change-card>summary,.today-analysis>summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px 16px;list-style:none;cursor:pointer;padding:18px 20px;min-height:44px;}
+.change-card>summary::-webkit-details-marker,.today-analysis>summary::-webkit-details-marker{display:none;}
+.change-card>summary:hover,.today-analysis>summary:hover{background:var(--surface-2);}
+.change-card>summary:focus-visible,.today-analysis>summary:focus-visible{outline:2px solid var(--accent);outline-offset:-3px;border-radius:10px;}
+.change-card[open]{border-color:var(--accent-text,var(--accent));}
+.change-card .change-meta{grid-column:1;gap:8px;}
+.change-title{grid-column:1;font-size:16px;line-height:1.65;font-weight:500;overflow-wrap:anywhere;}
+.change-byline{grid-column:1;line-height:1.6;overflow-wrap:anywhere;}
+.today-disclosure-hint{display:flex;align-items:center;gap:8px;align-self:center;grid-column:2;grid-row:1/-1;font-size:12px;color:var(--muted);white-space:nowrap;}
+.today-chevron{width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);margin:0 2px 4px;}
+.today-collapse-label{display:none;}
+details[open]>summary>.today-disclosure-hint .today-expand-label{display:none;}
+details[open]>summary>.today-disclosure-hint .today-collapse-label{display:inline;}
+details[open]>summary>.today-disclosure-hint .today-chevron{transform:rotate(225deg);margin-top:5px;}
+.change-body{padding:0 20px 16px;}
+.change-body .change-clocks{margin-top:4px;}
+.today-analysis-list{border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.today-analysis.stock-list-row{padding:0;background:var(--surface);}
+.today-analysis:last-child{border-bottom:0;}
+.today-analysis>summary{padding:16px 20px;gap:7px 16px;}
+.today-analysis-top{display:flex;align-items:center;justify-content:space-between;gap:8px 16px;flex-wrap:wrap;grid-column:1;}
+.today-analysis-top .small{font-size:11px;}
+.today-analysis-preview{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;grid-column:1;font-size:14px;color:var(--muted);line-height:1.65;overflow-wrap:anywhere;}
+.today-analysis[open]>summary .today-analysis-preview{display:none;}
+.today-analysis-body{padding:0 20px 16px;}
+.today-analysis-body .stock-one-sentence{margin:2px 0 8px;}
+.today-analysis-body .stock-analysis-date{display:none;}
+.today-analysis-body .focus-actions{gap:8px 22px;}
+.today-show-all{margin-top:12px;width:100%;}
+.focus-today>.focus-latest{margin-top:28px;}
+@media(max-width:600px){
+ .focus-heading.today-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;margin:0 0 18px;padding:0 0 16px;gap:6px 10px;}
+ .today-heading>div{display:contents;}
+ .today-heading .today-date{grid-column:1/-1;grid-row:1;}
+ .today-heading h1{font-size:27px;grid-column:1;grid-row:2;}.today-heading p{font-size:13px;}
+ .today-heading p.muted{grid-column:1/-1;grid-row:3;}
+ .today-heading>a{grid-column:2;grid-row:2;font-size:12px;min-height:44px;padding:8px 10px;}
+ .today-updates .focus-filters{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin:12px 0;}
+ .today-updates .focus-filters select{grid-column:1/-1;min-height:44px;}
+ .today-updates .focus-filters input{width:100%;font-size:16px;min-height:44px;}
+ .change-card>summary,.today-analysis>summary{padding:14px;gap:8px 10px;}
+ .change-title{font-size:14px;}.change-byline{font-size:11px;}
+ .change-kind{font-size:11px;}.change-meta{gap:6px;}
+ .today-disclosure-hint{gap:4px;font-size:11px;}
+ .today-analysis-top{gap:4px;}.today-analysis-top .small{flex-basis:100%;line-height:1.5;}
+ .today-analysis-preview{font-size:13px;}
+ .change-body,.today-analysis-body{padding:0 14px 12px;}
+ .today-section-heading p{font-size:12px;}
+}
 .stock-list-row header{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;}
 .stock-name{display:flex;flex-direction:column;gap:6px;text-decoration:none;max-width:60%;min-height:44px;justify-content:center;}
 .stock-name strong{font-size:19px;color:var(--text);}
@@ -138,6 +199,35 @@ body:has(.focus-nav) .watch-modes .btn{min-width:44px;}
  .watch-inline-metrics{grid-template-columns:repeat(2,minmax(0,1fr));}
  .stock-core-actions{gap:4px;}.stock-core-actions .btn{font-size:12px;padding:7px 10px;}
  .focus-stock .evidence-analysis{margin:16px 0;}.stock-information-map{margin:20px 0;}
+}
+/* Watchlist membership controls share the fixed stock column, separate from its links. */
+.watch-capacity{margin:0 0 12px;padding:12px 14px;border:1px solid var(--border);border-left:3px solid var(--accent-text,var(--accent));border-radius:8px;background:var(--surface);font-size:13px;line-height:1.6;}
+.watch-bulk{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:8px 16px;padding:8px 12px;margin:0 0 10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;}
+.watch-bulk[hidden],.watch-capacity[hidden],.watch-remove-result[hidden]{display:none;}
+.watch-selection-count,.watch-selection-review{font-size:12px;color:var(--muted);}
+.watch-selection-review summary{min-height:44px;display:flex;align-items:center;cursor:pointer;}
+.watch-selection-review summary::after{content:"⌄";margin-left:8px;}
+.watch-selection-review[open] summary::after{content:"⌃";}
+.watch-selection-names{max-width:48ch;line-height:1.7;margin:0 0 6px;overflow-wrap:anywhere;}
+.watch-bulk [hidden]{display:none;}
+.watch-bulk-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.watch-bulk .btn{min-height:44px;font-size:12px;padding:8px 10px;}
+.watch-remove-result{font-size:13px;line-height:1.6;margin:8px 0 12px;}
+.watch-select{position:absolute;left:4px;top:6px;display:flex;align-items:center;justify-content:center;width:44px;min-height:44px;cursor:pointer;}
+.watch-compact-table thead .watch-select{top:0;}
+.watch-select input{appearance:auto;min-width:16px;width:16px;min-height:16px;height:16px;margin:0;accent-color:var(--accent-text,var(--accent));cursor:pointer;}
+.watch-select:has(:focus-visible){outline:2px solid var(--accent);outline-offset:-3px;border-radius:6px;}
+.watch-select:has(:disabled){cursor:wait;opacity:.6;}
+.watch-compact-table.watch-selectable tr>:first-child{width:174px;padding-left:56px;}
+.watch-compact-table.watch-selectable thead tr>:first-child{padding-left:52px;}
+.watch-compact-table.watch-selectable .is-selected>*{background:color-mix(in srgb,var(--accent) 8%,var(--surface));}
+@media(max-width:600px){
+ .watch-capacity{font-size:12px;padding:8px 10px;margin-bottom:8px;}
+ .watch-bulk{padding:6px 8px;flex-wrap:wrap;gap:4px;margin-bottom:8px;}
+ .watch-bulk-actions{gap:4px;margin-left:auto;}
+ .watch-bulk .btn{font-size:11px;padding:7px 8px;}
+ .watch-compact-table.watch-selectable tr>:first-child{width:158px;padding-left:52px;}
+ .watch-select{left:0;}
 }
 /* A real compact table keeps the same columns and sorting on every screen. */
 .watch-table-scroll{overflow:auto;max-width:100%;border:1px solid var(--border);border-radius:12px;scroll-padding-left:130px;}

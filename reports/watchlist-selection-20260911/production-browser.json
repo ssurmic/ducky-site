@@ -1,0 +1,23 @@
+{
+  "verified_at": "2026-09-11T18:15:22.427Z",
+  "languages": [
+    "en",
+    "zh"
+  ],
+  "signed_in": true,
+  "rows": 50,
+  "checkboxes": 51,
+  "capacity_visible": true,
+  "add_disabled_at_limit": true,
+  "individual_selection": true,
+  "select_all": true,
+  "clear_selection": true,
+  "count_after_selection_and_clear": 50,
+  "document_overflow": 0,
+  "checkbox_target": [
+    44,
+    44
+  ],
+  "production_membership_writes": 0,
+  "scope": "Selection-only production QA; synthetic deletion and re-add are separately documented."
+}

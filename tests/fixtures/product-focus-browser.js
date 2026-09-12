@@ -25,21 +25,32 @@ const analysis={overview,sections:[{kind:'key_points',zh:'产能投放能否转�
  {kind:'watch',zh:'下一份财报需要核对订单和资本支出。',en:'Check orders and capital spending in the next earnings report.',citations:['first']}]};
 if(mode==='no-watch-section')analysis.sections=analysis.sections.filter(p=>p.kind!=='watch');
 let watches=mode==='no-watch'?[]:['NVDA','AVGO','AMD','GLW'];
+if(mode==='watchlist-management')watches=['NVDA','AVGO','AMD','GLW',...Array.from({length:46},(_,i)=>'TEST'+String(i).padStart(2,'0'))];
+if(mode==='today-large')watches=['AAPL','AEHR','ALAB','AMD','AVGO','GLW','NVDA','TSLA'];
 let researchReads=0;
 const price=(ticker,i=0)=>({ticker,company:{NVDA:'NVIDIA Corporation',AVGO:'Broadcom Inc.',AMD:'Advanced Micro Devices, Inc.',GLW:'Corning Incorporated'}[ticker]||ticker,
  ...(['minute-quotes','saved-quotes'].includes(mode)?{quote:{price:218.25+i*23,change_pct:-2.42,status:mode==='saved-quotes'?'stale':'current',quote_at:new Date(Date.now()-(mode==='saved-quotes'?600000:1000)).toISOString(),provider:'yahoo',feed:'yahoo_regular_session'}}:{}),
  price:223.67+i*23,price_status:'ready',price_session:'2026-09-09',change_pct:i%2?3.2:-.91,market_cap:(5-i)*1e12,metrics:{ytd:{status:'ready',value:[20.1,-2,0,-12][i]},drawdown:{status:'ready',value:-5-i*5},relative:{status:'ready',value:-7+i*2,symbols:['SPY']},iv_hv:{status:i===2?'missing':'ready',value:i===2?null:.71+i*.25},attention:{status:'ready',value:75+i*5},degen:{status:'ready',value:48+i*4}}});
 const stockSummary=ticker=>({ticker,status:mode==='pending'?'pending':mode==='previous'?'refresh_pending':'ready',records:3,
- as_of:mode==='previous'?previousClock:clock,overview:mode==='pending'?null:overview,sources:(mode==='previous'?previousNodes:nodes).slice(0,2)});
+ as_of:mode==='today-large'?new Date(Date.now()-(watches.length-watches.indexOf(ticker))*86400000).toISOString():mode==='previous'?previousClock:clock,overview:mode==='pending'?null:overview,sources:(mode==='previous'?previousNodes:nodes).slice(0,2)});
 const record=i=>({id:'change-'+i,ticker:i%2?'AVGO':'NVDA',kind:i===1?'revised':'added',state:i===3?'unavailable':'available',earlier_content:i===2,
  initial_coverage:false,published_at:i===2?'2026-08-20':today,observed_at:clock,available_at:clock,node:i===3?null:nodes[i%3]});
 window.fetch=async(input,options={})=>{
  const url=new URL(String(input),location.origin);requests.push({path:url.pathname+url.search,method:options.method||'GET'});
  if(url.origin!==location.origin)throw Error('External traffic forbidden in synthetic fixture');
- if((options.method||'GET')!=='GET')throw Error('Writes forbidden in synthetic fixture');
- const path=url.pathname.replace('/qa-api','');
+ const path=url.pathname.replace('/qa-api',''),method=options.method||'GET';
+ if(method!=='GET'){
+  if(mode==='watchlist-management'&&method==='DELETE'&&/^\/watchlist\/[A-Z0-9]+$/.test(path)){
+   const ticker=path.split('/').at(-1),removed=watches.includes(ticker);watches=watches.filter(t=>t!==ticker);return Response.json({ticker,removed});
+  }
+  if(mode==='watchlist-management'&&method==='POST'&&path==='/watchlist'){
+   const {ticker}=JSON.parse(options.body);if(watches.length>=50)return Response.json({error:'watch_limit',cap:50},{status:402});
+   const added=!watches.includes(ticker);if(added)watches.push(ticker);return Response.json({ticker,added});
+  }
+  throw Error('Writes forbidden in synthetic fixture');
+ }
  if(mode==='failure'&&path.includes('research'))return Response.json({error:'fixture_unavailable'},{status:503});
- if(path==='/watchlist')return Response.json({items:watches.map(ticker=>({ticker})),overview:{items:watches.map(price),session:'2026-09-09'}});
+ if(path==='/watchlist')return Response.json({cap:50,items:watches.map(ticker=>({ticker})),overview:{items:watches.map(price),session:'2026-09-09'}});
  if(path==='/me/stock-research'){
   researchReads++;
   if(mode==='recover-first-read'&&researchReads===1)return Response.json({error:'fixture_first_read_unavailable'},{status:503});
@@ -62,6 +73,7 @@ window.fetch=async(input,options={})=>{
 };
 const store=await import('/js/app/store.js'),router=await import('/js/app/router.js');
 store.set('me',{user_id:8888,tier:'pro',access:{billing_enabled:false},watch_cap:50});store.set('token','synthetic-fixture-only');store.set('watchlist',watches);
+const {renderBrandNavigation}=await import('/js/app/navigation.js');renderBrandNavigation(store.get('me'));
 if(!location.hash)history.replaceState(null,'',location.pathname+location.search+'#/'+(query.get('route')||'today'));
 const language=document.querySelector('[data-lang-toggle]');if(language){const next=new URLSearchParams(query);next.set('lang',query.get('lang')==='en'?'zh':'en');language.href='/qa-frame?'+next+location.hash;}
 await router.start();

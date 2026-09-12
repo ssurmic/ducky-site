@@ -1,6 +1,6 @@
 # Repeated creator viewpoints · 2026-09-10
 
-Status: implemented and locally verified; publication evidence follows below.
+Status: published; local and live acceptance completed for this change.
 
 ## User-visible behavior
 
@@ -67,3 +67,20 @@ real-user study or three-trading-day quote SLO has passed.
 
 Rollback baseline: frontend main `35a5713cbdc5daf6c1e4b7102f96a3d2afca4cf7`,
 Pages `23cf155b`. No backend rollback or migration is required.
+
+## Release evidence
+
+- [PR38](https://github.com/ssurmic/ducky-site/pull/38), main
+  `960ebb021b25258a29e24d31c8108d7d410ff7ce`; PR check `34563233372` and exact-main
+  check `34563356872` both passed, including the current 677-test suite.
+- Cloudflare Pages `7609ecf0`, app graph `251540f1d2e6670431b8`. At
+  2026-09-11 04:47:38 UTC, the public release manifest and both changed modules
+  returned HTTP 200 and matched the tested build byte for byte.
+  [Machine receipt](creator-repeated-views-20260910/pages-verification.json).
+- Authenticated production browser: EN and ZH show one LYFT headline with two
+  records collapsed by default. Expansion retains 2:19–2:25 and 2:19–2:29 and
+  both distinct map IDs, with an excerpt only on its actual source record.
+  A direct link to `claim:a6718deee46dcdaa28873f85` automatically opens and
+  prioritizes that record while retaining the other one.
+- No subscriptions or production state were changed. The owned preview server
+  and browser tab were closed. DGX runtime remains unchanged by this release.

@@ -1,0 +1,130 @@
+[
+  {
+    "firstCardY": 355.875,
+    "lang": "zh-CN",
+    "mainHeight": 522,
+    "overflow": false,
+    "theme": "light",
+    "tickers": [
+      "TSLA",
+      "NVDA",
+      "GLW",
+      "AVGO",
+      "AMD"
+    ],
+    "visibleUpdates": 2,
+    "width": 320
+  },
+  {
+    "firstCardY": 355.875,
+    "lang": "en",
+    "mainHeight": 522,
+    "overflow": false,
+    "theme": "light",
+    "tickers": [
+      "TSLA",
+      "NVDA",
+      "GLW",
+      "AVGO",
+      "AMD"
+    ],
+    "visibleUpdates": 1,
+    "width": 320
+  },
+  {
+    "firstCardY": 355.875,
+    "lang": "zh-CN",
+    "mainHeight": 522,
+    "overflow": false,
+    "theme": "light",
+    "tickers": [
+      "TSLA",
+      "NVDA",
+      "GLW",
+      "AVGO",
+      "AMD"
+    ],
+    "visibleUpdates": 2,
+    "width": 390
+  },
+  {
+    "firstCardY": 355.875,
+    "lang": "en",
+    "mainHeight": 522,
+    "overflow": false,
+    "theme": "light",
+    "tickers": [
+      "TSLA",
+      "NVDA",
+      "GLW",
+      "AVGO",
+      "AMD"
+    ],
+    "visibleUpdates": 2,
+    "width": 390
+  },
+  {
+    "firstCardY": 355.875,
+    "lang": "zh-CN",
+    "mainHeight": 522,
+    "overflow": false,
+    "theme": "dark",
+    "tickers": [
+      "TSLA",
+      "NVDA",
+      "GLW",
+      "AVGO",
+      "AMD"
+    ],
+    "visibleUpdates": 2,
+    "width": 320
+  },
+  {
+    "firstCardY": 355.875,
+    "lang": "en",
+    "mainHeight": 522,
+    "overflow": false,
+    "theme": "dark",
+    "tickers": [
+      "TSLA",
+      "NVDA",
+      "GLW",
+      "AVGO",
+      "AMD"
+    ],
+    "visibleUpdates": 1,
+    "width": 320
+  },
+  {
+    "firstCardY": 355.875,
+    "lang": "zh-CN",
+    "mainHeight": 522,
+    "overflow": false,
+    "theme": "dark",
+    "tickers": [
+      "TSLA",
+      "NVDA",
+      "GLW",
+      "AVGO",
+      "AMD"
+    ],
+    "visibleUpdates": 2,
+    "width": 390
+  },
+  {
+    "firstCardY": 355.875,
+    "lang": "en",
+    "mainHeight": 522,
+    "overflow": false,
+    "theme": "dark",
+    "tickers": [
+      "TSLA",
+      "NVDA",
+      "GLW",
+      "AVGO",
+      "AMD"
+    ],
+    "visibleUpdates": 2,
+    "width": 390
+  }
+]

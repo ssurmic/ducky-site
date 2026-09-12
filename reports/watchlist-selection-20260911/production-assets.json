@@ -1,0 +1,62 @@
+{
+  "graph": "e23c9971cde64aa70769",
+  "checks": [
+    {
+      "path": "/app/",
+      "status": 200,
+      "match": true,
+      "host_beacon_present": true,
+      "sha256": "a4871e9d01208e6cbdb6649bc2a7266473fefc66d82a3ecdac49037321b28bb3"
+    },
+    {
+      "path": "/en/app/",
+      "status": 200,
+      "match": true,
+      "host_beacon_present": true,
+      "sha256": "a4871e9d01208e6cbdb6649bc2a7266473fefc66d82a3ecdac49037321b28bb3"
+    },
+    {
+      "path": "/zh/app/",
+      "status": 200,
+      "match": true,
+      "host_beacon_present": true,
+      "sha256": "13c65ff58f641a75945c069bd6fa8604ed0fb2d593715f43374953e7ee6628f2"
+    },
+    {
+      "path": "/css/product-focus.css?v=5c86ada1",
+      "status": 200,
+      "match": true,
+      "host_beacon_present": false,
+      "sha256": "342c58de7fa1b7dba7730756adc511578771630112f375ed5518708997c24a7c"
+    },
+    {
+      "path": "/app-assets/e23c9971cde64aa70769/main.js",
+      "status": 200,
+      "match": true,
+      "host_beacon_present": false,
+      "sha256": "11cb05a77d60cc6e9157ef70a6416c74f5fc2a7eb68f9654098693f81eb2cb83"
+    },
+    {
+      "path": "/app-assets/e23c9971cde64aa70769/views/watchlist.js",
+      "status": 200,
+      "match": true,
+      "host_beacon_present": false,
+      "sha256": "eb6da3e17873223b081c90e883ec17a133d6e64287d0da49924cd79256975edf"
+    },
+    {
+      "path": "/app-assets/e23c9971cde64aa70769/watchlist-overview.js",
+      "status": 200,
+      "match": true,
+      "host_beacon_present": false,
+      "sha256": "2f487dbb2af526ee241f1ac5c8e2a9fb45d3516b27da9be95079954c69c5bb3f"
+    },
+    {
+      "path": "/app-assets/e23c9971cde64aa70769/api.js",
+      "status": 200,
+      "match": true,
+      "host_beacon_present": false,
+      "sha256": "90e4bfdecfb511fce1aa11ad36aa31aad8ad9facbf6d5986b3116cfeed2edcc6"
+    }
+  ],
+  "all_matched": true
+}
