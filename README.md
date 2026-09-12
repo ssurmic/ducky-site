@@ -43,5 +43,5 @@ once with `scripts/fonts.sh <JetBrainsMono.ttf>` (pyftsubset). Until then the sy
 | Environment | `PYTHON_VERSION=3.12` (Pages reads `.python-version` too); `pip install -r requirements.txt` runs via `python3 -m pip install -r requirements.txt && python3 build.py` if the image lacks Jinja2 |
 | Custom domains | `duckybot.app` (apex) + `www.duckybot.app` (redirected to apex by `public/_redirects`) |
 
-`dist/_headers` carries the CSP from SYSTEMDESIGN §5; `functions/` (later pack) provides `/go/<slug>` 302s.
+Release: `scripts/deploy_pages.sh` (Direct Upload Pages project — a git push never publishes; see the script header). `dist/_headers` carries the CSP from SYSTEMDESIGN §5; `functions/` (later pack) provides `/go/<slug>` 302s.
 CI (`.github/workflows/check.yml`) runs build + lint + link check on every push / PR.
