@@ -154,7 +154,8 @@ export function startOnboarding(){
     schedule();
   }
   function findTarget(){
-    const nodes=[...document.querySelectorAll('[data-tour]')].filter(n=>n.dataset.tour.split(' ').includes(targets[progress.step]));
+    const names=[targets[progress.step],...(progress.step==='add'?['watchlist.add-toggle']:[])];
+    const nodes=names.flatMap(name=>[...document.querySelectorAll('[data-tour]')].filter(n=>n.dataset.tour.split(' ').includes(name)));
     const ref=progress.examples?.opinion;
     return nodes.find(n=>{
       if(n.disabled||n.closest('[hidden]')||n.closest('[inert]'))return false;
@@ -218,10 +219,12 @@ export function startOnboarding(){
   window.addEventListener('storage',storage);window.addEventListener('resize',schedule);
   window.addEventListener('hashchange',navigate);
   document.addEventListener('scroll',schedule,true);
+  document.addEventListener('toggle',schedule,true);
   window.visualViewport?.addEventListener('resize',schedule);window.visualViewport?.addEventListener('scroll',schedule);
   void load();
   return ()=>{stopped=true;off();observer.disconnect();clearTimeout(timeout);if(frame!=null)cancelAnimationFrame(frame);
     document.removeEventListener('ducky:tour-progress',event);document.removeEventListener('keydown',escape);
+    document.removeEventListener('toggle',schedule,true);
     window.removeEventListener('storage',storage);window.removeEventListener('resize',schedule);window.removeEventListener('hashchange',navigate);document.removeEventListener('scroll',schedule,true);
     window.visualViewport?.removeEventListener('resize',schedule);window.visualViewport?.removeEventListener('scroll',schedule);
     releaseTarget();card.remove();ring.remove();help.remove();document.body.classList.remove('tour-visible');};
