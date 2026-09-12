@@ -1,8 +1,11 @@
 # ducky-site — agent notes
 
-**Read first:** `/Users/zizhaozhang/dev/ducky-bot/SYSTEMDESIGN.md` — §0 invariants (esp. 5: compliance strings),
-§1 (what the web layer is for), §5 (frontend: stack, pages, CSP, CI, config). That file is the single source of
-truth; this one only points at it.
+**Read first:** [AGENTS.md](AGENTS.md) links to the private backend's shared
+[design-current-status.md](https://github.com/ssurmic/ducky-bot/blob/codex/design-current-status-20260912/design-current-status.md) and
+[continuation.md](https://github.com/ssurmic/ducky-bot/blob/codex/design-current-status-20260912/continuation.md). All agents use that same document set.
+Then read backend `SYSTEMDESIGN.md` §0 invariants, §3.1 ownership and §5 frontend rules.
+This file adds frontend-specific guidance; it is not a second current system design.
+Use a current backend checkout, not an assumed machine-specific directory.
 
 ## Rules that CI enforces
 - `python3 build.py` renders `templates/*.html` × {zh, en} → `dist/en/` and `dist/zh/`, with English aliases at `dist/`. Copy lives

@@ -1,5 +1,12 @@
 # Change log
 
+## Shared design and continuation references · 2026-09-12
+
+Added a generic agent entry and linked frontend agent/README guidance to the private backend's
+shared current technical design and continuation record. Corrected the README's language-route
+and app description. The public repository contains references only, not private architecture.
+Documentation only; no assets, API behavior, feature flags or production deployment changed.
+
 ## Bilingual interactive onboarding · 2026-09-11 (deployed)
 
 New verified accounts receive a skippable, animated tour of real stock/map/chart controls,

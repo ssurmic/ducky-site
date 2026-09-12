@@ -1,10 +1,13 @@
 # ducky-site 🦆
 
-Public marketing site for **Ducky Bot** (`duckybot.app`): a static, bilingual (中文 at `/`, English at `/en/`),
-zero-third-party-script landing + disclaimer, built with a ~200-line Jinja2 script. Track record, trending,
-ideas and the `/app/` Mini App shell are added by later packs on top of the same pipeline.
+Public website and authenticated app for **Ducky Bot** (`duckybot.app`), built with
+Python/Jinja2 and a vanilla ES-module SPA. English pages use `/` and `/en/`; Chinese pages use `/zh/`.
+Cloudflare Pages serves the generated site and `/app/` shell; shared research comes from the backend API.
 
-Design authority: `ducky-bot/SYSTEMDESIGN.md` §5. Agent rules: `CLAUDE.md`.
+Engineering entry: [AGENTS.md](AGENTS.md) · [frontend rules](CLAUDE.md). The private backend owns the
+[shared current design](https://github.com/ssurmic/ducky-bot/blob/codex/design-current-status-20260912/design-current-status.md) and
+[continuation / review record](https://github.com/ssurmic/ducky-bot/blob/codex/design-current-status-20260912/continuation.md); both repositories reference those same documents.
+Backend `SYSTEMDESIGN.md` retains the detailed invariant and ownership contracts.
 
 ## Build
 
