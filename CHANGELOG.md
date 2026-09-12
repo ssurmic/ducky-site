@@ -1,12 +1,13 @@
 # Change log
 
-## Bilingual interactive onboarding · 2026-09-11 (release preparation)
+## Bilingual interactive onboarding · 2026-09-11 (deployed)
 
 New verified accounts receive a skippable, animated tour of real stock/map/chart controls,
 then source/video/calendar/disclosure chapters. Help resumes or replays saved progress.
 Onboarding works with billing closed and never claims an ungranted trial. Current bulk
-watchlist management and navigation remain. 705 tests pass; browser evidence covers both
-engines and short phone layouts. [Acceptance](reports/open-onboarding/README.md).
+watchlist management and navigation remain. 706 tests pass; browser evidence covers both
+engines and short phone layouts. Main `6fcf7b3` / Pages `247ad28c` is live; real
+production clicks completed 10/10 with saved progress. [Acceptance](reports/open-onboarding/README.md).
 
 ## Watchlist removal and capacity · 2026-09-11 (deployed)
 

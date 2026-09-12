@@ -5,7 +5,7 @@ remaining off. A server-defined cohort of new verified email accounts sees Welco
 older users can open Help. Start navigates to Watchlist and real business events advance
 each step. Copy never promises a trial unless the account has an actual trial record.
 
-Integrated backend base f30d14b / frontend base 816f98a. 705 frontend tests, 5,343 backend
+Integrated backend base f30d14b / frontend base 816f98a. 706 final frontend tests, 5,343 local backend
 tests, 53 focused lifecycle tests and 13 API smoke checks passed. Browser evidence in
 this directory records Chromium/WebKit at 320/390/430/1440px; phone available height660px.
 Research is synthetic QA; authentication, watchlist and progress use real local APIs.
@@ -17,6 +17,41 @@ The first open-mode runs exposed harness races (assertion before auth completion
 mixing the fixture with static public calendar data). The harness now waits for the
 welcome and isolates calendar data, selecting the exact pinned example date.
 
-Deployment pending at this commit. Backend release details and independent rollback
-are recorded in its reports/ONBOARDING-RELEASE-2026-09-11.md. Earlier trial-mode evidence
-in ../trial-onboarding remains historical; it does not certify formal billing activation.
+## Production release
+
+Live: https://duckybot.app/zh/app/ and /en/app/. Final frontend `6fcf7b384cda9e742294f42091f4f4b49d8c4883`
+(PR43/44/45), Pages `247ad28c`, app graph `064f4f853393d2d6e0c1`.
+Backend `dcbe8a1c2cc1b8df9a5ccd63b3bfe140f472f670` (PR60/61).
+[Final frontend CI](https://github.com/ssurmic/ducky-site/actions/runs/34665047733) passed;
+backend CI passed 5,361 tests, 7 skipped, architecture and 13/13 API smoke.
+
+The guide is enabled independently of billing. New verified accounts created from the
+fixed boundary `2026-09-12T01:21:56.707455+00:00` see Welcome. Existing accounts use
+“Product tour” / “使用引导”. Trial enrollment and purchases remain disabled.
+
+[HTTP receipt](production-http.json) confirms 11/11 inspected live pages/config/CSS/modules
+match the build. GitHub Pages dispatch lacked Cloudflare environment credentials;
+publication succeeded using the operator's existing local Wrangler OAuth session.
+No credential was committed. Backend used its tested-ref release lock and recovery bundle.
+
+[Production browser receipt](production-browser.json) records real clicks completing
+10/10 steps across the staged rollout, English/Chinese and a 390×650 Chrome viewport.
+The actual map, reviewed NVDA view, internal source, timestamped video link, calendar
+and insider filing were used. Existing watchlist count stayed unchanged. A full document
+reload through the language link preserved 10/10, with no automatic welcome repeated.
+This is distinct from the eight automated fixture runs above; physical phones are untested.
+
+Live acceptance found the exact-source API places platform on its creator, while the
+video target expected it on the post. PR45 inherits that platform in source navigation;
+a regression test uses the real response shape, and the real production video click now
+advances. External links count as opens, never playback. PR44 handles the collapsed Add
+toggle. Backend PR61 fixes the example publisher's archive kinds argument and validates
+against the actual reader. Normal publication of all three example types now passes.
+
+The disposable new-account API check passed eligibility, no-trial, failed Add, successful
+Add and saved-progress checks, then was anonymized through normal account deletion.
+Real email delivery and an actual Google identity-provider callback were not retested.
+All 43 owner-paused model/video/caption services remain inactive. No new model work was
+started. Backend rollback and sanitized receipts are in its
+reports/ONBOARDING-RELEASE-2026-09-11.md. Earlier trial-mode evidence in ../trial-onboarding
+remains historical; it does not certify formal billing activation.

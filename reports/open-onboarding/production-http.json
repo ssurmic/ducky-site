@@ -1,0 +1,77 @@
+{
+  "source_commit": "6fcf7b384cda9e742294f42091f4f4b49d8c4883",
+  "pages_deployment": "247ad28c",
+  "app_graph": "064f4f853393d2d6e0c1",
+  "checks": [
+    {
+      "path": "en/app/",
+      "status": 200,
+      "matches_build": true,
+      "sha256": "d7dc006fc2916488fb9e33d36c4a30df49367b4f0c49ba98cb04e41f7eeb84fd"
+    },
+    {
+      "path": "zh/app/",
+      "status": 200,
+      "matches_build": true,
+      "sha256": "a7084168ad03d88e80f88a6cf6bf5fabd1425e24bfd6b0d2254e1ad40e88c1cd"
+    },
+    {
+      "path": "config.js",
+      "status": 200,
+      "matches_build": true,
+      "sha256": "fd6076c425ee5f85d99d05f2883a0e44f8824e35c07740b99ec92c384cfe390b"
+    },
+    {
+      "path": "css/onboarding.css",
+      "status": 200,
+      "matches_build": true,
+      "sha256": "6d69c54d12c6d049b3630625cb2fff2b9c5c264e752ea45895974ca77f43f8a8"
+    },
+    {
+      "path": "app-assets/064f4f853393d2d6e0c1/main.js",
+      "status": 200,
+      "matches_build": true,
+      "sha256": "54f985dc9e41e751974e4b90945977b28a46d2a5f1edc0ff3e5cf81745c8312f"
+    },
+    {
+      "path": "app-assets/064f4f853393d2d6e0c1/onboarding.js",
+      "status": 200,
+      "matches_build": true,
+      "sha256": "05727dbb2429d9473b6c23f3f3761dbdd5b11f628a83296a54503a1d2b08c3b7"
+    },
+    {
+      "path": "app-assets/064f4f853393d2d6e0c1/api.js",
+      "status": 200,
+      "matches_build": true,
+      "sha256": "38b1ad536d52991aa3e3e7176c890db216bcf122aa346bdd9286b05364c657e3"
+    },
+    {
+      "path": "app-assets/064f4f853393d2d6e0c1/views/watchlist.js",
+      "status": 200,
+      "matches_build": true,
+      "sha256": "0c55079dc3adea18951609a6d3dddd2f59b87362b08872f82e00509db69e830e"
+    },
+    {
+      "path": "app-assets/064f4f853393d2d6e0c1/views/evidence.js",
+      "status": 200,
+      "matches_build": true,
+      "sha256": "6453cec142ab06be2fd1ced9f614f73f9119442420f0347bf4b8cbd073525c50"
+    },
+    {
+      "path": "app-assets/064f4f853393d2d6e0c1/views/chart.js",
+      "status": 200,
+      "matches_build": true,
+      "sha256": "c702da2498f61fb2ec9352d77f8c6e72169ef5c9eab2466e9c1f9a301e4e35ff"
+    },
+    {
+      "path": "app-assets/064f4f853393d2d6e0c1/views/creators.js",
+      "status": 200,
+      "matches_build": true,
+      "sha256": "400a94f8990b49585ad9429651be8e8e1977f6819e29497a211f4c81b6f8d916"
+    }
+  ],
+  "prior_onboarding_deployments": [
+    "4c3c96c0",
+    "fce69843"
+  ]
+}

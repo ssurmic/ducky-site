@@ -1,0 +1,46 @@
+{
+  "date": "2026-09-11 America/Los_Angeles",
+  "site": "https://duckybot.app/zh/app/",
+  "final_backend": "dcbe8a1c2cc1b8df9a5ccd63b3bfe140f472f670",
+  "final_frontend": "6fcf7b384cda9e742294f42091f4f4b49d8c4883",
+  "pages_deployment": "247ad28c",
+  "method": "Operator clicks in production Chrome, actual shared research and saved account progress; persistent session continued across staged rollout fixes.",
+  "languages": [
+    "en",
+    "zh"
+  ],
+  "responsive_viewport": {
+    "width": 390,
+    "height": 650,
+    "physical_phone": false,
+    "override_reset": true
+  },
+  "checks": {
+    "existing_account_manual_help": true,
+    "open_access_welcome_has_no_trial_promise": true,
+    "saved_stock_reuse_without_duplicate_add": true,
+    "correct_stock_map_loaded": true,
+    "reviewed_node_details_visible": true,
+    "chart_range_change_applied": true,
+    "pinned_nvda_view_details_visible": true,
+    "internal_source_context_visible": true,
+    "timestamped_original_video_link_clicked": true,
+    "video_claims_playback": false,
+    "pinned_calendar_day_details_visible": true,
+    "disclosure_type_dates_and_source_visible": true,
+    "disclosure_original_link_clicked": true,
+    "returned_to_original_watchlist": true,
+    "original_watchlist_count_unchanged": true,
+    "completed_steps": 10,
+    "total_steps": 10,
+    "full_document_language_reload_preserves_completion": true,
+    "no_repeat_welcome_after_completion": true,
+    "help_shows_completed_10_of_10_after_reload": true
+  },
+  "limitations": [
+    "No physical iPhone or Android acceptance",
+    "No real email delivery or Google identity-provider round trip in this release check",
+    "External links prove clicks, not reading or playback",
+    "Formal trial enrollment and charging remain disabled"
+  ]
+}
