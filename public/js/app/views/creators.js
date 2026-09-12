@@ -11,7 +11,7 @@ import {verifiedSpans,spanSection,legacyCalls,tickerViews} from '../creator-span
 import * as api from "../api.js";
 import * as store from "../store.js";
 import * as router from "../router.js";
-import { el, clear, toast, spinner, empty } from "../ui.js";
+import { el, clear, toast, spinner, empty, modal, closeModal } from "../ui.js";
 import { mountResearch, safeSource, dateTime, metric } from './creator-research.js';
 
 import {mountSetup,confirmCreator,avatar} from './creator-setup.js';
@@ -25,6 +25,7 @@ import {matchesStocks,taggedTickers} from '../creator-match.js';
 import {readingPreview} from '../reading-preview.js';
 
 const TAKE_CLS = { bull: "cr-bull", bear: "cr-bear", neutral: "cr-neutral" };
+const VIEWS_SHOWN = 4;   // lines per creator before the "more" disclosure
 const CALL_ARROW = { bull: "▲", bear: "▼", neutral: "•" };
 
 function pickSummary(x, isZh) {
@@ -70,7 +71,9 @@ function atTime(url, seconds) {
 }
 export function filterPosts(posts, { following, mine, archive, query = "", tickers=null }) {
   const needle = query.trim().toLocaleLowerCase();
-  return posts.filter(p => (!mine || following.has(p.kol_id)) && matchesStocks(p,tickers) && (archive || hasReviewedSummary(p) || verifiedSpans(p).length || discoveredSource(p)) &&
+  // Discovered sources whose summary is still being prepared are not shown in any list; only an
+  // exact source link (archive) reaches them, with their date and original link.
+  return posts.filter(p => (!mine || following.has(p.kol_id)) && matchesStocks(p,tickers) && (archive || hasReviewedSummary(p) || verifiedSpans(p).length) &&
     (!needle || [p.kol_name, p.title, ...(p.tickers || []), pickSummary(p.summary,true), pickSummary(p.summary,false)].join(" ").toLocaleLowerCase().includes(needle)))
     .sort((a,b)=>(Date.parse(b.published_at)||0)-(Date.parse(a.published_at)||0));
 }
@@ -184,20 +187,6 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   mergeDiscovery();
   let selected=kols.some(k=>k.id===initial.selected)?initial.selected:'', tab=initial.tab, shown=30;
   const labState={demo:initial.demo}, histories={}, archiveOpen=new Set();
-  // Pending summaries can be requested once per creator per visit; the server keeps its own cooldown.
-  const requested=new Set();
-  function requestSummary(kolId){
-    const button=el('button.btn.btn-ghost.btn-sm.creator-request-summary',{type:'button',disabled:requested.has(kolId),onclick:async()=>{
-      if(button.disabled||disposed||epoch!==store.epoch())return;button.disabled=true;
-      try{await api.kol.analyze(kolId);if(disposed||epoch!==store.epoch())return;requested.add(kolId);toast(s('creators.request_sent'),'ok');}
-      catch(error){
-        if(disposed||epoch!==store.epoch())return;
-        if(error.status===429){requested.add(kolId);toast(s('creators.request_cooldown'));}
-        else{button.disabled=false;toast(s('creators.request_failed'),'err');}
-      }
-    }},s('creators.request_summary'));
-    return button;
-  }
   const pageProgress=progressPoll({interval:30000,active:()=>!sourceOnly&&!disposed&&canRead(selected)&&epoch===store.epoch()&&root.isConnected&&!!selected&&tab==='feed',
     read:()=>api.get('/kol/'+encodeURIComponent(selected)+'/page'),
     onValue:page=>{if(page.kol_id!==selected)return;const old=doc.pages?.[selected];if(page.content_hash===old?.content_hash&&page.status===old?.status)return;
@@ -326,6 +315,10 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         el('label',el('span',s('creatordiscovery.filter')),filter)),el('p.creator-discovery-basis',s('creatordiscovery.basis')));
       if(discovery.coverage?.truncated||discovery.coverage?.scan_limited)content.append(el('p.small.muted',s('creatordiscovery.result_limit')));
     }
+    // Default entry for followed creators: their latest views, one per line, no creator picker. A creator's
+    // name opens that creator; a view opens the original source with its summary.
+    const directView=mine&&!selected&&!stockTicker&&!query&&!focusedPost&&!showSetup&&following.size>0;
+    if(directView){content.append(latestViews(available,stockFilter));return;}
     const grid = el("div.creator-directory");
     if(!mine)grid.classList.add('creator-discovery-directory');
     const directory=selected?[]:available;
@@ -389,9 +382,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     const feedContent=selected?el('details.creator-video-archive',{open:true},el('summary',s('creators.latest'))):el('section.creator-recent-feed');
     if(selected){const kid=selected;feedContent.addEventListener('toggle',()=>{if(feedContent.open){archiveOpen.add(kid);}else archiveOpen.delete(kid);});}
     content.append(feedContent);
-    const archiveBtn = el("button.btn.btn-ghost.btn-sm", { type: "button", "aria-pressed": String(archive), onclick: () => { archive = !archive; render(); } }, s(archive ? "creators.only_grounded" : "creators.show_archive"));
-    if(!selected)feedContent.append(el('header.creator-feed-heading',el('h2.creator-latest-title',s('creators.latest')),archiveBtn));
-    else feedContent.appendChild(archiveBtn);
+    if(!selected)feedContent.append(el('header.creator-feed-heading',el('h2.creator-latest-title',s('creators.latest'))));
     if(selected&&!focusedPost&&!histories[selected])feedContent.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>loadHistory(selected)},s('creatorpage.video_archive')));
     if (mine && !following.size) {feedContent.appendChild(empty(s("creators.no_following")));feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{mine=false;render();loadDiscovery();}},s('creators.discover')));return;}
     const history=selected?histories[selected]:null;
@@ -435,7 +426,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       if(source.caption_language) sourceFacts.append(el('span',source.caption_language+' · '+s(source.caption_source==='local_asr'?'creatorclaim.local_asr':source.caption_generated?'creators.auto_captions':'creators.manual_captions')));
       if(Number.isFinite(source.caption_coverage_pct)) sourceFacts.append(el('span',s('creators.coverage',{n:source.caption_coverage_pct})));
 
-      if (p.title) art.appendChild(el("h3.cr-video-title", {title:p.title}, previewTitle(p.title)));
+      if (p.title) art.appendChild(el("h3.cr-video-title", previewTitle(p.title)));
       if (reviewed || points.length) {
         if(meta.source?.corrections?.length)art.appendChild(el('p.small',s('creatorclaim.corrected')));
         const sections = meta.source?.sections || [];
@@ -454,7 +445,6 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         const status = meta.source?.status;
         const statusKey = {discovered:'source_pending',too_long:'too_long',too_dense:'too_dense',processing:'review_pending',review_unavailable:'review_pending',model_unavailable:'review_pending',source_unavailable:'source_pending',asr_unavailable:'source_pending',asr_timeout:'source_pending'}[status] || 'archive_hint';
         art.appendChild(el("p.muted.small", discoveredSource(p)?s('creators.new_source_pending',{date:String(p.published_at||'').slice(0,10)}):s('creators.'+statusKey)));
-        if(store.isPro()&&p.kol_id)art.appendChild(requestSummary(p.kol_id));
       }
 
       if(focusedPost&&focusedPoint&&!p.reviewed_spans?.some(v=>v.point_id===focusedPoint))art.append(el('p.data-notice',s('evidence.point_changed')));
@@ -479,6 +469,90 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     });
     if(!history?.items&&visiblePosts.length>shown) feedContent.append(el('button.btn.btn-ghost',{type:'button',onclick:()=>{shown+=30;renderContent();}},s('creators.load_more')));
     if(!focusedPost)feedContent.append(el('p.muted.small',s('creators.feed_limit',{n:history?.items?.length ?? posts.length})));
+  }
+
+  // One line per attributed view (stock, direction, the creator's claim, date, video); a reviewed
+  // video without a stock view gets one summary line. Order: creators by newest view, views newest first.
+  function creatorViews(readable){
+    const groups=new Map();
+    for(const p of readable){
+      const rows=verifiedSpans(p).filter(row=>row.intent!=='mention'&&row.basis==='attributed_opinion');
+      const views=rows.map(row=>({post:p,ticker:row.ticker,tickers:[row.ticker],stance:{support:'bull',counter:'bear'}[row.stance]||'neutral',pointId:row.point_id||'',
+        text:row.title?.[isZh?'zh':'en']||row.title?.zh||row.title?.en||'',seconds:row.start_seconds}));
+      for(const call of legacyCalls(p))views.push({post:p,ticker:call.sym,tickers:[call.sym],stance:['bull','bear'].includes(call.stance)?call.stance:'neutral',pointId:call.point_id||call.claim_id||'',
+        text:pickSummary(call.note,isZh)||conciseSummary(p.summary,isZh),seconds:call.action_start_seconds??call.start_seconds});
+      // A reviewed video without an attributed view keeps its summary line; the stocks it tagged stay
+      // neutral labels, never a direction.
+      if(!views.length&&hasReviewedSummary(p))views.push({post:p,ticker:'',tickers:taggedTickers(p),stance:'neutral',pointId:'',text:conciseSummary(p.summary,isZh)||s('creators.summary_view'),seconds:null,summaryOnly:true});
+      if(!views.length)continue;
+      const group=groups.get(p.kol_id)||{kolId:p.kol_id,views:[],latest:''};
+      group.views.push(...views.filter(v=>v.text));
+      group.latest=[group.latest,p.published_at||''].sort().pop();
+      groups.set(p.kol_id,group);
+    }
+    for(const group of groups.values())group.views.sort((a,b)=>(Date.parse(b.post.published_at)||0)-(Date.parse(a.post.published_at)||0)||(b.seconds??-1)-(a.seconds??-1));
+    return [...groups.values()].sort((a,b)=>(Date.parse(b.latest)||0)-(Date.parse(a.latest)||0));
+  }
+  function latestViews(available,stockFilter){
+    const section=el('section.creator-latest-views');
+    section.append(el('header.creator-feed-heading',el('div',el('h2.creator-latest-title',s('creators.latest_views')),el('p.small.muted',s('creators.latest_views_hint')))));
+    const readable=filterPosts(posts,{following,mine:true,archive:false,tickers:stockFilter});
+    const groups=creatorViews(readable);
+    // Every followed creator keeps a row, so a creator without readable views can still be opened.
+    for(const k of available)if(!groups.some(g=>g.kolId===k.id))groups.push({kolId:k.id,views:[],latest:''});
+    if(!groups.length){section.append(empty(s('creators.no_readable_views')));return section;}
+    for(const group of groups){
+      const creator=kols.find(k=>k.id===group.kolId)||{id:group.kolId,name:readable.find(p=>p.kol_id===group.kolId)?.kol_name||group.kolId};
+      const open=()=>{selected=creator.id;query='';showSetup=false;shown=30;render();};
+      const article=el('article.creator-views-group',{'data-creator':creator.id});
+      article.append(el('header.creator-views-head',avatar(creator),el('div.creator-views-title',
+        el('button.creator-name',{type:'button','aria-label':s('creators.open_creator')+' · '+(creator.name||creator.id),onclick:open},creator.name||creator.id),
+        el('p.small.muted',group.views.length?s('creators.views_count',{n:group.views.length})+' · '+s('creators.latest_at',{date:String(group.latest||'').slice(0,10)}):''))));
+      if(!group.views.length){article.append(el('p.small.muted.creator-views-none',s('creators.no_views_creator')));section.append(article);continue;}
+      const list=el('ol.creator-view-list');
+      const rows=group.views.map(view=>viewRow(view,creator));
+      for(const row of rows.slice(0,VIEWS_SHOWN))list.append(row);
+      article.append(list);
+      if(rows.length>VIEWS_SHOWN){
+        const rest=el('ol.creator-view-list');for(const row of rows.slice(VIEWS_SHOWN))rest.append(row);
+        article.append(el('details.creator-views-more',el('summary',s('creators.more_views',{n:rows.length-VIEWS_SHOWN})),rest));
+      }
+      section.append(article);
+    }
+    return section;
+  }
+  function viewRow(view,creator){
+    const p=view.post,tickers=(view.tickers||[]).filter(Boolean).slice(0,3);
+    const chips=tickers.length?tickers.map(t=>el('span.cr-take',{class:t===view.ticker?(TAKE_CLS[view.stance]||'cr-neutral'):'cr-neutral'},
+      '$'+t+(t===view.ticker&&['bull','bear'].includes(view.stance)?' '+s('creators.take_'+view.stance):''))):[el('span.cr-take.cr-neutral',s('creators.summary_ready'))];
+    const matched=tickers.filter(t=>watchedTickers.includes(t));
+    const button=el('button.creator-view-open',{type:'button','data-post':p.platform_post_id||p.id||'','data-point':view.pointId,onclick:()=>openView(view,creator)},
+      el('span.creator-view-takes',...chips),
+      el('span.creator-view-text',view.text),
+      el('span.creator-view-meta.small.muted',[String(p.published_at||'').slice(0,10),previewTitle(p.title)].filter(Boolean).join(' · '),
+        matched.length?el('span.creator-watch-match',' · '+s('creatorstocks.matched')+' '+matched.map(t=>'$'+t).join(' ')):null));
+    return el('li.creator-view-row',{class:'is-'+view.stance},button);
+  }
+  // The source behind one line: the video, its attributed views (the chosen one focused), the full
+  // summary with its timestamps, and the same exits the cards offer.
+  function openView(view,creator){
+    const p=view.post,meta=evidenceMeta(p),source=meta.source||{},points=verifiedSpans(p),body=el('div.creator-view-detail');
+    body.append(el('h3.cr-video-title',previewTitle(p.title)||s('creators.orig')),
+      el('p.small.muted',s('creators.published')+' '+videoDate(p.published_at,isZh?'zh-CN':'en-US')));
+    const spans=spanSection(points,null,view.pointId,{inline:true});if(spans)body.append(spans);
+    if(!points.length&&legacyCalls(p).length)body.append(callChips(legacyCalls(p),isZh,p.url,p.kol_id));
+    const fullSummary=hasReviewedSummary(p)?(pickSummary(p.summary,isZh)||pickSummary((source.sections||[])[0],isZh)):'';
+    if(fullSummary){
+      body.append(el('h4',s('creators.view_summary')),el('p.cr-attribution.muted.small',s('creators.attribution',{name:p.kol_name||creator.name||''})),el('p.cr-sum',fullSummary));
+      for(const section of source.sections||[])body.append(el('div.creator-view-section',safeSource(p.url)?el('a',{href:atTime(p.url,section.start_seconds),target:'_blank',rel:'noopener noreferrer'},`${Math.floor(section.start_seconds/60)}:${String(Math.floor(section.start_seconds)%60).padStart(2,'0')} ↗`):null,el('p',pickSummary(section,isZh))));
+    }
+    const actions=el('div.evidence-controls.creator-page-actions');
+    if(safeSource(p.url))actions.append(el('a.cr-orig.btn.btn-primary.btn-sm',{href:Number.isFinite(view.seconds)?atTime(p.url,view.seconds):p.url,target:'_blank',rel:'noopener noreferrer'},s('creators.orig')+' ↗'));
+    actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{closeModal();selected=p.kol_id;tab='research';renderContent();}},s('creators.research')));
+    if(view.ticker)actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{closeModal();selected=p.kol_id;tab='lab';labState.post=p.platform_post_id||p.id||'';labState.point=view.pointId;renderContent();}},s('creatorlab.simulate_post')),
+      evidenceLink(view.ticker,view.pointId));
+    body.append(actions);
+    modal((creator.name||p.kol_name||'')+' · '+String(p.published_at||'').slice(0,10),body);
   }
 
   async function loadHistory(kid){

@@ -96,13 +96,19 @@ test('the watchlist table adds four sortable signal columns from two shared read
  const root=document.querySelector('main');root.replaceChildren();const calls=[];
  globalThis.fetch=async url=>{calls.push(url);
   if(url==='/briefing/stocks?fields=signals')return Response.json(briefs);
+  // The archived filing is the same record the brief cites; the list reads it from the archive first.
+  if(url.startsWith('/radar/archive.json?kind=insider'))return Response.json({items:[{id:'sec:jane',kind:'insider',ticker:'NVDA',ts:'2026-09-02T21:00:00Z',
+    source_url:'https://www.sec.gov/Archives/edgar/data/1/jane.xml',extra:{facts:{owners:[{name:'Jane Doe',role:'Director'}],transactions:[{date:'2026-09-01',price:200,shares:5000},{date:'2026-09-01',price:210,shares:1000}],form:'4'}}}],next_cursor:null});
   if(url.startsWith('/radar/archive.json'))return Response.json(funds);
   if(url==='/me/stock-research')return Response.json({items:[],watchlist_count:3});
   return Response.json({items:['NVDA','AAPL','TSLA'],cap:50,overview:{items:[{ticker:'NVDA',company:'NVIDIA',price:218.29,market_cap:5e12},{ticker:'AAPL',company:'Apple',price:332,market_cap:4.8e12},{ticker:'TSLA',company:'Tesla',price:365,market_cap:1.4e12}]}});};
  const dispose=await watch.mount(root);await pause();
  assert.ok(calls.includes('/briefing/stocks?fields=signals'));
- // The 13F page is asked for exactly the watched stocks in the compact projection, never the market-wide newest page.
- assert.deepEqual(calls.filter(u=>u.startsWith('/radar/archive.json')),['/radar/archive.json?kind=13f&direction=1&limit=200&content=all&fields=signals&tickers=NVDA,AAPL,TSLA']);
+ // Both archive pages are asked for exactly the watched stocks in the compact projection, never a market-wide newest page.
+ const archiveCalls=calls.filter(u=>u.startsWith('/radar/archive.json'));
+ assert.equal(archiveCalls[0],'/radar/archive.json?kind=13f&direction=1&limit=200&content=all&fields=signals&tickers=NVDA,AAPL,TSLA');
+ assert.match(archiveCalls[1],/^\/radar\/archive\.json\?kind=insider&limit=200&content=all&fields=signals&start=\d{4}-\d{2}-\d{2}&tickers=NVDA,AAPL,TSLA$/);
+ assert.equal(archiveCalls.length,2);
  const first=root.querySelector('tbody tr');
  assert.equal(first.querySelectorAll('.watch-signal').length,4);
  assert.deepEqual([...root.querySelectorAll('thead .watch-signal-col .watch-sort-label')].map(n=>n.textContent),['Insider buying','Large fund adds','Option walls','Support refs']);
@@ -140,4 +146,30 @@ test('13F pages drop option lines, count one amended report once, withhold impla
  assert.match(signals.signalCell('funds',signals.buildSignals(briefs,doc,['AAPL']).get('AAPL')).textContent,/No adds in tracked funds/);
  const partial=signals.buildSignals(briefs,{...doc,partial:true},['AAPL']);
  assert.equal(partial.get('AAPL').funds.status,'missing');
+});
+
+test('the insider column reads archived Form 4 records: none on a complete page, brief facts only as a fallback',()=>{
+ const now=Date.parse('2026-09-12T00:00:00Z'),recent='2026-09-02T21:00:00Z',old='2025-06-01T00:00:00Z';
+ const archive={items:[
+  {id:'sec:1',kind:'insider',ticker:'NVDA',ts:recent,published_at:recent,source_url:'https://www.sec.gov/Archives/edgar/data/1/a.xml',
+   extra:{facts:{owners:[{name:'Jane Doe',role:'Director',title:''}],transactions:[{date:'2026-09-01',price:200,shares:5000},{date:'2026-09-01',price:210,shares:1000}],total_value:1210000,form:'4'}}},
+  {id:'sec:2',kind:'insider',ticker:'NVDA',ts:recent,published_at:recent,extra:{facts:{date_review_required:true,owners:[{name:'Flagged'}],transactions:[{price:1,shares:1}]}}},
+  {id:'sec:3',kind:'insider',ticker:'TSLA',ts:old,published_at:old,extra:{facts:{owners:[{name:'Old Buyer'}],transactions:[{price:100,shares:100}]}}}],next_cursor:null};
+ const filings=signals.insiderSignals(archive,{now});
+ assert.equal(filings.complete,true);assert.deepEqual([...filings.byTicker.keys()],['NVDA']);   // flagged and year-old records do not count
+ const all=signals.buildSignals(briefs,funds,['NVDA','AAPL','TSLA'],archive);
+ const nvda=all.get('NVDA').insider;
+ assert.equal(nvda.status,'ready');assert.equal(nvda.source,'archive');assert.equal(nvda.count,1);assert.equal(Math.round(nvda.average*100)/100,201.67);
+ assert.equal(nvda.filings[0].owners[0].role,'Director');assert.equal(nvda.filings[0].url,'https://www.sec.gov/Archives/edgar/data/1/a.xml');
+ // AAPL and TSLA have a complete page with no purchases: that is "none", even though TSLA's brief is pending.
+ assert.equal(all.get('AAPL').insider.status,'none');assert.equal(all.get('TSLA').insider.status,'none');
+ assert.match(signals.signalCell('insider',all.get('TSLA')).textContent,/No Form 4 purchases in 12 months/);
+ // A truncated page can only say "unknown" for stocks it does not list.
+ assert.equal(signals.buildSignals(briefs,funds,['MSFT'],{...archive,next_cursor:'more'}).get('MSFT').insider.status,'missing');
+ // Without the archive the brief's own copy of the filings still answers.
+ const fallback=signals.buildSignals(briefs,funds,['NVDA','AAPL'],null);
+ assert.equal(fallback.get('NVDA').insider.source,'brief');assert.equal(fallback.get('NVDA').insider.count,1);assert.equal(fallback.get('AAPL').insider.status,'none');
+ // Dated brief facts (the brief text is pending) still feed the option-wall and support columns.
+ const dated=signals.buildSignals({items:[{...briefs.items[0],status:'source_changed',facts_status:'dated',facts_as_of:'2026-09-11T12:00:00Z'}]},funds,['NVDA'],archive);
+ assert.equal(dated.get('NVDA').walls.status,'ready');assert.equal(dated.get('NVDA').walls.dated,true);assert.equal(dated.meta.as_of,'2026-09-11');
 });

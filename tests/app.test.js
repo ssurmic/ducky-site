@@ -209,8 +209,9 @@ test('creator search keeps the input mounted and archives never show unsupported
  root.querySelector('.creator-discovery-search').dispatchEvent(new window.Event('submit',{cancelable:true}));
  await new Promise(resolve=>setImmediate(resolve));
  root.querySelector('.creator-name').click();
- const archive=[...root.querySelectorAll('button')].find(b=>b.textContent===copy['app.creators.show_archive']);archive.click();
- assert.ok(root.textContent.includes('Memory report'));assert.equal(root.textContent.includes('UNSUPPORTED CLAIM'),false);assert.equal(root.textContent.includes('$WRONG'),false);dispose();root.remove();
+ // Unverified records are never offered: no archive toggle, and neither the claim nor its ticker appears.
+ assert.equal([...root.querySelectorAll('button')].find(b=>b.textContent===copy['app.creators.show_archive']),undefined);
+ assert.equal(root.textContent.includes('UNSUPPORTED CLAIM'),false);assert.equal(root.textContent.includes('$WRONG'),false);dispose();root.remove();
 });
 
 test('short video summaries without stock calls are readable but never directional',()=>{

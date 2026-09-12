@@ -59,10 +59,10 @@ test('Following retains unrelated posts and marks watched stocks only on reviewe
     url==='/me/kols'?{subs:['known'],analysis:{}}:url==='/watchlist'?{items:[{ticker:'NVDA'}]}:{items:[]});
   const root=document.createElement('main');document.body.append(root);
   const dispose=await mount(root,{query:new URLSearchParams('scope=following')});await tick();
-  assert.equal(root.querySelectorAll('.cr-post').length,2);
+  assert.equal(root.querySelectorAll('.creator-view-row').length,2);   // one line per reviewed video, no creator picker
   assert.equal(root.querySelectorAll('.creator-watch-match').length,1);
   assert.ok(root.querySelector('.creator-watch-match').textContent.includes('NVDA'));
-  assert.ok(root.querySelector('.creator-directory').textContent.includes('Other Creator'));
+  assert.ok(root.querySelector('.creator-latest-views').textContent.includes('Other Creator'));   // the creator heads its own group; no separate picker
   dispose();root.remove();
 });
 
@@ -99,7 +99,7 @@ test('old lookup restores only in explicit Add and never replaces Following or t
   url==='/kol/lookups'?{items:[{id:'old',input:candidate.name,status:'ready',candidates:[candidate]}]}:{items:[]});};
  const root=document.createElement('main');document.body.append(root);
  const dispose=await mount(root,{query:new URLSearchParams('scope=following')});await tick();
- assert.equal(root.querySelector('[role=combobox]'),null);assert.equal(root.querySelectorAll('.cr-post').length,1);
+ assert.equal(root.querySelector('[role=combobox]'),null);assert.equal(root.querySelectorAll('.creator-view-row').length,1);
  assert.ok(!calls.includes('/kol/lookups'));
  root.querySelector('[data-creator-scope="discover"]').click();await tick();
  assert.equal(root.querySelector('input[type=search]').value,'');

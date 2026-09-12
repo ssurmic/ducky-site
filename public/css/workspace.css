@@ -580,3 +580,23 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 .opportunity-history .btn{margin:4px 0 12px;min-height:44px}
 /* Use the workspace width for side-by-side watchlist comparisons. */
 body[data-route=watchlist] .app-view{max-width:1640px}
+/* Creators: the default list is each followed creator's latest views, one per line; a line opens the source. */
+.creator-latest-views{display:grid;gap:18px;margin-top:12px}
+.creator-views-group{border:1px solid var(--border);border-radius:14px;padding:14px 16px;background:var(--surface)}
+.creator-views-head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.creator-views-head .creator-name{font-weight:650;font-size:1rem;padding:0;min-height:44px;background:none;border:0;color:inherit;cursor:pointer;text-align:left}
+.creator-views-title p{margin:0}
+.creator-view-list{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.creator-view-open{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:start;width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:var(--surface-2);color:inherit;font:inherit;text-align:left;cursor:pointer}
+.creator-view-open:hover,.creator-view-open:focus-visible{border-color:var(--accent);outline:none}
+.creator-view-open .cr-take{align-self:start;white-space:nowrap;min-height:26px;display:inline-flex;align-items:center}
+.creator-view-text{line-height:1.55}
+.creator-view-meta{grid-column:2}
+.creator-view-row.is-bull .creator-view-open{border-left:3px solid var(--green,#3fb950)}
+.creator-view-row.is-bear .creator-view-open{border-left:3px solid var(--red,#f85149)}
+.creator-views-more>summary{cursor:pointer;color:var(--muted);font-size:.875rem;min-height:44px;display:flex;align-items:center}
+.creator-view-detail h4{margin:16px 0 4px;font-size:.95rem}
+.creator-view-detail .creator-view-section{display:flex;gap:10px;align-items:baseline;margin:6px 0}
+.creator-view-detail .creator-page-actions{margin-top:14px;flex-wrap:wrap}
+@media (max-width:640px){.creator-view-open{grid-template-columns:1fr}.creator-view-meta{grid-column:1}}
+
