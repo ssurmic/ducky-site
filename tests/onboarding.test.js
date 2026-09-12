@@ -78,6 +78,24 @@ test('existing accounts only open the tour when they request it',async()=>{
  }finally{stop();}
 });
 
+test('resuming add highlights its closed disclosure, then the real search form',async()=>{
+ const details=document.createElement('details');
+ details.innerHTML='<summary data-tour="watchlist.add-toggle">Add</summary><form data-tour="watchlist.add"></form>';
+ document.body.append(details);
+ const summary=details.querySelector('summary'),form=details.querySelector('form');
+ const rect={left:20,right:240,top:100,bottom:150,width:220,height:50};
+ summary.getBoundingClientRect=()=>rect;
+ form.getBoundingClientRect=()=>details.open?rect:{...rect,width:0,height:0};
+ const {stop}=setup();
+ try{
+  await next();document.querySelector('[data-tour-action="tour.start"]').click();await next();await next();
+  assert.match(summary.getAttribute('aria-describedby'),/tour-instruction/);
+  details.open=true;details.dispatchEvent(new window.Event('toggle'));await next();
+  assert.match(form.getAttribute('aria-describedby'),/tour-instruction/);
+  assert.equal(summary.hasAttribute('aria-describedby'),false);
+ }finally{stop();details.remove();}
+});
+
 test('phone instructions stay outside the target at keyboard and landscape heights',async()=>{
  const {tourPlacement}=await import('../public/js/app/onboarding.js');
  for(const width of [320,390,430,844])for(const height of [320,420,844]){

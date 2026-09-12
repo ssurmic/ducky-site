@@ -55,7 +55,7 @@ export async function mount(root,{signal}={}) {
   const form = el("form.add-row", { onsubmit: onAdd }, picker.wrap, addBtn);
   tourTarget(form,"watchlist.add");
   const addOptions = el('details.watch-add-options', {open:!(store.get('watchlist')||[]).length},
-    el('summary',s('watch.add')),el('p.view-intro.muted',s('watch.workflow')),form);
+    el('summary',{'data-tour':'watchlist.add-toggle'},s('watch.add')),el('p.view-intro.muted',s('watch.workflow')),form);
   const usage=el("div");
   const capacity=el('p.watch-capacity',{hidden:true,role:'status'});
   const selectionCount=el('summary',{'aria-live':'polite'});
