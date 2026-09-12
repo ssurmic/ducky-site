@@ -1,6 +1,8 @@
 # Change log
 
-## Creators open on their latest views; insider column reads local Form 4 records · 2026-09-12 (branch `codex/creators-latest-views-20260912`)
+## Creators open on their latest views; insider column reads local Form 4 records · 2026-09-12 (deployed)
+
+Released through `scripts/deploy_pages.sh`: main `1858a406` (PR #55) → Pages `7a563a0a` at 2026-09-12 23:51 UTC; the live `config.js` serves VERSION `1858a406`. Backend counterpart `a6d09163` (ducky-bot PR #89) was released to the host at 23:47 UTC, so the dated-facts path is live end to end.
 
 Owner feedback on the live app: the creators page made you pick a creator first and listed videos whose
 summary was still being prepared ("no full summary yet", "request a summary"); the watchlist showed
