@@ -1,5 +1,16 @@
 # Change log
 
+## Allow the Cloudflare Web Analytics beacon through the CSP · 2026-09-12
+
+Cloudflare Pages injects `https://static.cloudflareinsights.com/beacon.min.js` on every
+response, but the site CSP only admitted `'self'` and `https://telegram.org`, so every
+browser blocked it (console: `violates ... "script-src 'self' https://telegram.org"`) and no
+page view has ever reached Cloudflare Web Analytics. `script-src` now admits the beacon and
+`connect-src` admits its POST to `https://cloudflareinsights.com`; nothing else in the policy
+changed. `tests/headers-csp.test.js` pins the rendered `dist/_headers`. The pinned string in
+the backend `SYSTEMDESIGN.md` §5 changes in the same set. Not deployed by this change: the
+Pages project is Direct Upload, so a merge alone does not publish.
+
 ## Shared design and continuation references · 2026-09-12
 
 Added a generic agent entry and linked frontend agent/README guidance to the private backend's

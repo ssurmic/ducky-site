@@ -1,6 +1,6 @@
 {# Cloudflare Pages _headers — CSP exactly as SYSTEMDESIGN.md §5 (no X-Frame-Options: Telegram Web iframes Mini Apps) #}
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://telegram.org; connect-src 'self' {{ cfg.api_base }}; img-src 'self' data: https://t.me https://*.googleusercontent.com https://yt3.ggpht.com https://pbs.twimg.com; style-src 'self' 'unsafe-inline'; frame-src https://oauth.telegram.org; frame-ancestors 'self' https://web.telegram.org
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://telegram.org https://static.cloudflareinsights.com; connect-src 'self' {{ cfg.api_base }} https://cloudflareinsights.com; img-src 'self' data: https://t.me https://*.googleusercontent.com https://yt3.ggpht.com https://pbs.twimg.com; style-src 'self' 'unsafe-inline'; frame-src https://oauth.telegram.org; frame-ancestors 'self' https://web.telegram.org
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()

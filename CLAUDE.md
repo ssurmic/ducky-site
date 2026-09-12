@@ -24,8 +24,11 @@ Use a current backend checkout, not an assumed machine-specific directory.
   stable (no per-release query); legacy `/favicon.ico`, `/favicon.svg` and `/favicon.png`
   redirect to it. Do not regenerate favicon.svg from the older vector mascot. A future
   changed brand image needs a new versioned filename and coordinated reference updates.
-- **No third-party scripts on the landing.** CSP is `script-src 'self' https://telegram.org` (only the Login
-  Widget in `/app/` is whitelisted). No analytics, no fonts from Google, no CDN. Everything is self-hosted.
+- **No third-party scripts of our own on the landing.** CSP is `script-src 'self' https://telegram.org
+  https://static.cloudflareinsights.com`: the Login Widget in `/app/` and the Cloudflare Web Analytics beacon
+  (injected by Cloudflare Pages on every response; its POST goes to `https://cloudflareinsights.com`, admitted
+  by `connect-src`) are the only whitelisted third-party scripts. No other analytics, no fonts from Google,
+  no CDN. Everything else is self-hosted. `tests/headers-csp.test.js` pins the rendered `dist/_headers` CSP.
 - No inline `<script>` (CSP has no `'unsafe-inline'` for scripts). Inline `style=""` is allowed.
 - The K<1 band is called **资本臣服 / capitulation** — never the code's internal label.
 - Every win-rate carries `data-winrate` + `data-n` and a visible `n =` note; BACKTEST and LIVE are badged and
