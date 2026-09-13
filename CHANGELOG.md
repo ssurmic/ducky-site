@@ -1,5 +1,15 @@
 # Change log
 
+## Watchlist: consistent option and support references · 2026-09-13
+
+Support cells use the same price, reference type, distance and labeled 20-day closing-range
+slots for every stock. A put wall without a saved price range explicitly shows “Range unavailable”;
+a range without a current price keeps its endpoints and omits the marker. The detail card uses
+the same range state. Mobile signal widths and scrolling respect the fixed stock column, and
+reference/expiry text is no longer clipped by the generic two-line limit. Safari pointer clicks
+now restore focus to the same signal cell after closing details. Saved values and source
+selection are unchanged. [Acceptance](reports/WATCHLIST-WALL-CONSISTENCY-2026-09-13.md).
+
 ## Homepage: AI stock research and current interactive previews · 2026-09-13
 
 “Every signal on a stock. One page.” remains the headline. The page now explains AI aggregation,

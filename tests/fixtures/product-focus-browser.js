@@ -29,11 +29,23 @@ if(mode==='watchlist-management')watches=['NVDA','AVGO','AMD','GLW',...Array.fro
 if(mode==='today-large')watches=['AAPL','AEHR','ALAB','AMD','AVGO','GLW','NVDA','TSLA'];
 // A short list with room to add; only this case and watchlist-management accept in-memory membership writes.
 if(mode==='watchlist-add')watches=['NVDA','AVGO','AMD'];
+if(mode==='wall-consistency')watches=['NVDA','COIN','AVGO','TSLA','AMD'];
 const writable=['watchlist-management','watchlist-add'].includes(mode);
 let researchReads=0;
+const wallPrices={NVDA:230,COIN:184.55,AVGO:200,TSLA:300,AMD:160};
+const wallFact=(topic,data)=>({topic,dimension:'technical',observed_at:'2026-09-11T20:00:00Z',data});
+// Deliberately different coverage: a wall does not manufacture a closing-price range.
+const wallBriefs={items:[
+ {ticker:'NVDA',status:'ready',generated_at:'2026-09-11T20:00:00Z',evidence:[wallFact('price',{price:230}),wallFact('option_concentrations',{put_wall:225,call_wall:240,expiries:['2026-09-18','2026-10-16']})]},
+ {ticker:'COIN',status:'ready',generated_at:'2026-09-11T20:00:00Z',evidence:[wallFact('price',{price:184.55}),wallFact('price_position',{price:184.55,low:146.23,high:192.70,sessions:20})]},
+ {ticker:'AVGO',status:'ready',generated_at:'2026-09-11T20:00:00Z',evidence:[wallFact('price',{price:200}),wallFact('option_concentrations',{put_wall:190,call_wall:220,expiries:['2026-09-18']}),wallFact('price_position',{price:200,low:180,high:230,sessions:20})]},
+ {ticker:'TSLA',status:'ready',evidence:[]},
+ {ticker:'AMD',status:'pending'}
+]};
 const price=(ticker,i=0)=>({ticker,company:{NVDA:'NVIDIA Corporation',AVGO:'Broadcom Inc.',AMD:'Advanced Micro Devices, Inc.',GLW:'Corning Incorporated'}[ticker]||ticker,
  ...(['minute-quotes','saved-quotes'].includes(mode)?{quote:{price:218.25+i*23,change_pct:-2.42,status:mode==='saved-quotes'?'stale':'current',quote_at:new Date(Date.now()-(mode==='saved-quotes'?600000:1000)).toISOString(),provider:'yahoo',feed:'yahoo_regular_session'}}:{}),
- price:223.67+i*23,price_status:'ready',price_session:'2026-09-09',change_pct:i%2?3.2:-.91,market_cap:(5-i)*1e12,metrics:{ytd:{status:'ready',value:[20.1,-2,0,-12][i]},drawdown:{status:'ready',value:-5-i*5},relative:{status:'ready',value:-7+i*2,symbols:['SPY']},iv_hv:{status:i===2?'missing':'ready',value:i===2?null:.71+i*.25},attention:{status:'ready',value:75+i*5},degen:{status:'ready',value:48+i*4}}});
+ price:223.67+i*23,price_status:'ready',price_session:'2026-09-09',change_pct:i%2?3.2:-.91,market_cap:(5-i)*1e12,metrics:{ytd:{status:'ready',value:[20.1,-2,0,-12][i]},drawdown:{status:'ready',value:-5-i*5},relative:{status:'ready',value:-7+i*2,symbols:['SPY']},iv_hv:{status:i===2?'missing':'ready',value:i===2?null:.71+i*.25},attention:{status:'ready',value:75+i*5},degen:{status:'ready',value:48+i*4}},
+ ...(mode==='wall-consistency'?{price:wallPrices[ticker],price_session:'2026-09-11',company:{NVDA:'NVIDIA Corporation',COIN:'Coinbase Global, Inc.',AVGO:'Broadcom Inc.',TSLA:'Tesla, Inc.',AMD:'Advanced Micro Devices, Inc.'}[ticker]}:{})});
 const stockSummary=ticker=>({ticker,status:mode==='pending'?'pending':mode==='previous'?'refresh_pending':'ready',records:3,
  as_of:mode==='today-large'?new Date(Date.now()-(watches.length-watches.indexOf(ticker))*86400000).toISOString():mode==='previous'?previousClock:clock,overview:mode==='pending'?null:overview,sources:(mode==='previous'?previousNodes:nodes).slice(0,2)});
 const record=i=>({id:'change-'+i,ticker:i%2?'AVGO':'NVDA',kind:i===1?'revised':'added',state:i===3?'unavailable':'available',earlier_content:i===2,
@@ -53,7 +65,8 @@ window.fetch=async(input,options={})=>{
   throw Error('Writes forbidden in synthetic fixture');
  }
  if(mode==='failure'&&path.includes('research'))return Response.json({error:'fixture_unavailable'},{status:503});
- if(path==='/watchlist')return Response.json({cap:50,items:watches.map(ticker=>({ticker})),overview:{items:watches.map(price),session:'2026-09-09'}});
+ if(mode==='wall-consistency'&&path==='/briefing/stocks')return Response.json(wallBriefs);
+ if(path==='/watchlist')return Response.json({cap:50,items:watches.map(ticker=>({ticker})),overview:{items:watches.map(price),session:mode==='wall-consistency'?'2026-09-11':'2026-09-09'}});
  if(path==='/me/stock-research'){
   researchReads++;
   if(mode==='recover-first-read'&&researchReads===1)return Response.json({error:'fixture_first_read_unavailable'},{status:503});
