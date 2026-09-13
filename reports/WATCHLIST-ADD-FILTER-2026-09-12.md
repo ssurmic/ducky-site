@@ -1,7 +1,7 @@
 # Watchlist add keeps the whole list visible · 2026-09-12
 
-Status: implemented and tested on `fix/watchlist-add-reload-20260912`; not merged, not deployed. Record the
-PR, merge and Pages ids here on release.
+Status: deployed. PR #58 merged as main `c0d27904`; Pages deployment `8aaa50a6` at 2026-09-13 01:58 UTC; the live
+`config.js` serves VERSION `c0d27904`. Signed-in production verification by the owner is still pending.
 
 ## Problem and behavior
 
@@ -40,5 +40,8 @@ notification behavior changes.
 
 ## Release / rollback
 
-Baseline main `21c68785`. Reverting the single view change restores the previous behavior; server
-membership is unaffected either way.
+Published via PR #58, merge `c0d27904`, Pages `8aaa50a6`, app graph `0c4f6a07d80bcceb26c9`; PR CI (`check`)
+passed, and `scripts/deploy_pages.sh` verified the live VERSION after publishing. Baseline main `21c68785`; the
+previous production entry in the change log is main `1858a406` → Pages `7a563a0a`. Republishing that tip through
+the same script, or reverting the single view change, restores the previous behavior; server membership is
+unaffected either way.
