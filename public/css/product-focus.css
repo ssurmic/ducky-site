@@ -327,7 +327,10 @@ body:has(.focus-nav) .watch-modes .btn{min-width:44px;}
 .watch-wall.is-put .watch-wall-kind{color:var(--green);background:color-mix(in srgb,var(--green) 12%,transparent);}
 .watch-compact-table .watch-wall .watch-metric-value{font-size:13px;}
 .watch-wall-gap{font-size:10px;color:var(--muted);}
-.watch-range{display:flex;flex-direction:column;gap:4px;width:100%;max-width:124px;margin-top:3px;}
+.watch-range{display:flex;flex-direction:column;gap:5px;width:100%;max-width:124px;margin-top:5px;}
+.watch-support-reference{display:grid;gap:3px;width:100%;}
+.watch-range-label,.watch-range-empty{font-size:10px;line-height:1.4;color:var(--muted);}
+.watch-range-empty{min-height:22px;display:flex;justify-content:flex-end;align-items:center;color:var(--faint);}
 .watch-range-track{position:relative;height:4px;border-radius:2px;background:linear-gradient(90deg,color-mix(in srgb,var(--green) 55%,var(--border)),var(--border) 50%,color-mix(in srgb,var(--red) 55%,var(--border)));}
 .watch-range-dot{position:absolute;top:-3px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--text);border:2px solid var(--surface);box-shadow:0 0 0 1px var(--border);}
 .watch-range-ends{display:flex;justify-content:space-between;font-size:9px;color:var(--faint);letter-spacing:0;}
@@ -338,7 +341,7 @@ body:has(.focus-nav) .watch-modes .btn{min-width:44px;}
 @media(max-width:600px){
  .watch-signal-flag{font-size:11px!important;padding:1px 6px;}
  .watch-compact-table .watch-wall .watch-metric-value{font-size:12px;}
- .watch-range{max-width:96px;}
+ .watch-range{max-width:124px;}
 }
 
 /* Research map: one spine per lane, a stub and port for every displayed card. */
@@ -469,6 +472,14 @@ html[data-theme=dark] :is(.focus-today,.focus-stock,.stock-information-map,.watc
 button.watch-signal{appearance:none;border:0;background:transparent;font:inherit;color:inherit;width:100%;padding:4px 6px;margin:-4px -6px;border-radius:8px;cursor:pointer;text-align:right;}
 button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix(in srgb,var(--accent) 7%,transparent);outline:1px solid color-mix(in srgb,var(--accent) 35%,transparent);}
 .watch-signal .watch-metric-note,.watch-signal .watch-metric-status{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+/* Reference metadata must remain visible in both compact stock rows. */
+.watch-signal[data-metric=support] .watch-metric-note,.watch-signal[data-metric=walls] .watch-metric-note{display:block;overflow:visible;-webkit-line-clamp:unset;}
+.watch-support-gap,.watch-wall-gap{white-space:nowrap;}
+@media(max-width:600px){
+ .watch-compact-table tr>[data-signal=walls]{width:118px;}
+ .watch-compact-table tr>[data-signal=support]{width:136px;}
+ .watch-table-scroll:has(.watch-selectable){scroll-padding-left:158px;}
+}
 /* Flashcard: the records behind one cell, in the same card grammar as the map's source dialog. */
 .watch-signal-card{display:grid;gap:14px;}
 .watch-signal-card-lead{margin:0;font-size:15px;font-weight:600;}

@@ -81,6 +81,47 @@ test('signal cells read Yes/No with amounts, walls carry their distance to price
  assert.doesNotMatch([insider,fundsCell,walls,support].map(n=>n.textContent).join(' '),/target|guarantee|floor/i);
 });
 
+test('wall-only and range-only stocks share labeled support slots without fabricating range data',()=>{
+ const wallOnly=signals.briefSignals({evidence:[
+  {topic:'price',data:{price:230}},
+  {topic:'option_concentrations',data:{put_wall:225,call_wall:240}}]});
+ const rangeOnly=signals.briefSignals({evidence:[
+  {topic:'price_position',data:{price:184.55,low:146.23,high:192.70,sessions:20}}]});
+ for(const [ticker,sig,kind] of [['NVDA',wallOnly,'Put wall'],['COIN',rangeOnly,'20-day low']]){
+  const cell=signals.signalCell('support',sig,{ticker});
+  assert.equal(cell.querySelector('.watch-support-kind').textContent,kind);
+  assert.match(cell.querySelector('.watch-support-gap').textContent,/% below/);
+  assert.equal(cell.querySelector('.watch-range-label').textContent,'20-day closing range');
+  assert.ok(cell.querySelector('.watch-support-reference > .watch-metric-value'));
+ }
+ const nvda=signals.signalCell('support',wallOnly),coin=signals.signalCell('support',rangeOnly);
+ assert.match(nvda.textContent,/\$225/);assert.match(nvda.textContent,/Range unavailable/);
+ assert.equal(nvda.querySelector('.watch-range').dataset.rangeStatus,'missing');
+ assert.equal(nvda.querySelector('.watch-range-track'),null);
+ assert.equal(nvda.querySelector('.watch-range-dot'),null);
+ assert.equal(coin.querySelector('.watch-range').dataset.rangeStatus,'ready');
+ assert.match(coin.querySelector('.watch-range-ends').textContent,/\$146\.23.*\$192\.70/);
+ assert.equal(coin.querySelector('.watch-range-dot').style.left,'82.5%');
+ assert.equal(rangeOnly.walls.status,'none');
+ assert.match(signals.signalCard('support',wallOnly,'NVDA').textContent,/Range unavailable/);
+ for(const band of [{low:100},{low:100,high:100},{low:120,high:100},{low:NaN,high:120}]){
+  const sig={support:{...wallOnly.support,...band}};
+  assert.equal(signals.signalCell('support',sig).querySelector('.watch-range-track'),null);
+ }
+ const noPrice={support:{...rangeOnly.support,price:null,refs:[{key:'range_low',value:146.23,gap:null}]}};
+ const unknown=signals.signalCell('support',noPrice);
+ assert.equal(unknown.querySelector('.watch-support-gap').textContent,'Distance unavailable');
+ assert.ok(unknown.querySelector('.watch-range-track'));assert.equal(unknown.querySelector('.watch-range-dot'),null);
+});
+
+test('a signal opened without native pointer focus restores the clicked cell after closing',()=>{
+ const previous=document.createElement('button');document.body.append(previous);previous.focus();
+ const cell=signals.signalCell('support',signals.briefSignals(briefs.items[0]),{ticker:'NVDA'});document.body.append(cell);
+ // Programmatic click, like a Safari pointer click, does not first give the button native focus.
+ cell.click();assert.ok(document.querySelector('.modal-box'));closeModal();
+ assert.equal(document.activeElement,cell);cell.remove();previous.remove();
+});
+
 test('signal sorting ranks recorded values, keeps unknown stocks last and never fetches',()=>{
  const all=signals.buildSignals(briefs,funds,['NVDA','AAPL','TSLA']);
  const rows=[{ticker:'TSLA'},{ticker:'AAPL'},{ticker:'NVDA'}];

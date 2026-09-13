@@ -158,7 +158,7 @@ export function signalCell(key,sig,{ticker=''}={}){
   // The whole cell is one tap target: it opens the same flashcard the "?" explains, with the records behind the number.
   const cell=el(state==='missing'?'span.watch-metric.watch-signal':'button.watch-metric.watch-signal',{'data-metric':key,'data-status':state,
     ...(state==='missing'?{}:{type:'button','data-reading-key':ticker+':signal:'+key,'aria-label':signalLabel(key)+' · '+ticker+' · '+s('watch.signal_details'),
-      onclick:()=>modal(s('watch.signal_card_'+key)+(ticker?' · '+ticker:''),signalCard(key,sig,ticker))})},el('span.watch-metric-label',signalLabel(key)));
+      onclick:event=>{event.currentTarget.focus({preventScroll:true});modal(s('watch.signal_card_'+key)+(ticker?' · '+ticker:''),signalCard(key,sig,ticker));}})},el('span.watch-metric-label',signalLabel(key)));
   if(state==='missing'){cell.append(el('strong.watch-metric-value','—'),el('span.watch-metric-note',s('watch.signal_unknown')));return cell;}
   if(key==='insider'){
     if(state!=='ready'){cell.append(chip(state),el('span.watch-metric-note',s('watch.signal_insider_none')));return cell;}
@@ -188,15 +188,25 @@ export function signalCell(key,sig,{ticker=''}={}){
   }
   if(state!=='ready'){cell.append(el('strong.watch-metric-value','—'),el('span.watch-metric-note',s('watch.signal_support_none')));return cell;}
   const below=[...m.refs].filter(r=>finite(r.gap)&&r.gap<=0).sort((a,b)=>b.gap-a.gap),nearest=below[0]||[...m.refs].sort((a,b)=>Math.abs(a.gap??99)-Math.abs(b.gap??99))[0];
-  cell.append(el('strong.watch-metric-value',nearest.key==='put_wall'?strike(nearest.value):px(nearest.value)),
-    el('span.watch-metric-note',[s(nearest.key==='put_wall'?'watch.signal_ref_put':'watch.signal_ref_low'),gapText(nearest.gap)].filter(Boolean).join(' · ')));
-  if(finite(m.low)&&finite(m.high)&&m.high>m.low){
-    const pos=finite(m.price)?Math.min(100,Math.max(0,(m.price-m.low)/(m.high-m.low)*100)):null;
-    cell.append(el('span.watch-range',{'aria-label':s('watch.signal_range',{low:px(m.low),high:px(m.high)}),title:s('watch.signal_range',{low:px(m.low),high:px(m.high)})},
-      el('span.watch-range-track',pos===null?null:el('span.watch-range-dot',{style:{left:pos.toFixed(1)+'%'}})),
-      el('span.watch-range-ends',el('span',px(m.low)),el('span',px(m.high)))));
-  }
+  cell.append(el('span.watch-support-reference',
+    el('strong.watch-metric-value',nearest.key==='put_wall'?strike(nearest.value):px(nearest.value)),
+    el('span.watch-metric-note.watch-support-kind',s(nearest.key==='put_wall'?'watch.signal_ref_put':'watch.signal_ref_low')),
+    el('span.watch-metric-note.watch-support-gap',gapText(nearest.gap)||s('watch.signal_distance_unknown'))),supportRange(m));
   return cell;
+}
+
+// Keep the same range slot for every support source. A put wall alone is not a price range.
+function supportRange(m){
+  const available=finite(m.low)&&finite(m.high)&&m.high>m.low;
+  const label=s('watch.signal_range_label'),range=el('span.watch-range',{'data-range-status':available?'ready':'missing'},
+    el('span.watch-range-label',label));
+  if(!available){range.append(el('span.watch-range-empty',s('watch.signal_range_unknown')));return range;}
+  range.title=s('watch.signal_range',{low:px(m.low),high:px(m.high)});
+  range.setAttribute('aria-label',range.title);
+  const pos=finite(m.price)?Math.min(100,Math.max(0,(m.price-m.low)/(m.high-m.low)*100)):null;
+  range.append(el('span.watch-range-track',pos===null?null:el('span.watch-range-dot',{style:{left:pos.toFixed(1)+'%'}})),
+    el('span.watch-range-ends',el('span',px(m.low)),el('span',px(m.high))));
+  return range;
 }
 
 const compact=n=>new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US',{notation:'compact',maximumFractionDigits:1}).format(n);
@@ -226,7 +236,7 @@ export function signalCard(key,sig,ticker){
       finite(m.flip)?el('p.small.muted','Flip '+strike(m.flip)):null,m.expiries?.length?el('p.small.muted',s('watch.signal_expiry',{date:m.expiries.join(' / ')})):null));
   }else{
     for(const ref of m.refs||[])list.append(el('article.watch-signal-item',el('p',el('strong',ref.key==='put_wall'?strike(ref.value):px(ref.value)),' ',el('span.muted',s(ref.key==='put_wall'?'watch.signal_ref_put':'watch.signal_ref_low')+' · '+gapText(ref.gap)))));
-    if(finite(m.low)&&finite(m.high))list.append(el('p.small.muted',s('watch.signal_range',{low:px(m.low),high:px(m.high)})));
+    if(m.status==='ready')list.append(supportRange(m));
   }
   // An empty card still says why: no filings in the window, or no adds in the newest 13F page.
   if(!list.childElementCount)list.append(el('p.muted',m.status==='none'?
