@@ -1,0 +1,19 @@
+/* Standalone iframe shell; map cards, lanes and dialogs retain application CSS. */
+body.page-app.research-map-preview{margin:0;min-width:0;height:auto;overflow:auto;background:var(--bg);}
+body.research-map-preview.modal-open{overflow:hidden;}
+.research-map-preview .app-shell{display:block;height:auto;min-height:100dvh;}
+.research-map-preview .app-main{width:100%;max-width:1240px;margin:0 auto;padding:18px;overflow:visible;}
+.research-map-preview-heading h1{margin:0 0 8px;font-size:22px;line-height:1.35;}
+.research-map-preview-heading p{margin:0 0 16px;color:var(--muted);font-size:13px;line-height:1.6;max-width:85ch;}
+.research-map-preview .evidence-filter-select{font-size:16px;min-height:44px;}
+.research-map-preview .evidence-filters .btn,.research-map-preview .evidence-reset-filter{min-height:44px;}
+.research-map-preview-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;}
+.research-map-preview-footer p{font-size:12px;line-height:1.5;color:var(--muted);margin:0;}
+.research-map-preview .modal-box{max-height:calc(100dvh - 24px);}
+@media(max-width:600px){
+  .research-map-preview .app-main{padding:12px;}
+  .research-map-preview-heading h1{font-size:19px;}
+  .research-map-preview-heading p{font-size:12px;line-height:1.55;}
+  .research-map-preview-footer{align-items:stretch;}
+  .research-map-preview-footer .btn{width:100%;}
+}

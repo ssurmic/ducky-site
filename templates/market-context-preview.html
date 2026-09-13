@@ -1,0 +1,38 @@
+{# The current chart over the frozen public historical reconstruction used by the demo. #}
+<!doctype html>
+<html lang="{{ html_lang }}" data-lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <title>{{ t('app.preview.market_title') }} · Ducky Bot</title>
+  <link rel="canonical" href="{{ canonical }}">
+  {% for hl, href in hreflang.items() %}<link rel="alternate" hreflang="{{ hl }}" href="{{ href }}">{% endfor %}
+  <link rel="icon" href="/duck-head-cutout-v1.png" type="image/png">
+  <link rel="stylesheet" href="/css/site.css">
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/css/workspace.css">
+  <link rel="stylesheet" href="/css/product-focus.css">
+  <link rel="stylesheet" href="/css/market-context-preview.css">
+  <script type="application/json" id="ducky-strings">{{ app_strings|tojson }}</script>
+  <script type="application/json" id="market-context-data">{{ market_example|tojson }}</script>
+  <script type="module" src="/js/app/market-context-preview.js"></script>
+</head>
+<body class="page-app market-context-preview lang-{{ lang }}">
+  <div class="app-shell">
+    <main class="app-main" id="main">
+      <header class="market-context-preview-heading">
+        <h1>{{ t('app.preview.market_title') }}</h1>
+        <p>{{ tf('app.preview.market_note', date=market_example.as_of) }}</p>
+      </header>
+      <div id="market-context-preview">
+        <noscript><p>{{ t('app.noscript') }}</p></noscript>
+      </div>
+      <footer class="market-context-preview-footer">
+        <a class="btn btn-ghost" href="{{ url('/app/') }}#/macro" target="_blank" rel="noopener noreferrer">{{ t('app.preview.market_open_app') }} ↗</a>
+        <p>{{ t('app.foot.disclaimer') }}</p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

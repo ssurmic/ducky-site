@@ -215,7 +215,7 @@ function balanceBar(nodes){
     el('span.evidence-balance-legend',...lanes.map(k=>el('span',{class:'is-'+k},String(counts[k])))));
 }
 
-export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalysis=true,state}={}){
+export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalysis=true,showShare=true,state}={}){
   const nodes=Array.isArray(doc.nodes)?doc.nodes:[],view=el('section.evidence-workspace');
   if(archive)view.append(el('p.data-notice',s('evidence.archive',{at:time(doc.recorded_at)})));
   if(doc.status==='stale')view.append(el('p.data-notice',s('evidence.stale')));
@@ -290,7 +290,7 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
       const eventAt=eventDate(node),shownDate=eventAt?s('evidence.event_short',{at:eventAt}):date(node.published_at||node.observed_at);
       const authors=[...new Set((node.evidence||[]).map(authorLabel).filter(Boolean))];
       const linked=node.kind==='creator'&&node.evidence?.length===1?evidenceTarget(node.evidence[0]):null;
-      const shareContext={ticker:doc.ticker,recorded_at:doc.recorded_at,archive,example,status:doc.status};
+      const shareContext=showShare?{ticker:doc.ticker,recorded_at:doc.recorded_at,archive,example,status:doc.status}:undefined;
       const repeats=node.kind==='creator'?Math.max(0,...(node.evidence||[]).map(e=>occurrences.get(originalSourceKey(e))||0)):0;
       const sourceKey=(node.evidence||[]).map(originalSourceKey).find(Boolean)||'',authorId=authorIdentity(node)?.id||'';
       const card=el('article.evidence-node',{class:'is-'+node.stance+' source-'+identity,'data-source':identity,'data-reading-anchor':node.id,
@@ -313,8 +313,8 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
         el('span.evidence-node-footer',el('span',shownDate),
           el('span.evidence-node-number',{'aria-hidden':'true'},String(nodes.indexOf(node)+1).padStart(2,'0')),
           el('span',s((node.evidence||[]).length===1?'evidence.source_single':'evidence.sources',{n:(node.evidence||[]).length})+' ↗')));
-      card.append(el('button.evidence-node-open',{type:'button','aria-label':pick(node.title),'data-reading-key':doc.ticker+':node:'+node.id,'data-tour':doc.ticker==='NVDA'&&(node.evidence||[]).some(e=>e.kind==='creator'&&e.post_id)?'node.open opinion.open':'node.open','data-source':node.id,'data-ticker':doc.ticker}),
-        el('button.evidence-share-trigger',{type:'button','aria-label':s('share.card_label',{title:pick(node.title)}),onclick:event=>{event.stopPropagation();openCardShare(node,shareContext);}},s('share.action')));
+      card.append(el('button.evidence-node-open',{type:'button','aria-label':pick(node.title),'data-reading-key':doc.ticker+':node:'+node.id,'data-tour':doc.ticker==='NVDA'&&(node.evidence||[]).some(e=>e.kind==='creator'&&e.post_id)?'node.open opinion.open':'node.open','data-source':node.id,'data-ticker':doc.ticker}));
+      if(showShare)card.append(el('button.evidence-share-trigger',{type:'button','aria-label':s('share.card_label',{title:pick(node.title)}),onclick:event=>{event.stopPropagation();openCardShare(node,shareContext);}},s('share.action')));
       cards.set(node.id,card);
     }
     const authorBlock=(bucket,stance)=>{
