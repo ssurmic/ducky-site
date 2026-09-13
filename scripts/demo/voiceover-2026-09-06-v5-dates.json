@@ -1,0 +1,25 @@
+{
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
+  "revision": "0c0e3051f131929182e2c023b9537f8b1c68adfe",
+  "version": "2026-09-06-voice-v5-dates",
+  "speakers": {
+    "zh": "Serena",
+    "en": "Serena"
+  },
+  "instructions": {
+    "zh": "请用清晰、稳重、亲切的普通话女声，给客户介绍一个股票研究工具。语速适中，自然口语化，短句间留出轻微停顿，每个字的声母和韵母发音完整。买入、筛选、摘要、休市、提醒这些词要说清楚。不要抢拍，不要吞字，不要刻意拖长尾音，不要广告或新闻播音腔。",
+    "en": "Use a clear, warm, professional female voice. Speak natural conversational English at a moderately brisk pace, with short pauses. Calm, confident product walkthrough, without sales emphasis or sing-song intonation."
+  },
+  "delivery": {
+    "target_seconds": 35,
+    "maximum_seconds": 45,
+    "status": "Scene 3 truthfulness revision: newly reviewed source has no post-publication trading day yet. Explain chart prices/dates without implying completed subsequent performance."
+  },
+  "scenes": [
+    {
+      "name": "03-creators",
+      "zh": "查看博主解读，点开时间点听原话。再看价格图表，核对股价和日期。",
+      "en": "Read a creator summary and jump to the original video. Open the stock chart to check prices and dates."
+    }
+  ]
+}

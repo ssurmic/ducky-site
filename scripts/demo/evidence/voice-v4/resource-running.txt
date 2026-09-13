@@ -1,0 +1,9 @@
+MemoryCurrent=[not set]
+MemoryPeak=[not set]
+CPUQuotaPerSecUSec=infinity
+MemoryMax=infinity
+MemorySwapMax=infinity
+ActiveState=inactive
+               total        used        free      shared  buff/cache   available
+Mem:           121Gi        98Gi       9.3Gi       2.3Gi        12Gi        22Gi
+Swap:           15Gi        11Gi       4.1Gi
