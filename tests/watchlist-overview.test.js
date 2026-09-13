@@ -190,7 +190,7 @@ test('equal tiles include tiny issuers, ETFs and missing caps with dated prices'
  assert.match(view.textContent,/2026-09-04/);assert.match(view.textContent,/Equal size for comparison/);
 });
 
-test('filter autocomplete requires an explicit add and retains the selected stock after success',async()=>{
+test('filter autocomplete requires an explicit add and shows the whole list with the new stock after success',async()=>{
  const items=[row('NVDA',5.6e12,.84)],requests=[];
  globalThis.fetch=async(url,opts={})=>{requests.push([String(url),opts.method||'GET']);
   if(String(url).startsWith('/public/symbols?'))return Response.json({items:[{ticker:'CEG',name:'Constellation Energy',exchange:'NASDAQ'}]});
@@ -209,7 +209,9 @@ test('filter autocomplete requires an explicit add and retains the selected stoc
  assert.equal(requests.filter(([,m])=>m==='POST').length,1);
  assert.deepEqual(store.get('watchlist'),['NVDA','CEG']);
  assert.equal(root.querySelector('.watch-search-offer').hidden,true);
- assert.ok(root.querySelector('[data-open="CEG"]'));assert.equal(filter.value,'CEG');
+ // The search is cleared once the stock is on the list: every row is back, not a one-row match.
+ assert.ok(root.querySelector('[data-open="CEG"]'));assert.ok(root.querySelector('[data-open="NVDA"]'));
+ assert.equal(filter.value,'');assert.equal(root.querySelector('.watch-overview').classList.contains('is-filtered'),false);
  dispose();root.replaceChildren();
 });
 

@@ -1,0 +1,64 @@
+[
+  {
+    "label": "en-1440",
+    "width": 1440,
+    "lang": "en",
+    "theme": "dark",
+    "data": "synthetic fixture, in-memory membership",
+    "before": {
+      "count": "3/50 stocks",
+      "rows": [
+        "NVDA",
+        "AVGO",
+        "AMD"
+      ],
+      "search": "",
+      "offer_hidden": true,
+      "focused": "BODY"
+    },
+    "after": {
+      "count": "4/50 stocks",
+      "rows": [
+        "NVDA",
+        "AVGO",
+        "AMD",
+        "COIN"
+      ],
+      "search": "",
+      "offer_hidden": true,
+      "focused": "COIN:name"
+    },
+    "status": "passed"
+  },
+  {
+    "label": "zh-390",
+    "width": 390,
+    "lang": "zh",
+    "theme": "light",
+    "data": "synthetic fixture, in-memory membership",
+    "before": {
+      "count": "3/50 只",
+      "rows": [
+        "NVDA",
+        "AVGO",
+        "AMD"
+      ],
+      "search": "",
+      "offer_hidden": true,
+      "focused": "BODY"
+    },
+    "after": {
+      "count": "4/50 只",
+      "rows": [
+        "NVDA",
+        "AVGO",
+        "AMD",
+        "COIN"
+      ],
+      "search": "",
+      "offer_hidden": true,
+      "focused": "COIN:name"
+    },
+    "status": "passed"
+  }
+]
