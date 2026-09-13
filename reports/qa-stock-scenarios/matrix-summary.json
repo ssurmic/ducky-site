@@ -1,0 +1,21 @@
+{
+  "base_commit": "d0824785b2b34c920e06dd312310bb7c809ac7bc",
+  "final_assets": "Parent site.css and home-demo.js revisions copied locally on 2026-09-06; production changes are owned by parent",
+  "final_site_css_sha256": "83654e19167f14f3fdc756bc28ff92add540a727999bcca82bc9fe920e3cac16",
+  "final_home_demo_js_sha256": "8551fc4c1d1ec14f7172d281134a29018285624bb8902be1711664a9d68371a8",
+  "data_basis": "synthetic fixtures only",
+  "browser_basis": "CUA Chrome responsive viewport, iframe-inherited natural light preference, child data-theme absent",
+  "widths": [320, 390, 430, 1440],
+  "languages": ["zh", "en"],
+  "states": ["ready", "market", "results", "empty", "error", "missing", "stale", "long"],
+  "final_observations": 64,
+  "scoped_overflow_failures": 0,
+  "sampled_text_contrast_failures_below_4_5": 0,
+  "minimum_sampled_text_contrast": 5.192060987927794,
+  "natural_light_verified": true,
+  "actual_widths_verified": true,
+  "fixed_findings": ["long issuer h3 overflow", "nonempty evidence with no safe source rendered misleading ready state"],
+  "additional_interactions": ["loading visible", "late NVDA response does not replace ORCL", "editing clears pending NVDA context", "dark 390 px control", "keyboard focus at 390 px"],
+  "detail_retention": "320/390 batch was observed in CUA output; a later timeout reset in-memory detail. Full detailed results for 430/1440 retained in final-430.json and final-1440.json. Interrupted attempts are not counted.",
+  "limitations": ["not physical iOS or Safari", "not live market data", "not screen-reader validation", "screenshots sampled key views"]
+}
