@@ -1,5 +1,25 @@
 # Change log
 
+## Adding a stock from the search box shows the whole list again · 2026-09-12 (in review, not deployed)
+
+Owner report on the live app: with three stocks on the list, searching for a stock the list did not have
+and pressing "Add to watchlist" left the page showing "4/50 stocks" above a table with only the new stock,
+which read as the earlier stocks having failed to load. They were still on the list: the search text that
+found the stock stayed in the search box, so the table kept filtering by it after the add.
+
+- **Watchlist add**: a successful add (from the search offer or the Add form) clears the search box and
+  its filter, so every stock is listed with the new one; the new row is scrolled into view, and when the
+  add came from the search offer (whose button disappears) focus moves onto the new row's name. A failed
+  add (limit, network) leaves the search text in place for a retry. No API or membership change: the same
+  `POST /watchlist` and the same membership reload as before.
+- Tests: `tests/watchlist-selection.test.js` gains the regression (search → option → add → all four rows,
+  empty search, count 4/50, focus on the new row); the `tests/watchlist-overview.test.js` case that asserted
+  the search text survived the add now asserts the opposite. `tests/browser/watchlist-add.mjs` (new,
+  synthetic fixture only) records the flow on desktop EN dark and phone ZH light; the fixture gains a
+  writable `watchlist-add` case with three stocks and a symbol search that can find COIN.
+- Evidence: [acceptance record](reports/WATCHLIST-ADD-FILTER-2026-09-12.md); before/after screenshots and
+  measurements under `reports/watchlist-add-filter-20260912/`.
+
 ## Creators open on their latest views; insider column reads local Form 4 records · 2026-09-12 (deployed)
 
 Released through `scripts/deploy_pages.sh`: main `1858a406` (PR #55) → Pages `7a563a0a` at 2026-09-12 23:51 UTC; the live `config.js` serves VERSION `1858a406`. Backend counterpart `a6d09163` (ducky-bot PR #89) was released to the host at 23:47 UTC, so the dated-facts path is live end to end.

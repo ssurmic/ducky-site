@@ -151,3 +151,24 @@ test('other layouts offer a direct way back to selection; server quota rejection
   assert.equal(store.get('me').watch_cap,1);assert.equal(root.querySelector('.watch-capacity').hidden,false);assert.equal(root.querySelector('form button').disabled,true);assert.equal(upsells,0);
  }finally{dispose();api.setPaymentRequiredHandler(null);}
 });
+
+test('adding a stock found by the search box shows the whole list again with the new row in it',async()=>{
+ const {root,dispose}=await setup();
+ try{
+  const inner=globalThis.fetch;
+  globalThis.fetch=async(url,opts)=>String(url).startsWith('/public/symbols')?Response.json({items:[{ticker:'COIN',name:'Coinbase Global, Inc.',exchange:'NASDAQ'}]}):inner(url,opts);
+  const filter=root.querySelector('.watch-filter');filter.value='coin';filter.dispatchEvent(new window.Event('input'));
+  assert.deepEqual(members(root),[]);   // nothing on the list matches while the search is open
+  await new Promise(r=>setTimeout(r,220));
+  root.querySelector('.watch-search [role="option"]').click();
+  assert.equal(filter.value,'COIN');assert.equal(root.querySelector('.watch-search-offer').hidden,false);
+  root.querySelector('.watch-search-offer button').click();await new Promise(r=>setTimeout(r,30));
+  assert.deepEqual(store.get('watchlist'),['AAA','BBB','CCC','COIN']);
+  // Before the fix the search text survived the add and the list showed COIN alone under "4/50".
+  assert.deepEqual(members(root),['AAA','BBB','CCC','COIN']);
+  assert.equal(filter.value,'');assert.equal(root.querySelector('.watch-overview').classList.contains('is-filtered'),false);
+  assert.equal(root.querySelector('.watch-search-offer').hidden,true);
+  assert.match(root.querySelector('#watch-count').textContent,/4.*50/);
+  assert.equal(document.activeElement?.dataset.readingKey,'COIN:name');
+ }finally{dispose();}
+});

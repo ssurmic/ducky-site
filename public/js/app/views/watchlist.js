@@ -116,6 +116,15 @@ export async function mount(root,{signal}={}) {
     offer.append(el('div',el('strong',row.ticker),el('span.muted',row.name||row.company||''),el('p',s('watch.not_followed'))),
       el('button.btn.btn-primary.btn-sm',{type:'button',disabled:adding||removing||isFull(),onclick:()=>addTicker(row.ticker,false)},s(isFull()?'watch.full_button':adding?'watch.adding':'watch.add_to_watchlist')));
   }
+  function clearSearch(){filter.value='';query='';candidate=null;filterPicker.reset();}
+  // A long list sorted by market cap can place a new row below the fold: scroll it into view, and
+  // when the add came from the search offer (whose button is gone), move focus onto the row.
+  function revealRow(t,{focus=false}={}){
+    const row=list.querySelector(`[data-reading-anchor="${t}"],[data-open="${t}"]`);
+    if(!row)return;
+    row.scrollIntoView?.({block:'nearest'});
+    if(focus)(row.matches('a,button,input')?row:row.querySelector('.stock-name')||row.querySelector('[data-reading-key],a,button,input'))?.focus({preventScroll:true});
+  }
   function selectTicker(t) {
     selected=t;render();renderDetail();loadSnapshot(t,false);
     detail.querySelector('button')?.focus();
@@ -151,11 +160,15 @@ export async function mount(root,{signal}={}) {
       const result = await api.watchlist.add(t,{signal,silent402:true});
       if(disposed||store.epoch()!==epoch)return;
       if(fromForm){input.value = ""; picker.reset();}
-      filterPicker.reset();
+      // The search box found this stock; now that it is on the list, drop the search so the whole
+      // list comes back with the new row in it. Leaving the one-row match behind "Added" read as the
+      // other stocks having disappeared (owner report, 2026-09-12).
+      clearSearch();
       store.set('watchlist',[...new Set([...(store.get('watchlist')||[]),result?.ticker||t])]);
       toast(result?.added === false ? s("watch.following") : s("watch.added", { t:result?.ticker || t }), "ok");
       tg.haptic("success");
       await load();
+      if(currentSession())revealRow(result?.ticker||t,{focus:!fromForm});
       tourEvent('add',{ticker:result?.ticker||t});
 
     } catch (err) {

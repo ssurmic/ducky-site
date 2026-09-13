@@ -27,6 +27,9 @@ if(mode==='no-watch-section')analysis.sections=analysis.sections.filter(p=>p.kin
 let watches=mode==='no-watch'?[]:['NVDA','AVGO','AMD','GLW'];
 if(mode==='watchlist-management')watches=['NVDA','AVGO','AMD','GLW',...Array.from({length:46},(_,i)=>'TEST'+String(i).padStart(2,'0'))];
 if(mode==='today-large')watches=['AAPL','AEHR','ALAB','AMD','AVGO','GLW','NVDA','TSLA'];
+// A short list with room to add; only this case and watchlist-management accept in-memory membership writes.
+if(mode==='watchlist-add')watches=['NVDA','AVGO','AMD'];
+const writable=['watchlist-management','watchlist-add'].includes(mode);
 let researchReads=0;
 const price=(ticker,i=0)=>({ticker,company:{NVDA:'NVIDIA Corporation',AVGO:'Broadcom Inc.',AMD:'Advanced Micro Devices, Inc.',GLW:'Corning Incorporated'}[ticker]||ticker,
  ...(['minute-quotes','saved-quotes'].includes(mode)?{quote:{price:218.25+i*23,change_pct:-2.42,status:mode==='saved-quotes'?'stale':'current',quote_at:new Date(Date.now()-(mode==='saved-quotes'?600000:1000)).toISOString(),provider:'yahoo',feed:'yahoo_regular_session'}}:{}),
@@ -40,10 +43,10 @@ window.fetch=async(input,options={})=>{
  if(url.origin!==location.origin)throw Error('External traffic forbidden in synthetic fixture');
  const path=url.pathname.replace('/qa-api',''),method=options.method||'GET';
  if(method!=='GET'){
-  if(mode==='watchlist-management'&&method==='DELETE'&&/^\/watchlist\/[A-Z0-9]+$/.test(path)){
+  if(writable&&method==='DELETE'&&/^\/watchlist\/[A-Z0-9]+$/.test(path)){
    const ticker=path.split('/').at(-1),removed=watches.includes(ticker);watches=watches.filter(t=>t!==ticker);return Response.json({ticker,removed});
   }
-  if(mode==='watchlist-management'&&method==='POST'&&path==='/watchlist'){
+  if(writable&&method==='POST'&&path==='/watchlist'){
    const {ticker}=JSON.parse(options.body);if(watches.length>=50)return Response.json({error:'watch_limit',cap:50},{status:402});
    const added=!watches.includes(ticker);if(added)watches.push(ticker);return Response.json({ticker,added});
   }
@@ -67,7 +70,12 @@ window.fetch=async(input,options={})=>{
   analysis_status:mode==='pending'?'pending':mode==='previous'?'refresh_pending':'ready',analysis:mode==='pending'?null:analysis,
   analysis_generated_at:mode==='previous'?previousClock:clock,...(mode==='previous'?{analysis_nodes:previousNodes,analysis_snapshot_id:'synthetic-old'}:{})}});}
  if(path.startsWith('/bars/'))return Response.json({bars:mode==='pending'?[]:Array.from({length:90},(_,i)=>({t:new Date(Date.UTC(2026,5,1+i)).toISOString().slice(0,10),c:170+i*.48+Math.sin(i*.18)*12}))});
- if(path==='/public/symbols')return Response.json({items:[{ticker:'NVDA',name:'NVIDIA Corporation'}]});
+ if(path==='/public/symbols'){
+ // Symbol search for the add flow: a typed prefix finds an unfollowed stock; anything else keeps the NVDA default.
+ const q=(url.searchParams.get('q')||'').trim().toUpperCase().replace(/^\$/,''),known={NVDA:'NVIDIA Corporation',COIN:'Coinbase Global, Inc.',MU:'Micron Technology, Inc.'};
+ const items=Object.entries(known).filter(([t,n])=>q&&(t.startsWith(q)||n.toUpperCase().includes(q))).map(([ticker,name])=>({ticker,name,exchange:'NASDAQ'}));
+ return Response.json({items:items.length?items:[{ticker:'NVDA',name:'NVIDIA Corporation'}]});
+ }
  if(path==='/data-versions')return Response.json({});
  return Response.json({items:[],posts:[]});
 };
