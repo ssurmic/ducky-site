@@ -1,0 +1,37 @@
+[ledger:TEST no-write] ZZZ|insider|nope
+[postmortem] rebal:2026-08-31 → inserted: 月末调仓 · 再平衡:SPY 收 +0.4%,当日振幅 1.0%,成交量为 20 日均量的 1.4 倍。
+[postmortem] rebal:2026-08-31 → updated: 月末调仓 · 再平衡:SPY 收 +0.4%,当日振幅 1.0%,成交量为 20 日均量的 1.4 倍。
+✅ testmode parser (0/false/'' => live)
+✅ ledger dedup + relationships + TEST no-write + fail-open
+✅ watchlist_ctx is_tracked + conservative match_name
+✅ push_contract rejects $0 / company==ticker / template
+✅ confluence: 3 independent bullish sources ranks #1
+✅ no firehose uses the loose TEST_MODE parser footgun
+✅ kb smart-RAG: gate + dedup/merge + grounded history + postmortem grounding
+✅ analyst tool-belt: peer group correctness + research composes fail-soft
+✅ index_changes: named add/delete attaches to the calendar event, never fabricates
+✅ identities: backfill/auto-link, telegram_chat_id (existing==id, native==None), negative-band ids
+✅ standalone register: email-first native account (no Telegram), verify→login, link telegram
+✅ beta redeem-signup: invite code → native account + username identity + IP + granted tier
+✅ FRED macro calendar: parse future dates + invest_calendar prefers the store, falls back
+✅ llm_healthcheck: structured report, dry doesn't alert, unhealthy when backend down
+✅ earnings calendar (Finnhub) parse + batch registry cadence/due-logic
+❌ pytest suite (bin/tests) — skipped with a warning when pytest is missing: pytest exit 1:
+../../home/ssurmic/.local/share/cis-venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /home/ssurmic/.local/share/cis-venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+bin/tests/test_llm_batch_admission.py::test_fork_drops_parent_descriptor_even_from_other_context[other_thread]
+  /usr/lib/python3.12/multiprocessing/popen_fork.py:66: DeprecationWarning: This process (pid=2732490) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED bin/tests/test_kol_backfill_scheduling.py::test_persisted_three_continuation_quota_keeps_both_creators_and_untouched_videos_moving
+FAILED bin/tests/test_kol_bootstrap_reconcile.py::test_cached_only_worker_naturally_consumes_reconciled_historical_source
+FAILED bin/tests/test_kol_cache_promotion.py::test_cached_model_worker_advances_queued_source_during_provider_cooldown
+FAILED bin/tests/test_kol_identity_coverage_retention.py::test_all_ready_partial_source_is_not_reused_and_cannot_starve_later_videos
+4 failed, 4630 passed, 7 skipped, 2 warnings in 182.43s (0:03:02)
+
+
+[selftest] 1 FAILURE(S)

@@ -1,0 +1,170 @@
+[
+  {
+    "firstCardY": 360.5859375,
+    "heading": "最近已收录",
+    "height": 850,
+    "labels": [
+      {
+        "color": "rgb(248, 81, 73)",
+        "label": "作者看空",
+        "prices": "发表参考价$75.762026-09-04最新已存收盘$71.082026-09-09至今涨跌-6.18%股价变化",
+        "stance": "bear",
+        "referenceColor": "rgb(230, 237, 243)"
+      },
+      {
+        "color": "rgb(63, 185, 80)",
+        "label": "作者看多",
+        "prices": "发表参考价$338.462026-09-04最新已存收盘$330.652026-09-09至今涨跌—股价变化",
+        "stance": "bull",
+        "referenceColor": "rgb(230, 237, 243)"
+      },
+      {
+        "color": "rgb(63, 185, 80)",
+        "label": "作者看多",
+        "prices": "发表参考价$158.782026-09-04最新已存收盘$161.632026-09-09至今涨跌+1.79%股价变化",
+        "stance": "bull",
+        "referenceColor": "rgb(230, 237, 243)"
+      }
+    ],
+    "nav": [
+      "自选股",
+      "今日研究",
+      "信息导图",
+      "个股简报",
+      "图表",
+      "日历",
+      "提醒",
+      "博主",
+      "超跌机会",
+      "Vibe Check",
+      "组合筛选",
+      "雷达",
+      "高管与董事买入",
+      "机构持股与合作",
+      "议员交易",
+      "公司财报",
+      "指数调整",
+      "公司新闻",
+      "行业动态",
+      "市场报告",
+      "市场焦点",
+      "宏观环境",
+      "向上引力与市场日报",
+      "宏观与流动性",
+      "期权波动 IV/HV",
+      "公司招聘",
+      "我的"
+    ],
+    "overflow": false,
+    "width": 1280,
+    "lang": "zh"
+  },
+  {
+    "changeColor": "rgb(248, 81, 73)",
+    "firstCardY": 334.78125,
+    "height": 650,
+    "inputFont": "16px",
+    "mainHeight": 520,
+    "nav": [
+      {
+        "height": 54,
+        "text": "自选股"
+      },
+      {
+        "height": 54,
+        "text": "今日研究"
+      },
+      {
+        "height": 54,
+        "text": "日历"
+      },
+      {
+        "height": 54,
+        "text": "雷达"
+      }
+    ],
+    "overflow": false,
+    "stanceColor": "rgb(248, 81, 73)",
+    "width": 390,
+    "lang": "zh"
+  },
+  {
+    "firstCard": "TSLA\nMeet Kevin\n作者看多\n\n来源发布 2026年9月8日 05:24 UTC\n\n博主认为，特斯拉若再小幅回落，会带来更有吸引力的入场价；即使股价约为350美元，只要其Cybercab战略判断成立，也有吸引力。\n\n条件： if if we're right about the strategy with the cyber cab,\n\n发表参考价\n$354.08\n2026-09-04\n最新已存收盘\n$367.81\n2026-09-09\n至今涨跌\n—\n股价变化\n\n价格调整正在核对，暂不展示涨跌幅。\n\n查看原话 ↗\n来源详情\n摘录、时间与相关历史",
+    "firstCardY": 337.2464904785156,
+    "height": 600,
+    "mainHeight": 470,
+    "overflow": false,
+    "priceOverflow": false,
+    "width": 320,
+    "lang": "zh"
+  },
+  {
+    "firstCardY": 365.96875,
+    "heading": "Recent research",
+    "height": 650,
+    "labels": [
+      {
+        "color": "rgb(63, 185, 80)",
+        "text": "Creator: bullish"
+      },
+      {
+        "color": "rgb(248, 81, 73)",
+        "text": "Creator: bearish"
+      },
+      {
+        "color": "rgb(63, 185, 80)",
+        "text": "Creator: bullish"
+      }
+    ],
+    "overflow": false,
+    "priceOverflow": false,
+    "width": 320,
+    "lang": "en"
+  },
+  {
+    "firstCardY": 334.78125,
+    "heading": "Recent research",
+    "height": 650,
+    "labels": [
+      {
+        "color": "rgb(63, 185, 80)",
+        "text": "Creator: bullish"
+      },
+      {
+        "color": "rgb(248, 81, 73)",
+        "text": "Creator: bearish"
+      },
+      {
+        "color": "rgb(63, 185, 80)",
+        "text": "Creator: bullish"
+      }
+    ],
+    "overflow": false,
+    "priceOverflow": false,
+    "width": 390,
+    "lang": "en"
+  },
+  {
+    "firstCardY": 360.5859375,
+    "heading": "Recent research",
+    "height": 850,
+    "labels": [
+      {
+        "color": "rgb(63, 185, 80)",
+        "text": "Creator: bullish"
+      },
+      {
+        "color": "rgb(248, 81, 73)",
+        "text": "Creator: bearish"
+      },
+      {
+        "color": "rgb(63, 185, 80)",
+        "text": "Creator: bullish"
+      }
+    ],
+    "overflow": false,
+    "priceOverflow": false,
+    "width": 1280,
+    "lang": "en"
+  }
+]

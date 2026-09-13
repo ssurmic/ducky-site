@@ -1,0 +1,1294 @@
+[
+  {
+    "step": "search",
+    "metrics": {
+      "baseline": false,
+      "mode": "data",
+      "route": "#/research-brief",
+      "width": 1280,
+      "height": 850,
+      "theme": "dark",
+      "firstContent": {
+        "x": 256.3984375,
+        "y": 360.5859375,
+        "width": 672.203125,
+        "height": 242.5
+      },
+      "main": {
+        "x": 218,
+        "y": 62,
+        "width": 1062,
+        "height": 788
+      },
+      "records": 2,
+      "requests": [
+        {
+          "path": "/qa-api/kol/research?limit=100",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        }
+      ],
+      "errors": [],
+      "overflow": [],
+      "resources": [
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 3.5999999046325684,
+          "bytes": 0
+        },
+        {
+          "name": "/css/site.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/app.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/radar.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/workspace.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-starters.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-discovery.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/chart.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/duck-head-cutout-v1.png",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/qa-main.js",
+          "duration": 4.100000381469727,
+          "bytes": 5914
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/store.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/router.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/tg.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/ui.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/login-target.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/navigation.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/strings.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/api.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/css/research-brief.css",
+          "duration": 0,
+          "bytes": 0
+        }
+      ]
+    },
+    "text": "2 matches · 9 records loaded · Past 7 days (UTC)"
+  },
+  {
+    "step": "expanded-source",
+    "text": "Excerpt, dates & related historySynthetic UI example · source 2Higher spending could pressure margins before new capacity pays offOriginal excerptSynthetic UI excerpt. These are test records, not real creator claims or market research.First observedSep 9, 2026, 1:30 AM UTCVersion recordedSep 9, 2026, 2:00 AM UTCResearch preparedUnknownRecord ID 101 · claim:sample1Related historyStock research",
+    "metrics": {
+      "baseline": false,
+      "mode": "data",
+      "route": "#/research-brief",
+      "width": 1280,
+      "height": 850,
+      "theme": "dark",
+      "firstContent": {
+        "x": 256.3984375,
+        "y": 268.5859375,
+        "width": 672.203125,
+        "height": 565.78125
+      },
+      "main": {
+        "x": 218,
+        "y": 62,
+        "width": 1062,
+        "height": 788
+      },
+      "records": 2,
+      "requests": [
+        {
+          "path": "/qa-api/kol/research?limit=100",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        }
+      ],
+      "errors": [],
+      "overflow": [],
+      "resources": [
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 3.5999999046325684,
+          "bytes": 0
+        },
+        {
+          "name": "/css/site.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/app.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/radar.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/workspace.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-starters.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-discovery.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/chart.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/duck-head-cutout-v1.png",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/qa-main.js",
+          "duration": 4.100000381469727,
+          "bytes": 5914
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/store.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/router.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/tg.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/ui.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/login-target.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/navigation.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/strings.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/api.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/css/research-brief.css",
+          "duration": 0,
+          "bytes": 0
+        }
+      ]
+    }
+  },
+  {
+    "step": "leave",
+    "css": false
+  },
+  {
+    "step": "return",
+    "search": "Higher spending",
+    "text": "2 matches · 9 records loaded · Past 7 days (UTC)",
+    "detailsOpen": "",
+    "metrics": {
+      "baseline": false,
+      "mode": "data",
+      "route": "#/research-brief",
+      "width": 1280,
+      "height": 850,
+      "theme": "dark",
+      "firstContent": {
+        "x": 256.3984375,
+        "y": 360.5859375,
+        "width": 672.203125,
+        "height": 565.78125
+      },
+      "main": {
+        "x": 218,
+        "y": 62,
+        "width": 1062,
+        "height": 788
+      },
+      "records": 2,
+      "requests": [
+        {
+          "path": "/qa-api/kol/research?limit=100",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/kol/research?limit=100",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        }
+      ],
+      "errors": [],
+      "overflow": [],
+      "resources": [
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 3.5999999046325684,
+          "bytes": 0
+        },
+        {
+          "name": "/css/site.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/app.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/radar.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/workspace.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-starters.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-discovery.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/chart.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/duck-head-cutout-v1.png",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/qa-main.js",
+          "duration": 4.100000381469727,
+          "bytes": 5914
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/store.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/router.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/tg.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/ui.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/login-target.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/navigation.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/strings.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/api.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/css/research-brief.css",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/watchlist.js",
+          "duration": 1.5999999046325684,
+          "bytes": 19762
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/experience.js",
+          "duration": 2.1999998092651367,
+          "bytes": 1869
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/watchlist-overview.js",
+          "duration": 1.9000000953674316,
+          "bytes": 15127
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/company-context.js",
+          "duration": 2.1999998092651367,
+          "bytes": 3462
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/icons.js",
+          "duration": 3.5,
+          "bytes": 968
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/symbol-picker.js",
+          "duration": 3.5,
+          "bytes": 4747
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/snapshot-model.js",
+          "duration": 3.6999998092651367,
+          "bytes": 866
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/watchlist-metrics.js",
+          "duration": 1.5999999046325684,
+          "bytes": 4035
+        },
+        {
+          "name": "/css/research-brief.css",
+          "duration": 1.4000000953674316,
+          "bytes": 300
+        }
+      ]
+    }
+  },
+  {
+    "step": "server-ticker",
+    "text": "0 matches · 3 records loaded · Past 7 days (UTC)",
+    "metrics": {
+      "baseline": false,
+      "mode": "data",
+      "route": "#/research-brief?ticker=GLW&scope=all",
+      "width": 1280,
+      "height": 850,
+      "theme": "dark",
+      "firstContent": null,
+      "main": {
+        "x": 218,
+        "y": 62,
+        "width": 1062,
+        "height": 788
+      },
+      "records": 0,
+      "requests": [
+        {
+          "path": "/qa-api/kol/research?limit=100",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/kol/research?limit=100",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/kol/research?limit=100&ticker=GLW",
+          "method": "GET"
+        }
+      ],
+      "errors": [],
+      "overflow": [],
+      "resources": [
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 3.5999999046325684,
+          "bytes": 0
+        },
+        {
+          "name": "/css/site.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/app.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/radar.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/workspace.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-starters.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-discovery.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/chart.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/duck-head-cutout-v1.png",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/qa-main.js",
+          "duration": 4.100000381469727,
+          "bytes": 5914
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/store.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/router.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/tg.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/ui.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/login-target.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/navigation.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/strings.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/api.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/css/research-brief.css",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/watchlist.js",
+          "duration": 1.5999999046325684,
+          "bytes": 19762
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/experience.js",
+          "duration": 2.1999998092651367,
+          "bytes": 1869
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/watchlist-overview.js",
+          "duration": 1.9000000953674316,
+          "bytes": 15127
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/company-context.js",
+          "duration": 2.1999998092651367,
+          "bytes": 3462
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/icons.js",
+          "duration": 3.5,
+          "bytes": 968
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/symbol-picker.js",
+          "duration": 3.5,
+          "bytes": 4747
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/snapshot-model.js",
+          "duration": 3.6999998092651367,
+          "bytes": 866
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/watchlist-metrics.js",
+          "duration": 1.5999999046325684,
+          "bytes": 4035
+        },
+        {
+          "name": "/css/research-brief.css",
+          "duration": 1.4000000953674316,
+          "bytes": 300
+        }
+      ]
+    }
+  },
+  {
+    "step": "server-ticker-clean",
+    "text": "匹配 3 条 · 已加载 3 条记录 · 近 7 天（UTC）",
+    "metrics": {
+      "baseline": false,
+      "mode": "data",
+      "route": "#/research-brief?ticker=GLW&scope=all",
+      "width": 1280,
+      "height": 850,
+      "theme": "light",
+      "firstContent": {
+        "x": 256.3984375,
+        "y": 508.4765625,
+        "width": 672.203125,
+        "height": 242.5
+      },
+      "main": {
+        "x": 218,
+        "y": 62,
+        "width": 1062,
+        "height": 788
+      },
+      "records": 3,
+      "requests": [
+        {
+          "path": "/qa-api/kol/research?limit=100",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/kol/research?limit=100&ticker=GLW",
+          "method": "GET"
+        }
+      ],
+      "errors": [],
+      "overflow": [],
+      "resources": [
+        {
+          "name": "/css/site.css",
+          "duration": 12.599999904632568,
+          "bytes": 95693
+        },
+        {
+          "name": "/css/radar.css",
+          "duration": 11.5,
+          "bytes": 22013
+        },
+        {
+          "name": "/css/creator-starters.css",
+          "duration": 11.800000190734863,
+          "bytes": 4881
+        },
+        {
+          "name": "/css/workspace.css",
+          "duration": 11.800000190734863,
+          "bytes": 44117
+        },
+        {
+          "name": "/qa-main.js",
+          "duration": 11.300000190734863,
+          "bytes": 5914
+        },
+        {
+          "name": "/css/app.css",
+          "duration": 13,
+          "bytes": 176653
+        },
+        {
+          "name": "/css/creator-discovery.css",
+          "duration": 13.600000381469727,
+          "bytes": 5438
+        },
+        {
+          "name": "/css/chart.css",
+          "duration": 14,
+          "bytes": 13502
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 13.800000190734863,
+          "bytes": 54112
+        },
+        {
+          "name": "/duck-head-cutout-v1.png",
+          "duration": 16,
+          "bytes": 2330781
+        },
+        {
+          "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+          "duration": 14.5,
+          "bytes": 198222
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 1,
+          "bytes": 54112
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/store.js",
+          "duration": 1.9000000953674316,
+          "bytes": 2304
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/router.js",
+          "duration": 1.200000286102295,
+          "bytes": 7791
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/tg.js",
+          "duration": 2,
+          "bytes": 7356
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/ui.js",
+          "duration": 2.6000003814697266,
+          "bytes": 10002
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+          "duration": 2.9000000953674316,
+          "bytes": 2513
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/login-target.js",
+          "duration": 3.1000003814697266,
+          "bytes": 7673
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/navigation.js",
+          "duration": 3.5,
+          "bytes": 1441
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+          "duration": 3.6000003814697266,
+          "bytes": 5867
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/strings.js",
+          "duration": 1.3000001907348633,
+          "bytes": 1532
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+          "duration": 1.5999999046325684,
+          "bytes": 2484
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+          "duration": 1.5999999046325684,
+          "bytes": 607
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+          "duration": 1.5999999046325684,
+          "bytes": 607
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/api.js",
+          "duration": 1.700000286102295,
+          "bytes": 14860
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+          "duration": 0.6999998092651367,
+          "bytes": 3563
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+          "duration": 1.1999998092651367,
+          "bytes": 16703
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+          "duration": 1.5,
+          "bytes": 4420
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+          "duration": 1.5,
+          "bytes": 807
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+          "duration": 1.6000003814697266,
+          "bytes": 8646
+        },
+        {
+          "name": "/css/research-brief.css",
+          "duration": 3,
+          "bytes": 6997
+        }
+      ]
+    }
+  },
+  {
+    "step": "keyboard-clear",
+    "results": "匹配 3 条 · 已加载 3 条记录 · 近 7 天（UTC）",
+    "search": "",
+    "metrics": {
+      "baseline": false,
+      "mode": "data",
+      "route": "#/research-brief?ticker=GLW&scope=all",
+      "width": 1280,
+      "height": 850,
+      "theme": "light",
+      "firstContent": {
+        "x": 256.3984375,
+        "y": 508.4765625,
+        "width": 672.203125,
+        "height": 242.5
+      },
+      "main": {
+        "x": 218,
+        "y": 62,
+        "width": 1062,
+        "height": 788
+      },
+      "records": 3,
+      "requests": [
+        {
+          "path": "/qa-api/kol/research?limit=100",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/kol/research?limit=100&ticker=GLW",
+          "method": "GET"
+        }
+      ],
+      "errors": [],
+      "overflow": [],
+      "resources": [
+        {
+          "name": "/css/site.css",
+          "duration": 12.599999904632568,
+          "bytes": 95693
+        },
+        {
+          "name": "/css/radar.css",
+          "duration": 11.5,
+          "bytes": 22013
+        },
+        {
+          "name": "/css/creator-starters.css",
+          "duration": 11.800000190734863,
+          "bytes": 4881
+        },
+        {
+          "name": "/css/workspace.css",
+          "duration": 11.800000190734863,
+          "bytes": 44117
+        },
+        {
+          "name": "/qa-main.js",
+          "duration": 11.300000190734863,
+          "bytes": 5914
+        },
+        {
+          "name": "/css/app.css",
+          "duration": 13,
+          "bytes": 176653
+        },
+        {
+          "name": "/css/creator-discovery.css",
+          "duration": 13.600000381469727,
+          "bytes": 5438
+        },
+        {
+          "name": "/css/chart.css",
+          "duration": 14,
+          "bytes": 13502
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 13.800000190734863,
+          "bytes": 54112
+        },
+        {
+          "name": "/duck-head-cutout-v1.png",
+          "duration": 16,
+          "bytes": 2330781
+        },
+        {
+          "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+          "duration": 14.5,
+          "bytes": 198222
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 1,
+          "bytes": 54112
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/store.js",
+          "duration": 1.9000000953674316,
+          "bytes": 2304
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/router.js",
+          "duration": 1.200000286102295,
+          "bytes": 7791
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/tg.js",
+          "duration": 2,
+          "bytes": 7356
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/ui.js",
+          "duration": 2.6000003814697266,
+          "bytes": 10002
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+          "duration": 2.9000000953674316,
+          "bytes": 2513
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/login-target.js",
+          "duration": 3.1000003814697266,
+          "bytes": 7673
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/navigation.js",
+          "duration": 3.5,
+          "bytes": 1441
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+          "duration": 3.6000003814697266,
+          "bytes": 5867
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/strings.js",
+          "duration": 1.3000001907348633,
+          "bytes": 1532
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+          "duration": 1.5999999046325684,
+          "bytes": 2484
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+          "duration": 1.5999999046325684,
+          "bytes": 607
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+          "duration": 1.5999999046325684,
+          "bytes": 607
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/api.js",
+          "duration": 1.700000286102295,
+          "bytes": 14860
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+          "duration": 0.6999998092651367,
+          "bytes": 3563
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+          "duration": 1.1999998092651367,
+          "bytes": 16703
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+          "duration": 1.5,
+          "bytes": 4420
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+          "duration": 1.5,
+          "bytes": 807
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+          "duration": 1.6000003814697266,
+          "bytes": 8646
+        },
+        {
+          "name": "/css/research-brief.css",
+          "duration": 3,
+          "bytes": 6997
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,77 @@
+{
+  "snapshot": "/tmp/ducky-brief-regression-final-gu87lydh/site",
+  "moduleVersion": "424d72641f74a061be81",
+  "defaultFlag": false,
+  "defaultRoute": "watchlist",
+  "defaultLoginTarget": "#/watchlist",
+  "moduleImportRequests": [],
+  "cssAfterImport": 0,
+  "eagerModuleCount": 19,
+  "eagerModules": [
+    "app-assets/424d72641f74a061be81/account-avatar.js",
+    "app-assets/424d72641f74a061be81/api.js",
+    "app-assets/424d72641f74a061be81/auth.js",
+    "app-assets/424d72641f74a061be81/calendar-model.js",
+    "app-assets/424d72641f74a061be81/creator-route.js",
+    "app-assets/424d72641f74a061be81/evidence-route.js",
+    "app-assets/424d72641f74a061be81/login-target.js",
+    "app-assets/424d72641f74a061be81/main.js",
+    "app-assets/424d72641f74a061be81/navigation.js",
+    "app-assets/424d72641f74a061be81/nonce-flow.js",
+    "app-assets/424d72641f74a061be81/release-recovery.js",
+    "app-assets/424d72641f74a061be81/router.js",
+    "app-assets/424d72641f74a061be81/shared-read-refresh.js",
+    "app-assets/424d72641f74a061be81/social-communities.js",
+    "app-assets/424d72641f74a061be81/store.js",
+    "app-assets/424d72641f74a061be81/strings.js",
+    "app-assets/424d72641f74a061be81/telegram-link.js",
+    "app-assets/424d72641f74a061be81/tg.js",
+    "app-assets/424d72641f74a061be81/ui.js"
+  ],
+  "previewModuleReachableByStaticImport": false,
+  "conditionalDynamicImportVerified": true,
+  "homepageSourceMatchesBaseline": true,
+  "languages": [
+    {
+      "language": "zh",
+      "briefNavigation": false,
+      "briefStylesheet": false,
+      "immutableEntrypoint": true,
+      "homepageDesigns": [
+        {
+          "mode": "focus",
+          "href": "/?design=focus#top"
+        },
+        {
+          "mode": "flow",
+          "href": "/?design=flow#top"
+        },
+        {
+          "mode": "brief",
+          "href": "/?design=brief#top"
+        }
+      ]
+    },
+    {
+      "language": "en/",
+      "briefNavigation": false,
+      "briefStylesheet": false,
+      "immutableEntrypoint": true,
+      "homepageDesigns": [
+        {
+          "mode": "focus",
+          "href": "/en/?design=focus#top"
+        },
+        {
+          "mode": "flow",
+          "href": "/en/?design=flow#top"
+        },
+        {
+          "mode": "brief",
+          "href": "/en/?design=brief#top"
+        }
+      ]
+    }
+  ],
+  "limitation": "Node DOM and static graph checks; no HTTP authentication, browser request trace, or real-data entitlement validation."
+}

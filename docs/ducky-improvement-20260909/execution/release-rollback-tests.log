@@ -1,0 +1,35 @@
+✔ economic release names preserve distinctions (1.06525ms)
+✔ legacy/title-only creator views cannot acquire a grounded badge (0.134875ms)
+✔ email sign-in neither starts nonce polling nor exposes three forms (18.291333ms)
+✔ recovery preserves a reset link across stale sessions, removes its secret and clears old state (11.482167ms)
+✔ unavailable recovery does not claim an email was sent (6.331ms)
+✔ homepage separates oversold research from the complete legacy method archive (77.039375ms)
+✔ alert deep link prefills ticker and logout discards a late list (2.339ms)
+(node:194) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ fast route changes keep late calendar results out of the active watchlist (24.384125ms)
+✔ unselected free research gives a stock selection path without fetching (1.727416ms)
+✔ creator following, quality and search filters compose independently (9.740042ms)
+✔ radar preserves the delivered body, historical dates and incomplete archive state (10.86ms)
+✔ both app shells carry every navigation icon locally, including briefing and More (64.868125ms)
+✔ snapshot browser cache preserves provenance and expires after one minute (0.275333ms)
+✔ long-running alert setup keeps polling with bounded backoff until ready (3.078084ms)
+✔ creator search keeps the input mounted and archives never show unsupported claims (20.013625ms)
+✔ short video summaries without stock calls are readable but never directional (0.090708ms)
+✔ homepage research retains both benchmarks and the failed validation period (25.745917ms)
+✔ new destinations survive sign-in and radar links select one matching category (42.508625ms)
+✔ phone navigation promotes enabled research and keeps displaced tools reachable in More (84.181167ms)
+✔ discovery shows stocks outside the watchlist, preserving zero and unknown metrics (14.268375ms)
+✔ all accounts request candidates and stale results retain an explicit update notice (9.000208ms)
+✔ a late discovery result cannot populate a new session (8.045375ms)
+✔ price decoration rejects malformed, mismatched and missing quotes without fabricating zeros (0.346875ms)
+✔ homepage tour opens each named tool and keeps billing hidden in both languages (98.375334ms)
+✔ quote cards keep refreshing after the interactive duck moves into the support section (34.993792ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15492.225792

@@ -1,0 +1,2817 @@
+[
+  {
+    "build": "baseline",
+    "run": 1,
+    "route": "watchlist",
+    "lang": "en",
+    "width": 1280,
+    "height": 850,
+    "coarse": false,
+    "touchPoints": 0,
+    "lastPointer": null,
+    "theme": "dark",
+    "nav": [
+      {
+        "label": "Watchlist",
+        "x": 12,
+        "y": 78,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Research Map",
+        "x": 12,
+        "y": 121,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Stock briefs",
+        "x": 12,
+        "y": 164,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Chart",
+        "x": 12,
+        "y": 207,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Calendar",
+        "x": 12,
+        "y": 250,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Alerts",
+        "x": 12,
+        "y": 293,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Creators",
+        "x": 12,
+        "y": 336,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Me",
+        "x": 12,
+        "y": 794,
+        "w": 193,
+        "h": 40
+      }
+    ],
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 62
+    },
+    "main": {
+      "x": 218,
+      "y": 62,
+      "w": 1062,
+      "h": 788
+    },
+    "firstContent": {
+      "x": 257.3984375,
+      "y": 264.890625,
+      "w": 879.203125,
+      "h": 60
+    },
+    "overflow": [],
+    "tiles": 0,
+    "canvases": [],
+    "calls": [
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "actualTheme": "light",
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 10.299999713897705,
+        "bytes": 95693
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 13.199999809265137,
+        "bytes": 176653
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 12.599999904632568,
+        "bytes": 44117
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 12.699999809265137,
+        "bytes": 22013
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 13.300000190734863,
+        "bytes": 4881
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 13.400000095367432,
+        "bytes": 5438
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 13.800000190734863,
+        "bytes": 13502
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 14,
+        "bytes": 54112
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 14.900000095367432,
+        "bytes": 5913
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 15,
+        "bytes": 198222
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 15.700000286102295,
+        "bytes": 2330781
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 2.5,
+        "bytes": 54112
+      },
+      {
+        "name": "/qa-old.js",
+        "duration": 1.3000001907348633,
+        "bytes": 10232
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/tg.js",
+        "duration": 2,
+        "bytes": 7356
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 2.5,
+        "bytes": 2330781
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/store.js",
+        "duration": 1.5,
+        "bytes": 2304
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/router.js",
+        "duration": 1.3000001907348633,
+        "bytes": 7649
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/login-target.js",
+        "duration": 4.299999713897705,
+        "bytes": 7049
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/ui.js",
+        "duration": 4.599999904632568,
+        "bytes": 10002
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 5.5,
+        "bytes": 2330781
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/navigation.js",
+        "duration": 3.799999713897705,
+        "bytes": 1441
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/shared-read-refresh.js",
+        "duration": 4.199999809265137,
+        "bytes": 5867
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/release-recovery.js",
+        "duration": 5.5,
+        "bytes": 2513
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/strings.js",
+        "duration": 4,
+        "bytes": 1532
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/api.js",
+        "duration": 4.199999809265137,
+        "bytes": 14860
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/creator-route.js",
+        "duration": 4,
+        "bytes": 2484
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/evidence-route.js",
+        "duration": 4.400000095367432,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/social-communities.js",
+        "duration": 4.599999904632568,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/calendar-model.js",
+        "duration": 1.0999999046325684,
+        "bytes": 3563
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/views/watchlist.js",
+        "duration": 1,
+        "bytes": 19762
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/experience.js",
+        "duration": 1,
+        "bytes": 1869
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/watchlist-overview.js",
+        "duration": 1.8000001907348633,
+        "bytes": 15127
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/icons.js",
+        "duration": 1.8000001907348633,
+        "bytes": 968
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/company-context.js",
+        "duration": 2.1999998092651367,
+        "bytes": 3462
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/symbol-picker.js",
+        "duration": 2,
+        "bytes": 4747
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/snapshot-model.js",
+        "duration": 2.3000001907348633,
+        "bytes": 866
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/watchlist-metrics.js",
+        "duration": 0.5999999046325684,
+        "bytes": 4035
+      }
+    ]
+  },
+  {
+    "build": "after-off",
+    "run": 1,
+    "route": "watchlist",
+    "lang": "en",
+    "width": 1280,
+    "height": 850,
+    "coarse": false,
+    "touchPoints": 0,
+    "lastPointer": null,
+    "theme": "dark",
+    "nav": [
+      {
+        "label": "Watchlist",
+        "x": 12,
+        "y": 78,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Research Map",
+        "x": 12,
+        "y": 121,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Stock briefs",
+        "x": 12,
+        "y": 164,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Chart",
+        "x": 12,
+        "y": 207,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Calendar",
+        "x": 12,
+        "y": 250,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Alerts",
+        "x": 12,
+        "y": 293,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Creators",
+        "x": 12,
+        "y": 336,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Research Brief",
+        "x": 12,
+        "y": 548.796875,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Me",
+        "x": 12,
+        "y": 794,
+        "w": 193,
+        "h": 40
+      }
+    ],
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 62
+    },
+    "main": {
+      "x": 218,
+      "y": 62,
+      "w": 1062,
+      "h": 788
+    },
+    "firstContent": {
+      "x": 257.3984375,
+      "y": 264.890625,
+      "w": 879.203125,
+      "h": 60
+    },
+    "overflow": [],
+    "tiles": 0,
+    "canvases": [],
+    "calls": [
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "actualTheme": "light",
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 16.199999809265137,
+        "bytes": 95693
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 16.09999990463257,
+        "bytes": 22013
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 16.200000286102295,
+        "bytes": 176653
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 16.5,
+        "bytes": 44117
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 16.200000286102295,
+        "bytes": 4881
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 16.600000381469727,
+        "bytes": 5438
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 17.100000381469727,
+        "bytes": 13502
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 17.800000190734863,
+        "bytes": 5914
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 17,
+        "bytes": 54112
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 19.100000381469727,
+        "bytes": 2330781
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 18.100000381469727,
+        "bytes": 198222
+      },
+      {
+        "name": "/qa-old.js",
+        "duration": 1,
+        "bytes": 10231
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 6.400000095367432,
+        "bytes": 54112
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 3.4000000953674316,
+        "bytes": 7356
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 0.7000002861022949,
+        "bytes": 2304
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 1.5,
+        "bytes": 7791
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 2.0999999046325684,
+        "bytes": 2330781
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 1.9000000953674316,
+        "bytes": 10002
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 2.3000001907348633,
+        "bytes": 2513
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 2.3000001907348633,
+        "bytes": 5867
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 2.4000000953674316,
+        "bytes": 7673
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 2.700000286102295,
+        "bytes": 1441
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 2.9000000953674316,
+        "bytes": 14860
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 3.5,
+        "bytes": 1532
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 3,
+        "bytes": 2484
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 3.3000001907348633,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 3.8000001907348633,
+        "bytes": 607
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 3.299999713897705,
+        "bytes": 2330781
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 1.3000001907348633,
+        "bytes": 3563
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/watchlist.js",
+        "duration": 1.3000001907348633,
+        "bytes": 19762
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/experience.js",
+        "duration": 1.6999998092651367,
+        "bytes": 1869
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/watchlist-overview.js",
+        "duration": 1.6999998092651367,
+        "bytes": 15127
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/company-context.js",
+        "duration": 2.1999998092651367,
+        "bytes": 3462
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/icons.js",
+        "duration": 2.8000001907348633,
+        "bytes": 968
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/symbol-picker.js",
+        "duration": 2.4000000953674316,
+        "bytes": 4747
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/snapshot-model.js",
+        "duration": 2.9000000953674316,
+        "bytes": 866
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/watchlist-metrics.js",
+        "duration": 1,
+        "bytes": 4035
+      }
+    ]
+  },
+  {
+    "build": "baseline",
+    "run": 2,
+    "route": "watchlist",
+    "lang": "en",
+    "width": 1280,
+    "height": 850,
+    "coarse": false,
+    "touchPoints": 0,
+    "lastPointer": null,
+    "theme": "dark",
+    "nav": [
+      {
+        "label": "Watchlist",
+        "x": 12,
+        "y": 78,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Research Map",
+        "x": 12,
+        "y": 121,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Stock briefs",
+        "x": 12,
+        "y": 164,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Chart",
+        "x": 12,
+        "y": 207,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Calendar",
+        "x": 12,
+        "y": 250,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Alerts",
+        "x": 12,
+        "y": 293,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Creators",
+        "x": 12,
+        "y": 336,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Me",
+        "x": 12,
+        "y": 794,
+        "w": 193,
+        "h": 40
+      }
+    ],
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 62
+    },
+    "main": {
+      "x": 218,
+      "y": 62,
+      "w": 1062,
+      "h": 788
+    },
+    "firstContent": {
+      "x": 257.3984375,
+      "y": 264.890625,
+      "w": 879.203125,
+      "h": 60
+    },
+    "overflow": [],
+    "tiles": 0,
+    "canvases": [],
+    "calls": [
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "actualTheme": "light",
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 10.099999904632568,
+        "bytes": 95693
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 10.099999904632568,
+        "bytes": 176653
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 10.800000190734863,
+        "bytes": 44117
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 11.400000095367432,
+        "bytes": 22013
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 11.300000190734863,
+        "bytes": 4881
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 11.599999904632568,
+        "bytes": 13502
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 12.900000095367432,
+        "bytes": 5438
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 11.800000190734863,
+        "bytes": 54112
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 14.300000190734863,
+        "bytes": 2330781
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 12.700000286102295,
+        "bytes": 5913
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 11.900000095367432,
+        "bytes": 198222
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 2.1999998092651367,
+        "bytes": 54112
+      },
+      {
+        "name": "/qa-old.js",
+        "duration": 1.299999713897705,
+        "bytes": 10232
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/tg.js",
+        "duration": 2,
+        "bytes": 7356
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/store.js",
+        "duration": 1.5,
+        "bytes": 2304
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/router.js",
+        "duration": 0.8000001907348633,
+        "bytes": 7649
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/ui.js",
+        "duration": 1.5999999046325684,
+        "bytes": 10002
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/login-target.js",
+        "duration": 1.8999996185302734,
+        "bytes": 7049
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/release-recovery.js",
+        "duration": 2.3999996185302734,
+        "bytes": 2513
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/navigation.js",
+        "duration": 2.0999999046325684,
+        "bytes": 1441
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/shared-read-refresh.js",
+        "duration": 2.6999998092651367,
+        "bytes": 5867
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/strings.js",
+        "duration": 1.3000001907348633,
+        "bytes": 1532
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/creator-route.js",
+        "duration": 1.6999998092651367,
+        "bytes": 2484
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/evidence-route.js",
+        "duration": 2,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/social-communities.js",
+        "duration": 2.299999713897705,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/api.js",
+        "duration": 1.1000003814697266,
+        "bytes": 14860
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/calendar-model.js",
+        "duration": 0.7999997138977051,
+        "bytes": 3563
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/views/watchlist.js",
+        "duration": 1.5,
+        "bytes": 19762
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/experience.js",
+        "duration": 1.6999998092651367,
+        "bytes": 1869
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/watchlist-overview.js",
+        "duration": 1.5,
+        "bytes": 15127
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/company-context.js",
+        "duration": 1.8000001907348633,
+        "bytes": 3462
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/icons.js",
+        "duration": 2.4000000953674316,
+        "bytes": 968
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/symbol-picker.js",
+        "duration": 2.200000286102295,
+        "bytes": 4747
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/snapshot-model.js",
+        "duration": 2.6000003814697266,
+        "bytes": 866
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/watchlist-metrics.js",
+        "duration": 0.9000000953674316,
+        "bytes": 4035
+      }
+    ]
+  },
+  {
+    "build": "after-off",
+    "run": 2,
+    "route": "watchlist",
+    "lang": "en",
+    "width": 1280,
+    "height": 850,
+    "coarse": false,
+    "touchPoints": 0,
+    "lastPointer": null,
+    "theme": "dark",
+    "nav": [
+      {
+        "label": "Watchlist",
+        "x": 12,
+        "y": 78,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Research Map",
+        "x": 12,
+        "y": 121,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Stock briefs",
+        "x": 12,
+        "y": 164,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Chart",
+        "x": 12,
+        "y": 207,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Calendar",
+        "x": 12,
+        "y": 250,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Alerts",
+        "x": 12,
+        "y": 293,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Creators",
+        "x": 12,
+        "y": 336,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Research Brief",
+        "x": 12,
+        "y": 548.796875,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Me",
+        "x": 12,
+        "y": 794,
+        "w": 193,
+        "h": 40
+      }
+    ],
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 62
+    },
+    "main": {
+      "x": 218,
+      "y": 62,
+      "w": 1062,
+      "h": 788
+    },
+    "firstContent": {
+      "x": 257.3984375,
+      "y": 264.890625,
+      "w": 879.203125,
+      "h": 60
+    },
+    "overflow": [],
+    "tiles": 0,
+    "canvases": [],
+    "calls": [
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "actualTheme": "light",
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 12.300000190734863,
+        "bytes": 95693
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 11.5,
+        "bytes": 176653
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 12.100000381469727,
+        "bytes": 44117
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 12.700000286102295,
+        "bytes": 4881
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 12.700000286102295,
+        "bytes": 22013
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 13,
+        "bytes": 13502
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 13.5,
+        "bytes": 5438
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 14.300000190734863,
+        "bytes": 54112
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 15.900000095367432,
+        "bytes": 2330781
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 14.700000286102295,
+        "bytes": 5914
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 14.600000381469727,
+        "bytes": 198222
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 2.5,
+        "bytes": 54112
+      },
+      {
+        "name": "/qa-old.js",
+        "duration": 1.299999713897705,
+        "bytes": 10231
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 2.700000286102295,
+        "bytes": 7356
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 4.399999618530273,
+        "bytes": 2304
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 1.0999999046325684,
+        "bytes": 7791
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 1.8000001907348633,
+        "bytes": 10002
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 2.200000286102295,
+        "bytes": 7673
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 2.3000001907348633,
+        "bytes": 1441
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 2.5999999046325684,
+        "bytes": 2513
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 5,
+        "bytes": 5867
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 3,
+        "bytes": 1532
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 5.300000190734863,
+        "bytes": 2484
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 5.400000095367432,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 5.800000190734863,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 3.0999999046325684,
+        "bytes": 14860
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 0.8000001907348633,
+        "bytes": 3563
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/watchlist.js",
+        "duration": 3,
+        "bytes": 19762
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/experience.js",
+        "duration": 1.8000001907348633,
+        "bytes": 1869
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/icons.js",
+        "duration": 2,
+        "bytes": 968
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/company-context.js",
+        "duration": 2.200000286102295,
+        "bytes": 3462
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/symbol-picker.js",
+        "duration": 3,
+        "bytes": 4747
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/watchlist-overview.js",
+        "duration": 2.5999999046325684,
+        "bytes": 15127
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/snapshot-model.js",
+        "duration": 2.9000000953674316,
+        "bytes": 866
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/watchlist-metrics.js",
+        "duration": 1,
+        "bytes": 4035
+      }
+    ]
+  },
+  {
+    "build": "baseline",
+    "run": 3,
+    "route": "watchlist",
+    "lang": "en",
+    "width": 1280,
+    "height": 850,
+    "coarse": false,
+    "touchPoints": 0,
+    "lastPointer": null,
+    "theme": "dark",
+    "nav": [
+      {
+        "label": "Watchlist",
+        "x": 12,
+        "y": 78,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Research Map",
+        "x": 12,
+        "y": 121,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Stock briefs",
+        "x": 12,
+        "y": 164,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Chart",
+        "x": 12,
+        "y": 207,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Calendar",
+        "x": 12,
+        "y": 250,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Alerts",
+        "x": 12,
+        "y": 293,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Creators",
+        "x": 12,
+        "y": 336,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Me",
+        "x": 12,
+        "y": 794,
+        "w": 193,
+        "h": 40
+      }
+    ],
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 62
+    },
+    "main": {
+      "x": 218,
+      "y": 62,
+      "w": 1062,
+      "h": 788
+    },
+    "firstContent": {
+      "x": 257.3984375,
+      "y": 264.890625,
+      "w": 879.203125,
+      "h": 60
+    },
+    "overflow": [],
+    "tiles": 0,
+    "canvases": [],
+    "calls": [
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "actualTheme": "light",
+    "resources": [
+      {
+        "name": "/css/app.css",
+        "duration": 10.400000095367432,
+        "bytes": 176653
+      },
+      {
+        "name": "/css/site.css",
+        "duration": 10.699999809265137,
+        "bytes": 95693
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 10,
+        "bytes": 22013
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 11.400000095367432,
+        "bytes": 44117
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 11.5,
+        "bytes": 4881
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 11.800000190734863,
+        "bytes": 5438
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 12,
+        "bytes": 13502
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 13.200000286102295,
+        "bytes": 54112
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 14.5,
+        "bytes": 2330781
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 13.5,
+        "bytes": 5913
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 12.900000095367432,
+        "bytes": 198222
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 3.5999999046325684,
+        "bytes": 54112
+      },
+      {
+        "name": "/qa-old.js",
+        "duration": 1.5,
+        "bytes": 10232
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/tg.js",
+        "duration": 2.700000286102295,
+        "bytes": 7356
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/store.js",
+        "duration": 0.7999997138977051,
+        "bytes": 2304
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/router.js",
+        "duration": 0.7999997138977051,
+        "bytes": 7649
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/ui.js",
+        "duration": 1.799999713897705,
+        "bytes": 10002
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/login-target.js",
+        "duration": 2.1999998092651367,
+        "bytes": 7049
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/shared-read-refresh.js",
+        "duration": 2,
+        "bytes": 5867
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/release-recovery.js",
+        "duration": 2.1999998092651367,
+        "bytes": 2513
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/navigation.js",
+        "duration": 2.4000000953674316,
+        "bytes": 1441
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/strings.js",
+        "duration": 1,
+        "bytes": 1532
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/creator-route.js",
+        "duration": 1.5,
+        "bytes": 2484
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/evidence-route.js",
+        "duration": 1.5999999046325684,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/social-communities.js",
+        "duration": 2.0999999046325684,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/api.js",
+        "duration": 1.700000286102295,
+        "bytes": 14860
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/calendar-model.js",
+        "duration": 0.9000000953674316,
+        "bytes": 3563
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/views/watchlist.js",
+        "duration": 1.0999999046325684,
+        "bytes": 19762
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/experience.js",
+        "duration": 3,
+        "bytes": 1869
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/watchlist-overview.js",
+        "duration": 3.4000000953674316,
+        "bytes": 15127
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/company-context.js",
+        "duration": 3.700000286102295,
+        "bytes": 3462
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/icons.js",
+        "duration": 3.8000001907348633,
+        "bytes": 968
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/snapshot-model.js",
+        "duration": 4,
+        "bytes": 866
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/symbol-picker.js",
+        "duration": 4.100000381469727,
+        "bytes": 4747
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/watchlist-metrics.js",
+        "duration": 0.8000001907348633,
+        "bytes": 4035
+      }
+    ]
+  },
+  {
+    "build": "after-off",
+    "run": 3,
+    "route": "watchlist",
+    "lang": "en",
+    "width": 1280,
+    "height": 850,
+    "coarse": false,
+    "touchPoints": 0,
+    "lastPointer": null,
+    "theme": "dark",
+    "nav": [
+      {
+        "label": "Watchlist",
+        "x": 12,
+        "y": 78,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Research Map",
+        "x": 12,
+        "y": 121,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Stock briefs",
+        "x": 12,
+        "y": 164,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Chart",
+        "x": 12,
+        "y": 207,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Calendar",
+        "x": 12,
+        "y": 250,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Alerts",
+        "x": 12,
+        "y": 293,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Creators",
+        "x": 12,
+        "y": 336,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Research Brief",
+        "x": 12,
+        "y": 548.796875,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Me",
+        "x": 12,
+        "y": 794,
+        "w": 193,
+        "h": 40
+      }
+    ],
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 62
+    },
+    "main": {
+      "x": 218,
+      "y": 62,
+      "w": 1062,
+      "h": 788
+    },
+    "firstContent": {
+      "x": 257.3984375,
+      "y": 264.890625,
+      "w": 879.203125,
+      "h": 60
+    },
+    "overflow": [],
+    "tiles": 0,
+    "canvases": [],
+    "calls": [
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "actualTheme": "light",
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 10.200000286102295,
+        "bytes": 95693
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 10,
+        "bytes": 176653
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 10.700000286102295,
+        "bytes": 22013
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 10.800000190734863,
+        "bytes": 44117
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 11.5,
+        "bytes": 5438
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 11.700000286102295,
+        "bytes": 4881
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 12.800000190734863,
+        "bytes": 13502
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 12.599999904632568,
+        "bytes": 54112
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 13.199999809265137,
+        "bytes": 5914
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 14.199999809265137,
+        "bytes": 2330781
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 13.299999713897705,
+        "bytes": 198222
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 3.9000000953674316,
+        "bytes": 54112
+      },
+      {
+        "name": "/qa-old.js",
+        "duration": 1.5,
+        "bytes": 10231
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 2.5,
+        "bytes": 7356
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 1.4000000953674316,
+        "bytes": 2304
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 0.8000001907348633,
+        "bytes": 7791
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 1.5,
+        "bytes": 10002
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 1.6999998092651367,
+        "bytes": 7673
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 1.9000000953674316,
+        "bytes": 2513
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 2.1999998092651367,
+        "bytes": 5867
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 2.5,
+        "bytes": 1441
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 1.0999999046325684,
+        "bytes": 1532
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 1.8999996185302734,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 2.0999999046325684,
+        "bytes": 2484
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 2.0999999046325684,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 1.5,
+        "bytes": 14860
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 2.5,
+        "bytes": 3563
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/watchlist.js",
+        "duration": 2.3000001907348633,
+        "bytes": 19762
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/experience.js",
+        "duration": 1.5,
+        "bytes": 1869
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/company-context.js",
+        "duration": 1.9000000953674316,
+        "bytes": 3462
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/icons.js",
+        "duration": 2.1999998092651367,
+        "bytes": 968
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/symbol-picker.js",
+        "duration": 2.1999998092651367,
+        "bytes": 4747
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/watchlist-overview.js",
+        "duration": 2.4000000953674316,
+        "bytes": 15127
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/snapshot-model.js",
+        "duration": 2.5999999046325684,
+        "bytes": 866
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/watchlist-metrics.js",
+        "duration": 0.5999999046325684,
+        "bytes": 4035
+      }
+    ]
+  },
+  {
+    "build": "baseline",
+    "run": 4,
+    "route": "watchlist",
+    "lang": "en",
+    "width": 1280,
+    "height": 850,
+    "coarse": false,
+    "touchPoints": 0,
+    "lastPointer": null,
+    "theme": "dark",
+    "nav": [
+      {
+        "label": "Watchlist",
+        "x": 12,
+        "y": 78,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Research Map",
+        "x": 12,
+        "y": 121,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Stock briefs",
+        "x": 12,
+        "y": 164,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Chart",
+        "x": 12,
+        "y": 207,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Calendar",
+        "x": 12,
+        "y": 250,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Alerts",
+        "x": 12,
+        "y": 293,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Creators",
+        "x": 12,
+        "y": 336,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Me",
+        "x": 12,
+        "y": 794,
+        "w": 193,
+        "h": 40
+      }
+    ],
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 62
+    },
+    "main": {
+      "x": 218,
+      "y": 62,
+      "w": 1062,
+      "h": 788
+    },
+    "firstContent": {
+      "x": 257.3984375,
+      "y": 264.890625,
+      "w": 879.203125,
+      "h": 60
+    },
+    "overflow": [],
+    "tiles": 0,
+    "canvases": [],
+    "calls": [
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "actualTheme": "light",
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 11.699999809265137,
+        "bytes": 95693
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 11.100000381469727,
+        "bytes": 176653
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 11.800000190734863,
+        "bytes": 44117
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 12.300000190734863,
+        "bytes": 22013
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 12.400000095367432,
+        "bytes": 4881
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 12.700000286102295,
+        "bytes": 5438
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 13.800000190734863,
+        "bytes": 13502
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 14.5,
+        "bytes": 54112
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 15.800000190734863,
+        "bytes": 2330781
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 14.900000095367432,
+        "bytes": 5913
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 14.5,
+        "bytes": 198222
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 2.4000000953674316,
+        "bytes": 54112
+      },
+      {
+        "name": "/qa-old.js",
+        "duration": 1.3000001907348633,
+        "bytes": 10232
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/tg.js",
+        "duration": 2.0999999046325684,
+        "bytes": 7356
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/store.js",
+        "duration": 1.200000286102295,
+        "bytes": 2304
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/router.js",
+        "duration": 0.8000001907348633,
+        "bytes": 7649
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/ui.js",
+        "duration": 1.8000001907348633,
+        "bytes": 10002
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/login-target.js",
+        "duration": 1.5999999046325684,
+        "bytes": 7049
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/release-recovery.js",
+        "duration": 2.1999998092651367,
+        "bytes": 2513
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/shared-read-refresh.js",
+        "duration": 2.5999999046325684,
+        "bytes": 5867
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/navigation.js",
+        "duration": 2.5999999046325684,
+        "bytes": 1441
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/creator-route.js",
+        "duration": 1.6999998092651367,
+        "bytes": 2484
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/evidence-route.js",
+        "duration": 1.5999999046325684,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/social-communities.js",
+        "duration": 2.3000001907348633,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/strings.js",
+        "duration": 2.299999713897705,
+        "bytes": 1532
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/api.js",
+        "duration": 1.200000286102295,
+        "bytes": 14860
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/calendar-model.js",
+        "duration": 0.8000001907348633,
+        "bytes": 3563
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/views/watchlist.js",
+        "duration": 3.5,
+        "bytes": 19762
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/experience.js",
+        "duration": 1,
+        "bytes": 1869
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/company-context.js",
+        "duration": 2.299999713897705,
+        "bytes": 3462
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/watchlist-overview.js",
+        "duration": 2.299999713897705,
+        "bytes": 15127
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/symbol-picker.js",
+        "duration": 2.5,
+        "bytes": 4747
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/icons.js",
+        "duration": 2.5999999046325684,
+        "bytes": 968
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/snapshot-model.js",
+        "duration": 2.799999713897705,
+        "bytes": 866
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/watchlist-metrics.js",
+        "duration": 0.9000000953674316,
+        "bytes": 4035
+      }
+    ]
+  },
+  {
+    "build": "after-off",
+    "run": 4,
+    "route": "watchlist",
+    "lang": "en",
+    "width": 1280,
+    "height": 850,
+    "coarse": false,
+    "touchPoints": 0,
+    "lastPointer": null,
+    "theme": "dark",
+    "nav": [
+      {
+        "label": "Watchlist",
+        "x": 12,
+        "y": 78,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Research Map",
+        "x": 12,
+        "y": 121,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Stock briefs",
+        "x": 12,
+        "y": 164,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Chart",
+        "x": 12,
+        "y": 207,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Calendar",
+        "x": 12,
+        "y": 250,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Alerts",
+        "x": 12,
+        "y": 293,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Creators",
+        "x": 12,
+        "y": 336,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Research Brief",
+        "x": 12,
+        "y": 548.796875,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Me",
+        "x": 12,
+        "y": 794,
+        "w": 193,
+        "h": 40
+      }
+    ],
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 62
+    },
+    "main": {
+      "x": 218,
+      "y": 62,
+      "w": 1062,
+      "h": 788
+    },
+    "firstContent": {
+      "x": 257.3984375,
+      "y": 264.890625,
+      "w": 879.203125,
+      "h": 60
+    },
+    "overflow": [],
+    "tiles": 0,
+    "canvases": [],
+    "calls": [
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "actualTheme": "light",
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 11.199999809265137,
+        "bytes": 95693
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 11,
+        "bytes": 176653
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 11.199999809265137,
+        "bytes": 44117
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 11.5,
+        "bytes": 5438
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 11.699999809265137,
+        "bytes": 22013
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 11.900000095367432,
+        "bytes": 4881
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 13,
+        "bytes": 13502
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 13.199999809265137,
+        "bytes": 54112
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 14,
+        "bytes": 5914
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 13.699999809265137,
+        "bytes": 198222
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 14.599999904632568,
+        "bytes": 2330781
+      },
+      {
+        "name": "/qa-old.js",
+        "duration": 1,
+        "bytes": 10231
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 7.300000190734863,
+        "bytes": 54112
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 4.899999618530273,
+        "bytes": 7356
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 1.700000286102295,
+        "bytes": 2304
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 1.299999713897705,
+        "bytes": 7791
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 2,
+        "bytes": 10002
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 2.0999999046325684,
+        "bytes": 7673
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 2.1999998092651367,
+        "bytes": 2513
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 2.3000001907348633,
+        "bytes": 1441
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 2.5,
+        "bytes": 5867
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 1.700000286102295,
+        "bytes": 1532
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 1.8000001907348633,
+        "bytes": 2484
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 2,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 2.200000286102295,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 2,
+        "bytes": 14860
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 0.7999997138977051,
+        "bytes": 3563
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/watchlist.js",
+        "duration": 1.1999998092651367,
+        "bytes": 19762
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/watchlist-overview.js",
+        "duration": 1.5999999046325684,
+        "bytes": 15127
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/company-context.js",
+        "duration": 1.9000000953674316,
+        "bytes": 3462
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/experience.js",
+        "duration": 2.200000286102295,
+        "bytes": 1869
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/icons.js",
+        "duration": 2.700000286102295,
+        "bytes": 968
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/symbol-picker.js",
+        "duration": 2.8000001907348633,
+        "bytes": 4747
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/snapshot-model.js",
+        "duration": 2.9000000953674316,
+        "bytes": 866
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/watchlist-metrics.js",
+        "duration": 1.1000003814697266,
+        "bytes": 4035
+      }
+    ]
+  },
+  {
+    "build": "baseline",
+    "run": 5,
+    "route": "watchlist",
+    "lang": "en",
+    "width": 1280,
+    "height": 850,
+    "coarse": false,
+    "touchPoints": 0,
+    "lastPointer": null,
+    "theme": "dark",
+    "nav": [
+      {
+        "label": "Watchlist",
+        "x": 12,
+        "y": 78,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Research Map",
+        "x": 12,
+        "y": 121,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Stock briefs",
+        "x": 12,
+        "y": 164,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Chart",
+        "x": 12,
+        "y": 207,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Calendar",
+        "x": 12,
+        "y": 250,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Alerts",
+        "x": 12,
+        "y": 293,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Creators",
+        "x": 12,
+        "y": 336,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Me",
+        "x": 12,
+        "y": 794,
+        "w": 193,
+        "h": 40
+      }
+    ],
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 62
+    },
+    "main": {
+      "x": 218,
+      "y": 62,
+      "w": 1062,
+      "h": 788
+    },
+    "firstContent": {
+      "x": 257.3984375,
+      "y": 264.890625,
+      "w": 879.203125,
+      "h": 60
+    },
+    "overflow": [],
+    "tiles": 0,
+    "canvases": [],
+    "calls": [
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "actualTheme": "light",
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 10.800000190734863,
+        "bytes": 95693
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 10.899999618530273,
+        "bytes": 22013
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 11.5,
+        "bytes": 176653
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 11.599999904632568,
+        "bytes": 44117
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 12,
+        "bytes": 5438
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 12.699999809265137,
+        "bytes": 13502
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 12.699999809265137,
+        "bytes": 4881
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 12.599999904632568,
+        "bytes": 54112
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 15.699999809265137,
+        "bytes": 2330781
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 13.199999809265137,
+        "bytes": 5913
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 13.299999713897705,
+        "bytes": 198222
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 2.1999998092651367,
+        "bytes": 54112
+      },
+      {
+        "name": "/qa-old.js",
+        "duration": 1.200000286102295,
+        "bytes": 10232
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/tg.js",
+        "duration": 2.1999998092651367,
+        "bytes": 7356
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/store.js",
+        "duration": 1.5999999046325684,
+        "bytes": 2304
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/router.js",
+        "duration": 0.6999998092651367,
+        "bytes": 7649
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/ui.js",
+        "duration": 0.9000000953674316,
+        "bytes": 10002
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/release-recovery.js",
+        "duration": 1.8000001907348633,
+        "bytes": 2513
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/login-target.js",
+        "duration": 1.8000001907348633,
+        "bytes": 7049
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/navigation.js",
+        "duration": 2.5,
+        "bytes": 1441
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/shared-read-refresh.js",
+        "duration": 2.700000286102295,
+        "bytes": 5867
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/strings.js",
+        "duration": 1.5,
+        "bytes": 1532
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/creator-route.js",
+        "duration": 1.4000000953674316,
+        "bytes": 2484
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/social-communities.js",
+        "duration": 1.6999998092651367,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/evidence-route.js",
+        "duration": 1.6999998092651367,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/api.js",
+        "duration": 1,
+        "bytes": 14860
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/calendar-model.js",
+        "duration": 0.9000000953674316,
+        "bytes": 3563
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/views/watchlist.js",
+        "duration": 4,
+        "bytes": 19762
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/experience.js",
+        "duration": 4.5,
+        "bytes": 1869
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/watchlist-overview.js",
+        "duration": 5.200000286102295,
+        "bytes": 15127
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/icons.js",
+        "duration": 5.5,
+        "bytes": 968
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/company-context.js",
+        "duration": 5.800000190734863,
+        "bytes": 3462
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/symbol-picker.js",
+        "duration": 6.099999904632568,
+        "bytes": 4747
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/snapshot-model.js",
+        "duration": 6.300000190734863,
+        "bytes": 866
+      },
+      {
+        "name": "/app-assets/6cadaf470ccd5e1fc05b/watchlist-metrics.js",
+        "duration": 0.9000000953674316,
+        "bytes": 4035
+      }
+    ]
+  },
+  {
+    "build": "after-off",
+    "run": 5,
+    "route": "watchlist",
+    "lang": "en",
+    "width": 1280,
+    "height": 850,
+    "coarse": false,
+    "touchPoints": 0,
+    "lastPointer": null,
+    "theme": "dark",
+    "nav": [
+      {
+        "label": "Watchlist",
+        "x": 12,
+        "y": 78,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Research Map",
+        "x": 12,
+        "y": 121,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Stock briefs",
+        "x": 12,
+        "y": 164,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Chart",
+        "x": 12,
+        "y": 207,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Calendar",
+        "x": 12,
+        "y": 250,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Alerts",
+        "x": 12,
+        "y": 293,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Creators",
+        "x": 12,
+        "y": 336,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Research Brief",
+        "x": 12,
+        "y": 548.796875,
+        "w": 193,
+        "h": 40
+      },
+      {
+        "label": "Me",
+        "x": 12,
+        "y": 794,
+        "w": 193,
+        "h": 40
+      }
+    ],
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 62
+    },
+    "main": {
+      "x": 218,
+      "y": 62,
+      "w": 1062,
+      "h": 788
+    },
+    "firstContent": {
+      "x": 257.3984375,
+      "y": 264.890625,
+      "w": 879.203125,
+      "h": 60
+    },
+    "overflow": [],
+    "tiles": 0,
+    "canvases": [],
+    "calls": [
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "actualTheme": "light",
+    "resources": [
+      {
+        "name": "/css/app.css",
+        "duration": 11.400000095367432,
+        "bytes": 176653
+      },
+      {
+        "name": "/css/site.css",
+        "duration": 12.299999713897705,
+        "bytes": 95693
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 12.299999713897705,
+        "bytes": 22013
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 11.699999809265137,
+        "bytes": 44117
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 12.5,
+        "bytes": 4881
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 13.400000095367432,
+        "bytes": 5438
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 13.599999904632568,
+        "bytes": 13502
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 14.300000190734863,
+        "bytes": 54112
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 15.099999904632568,
+        "bytes": 198222
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 16,
+        "bytes": 2330781
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 14.300000190734863,
+        "bytes": 5914
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 2.4000000953674316,
+        "bytes": 54112
+      },
+      {
+        "name": "/qa-old.js",
+        "duration": 1.3000001907348633,
+        "bytes": 10231
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 2.3999996185302734,
+        "bytes": 7356
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 1,
+        "bytes": 2304
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 0.6999998092651367,
+        "bytes": 7791
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 1.799999713897705,
+        "bytes": 10002
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 1.9000000953674316,
+        "bytes": 2513
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 2,
+        "bytes": 7673
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 2.3000001907348633,
+        "bytes": 5867
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 2.5,
+        "bytes": 1441
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 1.6000003814697266,
+        "bytes": 2484
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 2,
+        "bytes": 1532
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 2,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 2.299999713897705,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 2.1999998092651367,
+        "bytes": 14860
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 0.9000000953674316,
+        "bytes": 3563
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/watchlist.js",
+        "duration": 3.1000003814697266,
+        "bytes": 19762
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/experience.js",
+        "duration": 2,
+        "bytes": 1869
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/watchlist-overview.js",
+        "duration": 1.799999713897705,
+        "bytes": 15127
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/company-context.js",
+        "duration": 2.0999999046325684,
+        "bytes": 3462
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/snapshot-model.js",
+        "duration": 4.5,
+        "bytes": 866
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/icons.js",
+        "duration": 4.5,
+        "bytes": 968
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/symbol-picker.js",
+        "duration": 4.599999904632568,
+        "bytes": 4747
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/watchlist-metrics.js",
+        "duration": 3.0999999046325684,
+        "bytes": 4035
+      }
+    ]
+  }
+]

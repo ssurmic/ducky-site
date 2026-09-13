@@ -1,0 +1,1154 @@
+[
+  {
+    "case": "partial",
+    "text": "Research previewRecent researchAll toolsMy watchlistAll accessible researchFiltersStockCreatorAll creators in loaded resultsAnother CreatorSample CreatorSource publication datePast 7 days (UTC)Past 30 days (UTC)All loaded datesApply filtersStock and creator filters query existing research. Dates and text filter only the loaded results.About these resultsBrowse saved research you can access, filtered by source publication date. The creators workspace also contains mentions, videos and source history that are outside this view.The last complete source check is unknown. Opening this page does not mean its sources were just published.Unknown publication dates: 1. Choose All loaded dates to include these records.Open creators and source recordsYour watchlist is unavailable. You can still browse All accessible research.0 matches · 9 records loaded · Past 7 days (UTC)No records match these filtersThis applies to the loaded results. It does not establish that there is no relevant news or risk.Clear filters and browse records",
+    "metrics": {
+      "baseline": false,
+      "mode": "partial",
+      "route": "#/research-brief",
+      "width": 1280,
+      "height": 850,
+      "theme": "light",
+      "firstContent": null,
+      "main": {
+        "x": 218,
+        "y": 62,
+        "width": 1062,
+        "height": 788
+      },
+      "records": 0,
+      "requests": [
+        {
+          "path": "/qa-api/kol/research?limit=100",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        }
+      ],
+      "errors": [],
+      "overflow": [],
+      "resources": [
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 3.6000003814697266,
+          "bytes": 0
+        },
+        {
+          "name": "/css/site.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/app.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/radar.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/workspace.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-starters.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-discovery.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/chart.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/duck-head-cutout-v1.png",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/qa-main.js",
+          "duration": 4.599999904632568,
+          "bytes": 5914
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/store.js",
+          "duration": 2.0999999046325684,
+          "bytes": 300
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/router.js",
+          "duration": 2.4000000953674316,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/tg.js",
+          "duration": 6.099999904632568,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/ui.js",
+          "duration": 3,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/login-target.js",
+          "duration": 4.300000190734863,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+          "duration": 5.599999904632568,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/navigation.js",
+          "duration": 7.800000190734863,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+          "duration": 8.800000190734863,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/strings.js",
+          "duration": 4.599999904632568,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+          "duration": 5.099999904632568,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+          "duration": 5.400000095367432,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+          "duration": 5.699999809265137,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/api.js",
+          "duration": 63.40000009536743,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+          "duration": 2,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+          "duration": 1.700000286102295,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+          "duration": 1.4000000953674316,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+          "duration": 2.200000286102295,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+          "duration": 3.4000000953674316,
+          "bytes": 300
+        },
+        {
+          "name": "/css/research-brief.css",
+          "duration": 1.700000286102295,
+          "bytes": 300
+        }
+      ]
+    }
+  },
+  {
+    "case": "failure",
+    "text": "Research previewRecent researchAll toolsMy watchlistAll accessible researchFiltersStockCreatorAll creators in loaded resultsSource publication datePast 7 days (UTC)Past 30 days (UTC)All loaded datesApply filtersStock and creator filters query existing research. Dates and text filter only the loaded results.About these resultsBrowse saved research you can access, filtered by source publication date. The creators workspace also contains mentions, videos and source history that are outside this view.The last complete source check is unknown. Opening this page does not mean its sources were just published.Open creators and source recordsResearch could not be loaded. Retry or return to All tools.Retry0 matches · 0 records loaded · Past 7 days (UTC)",
+    "metrics": {
+      "baseline": false,
+      "mode": "failure",
+      "route": "#/research-brief",
+      "width": 1280,
+      "height": 850,
+      "theme": "light",
+      "firstContent": null,
+      "main": {
+        "x": 218,
+        "y": 62,
+        "width": 1062,
+        "height": 788
+      },
+      "records": 0,
+      "requests": [
+        {
+          "path": "/qa-api/kol/research?limit=100",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        }
+      ],
+      "errors": [],
+      "overflow": [],
+      "resources": [
+        {
+          "name": "/css/site.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/app.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 3,
+          "bytes": 0
+        },
+        {
+          "name": "/css/radar.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/workspace.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-starters.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-discovery.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/chart.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/duck-head-cutout-v1.png",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/qa-main.js",
+          "duration": 3.6999998092651367,
+          "bytes": 5914
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/store.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/router.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/tg.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/ui.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/login-target.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/navigation.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/strings.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/api.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/css/research-brief.css",
+          "duration": 0,
+          "bytes": 0
+        }
+      ]
+    }
+  },
+  {
+    "case": "empty",
+    "text": "Research previewRecent researchAll toolsMy watchlistAll accessible researchFiltersStockCreatorAll creators in loaded resultsSource publication datePast 7 days (UTC)Past 30 days (UTC)All loaded datesApply filtersStock and creator filters query existing research. Dates and text filter only the loaded results.About these resultsBrowse saved research you can access, filtered by source publication date. The creators workspace also contains mentions, videos and source history that are outside this view.The last complete source check is unknown. Opening this page does not mean its sources were just published.Open creators and source records0 matches · 0 records loaded · Past 7 days (UTC)No records match these filtersThis applies to the loaded results. It does not establish that there is no relevant news or risk.Clear filters and browse records",
+    "metrics": {
+      "baseline": false,
+      "mode": "empty",
+      "route": "#/research-brief",
+      "width": 1280,
+      "height": 850,
+      "theme": "light",
+      "firstContent": null,
+      "main": {
+        "x": 218,
+        "y": 62,
+        "width": 1062,
+        "height": 788
+      },
+      "records": 0,
+      "requests": [
+        {
+          "path": "/qa-api/kol/research?limit=100",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        }
+      ],
+      "errors": [],
+      "overflow": [],
+      "resources": [
+        {
+          "name": "/css/site.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/app.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/radar.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 2.6999998092651367,
+          "bytes": 0
+        },
+        {
+          "name": "/css/workspace.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-starters.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-discovery.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/chart.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/duck-head-cutout-v1.png",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/qa-main.js",
+          "duration": 3.0999999046325684,
+          "bytes": 5914
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/store.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/router.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/tg.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/ui.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/login-target.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/navigation.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/strings.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/api.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/css/research-brief.css",
+          "duration": 0,
+          "bytes": 0
+        }
+      ]
+    }
+  },
+  {
+    "case": "no-watch",
+    "text": "Research previewRecent researchAll toolsMy watchlistAll accessible researchFiltersStockCreatorAll creators in loaded resultsAnother CreatorSample CreatorSource publication datePast 7 days (UTC)Past 30 days (UTC)All loaded datesApply filtersStock and creator filters query existing research. Dates and text filter only the loaded results.About these resultsBrowse saved research you can access, filtered by source publication date. The creators workspace also contains mentions, videos and source history that are outside this view.The last complete source check is unknown. Opening this page does not mean its sources were just published.Unknown publication dates: 1. Choose All loaded dates to include these records.Open creators and source recordsNo stocks on your watchlist yet. Browse the existing research to get started.Set up watchlist8 matches · 9 records loaded · Past 7 days (UTC)Start hereAVGOAnother CreatorCreator: bullishPublished 2026-09-08AI demand may support growth, if customer orders hold upCondition: If customer orders hold upOpen original ↗Source detailsExcerpt, dates & related historySynthetic UI example · source 1AI demand may support growth, if customer orders hold upOriginal excerptSynthetic UI excerpt. These are test records, not real creator claims or market research.First observedSep 9, 2026, 1:30 AM UTCVersion recordedSep 9, 2026, 2:00 AM UTCResearch preparedUnknownRecord ID 100 · claim:sample0Related historyStock researchAVGOAnother CreatorCreator: bullishPublished 2026-09-08AI demand may support growth, if customer orders hold upCondition: If customer orders hold upOpen original ↗Source detailsExcerpt, dates & related historySynthetic UI example · source 7AI demand may support growth, if customer orders hold upOriginal excerptSynthetic UI excerpt. These are test records, not real creator claims or market research.First observedSep 9, 2026, 1:30 AM UTCVersion recordedSep 9, 2026, 2:00 AM UTCResearch preparedUnknownRecord ID 106 · claim:sample6Related historyStock researchNVDASample CreatorCreator: bearishPublished 2026-09-07Higher spending could pressure margins before new capacity pays offOpen original ↗Source detailsExcerpt, dates & related historySynthetic UI example · source 2Higher spending could pressure margins before new capacity pays offOriginal excerptSynthetic UI excerpt. These are test records, not real creator claims or market research.First observedSep 9, 2026, 1:30 AM UTCVersion recordedSep 9, 2026, 2:00 AM UTCResearch preparedUnknownRecord ID 101 · claim:sample1Related historyStock researchOther records · 5NVDASample CreatorCreator: bearishPublished 2026-09-07Higher spending could pressure margins before new capacity pays offOpen original ↗Source detailsExcerpt, dates & related historySynthetic UI example · source 8Higher spending could pressure margins before new capacity pays offOriginal excerptSynthetic UI excerpt. These are test records, not real creator claims or market research.First observedSep 9, 2026, 1:30 AM UTCVersion recordedSep 9, 2026, 2:00 AM UTCResearch preparedUnknownRecord ID 107 · claim:sample7Related historyStock researchGLWSample CreatorCreator: bullishPublished 2026-09-06Optical networking demand needs another quarter of confirmationOpen original ↗Source detailsExcerpt, dates & related historySynthetic UI example · source 3Optical networking demand needs another quarter of confirmationOriginal excerptSynthetic UI excerpt. These are test records, not real creator claims or market research.First observedSep 9, 2026, 1:30 AM UTCVersion recordedSep 9, 2026, 2:00 AM UTCResearch preparedUnknownRecord ID 102 · claim:sample2Related historyStock researchGLWSample CreatorCreator: bullishPublished 2026-09-06Optical networking demand needs another quarter of confirmationOpen original ↗Source detailsExcerpt, dates & related historySynthetic UI example · source 9Optical networking demand needs another quarter of confirmationOriginal excerptSynthetic UI excerpt. These are test records, not real creator claims or market research.First observedSep 9, 2026, 1:30 AM UTCVersion recordedSep 9, 2026, 2:00 AM UTCResearch preparedUnknownRecord ID 108 · claim:sample8Related historyStock researchAVGOAnother CreatorContext / no clear directionPublished 2026-09-05AI demand may support growth, if customer orders hold upCondition: If customer orders hold upOpen original ↗Source detailsExcerpt, dates & related historySynthetic UI example · source 4AI demand may support growth, if customer orders hold upOriginal excerptSynthetic UI excerpt. These are test records, not real creator claims or market research.First observedUnknownVersion recordedSep 9, 2026, 2:00 AM UTCResearch preparedUnknownRecord ID 103 · claim:sample3Related historyStock researchGLWSample CreatorMention onlyPublished 2026-09-03Optical networking demand needs another quarter of confirmationOpen original ↗Source detailsExcerpt, dates & related historySynthetic UI example · source 6Optical networking demand needs another quarter of confirmationOriginal excerptSynthetic UI excerpt. These are test records, not real creator claims or market research.First observedSep 9, 2026, 1:30 AM UTCVersion recordedSep 9, 2026, 2:00 AM UTCResearch preparedUnknownRecord ID 105 · claim:sample5Related historyStock researchDiscussion overviewUses the same filtered records as the list.Stock records in these resultsStockRecordsVideosCreatorsAVGO331GLW331NVDA221Multiple records from one video count as one video. “—” means a reliable ID is missing. Counts do not verify a claim.",
+    "metrics": {
+      "baseline": false,
+      "mode": "no-watch",
+      "route": "#/research-brief?scope=all",
+      "width": 1280,
+      "height": 850,
+      "theme": "light",
+      "firstContent": {
+        "x": 256.3984375,
+        "y": 436.0859375,
+        "width": 672.203125,
+        "height": 290.1953125
+      },
+      "main": {
+        "x": 218,
+        "y": 62,
+        "width": 1062,
+        "height": 788
+      },
+      "records": 8,
+      "requests": [
+        {
+          "path": "/qa-api/kol/research?limit=100",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        }
+      ],
+      "errors": [],
+      "overflow": [],
+      "resources": [
+        {
+          "name": "/css/site.css",
+          "duration": 5.300000190734863,
+          "bytes": 300
+        },
+        {
+          "name": "/css/app.css",
+          "duration": 5.099999904632568,
+          "bytes": 300
+        },
+        {
+          "name": "/css/radar.css",
+          "duration": 5.599999904632568,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-starters.css",
+          "duration": 5.799999713897705,
+          "bytes": 300
+        },
+        {
+          "name": "/css/workspace.css",
+          "duration": 8.099999904632568,
+          "bytes": 300
+        },
+        {
+          "name": "/css/chart.css",
+          "duration": 8.799999713897705,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-discovery.css",
+          "duration": 8.899999618530273,
+          "bytes": 300
+        },
+        {
+          "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+          "duration": 9,
+          "bytes": 300
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 9.199999809265137,
+          "bytes": 300
+        },
+        {
+          "name": "/duck-head-cutout-v1.png",
+          "duration": 9,
+          "bytes": 300
+        },
+        {
+          "name": "/qa-main.js",
+          "duration": 9,
+          "bytes": 5914
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/store.js",
+          "duration": 1.6999998092651367,
+          "bytes": 300
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/router.js",
+          "duration": 5.100000381469727,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/ui.js",
+          "duration": 1.6999998092651367,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/login-target.js",
+          "duration": 2,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/tg.js",
+          "duration": 2.1999998092651367,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+          "duration": 2.1999998092651367,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+          "duration": 2.5,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/navigation.js",
+          "duration": 2.8000001907348633,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/strings.js",
+          "duration": 1.1999998092651367,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+          "duration": 1.5,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+          "duration": 1.5,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+          "duration": 1.700000286102295,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/api.js",
+          "duration": 1.4000000953674316,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+          "duration": 0.9000000953674316,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+          "duration": 1,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+          "duration": 1.4000000953674316,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+          "duration": 1.3000001907348633,
+          "bytes": 300
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+          "duration": 1.5,
+          "bytes": 300
+        },
+        {
+          "name": "/css/research-brief.css",
+          "duration": 0.9000000953674316,
+          "bytes": 300
+        }
+      ]
+    }
+  },
+  {
+    "case": "hundred",
+    "metrics": {
+      "baseline": false,
+      "mode": "hundred",
+      "route": "#/research-brief",
+      "width": 1280,
+      "height": 850,
+      "theme": "light",
+      "firstContent": {
+        "x": 256.3984375,
+        "y": 360.5859375,
+        "width": 672.203125,
+        "height": 290.1953125
+      },
+      "main": {
+        "x": 218,
+        "y": 62,
+        "width": 1062,
+        "height": 788
+      },
+      "records": 20,
+      "requests": [
+        {
+          "path": "/qa-api/kol/research?limit=100",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        }
+      ],
+      "errors": [],
+      "overflow": [],
+      "resources": [
+        {
+          "name": "/css/site.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/app.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/radar.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/workspace.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-starters.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-discovery.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/chart.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 5.599999904632568,
+          "bytes": 0
+        },
+        {
+          "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/duck-head-cutout-v1.png",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/qa-main.js",
+          "duration": 6,
+          "bytes": 5914
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/store.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/router.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/tg.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/ui.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/login-target.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/navigation.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/strings.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/api.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/css/research-brief.css",
+          "duration": 0,
+          "bytes": 0
+        }
+      ]
+    }
+  },
+  {
+    "case": "page-failure",
+    "text": "Some research could not be loaded. The records already loaded remain readable.Retry",
+    "metrics": {
+      "baseline": false,
+      "mode": "page-failure",
+      "route": "#/research-brief",
+      "width": 1280,
+      "height": 850,
+      "theme": "light",
+      "firstContent": {
+        "x": 256.3984375,
+        "y": -173.515625,
+        "width": 672.203125,
+        "height": 290.1953125
+      },
+      "main": {
+        "x": 218,
+        "y": 62,
+        "width": 1062,
+        "height": 788
+      },
+      "records": 5,
+      "requests": [
+        {
+          "path": "/qa-api/kol/research?limit=100",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/watchlist",
+          "method": "GET"
+        },
+        {
+          "path": "/qa-api/kol/research?limit=100&before=second",
+          "method": "GET"
+        }
+      ],
+      "errors": [],
+      "overflow": [],
+      "resources": [
+        {
+          "name": "/css/site.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/app.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/radar.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/workspace.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-starters.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/creator-discovery.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/css/chart.css",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 3.3999996185302734,
+          "bytes": 0
+        },
+        {
+          "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/duck-head-cutout-v1.png",
+          "duration": 0,
+          "bytes": 300
+        },
+        {
+          "name": "/qa-main.js",
+          "duration": 4,
+          "bytes": 5914
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/store.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/fonts/Manrope-variable-d0639be4.woff2",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/router.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/tg.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/ui.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/login-target.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/navigation.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/strings.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/api.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+          "duration": 0,
+          "bytes": 0
+        },
+        {
+          "name": "/css/research-brief.css",
+          "duration": 0,
+          "bytes": 0
+        }
+      ]
+    }
+  }
+]

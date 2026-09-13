@@ -1,0 +1,21 @@
+{
+  "basis": "Visible production creator-history stored unadjusted closes; arithmetic validation only, not intraday prices or realized returns.",
+  "rows": [
+    {
+      "ticker": "TSLA",
+      "reference": 354.08,
+      "latest": 367.81,
+      "reference_session": "2026-09-04",
+      "latest_session": "2026-09-09",
+      "percent": 3.877654767284233
+    },
+    {
+      "ticker": "UBER",
+      "reference": 75.76,
+      "latest": 71.08,
+      "reference_session": "2026-09-04",
+      "latest_session": "2026-09-09",
+      "percent": -6.177402323125669
+    }
+  ]
+}

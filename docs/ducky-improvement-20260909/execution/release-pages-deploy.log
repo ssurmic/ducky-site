@@ -1,0 +1,15 @@
+
+ ⛅️ wrangler 4.129.1 (update available 4.130.0)
+───────────────────────────────────────────────
+✨ Compiled Worker successfully
+Uploading... (2929/3040)
+Uploading... (2966/3040)
+Uploading... (3003/3040)
+Uploading... (3040/3040)
+✨ Success! Uploaded 111 files (2929 already uploaded) (1.78 sec)
+
+✨ Uploading _headers
+✨ Uploading _redirects
+✨ Uploading Functions bundle
+🌎 Deploying...
+✨ Deployment complete! Take a peek over at https://8980c925.ducky-site.pages.dev

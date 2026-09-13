@@ -1,0 +1,16 @@
+test_clean_deploy_keeps_previous_lazy_route_and_its_original_store (test_build_assets.AppReleaseTests.test_clean_deploy_keeps_previous_lazy_route_and_its_original_store) ... ok
+test_dependency_edit_changes_path_without_mutating_prior_release (test_build_assets.AppReleaseTests.test_dependency_edit_changes_path_without_mutating_prior_release) ... ok
+test_entire_graph_resolves_inside_one_snapshot (test_build_assets.AppReleaseTests.test_entire_graph_resolves_inside_one_snapshot) ... ok
+test_history_restores_screenshot_release_without_rewriting_its_bytes (test_build_assets.AppReleaseTests.test_history_restores_screenshot_release_without_rewriting_its_bytes) ... skipped 'screenshot release has aged outside bounded git history'
+test_same_bytes_reproduce_path_and_other_assets_keep_version (test_build_assets.AppReleaseTests.test_same_bytes_reproduce_path_and_other_assets_keep_version) ... ok
+test_current_projection_preserves_price_and_retrieval_clocks (test_export_desk_prices.PublicCloseExport.test_current_projection_preserves_price_and_retrieval_clocks) ... ok
+test_invalid_or_unfinished_daily_values_never_replace_current (test_export_desk_prices.PublicCloseExport.test_invalid_or_unfinished_daily_values_never_replace_current) ... ok
+test_outage_keeps_last_good_and_dated_artifact_is_immutable (test_export_desk_prices.PublicCloseExport.test_outage_keeps_last_good_and_dated_artifact_is_immutable) ... ok
+test_absent_and_non_boolean_values_are_disabled (test_research_brief_config.ResearchBriefConfigTests.test_absent_and_non_boolean_values_are_disabled) ... ok
+test_cli_override_can_disable_configured_release (test_research_brief_config.ResearchBriefConfigTests.test_cli_override_can_disable_configured_release) ... ok
+test_configured_release_emits_the_same_switch_as_navigation (test_research_brief_config.ResearchBriefConfigTests.test_configured_release_emits_the_same_switch_as_navigation) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.922s
+
+OK (skipped=1)

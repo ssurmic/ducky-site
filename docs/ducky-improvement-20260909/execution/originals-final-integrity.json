@@ -1,0 +1,14 @@
+{
+  "original_site": {
+    "path": "/Users/zizhaozhang/dev/ducky-site",
+    "tracked_diff_sha256": "b5670a0b7a5c26a5f42b2711245a46e67cc7b0e467a6d20da72922b6c689dbc3",
+    "same_as_initial": true,
+    "head": "f05fca526d8d83a2fb5f00ba92747a47a175e9cf"
+  },
+  "original_backend": {
+    "path": "/Users/zizhaozhang/dev/ducky-bot",
+    "tracked_diff_sha256": "485baf5a45602cf592c33c15f1023cbb2f47074e2decb62cc7beca26c33f4f23",
+    "same_as_initial": false,
+    "head": "751f40582f418362074d95f3452ac16b5fb2e32d"
+  }
+}

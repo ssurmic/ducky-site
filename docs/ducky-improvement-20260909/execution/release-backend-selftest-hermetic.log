@@ -1,0 +1,22 @@
+[ledger:TEST no-write] ZZZ|insider|nope
+[postmortem] rebal:2026-08-31 → inserted: 月末调仓 · 再平衡:SPY 收 +0.4%,当日振幅 1.0%,成交量为 20 日均量的 1.4 倍。
+[postmortem] rebal:2026-08-31 → updated: 月末调仓 · 再平衡:SPY 收 +0.4%,当日振幅 1.0%,成交量为 20 日均量的 1.4 倍。
+  4634 passed, 7 skipped, 2 warnings in 187.11s (0:03:07)
+✅ testmode parser (0/false/'' => live)
+✅ ledger dedup + relationships + TEST no-write + fail-open
+✅ watchlist_ctx is_tracked + conservative match_name
+✅ push_contract rejects $0 / company==ticker / template
+✅ confluence: 3 independent bullish sources ranks #1
+✅ no firehose uses the loose TEST_MODE parser footgun
+✅ kb smart-RAG: gate + dedup/merge + grounded history + postmortem grounding
+✅ analyst tool-belt: peer group correctness + research composes fail-soft
+✅ index_changes: named add/delete attaches to the calendar event, never fabricates
+✅ identities: backfill/auto-link, telegram_chat_id (existing==id, native==None), negative-band ids
+✅ standalone register: email-first native account (no Telegram), verify→login, link telegram
+✅ beta redeem-signup: invite code → native account + username identity + IP + granted tier
+✅ FRED macro calendar: parse future dates + invest_calendar prefers the store, falls back
+✅ llm_healthcheck: structured report, dry doesn't alert, unhealthy when backend down
+✅ earnings calendar (Finnhub) parse + batch registry cadence/due-logic
+✅ pytest suite (bin/tests) — skipped with a warning when pytest is missing
+
+[selftest] ALL GREEN

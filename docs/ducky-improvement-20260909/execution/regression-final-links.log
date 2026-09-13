@@ -1,0 +1,6 @@
+cwd: /tmp/ducky-brief-regression-final-gu87lydh/site
+command: /Users/zizhaozhang/dev/ducky-bot/.venv/bin/python scripts/check_links.py
+check_links: OK — 1290 links checked, 0 planned-page warnings
+
+exit_code: 0
+elapsed_seconds: 0.75

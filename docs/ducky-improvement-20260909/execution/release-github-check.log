@@ -1,0 +1,148 @@
+Refreshing run status every 10 seconds. Press Ctrl+C to quit.
+
+* main check · 34422167979
+Triggered via push less than a minute ago
+
+JOBS
+* build-and-lint (ID 102699764951)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-python@v5
+  ✓ Run pip install -r requirements.txt
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ public close export preserves last-good data
+  ✓ app module release isolation
+  ✓ research preview release and rollback switch
+  ✓ build (zh + en, i18n key parity)
+  * Run npm test
+  * lint copy (banned strings, data-winrate ⇔ data-n, disclaimer lines, no third-party scripts)
+  * internal link check
+  * sanity — both landings exist
+  * Post Run actions/setup-node@v4
+  * Post Run actions/setup-python@v5
+  * Post Run actions/checkout@v4
+Refreshing run status every 10 seconds. Press Ctrl+C to quit.
+
+* main check · 34422167979
+Triggered via push less than a minute ago
+
+JOBS
+* build-and-lint (ID 102699764951)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-python@v5
+  ✓ Run pip install -r requirements.txt
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ public close export preserves last-good data
+  ✓ app module release isolation
+  ✓ research preview release and rollback switch
+  ✓ build (zh + en, i18n key parity)
+  * Run npm test
+  * lint copy (banned strings, data-winrate ⇔ data-n, disclaimer lines, no third-party scripts)
+  * internal link check
+  * sanity — both landings exist
+  * Post Run actions/setup-node@v4
+  * Post Run actions/setup-python@v5
+  * Post Run actions/checkout@v4
+Refreshing run status every 10 seconds. Press Ctrl+C to quit.
+
+* main check · 34422167979
+Triggered via push less than a minute ago
+
+JOBS
+* build-and-lint (ID 102699764951)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-python@v5
+  ✓ Run pip install -r requirements.txt
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ public close export preserves last-good data
+  ✓ app module release isolation
+  ✓ research preview release and rollback switch
+  ✓ build (zh + en, i18n key parity)
+  * Run npm test
+  * lint copy (banned strings, data-winrate ⇔ data-n, disclaimer lines, no third-party scripts)
+  * internal link check
+  * sanity — both landings exist
+  * Post Run actions/setup-node@v4
+  * Post Run actions/setup-python@v5
+  * Post Run actions/checkout@v4
+Refreshing run status every 10 seconds. Press Ctrl+C to quit.
+
+* main check · 34422167979
+Triggered via push less than a minute ago
+
+JOBS
+* build-and-lint (ID 102699764951)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-python@v5
+  ✓ Run pip install -r requirements.txt
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ public close export preserves last-good data
+  ✓ app module release isolation
+  ✓ research preview release and rollback switch
+  ✓ build (zh + en, i18n key parity)
+  * Run npm test
+  * lint copy (banned strings, data-winrate ⇔ data-n, disclaimer lines, no third-party scripts)
+  * internal link check
+  * sanity — both landings exist
+  * Post Run actions/setup-node@v4
+  * Post Run actions/setup-python@v5
+  * Post Run actions/checkout@v4
+Refreshing run status every 10 seconds. Press Ctrl+C to quit.
+
+* main check · 34422167979
+Triggered via push about 1 minute ago
+
+JOBS
+* build-and-lint (ID 102699764951)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-python@v5
+  ✓ Run pip install -r requirements.txt
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ public close export preserves last-good data
+  ✓ app module release isolation
+  ✓ research preview release and rollback switch
+  ✓ build (zh + en, i18n key parity)
+  ✓ Run npm test
+  * lint copy (banned strings, data-winrate ⇔ data-n, disclaimer lines, no third-party scripts)
+  * internal link check
+  * sanity — both landings exist
+  * Post Run actions/setup-node@v4
+  * Post Run actions/setup-python@v5
+  * Post Run actions/checkout@v4
+✓ main check · 34422167979
+Triggered via push about 1 minute ago
+
+JOBS
+✓ build-and-lint in 1m10s (ID 102699764951)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-python@v5
+  ✓ Run pip install -r requirements.txt
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ public close export preserves last-good data
+  ✓ app module release isolation
+  ✓ research preview release and rollback switch
+  ✓ build (zh + en, i18n key parity)
+  ✓ Run npm test
+  ✓ lint copy (banned strings, data-winrate ⇔ data-n, disclaimer lines, no third-party scripts)
+  ✓ internal link check
+  ✓ sanity — both landings exist
+  ✓ Post Run actions/setup-node@v4
+  ✓ Post Run actions/setup-python@v5
+  ✓ Post Run actions/checkout@v4
+  ✓ Complete job
+
+ANNOTATIONS
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+build-and-lint: .github#2
+

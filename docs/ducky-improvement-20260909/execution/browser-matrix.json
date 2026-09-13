@@ -1,0 +1,2294 @@
+[
+  {
+    "lang": "en",
+    "baseline": false,
+    "mode": "data",
+    "route": "#/research-brief",
+    "width": 390,
+    "height": 650,
+    "theme": "light",
+    "firstContent": {
+      "x": 12,
+      "y": 334.78125,
+      "width": 366,
+      "height": 303.1953125
+    },
+    "main": {
+      "x": 0,
+      "y": 61,
+      "width": 390,
+      "height": 520
+    },
+    "records": 5,
+    "requests": [
+      {
+        "path": "/qa-api/kol/research?limit=100",
+        "method": "GET"
+      },
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 3.3000001907348633,
+        "bytes": 0
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 3.799999713897705,
+        "bytes": 5914
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 2.200000286102295,
+        "bytes": 2304
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 3,
+        "bytes": 7791
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 2.8000001907348633,
+        "bytes": 7356
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 2.799999713897705,
+        "bytes": 5867
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 3,
+        "bytes": 10002
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 3.299999713897705,
+        "bytes": 7673
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 3.0999999046325684,
+        "bytes": 1441
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 3.1999998092651367,
+        "bytes": 2513
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 2.200000286102295,
+        "bytes": 1532
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 2.6000003814697266,
+        "bytes": 14860
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 2.8000001907348633,
+        "bytes": 2484
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 2.1999998092651367,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 2.3999996185302734,
+        "bytes": 607
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 1.200000286102295,
+        "bytes": 3563
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+        "duration": 1.299999713897705,
+        "bytes": 16703
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+        "duration": 1.3999996185302734,
+        "bytes": 4420
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+        "duration": 1.3999996185302734,
+        "bytes": 807
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+        "duration": 1.5,
+        "bytes": 8646
+      },
+      {
+        "name": "/css/research-brief.css",
+        "duration": 1,
+        "bytes": 6997
+      }
+    ]
+  },
+  {
+    "lang": "zh",
+    "baseline": false,
+    "mode": "data",
+    "route": "#/research-brief",
+    "width": 390,
+    "height": 650,
+    "theme": "dark",
+    "firstContent": {
+      "x": 12,
+      "y": 334.78125,
+      "width": 366,
+      "height": 279.1953125
+    },
+    "main": {
+      "x": 0,
+      "y": 61,
+      "width": 390,
+      "height": 520
+    },
+    "records": 5,
+    "requests": [
+      {
+        "path": "/qa-api/kol/research?limit=100",
+        "method": "GET"
+      },
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 4.200000286102295,
+        "bytes": 0
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 4.700000286102295,
+        "bytes": 5914
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 1.9000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 3.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 1.6999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 1.799999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 2,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 2.799999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 2.8999996185302734,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 3.0999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 1.5999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 1.6999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 2,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 2,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 1.0999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 0.9000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+        "duration": 1.1999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+        "duration": 1.200000286102295,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+        "duration": 1.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+        "duration": 1.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/css/research-brief.css",
+        "duration": 0.6999998092651367,
+        "bytes": 300
+      }
+    ]
+  },
+  {
+    "lang": "zh",
+    "baseline": false,
+    "mode": "data",
+    "route": "#/research-brief",
+    "width": 390,
+    "height": 650,
+    "theme": "light",
+    "firstContent": {
+      "x": 12,
+      "y": 334.78125,
+      "width": 366,
+      "height": 279.1953125
+    },
+    "main": {
+      "x": 0,
+      "y": 61,
+      "width": 390,
+      "height": 520
+    },
+    "records": 5,
+    "requests": [
+      {
+        "path": "/qa-api/kol/research?limit=100",
+        "method": "GET"
+      },
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 5.299999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 5.400000095367432,
+        "bytes": 300
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 5.800000190734863,
+        "bytes": 300
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 5.800000190734863,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 6.099999904632568,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 6.099999904632568,
+        "bytes": 300
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 6.599999904632568,
+        "bytes": 300
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 7.800000190734863,
+        "bytes": 300
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 7,
+        "bytes": 300
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 7.700000286102295,
+        "bytes": 5914
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 7.099999904632568,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 1.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 3.200000286102295,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 1.5,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 1.5999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 2.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 2.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 2.5999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 2.9000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 1.5,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 1,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 1.5,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 1.8000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 1.5,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 0.7999997138977051,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+        "duration": 1,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+        "duration": 1.200000286102295,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+        "duration": 1.3000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+        "duration": 1.3000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/css/research-brief.css",
+        "duration": 0.6999998092651367,
+        "bytes": 300
+      }
+    ]
+  },
+  {
+    "lang": "en",
+    "baseline": false,
+    "mode": "data",
+    "route": "#/research-brief",
+    "width": 390,
+    "height": 650,
+    "theme": "dark",
+    "firstContent": {
+      "x": 12,
+      "y": 334.78125,
+      "width": 366,
+      "height": 303.1953125
+    },
+    "main": {
+      "x": 0,
+      "y": 61,
+      "width": 390,
+      "height": 520
+    },
+    "records": 5,
+    "requests": [
+      {
+        "path": "/qa-api/kol/research?limit=100",
+        "method": "GET"
+      },
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 4.599999904632568,
+        "bytes": 0
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 5.300000190734863,
+        "bytes": 5914
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 1.5999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 2.799999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 1.6999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 1.8000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 1.8000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 1.9000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 2.3000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 2.3000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 1.9000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 1.9000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 2.1000003814697266,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 2.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 2.5,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 1,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+        "duration": 0.9000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+        "duration": 1.200000286102295,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+        "duration": 1.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+        "duration": 1.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/css/research-brief.css",
+        "duration": 0.6999998092651367,
+        "bytes": 300
+      }
+    ]
+  },
+  {
+    "lang": "en",
+    "baseline": false,
+    "mode": "data",
+    "route": "#/research-brief",
+    "width": 320,
+    "height": 650,
+    "theme": "light",
+    "firstContent": {
+      "x": 12,
+      "y": 345.171875,
+      "width": 296,
+      "height": 324.890625
+    },
+    "main": {
+      "x": 0,
+      "y": 61,
+      "width": 320,
+      "height": 520
+    },
+    "records": 5,
+    "requests": [
+      {
+        "path": "/qa-api/kol/research?limit=100",
+        "method": "GET"
+      },
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 3.6999998092651367,
+        "bytes": 0
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 4,
+        "bytes": 5914
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 1.799999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 2,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 1.5999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 1.799999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 2.1999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 2.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 2.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 2.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 1.5,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 1.5,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 2,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 2.0999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 2.1999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 0.9000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+        "duration": 0.8000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+        "duration": 1.1000003814697266,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+        "duration": 1.200000286102295,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+        "duration": 1.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/css/research-brief.css",
+        "duration": 0.7999997138977051,
+        "bytes": 300
+      }
+    ]
+  },
+  {
+    "lang": "zh",
+    "baseline": false,
+    "mode": "data",
+    "route": "#/research-brief",
+    "width": 320,
+    "height": 650,
+    "theme": "dark",
+    "firstContent": {
+      "x": 12,
+      "y": 334.78125,
+      "width": 296,
+      "height": 303.1953125
+    },
+    "main": {
+      "x": 0,
+      "y": 61,
+      "width": 320,
+      "height": 520
+    },
+    "records": 5,
+    "requests": [
+      {
+        "path": "/qa-api/kol/research?limit=100",
+        "method": "GET"
+      },
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 3.4000000953674316,
+        "bytes": 0
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 3.9000000953674316,
+        "bytes": 5914
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 1.799999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 3,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 2.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 2.5999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 2.5999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 2.6999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 2.9000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 4,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 1.700000286102295,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 1.6000003814697266,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 1.6000003814697266,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 2.200000286102295,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 79.7000002861023,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 1,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+        "duration": 1,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+        "duration": 1.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+        "duration": 1.8000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+        "duration": 1.8000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/css/research-brief.css",
+        "duration": 1,
+        "bytes": 300
+      }
+    ]
+  },
+  {
+    "lang": "zh",
+    "baseline": false,
+    "mode": "data",
+    "route": "#/research-brief",
+    "width": 320,
+    "height": 650,
+    "theme": "light",
+    "firstContent": {
+      "x": 12,
+      "y": 334.78125,
+      "width": 296,
+      "height": 303.1953125
+    },
+    "main": {
+      "x": 0,
+      "y": 61,
+      "width": 320,
+      "height": 520
+    },
+    "records": 5,
+    "requests": [
+      {
+        "path": "/qa-api/kol/research?limit=100",
+        "method": "GET"
+      },
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 3.8000001907348633,
+        "bytes": 0
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 4.300000190734863,
+        "bytes": 5914
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 2,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 2.5,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 1.5999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 1.6999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 2.1999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 2.1999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 2.3000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 2.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 1.5999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 2,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 2.299999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 2.5,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 2.5999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 0.8999996185302734,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+        "duration": 0.7999997138977051,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+        "duration": 1.1999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+        "duration": 1.299999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+        "duration": 1.5,
+        "bytes": 300
+      },
+      {
+        "name": "/css/research-brief.css",
+        "duration": 0.8000001907348633,
+        "bytes": 300
+      }
+    ]
+  },
+  {
+    "lang": "en",
+    "baseline": false,
+    "mode": "data",
+    "route": "#/research-brief",
+    "width": 320,
+    "height": 650,
+    "theme": "dark",
+    "firstContent": {
+      "x": 12,
+      "y": 345.171875,
+      "width": 296,
+      "height": 324.890625
+    },
+    "main": {
+      "x": 0,
+      "y": 61,
+      "width": 320,
+      "height": 520
+    },
+    "records": 5,
+    "requests": [
+      {
+        "path": "/qa-api/kol/research?limit=100",
+        "method": "GET"
+      },
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 3.5999999046325684,
+        "bytes": 0
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 4.099999904632568,
+        "bytes": 5914
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 1.8999996185302734,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 2.299999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 1.8000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 1.9000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 2.3000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 2.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 2.5999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 2.6000003814697266,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 1,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 1.1999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 1.299999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 1.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 1.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 0.8000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+        "duration": 1,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+        "duration": 1.1999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+        "duration": 1.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+        "duration": 1.5,
+        "bytes": 300
+      },
+      {
+        "name": "/css/research-brief.css",
+        "duration": 0.6999998092651367,
+        "bytes": 300
+      }
+    ]
+  },
+  {
+    "lang": "en",
+    "baseline": false,
+    "mode": "data",
+    "route": "#/research-brief",
+    "width": 1280,
+    "height": 850,
+    "theme": "light",
+    "firstContent": {
+      "x": 256.3984375,
+      "y": 360.5859375,
+      "width": 672.203125,
+      "height": 290.1953125
+    },
+    "main": {
+      "x": 218,
+      "y": 62,
+      "width": 1062,
+      "height": 788
+    },
+    "records": 5,
+    "requests": [
+      {
+        "path": "/qa-api/kol/research?limit=100",
+        "method": "GET"
+      },
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 3.8999996185302734,
+        "bytes": 0
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 4.299999713897705,
+        "bytes": 5914
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 2,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 2.1999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 2.1999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 2.5,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 2.5999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 3,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 3,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 3.1999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 1,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 1.3000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 1.5,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 1.6000003814697266,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 1.5999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 0.8000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+        "duration": 0.7999997138977051,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+        "duration": 1.299999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+        "duration": 1.1999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+        "duration": 1.4000000953674316,
+        "bytes": 300
+      },
+      {
+        "name": "/css/research-brief.css",
+        "duration": 0.9000000953674316,
+        "bytes": 300
+      }
+    ]
+  },
+  {
+    "lang": "zh",
+    "baseline": false,
+    "mode": "data",
+    "route": "#/research-brief",
+    "width": 1280,
+    "height": 850,
+    "theme": "dark",
+    "firstContent": {
+      "x": 256.3984375,
+      "y": 360.5859375,
+      "width": 672.203125,
+      "height": 290.1953125
+    },
+    "main": {
+      "x": 218,
+      "y": 62,
+      "width": 1062,
+      "height": 788
+    },
+    "records": 5,
+    "requests": [
+      {
+        "path": "/qa-api/kol/research?limit=100",
+        "method": "GET"
+      },
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "resources": [
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 3.3000001907348633,
+        "bytes": 0
+      },
+      {
+        "name": "/css/site.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 3.6000003814697266,
+        "bytes": 5914
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/css/research-brief.css",
+        "duration": 0,
+        "bytes": 0
+      }
+    ]
+  },
+  {
+    "lang": "zh",
+    "baseline": false,
+    "mode": "data",
+    "route": "#/research-brief",
+    "width": 1280,
+    "height": 850,
+    "theme": "light",
+    "firstContent": {
+      "x": 256.3984375,
+      "y": 360.5859375,
+      "width": 672.203125,
+      "height": 290.1953125
+    },
+    "main": {
+      "x": 218,
+      "y": 62,
+      "width": 1062,
+      "height": 788
+    },
+    "records": 5,
+    "requests": [
+      {
+        "path": "/qa-api/kol/research?limit=100",
+        "method": "GET"
+      },
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "resources": [
+      {
+        "name": "/css/site.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 3.3000001907348633,
+        "bytes": 0
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 3.5999999046325684,
+        "bytes": 5914
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 1.799999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 2.0999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 1.6999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 2.0999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 2.299999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 2.5,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 2.5,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 2.6999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 1.200000286102295,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 1.3999996185302734,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 1.3999996185302734,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 1.6999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 1.3000001907348633,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 0.7999997138977051,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+        "duration": 1.1999998092651367,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+        "duration": 1.0999999046325684,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+        "duration": 1.299999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+        "duration": 1.299999713897705,
+        "bytes": 300
+      },
+      {
+        "name": "/css/research-brief.css",
+        "duration": 0.6999998092651367,
+        "bytes": 300
+      }
+    ]
+  },
+  {
+    "lang": "en",
+    "baseline": false,
+    "mode": "data",
+    "route": "#/research-brief",
+    "width": 1280,
+    "height": 850,
+    "theme": "dark",
+    "firstContent": {
+      "x": 256.3984375,
+      "y": 360.5859375,
+      "width": 672.203125,
+      "height": 290.1953125
+    },
+    "main": {
+      "x": 218,
+      "y": 62,
+      "width": 1062,
+      "height": 788
+    },
+    "records": 5,
+    "requests": [
+      {
+        "path": "/qa-api/kol/research?limit=100",
+        "method": "GET"
+      },
+      {
+        "path": "/qa-api/watchlist",
+        "method": "GET"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "resources": [
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 3.5999999046325684,
+        "bytes": 0
+      },
+      {
+        "name": "/css/site.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/app.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/radar.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/workspace.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-starters.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/creator-discovery.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/css/chart.css",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/vendor/lightweight-charts/lightweight-charts.standalone.production.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/duck-head-cutout-v1.png",
+        "duration": 0,
+        "bytes": 300
+      },
+      {
+        "name": "/qa-main.js",
+        "duration": 4.100000381469727,
+        "bytes": 5914
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/store.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/fonts/Manrope-variable-d0639be4.woff2",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/router.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/tg.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/ui.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/login-target.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/release-recovery.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/navigation.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/shared-read-refresh.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/strings.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/creator-route.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/evidence-route.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/social-communities.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/api.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/calendar-model.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/research-brief.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/reading-preview.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/views/creator-claim.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/app-assets/424d72641f74a061be81/research-brief-model.js",
+        "duration": 0,
+        "bytes": 0
+      },
+      {
+        "name": "/css/research-brief.css",
+        "duration": 0,
+        "bytes": 0
+      }
+    ]
+  }
+]

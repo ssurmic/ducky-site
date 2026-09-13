@@ -1,0 +1,25 @@
+{
+  "source": "/Users/zizhaozhang/dev/ducky-site-research-brief-20260909",
+  "snapshot": "/tmp/ducky-brief-regression-final-gu87lydh/site",
+  "baseline": "4a88b28ecd23c4f75f84f33a4a5081ad444bc882",
+  "files_copied": 1254,
+  "critical_sha256": {
+    "build.py": "f5c50734401e74c89492806df5be5d1bbf8c8d005d73b3493135f316f021b20a",
+    "public/js/app/router.js": "a34020110bc208481186047317f488d7fa750cbc3160cb09f0018f8cb4369347",
+    "public/js/app/login-target.js": "348254de27b0638cc2b56962a475a7bc4d4e27f58af9bb27b7b64e71751824fc",
+    "templates/app.html": "34a0f35c27b77df15cb17468e0292b1e7a7b77eb2d3a91c49493c276589f568f",
+    "i18n/en.json": "ac317b275b1c98b81974bb98de0a2d4a5c1063751e224eda0a3b699c5761c9a0",
+    "i18n/zh.json": "c97174d1e337e1cdbe62e4ba3f83faaf87676d8bf399f09d77bd1e58672ab295",
+    "public/css/research-brief.css": "306f2ff295f4d29568be16698d3c14c3add3da60fe24bed127c9cc78fecf3ef3",
+    "public/js/app/research-brief-model.js": "8743657f8546431c587e826e8f7236f1afcfd6591bfca620ed920197fa0cdfb6",
+    "public/js/app/views/research-brief.js": "57d8f02835a340039206eef8930d080c0595c4b814d20ffdc2b7ebf051a47b43",
+    "scripts/research_brief_qa.py": "f27f2385fee3eb16f4012a3f7ae0972507464e0d0ae1a1d97092ef3a60906225",
+    "tests/research-brief-model.test.js": "433ae3c02cee56ca2521a95ee5e86bcf2682926a36abbf27b35e0db8abe87c9a",
+    "tests/research-brief-view.test.js": "2b82107088c86b3a5136f483526aacb58bbc3e39790ae14cebdd6dcf0de391f2",
+    "tests/fixtures/research-brief-browser.js": "e20957bcfa4fafd1b712489a89e7319b96dc5fcb7485cf446c7c050da156bdd1"
+  },
+  "refreshed_after_owner_final_ui_changes": [
+    "scripts/research_brief_qa.py"
+  ],
+  "final_css_spacing_refresh": true
+}

@@ -1,0 +1,31 @@
+✔ projects records without changing input, dates, conditions, numbers or losses (2.345209ms)
+✔ deduplicates only identical identified transport copies; preserves conflicting versions (0.35725ms)
+✔ keeps separate points in one video and distinct authors, without inventing counts (0.997625ms)
+✔ date precision and timezone are explicit; impossible or ambiguous clocks stay unknown (0.06525ms)
+✔ unknown and mention stances remain non-directional; archived rows remain accessible (6.086042ms)
+✔ composes watchlist, ticker, creator, source date and loaded text including the opposing view (0.206709ms)
+✔ unknown dates do not enter a seven-day result; all-loaded view retains them (0.096583ms)
+✔ source links preserve zero and long-video offsets, reject unsafe URLs, never invent missing offsets (0.125625ms)
+✔ server query is bounded, encoded and has no browser-only text, watchlist or date filters (0.265833ms)
+✔ stable sorting preserves bearish evidence and source chronology without score invention (0.1415ms)
+✔ serialized legacy summaries show only prose; unavailable source states never leak internal JSON (0.156625ms)
+✔ explicit reported holdings retain position meaning without inventing a bullish view (0.068459ms)
+✔ 100 records make exactly two reads, no per-card work; filters and details reuse data (43.592458ms)
+✔ a failed next page retains successful records, retry keeps its cursor (41.112584ms)
+✔ unknown watchlist does not produce false personalization or discard all-readable research (14.972291ms)
+✔ malformed data is a visible load failure, never a successful empty market (13.83975ms)
+✔ late responses cannot expose a previous account’s research (25.345916ms)
+✔ saved filters and scroll restore on return, with data read again for current source gates (25.798208ms)
+✔ source text is rendered as text, and preview login return strips unsupported input (13.522625ms)
+✔ disabled module direct mount performs zero reads and imports no route stylesheet (0.53325ms)
+✔ overview local drill keeps the cursor bound to its original server query (26.833708ms)
+✔ returning to a paginated view revalidates previously requested pages before restoring scroll (49.427333ms)
+✔ keyboard focus survives replacing a load-more button after its final page (27.789583ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 649.933334

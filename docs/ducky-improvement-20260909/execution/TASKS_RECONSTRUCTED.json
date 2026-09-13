@@ -1,0 +1,57 @@
+{
+  "source": "Reconstructed from the three supplied MDs; not the missing original 03_TASKS.json",
+  "stage": "A",
+  "production_released": false,
+  "tasks": [
+    {
+      "id": "G00",
+      "title": "repository, existing A/B/C, flags, authorization and read-path audit.",
+      "status": "local_complete"
+    },
+    {
+      "id": "G01",
+      "title": "freeze baseline tests/build/browser and prior failures.",
+      "status": "local_complete"
+    },
+    {
+      "id": "G02",
+      "title": "pure read adapter, identities, timestamps, counts and adversarial contracts.",
+      "status": "local_complete"
+    },
+    {
+      "id": "G03",
+      "title": "build-default-off preview shell, route/login integration and CSS isolation.",
+      "status": "local_complete"
+    },
+    {
+      "id": "G04",
+      "title": "useful Brief: bounded current research, watched/all scopes and honest coverage.",
+      "status": "local_complete"
+    },
+    {
+      "id": "G05",
+      "title": "original/source-history/stock links, reversible detail and navigation restoration.",
+      "status": "local_complete"
+    },
+    {
+      "id": "G06",
+      "title": "creator/ticker server filters, loaded-result date/text filters, pagination/race handling.",
+      "status": "local_complete"
+    },
+    {
+      "id": "G07",
+      "title": "conditional overview: stable-ID counts sharing the same selector, max 20 rows.",
+      "status": "local_complete"
+    },
+    {
+      "id": "G08",
+      "title": "desktop/320/390, EN/ZH, light/dark, keyboard and bounded performance.",
+      "status": "local_complete"
+    },
+    {
+      "id": "G09",
+      "title": "complete regression, off-switch/rollback, actual-data evidence and final report.",
+      "status": "local_complete"
+    }
+  ]
+}

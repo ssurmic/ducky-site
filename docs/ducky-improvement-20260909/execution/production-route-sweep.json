@@ -1,0 +1,74 @@
+[
+  {
+    "heading": "我的自选股",
+    "mainHeight": 520,
+    "navResearch": true,
+    "overflow": false,
+    "route": "#/watchlist",
+    "width": 390
+  },
+  {
+    "heading": "个股简报",
+    "mainHeight": 520,
+    "navResearch": true,
+    "overflow": false,
+    "route": "#/briefing",
+    "width": 390
+  },
+  {
+    "heading": "股票图表",
+    "mainHeight": 520,
+    "navResearch": true,
+    "overflow": false,
+    "route": "#/chart",
+    "width": 390
+  },
+  {
+    "heading": "投资日历",
+    "mainHeight": 520,
+    "navResearch": true,
+    "overflow": false,
+    "route": "#/calendar",
+    "width": 390
+  },
+  {
+    "heading": "雷达",
+    "mainHeight": 520,
+    "navResearch": true,
+    "overflow": false,
+    "route": "#/boards",
+    "width": 390
+  },
+  {
+    "heading": "条件提醒",
+    "mainHeight": 520,
+    "navResearch": true,
+    "overflow": false,
+    "route": "#/alerts",
+    "width": 390
+  },
+  {
+    "heading": "财经博主",
+    "mainHeight": 520,
+    "navResearch": true,
+    "overflow": false,
+    "route": "#/creators",
+    "width": 390
+  },
+  {
+    "heading": "我的资料",
+    "mainHeight": 520,
+    "navResearch": true,
+    "overflow": false,
+    "route": "#/profile",
+    "width": 390
+  },
+  {
+    "heading": "我的资料",
+    "mainHeight": 520,
+    "navResearch": true,
+    "overflow": false,
+    "route": "#/billing",
+    "width": 390
+  }
+]

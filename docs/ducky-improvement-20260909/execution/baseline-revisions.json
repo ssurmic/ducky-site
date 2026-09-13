@@ -1,0 +1,26 @@
+{
+  "original_site": {
+    "path": "/Users/zizhaozhang/dev/ducky-site",
+    "head": "f05fca526d8d83a2fb5f00ba92747a47a175e9cf",
+    "status": " M build.py\n M i18n/en.json\n M i18n/zh.json\n M package.json\n M public/calendar.json\n M public/css/app.css\n M public/js/app/api.js\n M public/js/app/views/boards.js\n M public/js/app/views/calendar.js\n M public/js/app/views/chart.js\n M public/js/app/views/watchlist.js\n M templates/app.html\n M tests/app.test.js\n?? public/css/radar.css\n?? public/js/app/calendar-event.js\n?? public/js/app/calendar-model.js\n?? public/js/app/symbol-picker.js\n?? reports/PRODUCT-RELEASE-HANDOFF-2026-09-06.md\n?? tests/app-copy-contract.test.js\n?? tests/calendar-features.test.js\n?? tests/chart-freshness.test.js\n?? tests/radar.test.js\n",
+    "tracked_diff_sha256": "b5670a0b7a5c26a5f42b2711245a46e67cc7b0e467a6d20da72922b6c689dbc3"
+  },
+  "original_backend": {
+    "path": "/Users/zizhaozhang/dev/ducky-bot",
+    "head": "751f40582f418362074d95f3452ac16b5fb2e32d",
+    "status": " M 13f-firehose/scripts/fund_stake_watch.py\n M AGENTS.md\n M COPY-GUIDE.md\n M DUCKY-IMPROVEMENTS.md\n M NIGHTLOG.md\n M SYSTEMDESIGN.md\n M WORKFLOW.md\n M bin/analyst_tools.py\n M bin/batch_registry.py\n M bin/db.py\n M bin/fetch_macro_calendar.py\n M bin/invest_calendar.py\n M bin/selftest.py\n M bin/signal_archive.py\n M bin/snapshot.py\n M bin/subsector.py\n M bin/tests/test_api.py\n M deploy/.env.example\n M ducky-bot/STRATEGY.md\n M ducky-bot/api/app.py\n M insider-firehose/scripts/form4_firehose.py\n M political-firehose/scripts/congress_watcher.py\n M political-firehose/scripts/political_firehose.py\n M run-firehose.sh\n?? bin/calendar_context.py\n?? bin/calendar_evidence_worker.py\n?? bin/form4_rules.py\n?? bin/ops_metrics.py\n?? bin/peer_lag_research.py\n?? bin/peer_relative.py\n?? bin/peer_research.py\n?? bin/peer_snapshot_worker.py\n?? bin/radar_archive.py\n?? bin/radar_enrich.py\n?? bin/radar_identity.py\n?? bin/radar_ingest.py\n?? bin/radar_store.py\n?? bin/symbol_search.py\n?? bin/tests/test_calendar_features.py\n?? bin/tests/test_ops_metrics.py\n?? bin/tests/test_peer_relative.py\n?? bin/tests/test_radar_context.py\n?? bin/tests/test_radar_ingest.py\n?? bin/tests/test_signal_archive.py\n?? deploy/radar/\n?? output/\n?? reports/BOBALOR-COMPETITOR-2026-09-09.md\n?? reports/CREATOR-REFERENCE-2026-09-06.md\n?? reports/DEGEN-FEASIBILITY-2026-09-06.md\n?? reports/DEMO-ALERT-STORY-2026-09-06.md\n?? reports/DEMO-ENGLISH-CAPTIONS-2026-09-07.md\n?? reports/DEMO-STORY-2026-09-06.md\n?? reports/DEMO-WATCHLIST-STORY-2026-09-07.md\n?? reports/FREE-FULL-RESEARCH-2026-09-08.md\n?? reports/GROWTH-PLAN-2026-09-09.md\n?? reports/HISTORICAL-EVIDENCE-DESIGN-2026-09-06.md\n?? reports/KOVAVIEW-POSITIONING-2026-09-07.md\n?? reports/MOBILE-GOOGLE-LOGIN-2026-09-06.md\n?? reports/MONITORING-2026-09-08.md\n?? reports/PEER-LAG-2026-09-05-summary.json\n?? reports/PEER-LAG-2026-09-05.md\n?? reports/PEER-LAG-EXPERIMENT-v1.md\n?? reports/PEER-LAG-EXPERIMENT-v2.md\n?? reports/PRODUCT-RELEASE-HANDOFF-2026-09-06.md\n?? reports/RADAR-2026-09-05.md\n?? reports/RADAR-BACKFILL-2026-09-05.md\n?? reports/RADAR-IDENTITY-2026-09-06.md\n?? reports/SOCIAL-INGESTION-WORKSTREAM-2026-09-08.md\n?? reports/SOCIAL-TRACKING-2026-09-06.md\n?? reports/US-FREE-USER-AUDIT-2026-09-08.md\n?? reports/WATCHLIST-CALENDAR-2026-09-05.md\n?? reports/degen-feasibility-2026-09-06/\n?? reports/growth-2026-09-09/\n?? reports/monitoring-2026-09-08-local-benchmark.json\n?? reports/prospero-2026-09-05/\n?? reports/ux-2026-09-05/\n?? scripts/benchmark_monitoring.py\n?? scripts/fetch_peer_research.py\n?? scripts/monitor_report.py\n?? watchlist/peer-taxonomy-v1.json\n?? watchlist/peer-taxonomy-v2.json\n",
+    "tracked_diff_sha256": "f9d382b5ff060cd93a1f86c9a483231aeeaa5d3af37d0bbfce6285950eebe958"
+  },
+  "site": {
+    "path": "/Users/zizhaozhang/dev/ducky-site-research-brief-20260909",
+    "head": "4a88b28ecd23c4f75f84f33a4a5081ad444bc882",
+    "status": "?? docs/ducky-improvement-20260909/\n",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "backend": {
+    "path": "/Users/zizhaozhang/dev/ducky-bot-research-brief-20260909",
+    "head": "365409fd9ca6335e6dc87c855f9c9a35a9c7fa62",
+    "status": "",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
