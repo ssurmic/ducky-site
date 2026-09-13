@@ -1,5 +1,46 @@
 # Change log
 
+## Homepage: one stock, every signal; recent catches replace the losing example · 2026-09-12 (branch `feat/homepage-revamp-20260912`)
+
+Owner review of the live landing page: the hero opened on a "HISTORICAL · NOT LIVE" card whose first
+tab showed Nokia at −22.0% (the close 20 sessions after the already-spiked announcement day; from the
+pre-announcement close the same stock was +75% by 2026-09-11), the "See Ducky at work" link opened the same
+falling chart in a dialog, the donation card was the second screen on a phone, and the differentiator (all
+signals on one stock, pushed when they change, creators traceable to the source) was only visible in the
+walkthrough poster seven screens down. Competitor read: small subscription products (Quiver, Unusual
+Whales, Autopilot, Danelfin, Stocknear, Stock Unlock, WallStreetZen, Stock Events, Ticker Nerd) lead
+with a verb-plus-edge headline, the live product as the first visual, one number, and caveats beside the
+number. Plan and evidence: backend `reports/HOMEPAGE-REVAMP-PLAN-2026-09-12.md`.
+
+- **Hero** (`_partials/homepage-hero.html`): "一只股票的所有信号，一页看完。 / Every signal on a stock. One page."
+  beside a static NVDA signal card built from `public/home-signals.json`: five dated rows (two bullish creator
+  views, one bearish creator view, one 13F exit, one 13F increase), each linking to its YouTube timestamp or
+  EDGAR filing, the recorded close from `desk-prices.json`, and a link into the app's stock page. Below the copy,
+  four coverage counts from `public/home-proof.json` (creators, videos tracked, stocks with evidence, source
+  documents) with their export date. The research dialog, stock tabs, design-concept switcher and the
+  `ducky-demo-cases` hero stories are gone; `homepage.js` now only owns the motion control.
+- **Recent catches** (`_partials/recent-catches.html`, `public/media/ducky-home-cases-2026-09-12.json` from
+  `scripts/build_home_cases.py`): VRT earnings read (LIVE, +18.3% after 20 sessions), SGI CEO purchase (LIVE,
+  +6.9% to date), HOOD director purchase (replay, +37.1% after 20 sessions) and the disclosed loss, GLW warrant
+  terms (replay, −19.2% after 60 sessions). Base is the signal-session close; every daily point is in the JSON;
+  LIVE means the row is in the public track-record export, replay means computed afterwards with no alert then.
+- **Page order** (12 sections → 10): hero → catches → how it works (three steps + the walkthrough video, which
+  lost its own section heading) → look up a stock → creator views (34 creators / 730 videos, and 投资TALK君's
+  2026-08-24 Intel view with its 4:06 timestamp and +18.0% after 13 sessions) → video summary example →
+  oversold results → cost → who runs this (the duck, community links and support card moved here from the
+  hero) → all tools → FAQ. The three value cards, the three "paths" workflow block and the quotes bottom line
+  copy are dropped; the tool catalogue keeps its `#features` anchor for the navigation menu.
+- **Cost, not pricing**: OPEN-ACCESS-01 (owner, 2026-09-09) keeps billing closed (`/billing/plans` reports
+  `billing_enabled:false`) and `tests/open-access.test.js` forbids plan names and prices on public pages, so the
+  page carries an "everything is open right now" section instead. The owner's price for the future
+  re-enable release ($9/month) is recorded in the backend plan, not on the site.
+- **Navigation**: "Research examples" links to `#recent-catches` instead of opening a dialog.
+- **Nightly notary** (`scripts/push_track_record.sh`): also refreshes `public/home-proof.json` from the backend's
+  read-only `scripts/export_public_proof.py` when that script is present; failures keep the last-good file.
+- Tests: `tests/homepage.test.js` rewritten for the static hero, signal rows, proof counts and catches;
+  `public-navigation.test.js` and `community-support.test.js` follow the new placement. 734 pass.
+- Not in this change: the 42-second walkthrough re-cut (plan §6) and automating the catches JSON from the ledger.
+
 ## Creators open on their latest views; insider column reads local Form 4 records · 2026-09-12 (branch `codex/creators-latest-views-20260912`)
 
 Owner feedback on the live app: the creators page made you pick a creator first and listed videos whose

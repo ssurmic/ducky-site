@@ -1,0 +1,9 @@
+{# Cost: while OPEN-ACCESS-01 (owner decision, 2026-09-09) is in force every account has full access and
+   billing is closed (the API reports billing_enabled=false). Public pages therefore carry no pricing,
+   plan names or upgrade offers; tests/open-access.test.js pins that. Re-enabling charging is a separate,
+   explicit release. The decided price for that release is recorded in the backend report, not here. #}
+<section class="section access" id="access"><div class="wrap narrow">
+ <p class="eyebrow mono">{{ t('access.eyebrow') }}</p><h2>{{ t('access.title') }}</h2>
+ <p class="lead">{{ t('access.body') }}</p>
+ <p class="access-actions"><a class="btn btn-primary" href="{{ url('/app/') }}#/register">{{ t('access.cta') }}</a><span class="small muted">{{ t('access.note') }}</span></p>
+</div></section>

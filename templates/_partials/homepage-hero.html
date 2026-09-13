@@ -1,54 +1,46 @@
+{# Hero: the pitch (one stock, every signal, pushed when it changes) beside one stock's real, dated,
+   sourced signals. Everything here is static build output: public/home-signals.json (a reviewed public
+   snapshot), public/home-proof.json (read-only counts exported from the research store) and the recorded
+   close from desk-prices. No fetch, no account data, no live claims. #}
+{% set quote = desk_quotes.get(home_signals.ticker) %}
 <section class="home-hero no-glossary" id="top" data-home-hero>
  <div class="home-atmosphere" aria-hidden="true"><div class="home-logo-orbit"><img src="/duck-head-cutout-v1.png" width="512" height="512" alt="" decoding="async"><i></i><i></i></div></div>
  <div class="wrap home-composition">
   <div class="home-copy">
-   <p class="home-eyebrow"><span></span><b data-home-eyebrow>{{ t('home.eyebrow') }}</b></p>
-   <h1><span data-home-headline>{{ t('home.h1a') }}</span><br><em data-home-headline-end>{{ t('home.h1b') }}</em></h1>
+   <p class="home-eyebrow"><span></span><b>{{ t('home.eyebrow') }}</b></p>
+   <h1>{{ t('home.h1a') }}<br><em>{{ t('home.h1b') }}</em></h1>
    <p class="home-intro">{{ t('home.intro') }}</p>
-   <div class="home-cta"><a class="btn btn-primary" href="{{ url('/app/') }}#/register">{{ t('home.start') }} <span aria-hidden="true">↗</span></a><a class="home-text-link" href="#home-dossier" data-home-open aria-haspopup="dialog">{{ t('home.try') }} <span aria-hidden="true">↓</span></a></div>
+   <div class="home-cta"><a class="btn btn-primary" href="{{ url('/app/') }}#/register">{{ t('home.start') }} <span aria-hidden="true">↗</span></a><a class="home-text-link" href="#recent-catches">{{ t('home.try') }} <span aria-hidden="true">↓</span></a></div>
    <p class="home-access">{{ t('home.access') }}</p>
+   <dl class="home-proof" data-home-proof aria-label="{{ t('home.proof_label') }}">
+    <div><dt class="mono">{{ '{:,}'.format(home_proof.creators) }}</dt><dd>{{ t('home.proof_creators') }}</dd></div>
+    <div><dt class="mono">{{ '{:,}'.format(home_proof.videos_tracked) }}</dt><dd>{{ t('home.proof_videos') }}</dd></div>
+    <div><dt class="mono">{{ '{:,}'.format(home_proof.tickers_with_evidence) }}</dt><dd>{{ t('home.proof_tickers') }}</dd></div>
+    <div><dt class="mono">{{ '{:,}'.format(home_proof.source_documents) }}</dt><dd>{{ t('home.proof_documents') }}</dd></div>
+   </dl>
+   <p class="home-proof-note">{{ t('home.proof_asof').replace('{date}', home_proof.as_of) }}</p>
   </div>
   <div class="home-stage">
-   <div class="home-inputs" aria-label="{{ t('home.sources') }}">
-    {% for i in range(1,5) %}<div class="home-input home-input-{{ i }}"><span class="home-input-mark" aria-hidden="true">{{ ['↗','≡','▷','⌁'][i-1] }}</span><span>{{ t('home.source' ~ i) }}</span></div>{% endfor %}
-   </div>
-   <div class="home-seal" aria-hidden="true"><img src="/duck-head-cutout-v1.png" width="72" height="72" alt=""><span>Ducky</span></div>
-   <section class="home-dossier" id="home-dossier" aria-labelledby="home-dossier-title">
-    <div class="home-dossier-heading"><div><span class="home-caption">{{ t('home.demo_label') }}</span><h2 id="home-dossier-title">{{ t('home.dossier_title') }}</h2></div><button type="button" class="home-dossier-mark" data-home-open aria-haspopup="dialog" aria-label="{{ t('home.try') }}">↗</button></div>
-    <div class="home-stocks" role="tablist" aria-label="{{ t('home.choose_stock') }}">
-     {% for story in home_stories %}<button type="button" role="tab" id="home-tab-{{ story.key }}" aria-controls="home-story-{{ story.key }}" aria-selected="{{ 'true' if loop.first else 'false' }}" tabindex="{{ '0' if loop.first else '-1' }}" data-home-stock="{{ story.key }}"><span>{{ story.ticker }}</span><small>{{ t('home.' ~ story.key ~ '.name') }}</small></button>{% endfor %}
+   <aside class="signal-card" aria-labelledby="signal-card-title" data-home-signals>
+    <div class="signal-head">
+     <div><span class="home-caption">{{ t('home.card_label') }}</span><h2 id="signal-card-title"><span class="mono">{{ home_signals.ticker }}</span><small>{{ home_signals.name }}</small></h2></div>
+     <div class="signal-price"><strong class="mono">{{ '$%.2f' % quote.bars[-1].c if quote else '—' }}</strong><small>{{ t('home.card_close').replace('{date}', quote.last_d if quote else home_signals.as_of) }}</small></div>
     </div>
-    {% for story in home_stories %}
-    <article class="home-story" id="home-story-{{ story.key }}" role="tabpanel" aria-labelledby="home-tab-{{ story.key }}" tabindex="0"{% if not loop.first %} hidden{% endif %}>
-     <div class="home-story-meta"><span>{{ t('home.' ~ story.key ~ '.kind') }}</span><time datetime="{{ story.start }}">{{ story.start }}</time></div>
-     <h3>{{ t('home.' ~ story.key ~ '.title') }}</h3><p class="home-story-summary">{{ t('home.' ~ story.key ~ '.summary') }}</p>
-     <div class="home-takeaway"><span>{{ t('home.takeaway') }}</span><p>{{ t('home.' ~ story.key ~ '.takeaway') }}</p></div>
-     <details class="home-evidence"><summary><span>{{ t('home.followup') }}<small>{{ t('home.' ~ story.key ~ '.window') }}</small></span><span class="home-change{{ ' is-negative' if story.negative else '' }}">{{ story.change }} <span aria-hidden="true">↗</span></span></summary>
-      <div class="home-takeaway home-flow-takeaway"><span>{{ t('home.takeaway') }}</span><p>{{ t('home.' ~ story.key ~ '.takeaway') }}</p></div>
-      <figure class="home-price-history"><figcaption>{{ t('home.price_change') }} · {{ story.start }} → {{ story.end }}</figcaption><svg viewBox="0 0 360 104" role="img" aria-label="{{ t('home.price_change') }} {{ story.change }}"><line x1="12" x2="348" y1="{{ story.zero_y }}" y2="{{ story.zero_y }}" class="home-chart-zero"/><polyline points="{{ story.points }}" class="home-chart-line{{ ' is-negative' if story.negative else '' }}"/></svg><div class="home-chart-labels"><span>${{ story.price_start }}</span><span>${{ story.price_end }}</span></div></figure>
-      <p>{{ t('walkthrough.cases.' ~ story.key) }}</p><p class="home-basis">{{ t('home.price_basis') }}</p><a href="/media/ducky-demo-cases-2026-09-07.json">{{ t('home.full_data') }} ↗</a>
-     </details>
-     <div class="home-story-footer"><a href="{{ story.source_url }}" target="_blank" rel="noopener noreferrer">{{ t('home.original') }} ↗</a><span>{{ t('home.' ~ story.key ~ '.publisher') }}</span></div>
-    </article>
-    {% endfor %}
-    <p class="home-demo-note">{{ t('home.demo_note') }}</p>
-   </section>
+    <ol class="signal-list">
+     {% for item in home_signals['items'] %}
+     <li class="signal-row is-{{ item.stance }}">
+      <span class="signal-kind"><b>{{ t('home.card_kind_' ~ item.kind) }}</b><i>{{ t('home.card_stance_' ~ item.stance) }}</i></span>
+      <span class="signal-text">{{ item.title[lang] }}<small>{{ item.author }} · <a href="{{ item.source_url }}" target="_blank" rel="noopener noreferrer">{{ item.source_label[lang] }} ↗</a></small></span>
+      <time class="mono" datetime="{{ item.date }}">{{ item.date[5:] }}</time>
+     </li>
+     {% endfor %}
+    </ol>
+    <div class="signal-foot"><span>{{ t('home.card_push') }}</span><a href="{{ url('/app/') }}#/stock/{{ home_signals.ticker }}">{{ t('home.card_open') }} <span aria-hidden="true">→</span></a></div>
+    <p class="signal-note">{{ t('home.card_note').replace('{date}', home_signals.as_of) }} <a href="#stock-research">{{ t('home.card_more') }} ↓</a></p>
+   </aside>
   </div>
  </div>
- <dialog class="home-research-dialog" data-home-dialog aria-labelledby="home-dossier-title">
-  <div class="home-dialog-toolbar"><span>{{ t('home.try') }}</span><button type="button" data-home-close aria-label="{{ t('app.common.close') }}">{{ t('app.common.close') }} <span aria-hidden="true">×</span></button></div>
- </dialog>
- {% include "_partials/home-community.html" %}
  {% include "_partials/desk-quotes.html" %}
  <div class="wrap home-bottomline"><span>{{ t('home.bottomline') }}</span><button type="button" class="home-motion" data-home-motion aria-pressed="false" data-play="{{ t('home.play') }}" data-pause="{{ t('home.pause') }}">{{ t('home.pause') }}</button></div>
 </section>
-<nav class="home-design-review" aria-label="{{ t('home.designs') }}" data-home-review hidden>
- <span>{{ t('home.designs') }}</span>
- {% for mode in ['focus','flow','brief'] %}<a href="{{ url('/') }}?design={{ mode }}#top" data-home-design="{{ mode }}"><small>{{ ['A','B','C'][loop.index0] }}</small>{{ t('home.design.' ~ mode) }}</a>{% endfor %}
- <button type="button" data-home-theme data-light="{{ t('home.theme_light') }}" data-dark="{{ t('home.theme_dark') }}">{{ t('home.theme_light') }}</button>
- <a class="home-review-close" href="{{ url('/') }}" aria-label="{{ t('home.exit_preview') }}">×</a>
-</nav>
 <script type="application/json" data-home-strings>{{ home_copy|tojson }}</script>
-<section class="home-value wrap" aria-label="{{ t('home.value_label') }}">
- {% for i in range(1,4) %}<article><span class="home-value-number">0{{ i }}</span><div><h2>{{ t('home.value' ~ i) }}</h2><p>{{ t('home.value' ~ i ~ '_body') }}</p></div></article>{% endfor %}
-</section>

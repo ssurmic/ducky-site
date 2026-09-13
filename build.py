@@ -122,25 +122,47 @@ def page_targets() -> list[tuple[str, str]]:
     return out
 
 
-def load_home_stories() -> list[dict]:
-    """Small, dated landing examples derived from the existing public evidence artifact."""
-    doc = json.loads((PUBLIC / 'media/ducky-demo-cases-2026-09-07.json').read_text())
-    stories = []
-    for key, window in [('nok', 'first_20_after_announcement'), ('glw', 'whole_path'), ('hood', 'after_disclosure_20')]:
-        source = doc['cases'][key]
-        data = source[window]
-        points = data['path']
-        values = [p['return_pct'] for p in points]
+def load_home_cases() -> tuple[list[dict], str]:
+    """Landing "recent catches": the newest public/media/ducky-home-cases-*.json with sparkline geometry.
+    The JSON is produced by scripts/build_home_cases.py; every daily point of each path is kept."""
+    files = sorted((PUBLIC / 'media').glob('ducky-home-cases-????-??-??.json'))
+    if not files:
+        fail('public/media/ducky-home-cases-<date>.json missing (scripts/build_home_cases.py)')
+    doc = json.loads(files[-1].read_text())
+    cases = []
+    for c in doc['cases']:
+        values = [p['return_pct'] for p in c['path']]
         if not values or any(not math.isfinite(v) for v in values):
-            fail('invalid homepage historical path: ' + key)
+            fail('invalid homepage case path: ' + c['key'])
+        if c['tag'] not in ('live', 'replay'):
+            fail('homepage case tag must be live or replay: ' + c['key'])
         low, high = min(0, min(values)), max(0, max(values))
         span = high - low or 1
-        coords = ' '.join(f'{12 + i / max(1,len(values)-1) * 336:.2f},{16 + (high-v)/span*72:.2f}' for i,v in enumerate(values))
-        stories.append(dict(key=key, ticker=key.upper(), source_url=source['source_url'],
-            start=data['start'], end=data['end'], change=f"{data['return_pct']:+.1f}%",
-            negative=data['return_pct'] < 0, points=coords, zero_y=16+high/span*72,
-            price_start=f"{data['base_close']:.2f}", price_end=f"{data['end_close']:.2f}"))
-    return stories
+        points = ' '.join(f'{6 + i / max(1, len(values) - 1) * 108:.2f},{6 + (high - v) / span * 28:.2f}' for i, v in enumerate(values))
+        change = c['headline_return_pct']
+        cases.append({**c, 'points': points, 'zero_y': round(6 + high / span * 28, 2),
+                      'change': f'{change:+.1f}%', 'negative': change < 0})
+    return cases, files[-1].name
+
+
+def load_home_signals() -> dict:
+    """One stock's reviewed public signal snapshot (public/home-signals.json); every row needs an https source."""
+    doc = json.loads((PUBLIC / 'home-signals.json').read_text())
+    if not doc.get('items') or not doc.get('as_of'):
+        fail('public/home-signals.json needs as_of and items')
+    for item in doc['items']:
+        if not str(item.get('source_url', '')).startswith('https://'):
+            fail('homepage signal without an https source: ' + json.dumps(item, ensure_ascii=False)[:80])
+    return doc
+
+
+def load_home_proof() -> dict:
+    """Read-only coverage counts exported by the backend (scripts/export_public_proof.py) with their date."""
+    doc = json.loads((PUBLIC / 'home-proof.json').read_text())
+    for key in ('as_of', 'creators', 'videos_tracked', 'tickers_with_evidence', 'source_documents'):
+        if not doc.get(key):
+            fail('public/home-proof.json missing ' + key)
+    return doc
 
 
 def lang_prefix(lang: str) -> str:
@@ -677,7 +699,10 @@ def main() -> None:
             ctx["oversold"] = load_oversold_research()
             ctx["video_example"] = video_example
             ctx["demo_copy"] = {k[8:]: v for k, v in tables[lang].items() if k.startswith("demo.ui.")}
-            ctx["home_stories"] = load_home_stories() if tpl_name == 'index.html' else []
+            home = tpl_name == 'index.html'
+            ctx["home_cases"], ctx["home_cases_file"] = load_home_cases() if home else ([], '')
+            ctx["home_signals"] = load_home_signals() if home else {}
+            ctx["home_proof"] = load_home_proof() if home else {}
             ctx["home_copy"] = {k[5:]:v for k,v in tables[lang].items() if k.startswith('home.')} if tpl_name == 'index.html' else {}
             html = version_assets(tpl.render(**ctx), version, app_version)
             if tpl_name == "app.html":

@@ -4,7 +4,6 @@ import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 import {mountPublicNav} from '../public/js/public-nav.js';
 import {mountTour} from '../public/js/desk.js';
-import {mountHomepage} from '../public/js/homepage.js';
 import {safeTarget,signedInTarget} from '../public/js/app/login-target.js';
 
 const catalog=JSON.parse(readFileSync('product-navigation.json'));
@@ -74,14 +73,11 @@ test('mobile groups disclose one at a time; Escape, outside click, focus and res
  f.cleanup();
 });
 
-test('research launched from the menu opens a dialog and returns focus to its still-visible trigger',async()=>{
- const f=fixture({phone:true});f.add(mountHomepage(f.doc));
- const trigger=f.menu.querySelector('summary');trigger.click();await tick();
- const link=f.menu.querySelector('[data-home-open]');link.focus();link.click();
- assert.equal(f.menu.open,false);assert.equal(f.doc.querySelector('[data-home-dialog]').open,true);
- f.doc.querySelector('[data-home-close]').click();
- assert.equal(f.doc.querySelector('[data-home-dialog]').open,false);assert.equal(f.doc.activeElement,trigger);
- assert.equal(f.doc.querySelectorAll('#home-dossier').length,1);
+test('research examples from the menu point at the catches strip on the page, not a dialog',async()=>{
+ const f=fixture({phone:true});const trigger=f.menu.querySelector('summary');trigger.click();await tick();
+ const link=f.menu.querySelector('a[href$="#recent-catches"]');assert.ok(link);
+ assert.equal(link.hasAttribute('data-home-open'),false);assert.equal(f.doc.querySelector('dialog'),null);
+ assert.ok(f.doc.getElementById('recent-catches'));assert.ok(f.doc.querySelector('.public-top-link[href$="#recent-catches"]'));
  f.cleanup();
 });
 

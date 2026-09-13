@@ -1,0 +1,15 @@
+{
+ "as_of": "2026-09-13",
+ "generated_at": "2026-09-13T00:48:46+00:00",
+ "creators": 34,
+ "videos_tracked": 730,
+ "video_summaries": 98,
+ "tickers_with_evidence": 3100,
+ "source_documents": 9327,
+ "evidence_points": 13078,
+ "official_events": 69,
+ "ledger_pushes": 471,
+ "ledger_first_day": "2026-07-01",
+ "ledger_last_day": "2026-09-12",
+ "method": "distinct entities, read-only; see scripts/export_public_proof.py in the backend repository"
+}

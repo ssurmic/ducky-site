@@ -1,0 +1,9 @@
+{# Who runs this: the one-person transparency block, with the community and support card that used
+   to sit directly under the hero. Support belongs after the product has shown its value. #}
+<section class="section about" id="about">
+ <div class="wrap">
+  <p class="eyebrow mono">{{ t('about.eyebrow') }}</p><h2>{{ t('about.title') }}</h2><p class="lead">{{ t('about.body') }}</p>
+  <p class="about-links"><a href="https://github.com/ssurmic/ducky-site/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">{{ t('about.changelog') }} ↗</a><a href="{{ url('/track-record/') }}">{{ t('about.record') }} →</a></p>
+ </div>
+ {% include "_partials/home-community.html" %}
+</section>

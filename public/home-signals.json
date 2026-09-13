@@ -1,0 +1,68 @@
+{
+ "as_of": "2026-09-11",
+ "presentation": "A dated public snapshot of one stock's recorded signals, chosen to show the kinds of sources Ducky attaches to a ticker. Every row links to its original source. It is not a live feed and not a recommendation.",
+ "ticker": "NVDA",
+ "name": "NVIDIA",
+ "items": [
+  {
+   "date": "2026-09-07",
+   "kind": "creator",
+   "stance": "support",
+   "author": "Parkev Tatevosian, CFA",
+   "title": {
+    "zh": "把英伟达列为现在最值得买的股票，并表示正在密切关注",
+    "en": "Ranks NVIDIA as the top stock to buy right now and is watching it closely"
+   },
+   "source_url": "https://www.youtube.com/watch?v=qleHy1oNdjU&t=585s",
+   "source_label": {"zh": "YouTube · 9:45", "en": "YouTube · 9:45"}
+  },
+  {
+   "date": "2026-09-05",
+   "kind": "creator",
+   "stance": "support",
+   "author": "Meet Kevin",
+   "title": {
+    "zh": "IPO 募到的钱被拿去买黄仁勋的硬件，这对英伟达有利",
+    "en": "Funds from IPOs are spent on Jensen Huang's hardware, which is bullish for NVIDIA"
+   },
+   "source_url": "https://www.youtube.com/watch?v=2UqXpNfTKco&t=347s",
+   "source_label": {"zh": "YouTube · 5:47", "en": "YouTube · 5:47"}
+  },
+  {
+   "date": "2026-09-02",
+   "kind": "creator",
+   "stance": "counter",
+   "author": "Meet Kevin",
+   "title": {
+    "zh": "企业计算的转向会让英伟达面临利润率下降",
+    "en": "NVIDIA will face margin decline as computing shifts to the enterprise"
+   },
+   "source_url": "https://www.youtube.com/watch?v=VUzlDkmHqCI&t=1230s",
+   "source_label": {"zh": "YouTube · 20:30", "en": "YouTube · 20:30"}
+  },
+  {
+   "date": "2026-08-14",
+   "kind": "record",
+   "stance": "counter",
+   "author": "Situational Awareness LP",
+   "title": {
+    "zh": "13F：截至 2026-06-30 的报告中未见 NVDA 持仓",
+    "en": "13F: NVDA position absent from the report for 2026-06-30"
+   },
+   "source_url": "https://www.sec.gov/Archives/edgar/data/2045724/000093583626000418/",
+   "source_label": {"zh": "SEC 13F", "en": "SEC 13F"}
+  },
+  {
+   "date": "2026-08-14",
+   "kind": "record",
+   "stance": "support",
+   "author": "ARK Investment Management",
+   "title": {
+    "zh": "13F：截至 2026-06-30 报告的 NVDA 股数增加",
+    "en": "13F: reported NVDA shares increased as of 2026-06-30"
+   },
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1697748/000110465926096910/",
+   "source_label": {"zh": "SEC 13F", "en": "SEC 13F"}
+  }
+ ]
+}
