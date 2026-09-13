@@ -146,13 +146,30 @@ def load_home_cases() -> tuple[list[dict], str]:
 
 
 def load_home_signals() -> dict:
-    """One stock's reviewed public signal snapshot (public/home-signals.json); every row needs an https source."""
+    """Reviewed public signal snapshots for a few stocks (public/home-signals.json); every row needs an https source."""
     doc = json.loads((PUBLIC / 'home-signals.json').read_text())
-    if not doc.get('items') or not doc.get('as_of'):
-        fail('public/home-signals.json needs as_of and items')
-    for item in doc['items']:
-        if not str(item.get('source_url', '')).startswith('https://'):
-            fail('homepage signal without an https source: ' + json.dumps(item, ensure_ascii=False)[:80])
+    if not doc.get('stocks') or not doc.get('as_of'):
+        fail('public/home-signals.json needs as_of and stocks')
+    for stock in doc['stocks']:
+        if not stock.get('items') or not stock.get('close') or not stock.get('close_date'):
+            fail('homepage signal stock incomplete: ' + str(stock.get('ticker')))
+        for item in stock['items']:
+            if not str(item.get('source_url', '')).startswith('https://'):
+                fail('homepage signal without an https source: ' + json.dumps(item, ensure_ascii=False)[:80])
+    return doc
+
+
+def load_home_creators() -> dict:
+    """Creator roster plus one sourced example view per creator with its outcome (public/home-creators.json)."""
+    doc = json.loads((PUBLIC / 'home-creators.json').read_text())
+    if not doc.get('creators') or not doc.get('as_of'):
+        fail('public/home-creators.json needs as_of and creators')
+    for c in doc['creators']:
+        if c.get('lang') not in ('zh', 'en'):
+            fail('creator without a language: ' + str(c.get('name')))
+        case = c.get('case')
+        if case and not (str(case.get('source_url', '')).startswith('https://') and case.get('title', {}).get('zh') and case.get('title', {}).get('en')):
+            fail('creator example without source or bilingual title: ' + str(c.get('name')))
     return doc
 
 
@@ -703,6 +720,7 @@ def main() -> None:
             ctx["home_cases"], ctx["home_cases_file"] = load_home_cases() if home else ([], '')
             ctx["home_signals"] = load_home_signals() if home else {}
             ctx["home_proof"] = load_home_proof() if home else {}
+            ctx["home_creators"] = load_home_creators() if home else {}
             ctx["home_copy"] = {k[5:]:v for k,v in tables[lang].items() if k.startswith('home.')} if tpl_name == 'index.html' else {}
             html = version_assets(tpl.render(**ctx), version, app_version)
             if tpl_name == "app.html":

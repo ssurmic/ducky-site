@@ -41,6 +41,30 @@ number. Plan and evidence: backend `reports/HOMEPAGE-REVAMP-PLAN-2026-09-12.md`.
   `public-navigation.test.js` and `community-support.test.js` follow the new placement. 734 pass.
 - Not in this change: the 42-second walkthrough re-cut (plan §6) and automating the catches JSON from the ledger.
 
+### Second pass, same day: the preview becomes the product
+
+Owner review of the first preview: keep it, drop the video re-cut, and make the landing page itself the
+place to try things. Three additions, all static build output, no fetches:
+
+- **Hero stock switcher**: `public/home-signals.json` now carries four stocks (NVDA, MU, AMD, TSLA), five sourced
+  rows each with at least one bearish item; every panel is rendered server-side and `homepage.js` only toggles
+  `hidden` (arrow keys, Home/End, wrap-around).
+- **"What you see after sign-in"** (`_partials/product-preview.html`, `public/media/preview/*.{zh,en}.webp`): four real
+  screens behind tabs, one sign-in exit each: the information map and the creator-excerpt capture from the
+  2026-09-08 walkthrough, and the conditions form and market-context chart rendered from the app's own view
+  modules with example records (`scripts/demo/recording`, headless Chrome, 1440px, webp ≤ 65 KB).
+- **Creators** (`_partials/creators-showcase.html`, `public/home-creators.json` from `scripts/build_home_creators.py` over
+  the read-only export `public/media/creator-points-2026-09-13.json`): the roster of all 34 creators tracked with video
+  counts, and one direction-consistent example view for each creator that has one (7 today: 投资TALK君 COIN +20.4%,
+  商浩金 AMD +52.7%, Parkev MRVL +13.1%, Meet Kevin MU +4.5%, Everything Money NVDA +4.7%, Ticker Symbol: YOU NVDA
+  +2.8%, New Money GOOGL −1.6% bearish). The creator's own words stay in the creator's language with the page
+  language as a second line; base = first session on or after publication, change after 20 sessions or to date.
+  Editorial picks are declared in the script; a pick that stops qualifying falls back to the automatic choice.
+- Copy: "登录即是完整版 / the full version on sign-in" replaces the trial wording the owner had in mind, because
+  OPEN-ACCESS-01 keeps every account on full access with no end date and no billing.
+- Tests: `homepage.test.js` covers the switcher, the preview tabs, the creator cards' language attributes, sources
+  and outcomes, and still forbids fetches and pricing. 735 pass.
+
 ## Creators open on their latest views; insider column reads local Form 4 records · 2026-09-12 (branch `codex/creators-latest-views-20260912`)
 
 Owner feedback on the live app: the creators page made you pick a creator first and listed videos whose

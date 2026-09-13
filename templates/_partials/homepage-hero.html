@@ -1,8 +1,8 @@
-{# Hero: the pitch (one stock, every signal, pushed when it changes) beside one stock's real, dated,
-   sourced signals. Everything here is static build output: public/home-signals.json (a reviewed public
-   snapshot), public/home-proof.json (read-only counts exported from the research store) and the recorded
-   close from desk-prices. No fetch, no account data, no live claims. #}
-{% set quote = desk_quotes.get(home_signals.ticker) %}
+{# Hero: the pitch (one stock, every signal, pushed when it changes) beside real, dated, sourced signals for
+   four stocks. Everything here is static build output: public/home-signals.json (a reviewed public
+   snapshot; every panel is rendered server-side, only the first is visible until the visitor switches),
+   public/home-proof.json (read-only counts exported from the research store). No fetch, no account data,
+   no live claims. #}
 <section class="home-hero no-glossary" id="top" data-home-hero>
  <div class="home-atmosphere" aria-hidden="true"><div class="home-logo-orbit"><img src="/duck-head-cutout-v1.png" width="512" height="512" alt="" decoding="async"><i></i><i></i></div></div>
  <div class="wrap home-composition">
@@ -22,20 +22,29 @@
   </div>
   <div class="home-stage">
    <aside class="signal-card" aria-labelledby="signal-card-title" data-home-signals>
-    <div class="signal-head">
-     <div><span class="home-caption">{{ t('home.card_label') }}</span><h2 id="signal-card-title"><span class="mono">{{ home_signals.ticker }}</span><small>{{ home_signals.name }}</small></h2></div>
-     <div class="signal-price"><strong class="mono">{{ '$%.2f' % quote.bars[-1].c if quote else '—' }}</strong><small>{{ t('home.card_close').replace('{date}', quote.last_d if quote else home_signals.as_of) }}</small></div>
+    <div class="signal-tabs-row"><span class="home-caption" id="signal-card-title">{{ t('home.card_label') }}</span>
+     <div class="signal-tabs" role="tablist" aria-label="{{ t('home.card_choose') }}">
+      {% for s in home_signals.stocks %}<button type="button" role="tab" class="mono" id="signal-tab-{{ s.ticker }}" aria-controls="signal-panel-{{ s.ticker }}" aria-selected="{{ 'true' if loop.first else 'false' }}" tabindex="{{ '0' if loop.first else '-1' }}" data-signal-stock="{{ s.ticker }}">{{ s.ticker }}</button>{% endfor %}
+     </div>
     </div>
-    <ol class="signal-list">
-     {% for item in home_signals['items'] %}
-     <li class="signal-row is-{{ item.stance }}">
-      <span class="signal-kind"><b>{{ t('home.card_kind_' ~ item.kind) }}</b><i>{{ t('home.card_stance_' ~ item.stance) }}</i></span>
-      <span class="signal-text">{{ item.title[lang] }}<small>{{ item.author }} · <a href="{{ item.source_url }}" target="_blank" rel="noopener noreferrer">{{ item.source_label[lang] }} ↗</a></small></span>
-      <time class="mono" datetime="{{ item.date }}">{{ item.date[5:] }}</time>
-     </li>
-     {% endfor %}
-    </ol>
-    <div class="signal-foot"><span>{{ t('home.card_push') }}</span><a href="{{ url('/app/') }}#/stock/{{ home_signals.ticker }}">{{ t('home.card_open') }} <span aria-hidden="true">→</span></a></div>
+    {% for s in home_signals.stocks %}
+    <div class="signal-panel" id="signal-panel-{{ s.ticker }}" role="tabpanel" aria-labelledby="signal-tab-{{ s.ticker }}" tabindex="0" data-signal-panel="{{ s.ticker }}"{% if not loop.first %} hidden{% endif %}>
+     <div class="signal-head">
+      <h2><span class="mono">{{ s.ticker }}</span><small>{{ s.name }}</small></h2>
+      <div class="signal-price"><strong class="mono">${{ '%.2f' % s.close }}</strong><small>{{ t('home.card_close').replace('{date}', s.close_date) }}</small></div>
+     </div>
+     <ol class="signal-list">
+      {% for item in s['items'] %}
+      <li class="signal-row is-{{ item.stance }}">
+       <span class="signal-kind"><b>{{ t('home.card_kind_' ~ item.kind) }}</b><i>{{ t('home.card_stance_' ~ item.stance) }}</i></span>
+       <span class="signal-text">{{ item.title[lang] }}<small>{{ item.author }} · <a href="{{ item.source_url }}" target="_blank" rel="noopener noreferrer">{{ item.source_label[lang] }} ↗</a></small></span>
+       <time class="mono" datetime="{{ item.date }}">{{ item.date[5:] }}</time>
+      </li>
+      {% endfor %}
+     </ol>
+     <div class="signal-foot"><span>{{ t('home.card_push') }}</span><a href="{{ url('/app/') }}#/stock/{{ s.ticker }}">{{ t('home.card_open').replace('{ticker}', s.ticker) }} <span aria-hidden="true">→</span></a></div>
+    </div>
+    {% endfor %}
     <p class="signal-note">{{ t('home.card_note').replace('{date}', home_signals.as_of) }} <a href="#stock-research">{{ t('home.card_more') }} ↓</a></p>
    </aside>
   </div>

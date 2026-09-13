@@ -4,11 +4,13 @@ import {readFileSync,readdirSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 import {mountHomepage} from '../public/js/homepage.js';
 
-// The hero and the catches strip are static build output from three reviewed public files.
+// The hero, the catches strip, the product preview and the creator cards are static build output
+// from reviewed public files; the script only switches panels that are already in the HTML.
 const casesFile=readdirSync('public/media').filter(f=>/^ducky-home-cases-\d{4}-\d{2}-\d{2}\.json$/.test(f)).sort().at(-1);
 const cases=JSON.parse(readFileSync('public/media/'+casesFile,'utf8')).cases;
 const signals=JSON.parse(readFileSync('public/home-signals.json','utf8'));
 const proof=JSON.parse(readFileSync('public/home-proof.json','utf8'));
+const creators=JSON.parse(readFileSync('public/home-creators.json','utf8')).creators;
 
 function fixture(lang='zh',reduced=false){
  const dom=new JSDOM(readFileSync(lang==='en'?'dist/en/index.html':'dist/zh/index.html','utf8'),{url:'https://duckybot.app/'+(lang==='en'?'en/':'zh/'),pretendToBeVisual:true,runScripts:'outside-only'});
@@ -20,28 +22,39 @@ function fixture(lang='zh',reduced=false){
  return {dom,w,doc,media,dispose,get requests(){return requests;}};
 }
 
-for(const lang of ['zh','en'])test(`the public homepage works before JS: one stock's sourced signals, dated catches with full paths and honest counts: ${lang}`,()=>{
+for(const lang of ['zh','en'])test(`the public homepage works before JS: sourced signals for several stocks, dated catches, real screens, creators with outcomes: ${lang}`,()=>{
  const doc=new JSDOM(readFileSync(`dist/${lang}/index.html`,'utf8')).window.document,prefix=`/${lang}/`;
  assert.equal(doc.querySelector('.home-cta a').getAttribute('href'),prefix+'app/#/register');
  assert.equal(doc.querySelector('.home-cta .home-text-link').getAttribute('href'),'#recent-catches');
  assert.equal(doc.querySelector('dialog'),null,'no research dialog; the examples are on the page');
  assert.equal(doc.querySelector('[data-home-open]'),null);
- const rows=[...doc.querySelectorAll('[data-home-signals] .signal-row')];
- assert.equal(rows.length,signals.items.length);
- rows.forEach((row,i)=>{
-  const item=signals.items[i];
-  assert.equal(row.querySelector('time').dateTime,item.date);
-  assert.equal(row.querySelector('a').href,item.source_url);
-  assert.equal(row.querySelector('a').rel,'noopener noreferrer');
-  assert.ok(row.textContent.includes(item.title[lang]));
-  assert.ok(row.classList.contains('is-'+item.stance));
+ // hero: one panel per stock, all in the HTML, only the first visible
+ const tabs=[...doc.querySelectorAll('[data-signal-stock]')],panels=[...doc.querySelectorAll('[data-signal-panel]')];
+ assert.deepEqual(tabs.map(t=>t.dataset.signalStock),signals.stocks.map(s=>s.ticker));
+ assert.equal(panels.length,signals.stocks.length);
+ panels.forEach((panel,p)=>{
+  const stock=signals.stocks[p];
+  assert.equal(panel.hidden,p!==0);
+  assert.ok(panel.querySelector('.signal-price').textContent.includes(stock.close.toFixed(2)));
+  assert.ok(panel.querySelector('.signal-price').textContent.includes(stock.close_date));
+  const rows=[...panel.querySelectorAll('.signal-row')];
+  assert.equal(rows.length,stock.items.length);
+  rows.forEach((row,i)=>{
+   const item=stock.items[i];
+   assert.equal(row.querySelector('time').dateTime,item.date);
+   assert.equal(row.querySelector('a').href,item.source_url);
+   assert.equal(row.querySelector('a').rel,'noopener noreferrer');
+   assert.ok(row.textContent.includes(item.title[lang]));
+   assert.ok(row.classList.contains('is-'+item.stance));
+  });
+  assert.ok(new Set(stock.items.map(i=>i.stance)).has('counter'),stock.ticker+' shows a bearish item, not only bullish ones');
+  assert.equal(panel.querySelector('.signal-foot a').getAttribute('href'),prefix+'app/#/stock/'+stock.ticker);
  });
- assert.ok(new Set(signals.items.map(i=>i.stance)).has('counter'),'the snapshot shows a bearish item, not only bullish ones');
  assert.ok(doc.querySelector('.signal-note').textContent.includes(signals.as_of));
- assert.equal(doc.querySelector('.signal-foot a').getAttribute('href'),prefix+'app/#/stock/'+signals.ticker);
  const numbers=[...doc.querySelectorAll('[data-home-proof] dt')].map(n=>n.textContent.replace(/,/g,''));
  assert.deepEqual(numbers,[proof.creators,proof.videos_tracked,proof.tickers_with_evidence,proof.source_documents].map(String));
  assert.ok(doc.querySelector('.home-proof-note').textContent.includes(proof.as_of));
+ // recent catches
  const cards=[...doc.querySelectorAll('#recent-catches .catch-card')];
  assert.equal(cards.length,cases.length);
  cards.forEach((card,i)=>{
@@ -56,11 +69,65 @@ for(const lang of ['zh','en'])test(`the public homepage works before JS: one sto
  });
  assert.ok(cases.some(c=>c.headline_return_pct<0),'the strip discloses at least one loss');
  assert.ok(doc.querySelector(`#recent-catches a[href^="/media/${casesFile}"]`));
+ // product preview: four real screens, language-matched images, one sign-in exit each
+ const previewTabs=[...doc.querySelectorAll('[data-preview-tab]')],previewPanels=[...doc.querySelectorAll('[data-preview-panel]')];
+ assert.equal(previewTabs.length,4);assert.equal(previewPanels.length,4);
+ previewPanels.forEach((panel,i)=>{
+  assert.equal(panel.hidden,i!==0);
+  const img=panel.querySelector('img');
+  assert.ok(img.getAttribute('src').startsWith(`/media/preview/${panel.dataset.previewPanel}.${lang}.webp`),img.getAttribute('src'));
+  assert.ok(img.getAttribute('alt').length>10);
+  assert.equal(img.getAttribute('loading'),i===0?null:'lazy');
+  assert.equal(panel.querySelector('.preview-cta').getAttribute('href'),prefix+'app/#/register');
+  assert.ok(panel.querySelector('figcaption').textContent.trim().length>20);
+ });
+ // creators: one sourced example per featured creator, in the creator's own language; the full roster
+ const featured=creators.filter(c=>c.case),creatorCards=[...doc.querySelectorAll('#creator-views .creator-card')];
+ assert.equal(creatorCards.length,featured.length);assert.ok(featured.length>=5);
+ creatorCards.forEach((card,i)=>{
+  const c=featured[i];
+  assert.equal(card.dataset.creatorLang,c.lang);
+  assert.equal(card.querySelector('blockquote').getAttribute('lang'),c.lang==='zh'?'zh-CN':'en');
+  assert.equal(card.querySelector('blockquote').textContent.trim(),c.case.title[c.lang]);
+  if(lang!==c.lang)assert.equal(card.querySelector('.creator-translation').textContent.trim(),c.case.title[lang]);
+  assert.equal(card.querySelector('.creator-source').href,c.case.source_url);
+  assert.equal(card.querySelector('.creator-source').rel,'noopener noreferrer');
+  assert.equal(card.querySelector('.creator-change').textContent.trim(),(c.case.change_pct>=0?'+':'')+c.case.change_pct.toFixed(1)+'%');
+  assert.equal(card.classList.contains('is-negative'),c.case.change_pct<0);
+  assert.equal(card.querySelector('time').dateTime,c.case.date);
+  assert.ok(card.querySelector('.creator-basis').textContent.includes(c.case.base_close.toFixed(2)));
+ });
+ assert.ok(featured.some(c=>c.lang==='zh')&&featured.some(c=>c.lang==='en'),'both languages are represented');
+ assert.equal(doc.querySelectorAll('#creator-views .creator-roster li').length,creators.length);
+ assert.ok(doc.querySelector('#creator-views a[href$="#/creators"]'));
+ // order and the rest of the page
+ assert.ok(doc.querySelector('#recent-catches').compareDocumentPosition(doc.querySelector('#preview'))&4,'the preview follows the catches');
+ assert.ok(doc.querySelector('#preview').compareDocumentPosition(doc.querySelector('#creator-views'))&4);
  assert.ok(doc.querySelector(`#access a[href="${prefix}app/#/register"]`),'the cost section answers the money question with open access');
  assert.equal(doc.querySelector('#pricing,a[href*="#/billing"]'),null,'no pricing while OPEN-ACCESS-01 is in force');
  assert.ok(doc.querySelector('#about #community'),'support and community sit in the "who runs this" section');
  assert.ok(doc.querySelector('#access').compareDocumentPosition(doc.querySelector('#community'))&4,'support comes after the cost section');
  assert.ok(doc.querySelector('#recent-catches').compareDocumentPosition(doc.querySelector('#features'))&4,'the tool catalogue follows the proof');
+});
+
+test('the stock switcher and the preview tabs toggle panels that are already on the page, with keyboard support and no fetch',()=>{
+ const f=fixture('zh'),doc=f.doc;
+ const tabs=[...doc.querySelectorAll('[data-signal-stock]')],panels=[...doc.querySelectorAll('[data-signal-panel]')];
+ tabs[1].click();
+ assert.equal(panels[0].hidden,true);assert.equal(panels[1].hidden,false);
+ assert.equal(tabs[1].getAttribute('aria-selected'),'true');assert.equal(tabs[0].getAttribute('aria-selected'),'false');
+ assert.equal(tabs[1].tabIndex,0);assert.equal(tabs[0].tabIndex,-1);
+ tabs[1].dispatchEvent(new f.w.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true}));
+ assert.equal(doc.activeElement,tabs[2]);assert.equal(panels[2].hidden,false);assert.equal(panels[1].hidden,true);
+ tabs[2].dispatchEvent(new f.w.KeyboardEvent('keydown',{key:'End',bubbles:true,cancelable:true}));
+ assert.equal(panels.at(-1).hidden,false);
+ tabs.at(-1).dispatchEvent(new f.w.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true}));
+ assert.equal(panels[0].hidden,false,'arrow keys wrap around');
+ const pTabs=[...doc.querySelectorAll('[data-preview-tab]')],pPanels=[...doc.querySelectorAll('[data-preview-panel]')];
+ pTabs[2].click();
+ assert.equal(pPanels[0].hidden,true);assert.equal(pPanels[2].hidden,false);assert.equal(pTabs[2].getAttribute('aria-selected'),'true');
+ assert.equal(doc.querySelectorAll('[data-preview-panel]:not([hidden])').length,1);
+ assert.equal(f.requests,0);f.dispose();f.dom.window.close();
 });
 
 test('motion pauses on request and honors system reduced motion without offering an ineffective toggle',()=>{

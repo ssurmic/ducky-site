@@ -1,0 +1,30 @@
+{# Creator views: the roster of every creator tracked, and one direction-consistent example view per creator
+   with its source timestamp and the price change after publication (public/home-creators.json, built by
+   scripts/build_home_creators.py). A creator's own words stay in the creator's language; the page language
+   gets the translation as a second line. One example is one data point, and the copy says so. #}
+{% set featured = home_creators.creators | selectattr('case') | list %}
+<section class="section creators" id="creator-views"><div class="wrap">
+ <p class="eyebrow mono">{{ t('creators.eyebrow') }}</p><h2>{{ t('creators.title') }}</h2>
+ <p class="lead">{{ t('creators.intro').replace('{creators}', '{:,}'.format(home_proof.creators)).replace('{videos}', '{:,}'.format(home_proof.videos_tracked)) }}</p>
+ <h3 class="creators-sub">{{ t('creators.featured') }}</h3>
+ <ol class="creator-grid">
+  {% for c in featured %}{% set k = c.case %}{% set other = 'en' if c.lang == 'zh' else 'zh' %}
+  <li class="creator-card{{ ' is-negative' if k.change_pct < 0 else '' }}" data-creator="{{ c.id }}" data-creator-lang="{{ c.lang }}">
+   <div class="creator-head"><b>{{ c.name }}</b><span class="tag">{{ t('creators.lang_' ~ c.lang) }}</span><span class="creator-count">{{ t('creators.videos').replace('{n}', c.videos|string) }}</span></div>
+   <div class="creator-claim-head"><span class="mono">{{ k.ticker }}</span><span class="tag tag-{{ k.stance }}">{{ t('creators.stance_' ~ k.stance) }}</span><time class="mono" datetime="{{ k.date }}">{{ k.date }}</time></div>
+   <blockquote lang="{{ 'zh-CN' if c.lang == 'zh' else 'en' }}">{{ k.title[c.lang] }}</blockquote>
+   {% if lang != c.lang %}<p class="creator-translation" lang="{{ 'zh-CN' if lang == 'zh' else 'en' }}">{{ k.title[lang] }}</p>{% endif %}
+   {% set secs = (k.source_url.split('&t=')[-1].replace('s', '') | int) if '&t=' in k.source_url else 0 %}
+   <a class="creator-source" href="{{ k.source_url }}" target="_blank" rel="noopener noreferrer">{{ t('creators.source').replace('{t}', '%d:%02d' % (secs // 60, secs % 60)) }} ↗</a>
+   <div class="creator-result"><span>{% if k.complete %}{{ t('creators.after_20') }}{% else %}{{ t('creators.after_n').replace('{n}', k.sessions|string) }}{% endif %}</span><strong class="mono creator-change">{{ '%+.1f' % k.change_pct }}%</strong></div>
+   <p class="creator-basis">{{ t('creators.basis').replace('{base}', '%.2f' % k.base_close).replace('{start}', k.date).replace('{end_close}', '%.2f' % k.end_close).replace('{end}', k.end_date) }}</p>
+  </li>
+  {% endfor %}
+ </ol>
+ <h3 class="creators-sub">{{ t('creators.roster') }}</h3>
+ <ul class="creator-roster">
+  {% for c in home_creators.creators %}<li data-creator-lang="{{ c.lang }}"><span>{{ c.name }}</span><small class="mono">{{ c.videos }}</small></li>{% endfor %}
+ </ul>
+ <p class="creators-note small muted">{{ t('creators.note') }}</p>
+ <p class="creator-cta"><a class="btn btn-ghost" href="{{ url('/app/') }}#/creators">{{ t('creators.cta') }} →</a></p>
+</div></section>
