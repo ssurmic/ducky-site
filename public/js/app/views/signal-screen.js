@@ -40,9 +40,9 @@ export function configSummary(c){
   return parts.join(' · ') || s('screen.no_conditions');
 }
 
-export function mountScreen(root,{signal,query,initialConfig}={}){
+export function mountScreen(root,{signal,query,initialConfig,localOnly=false}={}){
   let alive=true,request=0,current=defaults(),saved=[],lastPreview=null;
-  const epoch=store.epoch(), screenId=query?.get('screen');
+  const epoch=localOnly?null:store.epoch(), screenId=query?.get('screen');
   const expanded=Boolean(screenId || query?.get('screening'));
   const box=el('details.signal-screen',{open:expanded},el('summary',el('strong',s('screen.title')),el('span.muted',s('screen.subtitle'))));
   root.append(box);
@@ -66,7 +66,7 @@ export function mountScreen(root,{signal,query,initialConfig}={}){
     el('details.screen-method',el('summary',s('market.details')),
       el('p.muted.small',s('screen.cap_note')),el('p.muted.small',s('screen.event_note'))));
   const status=el('p.screen-status',{role:'status','aria-live':'polite'}),results=el('div.screen-results');
-  const preview=el('button.btn.btn-primary',{type:'submit'},s('screen.preview'));
+  const preview=el('button.btn.btn-primary',{type:'submit'},s(localOnly?'preview.screen_apply':'screen.preview'));
   const reset=el('button.btn.btn-ghost',{type:'button',onclick:()=>{fill(defaults());clearResults();}},s('radar.reset'));
   form.append(el('div.screen-actions',preview,reset));
   const saveName=el('input.input',{name:'screen_name',maxlength:60,placeholder:s('screen.name_hint'),'aria-label':s('screen.name')});
@@ -78,14 +78,16 @@ export function mountScreen(root,{signal,query,initialConfig}={}){
   saveForm.hidden=true;
   const savedChoice=el('select.input',{'aria-label':s('screen.saved')},el('option',{value:''},s('screen.saved')));
   savedChoice.addEventListener('change',()=>{const row=saved.find(x=>String(x.id)===savedChoice.value);if(row){fill(row.config);saveName.value=row.name;clearResults();runPreview();}});
-  box.append(el('div.screen-body',el('p',s('screen.explanation')),presetsRow,savedChoice,form,status,results,saveForm));
+  // Public previews use the same editor, without account controls, matches or I/O.
+  box.append(el('div.screen-body',el('p',s('screen.explanation')),presetsRow,
+    localOnly?null:savedChoice,form,status,localOnly?null:results,localOnly?null:saveForm));
   fill(initialConfig||current);
   if(routePreset(screenId))fill(routePreset(screenId));
   form.addEventListener('submit',event=>{event.preventDefault();runPreview();});
   form.addEventListener('input',clearResults);
   form.addEventListener('change',clearResults);
   saveForm.addEventListener('submit',async event=>{
-    event.preventDefault();if(!lastPreview || !saveName.reportValidity())return;
+    event.preventDefault();if(localOnly || !lastPreview || !saveName.reportValidity())return;
     if(!saveName.value.trim()){saveName.setCustomValidity(s('screen.name_required'));saveName.reportValidity();return;}
     saveButton.disabled=true;
     try{
@@ -99,16 +101,16 @@ export function mountScreen(root,{signal,query,initialConfig}={}){
     finally{if(valid())saveButton.disabled=false;}
   });
   saveName.addEventListener('input',()=>saveName.setCustomValidity(''));
-  api.get('/public/radar/facets.json',{auth:false,signal}).then(doc=>{
+  if(!localOnly)api.get('/public/radar/facets.json',{auth:false,signal}).then(doc=>{
     if(!valid())return;
     for(const value of doc.sectors || [])if(!Array.from(fields.sector.options).some(o=>o.value===value))fields.sector.append(el('option',{value},sectorName(value)));
     fields.sector.value=current.sector;
   }).catch(()=>{});
-  if(store.get('token'))loadSaved();
-  root.addEventListener(CHANGED,loadSaved);
+  if(!localOnly && store.get('token'))loadSaved();
+  if(!localOnly)root.addEventListener(CHANGED,loadSaved);
   const cleanup=()=>{alive=false;request++;root.removeEventListener(CHANGED,loadSaved);};signal?.addEventListener('abort',cleanup,{once:true});return cleanup;
 
-  function valid(){return alive && epoch===store.epoch();}
+  function valid(){return alive && (localOnly || epoch===store.epoch());}
   function clearResults(){request++;lastPreview=null;saveForm.hidden=true;saveButton.textContent=s('screen.save');clear(results);status.textContent='';preview.disabled=false;}
   function fill(c){
     current={...defaults(),...c};
@@ -130,6 +132,7 @@ export function mountScreen(root,{signal,query,initialConfig}={}){
     c.events=EVENTS.filter(k=>eventBoxes[k].checked);return c;
   }
   async function loadSaved(){
+    if(localOnly)return;
     try{
       const doc=await api.get('/screens',{signal});if(!valid())return;saved=doc.items || [];
       clear(savedChoice);savedChoice.append(el('option',{value:''},s('screen.saved')),...saved.map(row=>el('option',{value:row.id},row.name)));
@@ -140,6 +143,7 @@ export function mountScreen(root,{signal,query,initialConfig}={}){
     current=read();fields.cap_max.setCustomValidity(current.cap_min!=null && current.cap_max!=null && current.cap_min>=current.cap_max?s('screen.cap_error'):'');
     fields.insider_min.setCustomValidity(current.insider_min!=null && current.insider_min<200000?s('screen.insider_error'):'');
     if(!form.reportValidity())return;
+    if(localOnly){clearResults();status.textContent=s('preview.screen_conditions')+': '+configSummary(current);return;}
     clearResults();const id=++request;preview.disabled=true;status.replaceChildren(spinner());
     try{
       const doc=await api.post('/screens/preview',{config:current},{signal});if(!valid() || id!==request)return;

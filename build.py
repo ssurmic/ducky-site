@@ -49,7 +49,7 @@ LIQ_ABUNDANT = 80                        # regime threshold drawn on the sparkli
 BRAND_ASSETS = ("avatar-group.jpg", "mascot.svg", "og.svg")   # must land in dist/ (§5.1 avatar rule)
 LANGS = ("en", "zh")
 DEFAULT_LANG = "en"  # No-prefix URLs serve the same English HTML as canonical /en/ URLs.
-NOINDEX_PAGES = {"app", "idea", "404"}  # Account shell, record placeholder and error page.
+NOINDEX_PAGES = {"app", "idea", "404", "research-map-preview", "creator-analysis-preview", "market-context-preview", "screener-preview"}  # Account/preview shells, record placeholder and error page.
 HREFLANG = {"zh": "zh-CN", "en": "en"}
 HTML_LANG = {"zh": "zh-CN", "en": "en"}
 ASSET_RE = re.compile(r'((?:href|src)=")(/[^"?#]+\.(?:css|js|svg|woff2|webmanifest|png|webp|jpg|jpeg|json))(")')
@@ -573,7 +573,7 @@ def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, versi
         "navigation": json.loads((ROOT / "product-navigation.json").read_text()),
         "desk_quotes": {} if cfg.get('trial_access') else {row['ticker']: row for row in json.loads((ROOT / cfg['desk_prices']).read_text())['quotes']},
         "app_strings": {k[4:]:v for k,v in table.items() if k.startswith("app.")},
-        "app_icon_sprite": app_icon_sprite() if page == "app" else "",
+        "app_icon_sprite": app_icon_sprite() if page in {"app", "research-map-preview", "creator-analysis-preview"} else "",
         "lang": lang, "html_lang": HTML_LANG[lang], "other_lang": other, "is_zh": lang == "zh",
         "page": page, "t": t, "t2": t2, "tf": tf, "tg": tg, "primary": primary, "url": url, "liq": liq,
         "track_n": track_n, "track_stats": track_stats or {"ok": False},
@@ -658,6 +658,11 @@ def load_video_example():
     return sample
 
 
+def load_market_example():
+    """Only the approved frozen demo reconstruction, with its full original basis."""
+    return json.loads((ROOT / "scripts" / "demo" / "recording" / "macro-beta.json").read_text())
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--api-base", help="override api_base from site.config.json")
@@ -715,15 +720,16 @@ def main() -> None:
             ctx = build_context(cfg, tables, lang, Path(tpl_name).stem, rel, version, liq, track_n, track_stats)
             ctx["oversold"] = load_oversold_research()
             ctx["video_example"] = video_example
+            ctx["market_example"] = load_market_example() if tpl_name == 'market-context-preview.html' else {}
             ctx["demo_copy"] = {k[8:]: v for k, v in tables[lang].items() if k.startswith("demo.ui.")}
             home = tpl_name == 'index.html'
             ctx["home_cases"], ctx["home_cases_file"] = load_home_cases() if home else ([], '')
-            ctx["home_signals"] = load_home_signals() if home else {}
+            ctx["home_signals"] = load_home_signals() if home or tpl_name == 'research-map-preview.html' else {}
             ctx["home_proof"] = load_home_proof() if home else {}
             ctx["home_creators"] = load_home_creators() if home else {}
             ctx["home_copy"] = {k[5:]:v for k,v in tables[lang].items() if k.startswith('home.')} if tpl_name == 'index.html' else {}
             html = version_assets(tpl.render(**ctx), version, app_version)
-            if tpl_name == "app.html":
+            if tpl_name in {"app.html", "research-map-preview.html", "creator-analysis-preview.html", "market-context-preview.html", "screener-preview.html"}:
                 validate_app_strings(html, tables[lang], lang)
             out = DIST / lang_prefix(lang).strip("/") / rel
             out.parent.mkdir(parents=True, exist_ok=True)

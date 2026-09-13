@@ -1,0 +1,37 @@
+{# Current signal-screen editor; preview mode only reviews local conditions. #}
+<!doctype html>
+<html lang="{{ html_lang }}" data-lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <title>{{ t('app.preview.screen_title') }} · Ducky Bot</title>
+  <link rel="canonical" href="{{ canonical }}">
+  {% for hl, href in hreflang.items() %}<link rel="alternate" hreflang="{{ hl }}" href="{{ href }}">{% endfor %}
+  <link rel="icon" href="/duck-head-cutout-v1.png" type="image/png">
+  <link rel="stylesheet" href="/css/site.css">
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/css/workspace.css">
+  <link rel="stylesheet" href="/css/product-focus.css">
+  <link rel="stylesheet" href="/css/screen-preview.css">
+  <script type="application/json" id="ducky-strings">{{ app_strings|tojson }}</script>
+  <script type="module" src="/js/app/screen-preview.js"></script>
+</head>
+<body class="page-app screen-preview lang-{{ lang }}">
+  <div class="app-shell">
+    <main class="app-main" id="main">
+      <header class="screen-preview-heading">
+        <h1>{{ t('app.preview.screen_title') }}</h1>
+        <p>{{ t('app.preview.screen_note') }}</p>
+      </header>
+      <div id="screen-preview">
+        <noscript><p>{{ t('app.noscript') }}</p></noscript>
+      </div>
+      <footer class="screen-preview-footer">
+        <a class="btn btn-ghost" href="{{ url('/app/') }}#/boards?screening=1" target="_blank" rel="noopener noreferrer">{{ t('app.preview.screen_open_app') }} ↗</a>
+        <p>{{ t('app.foot.disclaimer') }}</p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,5 +1,21 @@
 # Change log
 
+## Homepage: AI stock research and current interactive previews · 2026-09-13
+
+“Every signal on a stock. One page.” remains the headline. The page now explains AI aggregation,
+detailed creator reasoning, conditions and source timestamps, with the research tools and creator
+analysis ahead of historical price outcomes. The verified 34-creator roster adds “And more is coming”;
+subsequent prices remain available on expansion. The homepage portfolio-simulation promotion is removed.
+
+Outdated preview posters are replaced by current application components: a bullish/bearish Research Map,
+sectioned creator analysis, an editable screening-criteria preview and the historical market chart.
+Dates and source qualifications remain explicit. These previews make no research requests or account
+writes. The screener's normal behavior and in-app map sharing remain unchanged.
+
+Validation: 750 JavaScript tests, 22 Python tests (one skipped), copy/link gates and actual Chrome desktop
+and narrow phone viewports. [Acceptance and limitations](reports/PRODUCT-PREVIEW-ACCEPTANCE-2026-09-13.md);
+[official competitor comparison](reports/PRODUCT-POSITIONING-COMPETITORS-2026-09-13.md).
+
 ## Homepage: dated signals, product previews and creator examples · 2026-09-13
 
 The homepage now lets visitors switch among NVDA, MU, AMD and TSLA, read dated source-linked

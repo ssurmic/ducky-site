@@ -17,8 +17,10 @@
    {% if lang != c.lang %}<p class="creator-translation no-glossary" lang="{{ 'zh-CN' if lang == 'zh' else 'en' }}">{{ k.title[lang] }}</p>{% endif %}
    {% set secs = (k.source_url.split('&t=')[-1].replace('s', '') | int) if '&t=' in k.source_url else 0 %}
    <a class="creator-source" href="{{ k.source_url }}" target="_blank" rel="noopener noreferrer">{{ t('creators.source').replace('{t}', '%d:%02d' % (secs // 60, secs % 60)) }} ↗</a>
+   <details class="creator-history"><summary>{{ t('creators.history') }}</summary>
    <div class="creator-result"><span>{% if k.complete %}{{ t('creators.after_20') }}{% else %}{{ t('creators.after_n').replace('{n}', k.sessions|string) }}{% endif %}</span><strong class="mono creator-change no-glossary">{{ '%+.1f' % k.change_pct }}%</strong></div>
    <p class="creator-basis no-glossary">{{ t('creators.basis').replace('{base}', '%.2f' % k.base_close).replace('{start}', k.date).replace('{end_close}', '%.2f' % k.end_close).replace('{end}', k.end_date) }}</p>
+   </details>
   </li>
   {% endfor %}
  </ol>
@@ -26,6 +28,7 @@
  <ul class="creator-roster">
   {% for c in home_creators.creators %}<li data-creator-lang="{{ c.lang }}"><span>{{ c.name }}</span><small class="mono">{{ c.videos }}</small></li>{% endfor %}
  </ul>
+ <p class="creator-roster-more">{{ t('creators.more') }}</p>
  <p class="creators-note small muted">{{ t('creators.note') }}</p>
  <p class="creator-cta"><a class="btn btn-ghost" href="{{ url('/app/') }}#/creators">{{ t('creators.cta') }} →</a></p>
 </div></section>

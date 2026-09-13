@@ -1,0 +1,40 @@
+{# Current creator UI over one explicitly public reviewed-summary example. #}
+<!doctype html>
+<html lang="{{ html_lang }}" data-lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <title>{{ t('app.preview.creator_title') }} · Ducky Bot</title>
+  <link rel="canonical" href="{{ canonical }}">
+  {% for hl, href in hreflang.items() %}<link rel="alternate" hreflang="{{ hl }}" href="{{ href }}">{% endfor %}
+  <link rel="icon" href="/duck-head-cutout-v1.png" type="image/png">
+  <link rel="stylesheet" href="/css/site.css">
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/css/workspace.css">
+  <link rel="stylesheet" href="/css/product-focus.css">
+  <link rel="stylesheet" href="/css/creator-analysis-preview.css">
+  <script src="/config.js" defer></script>
+  <script type="application/json" id="ducky-strings">{{ app_strings|tojson }}</script>
+  <script type="application/json" id="creator-analysis-data">{{ video_example|tojson }}</script>
+  <script type="module" src="/js/app/creator-analysis-preview.js"></script>
+</head>
+<body class="page-app creator-analysis-preview lang-{{ lang }}">
+  {{ app_icon_sprite }}
+  <div class="app-shell">
+    <main class="app-main" id="main">
+      <header class="creator-analysis-preview-heading">
+        <p class="eyebrow">{{ t('app.preview.creator_title') }}</p>
+        <p>{{ tf('app.preview.creator_note', date=video_example.published_at[:10]) }}</p>
+      </header>
+      <div id="creator-analysis-preview" class="creators-view">
+        <noscript><p>{{ t('app.noscript') }}</p></noscript>
+      </div>
+      <footer class="creator-analysis-preview-footer">
+        <a class="btn btn-ghost" href="{{ url('/app/') }}#/creators?creator={{ video_example.kol_id }}" target="_blank" rel="noopener noreferrer">{{ t('app.preview.creator_open_app') }} ↗</a>
+        <p>{{ t('app.foot.disclaimer') }}</p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

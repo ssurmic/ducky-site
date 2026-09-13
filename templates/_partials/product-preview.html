@@ -1,21 +1,19 @@
-{# What you see after sign-in: four real screens (the information map and the creator excerpt are captures
-   from the 2026-09-08 walkthrough; conditions and market context are the app's own view modules rendered
-   with example records), each behind a tab, each with a caption and the same sign-in exit. All panels are
-   in the HTML; only the first is visible until the visitor switches. Images are lazy except the first. #}
+{# Research tools, with the current map renderer on a selected public snapshot.
+   Each tool uses the application renderer with explicit example inputs; actions stay outside the frame. #}
 {% set previews = ['map', 'creator', 'screen', 'briefing'] %}
+{% set preview_pages = {'map': '/research-map-preview/', 'creator': '/creator-analysis-preview/', 'screen': '/screener-preview/', 'briefing': '/market-context-preview/'} %}
+{% set routes = {'map': '#/evidence/NVDA', 'creator': '#/creators', 'screen': '#/boards?screening=1', 'briefing': '#/macro'} %}
 <section class="section preview" id="preview" data-product-preview><div class="wrap">
  <p class="eyebrow mono">{{ t('preview.eyebrow') }}</p><h2>{{ t('preview.title') }}</h2><p class="lead">{{ t('preview.intro') }}</p>
  <div class="preview-tabs" role="tablist" aria-label="{{ t('preview.choose') }}">
-  {% for key in previews %}<button type="button" role="tab" id="preview-tab-{{ key }}" aria-controls="preview-panel-{{ key }}" aria-selected="{{ 'true' if loop.first else 'false' }}" tabindex="{{ '0' if loop.first else '-1' }}" data-preview-tab="{{ key }}"><span class="mono">0{{ loop.index }}</span>{{ t('preview.' ~ key) }}</button>{% endfor %}
+  {% for key in previews %}<button type="button" role="tab" id="preview-tab-{{ key }}" aria-controls="preview-panel-{{ key }}" aria-selected="{{ 'true' if loop.first else 'false' }}" tabindex="{{ '0' if loop.first else '-1' }}" data-preview-tab="{{ key }}">{{ t('preview.' ~ key) }}</button>{% endfor %}
  </div>
  {% for key in previews %}
  <figure class="preview-panel" id="preview-panel-{{ key }}" role="tabpanel" aria-labelledby="preview-tab-{{ key }}" tabindex="0" data-preview-panel="{{ key }}"{% if not loop.first %} hidden{% endif %}>
   <div class="preview-frame">
-   <img src="/media/preview/{{ key }}.{{ lang }}.webp" width="1440" height="{{ 810 if key in ['map','creator'] else 900 }}" alt="{{ t('preview.' ~ key ~ '_alt') }}"{% if loop.first %} fetchpriority="high" decoding="async"{% else %} loading="lazy" decoding="async"{% endif %}>
-   <a class="preview-cta" href="{{ url('/app/') }}#/register">{{ t('preview.cta') }} <span aria-hidden="true">→</span></a>
+   <iframe class="preview-application" src="{{ url(preview_pages[key]) }}" title="{{ t('preview.' ~ key ~ '_alt') }}" loading="lazy"></iframe>
   </div>
-  <figcaption><strong>{{ t('preview.' ~ key) }}</strong><span>{{ t('preview.' ~ key ~ '_caption') }}</span></figcaption>
-  {% if key == 'map' %}<p class="preview-source-note no-glossary">{{ t('preview.map_qualification') }}{% if lang == 'en' %} <a href="https://blogs.nvidia.com/blog/nvidia-to-acquire-hugging-face/" target="_blank" rel="noopener noreferrer">{{ t('preview.map_source') }} ↗</a>{% endif %}</p>{% endif %}
+  <figcaption><div><strong>{{ t('preview.' ~ key) }}</strong><span>{{ t('preview.' ~ key ~ '_caption') }}</span></div><a class="preview-cta" href="{{ url('/app/') }}{{ routes[key] }}">{{ t('preview.' ~ key ~ '_cta') }} <span aria-hidden="true">→</span></a></figcaption>
  </figure>
  {% endfor %}
  <p class="small muted preview-note">{{ t('preview.note') }}</p>

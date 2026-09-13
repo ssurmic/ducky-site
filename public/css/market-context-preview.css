@@ -1,0 +1,17 @@
+/* Only the standalone shell changes; the chart retains the application's styles. */
+body.page-app.market-context-preview{margin:0;min-width:0;height:auto;overflow:auto;background:var(--bg);}
+.market-context-preview .app-shell{display:block;height:auto;min-height:100dvh;}
+.market-context-preview .app-main{width:100%;max-width:1080px;margin:0 auto;padding:18px;overflow:visible;}
+.market-context-preview-heading h1{margin:0 0 8px;font-size:22px;line-height:1.35;}
+.market-context-preview-heading p{margin:0 0 16px;color:var(--muted);font-size:13px;line-height:1.6;max-width:85ch;}
+.market-context-preview .macro-tabs .btn,.market-context-preview .macro-date-slider{min-height:44px;}
+.market-context-preview .macro-evidence>summary,.market-context-preview .macro-validation>summary{min-height:44px;display:flex;align-items:center;}
+.market-context-preview-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;}
+.market-context-preview-footer p{font-size:12px;line-height:1.5;color:var(--muted);margin:0;}
+@media(max-width:600px){
+  .market-context-preview .app-main{padding:12px;}
+  .market-context-preview-heading h1{font-size:19px;}
+  .market-context-preview-heading p{font-size:12px;line-height:1.55;}
+  .market-context-preview-footer{align-items:stretch;}
+  .market-context-preview-footer .btn{width:100%;}
+}

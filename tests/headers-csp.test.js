@@ -15,7 +15,7 @@ test('CSP admits the Cloudflare Web Analytics beacon that Pages injects, and not
 });
 test('CSP applies to every path and keeps the Telegram Mini App frame rules',()=>{
  assert.match(headers,/^\/\*\n\s+Content-Security-Policy:/m);
- assert.match(directive('frame-src'),/https:\/\/oauth\.telegram\.org/);
+ assert.equal(directive('frame-src'),"frame-src 'self' https://oauth.telegram.org");
  assert.match(directive('frame-ancestors'),/'self' https:\/\/web\.telegram\.org/);
  assert.doesNotMatch(headers,/X-Frame-Options/);
 });

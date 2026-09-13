@@ -25,7 +25,7 @@ function fixture(lang='zh',reduced=false){
 for(const lang of ['zh','en'])test(`the public homepage works before JS: sourced signals for several stocks, dated catches, real screens, creators with outcomes: ${lang}`,()=>{
  const doc=new JSDOM(readFileSync(`dist/${lang}/index.html`,'utf8')).window.document,prefix=`/${lang}/`;
  assert.equal(doc.querySelector('.home-cta a').getAttribute('href'),prefix+'app/#/register');
- assert.equal(doc.querySelector('.home-cta .home-text-link').getAttribute('href'),'#recent-catches');
+ assert.equal(doc.querySelector('.home-cta .home-text-link').getAttribute('href'),'#preview');
  assert.equal(doc.querySelector('dialog'),null,'no research dialog; the examples are on the page');
  assert.equal(doc.querySelector('[data-home-open]'),null);
  // hero: one panel per stock, all in the HTML, only the first visible
@@ -68,16 +68,20 @@ for(const lang of ['zh','en'])test(`the public homepage works before JS: sourced
  });
  assert.ok(cases.some(c=>c.headline_return_pct<0),'the strip discloses at least one loss');
  assert.ok(doc.querySelector(`#recent-catches a[href^="/media/${casesFile}"]`));
- // product preview: four real screens, language-matched images, one sign-in exit each
+ // Research preview: live app renderer for the map, dated captures for other tools.
  const previewTabs=[...doc.querySelectorAll('[data-preview-tab]')],previewPanels=[...doc.querySelectorAll('[data-preview-panel]')];
  assert.equal(previewTabs.length,4);assert.equal(previewPanels.length,4);
  previewPanels.forEach((panel,i)=>{
   assert.equal(panel.hidden,i!==0);
-  const img=panel.querySelector('img');
-  assert.ok(img.getAttribute('src').startsWith(`/media/preview/${panel.dataset.previewPanel}.${lang}.webp`),img.getAttribute('src'));
-  assert.ok(img.getAttribute('alt').length>10);
-  assert.equal(img.getAttribute('loading'),i===0?null:'lazy');
-  assert.equal(panel.querySelector('.preview-cta').getAttribute('href'),prefix+'app/#/register');
+  const key=panel.dataset.previewPanel, routes={map:'evidence/NVDA',creator:'creators',screen:'boards?screening=1',briefing:'macro'};
+  const pages={map:'research-map-preview',creator:'creator-analysis-preview',screen:'screener-preview',briefing:'market-context-preview'};
+  const frame=panel.querySelector('iframe');
+  assert.equal(frame.getAttribute('src'),prefix+pages[key]+'/');
+  assert.ok(frame.title.length>10);
+  assert.equal(frame.getAttribute('loading'),'lazy');
+  assert.equal(panel.querySelector('img'),null,'outdated walkthrough posters are no longer presented');
+  assert.equal(panel.querySelector('.preview-frame .preview-cta'),null,'the action must not obscure the product');
+  assert.equal(panel.querySelector('.preview-cta').getAttribute('href'),prefix+'app/#/'+routes[key]);
   assert.ok(panel.querySelector('figcaption').textContent.trim().length>20);
  });
  // creators: attributed summaries in the creator's language, with separate publication and price dates
@@ -105,8 +109,10 @@ for(const lang of ['zh','en'])test(`the public homepage works before JS: sourced
  assert.equal(doc.querySelectorAll('#creator-views .creator-roster li').length,creators.length);
  assert.ok(doc.querySelector('#creator-views a[href$="#/creators"]'));
  // order and the rest of the page
- assert.ok(doc.querySelector('#recent-catches').compareDocumentPosition(doc.querySelector('#preview'))&4,'the preview follows the catches');
+ assert.ok(doc.querySelector('#preview').compareDocumentPosition(doc.querySelector('#recent-catches'))&4,'research tools lead the historical outcomes');
  assert.ok(doc.querySelector('#preview').compareDocumentPosition(doc.querySelector('#creator-views'))&4);
+ assert.equal(doc.querySelector('#stock-research a[href*="tab=lab"]'),null,'homepage positions source research, not a portfolio simulator');
+ assert.ok(doc.querySelector('.creator-roster-more').textContent.trim());
  assert.ok(doc.querySelector(`#access a[href="${prefix}app/#/register"]`),'the cost section answers the money question with open access');
  assert.equal(doc.querySelector('#pricing,a[href*="#/billing"]'),null,'no pricing while OPEN-ACCESS-01 is in force');
  assert.ok(doc.querySelector('#about #community'),'support and community sit in the "who runs this" section');
