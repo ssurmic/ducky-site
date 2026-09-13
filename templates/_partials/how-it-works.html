@@ -1,0 +1,9 @@
+{# Three steps, then the recorded walkthrough. The steps are the product's real sequence
+   (add → gather and check → push), so the numbering carries information. #}
+<section class="section how" id="how"><div class="wrap">
+ <p class="eyebrow mono">{{ t('how.eyebrow') }}</p><h2>{{ t('how.title') }}</h2>
+ <ol class="how-steps">
+  {% for i in range(1,4) %}<li><span class="how-n">{{ i }}</span><h3>{{ t('how.step' ~ i) }}</h3><p>{{ t('how.step' ~ i ~ '_body') }}</p></li>{% endfor %}
+ </ol>
+ {% include "_partials/product-demo-video.html" %}
+</div></section>

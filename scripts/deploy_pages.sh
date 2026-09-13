@@ -34,6 +34,8 @@ fi
 log "gate for $SHORT: build + tests + export test + lint_copy + check_links"
 DUCKY_TEST_PYTHON="$PY" npm test
 "$PY" -m unittest discover -s tests -p 'test_export_desk_prices.py'
+"$PY" -m unittest discover -s tests -p 'test_home_proof.py'
+"$PY" -m unittest discover -s tests -p 'test_home_creator_source.py'
 "$PY" scripts/lint_copy.py
 "$PY" scripts/check_links.py
 test -s dist/index.html && test -s dist/en/index.html && test -s dist/_headers

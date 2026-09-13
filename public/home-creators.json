@@ -1,0 +1,429 @@
+{
+ "as_of": "2026-09-12",
+ "source": "selected-current-creator-views",
+ "presentation": "One direction-consistent example view per creator with the price change after publication. Not a hit rate or a ranking; the app lists saved views and available follow-up records.",
+ "basis": "Unadjusted USD daily closes; base = first session on or after the publication date (UTC); change = close 20 sessions later / base - 1, or the latest close when 20 sessions are not complete. Dividends and fees excluded. Views belong to their authors.",
+ "creators": [
+  {
+   "id": "meet-kevin",
+   "name": "Meet Kevin",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 86,
+   "views_with_outcome": 8,
+   "case": {
+    "author": "Meet Kevin",
+    "ticker": "MU",
+    "stance": "support",
+    "date": "2026-09-01",
+    "published_at": "2026-09-01T03:29:36+00:00",
+    "base_close": 933.44,
+    "end_date": "2026-09-11",
+    "end_close": 975.26,
+    "sessions": 7,
+    "complete": false,
+    "change_pct": 4.5,
+    "consistent": true,
+    "title": {
+     "en": "The creator views OpenAI’s memory buying for agentic tasks as a sign that AI labs’ circular financing and heavy spending are only beginning, making him bullish on Micron.",
+     "zh": "作者认为，OpenAI采购内存用于智能体任务，说明AI实验室的循环融资和大规模资金投入才刚开始，因此看多美光。"
+    },
+    "source_url": "https://www.youtube.com/watch?v=bjIK7WpYZFk&t=996s",
+    "point_id": "se-point:11c734f16e25da681b415add3f394ff5"
+   }
+  },
+  {
+   "id": "touzi-talk",
+   "name": "投资TALK君",
+   "lang": "zh",
+   "platform": "youtube",
+   "videos": 58,
+   "views_with_outcome": 33,
+   "case": {
+    "author": "投资TALK君",
+    "ticker": "COIN",
+    "stance": "support",
+    "date": "2026-08-10",
+    "published_at": "2026-08-08T00:25:38.000000+00:00",
+    "base_close": 148.68,
+    "end_date": "2026-09-08",
+    "end_close": 178.94,
+    "sessions": 20,
+    "complete": true,
+    "change_pct": 20.4,
+    "consistent": true,
+    "title": {
+     "en": "Bullish on Coinbase benefiting from stablecoin payment solutions.",
+     "zh": "看好Coinbase受益于稳定币支付方案。"
+    },
+    "source_url": "https://www.youtube.com/watch?v=0tTj4dtJDyM&t=1462s",
+    "point_id": "se-point:0f89f848960f38bced058d19bd238f74"
+   }
+  },
+  {
+   "id": "parkev-tatevosian",
+   "name": "Parkev Tatevosian, CFA",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 52,
+   "views_with_outcome": 5,
+   "case": {
+    "author": "Parkev Tatevosian, CFA",
+    "ticker": "MRVL",
+    "stance": "support",
+    "date": "2026-09-03",
+    "published_at": "2026-09-03T14:45:36+00:00",
+    "base_close": 208.83,
+    "end_date": "2026-09-11",
+    "end_close": 236.1,
+    "sessions": 5,
+    "complete": false,
+    "change_pct": 13.1,
+    "consistent": true,
+    "title": {
+     "en": "Marvell benefits from AI boom with soaring revenue, management forecasting accelerating growth in upcoming two fiscal years.",
+     "zh": "Marvell受益于AI增长，营收激增，管理层预测未来两年加速增长。"
+    },
+    "source_url": "https://www.youtube.com/watch?v=csGLgpoAvwk&t=61s",
+    "point_id": "se-point:b85ed2c6fa4e6fe95a06dd9b546985db"
+   }
+  },
+  {
+   "id": "everything-money",
+   "name": "Everything Money",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 19,
+   "views_with_outcome": 1,
+   "case": {
+    "author": "Everything Money",
+    "ticker": "NVDA",
+    "stance": "support",
+    "date": "2026-08-24",
+    "published_at": "2026-08-24T09:55:33+00:00",
+    "base_close": 208.48,
+    "end_date": "2026-09-11",
+    "end_close": 218.29,
+    "sessions": 13,
+    "complete": false,
+    "change_pct": 4.7,
+    "consistent": true,
+    "title": {
+     "en": "if the company can grow revenue by 20% annually for the next 10 years while maintaining high profits, there is over 15% return potential at current prices",
+     "zh": "若公司未来十年营收年增长20%且保持高利润，则当前股价有15%以上回报空间"
+    },
+    "source_url": "https://www.youtube.com/watch?v=hnSgrv4m0rc&t=473s",
+    "point_id": "se-point:f7373a711f934804da4be515698731e2"
+   }
+  },
+  {
+   "id": "shanghaojin",
+   "name": "商浩金 Shanghao Jin",
+   "lang": "zh",
+   "platform": "youtube",
+   "videos": 17,
+   "views_with_outcome": 10,
+   "case": {
+    "author": "商浩金 Shanghao Jin",
+    "ticker": "AMD",
+    "stance": "support",
+    "date": "2026-05-05",
+    "published_at": "2026-05-05T01:39:51+00:00",
+    "base_close": 355.26,
+    "end_date": "2026-06-03",
+    "end_close": 542.52,
+    "sessions": 20,
+    "complete": true,
+    "change_pct": 52.7,
+    "consistent": true,
+    "title": {
+     "en": "The creator says he holds AMD and does not plan to adjust the position.",
+     "zh": "博主持有AMD，表示暂不调整持仓。"
+    },
+    "source_url": "https://www.youtube.com/watch?v=PweaTXhs-aU&t=1366s",
+    "point_id": "se-point:643c31f1e36d344dd871768aa5fb03c9"
+   }
+  },
+  {
+   "id": "ticker-symbol-you",
+   "name": "Ticker Symbol: YOU",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 16,
+   "views_with_outcome": 2,
+   "case": {
+    "author": "Ticker Symbol: YOU",
+    "ticker": "NVDA",
+    "stance": "support",
+    "date": "2026-08-11",
+    "published_at": "2026-08-11T19:05:21+00:00",
+    "base_close": 217.5,
+    "end_date": "2026-09-09",
+    "end_close": 223.67,
+    "sessions": 20,
+    "complete": true,
+    "change_pct": 2.8,
+    "consistent": true,
+    "title": {
+     "en": "NVIDIA became the core driver of the biggest technology investment cycle since the internet by designing chips that power ChatGPT and generative AI applications.",
+     "zh": "NVIDIA因设计ChatGPT及生成式AI应用的芯片，成为自互联网以来最大的技术投资周期的核心驱动者。"
+    },
+    "source_url": "https://www.youtube.com/watch?v=osSWqOI0yp4&t=54s",
+    "point_id": "se-point:7030485ee3ed5c2cb06242b3f5f014de"
+   }
+  },
+  {
+   "id": "new-money",
+   "name": "New Money",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 15,
+   "views_with_outcome": 2,
+   "case": null,
+   "case_status": "withheld_source_changed"
+  },
+  {
+   "id": "andrei-jikh",
+   "name": "Andrei Jikh",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 25,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "stock-moe",
+   "name": "Stock Moe",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 23,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "graham-stephan",
+   "name": "Graham Stephan",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 20,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "yt-UCpEuTt0gZBeAC5nRNjX03qw",
+   "name": "Anna聊美股",
+   "lang": "zh",
+   "platform": "youtube",
+   "videos": 19,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "laoli",
+   "name": "老李玩钱",
+   "lang": "zh",
+   "platform": "youtube",
+   "videos": 19,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "yt-UCvf_c9B7iL0x7aqdhxI4zRg",
+   "name": "Ethan的美股笔记",
+   "lang": "zh",
+   "platform": "youtube",
+   "videos": 18,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "financial-education",
+   "name": "Financial Education",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 18,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "humbled-trader",
+   "name": "Humbled Trader",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 18,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "joseph-carlson",
+   "name": "Joseph Carlson",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 18,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "wall-street-millennial",
+   "name": "Wall Street Millennial",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 18,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "chip-stock-investor",
+   "name": "Chip Stock Investor",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 17,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "joseph-carlson-ah",
+   "name": "Joseph Carlson After Hours",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 17,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "yt-UCfAcqaaxkb6LJkeOcKlbSJQ",
+   "name": "StockTalkwithJay美股",
+   "lang": "zh",
+   "platform": "youtube",
+   "videos": 17,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "yt-UCqK8Ddg4g_n3UTVVIPIGzkA",
+   "name": "卓野聊美股",
+   "lang": "zh",
+   "platform": "youtube",
+   "videos": 17,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "xiaolin",
+   "name": "小Lin说",
+   "lang": "zh",
+   "platform": "youtube",
+   "videos": 17,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "clearvalue-tax",
+   "name": "ClearValue Tax",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 16,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "daniel-pronk",
+   "name": "Daniel Pronk",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 16,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "jose-najarro-stocks",
+   "name": "Jose Najarro Stocks",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 16,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "learn-to-invest",
+   "name": "Learn to Invest",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 16,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "yt-UCjrP2TtSTifuRJ76hW2IW1A",
+   "name": "Nick 美股咖啡館",
+   "lang": "zh",
+   "platform": "youtube",
+   "videos": 16,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "patrick-boyle",
+   "name": "Patrick Boyle",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 16,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "tom-nash",
+   "name": "Tom Nash",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 16,
+   "views_with_outcome": 4,
+   "case": null
+  },
+  {
+   "id": "ben-felix",
+   "name": "Ben Felix",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 15,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "chicken-genius",
+   "name": "Chicken Genius Singapore",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 15,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "inthemoney",
+   "name": "InTheMoney",
+   "lang": "en",
+   "platform": "youtube",
+   "videos": 15,
+   "views_with_outcome": 0,
+   "case": null
+  },
+  {
+   "id": "yt-UCxmQghUiDm2E7bC0O8cK56A",
+   "name": "本VC | Ben the VC",
+   "lang": "zh",
+   "platform": "youtube",
+   "videos": 15,
+   "views_with_outcome": 1,
+   "case": null
+  },
+  {
+   "id": "meitou",
+   "name": "美投讲美股",
+   "lang": "zh",
+   "platform": "youtube",
+   "videos": 15,
+   "views_with_outcome": 0,
+   "case": null
+  }
+ ]
+}

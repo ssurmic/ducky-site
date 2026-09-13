@@ -7,7 +7,7 @@
     <div class="public-menu-panel" id="public-menu-panel">
      <div class="public-menu-heading"><div><h2>{{ t('nav.menu_title') }}</h2><p>{{ t('nav.menu_hint') }}</p></div><a href="{{ url('/') }}#features">{{ t('nav.all_tools') }} →</a></div>
      <div class="public-mobile-links">{% if cfg.get('support_url') %}<a href="{{ cfg.support_url }}" target="_blank" rel="noopener noreferrer">☕ {{ t('nav.coffee') }}</a>{% endif %}
-      <a href="{{ url('/') }}#desk-feature-creators">{{ t('nav.creators') }}</a><a href="{{ url('/') }}#home-dossier" data-home-open aria-haspopup="dialog">{{ t('nav.examples') }}</a>
+      <a href="{{ url('/') }}#desk-feature-creators">{{ t('nav.creators') }}</a><a href="{{ url('/') }}#recent-catches">{{ t('nav.examples') }}</a>
      </div>
      <div class="public-menu-grid">
       {% for group in navigation.public_groups %}
@@ -26,7 +26,7 @@
     </div>
    </details>
    <a class="public-top-link" href="{{ url('/') }}#desk-feature-creators">{{ t('nav.creators') }}</a>
-   <a class="public-top-link" href="{{ url('/') }}#home-dossier" data-home-open aria-haspopup="dialog">{{ t('nav.examples') }}</a>
+   <a class="public-top-link" href="{{ url('/') }}#recent-catches">{{ t('nav.examples') }}</a>
   </nav>
   <div class="public-nav-actions">{% if cfg.get('support_url') %}<a class="public-coffee" href="{{ cfg.support_url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ t('nav.coffee') }}"><span aria-hidden="true">☕</span><span class="public-coffee-label">{{ t('nav.coffee') }}</span></a>{% endif %}<a class="lang-toggle mono public-language" href="{{ alt_url }}" hreflang="{{ 'en' if is_zh else 'zh-CN' }}" data-lang-toggle aria-label="{{ t('nav.lang_toggle_aria') }}">{{ t('nav.lang_toggle') }}</a><a class="btn btn-primary public-start" href="{{ url('/app/') }}#/login">{{ t('nav.cta_bot') }}</a></div>
  </div>

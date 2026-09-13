@@ -8,8 +8,8 @@ for(const lang of ['zh','en'])test('support preserves the exact owner destinatio
  const dom=new JSDOM(readFileSync(`dist/${lang==='en'?'en/':'zh/'}index.html`,'utf8'));
  const doc=dom.window.document,root=doc.querySelector('[data-duck-community]');
  assert.equal(doc.querySelectorAll('#community').length,1);
- assert.ok(root.closest('[data-home-hero]'),'support belongs in the former duck greeting slot');
- assert.ok(root.compareDocumentPosition(doc.querySelector('[data-duck-orbit]'))&4);
+ assert.ok(root.closest('#about'),'support lives in the "who runs this" section, after the product has shown its value');
+ assert.ok(doc.querySelector('#access').compareDocumentPosition(root)&4,'the cost section precedes the support card');
  assert.equal(doc.querySelector('.public-coffee').href,'https://buymeacoffee.com/duckybot');
  assert.equal(root.querySelector('.home-community-invite').href,'https://t.me/'+(lang==='en'?'duckybotGroupEN':'duckybotGroup'));
  assert.equal(root.querySelector('[data-support-address]').textContent,wallet);
