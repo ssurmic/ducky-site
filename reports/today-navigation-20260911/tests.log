@@ -1,0 +1,5747 @@
+
+> test
+> ${DUCKY_TEST_PYTHON:-python3} build.py && node --test tests/*.test.js
+
+[gen_calendar] wrote 42 deterministic events → /Users/zizhaozhang/dev/ducky-site-today-navigation-20260911/public/calendar.json
+build.py: rendered 22 pages (10 templates × 2 langs) → dist/  version=a3c16e71  api_base=https://api.duckybot.app  app modules=06fff310cec2056a30be  legacy imports versioned=478
+✔ natural examples do not require a ticker or make a request until review; confirmation is explicit and idempotent in UI (62.517834ms)
+✔ editing text or changing session invalidates late interpretations (9.423959ms)
+✔ ambiguous company and unsupported condition cannot be confirmed (5.10325ms)
+✔ relative rule shows return difference and the exact benchmark, never a price ratio (9.041125ms)
+✔ queued draft never activates an alert and closing stops further polling (10.406125ms)
+✔ creator topic examples fill real directory names without auto-following (13.77975ms)
+✔ changing the creator search drops a late lookup for the previous name (7.401208ms)
+✔ both built app pages embed every localized app key, including dynamic translator messages (132.961708ms)
+✔ brand link stays in the app before boot and returns signed-in users to watchlist in both languages (251.683ms)
+✔ zh: generated app ships every translation, including alerts, creators and TA (179.960541ms)
+✔ en: generated app ships every translation, including alerts, creators and TA (84.055791ms)
+✔ economic release names preserve distinctions (5.182834ms)
+✔ legacy/title-only creator views cannot acquire a grounded badge (0.25025ms)
+✔ email sign-in neither starts nonce polling nor exposes three forms (66.81225ms)
+✔ recovery preserves a reset link across stale sessions, removes its secret and clears old state (31.918792ms)
+Ducky read {
+  at: '2026-09-11T08:03:14.958Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.961Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 3,
+  status: 200,
+  items: 0,
+  request_id: 7
+}
+✔ unavailable recovery does not claim an email was sent (11.614875ms)
+✔ homepage separates oversold research from the complete legacy method archive (141.105875ms)
+✔ alert deep link prefills ticker and logout discards a late list (2.753959ms)
+Ducky read {
+  at: '2026-09-11T08:03:14.964Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.964Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.967Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.967Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.967Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+(node:58615) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ducky read {
+  at: '2026-09-11T08:03:15.130Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 25
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.130Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 25
+}
+✔ fast route changes keep late calendar results out of the active watchlist (23.169209ms)
+✔ unselected free research gives a stock selection path without fetching (1.8995ms)
+✔ creator following, quality and search filters compose independently (17.745458ms)
+✔ radar preserves the delivered body, historical dates and incomplete archive state (14.403083ms)
+✔ both app shells carry every navigation icon locally, including briefing and More (114.49025ms)
+✔ snapshot browser cache preserves provenance and expires after one minute (3.171125ms)
+✔ long-running alert setup keeps polling with bounded backoff until ready (2.963417ms)
+✔ creator search keeps the input mounted and archives never show unsupported claims (19.155792ms)
+✔ short video summaries without stock calls are readable but never directional (0.087625ms)
+✔ homepage research retains both benchmarks and the failed validation period (37.462334ms)
+✔ authoritative catalog never resurrects a retired or disabled price (4.240209ms)
+✔ a displayed plan carries its currency and term into billing without changing prices or placing an order (1.440917ms)
+✔ sign-in preserves the public plan choice and discards arbitrary payment parameters (2.123208ms)
+✔ a currency without a payment method explains the gap and switching currency reveals available methods without an order (75.705042ms)
+✔ top three stock cards preserve all remaining groups and exact date archive links (36.587167ms)
+✔ free historical period and unavailable evidence cannot appear as current or complete (3.002ms)
+✔ unsafe sources remain plain text and new users get a useful watchlist action (5.928125ms)
+✔ date-only filings disclose unknown time rather than displaying a fabricated midnight (3.784708ms)
+✔ weekly mount only reads one private briefing; market and macro remain collapsed without requests (29.950625ms)
+✔ late private result is dropped on logout or route cancellation and cleanup removes subscribers (41.6385ms)
+✔ earnings renders fiscal period, separate bases, missing estimates and losses (30.151375ms)
+✔ missing pre-event snapshot does not display today’s data as historical context (0.429416ms)
+✔ business interpretation stays separate from accounting facts and does not render old model comparison prose (28.877709ms)
+✔ calendar earnings is included in Free, shares requests, and discards responses after logout (24.710167ms)
+✔ combobox debounces, supports IME and keyboard selection, and never auto-submits (449.649791ms)
+✔ older search response cannot replace a newer query or update a disposed picker (667.347958ms)
+✔ followed result is disabled; empty search retains manual ticker input (229.553208ms)
+✔ event kinds keep payrolls, productivity, minutes, PMI and issuer earnings distinct (1.580959ms)
+✔ free event cards include current context and useful hints (6.675833ms)
+✔ event evidence retains losses and missing observations with source links (224.730209ms)
+✔ logout suppresses pending private research (221.886ms)
+✔ calendar merge identity preserves different events and deduplicates renamed releases (0.413667ms)
+Ducky read {
+  at: '2026-09-11T08:03:14.648Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.655Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 7,
+  status: 200,
+  request_id: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.760Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.764Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 4,
+  status: 200,
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.785Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.786Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.794Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.795Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.818Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.819Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.831Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 16
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.832Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 16
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.924Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 20
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.924Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 20
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.928Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 23
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.929Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 23
+}
+✔ mobile starts with two weeks and preserves all events through list, month and filters (118.485208ms)
+✔ desktop defaults to two weeks, pages fourteen days and keeps detail inside the period (33.98225ms)
+✔ holiday survives category filters and never requests private event research (24.457916ms)
+✔ month navigation and view changes keep the selected detail in the visible range (12.402042ms)
+✔ official index deep links lead 42 same-day events through preview, dialog, month and list with free context (93.145875ms)
+✔ ORCL stays visible beside two macro releases; every watched earnings label survives crowded two-week and month views (22.37925ms)
+✔ calendar ordering preserves every event, date order and session/macro context while prioritizing the linked stock (11.510583ms)
+✔ compact previews never hide watched earnings, even beyond their usual slot count (0.27375ms)
+Ducky read {
+  at: '2026-09-11T08:03:14.753Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.766Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 13,
+  status: 200,
+  items: 2,
+  request_id: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.804Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.805Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 2,
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.809Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.809Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 503,
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.809Z',
+  stage: 'failure',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 503,
+  request_id: 7,
+  reason: 'http'
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.818Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.819Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 202,
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.822Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.823Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.825Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 16
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.835Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 10,
+  status: 200,
+  items: 1,
+  request_id: 16
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.836Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 19
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.836Z',
+  stage: 'failure',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 19,
+  reason: 'session_changed'
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.838Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 22
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.838Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 22
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.841Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 25
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.842Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 25
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.845Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 28
+}
+Ducky read {
+  at: '2026-09-11T08:03:14.846Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 28
+}
+✔ calendar re-reads a nonempty cached watchlist on each visit and prioritizes newly watched earnings (83.80425ms)
+✔ failed or pending watchlist reads preserve saved membership and show an explicit retry state (13.671792ms)
+✔ a confirmed empty server watchlist replaces an older nonempty browser list (2.922ms)
+✔ navigation or logout before the shared list arrives cannot repopulate membership or render late calendar data (11.523417ms)
+✔ calendar retains earnings and their acquisition clocks during a source failure, then clears the warning on recovery (8.327541ms)
+✔ calendar never substitutes generated time for missing source acquisition (2.541791ms)
+✔ merged and fallback calendars preserve source status while a fresh API recovery overrides an older failure (2.774292ms)
+✔ one-card export preserves caveats, author, source timestamp and snapshot without personal fields (6.834708ms)
+✔ historical/dated states and missing dates never become current or zero (0.324375ms)
+✔ unsafe URLs, withdrawn claims and oversized qualifications cannot export unchecked (0.862958ms)
+✔ text wrapping retains negative values, CJK and unbroken source strings (3.615167ms)
+✔ share control is independent of navigation and an export failure stays in the dialog (49.707875ms)
+✔ candle aggregation separates Monday weeks and calendar months, preserving OHLC and zero volume (2.44575ms)
+✔ individual expiry never inherits combined levels or the expected move expiry (11.222417ms)
+✔ missing, stale and out-of-range prices never create a green water score (0.131792ms)
+✔ saved quote amount and source time remain distinct from daily-close validity (48.323916ms)
+✔ missing and non-finite OHLC values cannot become zero-price candles (7.025375ms)
+✔ chart zoom works without reloading data; reset also restores automatic price scaling (156.3775ms)
+✔ cold chart retries 202 and displays the completed result (7.674584ms)
+✔ stale bars disclose their lag and scheduled retries stop on disposal (5.01375ms)
+✔ browser and explicit theme changes repaint every chart layer without refetching, then unsubscribe (25.597042ms)
+✔ far-away option levels stay listed without flattening candles; explicit fit and reset preserve prices and focus (14.76075ms)
+✔ compact candle controls include two years for Free, cached aggregation and keyboard-accessible symbol switching (11.21125ms)
+✔ wall distances name their saved spot separately from the dated candle close and never invent quote time (8.100916ms)
+✔ reference rail stays outside the plot and follows expiry, theme and responsive disclosure without refetching (35.727458ms)
+✔ missing or invalid snapshot spot never falls back to the candle close for wall comparison (16.321292ms)
+✔ bar completion follows the API session facts rather than the browser date or latest bar date (0.140417ms)
+✔ an intraday candle is never labelled a completed close, while its OHLC remains intact (5.260667ms)
+✔ a saved intraday bar stays unfinished after the close and shows its actual observation time (8.385583ms)
+✔ scheduled bars refresh adopts complete two-year history in place (full range expands) (23.84225ms)
+✔ scheduled bars refresh adopts complete two-year history in place (zoomed dates preserved) (13.263708ms)
+✔ shared completion also leaves a cold chart placeholder without another request (3.418125ms)
+✔ support preserves the exact owner destination and handles clipboard permission failures: zh (992.264709ms)
+✔ support preserves the exact owner destination and handles clipboard permission failures: en (813.948958ms)
+✔ buyers and sellers are distinct, with business references separate from returns (40.096542ms)
+✔ only the matching peer basket can display a relative return (14.730042ms)
+✔ disabled, reclassified or mismatched comparisons cannot leak returns through details (4.512375ms)
+✔ COIN graph and exact source dialog distinguish a broad sector reference from ETF membership (50.265584ms)
+✔ AVGO industry reference shows only a dated, sourced constituent record and never infers it (2.206959ms)
+✔ missing classification and legacy contracts retain the pair without invented scope or holdings (0.49175ms)
+✔ source metadata is text; credentialed and unsafe URLs cannot establish membership (0.479541ms)
+✔ stock brief comparison uses the same scope details and theme basket is not called business peers (1.902625ms)
+✔ approved product descriptor does not permit trading calls or hide another banned phrase (46.21625ms)
+✔ reviewed views survive omitted public quotations and keep missing qualifiers explicit (5.327ms)
+✔ publication references and prospective pending open stay distinct without fake fills (16.698042ms)
+✔ corrected historical interpretation stays labeled and v2 retains source proof (0.522083ms)
+✔ map and creator adapters preserve self-reported behavior separately from outlook (0.733458ms)
+✔ progress preserves true zero and channel scope without turning retry time into an ETA (16.001875ms)
+✔ a bounded readable scan is a lower bound, never an exact or invented total (1.520042ms)
+✔ invalid status or dates cannot become apparently complete coverage (0.901542ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.392Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.395Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 4,
+  status: 200,
+  items: 1,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.433Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.434Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.441Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.441Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 13
+}
+✔ en: two unfollowing users discover the same historical creator absent from the recent feed (59.301583ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.447Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 18
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.448Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 18
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.476Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 21
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.477Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 21
+}
+✔ en: discovery source link opens exactly its historical post and highlighted point (35.244708ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.484Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 25
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.484Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 25
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.488Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 29
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.488Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 29
+}
+✔ en: directly opening or reloading a historical creator route retains the discovery-only author (11.615667ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.500Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 36
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.501Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 36
+}
+✔ en: Following → add fetches watchlist-scoped discovery before showing its results (12.512959ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.513Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 41
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.514Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 41
+}
+✔ en: Following → empty-following fetches watchlist-scoped discovery before showing its results (12.874875ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.540Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 48
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.540Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 48
+}
+✔ en: returning from a search-selected creator reloads the directory after clearing the query (26.422958ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.547Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 54
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.548Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 2,
+  request_id: 54
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.560Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 59
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.561Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 59
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.586Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 63
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.587Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 63
+}
+✔ en: refreshing rereads newly watched tickers and an empty watchlist remains empty until All is explicit (45.208792ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.658Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 74
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.658Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 74
+}
+✔ en: name, ticker and bilingual opinion queries intersect the selected stocks using GET only (72.528125ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.677Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 82
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.677Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 82
+}
+✔ en: an obsolete search response cannot replace the newer query or survive unmount (19.285708ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.680Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 88
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.680Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 88
+}
+✔ en: refresh removes withdrawn views even when the recent creator catalogue still contains the author (6.047542ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.445Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.448Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 3,
+  status: 200,
+  items: 1,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.480Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.481Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.489Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.489Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 13
+}
+✔ zh: two unfollowing users discover the same historical creator absent from the recent feed (54.532417ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.494Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 18
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.494Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 18
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.517Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 21
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.517Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 21
+}
+✔ zh: discovery source link opens exactly its historical post and highlighted point (27.96075ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.523Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 25
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.523Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 25
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.533Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 29
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.533Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 29
+}
+✔ zh: directly opening or reloading a historical creator route retains the discovery-only author (15.9715ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.562Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 36
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.563Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 36
+}
+✔ zh: Following → add fetches watchlist-scoped discovery before showing its results (29.293667ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.583Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 41
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.583Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 41
+}
+✔ zh: Following → empty-following fetches watchlist-scoped discovery before showing its results (20.449417ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.632Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 48
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.639Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 7,
+  status: 200,
+  items: 1,
+  request_id: 48
+}
+✔ zh: returning from a search-selected creator reloads the directory after clearing the query (48.770291ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.645Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 54
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.646Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 2,
+  request_id: 54
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.650Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 59
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.650Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 59
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.679Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 63
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.679Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 63
+}
+✔ zh: refreshing rereads newly watched tickers and an empty watchlist remains empty until All is explicit (45.976959ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.709Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 74
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.709Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 74
+}
+✔ zh: name, ticker and bilingual opinion queries intersect the selected stocks using GET only (30.434334ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.726Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 82
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.726Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 82
+}
+✔ zh: an obsolete search response cannot replace the newer query or survive unmount (16.396958ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.729Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 88
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.729Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 88
+}
+✔ zh: refresh removes withdrawn views even when the recent creator catalogue still contains the author (6.92475ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.476Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.480Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 4,
+  status: 200,
+  items: 0,
+  request_id: 5
+}
+✔ creator research uses private endpoint and does not fall back when Pro expires (4.697125ms)
+✔ creator feature links retain only safe public navigation choices through sign-in (1.154ms)
+✔ stock matching spans creators but is exact, quality-aware and not a directional inference (0.41625ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.557Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.557Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 12
+}
+✔ simulation deep links, tab navigation and ranking preserve settings without publishing holdings (88.062583ms)
+✔ an exact research point remains shareable through login and language route serialization (0.263334ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.569Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 17
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.569Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 17
+}
+✔ Call history navigation sends Following to the server and Discover keeps the wider scope (15.824625ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.484Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.486Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 2,
+  status: 200,
+  items: 0,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.503Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.503Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 7
+}
+✔ a historical loss is visible with its basis and inspectable date; missing paths are never invented (30.266958ms)
+✔ opening a creator renders its preloaded shared page without another fetch or analysis POST (20.901709ms)
+✔ expanded video history fetches that channel and continues beyond the global recent feed (21.282292ms)
+✔ bounded channel counts disclose their sample and retain a path to older records (7.967792ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.498Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.500Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 2,
+  status: 200,
+  items: 1,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.569Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.570Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 13
+}
+✔ explicit Add creator lookup finds a Chinese channel with no summaries independently of discovery stock filters (70.993542ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.601Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 17
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.601Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 17
+}
+✔ Following retains unrelated posts and marks watched stocks only on reviewed content (32.341166ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.630Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 23
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.630Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 23
+}
+✔ explicit stock links retain related content and language URL despite a saved person lookup (30.978875ms)
+✔ old lookup restores only in explicit Add and never replaces Following or the discovery query (14.441209ms)
+✔ creator history preserves versions and composes with following and stock search (1.19725ms)
+✔ expanded history shows a long note once while retaining qualifications and original evidence (28.752209ms)
+✔ free creator research reads the server-scoped results (1.637333ms)
+✔ paid history keeps a loss, exact dates, and unavailable windows visible (16.869416ms)
+✔ superseded interpretation is available only in historical view (0.105584ms)
+✔ canonical points survive later empty legacy revisions and collapse only their exact legacy duplicates (0.744542ms)
+✔ unmatured window shows known prices and condition; more pages retain previous views (19.242833ms)
+✔ stance aliases normalize without making a mere mention bullish (0.121709ms)
+✔ uncomputed, immature, missing-price and unknown-time views remain distinct (0.10175ms)
+✔ coverage is for loaded views and an older mature view arrives on the next page (16.307667ms)
+✔ groups order by publication then same-video source position, never processing time or topic text (0.39725ms)
+✔ deduplication uses exact point identity and retains different conditions in one source topic (0.104459ms)
+✔ groups default closed, keep distinct returns and stay open when another page merges (18.933125ms)
+✔ exact point link opens its own group while keeping other creators collapsed (2.7145ms)
+✔ an unloaded exact point is acknowledged and expands only after its explicit next page arrives (9.762708ms)
+✔ stock entry filters on the server before pagination and keeps the filter on later pages (6.935375ms)
+✔ an unmatched partial page does not claim that no stock views exist or load pages automatically (0.902084ms)
+✔ Following uses a server page scope without sending personal creator IDs (4.533834ms)
+✔ changed follow scope retries a fresh first page after invalid cursor, retaining rows until retry (7.52975ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.543Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.551Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 8,
+  status: 200,
+  items: 0,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.565Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.565Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.607Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.608Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.632Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 15
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.633Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 15
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.633Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 19
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.634Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 19
+}
+✔ a failed creator read retries the same source route with GETs and does not start analysis (115.501458ms)
+✔ a failed read from an aborted route does not leave a retry control on an old page (1.643958ms)
+✔ an exact source denied by the API shows Pro access instead of an endless retry or feed fallback (1.45525ms)
+✔ identical wording in one source keeps both original records and distinct excerpt availability (3.996458ms)
+✔ grouping cannot blend identities, bilingual meaning, qualification or source revisions (2.013167ms)
+✔ absent identity, missing translations and misleading source URLs stay separate (0.168ms)
+✔ one video can retain separate source passages without changing the stable reading order (0.143042ms)
+✔ verified mentions remain explicit, every passage is reachable and links are constrained (17.997292ms)
+✔ one presentation replaces only covered legacy stocks and retains opposing and conditional viewpoints (4.266292ms)
+✔ a reviewed position statement remains reachable and supersedes its old neutral call (3.4725ms)
+✔ caption correction is labelled and the exact original remains separately accessible (1.437333ms)
+✔ stock-scoped previews lead with its actual views while retaining other stocks and exact source links (4.696292ms)
+✔ repeated prose renders once while each record keeps its source excerpt, time range and exact map link (2.652458ms)
+✔ an exact link to either repeated record opens that record and keeps later unique viewpoints reachable (3.529958ms)
+✔ missing video time does not acquire a fictional zero timestamp, while actual zero is retained (0.473958ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.652Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.655Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 3,
+  status: 200,
+  items: 0,
+  request_id: 3
+}
+✔ entry selects recent reviewed sources, prioritises language and never relies on a creator name (10.326417ms)
+✔ avatar preview uses exact source links; follow requires a separate deliberate click (26.397084ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.678Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.679Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 8
+}
+✔ new accounts see ready creators without a lookup, auto-follow or model job (27.888333ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.706Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.706Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 13
+}
+✔ search, followed workspace and source pages do not add an unrelated recommendation panel (28.310666ms)
+Ducky read {
+  at: '2026-09-11T08:03:15.709Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 18
+}
+Ducky read {
+  at: '2026-09-11T08:03:15.709Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 18
+}
+✔ refresh removes withdrawn discovery recommendations rather than reusing stale cards (6.45025ms)
+✔ inherited watch updates pause explicitly and do not grant external permission (66.145458ms)
+✔ saved topics and device settings precede a collapsed watchlist without enabling push (15.215458ms)
+✔ new users can add a topic directly and watchlist disclosure stays open through save and rollback (38.432292ms)
+✔ superseded deep links hide contradictory old content and keep historical links, dates and read actions (12.876833ms)
+✔ missing status and explicit current status retain the summary, evidence and optional preview (8.393041ms)
+✔ refreshing a corrected item removes old evidence and an old preview handler cannot send it (19.684875ms)
+✔ a labeled notification test requires a separate click and targets only this browser (13.040833ms)
+✔ missing server subscription acknowledgement cannot enable device delivery (10.809917ms)
+✔ late authenticated responses cannot log out, upsell, or populate a replacement account (2.194125ms)
+✔ free members only load their saved settings and can pause or remove without paying (12.979167ms)
+✔ Pro inbox preserves source dates, direct vs sector matches and explicit historical replays (5.659625ms)
+✔ watchlist selection saves only after user input, with push off; failed writes do not persist in UI (24.054792ms)
+✔ 402 clears private content while preserving cancellation access for saved topics (9.128125ms)
+✔ read status changes after server success and repeated clicks share one mutation (15.746833ms)
+✔ denied push permission leaves the inbox available and makes no subscription or test request (15.318584ms)
+✔ explicit browser authorization registers this device but does not enable topic push or send a test (9.461041ms)
+✔ visibility pauses initial reads; resume is single-flight and unload blocks late results (4.548917ms)
+✔ account switches during push permission cannot attach a subscription to the next account (11.865583ms)
+✔ pagination merges repeated ids and direct deep links remain safe through login (5.935125ms)
+✔ unsafe source content is rendered as text, missing dates stay missing and invalid timestamps have no jump (4.169834ms)
+✔ transcript provenance labels distinguish machine transcription, generated captions and unknown sources (33.262875ms)
+✔ upgrading while saved-topic management is loading starts the private inbox after that flight settles (15.093667ms)
+✔ entering an already-followed ticker does not reset its existing push preference (8.315ms)
+✔ service-worker hints refresh the visible inbox once, reject foreign origins and queue hidden updates (33.675125ms)
+✔ a push hint received during an inbox request is coalesced into one follow-up read (2065.262834ms)
+✔ simulation conserves capital, cash budget, and includes missed rebounds (2.029208ms)
+✔ simulation selects earliest verified version, never a revised successful take (0.170333ms)
+✔ simulation uses singular day and trade labels only for a count of one (49.432208ms)
+✔ identity dialog never subscribes before affirmative confirmation, including cancel (17.34875ms)
+✔ free simulation reads scoped history and fictional returns require explicit selection (7.942708ms)
+✔ an accepted follow cannot be presented as cancelled while its request is pending (4.049542ms)
+✔ autocomplete keyboard selection confirms a cached channel and waits for a saved follow (11.810542ms)
+✔ lookup resumes after returning, polls automatically, and ignores results after cleanup (5.679333ms)
+Ducky read {
+  at: '2026-09-11T08:03:16.085Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.086Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 13
+}
+✔ old autocomplete responses cannot replace a newer search (5.762791ms)
+Ducky read {
+  at: '2026-09-11T08:03:16.101Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 21
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.101Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 21
+}
+✔ follow feedback persists and analysis completion is read automatically (25.882042ms)
+✔ progress reads are single-flight, back off on failure and pause in hidden tabs (1.8845ms)
+✔ verified close uses completed sessions and expires the verification, not the price (3.212625ms)
+✔ homepage keeps the close label, retries an outage online, and drops late work on dispose (417.070625ms)
+✔ periodic public close reads pause while hidden and reject an older returned session (116.311125ms)
+Ducky read {
+  at: '2026-09-11T08:03:16.083Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.085Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 2,
+  status: 200,
+  items: 0,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.088Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.088Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 6
+}
+Missing translation: account.profile
+Ducky read {
+  at: '2026-09-11T08:03:16.103Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 19
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.103Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 19
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.104Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 21
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.104Z',
+  stage: 'failure',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 21,
+  reason: 'session_changed'
+}
+✔ boot renews an expired saved credential then hydrates without a provider redirect (11.41475ms)
+✔ cookie-only restoration survives unavailable local storage (1.025417ms)
+✔ logout does not bootstrap a still-pending cookie in the same browser (0.676625ms)
+✔ late refresh cannot revive a logged-out account or overwrite a new login (0.661083ms)
+✔ simultaneous renewals share one request (1.209792ms)
+✔ an authenticated 401 renews and retries exactly once (1.593083ms)
+✔ renewal outage keeps the account for a later retry (0.679417ms)
+✔ late credential exchange cannot establish after logout (1.402667ms)
+✔ avatar is an accessible profile link with safe URL and error fallback (6.6505ms)
+✔ same-account renewal in another tab retries with its newer token without logging out (1.523ms)
+✔ bootstrap adopts a same-account renewal that arrived while its refresh was pending (0.59975ms)
+✔ a shared renewal can recover a stale refresh 401 without overwriting the winner (0.248042ms)
+✔ a different account in shared storage never receives an old-account write retry (0.810917ms)
+✔ another tab logout cancels late renewal without restoring credentials (0.383792ms)
+✔ a queued storage event cannot erase a subsequent sign-in (0.116125ms)
+✔ a password/session epoch change is not treated as a harmless renewal (0.13775ms)
+✔ waiting for the cross-tab lock adopts the winner without another refresh request (0.212625ms)
+✔ new destinations survive sign-in and radar links select one matching category (64.563708ms)
+✔ phone navigation promotes enabled research and keeps displaced tools reachable in More (118.0345ms)
+✔ discovery shows stocks outside the watchlist, preserving zero and unknown metrics (17.7145ms)
+✔ all accounts request candidates and stale results retain an explicit update notice (10.883542ms)
+✔ a late discovery result cannot populate a new session (7.968833ms)
+✔ price decoration rejects malformed, mismatched and missing quotes without fabricating zeros (0.696ms)
+✔ homepage tour opens each named tool and keeps billing hidden in both languages (153.931ms)
+✔ quote cards keep refreshing after the interactive duck moves into the support section (44.650583ms)
+✔ explicit sign-in collects missing or unverified email without losing its safe destination (4.348167ms)
+✔ save sends one code request, verification keeps the account and unlocks its destination (92.496791ms)
+✔ expired or unconfirmed verification never offers continue or announces verified (9.4065ms)
+✔ a saved email with a failed or throttled code shows a persistent retry instruction until resend succeeds (26.265917ms)
+✔ email setup omits unchanged country values and preserves edited free-text countries (11.552625ms)
+✔ leaving or switching accounts during verification cannot hydrate the wrong account (9.4855ms)
+✔ English idea lists identify Chinese originals and keep snapshot clocks and illustrative outcomes honest (153.501167ms)
+✔ idea list and detail prefer provided English titles without inventing translated evidence (52.3605ms)
+✔ an idea link with no matching record has one clear empty state (29.168916ms)
+✔ English track record shows the existing English disclaimer and preserves slash-separated terms (39.518375ms)
+✔ Chinese-only first-party reports disclose missing English and retain the exact original (16.852625ms)
+✔ existing bilingual report portions retain losses and full raw evidence without on-read translation (0.5935ms)
+✔ English reports may contain attributed Chinese names and original source-language news stays readable (0.085417ms)
+✔ price formatting distinguishes sub-cent prices, actual zero and missing values (22.086125ms)
+✔ price snapshots preserve small gains and losses at recorded precision (26.666ms)
+✔ actual zero remains neutral and missing data remains unavailable (9.7065ms)
+✔ grouping retains every point and source revision; identical names do not merge different authors (1.104084ms)
+✔ stance lanes retain opposing records and group expanded author history with repeat notices and exact links (37.781833ms)
+✔ real viewpoints stay in the first map preview and author preview before generic mentions (8.533625ms)
+Ducky read {
+  at: '2026-09-11T08:03:16.277Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.280Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 3,
+  status: 200,
+  items: 0,
+  request_id: 3
+}
+✔ a discovered new upload is visible without being promoted to a reviewed opinion (0.901709ms)
+✔ exact creator/post/point link survives sign-in without carrying private values (0.896ms)
+Ducky read {
+  at: '2026-09-11T08:03:16.319Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.320Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.324Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.324Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 10
+}
+✔ unfollowed old source loads by exact index, focuses expanded point, and scope navigation clears it (50.304875ms)
+✔ a map link opens the canonical position statement instead of the same-stock legacy neutral call (9.0655ms)
+Ducky read {
+  at: '2026-09-11T08:03:16.336Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.338Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.341Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 3,
+  status: 200,
+  request_id: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.357Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.357Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 2
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.358Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 2
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.362Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.362Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.363Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.374Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.374Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.375Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.386Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.386Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.386Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.391Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.391Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.392Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.401Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.401Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.401Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.413Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.413Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.413Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.416Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.416Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 9
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.416Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 9
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.425Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.425Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.425Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.465Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.465Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 11
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.465Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 11
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.474Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.474Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.474Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 12
+}
+✔ a ticker-like channel name is labelled as creator on both layouts and keeps the CEG route (34.281625ms)
+✔ focused map checks a creator in place, retaining the stock, original segment and return focus (11.770417ms)
+✔ direct source links retain stock context when returning to the creator, including retained link aliases (93.70075ms)
+✔ historical ownership direction stays consistent across badge, filter, source and dates (3.964458ms)
+✔ ownership labels require a consistent typed event, never words or retrieval age (0.233625ms)
+✔ saved overview is visible on arrival; reasons and exact citations require no network (1.445083ms)
+✔ only one overview appears above the graph, with detailed analysis still available (5.263083ms)
+✔ two evidence sections stay readable without inventing a watch item or fetching data (6.347ms)
+✔ an earlier analysis keeps its dated evidence while the graph shows a newer observation (17.610791ms)
+✔ previous analysis fails closed without a complete original-evidence binding and after withdrawal (0.465291ms)
+✔ unready snapshots never show an old analysis or invent an update time (0.805417ms)
+Ducky read {
+  at: '2026-09-11T08:03:16.483Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.483Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.483Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.488Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.488Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 14
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.489Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 14
+}
+✔ reopening the selected ticker reads its latest snapshot instead of doing nothing (16.834334ms)
+Ducky read {
+  at: '2026-09-11T08:03:16.525Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.525Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 16
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.525Z',
+  stage: 'failure',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 16,
+  reason: 'session_changed'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.591Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.591Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 17
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.591Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 17
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.617Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.618Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 18
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.618Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 18
+}
+✔ mobile picker reopens the current ticker with a fresh read and closes the dialog (12.033583ms)
+✔ six balanced nodes, exact source passage and progressive disclosure (4.110875ms)
+✔ no opinion search; stance filters and one expansion retain every viewpoint (19.75975ms)
+✔ untrusted captions stay text and unsafe source links are rejected (5.743125ms)
+✔ free users read their selections without fetching an unselected map (1.056834ms)
+✔ direct route uses shared API, logout removes data and old responses cannot return (0.604292ms)
+✔ evidence deep links survive sign-in without arbitrary query data (0.092083ms)
+✔ measured connectors follow the displayed cards and release their resize observer (45.0605ms)
+✔ point numbers keep matching summary citations after filtering (6.623209ms)
+✔ source dialogs omit a repeated explanation while retaining author and dates (4.101291ms)
+✔ one shared set of points forms support, opposition and context branches (9.25625ms)
+✔ phone stock picker and stance filters reuse the loaded graph without watchlist writes (9.611208ms)
+✔ untranslated source entries show original text without inventing a translation (7.381708ms)
+✔ platform identity uses source domains and structured metadata, never author names or stance (0.268834ms)
+✔ source branding preserves viewpoint, exact links, counts and source-dialog attribution (9.232334ms)
+✔ all fifty watched stocks remain reachable through the visible selector without searching (26.422375ms)
+✔ free guide exposes actions and actual server caps; paid users keep their workspace (12.113709ms)
+✔ watchlist limit names the correct feature and keeps the free path available (13.606542ms)
+✔ historical examples retain losses and never read current private reports (19.95075ms)
+Ducky read {
+  at: '2026-09-11T08:03:16.688Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.689Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.690Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.710Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.710Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.714Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.714Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.715Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.725Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 9
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.725Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 9
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.738Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.738Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.739Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 12
+}
+✔ a chosen free map stays locked until explicit save; unavailable data costs no slot (24.049959ms)
+✔ Pro watchlist has no free guide or placeholder text (8.994959ms)
+(node:58674) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ unselected creator content is unavailable, never falsely reported as no summaries (18.855625ms)
+✔ default Free map opens the selected stock, and removing it revokes the local research access (13.549792ms)
+✔ Discovery keeps stance, timestamped source and missing English explicit (2.894667ms)
+Ducky read {
+  at: '2026-09-11T08:03:16.668Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.670Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 2,
+  status: 200,
+  items: 0,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.686Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.686Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 7
+}
+✔ OAuth return skips stale stored auth and exchanges only its secure cookie (10.496125ms)
+✔ Google cancellation makes no session request and shows a retry route (6.522791ms)
+✔ email registration checks confirmation then sends one request and returns to verification (11.719833ms)
+Ducky read {
+  at: '2026-09-11T08:03:16.851Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.856Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 5,
+  status: 200,
+  items: 0,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.934Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:16.935Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 8
+}
+✔ Google Pro login → logout → failed provider lookup keeps a recoverable Google entry (98.963125ms)
+✔ login: unavailable and malformed provider responses show retry; explicit disabled stays hidden (137.353959ms)
+✔ login: navigation cancels provider loading and ignores the late response (39.143458ms)
+✔ register: unavailable and malformed provider responses show retry; explicit disabled stays hidden (111.559208ms)
+✔ register: navigation cancels provider loading and ignores the late response (29.383ms)
+✔ blocked, unavailable and stalled provider requests expose retry without ending a session (87.262875ms)
+✔ a stalled JSON body also times out; its late result cannot undo a successful retry (75.211375ms)
+✔ stock demo loads no data before intent; gates ticker, age and unsafe source links (177.640708ms)
+✔ editing the stock cancels an in-flight context and market failures stay retryable (56.625041ms)
+✔ historical filings retain day precision and distinguish collection from publication (68.628208ms)
+✔ market preview explains when no source can be displayed instead of implying fresh news (36.8555ms)
+✔ invalid market sources do not hide valid headlines later in the response (40.849375ms)
+✔ the public homepage works before JS with dated, attributed examples and the full loss-inclusive paths (185.331333ms)
+✔ stock tabs support keyboard order, one visible panel and independent evidence disclosure (113.866958ms)
+✔ concept and theme links are shareable, translated and do not affect the default homepage (168.734ms)
+✔ motion pauses on request and honors system reduced motion without offering an ineffective toggle (81.674792ms)
+✔ research opens from the CTA and deep link, restores state and closes on browser navigation: zh (129.551667ms)
+✔ research opens from the CTA and deep link, restores state and closes on browser navigation: en (126.656042ms)
+✔ zh ideas: format examples have no performance (161.277209ms)
+✔ zh idea: format examples have no performance (25.311417ms)
+✔ zh ideas: paper losses remain visible (20.862959ms)
+✔ zh idea: paper losses remain visible (31.768541ms)
+✔ en ideas: format examples have no performance (28.236625ms)
+✔ en idea: format examples have no performance (19.487292ms)
+✔ en ideas: paper losses remain visible (16.526667ms)
+✔ en idea: paper losses remain visible (19.743083ms)
+✔ zh idea language controls retain the selected record (156.8435ms)
+✔ en idea language controls retain the selected record (30.389042ms)
+Ducky read {
+  at: '2026-09-11T08:03:17.053Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.055Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.063Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.065Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 2
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.065Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 2,
+  status: 503,
+  request_id: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.066Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 2
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.066Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 3,
+  status: 503,
+  request_id: 1,
+  reason: 'http'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.066Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.091Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 0
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.117Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.117Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.117Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.118Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.126Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.131Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.131Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 5,
+  reason: 'network'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.132Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.132Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 6,
+  reason: 'network'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.132Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.132Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 7,
+  reason: 'network'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.132Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.132Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 401,
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.132Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 401,
+  request_id: 8,
+  reason: 'http'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.133Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 9
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.133Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 402,
+  request_id: 9
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.133Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 402,
+  request_id: 9,
+  reason: 'http'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.133Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.133Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 429,
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.133Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 429,
+  request_id: 10,
+  reason: 'http'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.133Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 11
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.133Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 403,
+  request_id: 11
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.133Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 403,
+  request_id: 11,
+  reason: 'http'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.134Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 14
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.134Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 503,
+  request_id: 14
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.134Z',
+  stage: 'failure',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 503,
+  request_id: 14,
+  reason: 'http'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.134Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 15
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.135Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 1,
+  status: 0,
+  request_id: 15,
+  reason: 'cancelled'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.135Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 16
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.135Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 16,
+  reason: 'session_changed'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.135Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 17
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.136Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 1,
+  status: 0,
+  request_id: 17,
+  reason: 'network'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.136Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 18
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.136Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 18,
+  reason: 'network'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.136Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 19
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.136Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 19,
+  reason: 'network'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.136Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 20
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.136Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 20,
+  reason: 'network'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.136Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 21
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.137Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 21
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.137Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 22
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.137Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 22,
+  reason: 'network'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.137Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 23
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.137Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 23,
+  reason: 'network'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.137Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 24
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.137Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 24,
+  reason: 'network'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.137Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 25
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.137Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 25
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.137Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 26
+}
+✔ first failed research read recovers in place without writes, lost focus or extra ticker fetches (85.776834ms)
+✔ failed first read gets at most two attempts; hidden/offline pages pause them (2.040708ms)
+✔ auth, cancellation, rate limits, searches, histories and writes never enroll as initial recovery (3.293291ms)
+✔ failed reads cannot migrate to a later route/account or complete after route abort (0.989667ms)
+✔ a recovered read rejoins normal refresh including source withdrawal (1.024833ms)
+Ducky read {
+  at: '2026-09-11T08:03:17.151Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 14,
+  status: 0,
+  request_id: 26,
+  reason: 'timeout'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.151Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 27
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.151Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 27,
+  reason: 'cancelled'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.152Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.152Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.153Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 28
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.154Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 29
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.154Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 28
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.154Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 29
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.154Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.157Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 0
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.158Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.158Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.159Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 30
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.159Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 31
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.159Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 31
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.159Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.161Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 0
+}
+✔ request deadline includes the response body and distinguishes timeout from route abort (14.17175ms)
+✔ malformed research is classified without hiding usable prices or claiming model progress (5.961125ms)
+Ducky read {
+  at: '2026-09-11T08:03:17.165Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 6,
+  status: 200,
+  items: 1,
+  request_id: 30
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.172Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 1
+}
+✔ a rendering exception cannot erase an accepted research response (14.429416ms)
+✔ only canonical internal routes survive login; credentials and external destinations do not (4.248167ms)
+✔ expired, malformed, future-dated or modified return state falls back safely (2.797334ms)
+Ducky read {
+  at: '2026-09-11T08:03:17.053Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.054Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.065Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.065Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.076Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.081Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 5,
+  status: 200,
+  items: 0,
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.082Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 16
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.082Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 16
+}
+✔ homepage creator link survives boot, password login and destination rendering (65.114125ms)
+✔ Google round trip returns to the requested chart; explicit linking still returns to profile (9.543583ms)
+✔ new email or invite account can verify its email before continuing to its requested page (0.122375ms)
+✔ line paths preserve zero and missing-data gaps without joining across them (0.836541ms)
+✔ stock lines share a valid starting date and rebase independently to one hundred (0.128125ms)
+✔ line chart supports ranges, separate yield units and exact keyboard date readouts (27.425ms)
+✔ free macro card never requests private data; account change suppresses pending chart (26.496209ms)
+✔ missing funding displays an uncertainty range without manufacturing a score (3.166208ms)
+✔ event probabilities preserve exact labels, timestamp, rules and thin/stale conditions (20.7225ms)
+✔ PPI missing odds remain unavailable, invalid prices cannot render as probabilities (1.766ms)
+✔ market context labels headline coverage and creator attribution without raw HTML (3.721833ms)
+✔ free market preview makes only a public request and logout discards pending private data (29.905583ms)
+✔ market summaries lead while counts, uncertainty and sources remain available on expansion (2.612792ms)
+Ducky read {
+  at: '1970-01-01T00:01:45.000Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 4
+}
+Ducky read {
+  at: '1970-01-01T00:01:45.000Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 4
+}
+✔ existing Telegram nonce sign-in still hydrates once before completion (14.319833ms)
+Ducky read {
+  at: '1970-01-01T00:01:47.000Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 10
+}
+Ducky read {
+  at: '1970-01-01T00:01:47.000Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 10
+}
+✔ nonce login creation and polling retry transient errors while respecting cancellation (6.423792ms)
+✔ stopping a pending nonce creation never shows a late QR or starts a poll (4.574875ms)
+✔ a changed account or page ignores a late nonce poll (3.63ms)
+Ducky read {
+  at: '1970-01-01T00:01:45.000Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 17
+}
+Ducky read {
+  at: '1970-01-01T00:01:45.000Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 17
+}
+Session profile unavailable 401
+✔ profile hydration failure is visible even after the nonce issued a token (3.035417ms)
+✔ preferences require an explicit save, do not send implicitly and cannot enable an unverified email (28.884208ms)
+✔ invalid settings are retryable and a server-disagreed preference never announces saved (8.994917ms)
+✔ a linked but unreachable Telegram account cannot be enabled until the bot is restarted (2.8955ms)
+✔ connecting Telegram starts a nonce only on request and cancels without sending or changing preferences (7.9885ms)
+✔ one test request survives double click and partial acceptance remains pending until both results are terminal (13.344208ms)
+✔ unknown results allow only a status refresh until the original result is confirmed (6.624417ms)
+✔ a lost submission response reuses the same key and channels; a later explicit test gets a new key (14.608542ms)
+✔ malformed, cross-message and incomplete receipts never appear as successful tests (19.350167ms)
+✔ a pending receipt at the polling limit requires refresh instead of another send (21.122167ms)
+✔ late receipt responses and scheduled polls stop when the account or view changes (18.389458ms)
+✔ notification-only worker completes activation before taking over existing tabs (4.143792ms)
+✔ push keeps a stable visible tag, exact owned-origin link and no cross-account payload broadcast (0.849292ms)
+✔ external, script, encoded-path and credentialed destinations fall back to the app (2.172875ms)
+✔ notification click focuses exact item or navigates an existing app to its precise item (1.600625ms)
+✔ an exact creation URL cannot focus stale SPA content without navigating to the item (0.5345ms)
+✔ notification click never focuses a foreign URL containing our deep link (0.324916ms)
+✔ a disappearing app tab still opens the selected notification (0.895458ms)
+✔ notifications use the current brand for legacy payloads and preserve descriptive titles (0.47525ms)
+✔ malformed push still shows a bounded fallback notification (0.387583ms)
+Ducky read {
+  at: '2026-09-11T08:03:17.648Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.649Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.657Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.657Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.664Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.664Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.665Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+(node:58688) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ built OAuth boot renders the authenticated destination with stale legacy modules present (113.0145ms)
+Ducky read {
+  at: '2026-09-11T08:03:17.580Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.582Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 2,
+  status: 200,
+  items: 0,
+  request_id: 5
+}
+✔ JSON old-tab 401 never revokes or erases a new Google session (9.942666ms)
+✔ binary old-tab 401 never revokes or erases a new Google session (0.7565ms)
+✔ an expired boot token does not clear the replacement saved by another tab (3.535125ms)
+✔ a current 401 clears only the expired local session and does not post logout (0.451625ms)
+✔ late same-tab failures cannot clear a replacement session (0.299458ms)
+✔ explicit logout still revokes this tab, preserving another tab's saved account (0.458583ms)
+✔ current product gives full UI access to any signed-in account without claiming payment (7.796709ms)
+✔ old checkout links resolve to the account page without checkout params (0.296667ms)
+✔ full creator feed is selected for an account with no paid subscription (2.3375ms)
+✔ capacity limits explain replacement without a purchase option (3.931375ms)
+✔ an old API 402 during deployment is a loading failure, not a capacity claim (5.843875ms)
+✔ built pages have no subscription entry, pricing comparison or account badge (669.119875ms)
+✔ URL filters send USD bounds, server watchlist scope and a bounded search (3.648125ms)
+✔ ratings preserve genuine zero, but never create stars for missing or malformed evidence (21.261916ms)
+✔ provider ratios retain zero and percentage points without claiming comparable valuation (8.280166ms)
+✔ stale comparisons and unsourced or unsafe explanations are withheld (7.565125ms)
+✔ comparable valuation requires a same-date supported metric and retains peer sample (3.613583ms)
+✔ filters operate through one cached endpoint and a late previous-filter response cannot overwrite the new result (50.772792ms)
+✔ pagination is single-flight, de-duplicates rows and focuses the first newly loaded stock (34.276667ms)
+✔ pagination restarts at the first page when its daily snapshot changed (13.05425ms)
+✔ unmount and token changes stop late DOM writes, including missing epoch changes (27.318084ms)
+✔ payment expiry presents access information and never keeps candidate cards (2.431333ms)
+✔ a complete universe directory does not imply its price scan is complete (4.114333ms)
+✔ partial evidence retains each known condition without inventing complete stars (8.6515ms)
+✔ factor rendering rejects duplicate keys, unknown versions and malformed or contradictory units (12.759ms)
+✔ IV30/HV20 requires its same-session snapshot and does not reuse old near-expiry ratios (5.496791ms)
+✔ mismatched or incomplete option snapshots cannot populate the ratio; partial observation remains explicit (10.956167ms)
+✔ warming and stale discovery retain dated observations and a recovery link (8.552708ms)
+✔ recorded candidates show their original scope, summary and independent daily price (1.8395ms)
+✔ candidate history loads only on demand and cannot write into another session (41.018875ms)
+✔ candidate history preserves a nonmatch and null reading (13.591208ms)
+✔ catalog coverage does not reinterpret legacy source inventory as completed snapshots (4.513583ms)
+✔ price chart preserves a missing day as a gap and exposes it through the date control (18.620583ms)
+✔ ambiguous date ordering is rejected rather than drawing a misleading price trajectory (0.640875ms)
+✔ a dated current average is a horizontal reference and mismatched dates are not displayed (4.147083ms)
+✔ a long unobserved interval is not drawn as a continuous price path (2.77675ms)
+✔ native captions clear the portrait controls after delayed track load and restore in landscape (64.333833ms)
+✔ tutorial phrase captions reserve width and clear controls at a 320px viewport (4.668041ms)
+✔ collapsing the tutorial pauses only its own video and never starts or loads media (9.347833ms)
+✔ cold chapter clicks wait for metadata; latest choice wins without loading twice or autoplay (77.8515ms)
+✔ chapter choice pauses existing playback and waits for the seek before reporting ready (5.953459ms)
+✔ stale chapter offsets fail instead of silently landing in another scene (5.422125ms)
+✔ unseekable decoders retry on loadeddata; unknown duration waits for a finite value (5.115125ms)
+✔ media failure leaves navigation usable and the next chapter choice retries loading (4.973875ms)
+✔ malformed chapter values and controls targeting a different player stay disabled (5.170916ms)
+✔ cleanup prevents late metadata from moving the player (5.301292ms)
+✔ ordinary playback marks a chapter without forcing playback or changing time (4.298292ms)
+✔ cold metadata with no seekable range waits for progress and only seeks the latest chapter (6.563084ms)
+✔ a clamped seek is not ready and retries only after a later media progress event (5.549584ms)
+✔ seeked without a decoded frame cannot report ready; an existing metadata error can reload (4.736042ms)
+✔ the bilingual same-origin trial shares the release graph while default navigation follows its own flag (224.156292ms)
+Ducky read {
+  at: '2026-09-11T08:03:17.954Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.956Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.966Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.969Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 2
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.971Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 5,
+  status: 200,
+  items: 1,
+  request_id: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.971Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 2,
+  status: 200,
+  items: 1,
+  request_id: 2
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.973Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.994Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.996Z',
+  stage: 'cache_hit',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:17.996Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.004Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.004Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.004Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 4
+}
+✔ stock search shows the selected language without translating source identities (1.368792ms)
+Ducky read {
+  at: '2026-09-11T08:03:18.014Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 10,
+  status: 503,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.014Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 10,
+  status: 503,
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.014Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 10,
+  status: 503,
+  request_id: 3,
+  reason: 'http'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.014Z',
+  stage: 'failure',
+  resource: 'watchlist',
+  elapsed_ms: 10,
+  status: 503,
+  request_id: 4,
+  reason: 'http'
+}
+Ducky research read { stage: 'http', status: 503, reason: 'http' }
+Ducky read {
+  at: '2026-09-11T08:03:18.021Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.022Z',
+  stage: 'request',
+  resource: 'stock_research',
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.023Z',
+  stage: 'response',
+  resource: 'stock_research',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.023Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.023Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.023Z',
+  stage: 'membership_changed',
+  resource: 'watchlist',
+  status: 200,
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.023Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.023Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.028Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.028Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.028Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.032Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 4,
+  status: 503,
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.032Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 4,
+  status: 503,
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.032Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 4,
+  status: 503,
+  request_id: 7,
+  reason: 'http'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.032Z',
+  stage: 'failure',
+  resource: 'watchlist',
+  elapsed_ms: 4,
+  status: 503,
+  request_id: 8,
+  reason: 'http'
+}
+Ducky research read { stage: 'http', status: 503, reason: 'http' }
+Ducky read {
+  at: '2026-09-11T08:03:18.040Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.042Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.042Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.043Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 9
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.043Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.044Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 9
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.044Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.044Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.046Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.047Z',
+  stage: 'request',
+  resource: 'stock_research',
+  request_id: 11
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.047Z',
+  stage: 'response',
+  resource: 'stock_research',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 11
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.048Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.051Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 3,
+  status: 200,
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.051Z',
+  stage: 'membership_changed',
+  resource: 'watchlist',
+  status: 200,
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.051Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.059Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 2,
+  readable: 2
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.059Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.059Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 14
+}
+✔ returning watchlist paints saved prices and research before either request completes (73.825833ms)
+✔ first watchlist paints the just-followed saved overview while its first reads are pending (19.104084ms)
+Ducky read {
+  at: '2026-09-11T08:03:18.066Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 7,
+  status: 503,
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.066Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 7,
+  status: 503,
+  request_id: 14
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.066Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 7,
+  status: 503,
+  request_id: 13,
+  reason: 'http'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.066Z',
+  stage: 'failure',
+  resource: 'watchlist',
+  elapsed_ms: 7,
+  status: 503,
+  request_id: 14,
+  reason: 'http'
+}
+Ducky research read { stage: 'http', status: 503, reason: 'http' }
+Ducky read {
+  at: '2026-09-11T08:03:18.069Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 2,
+  readable: 2
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.076Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 15
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.076Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 16
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.076Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 17
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.076Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 17
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.076Z',
+  stage: 'membership_changed',
+  resource: 'watchlist',
+  status: 200,
+  request_id: 17
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.076Z',
+  stage: 'failure',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 15,
+  reason: 'cancelled'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.076Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 0,
+  request_id: 16,
+  reason: 'cancelled'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.076Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.077Z',
+  stage: 'request',
+  resource: 'stock_research',
+  request_id: 18
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.077Z',
+  stage: 'response',
+  resource: 'stock_research',
+  elapsed_ms: 0,
+  status: 404,
+  request_id: 18
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.077Z',
+  stage: 'failure',
+  resource: 'stock_research',
+  elapsed_ms: 0,
+  status: 404,
+  request_id: 18,
+  reason: 'http'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.077Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.077Z',
+  stage: 'request',
+  resource: 'stock_research',
+  request_id: 19
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.077Z',
+  stage: 'response',
+  resource: 'stock_research',
+  elapsed_ms: 0,
+  status: 410,
+  request_id: 19
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.077Z',
+  stage: 'failure',
+  resource: 'stock_research',
+  elapsed_ms: 0,
+  status: 410,
+  request_id: 19,
+  reason: 'http'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.077Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.078Z',
+  stage: 'cache_miss',
+  resource: 'stock_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.078Z',
+  stage: 'request',
+  resource: 'stock_research',
+  request_id: 21
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.078Z',
+  stage: 'response',
+  resource: 'stock_research',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 21
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.085Z',
+  stage: 'render',
+  resource: 'stock_research',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.085Z',
+  stage: 'cache_hit',
+  resource: 'stock_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.087Z',
+  stage: 'render',
+  resource: 'stock_research',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.087Z',
+  stage: 'request',
+  resource: 'stock_research',
+  request_id: 23
+}
+✔ adding a previously read ticker paints its saved overview before the list reload completes (34.13275ms)
+✔ reads started before a membership mutation cannot restore the old list or erase saved summaries (1.284708ms)
+✔ one missing stock removes only its saved research, leaving other stock summaries readable (0.729833ms)
+Ducky read {
+  at: '2026-09-11T08:03:18.093Z',
+  stage: 'response',
+  resource: 'stock_research',
+  elapsed_ms: 6,
+  status: 503,
+  request_id: 23
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.093Z',
+  stage: 'failure',
+  resource: 'stock_research',
+  elapsed_ms: 6,
+  status: 503,
+  request_id: 23,
+  reason: 'http'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.094Z',
+  stage: 'cache_hit',
+  resource: 'stock_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.096Z',
+  stage: 'render',
+  resource: 'stock_research',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.097Z',
+  stage: 'request',
+  resource: 'stock_research',
+  request_id: 25
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.102Z',
+  stage: 'response',
+  resource: 'stock_research',
+  elapsed_ms: 5,
+  status: 403,
+  request_id: 25
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.102Z',
+  stage: 'failure',
+  resource: 'stock_research',
+  elapsed_ms: 5,
+  status: 403,
+  request_id: 25,
+  reason: 'http'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.103Z',
+  stage: 'cache_miss',
+  resource: 'stock_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.104Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.104Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.106Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 26
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.106Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 27
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.107Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 26
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.107Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 27
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.107Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.109Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.115Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 28
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.115Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 29
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.115Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 28
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.115Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 29
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.116Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.118Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 0
+}
+✔ returning stock uses saved evidence while offline; a permission denial removes it (26.151875ms)
+Ducky read {
+  at: '2026-09-11T08:03:18.124Z',
+  stage: 'request',
+  resource: 'stock_research',
+  request_id: 30
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.124Z',
+  stage: 'response',
+  resource: 'stock_research',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 30
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.125Z',
+  stage: 'cache_hit',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.127Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 31
+}
+✔ fresh unavailable research clears a saved paragraph and closes its source dialog (20.222167ms)
+Ducky read {
+  at: '2026-09-11T08:03:18.135Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 8,
+  status: 200,
+  request_id: 31
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.136Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.136Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.137Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 32
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.137Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 33
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.138Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 32
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.138Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 33
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.138Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.140Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.140Z',
+  stage: 'cache_miss',
+  resource: 'stock_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.141Z',
+  stage: 'request',
+  resource: 'stock_research',
+  request_id: 35
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.141Z',
+  stage: 'response',
+  resource: 'stock_research',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 35
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.141Z',
+  stage: 'render',
+  resource: 'stock_research',
+  items: 0,
+  readable: 0
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.142Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 36
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.142Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 36
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.142Z',
+  stage: 'membership_changed',
+  resource: 'watchlist',
+  status: 200,
+  request_id: 36
+}
+✔ a saved stock graph opens its map before the map request resolves, then respects withdrawal (12.403ms)
+Ducky read {
+  at: '2026-09-11T08:03:18.149Z',
+  stage: 'cache_hit',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.149Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.157Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 2,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.157Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 37
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.157Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 38
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.167Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 10,
+  status: 200,
+  items: 2,
+  request_id: 37
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.167Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 10,
+  status: 200,
+  items: 2,
+  request_id: 38
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.167Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.171Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 2,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.173Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.173Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 39
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.173Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 39
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.175Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.175Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 40
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.175Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 40
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.175Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.175Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 41
+}
+✔ add from a new stock then return to watchlist: previous research remains while only the new ticker is pending (35.147709ms)
+✔ stock briefs reuse the exact shared paragraph and original citations with one cached read (3.175459ms)
+Ducky read {
+  at: '2026-09-11T08:03:18.188Z',
+  stage: 'failure',
+  resource: 'watchlist_research',
+  elapsed_ms: 13,
+  status: 0,
+  request_id: 41,
+  reason: 'session_changed'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.189Z',
+  stage: 'cache_miss',
+  resource: 'stock_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.189Z',
+  stage: 'request',
+  resource: 'stock_research',
+  request_id: 43
+}
+✔ shared brief read failures and account changes cannot expose an earlier paragraph (13.994792ms)
+Ducky read {
+  at: '2026-09-11T08:03:18.196Z',
+  stage: 'failure',
+  resource: 'stock_research',
+  elapsed_ms: 7,
+  status: 0,
+  request_id: 43,
+  reason: 'session_changed'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.203Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.203Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 44
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.204Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 44
+}
+✔ a late stock detail response is discarded after the account epoch changes (7.761667ms)
+✔ core destinations and stock deep links survive sign-in without arbitrary queries (0.781375ms)
+✔ one sentence retains the accepted date and exact source; unbound text is hidden (2.0065ms)
+✔ a longer attributed overview retains the complete mechanism and source without new requests (1.252084ms)
+✔ old and unavailable content cannot appear as current quoted statements (0.784583ms)
+Ducky read {
+  at: '2026-09-11T08:03:18.225Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.225Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 48
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.225Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 48
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.226Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.226Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 50
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.226Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 50
+}
+✔ Today search reaches the backend, preserves pagination and performs no per-card requests (22.893709ms)
+Ducky read {
+  at: '2026-09-11T08:03:18.234Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.234Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 52
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.234Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 52
+}
+✔ malformed/failed research is not a successful empty day and late accounts do not receive text (9.146333ms)
+Ducky read {
+  at: '2026-09-11T08:03:18.260Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.260Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 57
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.260Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 57
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.263Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.263Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 60
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.263Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 60
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.264Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.264Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.265Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 62
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.265Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 63
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.265Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 62
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.265Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 63
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.265Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.267Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.271Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.271Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 64
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.271Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 64
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.273Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.274Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 66
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.274Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 66
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.276Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.276Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.276Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 68
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.277Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 69
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.277Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 69
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.277Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.281Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 0
+}
+✔ returning to research restores filters and pages through fresh source checks; another account starts clean (30.645875ms)
+✔ watchlist defaults to a compact list with shared research and direct maps (5.874917ms)
+✔ an explicitly empty watchlist shows onboarding, while unreadable research does not imply no watches (4.266833ms)
+Ducky read {
+  at: '2026-09-11T08:03:18.291Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 15,
+  status: 200,
+  items: 1,
+  request_id: 68
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.293Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.294Z',
+  stage: 'cache_hit',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.294Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.296Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.296Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 70
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.296Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 71
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.296Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 503,
+  request_id: 71
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.296Z',
+  stage: 'failure',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 503,
+  request_id: 71,
+  reason: 'http'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.314Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 18,
+  status: 200,
+  items: 1,
+  request_id: 70
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.316Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.317Z',
+  stage: 'cache_miss',
+  resource: 'stock_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.317Z',
+  stage: 'request',
+  resource: 'stock_research',
+  request_id: 73
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.317Z',
+  stage: 'response',
+  resource: 'stock_research',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 73
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.321Z',
+  stage: 'render',
+  resource: 'stock_research',
+  items: 4,
+  readable: 1
+}
+✔ quotes render before slow research; a failed refresh retains saved rows and its error (42.104333ms)
+Ducky read {
+  at: '2026-09-11T08:03:18.334Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.334Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.335Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 75
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.335Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 76
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.335Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 75
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.335Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 76
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.335Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.337Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 0
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.345Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.347Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.347Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 77
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.348Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 77
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.353Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.353Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 79
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.354Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 1,
+  status: 200,
+  items: 8,
+  request_id: 79
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.362Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.362Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 81
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.363Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 1,
+  status: 200,
+  items: 6,
+  request_id: 81
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.377Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.379Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 83
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.379Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  items: 6,
+  request_id: 83
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.386Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.386Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 85
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.387Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 1,
+  status: 200,
+  items: 6,
+  request_id: 85
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.389Z',
+  stage: 'cache_miss',
+  resource: 'stock_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.389Z',
+  stage: 'request',
+  resource: 'stock_research',
+  request_id: 88
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.389Z',
+  stage: 'response',
+  resource: 'stock_research',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 88
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.391Z',
+  stage: 'render',
+  resource: 'stock_research',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.394Z',
+  stage: 'render',
+  resource: 'stock_research',
+  items: 1,
+  readable: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.398Z',
+  stage: 'render',
+  resource: 'stock_research',
+  items: 0,
+  readable: 0
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.398Z',
+  stage: 'cache_miss',
+  resource: 'stock_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.398Z',
+  stage: 'request',
+  resource: 'stock_research',
+  request_id: 90
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.399Z',
+  stage: 'response',
+  resource: 'stock_research',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 90
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.399Z',
+  stage: 'render',
+  resource: 'stock_research',
+  items: 0,
+  readable: 0
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.400Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.400Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.401Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 91
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.401Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 92
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.401Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  items: 3,
+  request_id: 91
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.401Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 3,
+  request_id: 92
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.401Z',
+  stage: 'cache_hit',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.405Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 3,
+  readable: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.432Z',
+  stage: 'cache_miss',
+  resource: 'stock_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.432Z',
+  stage: 'request',
+  resource: 'stock_research',
+  request_id: 95
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.432Z',
+  stage: 'response',
+  resource: 'stock_research',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 95
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.434Z',
+  stage: 'render',
+  resource: 'stock_research',
+  items: 1,
+  readable: 0
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.435Z',
+  stage: 'cache_miss',
+  resource: 'evidence'
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.435Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 96
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.435Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 96
+}
+✔ stock overview preserves opposing evidence and loads history only on expansion (15.405ms)
+✔ price inspection retains losses, missing quotes and the actual closing date (1.64275ms)
+✔ shared watchlist updates preserve reading focus and filters, and never restore removed stocks (12.392833ms)
+✔ Today adopts a completed summary without rerunning searches, and withholds withdrawn text (4.944959ms)
+✔ Today sorts the full stock list by analysis time and exposes every stock without extra reads (10.648417ms)
+✔ Today preserves expanded stocks on refresh and return, but never carries another account’s reading state (27.1835ms)
+✔ stock refresh keeps expanded reasons and exact source dialogs, closes withdrawn sources and retains inspected dates (9.030375ms)
+✔ an untouched price chart follows the new close; unavailable summaries do not claim review is underway (2.062417ms)
+✔ column sorting toggles direction, keeps unknown values last and does not refetch (27.52025ms)
+✔ Explore has useful examples without watches, opens a seven-day feed and never generates on read (3.639083ms)
+✔ pending stock analysis still shows the saved information map without an extra fetch (3.0985ms)
+✔ a quote-only map refresh preserves open author groups; source changes still require review (8.917125ms)
+✔ switching account while config waits cannot subscribe for the next user or update the old button (23.4565ms)
+✔ switching account while permission waits cannot subscribe for the next user or update the old button (6.10725ms)
+✔ switching account while register waits cannot subscribe for the next user or update the old button (4.079959ms)
+✔ switching account while ready waits cannot subscribe for the next user or update the old button (4.570166ms)
+✔ switching account while existing waits cannot subscribe for the next user or update the old button (6.529791ms)
+✔ switching account while create waits cannot subscribe for the next user or update the old button (6.8085ms)
+✔ a late local subscription after route cancellation remains unbound instead of being posted for another account (5.740958ms)
+✔ same-token uid changes and epoch-only invalidation are both detected after permission resolves (13.663333ms)
+✔ changing route without an abort signal, or replacing the rendered button, stops a pending flow (15.12675ms)
+✔ late server 401 cannot run account-global logout or upsell handlers for the new session (4.869041ms)
+✔ one current-session click subscribes once, allows existing subscriptions and does not send an implicit test (21.187125ms)
+✔ unconfirmed subscription responses show no success and leave the current button retryable (10.456959ms)
+✔ an account switch while profile initialization waits cannot load the next account into the old page (8.105459ms)
+✔ all public tools have one preview, clear access and a safe post-sign-in destination: zh (179.973792ms)
+✔ feature deep links open hidden panels, preserve theme and work repeatedly and after Back: zh (73.116083ms)
+✔ all public tools have one preview, clear access and a safe post-sign-in destination: en (70.576958ms)
+✔ feature deep links open hidden panels, preserve theme and work repeatedly and after Back: en (47.76675ms)
+✔ mobile groups disclose one at a time; Escape, outside click, focus and resizing cleanly dismiss the menu (42.89325ms)
+✔ research launched from the menu opens a dialog and returns focus to its still-visible trigger (57.157875ms)
+✔ shared public navigation is present on secondary pages and does not enter the application shell (131.228167ms)
+✔ free radar reads current authenticated records without an artificial delay (34.186584ms)
+✔ Pro radar uses authenticated private URLs and does not mix public cache mode (8.441584ms)
+✔ static build sanitizer removes current and undated payloads while preserving losses and aggregate evidence (49.987458ms)
+✔ readable records retain every closed, open and losing position and compose filters (129.642875ms)
+✔ homepage previews all tools without private research and keeps sourced examples (131.693875ms)
+✔ storefront opens the app without pricing or upgrade offers in both languages (95.745875ms)
+✔ radar filters compose without treating historical excerpts, losses or missing text as new events (2.412916ms)
+✔ full archive filters and pagination are sent to the server, not applied only to the visible page (0.517583ms)
+✔ event categories, canonical links and explicit excerpt mode stay usable (57.086792ms)
+✔ screen deep links focus their open destination without loading unrelated market research (72.177667ms)
+✔ leaving a pending deep link prevents late responses from moving focus in the next route (11.663625ms)
+✔ late archive requests cannot overwrite a newer filter and pagination preserves losses (55.359167ms)
+✔ archive failure retains loaded records and retries the same cursor (26.569625ms)
+✔ an older archive service cannot silently pretend to support new filters (4.352917ms)
+✔ company and venue filters compose with search and unknown caps stay explicit (0.636708ms)
+✔ LIVE observations keep unknown publication separate from archive dates and delivery (8.706291ms)
+✔ index and news archive categories retain official timing, meaning and stock links (6.111833ms)
+✔ official lowercase live and revision provenance never reuse a historical-backfill claim (6.646667ms)
+✔ phone category picker exposes every category, preserves its selection and restores focus after choosing (20.506458ms)
+✔ saved responses are independent copies with original dates; no browser persistence (1.319542ms)
+✔ logout, epoch, token and effective-access changes discard private previews (0.16825ms)
+✔ memory preview expires and a backwards clock cannot extend it (0.079791ms)
+✔ an authoritative map withdrawal replaces the list paragraph and evicts stale stock details (0.145459ms)
+✔ a changed overview evicts older full maps and a malformed response cannot replace a readable one (0.093125ms)
+✔ membership updates retain the matching received list but removed tickers cannot return (1.123834ms)
+✔ adding one ticker preserves other saved summaries without manufacturing a new one (0.476333ms)
+✔ following a stock whose graph was already read reuses its dated summary and citations (0.309ms)
+✔ first follow can reuse a stock graph before the watchlist research endpoint was ever read (0.241417ms)
+✔ diagnostics retain bounded numeric receipts and matching IDs without private payload (5.183708ms)
+✔ web body has sections, one locale and no Telegram decoration; raw evidence stays intact (13.226708ms)
+✔ volatility rows become readable stock sections without invented values or executable HTML (1.022291ms)
+✔ current reader uses the private endpoint, canonicalizes aliases and switches only the displayed language (13.306375ms)
+✔ record login targets keep opaque identity and discard arbitrary query data (0.610083ms)
+✔ malformed source links remain literal text and do not break a report (0.445625ms)
+✔ translation truncation is disclosed only for the selected source body (0.140333ms)
+✔ presentation cleanup preserves standalone directional and risk symbols (0.066ms)
+✔ week range headers and stock section leads retain useful titles (0.218833ms)
+✔ signed-out entry point mounts a password reset link and can request a new link (107.2265ms)
+✔ module recovery checks current release and refreshes only on a deliberate click (6.621333ms)
+✔ same release or network failure does not offer an endless retry-import loop (1.17ms)
+✔ obsolete recovery cannot mutate a later route or refresh after navigation (0.54625ms)
+✔ release identity reads only a content hash from the immutable graph path (0.103708ms)
+✔ healthy old page checks on return and offers one update without losing a draft or session (4.976667ms)
+✔ release checker survives invalid/network responses and cannot render after disposal (1.066875ms)
+✔ projects records without changing input, dates, conditions, numbers or losses (3.796625ms)
+✔ deduplicates only identical identified transport copies; preserves conflicting versions (0.37ms)
+✔ keeps separate points in one video and distinct authors, without inventing counts (1.82075ms)
+✔ date precision and timezone are explicit; impossible or ambiguous clocks stay unknown (0.823708ms)
+✔ unknown and mention stances remain non-directional; archived rows remain accessible (6.168542ms)
+✔ composes watchlist, ticker, creator, source date and loaded text including the opposing view (0.245541ms)
+✔ unknown dates do not enter a seven-day result; all-loaded view retains them (0.10575ms)
+✔ source links preserve zero and long-video offsets, reject unsafe URLs, never invent missing offsets (0.137958ms)
+✔ server query is bounded, encoded and has no browser-only text, watchlist or date filters (0.285834ms)
+✔ stable sorting preserves bearish evidence and source chronology without score invention (0.164417ms)
+✔ serialized legacy summaries show only prose; unavailable source states never leak internal JSON (0.145ms)
+✔ explicit reported holdings retain position meaning without inventing a bullish view (0.090833ms)
+✔ stored closes keep their dates and losses; a bearish conditional opinion never flips price movement (3.6465ms)
+✔ uses the stored percent without recalculation, stance transformation or old study-window fallback (0.127375ms)
+✔ actual zero movement remains zero; latest zero is retained, a zero denominator is not divided (0.11125ms)
+✔ missing, pending, unknown and corporate-action states cannot become a calculated success (0.119291ms)
+✔ provider revisions retain visible dated anchors but require review instead of bypassing the stored gate (0.152334ms)
+✔ invalid or reversed sessions, unsupported context and missing basis stay explicit (0.074417ms)
+✔ a blocked anchor cannot publish a leftover numeric price and fail-safe absence is not zero (0.0585ms)
+✔ display formatting preserves zero, losses and tiny movements without a misleading signed zero (13.923208ms)
+Ducky read {
+  at: '2026-09-11T08:03:18.900Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 2
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.904Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 4,
+  status: 200,
+  items: 1,
+  request_id: 2
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.958Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:18.959Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 4
+}
+✔ 100 records make exactly two reads, no per-card work; filters and details reuse data (73.38375ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.003Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.004Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 503,
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.004Z',
+  stage: 'failure',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 503,
+  request_id: 8,
+  reason: 'http'
+}
+✔ a failed next page retains successful records, retry keeps its cursor (44.836042ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.018Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.018Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 10
+}
+✔ unknown watchlist does not produce false personalization or discard all-readable research (14.97075ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.031Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.031Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 12
+}
+✔ malformed data is a visible load failure, never a successful empty market (13.096833ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.056Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 14
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.057Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 14
+}
+✔ late responses cannot expose a previous account’s research (25.444125ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.070Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 16
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.071Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 16
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.082Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 18
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.083Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 18
+}
+✔ saved filters and scroll restore on return, with data read again for current source gates (25.874458ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.105Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 20
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.106Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 20
+}
+✔ source text is rendered as text, and preview login return strips unsupported input (22.608ms)
+✔ disabled module direct mount performs zero reads and imports no route stylesheet (0.603ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.133Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 23
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.133Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 23
+}
+✔ overview local drill keeps the cursor bound to its original server query (27.00725ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.159Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 26
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.159Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 26
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.183Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 29
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.183Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 29
+}
+✔ returning to a paginated view revalidates previously requested pages before restoring scroll (50.014584ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.213Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 32
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.214Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 32
+}
+✔ keyboard focus survives replacing a load-more button after its final page (30.060083ms)
+✔ stance colors and stored price movement stay independent, with no per-card request (14.0495ms)
+✔ date inspector reads all three series from the same trading session, including losses (77.269292ms)
+✔ year tick, pointer selection and cursor align to the same session despite holiday gaps (9.126583ms)
+✔ narrow layout keeps endpoint dates, avoids collisions and preserves the selected day (10.575833ms)
+✔ invalid observations leave the static chart available without a misleading inspector (5.043542ms)
+✔ records retain actual zero, missing scores, full dates and safe links (27.117875ms)
+✔ legacy heat is not relabeled as a historical bull/bear balance (1.404542ms)
+✔ current reviewed points appear before full-video notification readiness and keep qualification links (3.797042ms)
+✔ correction status never displays withdrawn title or facts (0.228542ms)
+✔ official publication precision is separate from effective date and uses available English copy (0.647917ms)
+✔ heat timeline has gaps for missing scores and absent collection, preserving a real zero (1.583625ms)
+✔ private evidence response is discarded after account changes (5.161542ms)
+✔ every default HTML route serves English; locale links and canonical URLs agree (655.212417ms)
+✔ sitemap lists only canonical indexable public pages with reciprocal language alternatives (223.596583ms)
+✔ Google verification and brand structured data survive at every homepage (76.336666ms)
+✔ legacy Chinese recovery keeps the exact fragment without touching normal English routes (0.257584ms)
+✔ snapshot month returns reconcile to dated adjusted closes and omit unfinished months (3.511667ms)
+✔ year-end windows compound returns and require every remaining month (0.384125ms)
+✔ month and period controls retain every year and make early years directly selectable (48.79525ms)
+✔ commentary is rejected when its exact cohort or schema changes (0.330709ms)
+✔ disposed history panel ignores delayed data (5.630916ms)
+✔ billing prices follow locale while payment amounts keep their actual denomination (2.2535ms)
+✔ all saved historical explanations match the exact shared observations (2.427125ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.069Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 2
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.072Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 3,
+  status: 200,
+  items: 0,
+  request_id: 2
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.073Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.074Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.075Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.075Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 6
+}
+Session profile unavailable 401
+✔ login retries a transient profile failure before reporting success (1008.143667ms)
+✔ definitive session failure cannot silently count as successful login (0.714833ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.109Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.114Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 5,
+  status: 200,
+  items: 0,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.126Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.126Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.132Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.132Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.132Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+(node:58737) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ boot shows session progress, then a working retry without losing the requested route (61.205375ms)
+✔ a held cross-tab lock times out, cancels its queue entry, and allows a later retry (10.576708ms)
+✔ a lock timeout adopts a completed same-account renewal without another request (0.607792ms)
+✔ logout while queued cannot become a restored session after the timeout (1.609667ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.093Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.094Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 3
+}
+✔ boot can use its existing access token while another tab holds the renewal lock (12.274292ms)
+✔ cookie-only boot exposes a retryable timeout instead of pretending the user logged out (3.160292ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.107Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.108Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 401,
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.108Z',
+  stage: 'failure',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 503,
+  request_id: 5,
+  reason: 'http'
+}
+✔ an expired access token and a held lock preserve credentials for recovery (1.073708ms)
+✔ acquiring the lock cancels only its queue timer and preserves the in-flight request (0.424ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.244Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.247Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 4,
+  status: 200,
+  request_id: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.248Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 2
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.248Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 2
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.251Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.252Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.252Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.252Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.252Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.252Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.252Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.252Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.253Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.253Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.257Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.258Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.258Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 9
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.258Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 9
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.258Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.258Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.260Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 11
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.261Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 1,
+  status: 200,
+  request_id: 11
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.261Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.261Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.261Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.261Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.261Z',
+  stage: 'request',
+  resource: 'evidence',
+  request_id: 14
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.261Z',
+  stage: 'response',
+  resource: 'evidence',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 14
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.263Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 20
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.264Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 1,
+  status: 200,
+  items: 1,
+  request_id: 20
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.264Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 21
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.264Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 21
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.265Z',
+  stage: 'request',
+  resource: 'watchlist_research',
+  request_id: 22
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.265Z',
+  stage: 'response',
+  resource: 'watchlist_research',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 22
+}
+✔ only shared read endpoints qualify; history, settings, search and mutations never replay (1.442375ms)
+✔ evidence rechecks and unrelated queue progress do not announce new research (13.413916ms)
+✔ evidence signatures retain attribution, corrections, market state and saved analysis (0.867292ms)
+✔ changed shared data gets one notice without replacing disclosures; hidden pages and abort stop reads (4.826458ms)
+✔ existing view polling updates the baseline and late responses cannot enter the next page (1.19325ms)
+✔ failed permission revalidation withholds the prior private page (1.280791ms)
+✔ delayed public Radar data is revalidated without bearer credentials or mutations (0.642166ms)
+✔ shared stock reads adopt new summaries with GETs; nested queue clocks stay quiet (1.807333ms)
+✔ watchlist inbox shows five truthful delivery states, suppresses old content and separates all clocks (26.310542ms)
+✔ pagination failure retains items and retries its cursor; refresh failure retries a first page (28.41925ms)
+✔ free gate makes no request, 402 clears private data and late account results cannot repopulate (1.982458ms)
+✔ homepage presets populate explicit same-stock rules without previewing or saving (35.11325ms)
+✔ preview carries exact conditions and saving is an independent opt-in with full evidence (50.068167ms)
+✔ editing while preview is pending drops late results and cannot save a stale rule (27.826792ms)
+Missing translation: screen.status_undefined
+✔ official event choices survive saved-rule loading and preview without changing defaults or enabling alerts (13.426584ms)
+✔ free preview reads shared research without saving or enabling notifications (11.703708ms)
+✔ saved alerts show the actual delivery state and toggling uses explicit owner action (15.627ms)
+✔ scope and event time windows remain legible in the saved summary (0.229125ms)
+✔ saving a Free screen immediately updates its list and quota without navigation (33.719125ms)
+✔ unknown and cancelled delivery render as distinct states without a sent claim (11.961833ms)
+✔ filters compose and include record IDs without calling a source (0.929125ms)
+✔ evidence keeps missing post IDs, signed votes and unsafe provider text explicit (29.381042ms)
+✔ even a maximum attention score leaves Bulls and Bears unknown (1.9425ms)
+✔ radar social category mounts its own section and free access reads current rows (6.986584ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.512Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.514Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 2,
+  status: 200,
+  items: 1,
+  request_id: 10
+}
+✔ current rows, search, history retry and cursor are usable without duplicated pages (49.083208ms)
+✔ unavailable and stale sources cannot look like fresh empty scans (4.993375ms)
+✔ navigation or logout discards an in-flight private snapshot (0.636667ms)
+✔ social search and scope survive language navigation without an extra snapshot fetch (12.723917ms)
+✔ detection price snapshots keep real zero and do not turn overheating into bearish sentiment (1.368083ms)
+✔ community selection scopes requests, history and language navigation; late results are discarded (33.117875ms)
+✔ rank table shows provider rank order even when attention score order differs (3.458917ms)
+✔ recorded trend distinguishes cold start, real zero and missing days (1.480458ms)
+✔ official dates, sessions and action meanings preserve unknowns and both sides (1.329542ms)
+✔ official index events use index context and stable IDs survive title revisions without merging distinct constituents (0.195292ms)
+✔ creator citations retain author, original qualifications, source point and selection limits (13.7925ms)
+✔ default report is concise with conditional actions and citations opening the exact evidence (16.444417ms)
+✔ stale, withdrawn and pending reports cannot appear current; unsafe prose stays text (2.838958ms)
+✔ free briefs use scoped results and a selected stock uses the same shared endpoint (10.906833ms)
+✔ late shared reports are discarded after logout (0.882875ms)
+✔ Degen legacy link uses one Vibe Check heading, direction first, attention in details (9.303917ms)
+✔ stock notification and Vibe targets survive sign-in without retaining arbitrary query data (0.431833ms)
+✔ a bot-confirmed identity requires a separate browser confirmation and retains the current account (23.662125ms)
+✔ cancel and leaving stop polling and revoke only the original account request (12.453792ms)
+✔ late confirmation and creation responses cannot mutate a new account or departed page (18.799292ms)
+✔ malformed URLs, nonces and codes never become QR codes or bot links (8.46075ms)
+✔ unconfirmed and malformed identities cannot offer a final confirmation (11.616875ms)
+✔ conflicts, expiry, mismatched linked identity and a changed profile never announce success (22.426958ms)
+✔ pending confirmation and a lost response retry the same nonce without creating another account request (5.989375ms)
+✔ transient polling errors retry within the server TTL and expiry stops the flow (9.174167ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.732Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.733Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.755Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 9
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.755Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 0,
+  request_id: 9
+}
+✔ Telegram widget session boots into email setup and a later saved session keeps its route (36.74ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.894Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 2
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.897Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 3,
+  status: 200,
+  request_id: 2
+}
+✔ a redirect link preserves the existing account and token, and removes signed fields before any request (15.301375ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.900Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.900Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.901Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.901Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 8
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.902Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.902Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.905Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.905Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.906Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 14
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.906Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 14
+}
+✔ invalid state, an expired intent, a changed session or a different account never binds or logs in the Telegram identity (6.715958ms)
+✔ a signed linking return with no current session cannot fall through to widget login (0.621375ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.907Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 16
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.907Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 16
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.908Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 19
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.908Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 19
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.908Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 22
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.908Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 22
+}
+✔ an already linked identity and an invalid Telegram signature leave the current account signed in (2.071625ms)
+Ducky read {
+  at: '2026-09-11T08:03:19.909Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 25
+}
+Ducky read {
+  at: '2026-09-11T08:03:19.909Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 25
+}
+✔ an account switch during a linking request ignores its late result and cannot hydrate the new account (0.648ms)
+✔ the existing login widget stays in redirect mode without unsafe inline callbacks (1.100708ms)
+✔ specific disputed horizons retain old/current evidence and all rows: zh (75.140875ms)
+✔ specific disputed horizons retain old/current evidence and all rows: en (12.5595ms)
+✔ ledger retains every result while filters and evidence dialogs are usable: zh (2892.28825ms)
+✔ ledger retains every result while filters and evidence dialogs are usable: en (2818.616334ms)
+Ducky read {
+  at: '2026-09-11T08:03:20.123Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.124Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.129Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.131Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 2,
+  status: 200,
+  items: 1,
+  request_id: 1
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.132Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.136Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 0,
+  readable: 0
+}
+✔ recent provider quote is separate from the completed close and expires by its trade clock (57.879417ms)
+✔ missing YTD identifies the unavailable input instead of claiming a small sample (3.870083ms)
+Ducky read {
+  at: '2026-09-11T08:03:20.154Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.154Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.157Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.158Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 5
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.175Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.175Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.176Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.176Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 6
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.176Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.178Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 0,
+  readable: 0
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.178Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.179Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.179Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.179Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 50,
+  request_id: 7
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.179Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.228Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 0,
+  readable: 0
+}
+✔ shared price refresh updates the visible list while keeping selection, filters and open research intact (38.221459ms)
+✔ treemap has exact market-cap areas without overlaps at 50 symbols (0.973542ms)
+✔ zero, missing, losses and unweighted stocks stay distinguishable and clickable (5.170792ms)
+✔ map legend uses the same scale as tiles; breadth retains flat and missing counts (2.639041ms)
+✔ map inspector works with focus, Escape and hover without fetching or selecting (3.825667ms)
+✔ touch focus does not open a hover layer before the first tap selects a stock (2.714292ms)
+✔ initial watchlist loading is not rendered as missing market data (3.531709ms)
+Ducky read {
+  at: '2026-09-11T08:03:20.389Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 0,
+  readable: 0
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.488Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.488Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.489Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.489Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 1,
+  request_id: 10
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.489Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.490Z',
+  stage: 'render',
+  resource: 'watchlist',
+  items: 0,
+  readable: 0
+}
+✔ large watchlist fetches no details until selection and pending quote keeps research accessible (237.896416ms)
+✔ squarify preserves exact areas in phone and desktop shapes without turning similar caps into strips (1.095625ms)
+✔ resizing repositions existing heatmap controls, preserves focus and never requests prices (68.878166ms)
+✔ equal tiles include tiny issuers, ETFs and missing caps with dated prices (1.664834ms)
+Ducky read {
+  at: '2026-09-11T08:03:20.713Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.713Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.713Z',
+  stage: 'membership_changed',
+  resource: 'watchlist',
+  status: 200,
+  request_id: 12
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.714Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.715Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.715Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 0,
+  status: 200,
+  items: 2,
+  request_id: 13
+}
+Ducky read {
+  at: '2026-09-11T08:03:20.715Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+✔ filter autocomplete requires an explicit add and retains the selected stock after success (229.610916ms)
+✔ each of fifty stock rows has a separate direct map link without opening details (28.248125ms)
+✔ list and heatmap label retained exact-session closes without turning missing into zero (3.410708ms)
+✔ six comparison metrics retain zero, missing samples, losses and individual clocks (4.526083ms)
+✔ metric sorting puts valid zero and losses ahead of missing or stale comparisons (2.184917ms)
+✔ retained YTD stays readable and sortable with its original date; other stale metrics stay unknown (2.451666ms)
+✔ long reference baskets stay compact while all members remain in the disclosure (0.852792ms)
+✔ collapsed list exposes the analysis clock and distinguishes retained text from a pending read (4.884834ms)
+✔ saved quote remains useful after expiry but never replaces the same or newer daily close (0.282584ms)
+✔ stock and map current-price labels agree without modifying saved analysis inputs (0.580916ms)
+✔ dialog traps focus, closes by Escape or backdrop and restores the original scroll and trigger (19.193958ms)
+✔ compact market topics reveal the full inference, missing evidence and original sources on demand (5.999542ms)
+✔ creator search sorts by publication, never processing time, retains undated posts and does not mutate the feed (2.240792ms)
+✔ saved YTD uses en copy, original dates and a usable zero (389.105375ms)
+✔ saved YTD uses zh copy, original dates and a usable zero (370.792417ms)
+ℹ tests 685
+ℹ suites 0
+ℹ pass 685
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15956.654625

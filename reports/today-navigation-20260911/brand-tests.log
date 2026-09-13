@@ -1,0 +1,57 @@
+✔ brand link stays in the app before boot and returns signed-in users to watchlist in both languages (112.730792ms)
+Ducky read {
+  at: '2026-09-11T08:01:14.862Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:01:14.864Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 2,
+  status: 200,
+  items: 0,
+  request_id: 3
+}
+Ducky read {
+  at: '2026-09-11T08:01:14.872Z',
+  stage: 'cache_miss',
+  resource: 'watchlist'
+}
+Ducky read {
+  at: '2026-09-11T08:01:14.872Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+Ducky read {
+  at: '2026-09-11T08:01:14.877Z',
+  stage: 'request',
+  resource: 'watchlist',
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:01:14.878Z',
+  stage: 'response',
+  resource: 'watchlist',
+  elapsed_ms: 1,
+  status: 200,
+  items: 0,
+  request_id: 4
+}
+Ducky read {
+  at: '2026-09-11T08:01:14.878Z',
+  stage: 'cache_miss',
+  resource: 'watchlist_research'
+}
+(node:58484) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ built OAuth boot renders the authenticated destination with stale legacy modules present (90.146791ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 467.854
