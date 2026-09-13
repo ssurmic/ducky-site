@@ -25,6 +25,10 @@ jobs:
       - run: npm ci
       - name: public close export preserves last-good data
         run: python3 -m unittest discover -s tests -p 'test_export_desk_prices.py'
+      - name: archived homepage proof and source validation
+        run: |
+          python3 -m unittest discover -s tests -p 'test_home_proof.py'
+          python3 -m unittest discover -s tests -p 'test_home_creator_source.py'
       - name: app module release isolation
         run: python3 -m unittest discover -s tests -p 'test_build_assets.py'
       - name: research preview release and rollback switch

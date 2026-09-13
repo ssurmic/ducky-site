@@ -1,6 +1,5 @@
-<section class="section product-demo" id="product-demo" aria-labelledby="product-demo-title">
- <div class="wrap">
-  <div class="product-demo-heading"><div><p class="eyebrow mono">{{ t('walkthrough.eyebrow') }}</p><h2 id="product-demo-title">{{ t('walkthrough.title') }}</h2></div></div>
+<div class="product-demo" id="product-demo" aria-labelledby="product-demo-title">
+  <h3 id="product-demo-title" class="product-demo-title">{{ t('walkthrough.title') }}</h3>
   {% set video_version = '2026-09-08-seamless-story-v2' %}
   {% set video_asset = '/media/ducky-walkthrough-' ~ video_version ~ '.' ~ lang %}
   <video id="product-demo-video" class="product-demo-player" controls playsinline preload="none" width="1920" height="1080" poster="{{ video_asset }}.jpg" aria-label="{{ t('walkthrough.title') }}" aria-describedby="product-demo-note">
@@ -47,6 +46,5 @@
    </details>
   </details>
   {% include "_partials/product-demo-intc-tutorial.html" %}
- </div>
-</section>
+</div>
 <script type="module" src="/js/product-demo.js"></script>

@@ -1,5 +1,30 @@
 # Change log
 
+## Homepage: dated signals, product previews and creator examples · 2026-09-13
+
+The homepage now lets visitors switch among NVDA, MU, AMD and TSLA, read dated source-linked
+signals, explore four product previews, and see six attributed creator summaries with their
+original publication dates and subsequent price paths. The 34-creator roster remains visible.
+Recent catches include VRT and SGI recorded signals plus HOOD and loss-inclusive GLW replays;
+every return keeps its actual base session and calculation basis. The site keeps full account
+access and the existing walkthrough video.
+
+Before release, the saved examples were checked against their current source owners. A revoked
+Micron year claim and a withdrawn Google case were withheld; 13F changes are factual context,
+not inferred creator sentiment. Summaries are labeled as summaries. Raw creator export data is
+excluded from public assets. Historical captures and app-interface example renders are identified;
+the NVIDIA acquisition discussion is explicitly an agreement, not a completed transaction.
+
+Four dated archive counts come from the coordinated backend exporter. Build and nightly refresh
+share a validator that accepts real zero, rejects malformed/missing data, and preserves the
+last-good file on a failed refresh. Counts describe retained records, not complete or reviewed
+coverage. Mobile controls have 44-pixel targets, and exact percentages avoid glossary splitting.
+
+Validation: 737 JavaScript tests; Python exporter/build/source tests; copy and link gates; actual
+Chrome desktop and phone viewport checks. Source, rendering, limitations and release receipts:
+[homepage acceptance](reports/HOMEPAGE-PUBLISH-2026-09-13.md). The previous live UI was
+`c0d27904` (Pages `8aaa50a6`); the later notary commit is retained in this release.
+
 ## Adding a stock from the search box shows the whole list again · 2026-09-12 (deployed)
 
 Released through `scripts/deploy_pages.sh`: main `c0d27904` (PR #58) → Pages `8aaa50a6` at 2026-09-13 01:58 UTC; the

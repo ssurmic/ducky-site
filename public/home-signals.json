@@ -1,0 +1,323 @@
+{
+ "as_of": "2026-09-11",
+ "presentation": "Dated public snapshots of four stocks' recorded signals, chosen to show the kinds of sources Ducky attaches to a ticker. Every row links to its original source. Not a live feed and not a recommendation.",
+ "stocks": [
+  {
+   "ticker": "NVDA",
+   "name": "NVIDIA",
+   "items": [
+    {
+     "date": "2026-09-07",
+     "kind": "creator",
+     "stance": "support",
+     "author": "Parkev Tatevosian, CFA",
+     "title": {
+      "zh": "把英伟达列为现在最值得买的股票，并表示正在密切关注",
+      "en": "Ranks NVIDIA as the top stock to buy right now and is watching it closely"
+     },
+     "source_url": "https://www.youtube.com/watch?v=qleHy1oNdjU&t=585s",
+     "source_label": {
+      "zh": "YouTube · 9:45",
+      "en": "YouTube · 9:45"
+     }
+    },
+    {
+     "date": "2026-09-05",
+     "kind": "creator",
+     "stance": "support",
+     "author": "Meet Kevin",
+     "title": {
+      "zh": "IPO 募到的钱被拿去买黄仁勋的硬件，这对英伟达有利",
+      "en": "Funds from IPOs are spent on Jensen Huang's hardware, which is bullish for NVIDIA"
+     },
+     "source_url": "https://www.youtube.com/watch?v=2UqXpNfTKco&t=347s",
+     "source_label": {
+      "zh": "YouTube · 5:47",
+      "en": "YouTube · 5:47"
+     }
+    },
+    {
+     "date": "2026-09-02",
+     "kind": "creator",
+     "stance": "counter",
+     "author": "Meet Kevin",
+     "title": {
+      "zh": "企业计算的转向会让英伟达面临利润率下降",
+      "en": "NVIDIA will face margin decline as computing shifts to the enterprise"
+     },
+     "source_url": "https://www.youtube.com/watch?v=VUzlDkmHqCI&t=1230s",
+     "source_label": {
+      "zh": "YouTube · 20:30",
+      "en": "YouTube · 20:30"
+     }
+    },
+    {
+     "date": "2026-08-14",
+     "kind": "record",
+     "stance": "context",
+     "author": "Situational Awareness LP",
+     "title": {
+      "zh": "13F：截至 2026-06-30 的报告中未见 NVDA 持仓",
+      "en": "13F: NVDA position absent from the report for 2026-06-30"
+     },
+     "source_url": "https://www.sec.gov/Archives/edgar/data/2045724/000093583626000418/",
+     "source_label": {
+      "zh": "SEC 13F",
+      "en": "SEC 13F"
+     }
+    },
+    {
+     "date": "2026-08-14",
+     "kind": "record",
+     "stance": "context",
+     "author": "ARK Investment Management",
+     "title": {
+      "zh": "13F：截至 2026-06-30 报告的 NVDA 股数增加",
+      "en": "13F: reported NVDA shares increased as of 2026-06-30"
+     },
+     "source_url": "https://www.sec.gov/Archives/edgar/data/1697748/000110465926096910/",
+     "source_label": {
+      "zh": "SEC 13F",
+      "en": "SEC 13F"
+     }
+    }
+   ],
+   "close_date": "2026-09-11",
+   "close": 218.29
+  },
+  {
+   "ticker": "MU",
+   "name": "Micron",
+   "items": [
+    {
+     "date": "2026-09-01",
+     "kind": "creator",
+     "stance": "support",
+     "author": "Meet Kevin",
+     "title": {
+      "en": "The creator views OpenAI’s memory buying for agentic tasks as a sign that AI labs’ circular financing and heavy spending are only beginning, making him bullish on Micron.",
+      "zh": "作者认为，OpenAI采购内存用于智能体任务，说明AI实验室的循环融资和大规模资金投入才刚开始，因此看多美光。"
+     },
+     "source_url": "https://www.youtube.com/watch?v=bjIK7WpYZFk&t=996s",
+     "source_label": {
+      "zh": "YouTube · 16:36",
+      "en": "YouTube · 16:36"
+     }
+    },
+    {
+     "date": "2026-08-18",
+     "kind": "creator",
+     "stance": "support",
+     "author": "投资TALK君",
+     "title": {
+      "zh": "即使估值维持在 8–10 倍，凭借 60–70% 的 EPS 增速也能带来股价增长",
+      "en": "Even at an 8–10x valuation, 60–70% EPS growth can drive the price higher"
+     },
+     "source_url": "https://www.youtube.com/watch?v=I7I0nlzaHT8&t=885s",
+     "source_label": {
+      "zh": "YouTube · 14:45",
+      "en": "YouTube · 14:45"
+     }
+    },
+    {
+     "date": "2026-08-14",
+     "kind": "record",
+     "stance": "context",
+     "author": "Millennium Management",
+     "title": {
+      "zh": "13F：截至 2026-06-30 报告的 MU 股数减少",
+      "en": "13F: reported MU shares decreased as of 2026-06-30"
+     },
+     "source_url": "https://www.sec.gov/Archives/edgar/data/1273087/000127308726000007/",
+     "source_label": {
+      "zh": "SEC 13F",
+      "en": "SEC 13F"
+     }
+    },
+    {
+     "date": "2026-08-14",
+     "kind": "record",
+     "stance": "context",
+     "author": "Appaloosa LP",
+     "title": {
+      "zh": "13F：截至 2026-06-30 报告的 MU 股数减少",
+      "en": "13F: reported MU shares decreased as of 2026-06-30"
+     },
+     "source_url": "https://www.sec.gov/Archives/edgar/data/1656456/000165645626000003/",
+     "source_label": {
+      "zh": "SEC 13F",
+      "en": "SEC 13F"
+     }
+    }
+   ],
+   "close_date": "2026-09-11",
+   "close": 975.26
+  },
+  {
+   "ticker": "AMD",
+   "name": "AMD",
+   "items": [
+    {
+     "date": "2026-09-11",
+     "kind": "creator",
+     "stance": "support",
+     "author": "Financial Education",
+     "title": {
+      "zh": "引用 Piper Sandler 的分析，看好 AMD 因 AI 需求带来的增长",
+      "en": "Cites Piper Sandler's analysis and the bull case for AMD driven by AI demand"
+     },
+     "source_url": "https://www.youtube.com/watch?v=0SkqIE7FOIc&t=87s",
+     "source_label": {
+      "zh": "YouTube · 1:27",
+      "en": "YouTube · 1:27"
+     }
+    },
+    {
+     "date": "2026-09-08",
+     "kind": "creator",
+     "stance": "support",
+     "author": "Jose Najarro Stocks",
+     "title": {
+      "zh": "AMD 是半导体建设周期里的关键公司",
+      "en": "AMD is crucial for the semiconductor buildout"
+     },
+     "source_url": "https://www.youtube.com/watch?v=uz5V2BkxRpo&t=291s",
+     "source_label": {
+      "zh": "YouTube · 4:51",
+      "en": "YouTube · 4:51"
+     }
+    },
+    {
+     "date": "2026-08-14",
+     "kind": "record",
+     "stance": "context",
+     "author": "ARK Investment Management",
+     "title": {
+      "zh": "13F：截至 2026-06-30 报告的 AMD 股数减少",
+      "en": "13F: reported AMD shares decreased as of 2026-06-30"
+     },
+     "source_url": "https://www.sec.gov/Archives/edgar/data/1697748/000110465926096910/",
+     "source_label": {
+      "zh": "SEC 13F",
+      "en": "SEC 13F"
+     }
+    },
+    {
+     "date": "2026-08-14",
+     "kind": "record",
+     "stance": "context",
+     "author": "Millennium Management",
+     "title": {
+      "zh": "13F：截至 2026-06-30 报告的 AMD 股数减少",
+      "en": "13F: reported AMD shares decreased as of 2026-06-30"
+     },
+     "source_url": "https://www.sec.gov/Archives/edgar/data/1273087/000127308726000007/",
+     "source_label": {
+      "zh": "SEC 13F",
+      "en": "SEC 13F"
+     }
+    },
+    {
+     "date": "2026-08-14",
+     "kind": "record",
+     "stance": "context",
+     "author": "Situational Awareness LP",
+     "title": {
+      "zh": "13F：截至 2026-06-30 的报告中未见 AMD 持仓",
+      "en": "13F: AMD position absent from the report for 2026-06-30"
+     },
+     "source_url": "https://www.sec.gov/Archives/edgar/data/2045724/000093583626000418/",
+     "source_label": {
+      "zh": "SEC 13F",
+      "en": "SEC 13F"
+     }
+    }
+   ],
+   "close_date": "2026-09-11",
+   "close": 516.13
+  },
+  {
+   "ticker": "TSLA",
+   "name": "Tesla",
+   "items": [
+    {
+     "date": "2026-09-08",
+     "kind": "creator",
+     "stance": "support",
+     "author": "Meet Kevin",
+     "title": {
+      "en": "The creator sees a further small Tesla pullback as a more attractive entry; he also sees appeal around the stated $350 price if his Cybercab thesis is right.",
+      "zh": "博主认为，特斯拉若再小幅回落，会带来更有吸引力的入场价；即使股价约为350美元，只要其Cybercab战略判断成立，也有吸引力。"
+     },
+     "source_url": "https://www.youtube.com/watch?v=xRKScH37m9A&t=1254s",
+     "source_label": {
+      "zh": "YouTube · 20:54",
+      "en": "YouTube · 20:54"
+     }
+    },
+    {
+     "date": "2026-08-14",
+     "kind": "record",
+     "stance": "context",
+     "author": "D1 Capital Partners",
+     "title": {
+      "zh": "13F：截至 2026-06-30 报告期末新出现 TSLA 持仓",
+      "en": "13F: TSLA position newly present at quarter end, 2026-06-30"
+     },
+     "source_url": "https://www.sec.gov/Archives/edgar/data/1747057/000117266126003662/",
+     "source_label": {
+      "zh": "SEC 13F",
+      "en": "SEC 13F"
+     }
+    },
+    {
+     "date": "2026-08-14",
+     "kind": "record",
+     "stance": "context",
+     "author": "Millennium Management",
+     "title": {
+      "zh": "13F：截至 2026-06-30 报告的 TSLA 股数减少",
+      "en": "13F: reported TSLA shares decreased as of 2026-06-30"
+     },
+     "source_url": "https://www.sec.gov/Archives/edgar/data/1273087/000127308726000007/",
+     "source_label": {
+      "zh": "SEC 13F",
+      "en": "SEC 13F"
+     }
+    },
+    {
+     "date": "2026-08-14",
+     "kind": "record",
+     "stance": "context",
+     "author": "ARK Investment Management",
+     "title": {
+      "zh": "13F：截至 2026-06-30 报告的 TSLA 股数减少",
+      "en": "13F: reported TSLA shares decreased as of 2026-06-30"
+     },
+     "source_url": "https://www.sec.gov/Archives/edgar/data/1697748/000110465926096910/",
+     "source_label": {
+      "zh": "SEC 13F",
+      "en": "SEC 13F"
+     }
+    },
+    {
+     "date": "2026-08-13",
+     "kind": "record",
+     "stance": "context",
+     "author": "Renaissance Technologies",
+     "title": {
+      "zh": "13F：截至 2026-06-30 报告的 TSLA 股数增加",
+      "en": "13F: reported TSLA shares increased as of 2026-06-30"
+     },
+     "source_url": "https://www.sec.gov/Archives/edgar/data/1037389/000103738926000059/",
+     "source_label": {
+      "zh": "SEC 13F",
+      "en": "SEC 13F"
+     }
+    }
+   ],
+   "close_date": "2026-09-11",
+   "close": 365.44
+  }
+ ]
+}

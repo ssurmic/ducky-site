@@ -90,8 +90,20 @@ elif ! "$PY" scripts/export_desk_prices.py --current --output public/desk-prices
   QUOTE_FAILED=1
 fi
 
+# Landing-page coverage counts (creators, videos, stocks, documents): read-only export from the
+# backend checkout, dated; the homepage build refuses to render without it. Runs only when the backend
+# script is present; a failure keeps the last-good file and is reported like the quote refresh.
+if [ -f "$DUCKY_ROOT/scripts/export_public_proof.py" ]; then
+  if SIGNALS_DIR="$DUCKY_ROOT/.signals" "$PY" "$DUCKY_ROOT/scripts/export_public_proof.py" > public/home-proof.json.tmp \
+     && "$PY" home_proof.py public/home-proof.json.tmp --replace public/home-proof.json; then
+    : # The shared validator replaced the temporary file only after every field passed.
+  else
+    rm -f public/home-proof.json.tmp; log "home-proof export failed; retained last-good counts"; QUOTE_FAILED=1
+  fi
+fi
+
 # 3. commit only on diff
-git add -- public/track-record.json public/feed.json public/ideas.json public/week-ahead.json public/desk-prices.json 2>/dev/null || true
+git add -- public/track-record.json public/feed.json public/ideas.json public/week-ahead.json public/desk-prices.json public/home-proof.json 2>/dev/null || true
 if [ "$TRIAL_ACCESS" = 1 ]; then
   git add -u -- public
 fi

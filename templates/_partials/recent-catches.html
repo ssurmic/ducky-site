@@ -1,0 +1,20 @@
+{# "Recent catches": recorded signals and what the price did afterwards. Built from the newest
+   public/media/ducky-home-cases-*.json (scripts/build_home_cases.py). Wins and the disclosed loss share
+   one layout; the tag says whether the signal sat in the public ledger that day (LIVE) or is a
+   historical replay computed later. #}
+<section class="section catches" id="recent-catches"><div class="wrap">
+ <p class="eyebrow mono">{{ t('catches.eyebrow') }}</p><h2>{{ t('catches.title') }}</h2><p class="lead">{{ t('catches.intro') }}</p>
+ <ol class="catch-grid">
+ {% for c in home_cases %}
+  <li class="catch-card{{ ' is-negative' if c.negative else '' }}">
+   <div class="catch-top"><b class="mono">{{ c.ticker }}</b><time class="mono" datetime="{{ c.signal_date }}">{{ c.signal_date }}</time></div>
+   <p class="catch-kind">{{ t('catches.kind_' ~ c.kind) }}</p>
+   <p class="catch-what">{{ t('catches.' ~ c.key) }}</p>
+   <svg viewBox="0 0 120 40" role="img" aria-label="{{ c.ticker }} {{ t('catches.chart_label') }} {{ c.change }}"><line x1="6" x2="114" y1="{{ c.zero_y }}" y2="{{ c.zero_y }}" class="catch-zero"/><polyline points="{{ c.points }}" class="catch-line"/></svg>
+   <div class="catch-result"><span>{% if c.headline_window == 'now' %}{{ t('catches.window_now').replace('{n}', c.sessions_since|string) }}{% else %}{{ t('catches.window_' ~ c.headline_window) }}{% endif %}</span><strong class="catch-change mono no-glossary">{{ c.change }}</strong><i class="tag tag-{{ c.tag }}">{{ t('catches.tag_' ~ c.tag) }}</i></div>
+   <div class="catch-links">{% if c.source_url %}<a href="{{ c.source_url }}" target="_blank" rel="noopener noreferrer">{{ t('catches.source') }} ↗</a>{% endif %}{% if c.record_url %}<a href="{{ url(c.record_url) }}">{{ t('catches.record') }} →</a>{% endif %}</div>
+  </li>
+ {% endfor %}
+ </ol>
+ <p class="catch-basis small muted">{{ t('catches.basis') }} <a href="/media/{{ home_cases_file }}">{{ t('home.full_data') }} ↗</a> · <a href="{{ url('/track-record/') }}">{{ t('catches.all') }} →</a></p>
+</div></section>
