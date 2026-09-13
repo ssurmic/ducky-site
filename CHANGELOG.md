@@ -1,6 +1,10 @@
 # Change log
 
-## Adding a stock from the search box shows the whole list again · 2026-09-12 (in review, not deployed)
+## Adding a stock from the search box shows the whole list again · 2026-09-12 (deployed)
+
+Released through `scripts/deploy_pages.sh`: main `c0d27904` (PR #58) → Pages `8aaa50a6` at 2026-09-13 01:58 UTC; the
+live `config.js` serves VERSION `c0d27904`. The script's gate passed before publishing (738/738 Node tests, export unit
+tests, copy lint, internal links). Backend unchanged. Signed-in production verification by the owner is still pending.
 
 Owner report on the live app: with three stocks on the list, searching for a stock the list did not have
 and pressing "Add to watchlist" left the page showing "4/50 stocks" above a table with only the new stock,
