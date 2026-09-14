@@ -13,6 +13,15 @@ const node=(id,stance='support')=>({id,kind:'creator',intent:'opinion',priority:
  platform:'youtube',creator_id:stance==='counter'?'sample-cautious':'sample-author',post_id:'sample-original',title:stance==='counter'?counter:title,reason:stance==='counter'?counter:title,published_at:today,observed_at:clock,
  condition_text:'If customers maintain capital spending',source_url:'https://example.com/synthetic-source',start_seconds:75,end_seconds:92}]});
 const nodes=[node('first'),node('second','counter'),node('third'),node('context1','context'),node('context2','context'),node('context3','context'),node('context4','context')];
+// Owner's repeated ORCL example, reproduced as a synthetic layout fixture.
+if(mode==='evidence-fold'){
+ const a=node('orcl-orders'),b=node('orcl-attention'),c=node('orcl-risk','counter');
+ a.conditional=b.conditional=false;a.published_at=b.published_at='2026-09-07';
+ a.title={zh:'作者认为 Oracle 风险有限，因为其订单与 OpenAI 关系紧密，而他认为 OpenAI 不会落后。',en:'The author sees limited Oracle risk because its orders are closely tied to OpenAI, which he expects to remain competitive.'};
+ b.title={zh:'作者称 Oracle 约一半订单依赖 OpenAI，预计新发布带动关注度回升，减轻市场对 Oracle 的担忧。',en:'The author says about half of Oracle orders depend on OpenAI; attention around new releases could ease market concerns.'};
+ for(const [i,n]of [a,b].entries()){n.reason=n.title;Object.assign(n.evidence[0],{title:n.title,reason:n.title,condition_text:null,author:'投资TALK君',post_id:'qaORCLvideo',source_url:'https://www.youtube.com/watch?v=qaORCLvideo',point_id:n.id,start_seconds:600+i*34,end_seconds:620+i*34,published_at:'2026-09-07'});}
+ nodes.splice(0,nodes.length,a,b,c);
+}
 const previousClock=new Date(Date.now()-3*86400000).toISOString();
 const previousNodes=nodes.map(n=>({...n,published_at:previousClock.slice(0,10),observed_at:previousClock,
  evidence:n.evidence.map(e=>({...e,published_at:previousClock.slice(0,10),observed_at:previousClock}))}));

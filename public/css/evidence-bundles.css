@@ -1,0 +1,23 @@
+/* Reading folders retain every original card and its source actions. */
+.evidence-bundle{min-width:0;list-style:none;}
+.evidence-bundle>.evidence-bundle-summary{list-style:none;cursor:pointer;min-height:44px;position:relative;display:flex;flex-direction:column;gap:8px;}
+.evidence-bundle-summary::-webkit-details-marker{display:none;}
+.evidence-bundle-summary::after{display:none;}
+.evidence-bundle-summary:focus-visible{outline:2px solid var(--branch);outline-offset:3px;}
+.evidence-bundle-basis,.evidence-bundle-meta{color:var(--muted);font-size:11px;line-height:1.5;}
+.evidence-bundle-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:28px;border-top:1px solid color-mix(in srgb,var(--branch) 24%,var(--border));padding-top:8px;font-size:12px;line-height:1.5;}
+.evidence-bundle-toggle>span:first-child{font-weight:600;}
+.evidence-fold-closed,.evidence-fold-open{color:var(--branch);white-space:nowrap;}
+.evidence-fold-closed::after{content:' ＋';}.evidence-fold-open::after{content:' −';}
+.evidence-bundle:not([open]) .evidence-fold-open,.evidence-bundle[open]>.evidence-bundle-summary .evidence-fold-closed{display:none;}
+.evidence-bundle[open]>.evidence-bundle-summary>strong,.evidence-bundle[open]>.evidence-bundle-summary>.evidence-bundle-basis{display:none;}
+.evidence-bundle[open]>.evidence-bundle-summary>.evidence-node-label,.evidence-bundle[open]>.evidence-bundle-summary>.evidence-bundle-meta{display:none;}
+.evidence-bundle[open]>.evidence-bundle-summary>.evidence-bundle-toggle{padding-top:0;border-top:0;}
+.evidence-bundle-items{display:flex;flex-direction:column;gap:8px;margin:8px 0 4px;padding-inline-start:10px;border-inline-start:1px solid color-mix(in srgb,var(--branch) 40%,var(--border));}
+.evidence-bundle-items .evidence-repeat{display:none;}
+.evidence-author-more>.evidence-bundle{margin-top:8px;}
+@media(max-width:700px){
+ .evidence-bundle>.evidence-bundle-summary{padding:12px;gap:7px;}
+ .evidence-bundle>.evidence-bundle-summary>strong{font-size:14px;line-height:1.6;}
+ .evidence-bundle-items{padding-inline-start:7px;}
+}

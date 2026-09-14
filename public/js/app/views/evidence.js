@@ -10,7 +10,7 @@ import {factText} from './stock-briefs.js';
 import {waterLevel,marketDetail,priceBadge} from '../evidence-context.js';
 import {icon} from '../icons.js';
 import {evidenceTarget,creatorTarget} from '../creator-route.js';
-import {groupAuthors,sourceOccurrences,originalSourceKey,authorIdentity} from '../evidence-grouping.js';
+import {groupAuthors,groupViews,sourceOccurrences,originalSourceKey,authorIdentity} from '../evidence-grouping.js';
 import {topicGroups} from '../evidence-topics.js';
 import {comparisonBadge,comparisonDetails} from '../comparison-context.js';
 import {sourceIdentity,nodeSourceIdentity,sourceBadge,sourceMark} from '../evidence-source.js';
@@ -29,6 +29,7 @@ function source(v){try{const u=new URL(v);return u.protocol==='https:'&&!u.usern
 const position=v=>{const n=Math.floor(v);return Number.isFinite(n)?Math.floor(n/60)+':'+String(n%60).padStart(2,'0'):'';};
 const factDescription=e=>e.topic==='price_gaps'?(e.data?.gaps?.length?e.data.gaps.map(g=>`${g.date} · $${g.lower}–$${g.upper}`).join(' / '):s('evidence.no_gaps')):factText(e);
 const TOPIC_PREVIEW=3;
+const folded=element=>{for(let p=element.parentElement;p;p=p.parentElement)if(p.tagName==='DETAILS'&&!p.open&&!p.querySelector(':scope > summary')?.contains(element))return true;return false;};
 const isMention=n=>n.intent==='mention'||n.basis==='verified_mention_no_direction';
 const missingLabel=k=>k.startsWith('ytd_')?s('evidence.missing_ytd',{benchmark:k.slice(4)}):k==='price_gaps'?s('evidence.missing_gaps'):has('stockbrief.missing_'+k)?s('stockbrief.missing_'+k):s('evidence.missing_other');
 
@@ -142,7 +143,7 @@ export function connectMap(map,center,branches){
     if(!box.width||!box.height)return;
     svg.setAttribute('viewBox',`0 0 ${box.width} ${box.height}`);
     const layout=window.getComputedStyle(map).getPropertyValue('--evidence-layout').trim();
-    const cards=[...branches.querySelectorAll('.evidence-node')];
+    const cards=[...branches.querySelectorAll('.evidence-node')].filter(n=>!folded(n));
     const groups=layout==='tree'?[...branches.querySelectorAll('.evidence-group')]:[];
     if(layout==='lanes'){
       for(const group of branches.querySelectorAll('.evidence-group')){
@@ -153,7 +154,7 @@ export function connectMap(map,center,branches){
         const tone=['support','counter','context'].find(k=>group.classList.contains('is-'+k));
         shape('path',{class:'evidence-wire is-'+tone,d:`M ${rx} ${ry} C ${rx} ${ry+16}, ${x} ${y-16}, ${x} ${y}`});
         // One spine per lane; every displayed card hangs from it with a stub and a port.
-        const shown=[...group.querySelectorAll('.evidence-node')].map(card=>card.getBoundingClientRect()).filter(b=>b.width&&b.height);
+        const shown=cards.filter(n=>group.contains(n)).map(card=>card.getBoundingClientRect()).filter(b=>b.width&&b.height);
         if(!shown.length)continue;
         const sx=h.left-box.left+5,last=shown.at(-1);
         shape('path',{class:'evidence-wire evidence-leaf-trunk is-'+tone,d:`M ${sx} ${h.bottom-box.top} V ${last.top-box.top+Math.min(26,last.height/2)}`});
@@ -171,7 +172,8 @@ export function connectMap(map,center,branches){
       const last=groups.at(-1)?.querySelector('.evidence-group-heading')?.getBoundingClientRect()||cards.at(-1).getBoundingClientRect();
       shape('path',{class:'evidence-trunk',d:`M ${rx} ${y} C ${rx} ${y+12}, ${x} ${y+8}, ${x} ${y+24} V ${last.top-box.top+last.height/2}`});
       for(const group of groups){
-        const h=group.querySelector('.evidence-group-heading').getBoundingClientRect(),end=group.querySelector('.evidence-node:last-child').getBoundingClientRect();
+        const last=cards.filter(n=>group.contains(n)).at(-1);if(!last)continue;
+        const h=group.querySelector('.evidence-group-heading').getBoundingClientRect(),end=last.getBoundingClientRect();
         const gy=h.top-box.top+h.height/2,gx=h.left-box.left,tone=['support','counter','context'].find(k=>group.classList.contains('is-'+k));
         shape('path',{class:'evidence-wire is-'+tone,d:`M ${x} ${gy} H ${gx}`});
         shape('path',{class:'evidence-wire evidence-leaf-trunk is-'+tone,d:`M ${gx+8} ${h.bottom-box.top} V ${end.top-box.top+end.height/2-8}`});
@@ -224,7 +226,8 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
   else if(example)view.append(el('p',s('experience.sample_overview')));
   if(!nodes.length){view.append(el('p.empty',s('evidence.empty')),el('a.btn.btn-ghost',{href:'#/research/'+doc.ticker},s('evidence.records')));return view;}
   let scope=['support','counter','context'].includes(state?.scope)?state.scope:'all',limit=state?.expanded?nodes.length:6;
-  view.readingState=()=>({scope,expanded:limit>6});
+  const opened=new Set(state?.openedGroups||[]);
+  view.readingState=()=>({scope,expanded:limit>6,openedGroups:[...opened]});
   const occurrences=sourceOccurrences(nodes);
   const filters=el('div.evidence-filters',{'aria-label':s('evidence.filter')});
   const controls=[];
@@ -259,7 +262,7 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
     const origin=id?cards.get(id):null,key=origin?.dataset.sourceKey||'',author=origin?.dataset.author||'';
     const related=[];
     for(const card of cards.values()){
-      const same=!!origin&&card!==origin&&((!!key&&card.dataset.sourceKey===key)||(!!author&&card.dataset.author===author));
+      const same=!!origin&&card!==origin&&!folded(card)&&((!!key&&card.dataset.sourceKey===key)||(!!author&&card.dataset.author===author));
       card.classList.toggle('is-related',same);card.classList.toggle('is-origin',card===origin);
       if(same)related.push(card);
     }
@@ -269,10 +272,11 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
   function paint(){
     controls.forEach(([key,b])=>b.setAttribute('aria-pressed',String(key===scope)));filterSelect.value=scope;
     const filtered=readingOrder(nodes.filter(n=>scope==='all'||n.stance===scope));
+    const folders=groupViews(filtered,doc.view_groups);
     // Balanced first screen; selecting All never silently buries opposition.
     const first=[];
-    if(scope==='all'){for(const stance of ['support','counter','context'])first.push(...filtered.filter(n=>n.stance===stance).slice(0,2));}
-    const ordered=[...first,...filtered.filter(n=>!first.includes(n))];
+    if(scope==='all'){for(const stance of ['support','counter','context'])first.push(...folders.filter(f=>f.lead.stance===stance).slice(0,2));}
+    const ordered=[...first,...folders.filter(f=>!first.includes(f))];
     clear(branches);
     const groups=new Map();
     for(const stance of ['support','context','counter']){
@@ -281,7 +285,7 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
       const group=el('section.evidence-group',{class:'is-'+stance},el('h2.evidence-group-heading',el('span',s('evidence.'+stance)),el('span.evidence-group-count',String(count))),list);
       groups.set(stance,{group,list});
     }
-    const visible=ordered.slice(0,limit);
+    const shownFolders=ordered.slice(0,limit),visible=shownFolders.flatMap(f=>f.nodes);
     center.style.gridRow='1 / '+(Math.min(3,Math.ceil(visible.length/2))+1);
     map.classList.toggle('is-empty',!visible.length);
     cards=new Map();
@@ -321,10 +325,28 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
       const block=el('section.evidence-author-group',{'data-author':bucket.author.id},
         el('header.evidence-author-heading',el('a',{href:creatorTarget({selected:bucket.author.id,mine:false,ticker:doc.ticker}),'aria-label':bucket.author.name+' · '+s('evidence.author_archive')},bucket.author.name),
           el('span.small.muted',s(bucket.nodes.length===1?'evidence.author_points_single':'evidence.author_points',{n:bucket.nodes.length})+(bucket.sources.size?' · '+s(bucket.sources.size===1?'evidence.author_sources_single':'evidence.author_sources',{n:bucket.sources.size}):''))));
-      for(const node of bucket.nodes.slice(0,2))block.append(cards.get(node.id));
-      if(bucket.nodes.length>2){
+      const buckets=shownFolders.filter(f=>bucket.nodes.includes(f.lead));
+      const renderFolder=folder=>{
+        if(folder.nodes.length===1)return cards.get(folder.lead.id);
+        const lead=folder.lead,key=doc.ticker+':fold:'+folder.key;
+        const dates=[...new Set(folder.nodes.map(n=>date(n.published_at)).filter(d=>d!=='—'))].sort();
+        const shownDate=dates.length>1?dates[0]+' – '+dates.at(-1):dates[0]||'—';
+        const fold=el('details.evidence-bundle',{'data-reading-key':key,class:'is-'+stance,open:opened.has(key)},
+          el('summary.evidence-node.evidence-bundle-summary',{class:'is-'+stance,'data-reading-key':key+':toggle'},
+            el('span.evidence-node-label',sourceBadge(nodeSourceIdentity(lead)),el('span.evidence-category',eventLabel(lead))),
+            el('span.evidence-bundle-basis',s(folder.basis==='thesis'?'evidence.fold_thesis':'evidence.fold_source')),
+            el('strong',pick(lead.title)),
+            el('span.evidence-bundle-meta',shownDate),
+            el('span.evidence-bundle-toggle',el('span',s('evidence.fold_count',{n:folder.nodes.length})),
+              el('span.evidence-fold-closed',s('evidence.fold_expand')),el('span.evidence-fold-open',s('evidence.fold_collapse')))),
+          el('div.evidence-bundle-items',...folder.nodes.map(n=>cards.get(n.id))));
+        fold.addEventListener('toggle',()=>{if(fold.open)opened.add(key);else opened.delete(key);connections.refresh();});
+        return fold;
+      };
+      for(const folder of buckets.slice(0,2))block.append(renderFolder(folder));
+      if(buckets.length>2){
         const rest=el('details.evidence-author-more',{'data-reading-key':doc.ticker+':author:'+stance+':'+bucket.author.id},
-          el('summary',s(bucket.nodes.length===3?'evidence.author_more_single':'evidence.author_more',{n:bucket.nodes.length-2})),...bucket.nodes.slice(2).map(n=>cards.get(n.id)));
+          el('summary',s('evidence.fold_more',{n:buckets.length-2})),...buckets.slice(2).map(renderFolder));
         rest.addEventListener('toggle',()=>connections.refresh());block.append(rest);
       }
       return block;
@@ -364,8 +386,8 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
     }
     reset.hidden=scope==='all';
     if(!filtered.length)branches.append(el('p.empty',s('evidence.no_match')));
-    total.textContent=s('evidence.showing',{shown:Math.min(limit,filtered.length),total:filtered.length});
-    const remaining=filtered.length-limit;
+    total.textContent=s('evidence.showing',{shown:visible.length,total:filtered.length});
+    const remaining=folders.length-limit;
     step.hidden=remaining<=STEP;more.hidden=remaining<=0;
     relate(null);connections.refresh();
   }
