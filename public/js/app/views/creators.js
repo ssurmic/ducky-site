@@ -18,7 +18,7 @@ import {mountSetup,confirmCreator,avatar} from './creator-setup.js';
 import {progressPoll,renderProgress} from './creator-progress.js';
 import {mountSimulation} from './creator-simulation.js';
 import {mountLeaderboard} from './creator-leaderboard.js';
-import {groundedClaim,claimDetails} from './creator-claim.js';
+import {groundedClaim,claimDetails,sourceSummaryAccepted} from './creator-claim.js';
 import {renderCreatorPage} from './creator-page.js';
 import {creatorRoute,creatorTarget} from '../creator-route.js';
 import {matchesStocks,taggedTickers} from '../creator-match.js';
@@ -53,11 +53,15 @@ export function evidenceMeta(post) {
 }
 export function hasGroundedCalls(post) {
   const meta = evidenceMeta(post);
-  return meta.quality === "grounded" && meta.source?.kind === "transcript" && (post.calls || []).some(groundedClaim);
+  return meta.quality === "grounded" && meta.source?.kind === "transcript" && (post.calls || []).some(call=>
+    groundedClaim(call)&&(call.verification!=='source_validated'||['ready','partial'].includes(meta.source.status)));
 }
 
 export function hasReviewedSummary(post) {
   const m = evidenceMeta(post);
+  if(m.source?.summary_validation!==undefined||(post.calls||[]).some(call=>call.verification==='source_validated'))
+    return m.source?.summary_validation!==undefined&&sourceSummaryAccepted(m.source)&&
+      m.source.kind==='transcript'&&['grounded','no_call'].includes(m.quality);
   return hasGroundedCalls(post) || ((m.source?.summary_reviewed===true || ["short-video-v2","short-video-v3","creator-video-v4"].includes(m.source?.version)) && m.source.status === "ready" && m.source.kind === "transcript" && ["grounded", "no_call"].includes(m.quality));
 }
 export function discoveredSource(post){

@@ -3,6 +3,7 @@
 import {renderCreatorPage} from './views/creator-page.js';
 import {el} from './ui.js';
 import {s} from './strings.js';
+import {sourceSummaryAccepted} from './views/creator-claim.js';
 
 const text=value=>typeof value==='string'&&value.trim()&&value.length<=5000;
 const timestamp=value=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}T.*(?:Z|[+-]\d{2}:\d{2})$/.test(value)&&
@@ -20,8 +21,8 @@ export function publicCreator(snapshot){
   const url=source(snapshot?.url),sections=snapshot?.sections,duration=snapshot?.source?.duration_seconds;
   if(!url||!text(snapshot?.kol_name)||!text(snapshot?.title)||
       !/^[A-Za-z0-9][A-Za-z0-9_-]{0,95}$/.test(snapshot?.kol_id||'')||
-      !timestamp(snapshot?.published_at)||snapshot?.source?.status!=='ready'||
-      snapshot.source.summary_reviewed!==true||!Number.isFinite(duration)||duration<=0||
+      !timestamp(snapshot?.published_at)||!sourceSummaryAccepted(snapshot?.source)||
+      !Number.isFinite(duration)||duration<=0||
       !Array.isArray(sections)||!sections.length||sections.length>20)throw Error('invalid_public_creator');
   let previous=-1;
   const highlights=sections.map(section=>{

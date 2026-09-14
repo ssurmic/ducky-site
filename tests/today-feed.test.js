@@ -59,7 +59,10 @@ test('a quiet day widens once to the past week and says so; a manual range choic
  dispose();
 });
 
-test('the feed asks for twelve records per page and reads the newest publication first inside a page',async()=>{
+test('the feed asks for twelve records per page and reads the newest publication first inside a page',async t=>{
+ // This test compares two publications within Today. At local 00:00–00:59,
+ // an unfrozen now-minus-one-hour legitimately belongs to the older disclosure.
+ t.mock.timers.enable({apis:['Date'],now:new Date(2026,8,14,12,0).getTime()});
  const root=setup();let limit=null;
  globalThis.fetch=async url=>{const u=new URL(url,'https://ducky.test');
   if(u.pathname==='/me/stock-research')return Response.json({items:[item()],watchlist_count:1});
@@ -72,6 +75,23 @@ test('the feed asks for twelve records per page and reads the newest publication
  assert.deepEqual([...root.querySelectorAll('.today-updates > .change-list > .change-card .ticker')].map(n=>n.textContent),['AMD','NVDA']);
  assert.equal(root.querySelectorAll('.today-quote').length,0);
  dispose();
+});
+
+test('at local midnight an earlier publication remains accessible under older records',async t=>{
+ t.mock.timers.enable({apis:['Date'],now:new Date(2026,8,14,0,30).getTime()});
+ const root=setup();
+ globalThis.fetch=async url=>{const u=new URL(url,'https://ducky.test');
+  if(u.pathname==='/me/stock-research')return Response.json({items:[item()],watchlist_count:1});
+  if(u.pathname==='/watchlist')return Response.json({items:[],overview:{items:[]}});
+  return Response.json({items:[change(1,'support','NVDA',new Date(Date.now()-3600000).toISOString()),
+   change(2,'counter','AMD',new Date().toISOString())],next_cursor:null});};
+ const dispose=await today.mount(root);await pause();
+ try{
+  assert.deepEqual([...root.querySelectorAll('.today-updates > .change-list > .change-card .ticker')].map(n=>n.textContent),['AMD']);
+  assert.deepEqual([...root.querySelectorAll('.change-older .change-card .ticker')].map(n=>n.textContent),['NVDA']);
+  assert.equal(root.querySelector('.change-older').hidden,false);
+  assert.equal(root.querySelectorAll('.today-updates .change-card').length,2);
+ }finally{dispose();}
 });
 
 test('an open Today re-reads its first page once a minute and adds newly published records in place',async t=>{
