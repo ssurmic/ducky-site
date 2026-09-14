@@ -1,33 +1,130 @@
 {
  "schema": "week-ahead/1",
- "generated_at": "2026-09-12T06:31:53+00:00",
- "as_of": "2026-09-12T06:31:53+00:00",
- "week_of": "09/07–09/11",
+ "generated_at": "2026-09-13T06:32:25+00:00",
+ "as_of": "2026-09-13T06:32:25+00:00",
+ "week_of": "09/14–09/18",
  "events": [
   {
    "dow": "周四",
    "dow_en": "Thu",
-   "date": "09/10",
-   "et_zh": "",
-   "et_en": "",
-   "name": "ORCL",
-   "kind": "earnings",
-   "watch": true
+   "date": "09/17",
+   "et": "8:30am et",
+   "name": "Core Retail Sales",
+   "kind": "macro",
+   "tier": "high"
   },
   {
    "dow": "周四",
    "dow_en": "Thu",
-   "date": "09/10",
-   "et_zh": "",
-   "et_en": "",
-   "name": "ADBE",
-   "kind": "earnings",
-   "watch": false
+   "date": "09/17",
+   "et": "8:30am et",
+   "name": "Retail Sales",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/17",
+   "et": "8:30am et",
+   "name": "Retail Sales Ex Gas/Autos",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/17",
+   "et": "11:30am et",
+   "name": "Atlanta Fed GDPNow",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/17",
+   "et": "2:00pm et",
+   "name": "Interest Rate Projection - 1st Yr",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/17",
+   "et": "2:00pm et",
+   "name": "Interest Rate Projection - 2nd Yr",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/17",
+   "et": "2:00pm et",
+   "name": "Interest Rate Projection - 3rd Yr",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/17",
+   "et": "2:00pm et",
+   "name": "Interest Rate Projection - Current",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/17",
+   "et": "2:00pm et",
+   "name": "Interest Rate Projection - Longer",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/17",
+   "et": "2:00pm et",
+   "name": "FOMC Economic Projections",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/17",
+   "et": "2:00pm et",
+   "name": "FOMC Statement",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/17",
+   "et": "2:00pm et",
+   "name": "Fed Interest Rate Decision",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "09/17",
+   "et": "2:30pm et",
+   "name": "FOMC Press Conference",
+   "kind": "macro",
+   "tier": "high"
   },
   {
    "dow": "周五",
    "dow_en": "Fri",
-   "date": "09/11",
+   "date": "09/18",
    "et": "8:30am et",
    "name": "Continuing Jobless Claims",
    "kind": "macro",
@@ -36,16 +133,7 @@
   {
    "dow": "周五",
    "dow_en": "Fri",
-   "date": "09/11",
-   "et": "8:30am et",
-   "name": "Core PPI",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周五",
-   "dow_en": "Fri",
-   "date": "09/11",
+   "date": "09/18",
    "et": "8:30am et",
    "name": "Initial Jobless Claims",
    "kind": "macro",
@@ -54,36 +142,9 @@
   {
    "dow": "周五",
    "dow_en": "Fri",
-   "date": "09/11",
+   "date": "09/18",
    "et": "8:30am et",
    "name": "Jobless Claims 4-Week Avg.",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周五",
-   "dow_en": "Fri",
-   "date": "09/11",
-   "et": "8:30am et",
-   "name": "PPI",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周五",
-   "dow_en": "Fri",
-   "date": "09/11",
-   "et": "8:30am et",
-   "name": "PPI ex. Food/Energy/Transport",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周五",
-   "dow_en": "Fri",
-   "date": "09/11",
-   "et": "9:20am et",
-   "name": "Atlanta Fed GDPNow",
    "kind": "macro",
    "tier": "high"
   }
