@@ -1,5 +1,21 @@
 # Change log
 
+## Direct watchlist additions from search suggestions · 2026-09-14
+
+Search suggestions now show instrument labels/tags and a separate Add button. Eligible stocks
+and ordinary ETFs can be added without first selecting a result. Leveraged products display a
+muted unavailable state and a clear reason; added, pending and capacity states remain explicit.
+The full and basic watchlist pages share this interaction, and the selected-result offer applies
+the same gate. Successful adds clear search and reveal the complete list; failures retain the
+query. Keyboard focus stays usable after the popup disappears.
+
+The shared picker keeps Chart/Explore selection behavior and adds type labels there. Instrument
+classification and watch eligibility come from the API; the frontend does not guess leverage
+from names. Missing eligibility disables the new actions. Backend must deploy first. This
+change is locally implemented, not deployed; [acceptance](reports/AUTOCOMPLETE-WATCHLIST-2026-09-14.md)
+records verification and the paired backend candidate.
+
+
 ## Watchlist: consistent option and support references · 2026-09-13
 
 Support cells use the same price, reference type, distance and labeled 20-day closing-range

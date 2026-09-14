@@ -59,7 +59,10 @@ test('a quiet day widens once to the past week and says so; a manual range choic
  dispose();
 });
 
-test('the feed asks for twelve records per page and reads the newest publication first inside a page',async()=>{
+test('the feed asks for twelve records per page and reads the newest publication first inside a page',async t=>{
+ // Both publications must be in Today; a real clock before 01:00 moves the
+ // one-hour-old fixture into the previous day's correctly folded records.
+ t.mock.timers.enable({apis:['Date'],now:new Date(2026,8,14,12)});
  const root=setup();let limit=null;
  globalThis.fetch=async url=>{const u=new URL(url,'https://ducky.test');
   if(u.pathname==='/me/stock-research')return Response.json({items:[item()],watchlist_count:1});

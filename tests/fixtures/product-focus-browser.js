@@ -27,10 +27,22 @@ if(mode==='no-watch-section')analysis.sections=analysis.sections.filter(p=>p.kin
 let watches=mode==='no-watch'?[]:['NVDA','AVGO','AMD','GLW'];
 if(mode==='watchlist-management')watches=['NVDA','AVGO','AMD','GLW',...Array.from({length:46},(_,i)=>'TEST'+String(i).padStart(2,'0'))];
 if(mode==='today-large')watches=['AAPL','AEHR','ALAB','AMD','AVGO','GLW','NVDA','TSLA'];
-// A short list with room to add; only this case and watchlist-management accept in-memory membership writes.
-if(mode==='watchlist-add')watches=['NVDA','AVGO','AMD'];
+// These explicit membership cases accept writes only to the fixture's in-memory array.
+if(['watchlist-add','autocomplete-watchlist'].includes(mode))watches=['NVDA','AVGO','AMD'];
 if(mode==='wall-consistency')watches=['NVDA','COIN','AVGO','TSLA','AMD'];
-const writable=['watchlist-management','watchlist-add'].includes(mode);
+const writable=['watchlist-management','watchlist-add','autocomplete-watchlist'].includes(mode);
+const autocompleteSymbols=[
+ {ticker:'META',name:'Meta Platforms, Inc. - Class A Common Stock',exchange:'NASDAQ',instrument_type:'stock',instrument_tags:['stock'],watch_eligible:true,watch_reason:null,
+  industry:'超大规模云与平台计算需求',industry_en:'Hyperscaler / platform compute demand'},
+ {ticker:'NVDA',name:'NVIDIA Corporation',exchange:'NASDAQ',instrument_type:'stock',instrument_tags:['stock'],watch_eligible:true,watch_reason:null},
+ {ticker:'MTAW',name:'Meta AI Lab Ecosystem ETF',exchange:'NYSE Arca',instrument_type:'etf',instrument_tags:['etf'],watch_eligible:true,watch_reason:null},
+ {ticker:'METU',name:'Direxion Daily META Bull 2X Shares',exchange:'NASDAQ',instrument_type:'etf',instrument_tags:['etf','leveraged','2x'],watch_eligible:false,watch_reason:'leveraged_instrument'},
+ {ticker:'SH',name:'ProShares Short S&P500',exchange:'NYSE Arca',instrument_type:'etf',instrument_tags:['etf','inverse'],watch_eligible:true,watch_reason:null},
+ {ticker:'WARNT',name:'Synthetic Corporation Warrants',exchange:'NASDAQ',instrument_type:'warrant',instrument_tags:['warrant'],watch_eligible:true,watch_reason:null},
+ {ticker:'MYST',name:'Synthetic Unclassified Instrument',exchange:'NASDAQ',instrument_type:'unknown',instrument_tags:['unknown'],watch_eligible:true,watch_reason:null},
+ // Older API data is deliberately missing the additive gate fields.
+ {ticker:'LEGACY',name:'Synthetic Legacy Symbol',exchange:'NASDAQ'},
+];
 let researchReads=0;
 const wallPrices={NVDA:230,COIN:184.55,AVGO:200,TSLA:300,AMD:160};
 const wallFact=(topic,data)=>({topic,dimension:'technical',observed_at:'2026-09-11T20:00:00Z',data});
@@ -51,7 +63,8 @@ const stockSummary=ticker=>({ticker,status:mode==='pending'?'pending':mode==='pr
 const record=i=>({id:'change-'+i,ticker:i%2?'AVGO':'NVDA',kind:i===1?'revised':'added',state:i===3?'unavailable':'available',earlier_content:i===2,
  initial_coverage:false,published_at:i===2?'2026-08-20':today,observed_at:clock,available_at:clock,node:i===3?null:nodes[i%3]});
 window.fetch=async(input,options={})=>{
- const url=new URL(String(input),location.origin);requests.push({path:url.pathname+url.search,method:options.method||'GET'});
+ const url=new URL(String(input),location.origin);requests.push({path:url.pathname+url.search,method:options.method||'GET',
+  ...(mode==='autocomplete-watchlist'&&options.body?{body:JSON.parse(options.body)}:{})});
  if(url.origin!==location.origin)throw Error('External traffic forbidden in synthetic fixture');
  const path=url.pathname.replace('/qa-api',''),method=options.method||'GET';
  if(method!=='GET'){
@@ -60,6 +73,8 @@ window.fetch=async(input,options={})=>{
   }
   if(writable&&method==='POST'&&path==='/watchlist'){
    const {ticker}=JSON.parse(options.body);if(watches.length>=50)return Response.json({error:'watch_limit',cap:50},{status:402});
+   if(mode==='autocomplete-watchlist'&&autocompleteSymbols.find(row=>row.ticker===ticker)?.watch_eligible===false)
+    return Response.json({error:'watch_ineligible',reason:'leveraged_instrument',ticker},{status:400});
    const added=!watches.includes(ticker);if(added)watches.push(ticker);return Response.json({ticker,added});
   }
   throw Error('Writes forbidden in synthetic fixture');
@@ -84,16 +99,23 @@ window.fetch=async(input,options={})=>{
   analysis_generated_at:mode==='previous'?previousClock:clock,...(mode==='previous'?{analysis_nodes:previousNodes,analysis_snapshot_id:'synthetic-old'}:{})}});}
  if(path.startsWith('/bars/'))return Response.json({bars:mode==='pending'?[]:Array.from({length:90},(_,i)=>({t:new Date(Date.UTC(2026,5,1+i)).toISOString().slice(0,10),c:170+i*.48+Math.sin(i*.18)*12}))});
  if(path==='/public/symbols'){
+ if(mode==='autocomplete-watchlist'){
+  const q=(url.searchParams.get('q')||'').trim().toUpperCase().replace(/^\$/,'');
+  const items=autocompleteSymbols.filter(row=>q==='ALL'||row.ticker.startsWith(q)||row.name.toUpperCase().includes(q)).slice(0,8);
+  return Response.json({items,total_count:items.length});
+ }
  // Symbol search for the add flow: a typed prefix finds an unfollowed stock; anything else keeps the NVDA default.
  const q=(url.searchParams.get('q')||'').trim().toUpperCase().replace(/^\$/,''),known={NVDA:'NVIDIA Corporation',COIN:'Coinbase Global, Inc.',MU:'Micron Technology, Inc.'};
- const items=Object.entries(known).filter(([t,n])=>q&&(t.startsWith(q)||n.toUpperCase().includes(q))).map(([ticker,name])=>({ticker,name,exchange:'NASDAQ'}));
- return Response.json({items:items.length?items:[{ticker:'NVDA',name:'NVIDIA Corporation'}]});
+ const stock=(ticker,name)=>({ticker,name,exchange:'NASDAQ',instrument_type:'stock',instrument_tags:['stock'],watch_eligible:true,watch_reason:null});
+ const items=Object.entries(known).filter(([t,n])=>q&&(t.startsWith(q)||n.toUpperCase().includes(q))).map(([ticker,name])=>stock(ticker,name));
+ return Response.json({items:items.length?items:[stock('NVDA','NVIDIA Corporation')]});
  }
  if(path==='/data-versions')return Response.json({});
  return Response.json({items:[],posts:[]});
 };
 const store=await import('/js/app/store.js'),router=await import('/js/app/router.js');
-store.set('me',{user_id:8888,tier:'pro',access:{billing_enabled:false},watch_cap:50});store.set('token','synthetic-fixture-only');store.set('watchlist',watches);
+store.set('me',{user_id:8888,tier:'pro',access:{billing_enabled:false},watch_cap:50,
+ ...(query.get('research')==='off'?{entitlement:{capabilities:{research:false}}}:{})});store.set('token','synthetic-fixture-only');store.set('watchlist',watches);
 const {renderBrandNavigation}=await import('/js/app/navigation.js');renderBrandNavigation(store.get('me'));
 if(!location.hash)history.replaceState(null,'',location.pathname+location.search+'#/'+(query.get('route')||'today'));
 const language=document.querySelector('[data-lang-toggle]');if(language){const next=new URLSearchParams(query);next.set('lang',query.get('lang')==='en'?'zh':'en');language.href='/qa-frame?'+next+location.hash;}
