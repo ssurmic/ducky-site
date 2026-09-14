@@ -1,5 +1,19 @@
 # Change log
 
+## One HD fluffy duck across the product · 2026-09-14
+
+The owner clarified that every logo should use the detailed fluffy green duck. The
+existing 1254 × 1254 transparent original now also replaces the older round avatar in
+app empty states and notifications, and the flat artwork in the social preview.
+Homepage, navigation, app, previews, onboarding, exported evidence cards and
+browser/install icons keep sharing `/duck-head-cutout-v1.png`. Evidence-card exports
+preserve the square mark's proportions. Older artwork remains available for historical
+references but is no longer selected by current product surfaces.
+
+Local verification and publication status are recorded in
+[acceptance](reports/FLUFFY-LOGO-HD-2026-09-14.md). Publishing the site does not establish
+that Google has refreshed its search icon or chosen site name.
+
 ## Direct watchlist additions from search suggestions · 2026-09-14
 
 Search suggestions now show instrument labels/tags and a separate Add button. Eligible stocks

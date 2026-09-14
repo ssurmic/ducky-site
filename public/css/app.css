@@ -210,10 +210,10 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 .modal-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 @media (min-width: 600px) { #modal { align-items: center; padding: 20px; } .modal-box { border-radius: var(--r-lg); padding-bottom: 18px; } }
 
-/* ---- brand mark + empty states (mascot.svg; SYSTEMDESIGN §5.2 C) ---- */
+/* ---- brand mark + empty states (canonical fluffy duck; SYSTEMDESIGN §5.2 C) ---- */
 .app-top .brand { display: inline-flex; align-items: center; gap: 6px; }
 .app-top .avatar-mark { width: 26px; height: 26px; box-shadow: none; }
-.empty::before { content: ""; display: block; width: 72px; height: 72px; margin: 0 auto 8px; background: url("/avatar-160.jpg") center / cover no-repeat; border-radius: 50%; opacity: 1; }
+.empty::before { content: ""; display: block; width: 72px; height: 72px; margin: 0 auto 8px; background: url("/duck-head-cutout-v1.png") center / contain no-repeat; border-radius: 0; opacity: 1; }
 
 /* §14 profile */
 .card.profile .form { display: grid; gap: 12px; margin-top: 12px; }

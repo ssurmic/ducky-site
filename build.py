@@ -46,7 +46,8 @@ LIQ_JSON, LIQ_CSV = RECEIPTS / "liquidity-2026.json", RECEIPTS / "liquidity-scor
 TRACK_JSON = PUBLIC / "track-record.json"
 LIQ_EVENT = "2026-04-08"                 # first 🟢 ABUNDANT print of 2026 (SYSTEMDESIGN §5.2 A)
 LIQ_ABUNDANT = 80                        # regime threshold drawn on the sparkline
-BRAND_ASSETS = ("avatar-group.jpg", "mascot.svg", "og.svg")   # must land in dist/ (§5.1 avatar rule)
+BRAND_MARK = "duck-head-cutout-v1.png"
+BRAND_ASSETS = (BRAND_MARK, "og-fluffy-hd-v2.svg", "og-fluffy-hd-v2.png")  # Current primary mark and share card.
 LANGS = ("en", "zh")
 DEFAULT_LANG = "en"  # No-prefix URLs serve the same English HTML as canonical /en/ URLs.
 NOINDEX_PAGES = {"app", "idea", "404", "research-map-preview", "creator-analysis-preview", "market-context-preview", "screener-preview"}  # Account/preview shells, record placeholder and error page.
@@ -224,7 +225,7 @@ def version_assets(html: str, version: str, app_version: str) -> str:
         path = match.group(2)
         # The brand image already has a versioned filename. Keep the favicon URL
         # stable for search crawlers, and share its cached bytes with the hero/nav.
-        if path == "/duck-head-cutout-v1.png":
+        if path == "/" + BRAND_MARK:
             return match.group(0)
         if path.startswith("/js/app/"):
             path = path.replace("/js/app/", f"/app-assets/{app_version}/", 1)
@@ -584,7 +585,7 @@ def build_context(cfg: dict, tables: dict, lang: str, page: str, rel: str, versi
         "alt_url": page_url(other, rel),
         "hreflang": {HREFLANG[l]: cfg["site_url"] + page_url(l, rel) for l in LANGS},
         "x_default": cfg["site_url"] + page_url(DEFAULT_LANG, rel),
-        "og_image": cfg["site_url"] + cfg.get("og_image", "/og.svg"),
+        "og_image": cfg["site_url"] + cfg.get("og_image", "/og-fluffy-hd-v2.png"),
         "version": version, "build_date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
     }
 
@@ -695,7 +696,7 @@ def main() -> None:
 
     if DIST.exists():
         shutil.rmtree(DIST)
-    shutil.copytree(PUBLIC, DIST)          # public/ is copied whole (avatar-group.jpg, mascot.svg, receipts/ …)
+    shutil.copytree(PUBLIC, DIST)          # public/ is copied whole, retaining historical brand URLs and receipts
     from public_access import sanitize_public_payloads
     sanitize_public_payloads(DIST)
     from creator_public_access import sanitize_creator_catalog
@@ -706,7 +707,7 @@ def main() -> None:
     app_version = publish_app_modules(retain_history=True)
     for name in BRAND_ASSETS:
         if not (DIST / name).is_file():
-            fail(f"brand asset public/{name} missing from dist/ (SYSTEMDESIGN §5.1 avatar rule)")
+            fail(f"brand asset public/{name} missing from dist/ (current brand contract)")
     # Legacy favicon paths redirect to the same fluffy homepage duck in _redirects.
     font = PUBLIC / "fonts" / "JetBrainsMono-sub.woff2"
     if not font.exists():

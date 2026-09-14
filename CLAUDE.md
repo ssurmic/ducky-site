@@ -19,11 +19,15 @@ Use a current backend checkout, not an assumed machine-specific directory.
   "AI-backed / AI 驱动 / AI 引擎" only — no model, hardware, storage or competitor names in user-facing copy.
 - The 🌊 liquidity receipt card + `/track-record/#liquidity` render from `public/receipts/liquidity-2026.json` and
   `liquidity-score-2026.csv` at build time (`build.py: load_liquidity`, `tf()` = `t()` + `str.format`).
-- Brand mark: `public/duck-head-cutout-v1.png` is the owner's fluffy green homepage duck,
-  shared by nav, hero, app, favicon and installation icons. Keep its versioned filename URL
-  stable (no per-release query); legacy `/favicon.ico`, `/favicon.svg` and `/favicon.png`
-  redirect to it. Do not regenerate favicon.svg from the older vector mascot. A future
-  changed brand image needs a new versioned filename and coordinated reference updates.
+- Brand mark: `public/duck-head-cutout-v1.png` is the owner-approved 1254×1254 transparent
+  fluffy green duck with sleepy eyes, an orange smiling bill and one tuft. Nav, hero, app, empty states,
+  onboarding, favicon, installation icons, notifications and exported cards use this same mark.
+  Keep its versioned filename URL stable (no per-release query); legacy `/favicon.ico`,
+  `/favicon.svg` and `/favicon.png` redirect to it. The current social preview is
+  `og-fluffy-hd-v2.png`, rendered from the editable sibling SVG with this exact mark embedded.
+  Retain earlier asset URLs for historical receipts, but never use the retired vector mascot or
+  old avatars as a current product mark. Future brand changes require a new versioned filename
+  and coordinated references; update declared icon dimensions to match the actual PNG.
 - **No third-party scripts of our own on the landing.** CSP is `script-src 'self' https://telegram.org
   https://static.cloudflareinsights.com`: the Login Widget in `/app/` and the Cloudflare Web Analytics beacon
   (injected by Cloudflare Pages on every response; its POST goes to `https://cloudflareinsights.com`, admitted
@@ -52,7 +56,7 @@ Record viewport simulation, touch emulation and physical-device checks separatel
 ## File ownership (packs)
 | Owner | Paths |
 |---|---|
-| **S1 site pipeline + landing (this pack)** | `build.py`, `site.config.json`, `i18n/`, `templates/_base.html`, `templates/_headers.tpl`, `templates/index.html`, `templates/_partials/**`, `templates/disclaimer.html`, `templates/404.html`, `public/css/`, `public/js/lang.js`, `public/js/site.js`, `public/favicon.svg`, `public/robots.txt`, `public/_redirects`, `public/manifest.webmanifest`, `public/og.svg`, `scripts/lint_copy.py`, `scripts/check_links.py`, `scripts/serve.sh`, `scripts/fonts.sh`, `.github/workflows/check.yml`, `README.md`, this file |
+| **S1 site pipeline + landing (this pack)** | `build.py`, `site.config.json`, `i18n/`, `templates/_base.html`, `templates/_headers.tpl`, `templates/index.html`, `templates/_partials/**`, `templates/disclaimer.html`, `templates/404.html`, `public/css/`, `public/js/lang.js`, `public/js/site.js`, `public/duck-head-cutout-v1.png`, `public/robots.txt`, `public/_redirects`, `public/manifest.webmanifest`, `public/og-fluffy-hd-v2.*`, `scripts/lint_copy.py`, `scripts/check_links.py`, `scripts/serve.sh`, `scripts/fonts.sh`, `.github/workflows/check.yml`, `README.md`, this file |
 | Track record pack | `templates/track-record.html`, `public/js/track.js`, `scripts/push_track_record.sh` |
 | Trending / ideas pack | `templates/trending.html`, `templates/ideas*.html` |
 | App / Mini App pack | `templates/app.html`, `public/js/app/**`, `public/vendor/**` |

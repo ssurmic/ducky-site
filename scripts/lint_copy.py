@@ -13,8 +13,11 @@ Checks (exit 1 on any failure):
 """
 from __future__ import annotations
 
+import base64
+import binascii
 import re
 import sys
+from xml.parsers import expat
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -174,6 +177,54 @@ def check_i18n_zh_english() -> list[str]:
     return errs
 
 
+# Only SVG image URLs carry opaque bytes. Text, metadata, comments and every other
+# attribute still go through the normal copy checks, with original line numbers.
+_IMAGE_TAG = re.compile(rb"<(?:[^\s:<>]+:)?image\b(?:[^>\"']|\"[^\"]*\"|'[^']*')*>")
+_SVG_ATTRIBUTE = re.compile(rb"\s([^\s=<>\"']+)\s*=\s*([\"'])(.*?)\2", re.DOTALL)
+_PNG_URI = b"data:image/png;base64,"
+
+
+def svg_copy_text(text: str) -> str:
+    """Mask strict base64 PNG image bytes, keeping all authored text and attributes."""
+    raw, spans = text.encode("utf-8"), []
+    parser = expat.ParserCreate(namespace_separator="}")
+
+    def start(name, attrs):
+        if name not in {"image", "http://www.w3.org/2000/svg}image"}:
+            return
+        tag = _IMAGE_TAG.match(raw, parser.CurrentByteIndex)
+        if not tag:
+            return
+        for match in _SVG_ATTRIBUTE.finditer(tag.group()):
+            if match[1] not in {b"href", b"xlink:href"} or not match[3].startswith(_PNG_URI):
+                continue
+            uri = match[3].decode("utf-8")
+            if uri not in (attrs.get("href"), attrs.get("http://www.w3.org/1999/xlink}href")):
+                continue
+            payload = match[3][len(_PNG_URI):]
+            try:
+                data = base64.b64decode(payload, validate=True)
+            except (ValueError, binascii.Error):
+                continue
+            if data.startswith(b"\x89PNG\r\n\x1a\n"):
+                spans.append((tag.start() + match.start(3) + len(_PNG_URI), tag.start() + match.end(3)))
+
+    def reject_doctype(*args):
+        raise ValueError("doctype")
+
+    parser.StartElementHandler = start
+    # Entity-defined image URLs need separate review; never resolve external resources.
+    parser.StartDoctypeDeclHandler = reject_doctype
+    try:
+        parser.Parse(raw, True)
+    except (expat.ExpatError, ValueError):
+        return text
+    masked = bytearray(raw)
+    for start, end in spans:
+        masked[start:end] = b" " * (end - start)
+    return masked.decode("utf-8")
+
+
 def main() -> int:
     if not DIST.is_dir():
         print("lint_copy: dist/ missing — run build.py first")
@@ -192,6 +243,8 @@ def main() -> int:
             text = p.read_text(encoding="utf-8")
         except UnicodeDecodeError:
             continue
+        if p.suffix == ".svg":
+            text = svg_copy_text(text)
         for m in BANNED.finditer(text):
             line = text.count("\n", 0, m.start()) + 1
             errors.append(f"{rel}:{line}: banned string {m.group()!r}")
