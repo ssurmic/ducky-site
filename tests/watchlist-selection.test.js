@@ -156,11 +156,11 @@ test('adding a stock found by the search box shows the whole list again with the
  const {root,dispose}=await setup();
  try{
   const inner=globalThis.fetch;
-  globalThis.fetch=async(url,opts)=>String(url).startsWith('/public/symbols')?Response.json({items:[{ticker:'COIN',name:'Coinbase Global, Inc.',exchange:'NASDAQ'}]}):inner(url,opts);
+  globalThis.fetch=async(url,opts)=>String(url).startsWith('/public/symbols')?Response.json({items:[{ticker:'COIN',name:'Coinbase Global, Inc.',exchange:'NASDAQ',instrument_type:'stock',instrument_tags:['stock'],watch_eligible:true,watch_reason:null}]}):inner(url,opts);
   const filter=root.querySelector('.watch-filter');filter.value='coin';filter.dispatchEvent(new window.Event('input'));
   assert.deepEqual(members(root),[]);   // nothing on the list matches while the search is open
   await new Promise(r=>setTimeout(r,220));
-  root.querySelector('.watch-search [role="option"]').click();
+  root.querySelector('.watch-search .symbol-select').click();
   assert.equal(filter.value,'COIN');assert.equal(root.querySelector('.watch-search-offer').hidden,false);
   root.querySelector('.watch-search-offer button').click();await new Promise(r=>setTimeout(r,30));
   assert.deepEqual(store.get('watchlist'),['AAA','BBB','CCC','COIN']);
@@ -170,5 +170,66 @@ test('adding a stock found by the search box shows the whole list again with the
   assert.equal(root.querySelector('.watch-search-offer').hidden,true);
   assert.match(root.querySelector('#watch-count').textContent,/4.*50/);
   assert.equal(document.activeElement?.dataset.readingKey,'COIN:name');
+ }finally{dispose();}
+});
+
+test('leveraged search results cannot add through dropdown, offer, or form submission',async()=>{
+ const {root,requests,dispose}=await setup();
+ try{
+  const inner=globalThis.fetch;
+  globalThis.fetch=async(url,opts)=>String(url).startsWith('/public/symbols')?Response.json({items:[{ticker:'TQQQ',name:'ProShares UltraPro QQQ',instrument_type:'etf',instrument_tags:['etf','leveraged'],watch_eligible:false,watch_reason:'leveraged_instrument'}]}):inner(url,opts);
+  const filter=root.querySelector('.watch-filter');filter.value='TQQQ';filter.dispatchEvent(new window.Event('input'));
+  await new Promise(r=>setTimeout(r,220));
+  assert.equal(root.querySelector('.watch-search .symbol-add'),null);
+  assert.equal(root.querySelector('.watch-search-offer button'),null);
+  assert.match(root.querySelector('.watch-search').textContent,/Leveraged/);
+  const form=root.querySelector('form'),input=form.querySelector('input');input.value='TQQQ';input.dispatchEvent(new window.Event('input'));
+  await new Promise(r=>setTimeout(r,220));
+  assert.equal(form.querySelector('button[type=submit]').disabled,true);
+  form.dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));await pause();
+  assert.equal(requests.filter(r=>r.method==='POST').length,0);
+  assert.deepEqual(store.get('watchlist'),['AAA','BBB','CCC']);
+ }finally{dispose();}
+});
+
+test('direct autocomplete add serializes duplicate clicks and retains search after failed write',async()=>{
+ let finish;const {root,requests,dispose}=await setup(['AAA'],{write:()=>new Promise(r=>{finish=r;})});
+ try{
+  const inner=globalThis.fetch;
+  globalThis.fetch=async(url,opts)=>String(url).startsWith('/public/symbols')?Response.json({items:[{ticker:'META',name:'Meta Platforms',instrument_type:'stock',instrument_tags:['stock'],watch_eligible:true,watch_reason:null}]}):inner(url,opts);
+  const filter=root.querySelector('.watch-filter');filter.value='meta';filter.dispatchEvent(new window.Event('input'));
+  await new Promise(r=>setTimeout(r,220));
+  const button=root.querySelector('.watch-search .symbol-add');button.click();button.click();
+  assert.equal(requests.filter(r=>r.method==='POST').length,1);
+  finish(Response.json({error:'test_failure'},{status:400}));await pause();
+  assert.deepEqual(store.get('watchlist'),['AAA']);assert.equal(filter.value,'meta');
+  assert.equal(root.querySelector('.watch-search .symbol-add').disabled,false);
+ }finally{dispose();}
+});
+
+test('full watchlist disables direct autocomplete add with the current capacity',async()=>{
+ const {root,requests,dispose}=await setup(['AAA'],{cap:1});
+ try{
+  const inner=globalThis.fetch;
+  globalThis.fetch=async(url,opts)=>String(url).startsWith('/public/symbols')?Response.json({items:[{ticker:'META',name:'Meta Platforms',instrument_type:'stock',instrument_tags:['stock'],watch_eligible:true,watch_reason:null}]}):inner(url,opts);
+  const filter=root.querySelector('.watch-filter');filter.value='meta';filter.dispatchEvent(new window.Event('input'));
+  await new Promise(r=>setTimeout(r,220));
+  const button=root.querySelector('.watch-search .symbol-add');assert.equal(button.disabled,true);button.click();
+  assert.equal(requests.filter(r=>r.method==='POST').length,0);
+  assert.match(root.querySelector('.watch-capacity').textContent,/1/);
+ }finally{dispose();}
+});
+
+test('successful add-form autocomplete action returns keyboard focus to the cleared input',async()=>{
+ const {root,dispose}=await setup();
+ try{
+  root.querySelector('.watch-add-options').open=true;
+  const inner=globalThis.fetch;
+  globalThis.fetch=async(url,opts)=>String(url).startsWith('/public/symbols')?Response.json({items:[{ticker:'META',name:'Meta Platforms',instrument_type:'stock',instrument_tags:['stock'],watch_eligible:true,watch_reason:null}]}):inner(url,opts);
+  const input=root.querySelector('form input');input.focus();input.value='META';input.dispatchEvent(new window.Event('input'));
+  await new Promise(r=>setTimeout(r,220));
+  const button=root.querySelector('form .symbol-add');button.focus();button.click();await pause();
+  assert.deepEqual(store.get('watchlist'),['AAA','BBB','CCC','META']);
+  assert.equal(input.value,'');assert.equal(document.activeElement,input);
  }finally{dispose();}
 });

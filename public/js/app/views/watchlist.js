@@ -7,7 +7,7 @@ import { buildSignals } from "../watchlist-signals.js";
 import { companyContext } from "../company-context.js";
 import {reading,researchRow,replaceReading,syncSourceDialog} from '../stock-reading.js';
 import { icon } from "../icons.js";
-import { symbolPicker } from "../symbol-picker.js";
+import { symbolPicker, instrumentLabels, watchEligibility } from "../symbol-picker.js";
 import { s } from "../strings.js";
 import * as api from "../api.js";
 import * as store from "../store.js";
@@ -52,7 +52,7 @@ export async function mount(root,{signal}={}) {
   }
   let view = "list", query = "", sort = "market_cap", sortDirection = "desc", area = 'equal', candidate = null, adding = false;
   const checked=new Set();
-  let removing=false;
+  let removing=false, addCandidate=null;
   const currentSession=()=>!disposed&&!signal?.aborted&&store.epoch()===mountedEpoch;
   const watchCap=()=>Number.isFinite(store.get('me')?.watch_cap)?store.get('me').watch_cap:null;
   const isFull=()=>watchCap()!==null&&(store.get('watchlist')||[]).length>=watchCap();
@@ -63,7 +63,14 @@ export async function mount(root,{signal}={}) {
   const head = el("div.view-head", el("h1", s("watch.title")), el("span.count.mono", { id: "watch-count" }));
   const input = el("input.input.mono", { type: "text", placeholder: s("watch.placeholder"), autocomplete: "off", autocapitalize: "characters", spellcheck: "false", maxlength: "80", "aria-label": s("watch.placeholder") });
   const addBtn = el("button.btn.btn-primary", { type: "submit" }, s("watch.add"));
-  const picker = symbolPicker(input, () => store.get("watchlist") || []);
+  const pickerActionState=()=>({pending:adding,disabled:adding||removing||isFull(),
+    ...(isFull()?{label:s('watch.full_button'),reason:s('watch.full_note',{cap:watchCap()})}:{})});
+  const picker = symbolPicker(input, () => store.get("watchlist") || [],{
+    onAdd:row=>addTicker(row.ticker,true,row),actionState:pickerActionState,
+    onSelect:row=>{addCandidate=row;render();},
+    onResults:rows=>{addCandidate=rows.find(row=>row.ticker===input.value.trim().toUpperCase().replace(/^\$/,''))||null;render();}
+  });
+  input.addEventListener('input',()=>{addCandidate=null;render();});
   unsubs.push(picker.dispose);
   const form = el("form.add-row", { onsubmit: onAdd }, picker.wrap, addBtn);
   tourTarget(form,"watchlist.add");
@@ -101,6 +108,7 @@ export async function mount(root,{signal}={}) {
   unsubs.push(()=>clearTimeout(filterTimer));
   const filterPicker = symbolPicker(filter,()=>store.get('watchlist')||[],{
     allowWatched:true,
+    onAdd:row=>addTicker(row.ticker,false,row),actionState:pickerActionState,
     onSelect:row=>{candidate=row;query=filter.value;render();},
     onResults:rows=>{candidate=rows.find(row=>row.ticker===filter.value.trim().toUpperCase().replace(/^\$/,''))||null;renderOffer();}
   });
@@ -113,8 +121,11 @@ export async function mount(root,{signal}={}) {
     offer.hidden=!candidate||(store.get('watchlist')||[]).includes(candidate.ticker);
     if(offer.hidden)return;
     const row=candidate;
-    offer.append(el('div',el('strong',row.ticker),el('span.muted',row.name||row.company||''),el('p',s('watch.not_followed'))),
-      el('button.btn.btn-primary.btn-sm',{type:'button',disabled:adding||removing||isFull(),onclick:()=>addTicker(row.ticker,false)},s(isFull()?'watch.full_button':adding?'watch.adding':'watch.add_to_watchlist')));
+    const eligibility=watchEligibility(row);
+    offer.append(el('div',el('strong',row.ticker),el('span.muted',row.name||row.company||''),
+      el('div.symbol-tags',...instrumentLabels(row).map(label=>el('span.symbol-tag',label))),
+      el('p',eligibility.eligible?s('watch.not_followed'):eligibility.reason)));
+    if(eligibility.eligible)offer.append(el('button.btn.btn-primary.btn-sm',{type:'button',disabled:adding||removing||isFull(),onclick:()=>addTicker(row.ticker,false,row)},s(isFull()?'watch.full_button':adding?'watch.adding':'watch.add_to_watchlist')));
   }
   function clearSearch(){filter.value='';query='';candidate=null;filterPicker.reset();}
   // A long list sorted by market cap can place a new row below the fold: scroll it into view, and
@@ -149,17 +160,18 @@ export async function mount(root,{signal}={}) {
     e.preventDefault();
     const t = input.value.trim().toUpperCase().replace(/^\$/, "");
     if (!TICKER_RE.test(t)) { toast(s("watch.select_result")); input.focus(); return; }
-    await addTicker(t,true);
+    await addTicker(t,true,addCandidate?.ticker===t?addCandidate:null);
   }
-  async function addTicker(t,fromForm) {
-    if(adding||removing||!currentSession())return;
-    if ((store.get("watchlist") || []).includes(t)) { toast(s("watch.following")); return; }
-    if(isFull()){toast(s('watch.full_note',{cap:watchCap()}));return;}
+  async function addTicker(t,fromForm,symbol=null) {
+    if(adding||removing||!currentSession())return false;
+    if(symbol&&!watchEligibility(symbol).eligible){toast(watchEligibility(symbol).reason);return false;}
+    if ((store.get("watchlist") || []).includes(t)) { toast(s("watch.following")); return false; }
+    if(isFull()){toast(s('watch.full_note',{cap:watchCap()}));return false;}
     const epoch=store.epoch();adding=true;render();
     try {
       const result = await api.watchlist.add(t,{signal,silent402:true});
-      if(disposed||store.epoch()!==epoch)return;
-      if(fromForm){input.value = ""; picker.reset();}
+      if(disposed||store.epoch()!==epoch)return false;
+      if(fromForm){input.value = ""; addCandidate=null; picker.reset();input.focus({preventScroll:true});}
       // The search box found this stock; now that it is on the list, drop the search so the whole
       // list comes back with the new row in it. Leaving the one-row match behind "Added" read as the
       // other stocks having disappeared (owner report, 2026-09-12).
@@ -170,14 +182,17 @@ export async function mount(root,{signal}={}) {
       await load();
       if(currentSession())revealRow(result?.ticker||t,{focus:!fromForm});
       tourEvent('add',{ticker:result?.ticker||t});
+      return true;
 
     } catch (err) {
-      if(disposed||store.epoch()!==epoch)return;
+      if(disposed||store.epoch()!==epoch)return false;
       if(err.body?.error==='watch_limit'){
         if(Number.isFinite(err.body.cap))store.patch('me',{watch_cap:err.body.cap});
         toast(s('watch.full_note',{cap:err.body.cap??watchCap()??'—'}));await load();
-      }else if(err.status===402)toast(s('watch.add_unavailable'),'err');
+      }else if(err.body?.error==='watch_ineligible')toast(watchEligibility({watch_eligible:false,watch_reason:err.body.reason}).reason,'err');
+      else if(err.status===402)toast(s('watch.add_unavailable'),'err');
       else toast(s("common.error", { msg: err.message }), "err");
+      return false;
     } finally { adding=false;if(currentSession())render(); }
   }
 
@@ -215,6 +230,7 @@ export async function mount(root,{signal}={}) {
   }
 
   function render() {
+    picker.update();filterPicker.update();
     renderOffer();list.classList.toggle('is-filtered',!!query.trim());
     const items = store.get("watchlist") || [];
     const me = store.get("me") || {};
@@ -223,7 +239,7 @@ export async function mount(root,{signal}={}) {
     for(const ticker of checked)if(!items.includes(ticker))checked.delete(ticker);
     const full=isFull();
     capacity.hidden=!full;capacity.textContent=full?s('watch.full_note',{cap}):'';
-    addBtn.disabled=adding||removing||full;
+    addBtn.disabled=adding||removing||full||!!(addCandidate&&!watchEligibility(addCandidate).eligible);
     addBtn.textContent=s(full?'watch.full_button':adding?'watch.adding':'watch.add');
     bulk.hidden=!focused||!items.length;
     selectionHint.hidden=!!checked.size;selectionReview.hidden=!checked.size;

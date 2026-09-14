@@ -190,10 +190,10 @@ test('equal tiles include tiny issuers, ETFs and missing caps with dated prices'
  assert.match(view.textContent,/2026-09-04/);assert.match(view.textContent,/Equal size for comparison/);
 });
 
-test('filter autocomplete requires an explicit add and shows the whole list with the new stock after success',async()=>{
+test('filter autocomplete adds directly and shows the whole list with the new stock after success',async()=>{
  const items=[row('NVDA',5.6e12,.84)],requests=[];
  globalThis.fetch=async(url,opts={})=>{requests.push([String(url),opts.method||'GET']);
-  if(String(url).startsWith('/public/symbols?'))return Response.json({items:[{ticker:'CEG',name:'Constellation Energy',exchange:'NASDAQ'}]});
+  if(String(url).startsWith('/public/symbols?'))return Response.json({items:[{ticker:'CEG',name:'Constellation Energy',exchange:'NASDAQ',instrument_type:'stock',instrument_tags:['stock'],watch_eligible:true,watch_reason:null}]});
   if(opts.method==='POST'){items.push(row('CEG',1e11,0));return Response.json({added:true,ticker:'CEG'});}
   return Response.json({items,overview:{items,session:'2026-09-04'}});
  };
@@ -203,9 +203,8 @@ test('filter autocomplete requires an explicit add and shows the whole list with
  await new Promise(r=>setTimeout(r,220));
  assert.equal(root.querySelector('.watch-search-offer').hidden,false);
  assert.match(root.querySelector('.watch-search-offer').textContent,/CEG.*Constellation Energy/);
- root.querySelector('.watch-search [role="option"]').click();
- assert.equal(filter.value,'CEG');assert.equal(requests.filter(([,m])=>m==='POST').length,0);
- root.querySelector('.watch-search-offer button').click();await new Promise(r=>setTimeout(r,0));
+ assert.equal(requests.filter(([,m])=>m==='POST').length,0);
+ root.querySelector('.watch-search .symbol-add').click();await new Promise(r=>setTimeout(r,0));
  assert.equal(requests.filter(([,m])=>m==='POST').length,1);
  assert.deepEqual(store.get('watchlist'),['NVDA','CEG']);
  assert.equal(root.querySelector('.watch-search-offer').hidden,true);
