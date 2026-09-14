@@ -1,11 +1,30 @@
 import {s} from '../strings.js';
 import {el,px} from '../ui.js';
 
+const receiptHash=value=>typeof value==='string'&&/^[a-f0-9]{64}$/.test(value);
+const exactKeys=(value,keys)=>Boolean(value)&&typeof value==='object'&&!Array.isArray(value)&&
+  Object.keys(value).length===keys.length&&keys.every(key=>Object.hasOwn(value,key));
+
+// The API validates the immutable receipt and current source. The browser checks
+// the explicit accepted shape; it does not invent an independent review verdict.
+export function sourceSummaryAccepted(source) {
+  if(source?.status!=='ready')return false;
+  const proof=source.summary_validation;
+  if(proof===undefined)return source.summary_reviewed===true;
+  return source.summary_reviewed===false&&exactKeys(proof,['version','method','content_hash'])&&
+    proof.version==='creator-single-pass/1'&&proof.method==='single-pass-v1'&&receiptHash(proof.content_hash);
+}
+
 export function groundedClaim(c) {
-  if(['retracted','superseded'].includes(c?.attribution_status))return false;
-  return ['creator-claims-v1','creator-claims-v2'].includes(c?.extractor_version)
-    ? c.evidence_verified===true && c.verification==='source_reviewed' && Boolean(c.source_hash) && Array.isArray(c.segment_ids) && c.segment_ids.length>0
-    : typeof c?.evidence==='string' && c.evidence.length>=12;
+  if(['retracted','superseded','withdrawn','pending','quarantined'].includes(c?.attribution_status))return false;
+  const modern=['creator-claims-v1','creator-claims-v2'].includes(c?.extractor_version);
+  if(!modern)return c?.verification!=='source_validated'&&typeof c?.evidence==='string'&&c.evidence.length>=12;
+  if(c.evidence_verified!==true||!c.source_hash||!Array.isArray(c.segment_ids)||!c.segment_ids.length)return false;
+  if(c.verification==='source_reviewed')return c._single_pass===undefined;
+  const proof=c._single_pass;
+  return c.verification==='source_validated'&&exactKeys(proof,['version','source_hash','content_hash'])&&
+    proof.version==='creator-single-pass/1'&&receiptHash(proof.source_hash)&&
+    proof.source_hash===c.source_hash&&receiptHash(proof.content_hash);
 }
 export function sourceAt(url, seconds) {
   try {

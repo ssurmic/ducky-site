@@ -1,5 +1,22 @@
 # Change log
 
+## Creator views: source-validated extraction remains readable · 2026-09-14
+
+Creator views and the public summary preview now accept the server's explicit single-pass
+validation receipt alongside existing independently reviewed content. Accepted claims keep
+their stock, direction and original video position. Missing, malformed, withdrawn or pending
+receipts do not acquire a completed summary or a directional claim; automatic validation is
+never relabeled as independent review.
+
+The Today ordering fixture now fixes its clock at local noon. A separate midnight test checks
+that a previous-day publication remains accessible under older records, preserving the actual
+product behavior.
+
+Validation: 757 JavaScript tests passed; Python suite collected 22 tests (21 passed, one skipped);
+copy and internal-link gates passed. Twelve Chromium viewport cases covered English/Chinese,
+dark/light, narrow phones and desktop, including the original video at 1:31. These are simulated
+viewports, not physical-device or live-data acceptance. [Acceptance and remaining limits](reports/CREATOR-SINGLE-PASS-2026-09-14.md).
+
 ## Watchlist: consistent option and support references · 2026-09-13
 
 Support cells use the same price, reference type, distance and labeled 20-day closing-range
