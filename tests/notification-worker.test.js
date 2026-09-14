@@ -95,6 +95,9 @@ test('notifications use the current brand for legacy payloads and preserve descr
   await w.dispatch('push', {data:{json:()=>({title:'Ducky TradeBot',body:'Existing queued alert'})}});
   assert.equal(w.shown[0][0], 'Ducky Bot');
   assert.equal(w.shown[0][1].body, 'Existing queued alert');
+  const manifest=JSON.parse(readFileSync(new URL('../dist/manifest.webmanifest',import.meta.url),'utf8'));
+  assert.equal(w.shown[0][1].icon,manifest.icons[0].src,'notifications use the installed app mark');
+  assert.equal(w.shown[0][1].badge,manifest.icons[0].src);
   await w.dispatch('push', {data:{json:()=>({title:'NVDA alert'})}});
   assert.equal(w.shown[1][0], 'NVDA alert');
 });

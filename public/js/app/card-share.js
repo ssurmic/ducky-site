@@ -99,7 +99,7 @@ export async function renderCardImage(card){
   ctx.textBaseline='top';ctx.fillStyle='#16251d';ctx.font=`700 29px ${font}`;ctx.fillText('Ducky Bot',pad+70,64);
   ctx.fillStyle='#68776b';ctx.font=`400 20px ${font}`;ctx.fillText(s('share.card_type'),pad+70,104);
   const mark=new Image();mark.src='/duck-head-cutout-v1.png';
-  try{await mark.decode();ctx.drawImage(mark,pad,60,54,64);}catch{/* Text brand remains readable offline. */}
+  try{await mark.decode();ctx.drawImage(mark,pad,65,54,54);}catch{/* Text brand remains readable offline. */}
   for(const b of blocks){ctx.font=`${b.weight} ${b.size}px ${font}`;ctx.fillStyle=b.color;b.lines.forEach((line,i)=>ctx.fillText(line,pad,b.y+i*b.height));}
   ctx.fillStyle='#dbe3d6';ctx.fillRect(pad,divider,content,1);
   ctx.fillStyle='#526254';ctx.font=`400 22px ${font}`;

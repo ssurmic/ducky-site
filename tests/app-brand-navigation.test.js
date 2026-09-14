@@ -16,7 +16,8 @@ test('brand link stays in the app before boot and returns signed-in users to wat
   assert.equal(brand.getAttribute('href'),'#/watchlist');
   assert.equal(brand.getAttribute('aria-label'),brand.dataset.watchlistLabel);
   assert.notEqual(brand.id,'logout');
-  assert.ok(brand.querySelector('img[src="/duck-head-cutout-v1.png"]'));
+  assert.equal(brand.querySelector('img').getAttribute('src'),document.querySelector('link[rel=icon]').getAttribute('href'),
+    'app navigation uses the same current mark as the browser icon');
   dom.window.close();
  }
 });

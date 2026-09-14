@@ -25,8 +25,8 @@ self.addEventListener("push", function (event) {
   if (/^Ducky[ -]*Trade[ -]*Bot$/i.test(title)) title = "Ducky Bot";
   var opts = {
     body: plain(data.body, "", 400),
-    icon: "/avatar-160.jpg",
-    badge: "/avatar-160.jpg",
+    icon: "/duck-head-cutout-v1.png",
+    badge: "/duck-head-cutout-v1.png",
     data: { url: appURL(data.url) },
     tag: plain(data.tag, "", 120) || undefined,
     renotify: false,

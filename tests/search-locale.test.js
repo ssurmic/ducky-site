@@ -65,7 +65,8 @@ test('Google verification and brand structured data survive at every homepage',(
     assert.equal(home.querySelector('[name=google-site-verification]').content,cfg.google_site_verification);
     const graph=JSON.parse(home.querySelector('script[type="application/ld+json"]').textContent)['@graph'];
     assert.equal(graph.find(x=>x['@type']==='WebSite').name,'Ducky Bot');
-    assert.equal(graph.find(x=>x['@type']==='Organization').logo,site+'/duck-head-cutout-v1.png');
+    assert.equal(graph.find(x=>x['@type']==='Organization').logo,new URL(home.querySelector('link[rel=icon]').getAttribute('href'),site).href,
+      'search branding shares the current site icon');
   }
 });
 
