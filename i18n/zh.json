@@ -4188,7 +4188,7 @@
   "app.evidence.author_points": "{n} 条记录",
   "app.evidence.author_sources": "{n} 份原文",
   "app.evidence.repeated_source": "同一原文关联 {n} 条记录",
-  "app.evidence.group_note": "同一作者的记录合并排列；每条观点仍保留原文与日期。重复提及不代表独立佐证。",
+  "app.evidence.group_note": "相关观点默认折叠，展开可看每条观点、日期和原文。重复提及不代表独立佐证。",
   "app.evidence.topic_filings": "申报与持仓",
   "app.evidence.topic_price": "价格与技术面",
   "app.evidence.topic_relative": "相对表现",
@@ -4443,5 +4443,11 @@
   "app.preview.screen_open_app": "打开股票筛选",
   "app.preview.screen_unavailable": "暂时无法展示筛选条件。",
   "app.preview.screen_conditions": "所选条件",
-  "app.preview.screen_apply": "查看所选条件"
+  "app.preview.screen_apply": "查看所选条件",
+  "app.evidence.fold_thesis": "同一论点",
+  "app.evidence.fold_source": "同一视频",
+  "app.evidence.fold_count": "{n} 条相关观点",
+  "app.evidence.fold_expand": "展开",
+  "app.evidence.fold_collapse": "收起",
+  "app.evidence.fold_more": "另有 {n} 组观点"
 }

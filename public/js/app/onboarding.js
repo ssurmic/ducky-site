@@ -1,3 +1,4 @@
+import {tourReadingTarget} from './tour-events.js';
 import * as api from './api.js';
 import * as store from './store.js';
 import {el,clear,dateTime} from './ui.js';
@@ -157,15 +158,16 @@ export function startOnboarding(){
     const names=[targets[progress.step],...(progress.step==='add'?['watchlist.add-toggle']:[])];
     const nodes=names.flatMap(name=>[...document.querySelectorAll('[data-tour]')].filter(n=>n.dataset.tour.split(' ').includes(name)));
     const ref=progress.examples?.opinion;
-    return nodes.find(n=>{
-      if(n.disabled||n.closest('[hidden]')||n.closest('[inert]'))return false;
-      if(n.dataset.ticker&&['map','node','chart'].includes(progress.step)&&n.dataset.ticker!==progress.ticker)return false;
-      if(['opinion','source'].includes(progress.step)&&ref?.node_id&&n.dataset.source&&n.dataset.source!==ref.node_id)return false;
-      if(progress.step==='source'&&ref?.post_id&&n.dataset.post!==ref.post_id)return false;
-      if(progress.step==='video'&&ref?.post_id&&n.dataset.post!==ref.post_id)return false;
-      if(progress.step==='calendar'&&progress.examples?.calendar?.date&&n.dataset.date!==progress.examples.calendar.date)return false;
-      return n.getBoundingClientRect().width>0;
-    });
+    return nodes.map(n=>{
+      if(n.disabled||n.closest('[hidden]')||n.closest('[inert]'))return null;
+      if(n.dataset.ticker&&['map','node','chart'].includes(progress.step)&&n.dataset.ticker!==progress.ticker)return null;
+      if(['opinion','source'].includes(progress.step)&&ref?.node_id&&n.dataset.source&&n.dataset.source!==ref.node_id)return null;
+      if(progress.step==='source'&&ref?.post_id&&n.dataset.post!==ref.post_id)return null;
+      if(progress.step==='video'&&ref?.post_id&&n.dataset.post!==ref.post_id)return null;
+      if(progress.step==='calendar'&&progress.examples?.calendar?.date&&n.dataset.date!==progress.examples.calendar.date)return null;
+      const target=tourReadingTarget(n);
+      return target.getBoundingClientRect().width>0?target:null;
+    }).find(Boolean);
   }
   function position(){
     frame=null;if(!visible)return;

@@ -4188,7 +4188,7 @@
   "app.evidence.author_points": "{n} records",
   "app.evidence.author_sources": "{n} original sources",
   "app.evidence.repeated_source": "Same source linked to {n} records",
-  "app.evidence.group_note": "Grouped by author, with original sources and dates. Repeated mentions do not count as independent evidence.",
+  "app.evidence.group_note": "Related points are folded together. Expand for each statement, date and source. Repeated mentions are not independent evidence.",
   "app.evidence.topic_filings": "Filings & ownership",
   "app.evidence.topic_price": "Price & technicals",
   "app.evidence.topic_relative": "Relative performance",
@@ -4443,5 +4443,11 @@
   "app.preview.screen_open_app": "Open stock screening",
   "app.preview.screen_unavailable": "This screening preview is unavailable.",
   "app.preview.screen_conditions": "Selected criteria",
-  "app.preview.screen_apply": "Review criteria"
+  "app.preview.screen_apply": "Review criteria",
+  "app.evidence.fold_thesis": "Same thesis",
+  "app.evidence.fold_source": "Same video",
+  "app.evidence.fold_count": "{n} related points",
+  "app.evidence.fold_expand": "Expand",
+  "app.evidence.fold_collapse": "Collapse",
+  "app.evidence.fold_more": "{n} more groups"
 }

@@ -1,5 +1,9 @@
 # Change log
 
+## Related evidence cards · 2026-09-13
+
+Same-author, same-video, same-direction evidence now occupies one collapsed card. “2 related points” expands to each original statement, date, source and share action. Source folders work with existing historical API payloads; reviewed cross-video groups can use optional server metadata. Folders consume one preview slot, and opposing views retain their own lane. Native disclosure, refresh state and exact source routes remain intact; tours first point to a closed folder before its original child. See [acceptance](reports/EVIDENCE-FOLDING-2026-09-13.md). Not deployed by this change.
+
 ## Watchlist: consistent option and support references · 2026-09-13
 
 Support cells use the same price, reference type, distance and labeled 20-day closing-range

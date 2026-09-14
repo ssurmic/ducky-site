@@ -9,3 +9,13 @@ export function tourTarget(element, name, details={}) {
   for (const [key,value] of Object.entries(details)) if(value!=null) element.dataset[key]=String(value);
   return element;
 }
+
+// A grouped source is still the exact tour target. First guide the reader to
+// its outermost closed folder; opening it does not claim the source was read.
+export function tourReadingTarget(element){
+  let target=element;
+  for(let parent=element?.parentElement;parent;parent=parent.parentElement){
+    if(parent.tagName==='DETAILS'&&!parent.open)target=parent.querySelector(':scope > summary')||target;
+  }
+  return target;
+}
