@@ -250,14 +250,14 @@
         "status": "current",
         "price_session": "2026-09-18",
         "expected_session": "2026-09-18",
-        "market_date": "2026-09-18",
+        "market_date": "2026-09-19",
         "closures": [],
-        "checked_at": "2026-09-19T02:15:58.178342+00:00",
+        "checked_at": "2026-09-20T02:15:16.944411+00:00",
         "basis": "completed_regular_session",
         "calendar_source": "https://www.nyse.com/markets/hours-calendars"
       },
       "source_url": "https://api.duckybot.app/public/prices/NVDA.json?limit=30",
-      "retrieved_at": "2026-09-19T02:15:58+00:00"
+      "retrieved_at": "2026-09-20T02:15:16+00:00"
     },
     {
       "ticker": "SPY",
@@ -508,14 +508,14 @@
         "status": "current",
         "price_session": "2026-09-18",
         "expected_session": "2026-09-18",
-        "market_date": "2026-09-18",
+        "market_date": "2026-09-19",
         "closures": [],
-        "checked_at": "2026-09-19T02:15:58.248307+00:00",
+        "checked_at": "2026-09-20T02:15:17.006078+00:00",
         "basis": "completed_regular_session",
         "calendar_source": "https://www.nyse.com/markets/hours-calendars"
       },
       "source_url": "https://api.duckybot.app/public/prices/SPY.json?limit=30",
-      "retrieved_at": "2026-09-19T02:15:58+00:00"
+      "retrieved_at": "2026-09-20T02:15:17+00:00"
     },
     {
       "ticker": "NOK",
@@ -766,14 +766,14 @@
         "status": "current",
         "price_session": "2026-09-18",
         "expected_session": "2026-09-18",
-        "market_date": "2026-09-18",
+        "market_date": "2026-09-19",
         "closures": [],
-        "checked_at": "2026-09-19T02:15:58.307278+00:00",
+        "checked_at": "2026-09-20T02:15:17.078156+00:00",
         "basis": "completed_regular_session",
         "calendar_source": "https://www.nyse.com/markets/hours-calendars"
       },
       "source_url": "https://api.duckybot.app/public/prices/NOK.json?limit=30",
-      "retrieved_at": "2026-09-19T02:15:58+00:00"
+      "retrieved_at": "2026-09-20T02:15:17+00:00"
     }
   ]
 }
