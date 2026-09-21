@@ -16,6 +16,18 @@
 .focus-empty{padding:24px;border:1px solid var(--border);border-radius:14px;line-height:1.75;}
 .focus-latest{margin-top:44px;}
 .today-heading{padding:8px 0 22px;border-bottom:1px solid var(--border);margin-bottom:24px;}
+/* Macro strip: four market-level references above the personal feed. */
+.today-macro{margin:0 0 22px;}
+.today-macro-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
+.today-macro-tile{display:grid;gap:4px;padding:12px 14px;border:1px solid var(--border);border-radius:12px;background:var(--surface);min-width:0;}
+.today-macro-label{font-size:12px;color:var(--muted);}
+.today-macro-value{font-size:22px;line-height:1.1;font-variant-numeric:tabular-nums;}
+.today-macro-unit{font-size:12px;color:var(--muted);margin-left:4px;font-weight:500;}
+.today-macro-note{font-size:12px;color:var(--muted);line-height:1.45;}
+.today-macro-tile.is-up .today-macro-value{color:var(--green);}
+.today-macro-tile.is-down .today-macro-value{color:var(--red);}
+.today-macro-source{margin:8px 0 0;}
+@media(max-width:600px){.today-macro-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.today-macro-value{font-size:19px;}}
 .today-heading .today-date{color:var(--accent-text,var(--accent));font-size:12px;font-weight:600;}
 .today-heading h1{margin:6px 0;font-size:32px;}
 .today-section-title{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:600;margin:0;}
@@ -482,6 +494,8 @@ html[data-theme=dark] :is(.focus-today,.focus-stock,.stock-information-map,.watc
 /* Wide enough for one-line pills: "Net selling −$2.1M", "6 added · 7 trimmed". */
 .watch-compact-table tr>[data-signal=insider]{width:198px;}
 .watch-compact-table tr>[data-signal=funds]{width:204px;}
+.watch-compact-table tr>[data-signal=politicians]{width:204px;}
+.watch-signal-ref{color:var(--muted);font-variant-numeric:tabular-nums;}
 .watch-compact-table tr>[data-signal=walls]{width:132px;}
 .watch-compact-table tr>[data-signal=support]{width:152px;}
 .watch-signal-average{color:var(--text);font-weight:600;}
