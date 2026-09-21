@@ -1,130 +1,69 @@
 {
  "schema": "week-ahead/1",
- "generated_at": "2026-09-19T06:31:59+00:00",
- "as_of": "2026-09-19T06:31:59+00:00",
- "week_of": "09/14–09/18",
+ "generated_at": "2026-09-20T06:31:31+00:00",
+ "as_of": "2026-09-20T06:31:31+00:00",
+ "week_of": "09/21–09/25",
  "events": [
   {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/17",
-   "et": "8:30am et",
-   "name": "Core Retail Sales",
+   "dow": "周二",
+   "dow_en": "Tue",
+   "date": "09/22",
+   "et": "6:30am et",
+   "name": "Fed Goolsbee Speaks",
    "kind": "macro",
-   "tier": "high"
+   "tier": "fed"
+  },
+  {
+   "dow": "周三",
+   "dow_en": "Wed",
+   "date": "09/23",
+   "et_zh": "盘前",
+   "et_en": "BMO",
+   "name": "CTAS",
+   "kind": "earnings",
+   "watch": false
   },
   {
    "dow": "周四",
    "dow_en": "Thu",
-   "date": "09/17",
-   "et": "8:30am et",
-   "name": "Retail Sales",
+   "date": "09/24",
+   "et": "10:05am et",
+   "name": "Fed Vice Chair for Supervision Barr Speaks",
    "kind": "macro",
-   "tier": "high"
+   "tier": "fed"
   },
   {
    "dow": "周四",
    "dow_en": "Thu",
-   "date": "09/17",
-   "et": "8:30am et",
-   "name": "Retail Sales Ex Gas/Autos",
-   "kind": "macro",
-   "tier": "high"
+   "date": "09/24",
+   "et_zh": "盘后",
+   "et_en": "AH",
+   "name": "COST",
+   "kind": "earnings",
+   "watch": false
   },
   {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/17",
-   "et": "12:00pm et",
-   "name": "Atlanta Fed GDPNow",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/17",
-   "et": "2:00pm et",
-   "name": "Interest Rate Projection - 1st Yr",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/17",
-   "et": "2:00pm et",
-   "name": "Interest Rate Projection - 2nd Yr",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/17",
-   "et": "2:00pm et",
-   "name": "Interest Rate Projection - 3rd Yr",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/17",
-   "et": "2:00pm et",
-   "name": "Interest Rate Projection - Current",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/17",
-   "et": "2:00pm et",
-   "name": "Interest Rate Projection - Longer",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/17",
-   "et": "2:00pm et",
-   "name": "FOMC Economic Projections",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/17",
-   "et": "2:00pm et",
-   "name": "FOMC Statement",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/17",
-   "et": "2:00pm et",
-   "name": "Fed Interest Rate Decision",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/17",
-   "et": "2:30pm et",
-   "name": "FOMC Press Conference",
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/25",
+   "et": "4:10am et",
+   "name": "FOMC Member Williams Speaks",
    "kind": "macro",
    "tier": "high"
   },
   {
    "dow": "周五",
    "dow_en": "Fri",
-   "date": "09/18",
+   "date": "09/25",
+   "et": "8:00am et",
+   "name": "FOMC Member Barkin Speaks",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/25",
    "et": "8:30am et",
    "name": "Continuing Jobless Claims",
    "kind": "macro",
@@ -133,7 +72,7 @@
   {
    "dow": "周五",
    "dow_en": "Fri",
-   "date": "09/18",
+   "date": "09/25",
    "et": "8:30am et",
    "name": "Initial Jobless Claims",
    "kind": "macro",
@@ -142,7 +81,7 @@
   {
    "dow": "周五",
    "dow_en": "Fri",
-   "date": "09/18",
+   "date": "09/25",
    "et": "8:30am et",
    "name": "Jobless Claims 4-Week Avg.",
    "kind": "macro",
