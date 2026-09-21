@@ -171,12 +171,31 @@ export function signalSortValue(sig,key){
 }
 
 function chip(state){return el('strong.watch-metric-value.watch-signal-flag',{class:state==='ready'?'is-yes':'is-no'},s(state==='ready'?'watch.signal_yes':'watch.signal_no'));}
-// One pill per side present: green for purchases / adds, red for open-market sales / trims.
+// Side badges (card items): green for purchases / adds, red for open-market sales / trims.
 const SIDE_COPY={buy:['is-yes','watch.signal_bought'],sell:['is-sell','watch.signal_sold'],add:['is-yes','watch.signal_added'],trim:['is-sell','watch.signal_trimmed']};
 function sideChips(sides){return el('span.watch-signal-flags',...sides.map(side=>el('strong.watch-metric-value.watch-signal-flag',{class:SIDE_COPY[side][0]},s(SIDE_COPY[side][1]))));}
-const insiderSides=m=>[m.buys>0?'buy':null,m.sells>0?'sell':null].filter(Boolean);
-const fundSides=m=>[m.adds?.length?'add':null,m.trims?.length?'trim':null].filter(Boolean);
 const tradeLine=f=>s(f.side==='sell'?'watch.signal_sell_line':'watch.signal_buy_line',{who:who(f.owners),value:money(f.value)});
+const countText=(n,one,many)=>n>0?s(n===1?one:many,{n}):null;
+// The cell answers at a glance: which way the window leans (one pill with the net amount), how mixed
+// it is (a green/red balance bar with the counts) and what happened last. The card has every filing.
+function netChip(m){
+  const net=m.bought-m.sold,mixed=m.buys>0&&m.sells>0;
+  const tone=mixed?(net>0?'is-yes':net<0?'is-sell':'is-mixed'):m.sells>0?'is-sell':'is-yes';
+  const text=mixed?(net>0?s('watch.signal_net_buying',{value:money(net)}):net<0?s('watch.signal_net_selling',{value:money(-net)}):s('watch.signal_balanced'))
+    :m.sells>0?s('watch.signal_selling',{value:money(m.sold)}):s('watch.signal_buying',{value:money(m.bought)});
+  return el('strong.watch-metric-value.watch-signal-flag.watch-signal-net',{class:tone},text);
+}
+function balanceBar(positive,negative,label){
+  const total=positive+negative;if(!(total>0))return null;
+  const share=Math.round(positive/total*100);
+  return el('span.watch-balance',{role:'img','aria-label':label,title:label},
+    el('span.watch-balance-buy',{style:{width:share+'%'}}),el('span.watch-balance-sell',{style:{width:(100-share)+'%'}}));
+}
+function mixChip(adds,trims){
+  const tone=adds>trims?'is-yes':trims>adds?'is-sell':'is-mixed';
+  return el('strong.watch-metric-value.watch-signal-flag.watch-signal-net',{class:tone},
+    [countText(adds,'watch.signal_adds_one','watch.signal_adds_many'),countText(trims,'watch.signal_trims_one','watch.signal_trims_many')].filter(Boolean).join(' · '));
+}
 // A complete page allows a plain "none"; a truncated one only says where the stock was not found.
 const fundsNone=m=>m.complete?s('watch.signal_funds_none_tracked'):m.count?s('watch.signal_funds_none_page',{n:m.count}):s('watch.signal_funds_none');
 
@@ -189,19 +208,19 @@ export function signalCell(key,sig,{ticker=''}={}){
   if(state==='missing'){cell.append(el('strong.watch-metric-value','—'),el('span.watch-metric-note',s('watch.signal_unknown')));return cell;}
   if(key==='insider'){
     if(state!=='ready'){cell.append(chip(state),el('span.watch-metric-note',s('watch.signal_insider_none')));return cell;}
-    // Newest filings first: date, who traded, bought or sold, reported value. Sales read red.
-    cell.append(sideChips(insiderSides(m)));
-    for(const filing of m.filings.slice(0,2))cell.append(el('span.watch-metric-status.watch-signal-event',{class:'is-'+filing.side},[shortDate(filing.date),tradeLine(filing)].join(' · ')));
-    if(m.count>2)cell.append(el('span.watch-metric-status',s('watch.signal_more_filings',{n:m.count-2})));
+    const latest=m.filings[0];
+    cell.append(netChip(m),balanceBar(m.bought,m.sold,s('watch.signal_balance',{bought:money(m.bought),sold:money(m.sold)})),
+      el('span.watch-metric-status.watch-signal-mix',[countText(m.buys,'watch.signal_buys_one','watch.signal_buys_many'),countText(m.sells,'watch.signal_sells_one','watch.signal_sells_many')].filter(Boolean).join(' · ')),
+      el('span.watch-metric-status.watch-signal-event',{class:'is-'+latest.side},s('watch.signal_latest',{event:[shortDate(latest.date),tradeLine(latest)].join(' · ')})));
     return cell;
   }
   if(key==='funds'){
     const first=m.moves?.[0];
     if(state!=='ready'){cell.append(chip(state),el('span.watch-metric-note',fundsNone(m)));return cell;}
     const name=first?.fund||s('watch.signal_fund_unnamed'),range=m.moves.map(a=>a.range).find(Boolean);
-    cell.append(sideChips(fundSides(m)),el('span.watch-metric-note.watch-signal-fund.watch-signal-event',{class:'is-'+first.side,title:m.moves.map(a=>a.fund).filter(Boolean).join(' · ')},
-        s(first.side==='trim'?'watch.signal_fund_trim_line':'watch.signal_fund_add_line',{fund:name})),
-      el('span.watch-metric-status',[m.moves.length>1?s('watch.signal_funds_more',{n:m.moves.length-1}):null,first?.period].filter(Boolean).join(' · ')));
+    cell.append(mixChip(m.adds.length,m.trims.length),balanceBar(m.adds.length,m.trims.length,s('watch.signal_fund_balance',{adds:m.adds.length,trims:m.trims.length})),
+      el('span.watch-metric-status.watch-signal-fund.watch-signal-event',{class:'is-'+first.side,title:m.moves.map(a=>a.fund).filter(Boolean).join(' · ')},
+        [s(first.side==='trim'?'watch.signal_fund_trim_line':'watch.signal_fund_add_line',{fund:name}),first?.period].filter(Boolean).join(' · ')));
     if(range)cell.append(el('span.watch-metric-status.watch-signal-range',strike(range.low)+'–'+strike(range.high)));
     else if(first?.filed)cell.append(el('span.watch-metric-status',s('watch.signal_filed',{date:shortDate(first.filed)})));
     return cell;
@@ -252,7 +271,7 @@ export function signalCard(key,sig,ticker){
       externalLink(filing.url,s('boards.source'))));
     const lead=[m.buys>0?[s('watch.signal_bought')+' '+money(m.bought),finite(m.average)?s('watch.signal_avg_price',{price:px(m.average)}):null,m.shares>0?s('watch.signal_shares',{n:compact(m.shares)}):null].filter(Boolean).join(' · '):null,
       m.sells>0?s('watch.signal_sold')+' '+money(m.sold):null].filter(Boolean);
-    if(lead.length)body.append(el('p.watch-signal-card-lead',lead.join(' · ')));
+    if(lead.length)body.append(el('p.watch-signal-card-lead',netChip(m),' ',lead.join(' · ')));
   }else if(key==='funds'){
     for(const move of m.moves||[])list.append(el('article.watch-signal-item',{class:'is-'+move.side},
       el('header',el('strong',move.fund||s('watch.signal_fund_unnamed')),el('span.small.muted',move.period||'—')),
