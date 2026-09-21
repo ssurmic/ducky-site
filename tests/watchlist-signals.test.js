@@ -72,7 +72,7 @@ test('signal cells read bought/sold with amounts, walls carry their distance to 
  const fundCard=signals.signalCard('funds',ranged.get('NVDA'),'NVDA');assert.match(fundCard.textContent,/Shares 1M → 1\.5M/);assert.match(fundCard.textContent,/Quarter-end reported price ≈ \$160\.00/);assert.match(fundCard.textContent,/Quarter price range \$150–\$178\.50/);assert.ok([...fundCard.querySelectorAll('a')].some(a=>a.getAttribute('href')==='#/boards?board=partner&ticker=NVDA'));
  const walls=signals.signalCell('walls',all.get('NVDA'));
  assert.match(walls.querySelector('.watch-wall.is-call').textContent,/\$240/);assert.match(walls.querySelector('.watch-wall.is-call').textContent,/9\.9% above/);
- assert.match(walls.querySelector('.watch-wall.is-put').textContent,/8\.4% below/);assert.match(walls.textContent,/Exp 09\/18 \/ 10\/16/);
+ assert.match(walls.querySelector('.watch-wall.is-put').textContent,/8\.4% below/);assert.match(walls.title,/Exp 09\/18 \/ 10\/16/);
  const support=signals.signalCell('support',all.get('NVDA'));
  assert.match(support.textContent,/Put wall/);assert.match(support.textContent,/8\.4% below/);
  assert.equal(support.querySelector('.watch-range-dot').style.left,'51.8%');assert.match(support.querySelector('.watch-range').getAttribute('aria-label'),/\$195.*\$240/);

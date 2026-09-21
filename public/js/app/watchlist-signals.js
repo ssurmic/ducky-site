@@ -284,9 +284,11 @@ export function signalCell(key,sig,{ticker=''}={}){
   }
   if(key==='walls'){
     if(state!=='ready'){cell.append(el('strong.watch-metric-value','—'),el('span.watch-metric-note',s('watch.signal_walls_none')));return cell;}
-    cell.append(el('span.watch-wall.is-call',el('span.watch-wall-kind',s('watch.signal_call')),el('strong.watch-metric-value',finite(m.call)?strike(m.call):'—'),el('span.watch-wall-gap',gapText(gap(m.call,m.price)))),
-      el('span.watch-wall.is-put',el('span.watch-wall-kind',s('watch.signal_put')),el('strong.watch-metric-value',finite(m.put)?strike(m.put):'—'),el('span.watch-wall-gap',gapText(gap(m.put,m.price)))),
-      el('span.watch-metric-note',m.expiries.length?s('watch.signal_expiry',{date:m.expiries.slice(0,2).map(shortDate).join(' / ')}):s('watch.signal_walls_basis')));
+    // Two single lines — kind, strike, distance — with the expiries in the title and the card.
+    const expiry=m.expiries.length?s('watch.signal_expiry',{date:m.expiries.slice(0,2).map(shortDate).join(' / ')}):s('watch.signal_walls_basis');
+    cell.title=expiry;
+    cell.append(el('span.watch-wall.is-call',{title:expiry},el('span.watch-wall-kind',s('watch.signal_call')),el('strong.watch-metric-value',finite(m.call)?strike(m.call):'—'),el('span.watch-wall-gap',gapText(gap(m.call,m.price)))),
+      el('span.watch-wall.is-put',{title:expiry},el('span.watch-wall-kind',s('watch.signal_put')),el('strong.watch-metric-value',finite(m.put)?strike(m.put):'—'),el('span.watch-wall-gap',gapText(gap(m.put,m.price)))));
     return cell;
   }
   if(state!=='ready'){cell.append(el('strong.watch-metric-value','—'),el('span.watch-metric-note',s('watch.signal_support_none')));return cell;}
