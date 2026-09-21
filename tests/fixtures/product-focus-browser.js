@@ -126,8 +126,16 @@ window.fetch=async(input,options={})=>{
    {id:'13f:a:'+ticker,kind:'13f',ticker,reporter_name:'Appaloosa LP',ts:'2026-08-14T12:00:00Z',direction:1,extra:{facts:{accession:'a-'+ticker,position_change:i%2?'new':'increased',report_period:'2026-06-30',prior_shares:1000000,new_shares:1500000,new_value:3e8,quarter_price_range:{low:175.75,high:235.74}}}},
    {id:'13f:b:'+ticker,kind:'13f',ticker,reporter_name:'ARK Investment Management',ts:'2026-08-13T12:00:00Z',direction:-1,extra:{facts:{accession:'b-'+ticker,position_change:i===1?'closed':'decreased',report_period:'2026-06-30',prior_shares:800000,new_shares:i===1?0:500000,new_value:1e8}}},
    ...dense(ticker,i)]);
-  return Response.json({items:kind==='insider'?insider:kind==='13f'?funds:[],next_cursor:null});
+  const political=tickers.flatMap((ticker,i)=>i>2?[]:[
+   {id:'house:'+ticker+':1',kind:'political',ticker,ts:'2026-07-24T00:00:00Z',direction:1,source_url:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/2003.pdf',
+    extra:{facts:{politician:'Nancy Pelosi',owner:'SP',transaction_code:'P',transaction_date:'2026-07-24',amount_range:'$500,001 - $1,000,000',asset_type:'ST',filing_date:'2026-08-20',transaction_close:{close:22.5,date:'2026-07-24'}}}},
+   ...(i===0?[{id:'house:'+ticker+':2',kind:'political',ticker,ts:'2026-06-12T00:00:00Z',direction:-1,source_url:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/2001.pdf',
+    extra:{facts:{politician:'Josh Gottheimer',owner:'JT',transaction_code:'S',transaction_date:'2026-06-12',amount_range:'$15,001 - $50,000',asset_type:'OP',description:'Call options; Strike price $340; Expires 12/18/2026',filing_date:'2026-07-10',transaction_close:{close:19.8,date:'2026-06-12'}}}}]:[])]);
+  return Response.json({items:kind==='insider'?insider:kind==='13f'?funds:kind==='political'?political:[],next_cursor:null});
  }
+ if(path==='/macro/beta')return Response.json({schema:'macro-beta/1',status:'ok',as_of:'2026-09-18',observed_at:'2026-09-19T12:00:00Z',history:[{}],
+  latest:{date:'2026-09-18',regime:'mixed',funding_score:54,rates_score:48,beta_score:51.6,metrics:{net_liquidity_bn:5850,net_liquidity_65d_change_bn:-120,nominal_10y:4.12,nominal_10y_20d_change_bp:9,vix:17.6,vix_3m:19.1,vix_term_ratio:0.9215}},
+  fear_greed:{score:27,rating:'fear',previous_close:31,as_of:'2026-09-18T23:59:00+00:00'}});
  return Response.json({items:[],posts:[]});
 };
 const store=await import('/js/app/store.js'),router=await import('/js/app/router.js');

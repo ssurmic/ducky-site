@@ -6,8 +6,8 @@
 import {el,px,modal} from './ui.js';
 import {s,LANG} from './strings.js';
 
-export const signalKeys=['insider','funds','walls','support'];
-const copy={insider:'watch.signal_insider',funds:'watch.signal_funds',walls:'watch.signal_walls',support:'watch.signal_support'};
+export const signalKeys=['insider','funds','politicians','walls','support'];
+const copy={insider:'watch.signal_insider',funds:'watch.signal_funds',politicians:'watch.signal_politicians',walls:'watch.signal_walls',support:'watch.signal_support'};
 export const signalLabel=key=>s(copy[key]);
 // A "?" beside each header opens a plain-language explanation: what it is, where it comes from, its limits.
 export function signalHelpButton(key,meta={}){
@@ -145,22 +145,56 @@ export function fundSignals(doc){
   return {loaded,byTicker,since,count:rows.length,filings:filings.size,periods,complete:loaded&&!doc.next_cursor};
 }
 
-export function buildSignals(briefs,funds,tickers=[],insiders=null){
+// Congressional (STOCK Act) disclosures for the watched stocks: amounts are ranges, never prices, so
+// each disclosure carries the saved close of its transaction date as the reference. Newest first.
+const OWNER_COPY={SP:'watch.signal_owner_spouse',JT:'watch.signal_owner_joint',DC:'watch.signal_owner_child'};
+const amountText=range=>{const n=String(range||'').match(/\$([\d,]+)/g);if(!n)return String(range||'');
+  const parts=n.map(v=>Number(v.replace(/[$,]/g,'')));const fmt=v=>new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US',{style:'currency',currency:'USD',notation:'compact',maximumFractionDigits:v>=1e6?1:0}).format(v);
+  return parts.length>1?fmt(parts[0])+'–'+fmt(parts[1]):fmt(parts[0]);};
+export function politicianSignals(doc,{months=6,now=Date.now()}={}){
+  const since=new Date(now-months*30.5*864e5).toISOString().slice(0,10);
+  const rows=(Array.isArray(doc?.items)?doc.items:[]).filter(row=>row?.kind==='political');
+  const byTicker=new Map();
+  for(const row of rows){
+    const ticker=String(row.ticker||'').toUpperCase();if(!ticker)continue;
+    const facts=row.extra?.facts||{},date=day(facts.transaction_date||row.event_date||row.ts);
+    if(!date||date<since)continue;
+    const trade={date,filed:day(facts.filing_date||row.published_at||row.ts),side:tradeSide(row),
+      politician:typeof facts.politician==='string'?facts.politician:'',owner:typeof facts.owner==='string'?facts.owner:'',
+      amount:typeof facts.amount_range==='string'?facts.amount_range:'',asset:typeof facts.asset_type==='string'?facts.asset_type:'',
+      description:typeof facts.description==='string'?facts.description:'',
+      close:finite(facts.transaction_close?.close)?facts.transaction_close.close:null,closeDate:day(facts.transaction_close?.date),
+      summary:typeof row.summary==='string'?row.summary:'',url:link(row.source_url||row.extra?.source_url)};
+    if(!byTicker.has(ticker))byTicker.set(ticker,[]);
+    byTicker.get(ticker).push(trade);
+  }
+  for(const list of byTicker.values())list.sort(newestFirst);
+  const loaded=Array.isArray(doc?.items)&&!doc.partial;
+  return {loaded,byTicker,complete:loaded&&!doc.next_cursor,count:rows.length,since};
+}
+function politiciansFrom(trades,{status='ready',complete=true,since=''}={}){
+  const buys=trades.filter(t=>t.side!=='sell').length,sells=trades.length-buys;
+  return {status:trades.length?'ready':status,trades,buys,sells,count:trades.length,latest:trades[0]?.date||'',complete,since,
+    people:[...new Set(trades.map(t=>t.politician).filter(Boolean))],side:buys&&sells?'both':sells?'sell':buys?'buy':null};
+}
+
+export function buildSignals(briefs,funds,tickers=[],insiders=null,politicians=null){
   const briefItems=new Map((Array.isArray(briefs?.items)?briefs.items:[]).filter(i=>i?.ticker).map(i=>[String(i.ticker).toUpperCase(),i]));
-  const archive=fundSignals(funds),filings=insiderSignals(insiders);
+  const archive=fundSignals(funds),filings=insiderSignals(insiders),disclosures=politicianSignals(politicians);
   const out=new Map();
-  for(const ticker of new Set([...tickers,...briefItems.keys(),...archive.byTicker.keys(),...filings.byTicker.keys()])){
+  for(const ticker of new Set([...tickers,...briefItems.keys(),...archive.byTicker.keys(),...filings.byTicker.keys(),...disclosures.byTicker.keys()])){
     const fund=archive.byTicker.get(ticker),brief=briefSignals(briefItems.get(ticker));
     // The archived filings decide the insider column whenever that page loaded; the brief's copy of
     // the same records is the fallback, so a pending brief never turns "none" into "pending".
     const insider=filings.loaded?{...insiderFrom(filings.byTicker.get(ticker)||[],{status:filings.complete?'none':'missing',complete:filings.complete}),source:'archive',since:filings.since}:brief.insider;
-    out.set(ticker,{...brief,insider,
+    const politician=disclosures.loaded?politiciansFrom(disclosures.byTicker.get(ticker)||[],{status:disclosures.complete?'none':'missing',complete:disclosures.complete,since:disclosures.since}):{status:'missing',trades:[],buys:0,sells:0,count:0};
+    out.set(ticker,{...brief,insider,politicians:politician,
       funds:fund?{...fund,since:archive.since,complete:archive.complete,count:archive.count}:
         {status:archive.loaded?'none':'missing',since:archive.since,complete:archive.complete,count:archive.count,moves:[],adds:[],trims:[]},
       briefed:briefItems.has(ticker)});
   }
   out.meta={since:archive.since,count:archive.count,filings:archive.filings,complete:archive.complete,loaded:archive.loaded||briefItems.size>0||filings.loaded,
-    insider_since:filings.since,insider_complete:filings.complete,
+    insider_since:filings.since,insider_complete:filings.complete,politicians_since:disclosures.since,politicians_complete:disclosures.complete,
     as_of:newest([...briefItems.values()].map(i=>i.facts_as_of||i.generated_at||i.checked_at||i.as_of))};
   return out;
 }
@@ -174,6 +208,7 @@ export function signalSortValue(sig,key){
   if(key==='insider')return m.status==='ready'?(m.bought||0)-(m.sold||0):-1e15;
   if(key==='funds'){if(m.status!=='ready')return -2;const adds=m.adds.length,trims=m.trims.length,total=adds+trims;
     return total?(adds-trims)/total+Math.min(total,999)/1e6:-2;}
+  if(key==='politicians')return m.status==='ready'?(m.buys-m.sells)+Math.min(m.count,999)/1e6:-1e3;
   if(key==='walls'){const d=gap(m.put,m.price);return finite(d)?-d:m.status==='ready'?0:null;}
   if(key==='support'){const gaps=m.refs?.map(r=>r.gap).filter(finite)||[];return gaps.length?-Math.max(...gaps):null;}
   return null;
@@ -200,10 +235,10 @@ function balanceBar(positive,negative,label){
   return el('span.watch-balance',{role:'img','aria-label':label,title:label},
     el('span.watch-balance-buy',{style:{width:share+'%'}}),el('span.watch-balance-sell',{style:{width:(100-share)+'%'}}));
 }
-function mixChip(adds,trims){
+function mixChip(adds,trims,addOne='watch.signal_adds_one',addMany='watch.signal_adds_many',trimOne='watch.signal_trims_one',trimMany='watch.signal_trims_many'){
   const tone=adds>trims?'is-yes':trims>adds?'is-sell':'is-mixed';
   return el('strong.watch-metric-value.watch-signal-flag.watch-signal-net',{class:tone},
-    [countText(adds,'watch.signal_adds_one','watch.signal_adds_many'),countText(trims,'watch.signal_trims_one','watch.signal_trims_many')].filter(Boolean).join(' · '));
+    [countText(adds,addOne,addMany),countText(trims,trimOne,trimMany)].filter(Boolean).join(' · '));
 }
 // A complete page allows a plain "none"; a truncated one only says where the stock was not found.
 const fundsNone=m=>m.complete?s('watch.signal_funds_none_tracked'):m.count?s('watch.signal_funds_none_page',{n:m.count}):s('watch.signal_funds_none');
@@ -232,6 +267,16 @@ export function signalCell(key,sig,{ticker=''}={}){
         [s(first.side==='trim'?'watch.signal_fund_trim_line':'watch.signal_fund_add_line',{fund:name}),first?.period].filter(Boolean).join(' · ')));
     if(range)cell.append(el('span.watch-metric-status.watch-signal-range',strike(range.low)+'–'+strike(range.high)));
     else if(first?.filed)cell.append(el('span.watch-metric-status',s('watch.signal_filed',{date:shortDate(first.filed)})));
+    return cell;
+  }
+  if(key==='politicians'){
+    if(state!=='ready'){cell.append(chip(state),el('span.watch-metric-note',s('watch.signal_politicians_none')));return cell;}
+    const latest=m.trades[0],who=latest.politician?latest.politician.split(' ').at(-1):s('evidence.recorded_data');
+    cell.append(mixChip(m.buys,m.sells,'watch.signal_buys_one','watch.signal_buys_many','watch.signal_sells_one','watch.signal_sells_many'),
+      balanceBar(m.buys,m.sells,s('watch.signal_balance_counts',{buys:m.buys,sells:m.sells})),
+      el('span.watch-metric-status.watch-signal-event',{class:'is-'+latest.side},s('watch.signal_latest',{event:[shortDate(latest.date),
+        s(latest.side==='sell'?'watch.signal_pol_sell_line':'watch.signal_pol_buy_line',{who,amount:amountText(latest.amount)})].join(' · ')})),
+      finite(latest.close)?el('span.watch-metric-status.watch-signal-ref',s('watch.signal_ref_close',{price:px(latest.close)})):null);
     return cell;
   }
   if(key==='walls'){
@@ -289,6 +334,13 @@ export function signalCard(key,sig,ticker){
       finite(move.quarterEnd)?el('p.small.muted',s('watch.signal_quarter_end_price',{price:px(move.quarterEnd)})):null,
       move.range?el('p.small.muted',s('watch.signal_quarter_range',{low:strike(move.range.low),high:strike(move.range.high)})):null,
       el('p.small.muted',move.filed?s('watch.signal_filed',{date:move.filed}):''),externalLink(move.url,s('boards.source'))));
+  }else if(key==='politicians'){
+    for(const t of m.trades||[])list.append(el('article.watch-signal-item',{class:'is-'+t.side},
+      el('header',el('strong',t.politician||s('evidence.recorded_data')),el('span.small.muted',t.date||'—')),
+      el('p',sideChips([t.side]),el('span.muted',' · '+[OWNER_COPY[t.owner]?s(OWNER_COPY[t.owner]):null,s(t.asset==='OP'?'watch.signal_asset_option':'watch.signal_asset_stock'),amountText(t.amount)].filter(Boolean).join(' · '))),
+      t.description?el('p.small.muted',t.description):null,
+      finite(t.close)?el('p.small.muted',s('watch.signal_ref_close_on',{price:px(t.close),date:t.closeDate||t.date})):null,
+      t.filed?el('p.small.muted',s('watch.signal_disclosed',{date:t.filed})):null,externalLink(t.url,s('boards.source'))));
   }else if(key==='walls'){
     list.append(el('article.watch-signal-item',el('p',el('span.watch-wall-kind',s('watch.signal_call')),' ',el('strong',finite(m.call)?strike(m.call):'—'),el('span.muted',' '+gapText(gap(m.call,m.price)))),
       el('p',el('span.watch-wall-kind',s('watch.signal_put')),' ',el('strong',finite(m.put)?strike(m.put):'—'),el('span.muted',' '+gapText(gap(m.put,m.price)))),
@@ -299,11 +351,11 @@ export function signalCard(key,sig,ticker){
   }
   // An empty card still says why: no filings in the window, or no adds in the newest 13F page.
   if(!list.childElementCount)list.append(el('p.muted',m.status==='none'?
-    (key==='insider'?s('watch.signal_insider_none'):key==='funds'?fundsNone(m):key==='walls'?s('watch.signal_walls_none'):s('watch.signal_support_none')):
+    (key==='insider'?s('watch.signal_insider_none'):key==='funds'?fundsNone(m):key==='politicians'?s('watch.signal_politicians_none'):key==='walls'?s('watch.signal_walls_none'):s('watch.signal_support_none')):
     s('watch.signal_card_empty')));
-  body.append(list,el('p.small.muted',s(key==='funds'?'watch.signal_card_note_funds':key==='insider'?'watch.signal_card_note_insider':'watch.signal_method_'+key)));
+  body.append(list,el('p.small.muted',s(key==='funds'?'watch.signal_card_note_funds':key==='insider'?'watch.signal_card_note_insider':key==='politicians'?'watch.signal_card_note_politicians':'watch.signal_method_'+key)));
   if(ticker)body.append(el('div.watch-signal-card-actions',
-    el('a.btn.btn-ghost.btn-sm',{href:key==='insider'?'#/boards?board=insider&ticker='+encodeURIComponent(ticker):key==='funds'?'#/boards?board=partner&ticker='+encodeURIComponent(ticker):'#/chart/'+encodeURIComponent(ticker)},s(['insider','funds'].includes(key)?'watch.signal_open_filings':'radar.chart')),
+    el('a.btn.btn-ghost.btn-sm',{href:key==='insider'?'#/boards?board=insider&ticker='+encodeURIComponent(ticker):key==='funds'?'#/boards?board=partner&ticker='+encodeURIComponent(ticker):key==='politicians'?'#/boards?board=political&ticker='+encodeURIComponent(ticker):'#/chart/'+encodeURIComponent(ticker)},s(['insider','funds'].includes(key)?'watch.signal_open_filings':'radar.chart')),
     el('a.btn.btn-ghost.btn-sm',{href:'#/evidence/'+encodeURIComponent(ticker)},s('watch.signal_open_map'))));
   return body;
 }
@@ -313,6 +365,7 @@ export function signalMethods(signals){
   return el('details.watch-metric-method.watch-signal-method',{'data-disclosure':'signals'},el('summary',s('watch.signal_method')),
     el('p.small.muted',s('watch.signal_method_insider')),
     el('p.small.muted',s('watch.signal_method_funds',{n:meta.filings||0,since:meta.since||'—'})),
+    el('p.small.muted',s('watch.signal_method_politicians')),
     el('p.small.muted',s('watch.signal_method_walls')),
     el('p.small.muted',s('watch.signal_method_support')),
     el('p.small.muted',s('watch.signal_source_note',{date:meta.as_of||'—'})));

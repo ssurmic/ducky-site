@@ -21,10 +21,11 @@ const TICKER_RE = /^[A-Z][A-Z0-9.\-]{0,9}$/;
 // records (purchases and open-market sales), each for exactly the watched stocks (fifty per page) rather than a market-wide
 // newest page one large filing can fill.
 export const BRIEFS_PATH='/briefing/stocks?fields=signals';
-const FUNDS_PAGE=50,INSIDER_MONTHS=6,FUNDS_MONTHS=9;
+const FUNDS_PAGE=50,INSIDER_MONTHS=6,FUNDS_MONTHS=9,POLITICIAN_MONTHS=6;
 // Nine months of 13F filings cover the two newest report quarters plus the 45-day filing lag; the
 // signals module then keeps only the two newest report periods it actually sees.
 export const fundsPath=(tickers,now=Date.now())=>'/radar/archive.json?kind=13f&limit=200&content=all&fields=signals&start='+new Date(now-FUNDS_MONTHS*30.5*864e5).toISOString().slice(0,10)+'&tickers='+tickers.map(encodeURIComponent).join(',');
+export const politicianPath=(tickers,now=Date.now())=>'/radar/archive.json?kind=political&limit=200&content=all&fields=signals&start='+new Date(now-POLITICIAN_MONTHS*30.5*864e5).toISOString().slice(0,10)+'&tickers='+tickers.map(encodeURIComponent).join(',');
 export const insiderPath=(tickers,now=Date.now())=>'/radar/archive.json?kind=insider&limit=200&content=all&fields=signals&start='+new Date(now-INSIDER_MONTHS*30.5*864e5).toISOString().slice(0,10)+'&tickers='+tickers.map(encodeURIComponent).join(',');
 // Above this many stocks, typing in the filter rebuilds the table on a short debounce.
 const LARGE_LIST=60;
@@ -43,8 +44,8 @@ export async function mount(root,{signal}={}) {
   const focused=window.DUCKY?.PRODUCT_FOCUS_ENABLED===true;
   let research=new Map((api.peek('/me/stock-research')?.items||[]).map(item=>[item.ticker,item])),researchFailed=false,researchLoading=true,loadSeq=0,membershipAvailable=false;
   // Disclosure/options references beside each row: saved brief facts plus the archived 13F page.
-  let signals=new Map(),briefsDoc=null,fundsDoc=null,insidersDoc=null;
-  const rebuildSignals=()=>{signals=buildSignals(briefsDoc,fundsDoc,store.get('watchlist')||[],insidersDoc);};
+  let signals=new Map(),briefsDoc=null,fundsDoc=null,insidersDoc=null,politiciansDoc=null;
+  const rebuildSignals=()=>{signals=buildSignals(briefsDoc,fundsDoc,store.get('watchlist')||[],insidersDoc,politiciansDoc);};
   const missingResearch=()=>({status:researchLoading?'read_pending':researchFailed?'read_failed':'pending'});
   let lastPaint='';
   function reportPaint(){
@@ -421,12 +422,13 @@ export async function mount(root,{signal}={}) {
       const briefsRead=api.get(BRIEFS_PATH,{signal,silent402:true,observe:false}).catch(()=>null);
       let tickers=store.get('watchlist')||[];
       if(!tickers.length){await membershipSettled;tickers=store.get('watchlist')||[];}
-      const [briefs,funds,insiders]=await Promise.all([briefsRead,tickers.length?readArchive(fundsPath,tickers):Promise.resolve(null),
-        tickers.length?readArchive(insiderPath,tickers):Promise.resolve(null)]);
+      const [briefs,funds,insiders,politicians]=await Promise.all([briefsRead,tickers.length?readArchive(fundsPath,tickers):Promise.resolve(null),
+        tickers.length?readArchive(insiderPath,tickers):Promise.resolve(null),tickers.length?readArchive(politicianPath,tickers):Promise.resolve(null)]);
       if(!current())return;
       if(Array.isArray(briefs?.items))briefsDoc=briefs;
       if(funds)fundsDoc=funds;
       if(insiders)insidersDoc=insiders;
+      if(politicians)politiciansDoc=politicians;
       rebuildSignals();paintResearch();
     })():Promise.resolve();
     try {

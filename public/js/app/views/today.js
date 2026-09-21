@@ -2,6 +2,7 @@ import {el,clear,spinner,px,pct} from '../ui.js';
 import {sourceBadge,nodeSourceIdentity} from '../evidence-source.js';
 import {displayQuote} from '../watchlist-overview.js';
 import {researchExamples} from '../research-examples.js';
+import {mountMacroStrip} from '../today-macro.js';
 import {s,LANG} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
@@ -110,6 +111,10 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   const title=el('header.focus-heading.today-heading',el('div',el('p.today-date',date),el('h1',s('focus.today')),el('p.muted',s('focus.today_intro')),stats),
     el('a.btn.btn-ghost',{href:'#/calendar'},s('focus.upcoming')));
   if(!embedded)main.append(title);
+  // Market-level references first (liquidity, 10-year yield, VIX term structure, Fear & Greed); the
+  // saved macro backdrop is read once per mount and never delays the personal feed below.
+  const macroHost=el('div.today-macro-host');
+  if(!embedded){main.append(macroHost);mountMacroStrip(macroHost,{signal});}
   const stat=(value,label)=>el('span.today-stat',el('strong',String(value)),el('span',label));
   function renderStats(){
     if(embedded)return;

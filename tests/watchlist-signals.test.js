@@ -153,7 +153,7 @@ test('signal sorting ranks recorded values, keeps unknown stocks last and never 
  assert.ok(signals.signalSortValue(all.get('NVDA'),'walls')>8);
 });
 
-test('the watchlist table adds four sortable signal columns from two shared reads and explains their basis',async()=>{
+test('the watchlist table adds five sortable signal columns from three archive reads and explains their basis',async()=>{
  store.bumpEpoch();store.set('me',{user_id:12,tier:'pro',access:{billing_enabled:false},watch_cap:50});store.set('token','synthetic-only');store.set('watchlist',['NVDA','AAPL','TSLA']);
  const root=document.querySelector('main');root.replaceChildren();const calls=[];
  globalThis.fetch=async url=>{calls.push(url);
@@ -170,11 +170,12 @@ test('the watchlist table adds four sortable signal columns from two shared read
  const archiveCalls=calls.filter(u=>u.startsWith('/radar/archive.json'));
  assert.match(archiveCalls[0],/^\/radar\/archive\.json\?kind=13f&limit=200&content=all&fields=signals&start=\d{4}-\d{2}-\d{2}&tickers=NVDA,AAPL,TSLA$/);
  assert.match(archiveCalls[1],/^\/radar\/archive\.json\?kind=insider&limit=200&content=all&fields=signals&start=\d{4}-\d{2}-\d{2}&tickers=NVDA,AAPL,TSLA$/);
- assert.equal(archiveCalls.length,2);
+ assert.match(archiveCalls[2],/^\/radar\/archive\.json\?kind=political&limit=200&content=all&fields=signals&start=\d{4}-\d{2}-\d{2}&tickers=NVDA,AAPL,TSLA$/);
+ assert.equal(archiveCalls.length,3);
  const first=root.querySelector('tbody tr');
- assert.equal(first.querySelectorAll('.watch-signal').length,4);
- assert.deepEqual([...root.querySelectorAll('thead .watch-signal-col .watch-sort-label')].map(n=>n.textContent),['Insider activity','Large fund activity','Option walls','Support refs']);
- assert.equal(root.querySelectorAll('thead .watch-signal-col .watch-signal-help').length,4);
+ assert.equal(first.querySelectorAll('.watch-signal').length,5);
+ assert.deepEqual([...root.querySelectorAll('thead .watch-signal-col .watch-sort-label')].map(n=>n.textContent),['Insider activity','Large fund activity','Politician trades','Option walls','Support refs']);
+ assert.equal(root.querySelectorAll('thead .watch-signal-col .watch-signal-help').length,5);
  root.querySelector('thead [data-signal=funds] .watch-signal-help').click();
  assert.match(document.querySelector('.modal-body').textContent,/quarter-end snapshot/);assert.match(document.querySelector('.modal-body').textContent,/since 2026-08-13/);closeModal();
  first.querySelector('button.watch-signal[data-metric=insider]').click();
@@ -304,4 +305,36 @@ test('fund moves count only the two newest report quarters on the page, whicheve
   {id:'sec:in',kind:'insider',ticker:'NVDA',ts:'2026-04-01T00:00:00Z',direction:1,extra:{facts:{owners:[{name:'In'}],transactions:[{date:'2026-03-31',price:10,shares:1000}]}}},
   {id:'sec:out',kind:'insider',ticker:'NVDA',ts:'2026-02-01T00:00:00Z',direction:1,extra:{facts:{owners:[{name:'Out'}],transactions:[{date:'2026-01-31',price:10,shares:1000}]}}}],next_cursor:null},{now});
  assert.deepEqual(filings.byTicker.get('NVDA').map(f=>f.owners[0].name),['In']);
+});
+
+test('politician disclosures count buys and sells, show the latest with its amount range and reference close, and list every disclosure',()=>{
+ const now=Date.parse('2026-09-21T00:00:00Z');
+ const doc={items:[
+  {id:'house:1',kind:'political',ticker:'INTC',ts:'2026-07-24T00:00:00Z',direction:1,source_url:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/2003.pdf',
+   extra:{facts:{politician:'Nancy Pelosi',owner:'SP',transaction_code:'P',transaction_date:'2026-07-24',amount_range:'$500,001 - $1,000,000',asset_type:'ST',filing_date:'2026-08-20',transaction_close:{close:22.5,date:'2026-07-24'}}}},
+  {id:'house:2',kind:'political',ticker:'INTC',ts:'2026-05-29T00:00:00Z',direction:1,extra:{facts:{politician:'Nancy Pelosi',owner:'SP',transaction_code:'P',transaction_date:'2026-05-29',amount_range:'$1,000,001 - $5,000,000',asset_type:'OP',description:'Call options; Strike price $20; Expires 01/16/2027',filing_date:'2026-07-01'}}},
+  {id:'house:3',kind:'political',ticker:'INTC',ts:'2026-06-12T00:00:00Z',direction:-1,extra:{facts:{politician:'Josh Gottheimer',owner:'JT',transaction_code:'S',transaction_date:'2026-06-12',amount_range:'$15,001 - $50,000',asset_type:'ST',filing_date:'2026-07-10',transaction_close:{close:19.8,date:'2026-06-12'}}}},
+  {id:'house:old',kind:'political',ticker:'INTC',ts:'2025-12-30T00:00:00Z',direction:1,extra:{facts:{politician:'Old Member',transaction_date:'2025-12-30',amount_range:'$1,001 - $15,000',asset_type:'ST'}}}],next_cursor:null};
+ const disclosures=signals.politicianSignals(doc,{now});
+ assert.deepEqual(disclosures.byTicker.get('INTC').map(t=>t.date),['2026-07-24','2026-06-12','2026-05-29']);   // newest first, six-month window
+ const all=signals.buildSignals(briefs,funds,['INTC','AAPL'],null,doc);
+ const intc=all.get('INTC').politicians;
+ assert.equal(intc.status,'ready');assert.equal(intc.buys,2);assert.equal(intc.sells,1);assert.equal(intc.side,'both');assert.deepEqual(intc.people,['Nancy Pelosi','Josh Gottheimer']);
+ const cell=signals.signalCell('politicians',all.get('INTC'),{ticker:'INTC'});
+ assert.equal(cell.dataset.status,'ready');
+ assert.equal(cell.querySelector('.watch-signal-net').textContent,'2 buys · 1 sale');assert.ok(cell.querySelector('.watch-signal-net').classList.contains('is-yes'));
+ assert.equal(cell.querySelector('.watch-signal-event').textContent,'Latest 07/24 · Pelosi bought $500K–$1M');assert.ok(cell.querySelector('.watch-signal-event').classList.contains('is-buy'));
+ assert.equal(cell.querySelector('.watch-signal-ref').textContent,'close $22.50');
+ assert.equal(cell.querySelector('.watch-balance-buy').style.width,'67%');
+ const none=signals.signalCell('politicians',all.get('AAPL'),{ticker:'AAPL'});
+ assert.equal(none.dataset.status,'none');assert.match(none.textContent,/No disclosed politician trades in 6 months/);
+ assert.equal(signals.buildSignals(briefs,funds,['MSFT'],null,{...doc,next_cursor:'more'}).get('MSFT').politicians.status,'missing');
+ assert.equal(signals.buildSignals(briefs,funds,['MSFT'],null,null).get('MSFT').politicians.status,'missing');
+ const card=signals.signalCard('politicians',all.get('INTC'),'INTC');
+ assert.equal(card.querySelectorAll('.watch-signal-item').length,3);assert.equal(card.querySelectorAll('.watch-signal-item.is-sell').length,1);
+ assert.match(card.textContent,/Nancy Pelosi.*spouse · stock · \$500K–\$1M/);assert.match(card.textContent,/Close on 2026-07-24: \$22\.50/);assert.match(card.textContent,/Disclosed 2026-08-20/);
+ assert.match(card.textContent,/options · \$1M–\$5M/);assert.match(card.textContent,/Call options; Strike price \$20/);
+ assert.match(card.textContent,/Amounts are disclosed as ranges/);assert.ok([...card.querySelectorAll('a')].some(a=>a.getAttribute('href')==='#/boards?board=political&ticker=INTC'));
+ assert.ok(signals.signalSortValue(all.get('INTC'),'politicians')>signals.signalSortValue(all.get('AAPL'),'politicians'));
+ assert.doesNotMatch(cell.textContent+card.textContent,/target|guarantee|floor|buy now/i);
 });
