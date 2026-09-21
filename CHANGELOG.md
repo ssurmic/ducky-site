@@ -1,5 +1,20 @@
 # Change log
 
+## Watchlist right-hand columns: fixed widths, one-line headers, single-line wall cells; sells in orange · 2026-09-21
+
+Owner review of the density release: the six metric columns had no width of their own, so `table-layout: fixed`
+gave them the ~57 px left over after the signal columns — headers broke into one word per line in both
+languages and neighbouring values ran together ("-3.3%24.1 pp"); option-wall and support cells were five or six
+lines tall; and red for every insider sale, fund trim and politician sale read as a warning although selling is
+routine. Changes: each metric header now has a 100 px column (`min-width` 2140 px, horizontal scroll with the
+sticky stock column as before) and a one-line short name — YTD, 52W high, vs peers, IV/HV20, Reddit, Degen /
+年初至今, 距52周高, 相对同业, IV/HV20, 讨论, Degen — with the full name on the button (`title`, `aria-label`) and
+in the `?` help; metric and signal header labels never wrap; the option-wall cell is two single lines (kind,
+strike, distance) with the expiries in the title and the card; the support cell puts value, kind and distance on
+one line above the 20-day range bar; the zh wall header is 期权墙. Colors: open-market sales, fund trims and
+politician sales — pill, balance bar, latest-event line, card border — use the orange token; purchases, adds and
+buys stay green; red is reserved for price declines. Tests updated (`watchlist-digest`, `watchlist-signals`).
+
 ## Watchlist density: a signals digest in the Overview cell, three-line cells, header help · 2026-09-21 (deployed)
 
 Released through `scripts/deploy_pages.sh`: main `3c99d076` (PR #74) → Pages deployment `9dc70e40` at 2026-09-21

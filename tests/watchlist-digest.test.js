@@ -21,7 +21,7 @@ const sig={
  funds:{status:'ready',adds:new Array(6).fill({side:'add'}),trims:new Array(7).fill({side:'trim'}),moves:[{side:'add',fund:'Appaloosa LP',period:'2026 Q2'}]},
  politicians:{status:'ready',count:7,buys:4,sells:3,trades:[{side:'sell',date:'2026-08-18',politician:'Gil Cisneros',amount:'$1,001 - $15,000'}]},
  walls:{status:'ready',call:240,put:221,price:227.38,expiries:['2026-09-21']},
- support:{status:'ready',refs:[{key:'put_wall',value:221,gap:-2.8}]}};
+ support:{status:'ready',refs:[{key:'put_wall',value:221,gap:-2.8}],low:208.25,high:230.1,price:227.38,sessions:20}};
 const row={ticker:'NVDA',metrics:{ytd:{status:'ready',value:22.2},drawdown:{status:'ready',value:-3.3},relative:{status:'stale',value:-24.1,as_of:'2026-09-21',symbols:['AMD']},iv_hv:{status:'ready',value:0.58,expiry:'2026-09-28'},attention:{status:'insufficient'},degen:{status:'insufficient'}}};
 
 test('the digest reads every loaded column in one line, nearest wall first among references, and never names a floor or target',()=>{
@@ -87,4 +87,19 @@ test('signal cells keep three short lines; counts, ranges and closes stay in tit
  assert.ok(funds.querySelector('.watch-signal-event').getAttribute('title').includes('Appaloosa LP'));
  const pol=signals.signalCell('politicians',sig,{ticker:'NVDA'});
  assert.equal(pol.querySelectorAll('.watch-signal-ref').length,0);
+});
+
+
+test('metric headers are one short line with the full name on the button; wall and support cells are single lines',async()=>{
+ const {overviewView}=await import('../public/js/app/watchlist-overview.js');
+ const root=overviewView([{ticker:'NVDA',company:'NVIDIA Corporation',market_cap:5.4e12,price:227.38,change_pct:2.3,price_session:'2026-09-21',metrics:row.metrics}],
+  {view:'list',renderResearch:()=>document.createElement('div'),signals:new Map([['NVDA',sig]]),session:'2026-09-21'});
+ const heads=[...root.querySelectorAll('thead th[data-metric] .watch-sort')];
+ assert.deepEqual(heads.map(n=>n.querySelector('.watch-sort-label').textContent),['YTD','52W high','vs peers','IV/HV20','Reddit','Degen']);
+ assert.equal(heads[0].getAttribute('aria-label'),copy['app.watch.metric_ytd']);assert.equal(heads[1].title,copy['app.watch.metric_drawdown']);
+ const walls=root.querySelector('td[data-signal=walls] .watch-signal');
+ assert.equal(walls.querySelectorAll('.watch-metric-note').length,0);assert.match(walls.title,/09\/21/);
+ assert.equal(walls.querySelectorAll('.watch-wall').length,2);
+ const support=root.querySelector('td[data-signal=support] .watch-signal');
+ assert.ok(support.querySelector('.watch-support-reference'));assert.match(support.querySelector('.watch-range')?.getAttribute('aria-label')||'',/20-day/);
 });

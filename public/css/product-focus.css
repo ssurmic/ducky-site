@@ -576,3 +576,31 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
  .watch-compact-table th,.watch-compact-table td{padding:6px 8px;}
  .watch-strip{font-size:11px;gap:4px 10px;}
 }
+
+/* Right-hand columns (2026-09-21): every column has a width; headers never wrap; sells and trims are
+   orange (a normal event), purchases and adds green; red is reserved for price declines. */
+.watch-compact-table{min-width:2140px;}
+.watch-compact-table th[data-metric]{width:100px;}
+.watch-compact-table th{overflow:hidden;}
+.watch-compact-table th[data-metric] .watch-sort-label,.watch-compact-table th.watch-signal-col .watch-sort-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.watch-compact-table thead th{padding:0 6px;}
+.watch-compact-table th.watch-help-col .watch-sort{padding-right:22px;padding-left:0;}
+.watch-compact-table .watch-metric-value{white-space:nowrap;}
+.watch-signal-flag.is-sell{color:var(--orange);border-color:color-mix(in srgb,var(--orange) 45%,var(--border));background:color-mix(in srgb,var(--orange) 10%,transparent);}
+.watch-balance-sell{background:var(--orange);}
+.watch-signal-event.is-sell,.watch-signal-event.is-trim{color:var(--orange);}
+.watch-signal-item.is-sell,.watch-signal-item.is-trim{border-color:color-mix(in srgb,var(--orange) 35%,var(--border));}
+.watch-wall.is-call .watch-wall-kind{color:var(--orange);background:color-mix(in srgb,var(--orange) 12%,transparent);}
+.watch-range-track{background:linear-gradient(90deg,color-mix(in srgb,var(--green) 55%,var(--border)),var(--border) 50%,color-mix(in srgb,var(--orange) 55%,var(--border)));}
+/* Option walls: one line per wall. Support refs: value, kind and distance on one line above the range. */
+.watch-compact-table .watch-wall{flex-wrap:nowrap;gap:5px;white-space:nowrap;}
+.watch-compact-table .watch-wall-gap{flex-basis:auto;}
+.watch-compact-table .watch-support-reference{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:baseline;gap:2px 5px;}
+.watch-compact-table .watch-range-label{display:none;}
+.watch-compact-table .watch-range{margin-top:2px;gap:2px;}
+.watch-compact-table .watch-signal{gap:3px;}
+.watch-compact-table .watch-balance{margin-top:2px;}
+@media(max-width:600px){
+ .watch-compact-table{min-width:1900px;}
+ .watch-compact-table th[data-metric]{width:84px;}
+}

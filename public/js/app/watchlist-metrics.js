@@ -7,6 +7,8 @@ const copy={ytd:'watch.metric_ytd',drawdown:'watch.metric_drawdown',relative:'wa
 const stateCopy={missing:'watch.metric_missing',not_observed:'watch.metric_uncovered',insufficient:'watch.metric_insufficient',stale:'watch.metric_stale',outside_latest_sample:'watch.metric_previous_sample',expired:'watch.metric_expired',benchmark_changed:'watch.metric_benchmark_changed'};
 const date=at=>at?.slice(0,10)||'—';
 export const metricLabel=key=>s(copy[key]);
+// One-line header names for a 96px column; the full name stays on the button and in the help.
+export const metricShortLabel=key=>s('watch.metric_short_'+key);
 export const metricSortValue=(row,key)=>{
   const m=row.metrics?.[key];return (m?.status==='ready'||key==='ytd'&&m?.status==='retained')&&finite(m.value)?m.value:null;
 };
