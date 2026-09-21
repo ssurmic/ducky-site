@@ -77,8 +77,8 @@ test('signal cells read bought/sold with amounts, walls carry their distance to 
  assert.match(support.textContent,/Put wall/);assert.match(support.textContent,/8\.4% below/);
  assert.equal(support.querySelector('.watch-range-dot').style.left,'51.8%');assert.match(support.querySelector('.watch-range').getAttribute('aria-label'),/\$195.*\$240/);
  assert.match(signals.signalCell('walls',all.get('AAPL')).textContent,/No option concentration data/);
- assert.match(signals.signalCard('funds',all.get('AAPL'),'AAPL').textContent,/No adds or trims in tracked funds' 13F filings/);
- assert.match(signals.signalCard('insider',all.get('AAPL'),'AAPL').textContent,/No open-market Form 4 trades in 12 months/);
+ assert.match(signals.signalCard('funds',all.get('AAPL'),'AAPL').textContent,/No adds or trims in tracked funds' two newest 13F quarters/);
+ assert.match(signals.signalCard('insider',all.get('AAPL'),'AAPL').textContent,/No open-market Form 4 trades in 6 months/);
  assert.doesNotMatch([insider,fundsCell,walls,support].map(n=>n.textContent).join(' '),/target|guarantee|floor/i);
 });
 
@@ -168,7 +168,7 @@ test('the watchlist table adds four sortable signal columns from two shared read
  assert.ok(calls.includes('/briefing/stocks?fields=signals'));
  // Both archive pages are asked for exactly the watched stocks in the compact projection, never a market-wide newest page.
  const archiveCalls=calls.filter(u=>u.startsWith('/radar/archive.json'));
- assert.equal(archiveCalls[0],'/radar/archive.json?kind=13f&limit=200&content=all&fields=signals&tickers=NVDA,AAPL,TSLA');
+ assert.match(archiveCalls[0],/^\/radar\/archive\.json\?kind=13f&limit=200&content=all&fields=signals&start=\d{4}-\d{2}-\d{2}&tickers=NVDA,AAPL,TSLA$/);
  assert.match(archiveCalls[1],/^\/radar\/archive\.json\?kind=insider&limit=200&content=all&fields=signals&start=\d{4}-\d{2}-\d{2}&tickers=NVDA,AAPL,TSLA$/);
  assert.equal(archiveCalls.length,2);
  const first=root.querySelector('tbody tr');
@@ -225,7 +225,7 @@ test('the insider column reads archived Form 4 records: none on a complete page,
  assert.equal(nvda.filings[0].owners[0].role,'Director');assert.equal(nvda.filings[0].url,'https://www.sec.gov/Archives/edgar/data/1/a.xml');
  // AAPL and TSLA have a complete page with no purchases: that is "none", even though TSLA's brief is pending.
  assert.equal(all.get('AAPL').insider.status,'none');assert.equal(all.get('TSLA').insider.status,'none');
- assert.match(signals.signalCell('insider',all.get('TSLA')).textContent,/No open-market Form 4 trades in 12 months/);
+ assert.match(signals.signalCell('insider',all.get('TSLA')).textContent,/No open-market Form 4 trades in 6 months/);
  // A truncated page can only say "unknown" for stocks it does not list.
  assert.equal(signals.buildSignals(briefs,funds,['MSFT'],{...archive,next_cursor:'more'}).get('MSFT').insider.status,'missing');
  // Without the archive the brief's own copy of the filings still answers.
@@ -286,4 +286,22 @@ test('open-market sales and trimmed positions stay apart from purchases and adds
  assert.match(signals.signalCard('funds',withMoves.get('AAPL'),'AAPL').textContent,/Position closed/);
  assert.match(signals.signalCard('funds',withMoves.get('NVDA'),'NVDA').textContent,/Shares 800K → 500K/);
  assert.doesNotMatch(cell.textContent+fundCell.textContent,/target|guarantee|floor|buy now/i);
+});
+
+test('fund moves count only the two newest report quarters on the page, whichever quarters those are',()=>{
+ const row=(id,period,change)=>({id,kind:'13f',ticker:'NVDA',reporter_name:'Fund '+id,ts:'2026-08-14T00:00:00Z',direction:change==='decreased'?-1:1,extra:{facts:{accession:id,position_change:change,report_period:period}}});
+ const doc={items:[row('q2','2026-06-30','increased'),row('q1','2026-03-31','decreased'),row('q4','2025-12-31','increased'),row('q3','2025-09-30','decreased')],next_cursor:null};
+ const archive=signals.fundSignals(doc);
+ assert.deepEqual(archive.periods,['2026-03-31','2026-06-30']);
+ assert.deepEqual(archive.byTicker.get('NVDA').moves.map(m=>m.fund),['Fund q2','Fund q1']);   // 2025 quarters are history, not activity
+ assert.equal(signals.QUARTERS,2);
+ // Before a new quarter's filings arrive the window simply stays on the two quarters that exist.
+ const lagged=signals.fundSignals({items:[row('q1','2026-03-31','increased'),row('q4','2025-12-31','decreased')],next_cursor:null});
+ assert.deepEqual(lagged.periods,['2025-12-31','2026-03-31']);
+ // Insider window is six months.
+ const now=Date.parse('2026-09-21T00:00:00Z');
+ const filings=signals.insiderSignals({items:[
+  {id:'sec:in',kind:'insider',ticker:'NVDA',ts:'2026-04-01T00:00:00Z',direction:1,extra:{facts:{owners:[{name:'In'}],transactions:[{date:'2026-03-31',price:10,shares:1000}]}}},
+  {id:'sec:out',kind:'insider',ticker:'NVDA',ts:'2026-02-01T00:00:00Z',direction:1,extra:{facts:{owners:[{name:'Out'}],transactions:[{date:'2026-01-31',price:10,shares:1000}]}}}],next_cursor:null},{now});
+ assert.deepEqual(filings.byTicker.get('NVDA').map(f=>f.owners[0].name),['In']);
 });
