@@ -24,14 +24,26 @@ const sig={
  support:{status:'ready',refs:[{key:'put_wall',value:221,gap:-2.8}],low:208.25,high:230.1,price:227.38,sessions:20}};
 const row={ticker:'NVDA',metrics:{ytd:{status:'ready',value:22.2},drawdown:{status:'ready',value:-3.3},relative:{status:'stale',value:-24.1,as_of:'2026-09-21',symbols:['AMD']},iv_hv:{status:'ready',value:0.58,expiry:'2026-09-28'},attention:{status:'insufficient'},degen:{status:'insufficient'}}};
 
-test('the digest reads every loaded column in one line, nearest wall first among references, and never names a floor or target',()=>{
+test('the digest starts with today\'s close and the price against its references, then activity; it never names a floor or target',()=>{
  const text=digest.digestText(row,sig);
- assert.equal(text,'Insiders net selling $410.5M (3 filings, 6 mo) · Funds: 6 added · 7 trimmed · Politicians: 4 buys · 3 sales · Put wall $221, 2.8% below the last price · +22.2% YTD, 3.3% under the 52W closing high');
+ assert.equal(text,'2.9% above the Put wall $221 · 5.6% under the call wall $240 · at the high end of its 20-day range · options price less movement than the last 20 sessions (IV/HV 0.58×) · +22.2% YTD, 3.3% under the 52W closing high · Insiders net selling $410.5M (3 filings, 6 mo) · Funds: 6 added · 7 trimmed · Politicians: 4 buys · 3 sales');
  for(const banned of ['target','floor','buy now'])assert.ok(!text.toLowerCase().includes(banned));
  assert.deepEqual(digest.digestParts({},{insider:{status:'none'},funds:{status:'missing'},walls:{status:'none'}}),[]);
  // The call wall wins when it sits closer to the last price.
  const near=digest.nearestWall({status:'ready',call:228,put:200,price:227.38});
  assert.equal(near.kind,'call');assert.ok(near.gap>0&&near.gap<0.3);
+ // A pulled-back stock within 3% of a reference below, with no insider net selling, gets the plain reading.
+ const back={ticker:'AMD',change_pct:-1.2,price_status:'ready',metrics:{ytd:{status:'ready',value:-4},drawdown:{status:'ready',value:-14.5},iv_hv:{status:'ready',value:1.35}}};
+ const quiet={insider:{status:'none'},funds:{status:'ready',adds:[{}],trims:[]},politicians:{status:'none'},
+  walls:{status:'ready',call:170,put:140,price:143.2},support:{status:'ready',refs:[{key:'put_wall',value:140,gap:-2.2},{key:'range_low',value:139,gap:-2.9}],low:139,high:171,price:143.2,sessions:20}};
+ const parts=digest.digestParts(back,quiet);
+ assert.equal(parts[0],'Closed down 1.20% today');
+ assert.equal(parts[1],'2.3% above the Put wall $140');
+ assert.ok(parts.includes('at the low end of its 20-day range'));
+ assert.ok(parts.includes('options price more movement than the last 20 sessions (IV/HV 1.35×)'));
+ assert.equal(parts.at(-1),copy['app.watch.digest_pullback']);
+ // A stock at its high with insiders selling gets no such reading.
+ assert.ok(!digest.digestParts(row,sig).includes(copy['app.watch.digest_pullback']));
 });
 
 test('every digest and help string has a Chinese twin without English leaking into either',()=>{
@@ -42,7 +54,7 @@ test('every digest and help string has a Chinese twin without English leaking in
 
 test('a pending stock summary shows the digest with the pending state as a caption; a reviewed summary is untouched',()=>{
  const pending=reading({ticker:'NVDA',status:'pending',records:3},{digest:digest.digestText(row,sig)});
- assert.ok(pending.querySelector('.stock-digest').textContent.startsWith('Insiders net selling'));
+ assert.ok(pending.querySelector('.stock-digest').textContent.includes('Insiders net selling'));
  assert.equal(pending.querySelector('.stock-digest-note').textContent,copy['app.watch.digest_note']);
  assert.ok(!pending.textContent.includes('not ready yet'));
  const loading=reading({ticker:'NVDA',status:'read_pending'},{digest:'x'});

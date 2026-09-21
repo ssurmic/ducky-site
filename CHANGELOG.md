@@ -1,5 +1,21 @@
 # Change log
 
+## Watchlist digest v2: today's close, the price against its references, volatility, then activity · 2026-09-21
+
+Owner review of the digest: it should say when a stock sits near a wall or support, how it is trading against
+its range and volatility, and give a plain reading such as today's close. The Overview line now reads in this
+order (`watchlist-digest.js`, rule-based, no request): today's close and change; the nearest reference below the
+last price (put wall or 20-day low) with its distance, the call wall above with its distance, and the low or high
+sixth of the 20-day closing range; the options market against the last 20 sessions when IV/HV20 is at or under
+0.8× or at or over 1.2×; YTD and distance from the 52-week closing high; then insider net amount, fund
+adds/trims and politician trades. When a stock is 10% or more under its 52-week high, within 3% of a reference
+below, and insiders are not net selling, one closing phrase says so ("pulled back to a reference level with no
+insider net selling" / "已回调至参考位附近，内部人无净卖出") — a description of where the stock is, not advice; the
+copy lint's banned wording still applies to every string. Tests cover the order, the reading and its absence.
+
+The previous entry (fixed widths, one-line headers, orange sells) was released as main `1af4af6f` (PR #76) →
+Pages deployment `f2323f09` at 2026-09-21 23:17 UTC and verified in the owner's browser.
+
 ## Watchlist right-hand columns: fixed widths, one-line headers, single-line wall cells; sells in orange · 2026-09-21
 
 Owner review of the density release: the six metric columns had no width of their own, so `table-layout: fixed`
