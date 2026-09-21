@@ -17,11 +17,12 @@ import { el, clear, toast, spinner, empty, errorBox, lock, num, px, pct, int, si
 
 const TICKER_RE = /^[A-Z][A-Z0-9.\-]{0,9}$/;
 // Signal columns read compact projections: saved brief facts for the four topics the list shows, the
-// newest 13F share increases and the last twelve months of Form 4 purchase records, each for exactly the
-// watched stocks (fifty per page) rather than a market-wide newest page one large filing can fill.
+// newest 13F share changes (adds and trims) and the last twelve months of Form 4 records (purchases and
+// open-market sales), each for exactly the watched stocks (fifty per page) rather than a market-wide
+// newest page one large filing can fill.
 export const BRIEFS_PATH='/briefing/stocks?fields=signals';
 const FUNDS_PAGE=50,INSIDER_MONTHS=12;
-export const fundsPath=tickers=>'/radar/archive.json?kind=13f&direction=1&limit=200&content=all&fields=signals&tickers='+tickers.map(encodeURIComponent).join(',');
+export const fundsPath=tickers=>'/radar/archive.json?kind=13f&limit=200&content=all&fields=signals&tickers='+tickers.map(encodeURIComponent).join(',');
 export const insiderPath=(tickers,now=Date.now())=>'/radar/archive.json?kind=insider&limit=200&content=all&fields=signals&start='+new Date(now-INSIDER_MONTHS*30.5*864e5).toISOString().slice(0,10)+'&tickers='+tickers.map(encodeURIComponent).join(',');
 // Above this many stocks, typing in the filter rebuilds the table on a short debounce.
 const LARGE_LIST=60;
