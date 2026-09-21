@@ -19,8 +19,40 @@ export function nearestWall(walls){
 }
 export const insiderNet=insider=>insider?.status==='ready'&&insider.count>0?(insider.bought||0)-(insider.sold||0):null;
 
+// Where the last price sits against the references the row already carries: the nearest reference
+// below it (put wall or 20-day low), the call wall above, and the position inside the 20-day range.
+export function priceContext(sig){
+  const support=sig?.support,walls=sig?.walls;
+  const price=finite(support?.price)?support.price:finite(walls?.price)?walls.price:null;
+  if(!finite(price)||price<=0)return null;
+  const below=(support?.status==='ready'?support.refs||[]:[]).filter(r=>finite(r.value)&&r.value<=price)
+    .map(r=>({kind:r.key,level:r.value,gap:(price/r.value-1)*100})).sort((a,b)=>a.gap-b.gap)[0]||null;
+  const call=walls?.status==='ready'&&finite(walls.call)&&walls.call>=price?{level:walls.call,gap:(walls.call/price-1)*100}:null;
+  const span=support?.status==='ready'&&finite(support.low)&&finite(support.high)&&support.high>support.low?(price-support.low)/(support.high-support.low)*100:null;
+  return {price,below,call,span};
+}
+
 export function digestParts(row,sig){
   const parts=[];
+  // 1. Today's close and where it sits against the row's references.
+  const change=row?.change_pct;
+  if(finite(change)&&row?.price_status!=='missing')parts.push(s(change>0?'watch.digest_close_up':change<0?'watch.digest_close_down':'watch.digest_close_flat',{n:Math.abs(change).toFixed(2)+'%'}));
+  const context=priceContext(sig);
+  if(context?.below)parts.push(s(context.below.gap<0.05?'watch.digest_at_reference':'watch.digest_above_reference',
+    {n:context.below.gap.toFixed(1),price:context.below.kind==='put_wall'?strike(context.below.level):px(context.below.level),
+     kind:s(context.below.kind==='put_wall'?'watch.signal_ref_put':'watch.signal_ref_low')}));
+  if(context?.call)parts.push(s(context.call.gap<0.05?'watch.digest_at_call':'watch.digest_below_call',{n:context.call.gap.toFixed(1),price:strike(context.call.level)}));
+  // The low or high sixth of the 20-day closing range is worth a word; the middle is not.
+  if(finite(context?.span)&&(context.span<=15||context.span>=85))parts.push(s(context.span<=15?'watch.digest_range_low':'watch.digest_range_high'));
+  // 2. What the options market prices against what the stock has done.
+  const iv=row?.metrics?.iv_hv;
+  if(finite(iv?.value)&&iv.status==='ready'&&(iv.value<=0.8||iv.value>=1.2))parts.push(s(iv.value<=0.8?'watch.digest_iv_low':'watch.digest_iv_high',{n:iv.value.toFixed(2)}));
+  // 3. The longer frame.
+  const ytd=row?.metrics?.ytd,dd=row?.metrics?.drawdown,price=[];
+  if(finite(ytd?.value)&&['ready','retained'].includes(ytd.status))price.push(s('watch.digest_ytd',{n:pct(ytd.value,1)}));
+  if(finite(dd?.value)&&dd.status==='ready')price.push(s(dd.value<0?'watch.digest_drawdown':'watch.digest_at_high',{n:Math.abs(dd.value).toFixed(1)}));
+  if(price.length)parts.push(price.join(LANG==='zh'?'，':', '));
+  // 4. Who has been trading it.
   const insider=sig?.insider,net=insiderNet(insider);
   const count=(n,one,many)=>n>0?s(n===1?one:many,{n}):'';
   if(net!==null)parts.push(s(net<0?'watch.digest_insider_sell':net>0?'watch.digest_insider_buy':'watch.digest_insider_even',
@@ -31,13 +63,9 @@ export function digestParts(row,sig){
   const pol=sig?.politicians;
   if(pol?.status==='ready'&&pol.count>0)parts.push(s('watch.digest_politicians',{trades:[count(pol.buys||0,'watch.signal_buys_one','watch.signal_buys_many'),
     count(pol.sells||0,'watch.signal_sells_one','watch.signal_sells_many')].filter(Boolean).join(' · ')}));
-  const wall=nearestWall(sig?.walls);
-  if(wall)parts.push(s(wall.kind==='put'?(wall.gap<0?'watch.digest_put_below':'watch.digest_put_above'):(wall.gap<0?'watch.digest_call_below':'watch.digest_call_above'),
-    {price:strike(wall.level),n:Math.abs(wall.gap).toFixed(1)}));
-  const ytd=row?.metrics?.ytd,dd=row?.metrics?.drawdown,price=[];
-  if(finite(ytd?.value)&&['ready','retained'].includes(ytd.status))price.push(s('watch.digest_ytd',{n:pct(ytd.value,1)}));
-  if(finite(dd?.value)&&dd.status==='ready')price.push(s(dd.value<0?'watch.digest_drawdown':'watch.digest_at_high',{n:Math.abs(dd.value).toFixed(1)}));
-  if(price.length)parts.push(price.join(LANG==='zh'?'，':', '));
+  // 5. One plain reading when the facts line up: pulled back from its high, sitting within 3% of a
+  //    reference below, insiders not net selling. A description of where the stock is, not advice.
+  if(finite(dd?.value)&&dd.status==='ready'&&dd.value<=-10&&context?.below&&context.below.gap<=3&&!(net!==null&&net<0))parts.push(s('watch.digest_pullback'));
   return parts;
 }
 export const digestText=(row,sig)=>digestParts(row,sig).join(' · ');
