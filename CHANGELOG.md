@@ -1,6 +1,11 @@
 # Change log
 
-## Watchlist density: a signals digest in the Overview cell, three-line cells, header help · 2026-09-21
+## Watchlist density: a signals digest in the Overview cell, three-line cells, header help · 2026-09-21 (deployed)
+
+Released through `scripts/deploy_pages.sh`: main `3c99d076` (PR #74) → Pages deployment `9dc70e40` at 2026-09-21
+22:48 UTC; the live `config.js` serves `VERSION 3c99d076`. Verified in the owner's browser: every Overview cell reads
+its digest line, the strip counted 25 stocks with insider net selling, 1 net buying, 7 with more fund adds than trims
+and 10 within 3% of a put wall across 35 stocks, rows are three lines tall.
 
 Owner report: the List view was crowded and the Overview column showed "The stock summary is not ready yet." on
 every row while taking a quarter of the width. Changes: (1) until a reviewed stock summary exists, the Overview
