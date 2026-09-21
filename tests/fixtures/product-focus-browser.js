@@ -111,6 +111,20 @@ window.fetch=async(input,options={})=>{
  return Response.json({items:items.length?items:[stock('NVDA','NVIDIA Corporation')]});
  }
  if(path==='/data-versions')return Response.json({});
+ if(path==='/radar/archive.json'){
+  // Synthetic Form 4 and 13F rows for the watched stocks: every stock has a purchase, the first two
+  // also an open-market sale; funds add on one line and trim on another.
+  const kind=url.searchParams.get('kind'),tickers=(url.searchParams.get('tickers')||'').split(',').filter(Boolean);
+  const insider=tickers.flatMap((ticker,i)=>[
+   {id:'sec:'+ticker+':P',kind:'insider',ticker,ts:'2026-09-0'+(1+i%8)+'T00:00:00Z',direction:1,source_url:'https://www.sec.gov/Archives/edgar/data/1/'+ticker+'-p.xml',
+    extra:{facts:{owners:[{name:'Rivera Dana',role:'Director'}],transactions:[{date:'2026-09-0'+(1+i%8),price:180+i,shares:6000}]}}},
+   ...(i<2?[{id:'sec:'+ticker+':S',kind:'insider',ticker,ts:'2026-09-17T00:00:00Z',direction:-1,source_url:'https://www.sec.gov/Archives/edgar/data/1/'+ticker+'-s.xml',
+    extra:{facts:{owners:[{name:'Chen Wei',role:'Officer',title:'Chief Financial Officer'}],transactions:[{date:'2026-09-16',price:212.4,shares:15000}]}}}]:[])]);
+  const funds=tickers.flatMap((ticker,i)=>[
+   {id:'13f:a:'+ticker,kind:'13f',ticker,reporter_name:'Appaloosa LP',ts:'2026-08-14T12:00:00Z',direction:1,extra:{facts:{accession:'a-'+ticker,position_change:i%2?'new':'increased',report_period:'2026-06-30',prior_shares:1000000,new_shares:1500000,new_value:3e8,quarter_price_range:{low:175.75,high:235.74}}}},
+   {id:'13f:b:'+ticker,kind:'13f',ticker,reporter_name:'ARK Investment Management',ts:'2026-08-13T12:00:00Z',direction:-1,extra:{facts:{accession:'b-'+ticker,position_change:i===1?'closed':'decreased',report_period:'2026-06-30',prior_shares:800000,new_shares:i===1?0:500000,new_value:1e8}}}]);
+  return Response.json({items:kind==='insider'?insider:kind==='13f'?funds:[],next_cursor:null});
+ }
  return Response.json({items:[],posts:[]});
 };
 const store=await import('/js/app/store.js'),router=await import('/js/app/router.js');
