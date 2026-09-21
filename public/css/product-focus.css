@@ -324,7 +324,10 @@ body:has(.focus-nav) .watch-modes .btn{min-width:44px;}
 .watch-signal-flag.is-sell::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;}
 .watch-signal-flags{display:inline-flex;flex-wrap:wrap;justify-content:flex-end;gap:4px;}
 .watch-signal-flag.is-mixed{color:var(--muted);}
-.watch-signal-net{white-space:nowrap;}
+.watch-signal-net{white-space:normal;max-width:100%;text-align:right;line-height:1.3;}
+/* A signal cell never paints into its neighbour, whatever the copy length. */
+.watch-compact-table .watch-signal-cell{overflow:hidden;}
+.watch-compact-table .watch-signal-cell .watch-signal{max-width:100%;box-sizing:border-box;}
 /* Balance bar: the green share of the window's value or moves against the red share. */
 .watch-balance{display:flex;width:100%;max-width:124px;height:4px;border-radius:2px;overflow:hidden;background:var(--border);margin-top:3px;}
 .watch-balance-buy{background:var(--green);}
@@ -476,8 +479,9 @@ html[data-theme=dark] :is(.focus-today,.focus-stock,.stock-information-map,.watc
 .watch-signal-help{position:absolute;right:4px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:22px;height:22px;padding:0;border:1px solid var(--border);border-radius:50%;background:var(--surface);color:var(--muted);font:inherit;font-size:11px;font-weight:700;line-height:1;cursor:pointer;}
 .watch-signal-help:hover,.watch-signal-help:focus-visible{color:var(--accent-text,var(--accent));border-color:var(--accent);}
 /* Fixed widths keep every signal cell readable; the table grows and scrolls instead of squeezing. */
-.watch-compact-table tr>[data-signal=insider]{width:172px;}
-.watch-compact-table tr>[data-signal=funds]{width:176px;}
+/* Wide enough for one-line pills: "Net selling −$2.1M", "6 added · 7 trimmed". */
+.watch-compact-table tr>[data-signal=insider]{width:198px;}
+.watch-compact-table tr>[data-signal=funds]{width:204px;}
 .watch-compact-table tr>[data-signal=walls]{width:132px;}
 .watch-compact-table tr>[data-signal=support]{width:152px;}
 .watch-signal-average{color:var(--text);font-weight:600;}

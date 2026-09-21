@@ -120,9 +120,12 @@ window.fetch=async(input,options={})=>{
     extra:{facts:{owners:[{name:'Rivera Dana',role:'Director'}],transactions:[{date:'2026-09-0'+(1+i%8),price:180+i,shares:6000}]}}},
    ...(i<2?[{id:'sec:'+ticker+':S',kind:'insider',ticker,ts:'2026-09-17T00:00:00Z',direction:-1,source_url:'https://www.sec.gov/Archives/edgar/data/1/'+ticker+'-s.xml',
     extra:{facts:{owners:[{name:'Chen Wei',role:'Officer',title:'Chief Financial Officer'}],transactions:[{date:'2026-09-16',price:212.4,shares:15000}]}}}]:[])]);
+  const dense=(ticker,i)=>i<2?[]:Array.from({length:11},(_,k)=>({id:'13f:d'+k+':'+ticker,kind:'13f',ticker,reporter_name:['Bridgewater Associates','Tiger Global','Coatue','Baillie Gifford','Third Point','Pershing Square','Viking Global','Lone Pine','Altimeter Capital','D1 Capital','Maverick Capital'][k],
+   ts:'2026-08-1'+(k%9)+'T12:00:00Z',direction:k<5?1:-1,extra:{facts:{accession:'d'+k+'-'+ticker,position_change:k<5?'increased':'decreased',report_period:'2026-06-30',prior_shares:1e6,new_shares:k<5?1.2e6:8e5,new_value:k<5?2.4e8:1.6e8}}}));
   const funds=tickers.flatMap((ticker,i)=>[
    {id:'13f:a:'+ticker,kind:'13f',ticker,reporter_name:'Appaloosa LP',ts:'2026-08-14T12:00:00Z',direction:1,extra:{facts:{accession:'a-'+ticker,position_change:i%2?'new':'increased',report_period:'2026-06-30',prior_shares:1000000,new_shares:1500000,new_value:3e8,quarter_price_range:{low:175.75,high:235.74}}}},
-   {id:'13f:b:'+ticker,kind:'13f',ticker,reporter_name:'ARK Investment Management',ts:'2026-08-13T12:00:00Z',direction:-1,extra:{facts:{accession:'b-'+ticker,position_change:i===1?'closed':'decreased',report_period:'2026-06-30',prior_shares:800000,new_shares:i===1?0:500000,new_value:1e8}}}]);
+   {id:'13f:b:'+ticker,kind:'13f',ticker,reporter_name:'ARK Investment Management',ts:'2026-08-13T12:00:00Z',direction:-1,extra:{facts:{accession:'b-'+ticker,position_change:i===1?'closed':'decreased',report_period:'2026-06-30',prior_shares:800000,new_shares:i===1?0:500000,new_value:1e8}}},
+   ...dense(ticker,i)]);
   return Response.json({items:kind==='insider'?insider:kind==='13f'?funds:[],next_cursor:null});
  }
  return Response.json({items:[],posts:[]});
