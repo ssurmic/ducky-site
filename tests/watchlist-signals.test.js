@@ -66,7 +66,7 @@ test('signal cells read bought/sold with amounts, walls carry their distance to 
  const pending=signals.signalCell('insider',all.get('TSLA'));
  assert.equal(pending.dataset.status,'missing');assert.match(pending.textContent,/Data pending/);
  const fundsCell=signals.signalCell('funds',all.get('NVDA'));
- assert.match(fundsCell.querySelector('.watch-signal-net').textContent,/^2 funds added$/);assert.match(fundsCell.textContent,/Bridgewater Associates added · 2026 Q2/);assert.match(fundsCell.textContent,/13F filed 08\/14/);
+ assert.match(fundsCell.querySelector('.watch-signal-net').textContent,/^2 added$/);assert.match(fundsCell.textContent,/Bridgewater Associates added · 2026 Q2/);assert.match(fundsCell.textContent,/13F filed 08\/14/);
  const ranged=signals.buildSignals(briefs,{items:[{...funds.items[0],extra:{facts:{position_change:'increased',report_period:'2026-06-30',prior_shares:1000000,new_shares:1500000,new_value:2.4e8,quarter_price_range:{low:150,high:178.5,sessions:63}}}}]},['NVDA']);
  const rangedCell=signals.signalCell('funds',ranged.get('NVDA'),{ticker:'NVDA'});assert.match(rangedCell.querySelector('.watch-signal-range').textContent,/\$150–\$178\.50/);
  const fundCard=signals.signalCard('funds',ranged.get('NVDA'),'NVDA');assert.match(fundCard.textContent,/Shares 1M → 1\.5M/);assert.match(fundCard.textContent,/Quarter-end reported price ≈ \$160\.00/);assert.match(fundCard.textContent,/Quarter price range \$150–\$178\.50/);assert.ok([...fundCard.querySelectorAll('a')].some(a=>a.getAttribute('href')==='#/boards?board=partner&ticker=NVDA'));
@@ -277,11 +277,11 @@ test('open-market sales and trimmed positions stay apart from purchases and adds
  assert.equal(moves.byTicker.get('NVDA').side,'both');assert.equal(moves.byTicker.get('AAPL').side,'trim');
  const withMoves=signals.buildSignals(briefs,doc,['NVDA','AAPL'],archive);
  const fundCell=signals.signalCell('funds',withMoves.get('NVDA'),{ticker:'NVDA'});
- assert.equal(fundCell.querySelector('.watch-signal-net').textContent,'1 fund added · 1 fund trimmed');assert.ok(fundCell.querySelector('.watch-signal-net').classList.contains('is-mixed'));
+ assert.equal(fundCell.querySelector('.watch-signal-net').textContent,'1 added · 1 trimmed');assert.ok(fundCell.querySelector('.watch-signal-net').classList.contains('is-mixed'));
  assert.equal(fundCell.querySelector('.watch-balance-buy').style.width,'50%');
  assert.equal(fundCell.querySelector('.watch-signal-fund').textContent,'Fund B trimmed · 2026 Q2');assert.ok(fundCell.querySelector('.watch-signal-fund').classList.contains('is-trim'));
  const trimmedOnly=signals.signalCell('funds',withMoves.get('AAPL'),{ticker:'AAPL'});
- assert.equal(trimmedOnly.querySelector('.watch-signal-net').textContent,'1 fund trimmed');assert.ok(trimmedOnly.querySelector('.watch-signal-net').classList.contains('is-sell'));
+ assert.equal(trimmedOnly.querySelector('.watch-signal-net').textContent,'1 trimmed');assert.ok(trimmedOnly.querySelector('.watch-signal-net').classList.contains('is-sell'));
  assert.equal(signals.signalSortValue(withMoves.get('NVDA'),'funds'),2/1e6);   // one add, one trim: even, two moves break the tie
  assert.match(signals.signalCard('funds',withMoves.get('AAPL'),'AAPL').textContent,/Position closed/);
  assert.match(signals.signalCard('funds',withMoves.get('NVDA'),'NVDA').textContent,/Shares 800K → 500K/);
