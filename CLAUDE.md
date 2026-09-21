@@ -105,7 +105,13 @@ repeat source use without treating it as independent corroboration or merging op
 
 ## Search and default language (owner, 2026-09-10)
 
-English is the default at all no-prefix HTML routes; `/en/` remains the canonical English URL and `/zh/` is Chinese. Keep language toggles and reciprocal hreflang tags. The sitemap contains only canonical, indexable public pages; account/preview shells, generic record placeholders and 404s stay out. Do not stamp every build date as a content lastmod. The Google ownership meta tag is intentionally public and must remain after verification. Indexing and rankings require separate Search Console evidence.
+English is the static fallback at all no-prefix HTML routes; `/en/` remains the canonical English URL and `/zh/` is Chinese. Keep language toggles and reciprocal hreflang tags. The sitemap contains only canonical, indexable public pages; account/preview shells, generic record placeholders and 404s stay out. Do not stamp every build date as a content lastmod. The Google ownership meta tag is intentionally public and must remain after verification. Indexing and rankings require separate Search Console evidence.
+
+Owner update (2026-09-20): no-prefix visits use the saved `ducky_lang` cookie, otherwise
+the browser profile's ordered languages (first supported English/Chinese, English fallback).
+Only an explicit language-toggle action saves the choice, for one year across all site paths.
+Explicit `/en/` and `/zh/` links retain their requested language without overwriting the cookie.
+Legacy no-prefix OAuth/reset callbacks retain their existing locale routing.
 
 
 ## Search positioning (owner, 2026-09-10)

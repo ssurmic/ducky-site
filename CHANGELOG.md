@@ -1,5 +1,14 @@
 # Change log
 
+## Remember language choices and follow browser preferences · 2026-09-20
+
+Language switches now save a one-year, site-wide `ducky_lang` cookie. On later
+no-prefix visits, that choice wins over the browser profile’s ordered languages.
+Without a saved choice, the first supported English or Chinese browser language
+is used, with English as fallback. Explicit `/en/` and `/zh/` links remain stable.
+Deep links and query parameters survive automatic selection; existing OAuth and
+password-reset routing is preserved. [Acceptance](reports/LANGUAGE-PREFERENCE-2026-09-20.md).
+
 ## One HD fluffy duck across the product · 2026-09-14
 
 The owner clarified that every logo should use the detailed fluffy green duck. The
