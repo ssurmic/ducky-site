@@ -82,7 +82,7 @@ export function briefSignals(item){
 // reads, scanned every few minutes), so "none" never waits for a brief to be regenerated. Records
 // held for date review are skipped, as the brief does. Purchases and open-market sales are both
 // kept, each filing tagged with its side. "None" is only claimed on a complete page.
-export function insiderSignals(doc,{months=12,now=Date.now()}={}){
+export function insiderSignals(doc,{months=6,now=Date.now()}={}){
   const since=new Date(now-months*30.5*864e5).toISOString().slice(0,10);
   const rows=(Array.isArray(doc?.items)?doc.items:[]).filter(row=>row?.kind==='insider'&&!row.extra?.facts?.date_review_required&&day(row.ts||row.published_at)>=since);
   const byTicker=new Map();
@@ -100,12 +100,16 @@ export function insiderSignals(doc,{months=12,now=Date.now()}={}){
 }
 
 // Archived 13F records ordered newest first: reported-share increases and new positions (adds) and
-// decreases and exits (trims). Unchanged positions are not moves. Option, warrant and debt lines
+// decreases and exits (trims) in the two newest report quarters present on the page (older quarters
+// are history, not activity). Unchanged positions are not moves. Option, warrant and debt lines
 // never count, and one fund's amended report for a quarter replaces its original instead of
 // doubling the move.
 const MOVES={new:'add',increased:'add',decreased:'trim',closed:'trim'};
+export const QUARTERS=2;
 export function fundSignals(doc){
-  const rows=(Array.isArray(doc?.items)?doc.items:[]).filter(row=>row?.kind==='13f'&&!row.extra?.facts?.put_call);
+  const all=(Array.isArray(doc?.items)?doc.items:[]).filter(row=>row?.kind==='13f'&&!row.extra?.facts?.put_call);
+  const periods=[...new Set(all.map(row=>day(row.extra?.facts?.report_period)).filter(Boolean))].sort().slice(-QUARTERS);
+  const rows=all.filter(row=>periods.includes(day(row.extra?.facts?.report_period)));
   const byTicker=new Map(),seen=new Set(),filings=new Set();
   for(const row of rows){
     const ticker=String(row.ticker||'').toUpperCase();if(!ticker)continue;
@@ -138,7 +142,7 @@ export function fundSignals(doc){
   const loaded=Array.isArray(doc?.items)&&!doc.partial;
   // "None" is only claimed when the page covered the stocks completely (no further cursor);
   // a truncated page can only say the stock is absent from the records it holds.
-  return {loaded,byTicker,since,count:rows.length,filings:filings.size,complete:loaded&&!doc.next_cursor};
+  return {loaded,byTicker,since,count:rows.length,filings:filings.size,periods,complete:loaded&&!doc.next_cursor};
 }
 
 export function buildSignals(briefs,funds,tickers=[],insiders=null){
