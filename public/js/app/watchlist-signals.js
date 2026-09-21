@@ -161,10 +161,15 @@ export function buildSignals(briefs,funds,tickers=[],insiders=null){
   return out;
 }
 
+// Descending puts the strongest buying first: insiders by net reported value (bought minus sold),
+// funds by the add share of their moves (all adds 1, all trims -1; more moves break ties). Stocks
+// with no records sit below every recorded stock (finite sentinels: the table treats non-finite
+// values as unknown); unknown stocks stay last.
 export function signalSortValue(sig,key){
   const m=sig?.[key];if(!m||m.status==='missing')return null;
-  if(key==='insider')return m.status==='ready'?Math.max(m.value||0,m.count||0):0;
-  if(key==='funds')return m.status==='ready'?m.moves.length:0;
+  if(key==='insider')return m.status==='ready'?(m.bought||0)-(m.sold||0):-1e15;
+  if(key==='funds'){if(m.status!=='ready')return -2;const adds=m.adds.length,trims=m.trims.length,total=adds+trims;
+    return total?(adds-trims)/total+Math.min(total,999)/1e6:-2;}
   if(key==='walls'){const d=gap(m.put,m.price);return finite(d)?-d:m.status==='ready'?0:null;}
   if(key==='support'){const gaps=m.refs?.map(r=>r.gap).filter(finite)||[];return gaps.length?-Math.max(...gaps):null;}
   return null;

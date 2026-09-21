@@ -129,6 +129,26 @@ test('signal sorting ranks recorded values, keeps unknown stocks last and never 
  assert.deepEqual(sortRows([...rows],'insider','desc',{signals:all}).map(r=>r.ticker),['NVDA','AAPL','TSLA']);
  assert.deepEqual(sortRows([...rows],'insider','asc',{signals:all}).map(r=>r.ticker),['AAPL','NVDA','TSLA']);
  assert.deepEqual(sortRows([...rows],'funds','desc',{signals:all}).map(r=>r.ticker),['NVDA','AAPL','TSLA']);
+ // Descending ranks the add share, not the number of moves: 3 adds of 3 beat 5 adds of 8; trims-only
+ // ranks below both; a stock with no records sits below every recorded stock; unknown stays last.
+ const mixed={items:[
+  ...['A','B','C'].map((f,i)=>({id:'13f:x'+i,kind:'13f',ticker:'XALL',reporter_name:'Fund '+f,ts:'2026-08-1'+i+'T00:00:00Z',direction:1,extra:{facts:{accession:'x'+i,position_change:'increased',report_period:'2026-06-30'}}})),
+  ...Array.from({length:8},(_,i)=>({id:'13f:y'+i,kind:'13f',ticker:'YMANY',reporter_name:'Fund '+i,ts:'2026-08-1'+(i%9)+'T00:00:00Z',direction:i<5?1:-1,extra:{facts:{accession:'y'+i,position_change:i<5?'increased':'decreased',report_period:'2026-06-30'}}})),
+  {id:'13f:z',kind:'13f',ticker:'ZTRIM',reporter_name:'Fund Z',ts:'2026-08-12T00:00:00Z',direction:-1,extra:{facts:{accession:'z',position_change:'decreased',report_period:'2026-06-30'}}}],next_cursor:null};
+ const ratio=signals.buildSignals(briefs,mixed,['XALL','YMANY','ZTRIM','NONE','UNKNOWN'],{items:[],next_cursor:null});
+ ratio.get('UNKNOWN').funds={status:'missing'};
+ const list=[{ticker:'UNKNOWN'},{ticker:'ZTRIM'},{ticker:'NONE'},{ticker:'YMANY'},{ticker:'XALL'}];
+ assert.deepEqual(sortRows([...list],'funds','desc',{signals:ratio}).map(r=>r.ticker),['XALL','YMANY','ZTRIM','NONE','UNKNOWN']);
+ assert.ok(signals.signalSortValue(ratio.get('XALL'),'funds')>signals.signalSortValue(ratio.get('YMANY'),'funds'));
+ assert.equal(signals.signalSortValue(ratio.get('NONE'),'funds'),-2);
+ // Insiders rank by net reported value: a net seller sits below a net buyer and above no records.
+ const trades={items:[
+  {id:'sec:b',kind:'insider',ticker:'BUYER',ts:'2026-09-02T00:00:00Z',direction:1,extra:{facts:{owners:[{name:'B'}],transactions:[{date:'2026-09-01',price:10,shares:30000}]}}},
+  {id:'sec:s1',kind:'insider',ticker:'SELLER',ts:'2026-09-02T00:00:00Z',direction:1,extra:{facts:{owners:[{name:'S'}],transactions:[{date:'2026-09-01',price:10,shares:50000}]}}},
+  {id:'sec:s2',kind:'insider',ticker:'SELLER',ts:'2026-09-03T00:00:00Z',direction:-1,extra:{facts:{owners:[{name:'S'}],transactions:[{date:'2026-09-02',price:10,shares:90000}]}}}],next_cursor:null};
+ const net=signals.buildSignals(briefs,funds,['BUYER','SELLER','QUIET'],trades);
+ assert.deepEqual(sortRows([{ticker:'QUIET'},{ticker:'SELLER'},{ticker:'BUYER'}],'insider','desc',{signals:net}).map(r=>r.ticker),['BUYER','SELLER','QUIET']);
+ assert.equal(signals.signalSortValue(net.get('SELLER'),'insider'),-400000);
  assert.equal(signals.signalSortValue(all.get('TSLA'),'walls'),null);
  assert.ok(signals.signalSortValue(all.get('NVDA'),'walls')>8);
 });
@@ -262,7 +282,7 @@ test('open-market sales and trimmed positions stay apart from purchases and adds
  assert.equal(fundCell.querySelector('.watch-signal-fund').textContent,'Fund B trimmed · 2026 Q2');assert.ok(fundCell.querySelector('.watch-signal-fund').classList.contains('is-trim'));
  const trimmedOnly=signals.signalCell('funds',withMoves.get('AAPL'),{ticker:'AAPL'});
  assert.equal(trimmedOnly.querySelector('.watch-signal-net').textContent,'1 fund trimmed');assert.ok(trimmedOnly.querySelector('.watch-signal-net').classList.contains('is-sell'));
- assert.equal(signals.signalSortValue(withMoves.get('NVDA'),'funds'),2);
+ assert.equal(signals.signalSortValue(withMoves.get('NVDA'),'funds'),2/1e6);   // one add, one trim: even, two moves break the tie
  assert.match(signals.signalCard('funds',withMoves.get('AAPL'),'AAPL').textContent,/Position closed/);
  assert.match(signals.signalCard('funds',withMoves.get('NVDA'),'NVDA').textContent,/Shares 800K → 500K/);
  assert.doesNotMatch(cell.textContent+fundCell.textContent,/target|guarantee|floor|buy now/i);
