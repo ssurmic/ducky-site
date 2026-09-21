@@ -68,11 +68,7 @@
       "icon": "digest"
     }
   ],
-  "research": [
-    "market",
-    "macro",
-    "screens"
-  ],
+  "research": [],
   "account": [
     "profile"
   ],
@@ -90,9 +86,7 @@
       "key": "discover",
       "routes": [
         "boards",
-        "opportunities",
-        "screens",
-        "market"
+        "opportunities"
       ]
     },
     {
@@ -102,7 +96,6 @@
         "evidence",
         "creators",
         "vibe",
-        "macro",
         "reports"
       ]
     }

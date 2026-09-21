@@ -1,5 +1,17 @@
 # Change log
 
+## Free-and-open wording, one name each for Radar and Research Map, marketing list trimmed · 2026-09-21
+
+Owner decisions (2026-09-21): the app carries no paid tier today, so every rendered gate message now says the
+feature is open and asks anonymous visitors to sign in (creators, calendar, updates, radar, social, opportunities,
+briefing, chart overlays, tour, trial, alert and screen limits); the FAQ no longer says "paid alerts"; four unused
+Pro strings are gone. Naming: the research map is "Research Map" / 「研究地图」 everywhere (was 信息导图 in Chinese
+and "Research map" in two focus labels; the mobile tab reads "Map"), company-event surfaces are "Radar" / 「雷达」
+(was "Event radar", "Company events", "Company event records"), and the research-brief tab reads "Brief" / 「研究简报」.
+The landing "Compare all tools" list drops Market themes, Macro and Stock screens, which the app's navigation does not
+reach (11 tools, matching the public menu); the demo aside is "Market headlines" and its Radar path opens the Radar.
+No behaviour change: the access predicates and 402 handling stay as they are.
+
 ## One HD fluffy duck across the product · 2026-09-14
 
 The owner clarified that every logo should use the detailed fluffy green duck. The
