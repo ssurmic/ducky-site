@@ -1,7 +1,7 @@
 import { el, pct, px } from './ui.js';
 import { s, LANG } from './strings.js';
 import { icon } from './icons.js';
-import {metricKeys,metricCell,metricLabel,metricMethods,metricSortValue} from './watchlist-metrics.js';
+import {metricKeys,metricCell,metricLabel,metricMethods,metricSortValue,metricHelpButton} from './watchlist-metrics.js';
 import {signalKeys,signalCell,signalLabel,signalHelpButton,signalSortValue,signalMethods} from './watchlist-signals.js';
 
 const finite = n => typeof n === 'number' && Number.isFinite(n);
@@ -230,7 +230,7 @@ export function overviewView(rows, options) {
         sortHeader('change_pct',s('watch.metric_quote')),el('th',{scope:'col'},s('watch.view_reading')),
         sortHeader('market_cap',s('watch.cap')),...signalKeys.map((key,i)=>{const th=sortHeader(key,signalLabel(key));th.classList.add('watch-signal-col');th.dataset.signal=key;if(!i)th.classList.add('is-first');
           th.append(signalHelpButton(key,signals?.meta||{}));return th;}),
-        ...metricKeys.map(key=>sortHeader(key,metricLabel(key))))));
+        ...metricKeys.map(key=>{const th=sortHeader(key,metricLabel(key));th.classList.add('watch-help-col');th.dataset.metric=key;th.append(metricHelpButton(key));return th;}))));
       if(selection){table.classList.add('watch-selectable');table.querySelector('th').prepend(selectBox());}
       const body=el('tbody');
       for(const row of filtered){

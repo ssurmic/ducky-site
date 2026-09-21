@@ -37,7 +37,7 @@ export function localTime(value){
   return value&&Number.isFinite(date.getTime())?new Intl.DateTimeFormat(LANG==='en'?'en-US':'zh-CN',
     {year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}).format(date):'—';
 }
-export function reading(item,{citations=true}={}){
+export function reading(item,{citations=true,digest=''}={}){
   const refs=item?.overview?.citations;
   const accepted=['ready','refresh_pending'].includes(item?.status)&&pick(item?.overview)&&
     Array.isArray(refs)&&refs.length&&refs.every(id=>item.sources?.some(n=>n.id===id));
@@ -45,6 +45,12 @@ export function reading(item,{citations=true}={}){
   if(!accepted){
     const state={read_pending:'summary_loading',read_failed:'summary_read_failed',failed:'analysis_unavailable',insufficient:'analysis_insufficient',
       source_changed:'analysis_source_changed',withdrawn:'analysis_withdrawn'}[item?.status];
+    // Until a reviewed summary exists the row's own signal columns speak in one line; the
+    // pending state stays visible underneath as a caption instead of taking the whole cell.
+    if(digest){
+      wrap.append(el('p.stock-digest',digest),el('p.small.muted.stock-digest-note',s(state?'focus.'+state:'watch.digest_note')));
+      return wrap;
+    }
     wrap.append(el('p.muted',s(state?'focus.'+state:item?.records===0?'focus.no_research':'focus.analysis_waiting')));
     return wrap;
   }
@@ -92,10 +98,10 @@ export function compactPrice(row){
     el('p.small',fresh.provider+' · '+fresh.feed),el('p.small',s('focus.quote_date',{date:dateTime(fresh.quote_at)}))));
   return wrap;
 }
-export function researchRow(ticker,row,item){
+export function researchRow(ticker,row,item,{digest=''}={}){
   return el('article.stock-list-row',{'data-reading-anchor':ticker},
     el('header',el('a.stock-name',{href:stockHref(ticker),'data-reading-key':`${ticker}:name`},el('strong',ticker),el('span.muted',row?.company||'')),compactPrice(row)),
-    reading({...item,ticker}),el('a.stock-open',{href:'#/evidence/'+encodeURIComponent(ticker),'data-reading-key':`${ticker}:map`,'data-tour':'stock.map','data-ticker':ticker},s('watch.open_map')+' →'),el('a.stock-open',{href:stockHref(ticker),'data-reading-key':`${ticker}:open`},s('focus.open_stock')+' →'));
+    reading({...item,ticker},{digest}),el('a.stock-open',{href:'#/evidence/'+encodeURIComponent(ticker),'data-reading-key':`${ticker}:map`,'data-tour':'stock.map','data-ticker':ticker},s('watch.open_map')+' →'),el('a.stock-open',{href:stockHref(ticker),'data-reading-key':`${ticker}:open`},s('focus.open_stock')+' →'));
 }
 
 export function dayWindow(now=new Date(),days=1){

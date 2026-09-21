@@ -58,7 +58,7 @@ test('signal cells read bought/sold with amounts, walls carry their distance to 
  const all=signals.buildSignals(briefs,funds,['NVDA','AAPL','TSLA']);
  const insider=signals.signalCell('insider',all.get('NVDA'));
  assert.equal(insider.dataset.status,'ready');assert.match(insider.querySelector('.watch-signal-net').textContent,/^Buying \$1\.2M$/);assert.ok(insider.querySelector('.watch-signal-net').classList.contains('is-yes'));
- assert.match(insider.textContent,/1 buy/);assert.match(insider.textContent,/Latest 09\/02 · Jane Doe bought \$1\.2M/);assert.equal(insider.querySelector('.watch-balance-sell').style.width,'0%');assert.match(insider.textContent,/09\/02/);
+ assert.equal(insider.querySelector('.watch-signal-net').getAttribute('title'),'1 buy');assert.match(insider.textContent,/Latest 09\/02 · Jane Doe bought \$1\.2M/);assert.equal(insider.querySelector('.watch-balance-sell').style.width,'0%');assert.match(insider.textContent,/09\/02/);
  assert.match(signals.signalCard('insider',all.get('NVDA'),'NVDA').textContent,/Bought \$1\.2M · Avg \$201\.67 · 6K sh/);
  assert.equal(all.get('NVDA').insider.shares,6000);
  const none=signals.signalCell('insider',all.get('AAPL'));
@@ -66,9 +66,9 @@ test('signal cells read bought/sold with amounts, walls carry their distance to 
  const pending=signals.signalCell('insider',all.get('TSLA'));
  assert.equal(pending.dataset.status,'missing');assert.match(pending.textContent,/Data pending/);
  const fundsCell=signals.signalCell('funds',all.get('NVDA'));
- assert.match(fundsCell.querySelector('.watch-signal-net').textContent,/^2 added$/);assert.match(fundsCell.textContent,/Bridgewater Associates added · 2026 Q2/);assert.match(fundsCell.textContent,/13F filed 08\/14/);
+ assert.match(fundsCell.querySelector('.watch-signal-net').textContent,/^2 added$/);assert.match(fundsCell.textContent,/Bridgewater Associates added · 2026 Q2/);assert.match(fundsCell.querySelector('.watch-signal-event').getAttribute('title'),/13F filed 08\/14/);
  const ranged=signals.buildSignals(briefs,{items:[{...funds.items[0],extra:{facts:{position_change:'increased',report_period:'2026-06-30',prior_shares:1000000,new_shares:1500000,new_value:2.4e8,quarter_price_range:{low:150,high:178.5,sessions:63}}}}]},['NVDA']);
- const rangedCell=signals.signalCell('funds',ranged.get('NVDA'),{ticker:'NVDA'});assert.match(rangedCell.querySelector('.watch-signal-range').textContent,/\$150–\$178\.50/);
+ const rangedCell=signals.signalCell('funds',ranged.get('NVDA'),{ticker:'NVDA'});assert.match(rangedCell.querySelector('.watch-signal-event').getAttribute('title'),/\$150–\$178\.50/);
  const fundCard=signals.signalCard('funds',ranged.get('NVDA'),'NVDA');assert.match(fundCard.textContent,/Shares 1M → 1\.5M/);assert.match(fundCard.textContent,/Quarter-end reported price ≈ \$160\.00/);assert.match(fundCard.textContent,/Quarter price range \$150–\$178\.50/);assert.ok([...fundCard.querySelectorAll('a')].some(a=>a.getAttribute('href')==='#/boards?board=partner&ticker=NVDA'));
  const walls=signals.signalCell('walls',all.get('NVDA'));
  assert.match(walls.querySelector('.watch-wall.is-call').textContent,/\$240/);assert.match(walls.querySelector('.watch-wall.is-call').textContent,/9\.9% above/);
@@ -256,7 +256,7 @@ test('open-market sales and trimmed positions stay apart from purchases and adds
  const net=cell.querySelector('.watch-signal-net');
  assert.equal(net.textContent,'Net selling −$2.2M');assert.ok(net.classList.contains('is-sell'));   // one pill says which way the window leans
  assert.equal(cell.querySelector('.watch-balance-buy').style.width,'24%');assert.equal(cell.querySelector('.watch-balance-sell').style.width,'76%');
- assert.equal(cell.querySelector('.watch-signal-mix').textContent,'1 buy · 1 sale');
+ assert.equal(cell.querySelector('.watch-signal-net').getAttribute('title'),'1 buy · 1 sale');
  const lines=[...cell.querySelectorAll('.watch-signal-event')];
  assert.equal(lines.length,1);assert.equal(lines[0].textContent,'Latest 09/17 · Chen Wei +1 sold $3.2M');assert.ok(lines[0].classList.contains('is-sell'));
  const onlySold=signals.signalCell('insider',all.get('AAPL'),{ticker:'AAPL'});
@@ -324,7 +324,7 @@ test('politician disclosures count buys and sells, show the latest with its amou
  assert.equal(cell.dataset.status,'ready');
  assert.equal(cell.querySelector('.watch-signal-net').textContent,'2 buys · 1 sale');assert.ok(cell.querySelector('.watch-signal-net').classList.contains('is-yes'));
  assert.equal(cell.querySelector('.watch-signal-event').textContent,'Latest 07/24 · Pelosi bought $500K–$1M');assert.ok(cell.querySelector('.watch-signal-event').classList.contains('is-buy'));
- assert.equal(cell.querySelector('.watch-signal-ref').textContent,'close $22.50');
+ assert.match(cell.querySelector('.watch-signal-event').getAttribute('title'),/close \$22\.50$/);
  assert.equal(cell.querySelector('.watch-balance-buy').style.width,'67%');
  const none=signals.signalCell('politicians',all.get('AAPL'),{ticker:'AAPL'});
  assert.equal(none.dataset.status,'none');assert.match(none.textContent,/No disclosed politician trades in 6 months/);

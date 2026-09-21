@@ -4,6 +4,7 @@ import {freeGuide,quotaNote} from '../experience.js';
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
 import { overviewView, layoutOverview, retimeQuotes } from "../watchlist-overview.js";
 import { buildSignals } from "../watchlist-signals.js";
+import { digestText, listSummary } from "../watchlist-digest.js";
 import { companyContext } from "../company-context.js";
 import {reading,researchRow,replaceReading,syncSourceDialog} from '../stock-reading.js';
 import { icon } from "../icons.js";
@@ -92,6 +93,9 @@ export async function mount(root,{signal}={}) {
   const bulk=el('div.watch-bulk',{hidden:!focused},selectionHint,selectionReview,el('div.watch-bulk-actions',manageBtn,clearSelection,removeBtn));
   const removeResult=el('p.watch-remove-result',{hidden:true,role:'status'});
   const readNotice=el('div',{'aria-live':'polite'});
+  // One line above the table: how many watched stocks carry each kind of reference right now, and
+  // the way to today's changes. Counts come from the columns already loaded; nothing is fetched.
+  const strip=el('p.watch-strip',{hidden:true,role:'status'});
   const list = el("div.watch-overview", { id: "watch-cards" });
   const resize=()=>layoutOverview(list);
   if(document.fonts)document.fonts.ready.then(()=>{if(!disposed)layoutOverview(list,true);});
@@ -157,7 +161,7 @@ export async function mount(root,{signal}={}) {
   }
   head.append(addOptions);
   tourTarget(head,'watchlist.home');
-  root.append(head, freeGuide() || "", usage, capacity, controls, offer, bulk, removeResult, readNotice, layout,
+  root.append(head, freeGuide() || "", usage, capacity, controls, offer, bulk, removeResult, readNotice, strip, layout,
     el('div.chips',el('a.chip',{href:'#/updates'},s('updates.entry_title'))));
 
   async function onAdd(e) {
@@ -264,17 +268,19 @@ export async function mount(root,{signal}={}) {
     if(loading && !overview && !research.size){clear(list).append(skeleton(items.length));return;}
     if (!items.length) {clear(list).append(empty(s('watch.empty')));return;}
     const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
+    const digestFor=t=>focused?digestText(rows.get(t),signals.get(t)):'';
+    renderStrip(items.map(t=>rows.get(t)).filter(Boolean));
     if(view==='reading'){
       const ordered=[...items].filter(t=>[t,rows.get(t)?.company||''].join(' ').toLowerCase().includes(query.trim().toLowerCase()))
         .sort((a,b)=>(rows.get(b)?.market_cap||0)-(rows.get(a)?.market_cap||0)||a.localeCompare(b));
-      replaceReading(list,el('div.stock-reading-list',...ordered.map(t=>researchRow(t,rows.get(t),research.get(t)||missingResearch()))));
+      replaceReading(list,el('div.stock-reading-list',...ordered.map(t=>researchRow(t,rows.get(t),research.get(t)||missingResearch(),{digest:digestFor(t)}))));
       if(!ordered.length)list.append(el('p.muted',s('focus.no_matching_stocks')));
       reportPaint();
       return;
     }
     const tableLeft=list.querySelector('.watch-table-scroll')?.scrollLeft||0;
     replaceReading(list,overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
-      {view,query,sort,sortDirection,quoteReceived:overviewReceived,selection:focused?{checked,disabled:removing||adding,toggle:(tickers,value)=>{if(removing||adding)return;for(const t of tickers)value?checked.add(t):checked.delete(t);render();}}:null,onSort:key=>{sortDirection=key===sort?(sortDirection==='desc'?'asc':'desc'):key==='ticker'?'asc':'desc';sort=key;render();},area,signals:focused?signals:null,renderResearch:focused?t=>reading({...research.get(t),ticker:t,...(!research.has(t)?missingResearch():{})}):null,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
+      {view,query,sort,sortDirection,quoteReceived:overviewReceived,selection:focused?{checked,disabled:removing||adding,toggle:(tickers,value)=>{if(removing||adding)return;for(const t of tickers)value?checked.add(t):checked.delete(t);render();}}:null,onSort:key=>{sortDirection=key===sort?(sortDirection==='desc'?'asc':'desc'):key==='ticker'?'asc':'desc';sort=key;render();},area,signals:focused?signals:null,renderResearch:focused?t=>reading({...research.get(t),ticker:t,...(!research.has(t)?missingResearch():{})},{digest:digestFor(t)}):null,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
     reportPaint();
     const scroll=list.querySelector('.watch-table-scroll');
     if(scroll){scroll.scrollLeft=tableLeft;const shade=()=>scroll.classList.toggle('is-scrolled',scroll.scrollLeft>2);shade();scroll.addEventListener('scroll',shade,{passive:true});}
@@ -283,6 +289,17 @@ export async function mount(root,{signal}={}) {
     layoutOverview(list);
   }
 
+  function renderStrip(rowsShown){
+    clear(strip);
+    const summary=focused&&view!=='heatmap'?listSummary(rowsShown,signals):null;
+    strip.hidden=!summary||!summary.loaded||!summary.n;
+    if(strip.hidden)return;
+    // Only the counts that are not zero are worth a reader's glance.
+    const parts=[['sells','watch.strip_sells'],['buys','watch.strip_buys'],['funds','watch.strip_funds'],['walls','watch.strip_walls']]
+      .filter(([key])=>summary[key]>0).map(([key,copy])=>s(copy,{n:summary[key]}));
+    strip.hidden=!parts.length;if(strip.hidden)return;
+    strip.append(el('span',s('watch.strip_summary',{n:summary.n,parts:parts.join(' · ')})),el('a.watch-strip-link',{href:'#/today'},s('watch.strip_link')+' →'));
+  }
   // The list keeps its shape while the first read is in flight: a few muted rows, not a bare spinner.
   function skeleton(count){
     const rows=Math.min(8,Math.max(3,count||0));
