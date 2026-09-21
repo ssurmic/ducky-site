@@ -1,5 +1,15 @@
 # Change log
 
+## Politician trades column, Today macro strip, open-access wording · 2026-09-21 (deployed)
+
+Released through `scripts/deploy_pages.sh`: main `e25dc9e3` (PRs #71 and #72) → Pages deployment `0f18d990` at
+2026-09-21 19:00 UTC; the live `config.js` serves `VERSION e25dc9e3`. #71 adds the fifth signal column "Politician
+trades" (two newest quarters of House disclosures: net pill, balance bar, latest disclosure with owner, amount range
+and the saved close on the transaction date; card lists every disclosure) and the Today macro strip (USD liquidity
+score, 10-year Treasury, VIX with the VIX/VIX3M ratio, Fear & Greed, read from `/macro/beta`, dated, hidden on failure).
+#72 is the wording and naming change recorded below. Backend inputs came from ducky-bot #161 and #163, deployed on the
+DGX as `d7925257` at 18:59 UTC; the VIX and Fear & Greed tiles fill after the next daily macro job.
+
 ## Free-and-open wording, one name each for Radar and Research Map, marketing list trimmed · 2026-09-21
 
 Owner decisions (2026-09-21): the app carries no paid tier today, so every rendered gate message now says the
