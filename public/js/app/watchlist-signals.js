@@ -227,7 +227,8 @@ function netChip(m){
   const tone=mixed?(net>0?'is-yes':net<0?'is-sell':'is-mixed'):m.sells>0?'is-sell':'is-yes';
   const text=mixed?(net>0?s('watch.signal_net_buying',{value:money(net)}):net<0?s('watch.signal_net_selling',{value:money(-net)}):s('watch.signal_balanced'))
     :m.sells>0?s('watch.signal_selling',{value:money(m.sold)}):s('watch.signal_buying',{value:money(m.bought)});
-  return el('strong.watch-metric-value.watch-signal-flag.watch-signal-net',{class:tone},text);
+  const counts=[countText(m.buys,'watch.signal_buys_one','watch.signal_buys_many'),countText(m.sells,'watch.signal_sells_one','watch.signal_sells_many')].filter(Boolean).join(' · ');
+  return el('strong.watch-metric-value.watch-signal-flag.watch-signal-net',{class:tone,...(counts?{title:counts,'aria-label':text+' · '+counts}:{})},text);
 }
 function balanceBar(positive,negative,label){
   const total=positive+negative;if(!(total>0))return null;
@@ -253,30 +254,32 @@ export function signalCell(key,sig,{ticker=''}={}){
   if(key==='insider'){
     if(state!=='ready'){cell.append(chip(state),el('span.watch-metric-note',s('watch.signal_insider_none')));return cell;}
     const latest=m.filings[0];
+    // Pill, balance bar, latest filing: three short lines. Counts sit in the pill's title and the card.
+    const event=s('watch.signal_latest',{event:[shortDate(latest.date),tradeLine(latest)].join(' · ')});
     cell.append(netChip(m),balanceBar(m.bought,m.sold,s('watch.signal_balance',{bought:money(m.bought),sold:money(m.sold)})),
-      el('span.watch-metric-status.watch-signal-mix',[countText(m.buys,'watch.signal_buys_one','watch.signal_buys_many'),countText(m.sells,'watch.signal_sells_one','watch.signal_sells_many')].filter(Boolean).join(' · ')),
-      el('span.watch-metric-status.watch-signal-event',{class:'is-'+latest.side},s('watch.signal_latest',{event:[shortDate(latest.date),tradeLine(latest)].join(' · ')})));
+      el('span.watch-metric-status.watch-signal-event',{class:'is-'+latest.side,title:event},event));
     return cell;
   }
   if(key==='funds'){
     const first=m.moves?.[0];
     if(state!=='ready'){cell.append(chip(state),el('span.watch-metric-note',fundsNone(m)));return cell;}
     const name=first?.fund||s('watch.signal_fund_unnamed'),range=m.moves.map(a=>a.range).find(Boolean);
+    // The quarter's price range and the filing date stay in the card, not under every row.
+    const line=[s(first.side==='trim'?'watch.signal_fund_trim_line':'watch.signal_fund_add_line',{fund:name}),first?.period].filter(Boolean).join(' · ');
     cell.append(mixChip(m.adds.length,m.trims.length),balanceBar(m.adds.length,m.trims.length,s('watch.signal_fund_balance',{adds:m.adds.length,trims:m.trims.length})),
-      el('span.watch-metric-status.watch-signal-fund.watch-signal-event',{class:'is-'+first.side,title:m.moves.map(a=>a.fund).filter(Boolean).join(' · ')},
-        [s(first.side==='trim'?'watch.signal_fund_trim_line':'watch.signal_fund_add_line',{fund:name}),first?.period].filter(Boolean).join(' · ')));
-    if(range)cell.append(el('span.watch-metric-status.watch-signal-range',strike(range.low)+'–'+strike(range.high)));
-    else if(first?.filed)cell.append(el('span.watch-metric-status',s('watch.signal_filed',{date:shortDate(first.filed)})));
+      el('span.watch-metric-status.watch-signal-fund.watch-signal-event',{class:'is-'+first.side,title:[line,...m.moves.map(a=>a.fund).filter(Boolean),range?strike(range.low)+'–'+strike(range.high):'',
+        !range&&first?.filed?s('watch.signal_filed',{date:shortDate(first.filed)}):''].filter(Boolean).join(' · ')},line));
     return cell;
   }
   if(key==='politicians'){
     if(state!=='ready'){cell.append(chip(state),el('span.watch-metric-note',s('watch.signal_politicians_none')));return cell;}
     const latest=m.trades[0],who=latest.politician?latest.politician.split(' ').at(-1):s('evidence.recorded_data');
+    const event=s('watch.signal_latest',{event:[shortDate(latest.date),
+      s(latest.side==='sell'?'watch.signal_pol_sell_line':'watch.signal_pol_buy_line',{who,amount:amountText(latest.amount)})].join(' · ')});
+    // The close on the trade date stays in the card, not as a fourth line in the cell.
     cell.append(mixChip(m.buys,m.sells,'watch.signal_buys_one','watch.signal_buys_many','watch.signal_sells_one','watch.signal_sells_many'),
       balanceBar(m.buys,m.sells,s('watch.signal_balance_counts',{buys:m.buys,sells:m.sells})),
-      el('span.watch-metric-status.watch-signal-event',{class:'is-'+latest.side},s('watch.signal_latest',{event:[shortDate(latest.date),
-        s(latest.side==='sell'?'watch.signal_pol_sell_line':'watch.signal_pol_buy_line',{who,amount:amountText(latest.amount)})].join(' · ')})),
-      finite(latest.close)?el('span.watch-metric-status.watch-signal-ref',s('watch.signal_ref_close',{price:px(latest.close)})):null);
+      el('span.watch-metric-status.watch-signal-event',{class:'is-'+latest.side,title:event+(finite(latest.close)?' · '+s('watch.signal_ref_close',{price:px(latest.close)}):'')},event));
     return cell;
   }
   if(key==='walls'){

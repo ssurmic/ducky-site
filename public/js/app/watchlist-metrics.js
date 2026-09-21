@@ -1,4 +1,4 @@
-import {el, pct} from './ui.js';
+import {el, pct, modal} from './ui.js';
 import {s, LANG} from './strings.js';
 
 export const metricKeys=['ytd','drawdown','relative','iv_hv','attention','degen'];
@@ -10,6 +10,15 @@ export const metricLabel=key=>s(copy[key]);
 export const metricSortValue=(row,key)=>{
   const m=row.metrics?.[key];return (m?.status==='ready'||key==='ytd'&&m?.status==='retained')&&finite(m.value)?m.value:null;
 };
+
+// A "?" beside each metric header opens the plain-language explanation and the method text; the
+// cells themselves carry the number, one short qualifier at most, and the exact state as a title.
+export function metricHelpButton(key){
+  return el('button.watch-signal-help',{type:'button','aria-label':s('watch.metric_help_label',{column:metricLabel(key)}),'data-reading-key':'metric-help:'+key,
+    onclick:()=>modal(metricLabel(key),el('div.watch-signal-help-body',el('p',s('watch.metric_help_'+key)),
+      el('p.small.muted',s(['attention','degen'].includes(key)?'watch.metric_method_social':key==='iv_hv'?'watch.metric_method_vol':'watch.metric_method_prices')),
+      el('p.small.muted',s('watch.metric_help_states'))))},'?');
+}
 
 export function metricCell(key,m={}) {
   const valid=finite(m.value),ready=m.status==='ready';
@@ -23,22 +32,24 @@ export function metricCell(key,m={}) {
     if(ready&&['ytd','drawdown','relative'].includes(key))tone=m.value>0?'watch-up':m.value<0?'watch-down':'watch-flat';
     if(ready&&key==='degen'&&['elevated','overheated'].includes(m.level))tone='watch-attention-high';
   }
-  if(key==='ytd')note=s('watch.metric_ytd_basis');
-  if(key==='drawdown')note=s('watch.metric_close_high');
+  // Only a qualifier that changes the reading stays in the cell: the comparison basket and the
+  // IV-versus-HV direction. Basis notes ("year to date · adjusted", "closing high") live in the header help.
   if(key==='relative'){const refs=m.symbols||[];note=refs.slice(0,2).join(' / ')+(refs.length>2?' +'+(refs.length-2):'')||s('watch.metric_reference');}
-  if(key==='iv_hv'&&valid)note=s(m.value<1?'watch.metric_iv_lower':m.value>1?'watch.metric_iv_higher':'watch.metric_iv_equal')+(m.expiry?' · '+m.expiry.slice(5).replace('-','/'):'');
-  if(key==='attention')note=s('watch.metric_reddit');
-  if(key==='degen')note=s('watch.metric_score');
+  if(key==='iv_hv'&&valid)note=s(m.value<1?'watch.metric_iv_lower':m.value>1?'watch.metric_iv_higher':'watch.metric_iv_equal');
   const state=m.status||'missing';
   const reasonCopy={anchor_missing:'watch.ytd_anchor_missing',latest_session_missing:'watch.ytd_close_pending',adjustment_vintage_mismatch:'watch.ytd_adjustment_pending'};
   const status=ready?'':s(key==='ytd'&&state==='retained'?'watch.ytd_retained':key==='ytd'&&reasonCopy[m.reason]||stateCopy[state]||stateCopy.missing);
-  return el('span.watch-metric',{'data-metric':key,'data-status':state},
+  // An unavailable or dated value keeps its exact state and date in the title (and in the method
+  // disclosure below the table) rather than as a second and third line in every cell.
+  const title=[ready?'':status+(m.as_of?' · '+date(m.as_of):''),key==='iv_hv'&&valid&&m.expiry?s('watch.metric_expiry',{date:m.expiry}):''].filter(Boolean).join(' · ');
+  // A saved year-to-date return is the one value whose date changes the reading: it keeps its
+  // "saved · date" line in the cell.
+  const retained=key==='ytd'&&state==='retained'&&valid;
+  return el('span.watch-metric',{'data-metric':key,'data-status':state,...(title&&!retained?{title}:{})},
     el('span.watch-metric-label',metricLabel(key)),
-    el('strong.watch-metric-value',{class:tone},value),
-    el('span.watch-metric-note',valid?note:status),
-    valid&&!ready?key==='ytd'&&state==='retained'?
-      el('span.watch-metric-status',status,el('time.watch-metric-date',{datetime:m.as_of},date(m.as_of))):
-      el('span.watch-metric-status',status+' · '+date(m.as_of)):null);
+    el('strong.watch-metric-value',{class:tone,...(title&&!retained?{'aria-label':value+' · '+title}:{})},value),
+    note?el('span.watch-metric-note',note):null,
+    retained?el('span.watch-metric-status',status,el('time.watch-metric-date',{datetime:m.as_of},date(m.as_of))):null);
 }
 
 export function metricMethods(rows){

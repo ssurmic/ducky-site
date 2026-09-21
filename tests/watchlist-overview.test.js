@@ -39,7 +39,7 @@ test('a provider quote shows its age, turns into a saved quote after three minut
 test('missing YTD identifies the unavailable input instead of claiming a small sample',()=>{
  const r={...row('NVDA',1e9),metrics:{ytd:{status:'insufficient',reason:'adjustment_vintage_mismatch'}}};
  const list=overviewView([r],{view:'list',onSelect:()=>{}});
- assert.match(list.querySelector('[data-metric="ytd"]').textContent,/Adjusted prices awaiting update/);
+ assert.match(list.querySelector('[data-metric="ytd"]').getAttribute('title'),/Adjusted prices awaiting update/);
 });
 
 test('shared price refresh updates the visible list while keeping selection, filters and open research intact',async()=>{
@@ -245,10 +245,10 @@ test('six comparison metrics retain zero, missing samples, losses and individual
   attention:{value:16,status:'ready'},degen:{value:null,status:'insufficient'}}};
  const view=overviewView([r],{view:'list',onSelect:()=>{}});
  const cells=view.querySelectorAll('.watch-metric');assert.equal(cells.length,6);
- assert.match(cells[0].textContent,/0.0%/);assert.match(cells[1].textContent,/-24.2%.*Earlier data.*2026-09-04/);
+ assert.match(cells[0].textContent,/0.0%/);assert.match(cells[1].textContent,/-24.2%/);assert.match(cells[1].getAttribute('title'),/Earlier data.*2026-09-04/);
  assert.match(cells[2].textContent,/-7.3 pp.*MRVL \/ CRDO/);
- assert.match(cells[3].textContent,/0.73×.*IV below HV.*09\/16/);
- assert.match(cells[5].textContent,/—.*Insufficient data/);assert.doesNotMatch(cells[5].textContent,/0 \/ 100/);
+ assert.match(cells[3].textContent,/0.73×.*IV below HV/);assert.match(cells[3].getAttribute('title')||'',/09-16|09\/16/);
+ assert.match(cells[5].textContent,/—/);assert.match(cells[5].getAttribute('title'),/Insufficient data/);assert.doesNotMatch(cells[5].textContent,/0 \/ 100/);
  assert.match(view.querySelector('.watch-metric-method').textContent,/IV 32.1% \/ HV20 44.2%.*2026-09-16/);
  assert.match(view.querySelector('.watch-row[data-open]').getAttribute('aria-label'),/YTD return · 0.0%/);
  assert.equal(view.querySelectorAll('button a, a button').length,0);

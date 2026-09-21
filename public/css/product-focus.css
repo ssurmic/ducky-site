@@ -558,3 +558,21 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
 @keyframes watch-shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
 @media (prefers-reduced-motion:reduce){.watch-skeleton-cell{animation:none;}}
 .watch-quote-time{font-variant-numeric:tabular-nums;}
+
+/* Watchlist density (2026-09-21): three short lines per cell at most; a digest sentence in the Overview cell. */
+.watch-compact-table th,.watch-compact-table td{padding:10px 12px;}
+.watch-compact-table tr>:nth-child(3){width:300px;}
+.watch-compact-table .watch-signal-event{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.45;}
+.watch-compact-table .watch-metric-note{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.watch-compact-table .watch-signal-net{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;}
+.watch-compact-table th.watch-help-col{position:relative;font-size:11px;}
+.watch-compact-table th.watch-help-col .watch-sort{padding-right:26px;}
+.stock-digest{margin:0;font-size:12px;line-height:1.6;color:var(--text);}
+.stock-digest-note{margin:4px 0 0;font-size:10px;line-height:1.5;}
+.watch-inline-reading .stock-digest{font-size:12px;line-height:1.6;}
+.watch-strip{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin:2px 0 10px;font-size:12px;line-height:1.5;color:var(--muted);}
+.watch-strip-link{white-space:nowrap;font-weight:600;color:var(--accent-text,var(--accent));}
+@media(max-width:600px){
+ .watch-compact-table th,.watch-compact-table td{padding:6px 8px;}
+ .watch-strip{font-size:11px;gap:4px 10px;}
+}

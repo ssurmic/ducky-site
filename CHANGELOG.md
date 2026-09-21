@@ -1,5 +1,22 @@
 # Change log
 
+## Watchlist density: a signals digest in the Overview cell, three-line cells, header help · 2026-09-21
+
+Owner report: the List view was crowded and the Overview column showed "The stock summary is not ready yet." on
+every row while taking a quarter of the width. Changes: (1) until a reviewed stock summary exists, the Overview
+cell shows one line built from the row's own signal columns (`watchlist-digest.js`: insider net amount and filing
+count, fund adds/trims, politician buys/sells, the nearest option wall with its distance, YTD and distance from
+the 52-week closing high; no request, no forecast, no floor or target wording) with the pending state as a
+caption; a reviewed summary replaces it unchanged, and the Overview mode's rows read the same line. (2) Metric
+cells keep the number and at most one qualifier (comparison basket, IV versus HV); the basis notes and the
+per-cell "Earlier data · date" / "Insufficient data" lines move to a `?` help beside each metric header
+(`metricHelpButton`) and to the value's title; a saved YTD keeps its date line. (3) Insider, fund and politician
+cells are three short lines — pill, balance bar, latest event — with counts, the quarter's price range, the
+filing date and the trade-date close in titles and the card; event lines clamp to one line. (4) One line above the
+table counts the stocks with insider net selling / net buying, more fund adds than trims, and a put wall within
+3%, and links to Today ("Check today's overview"); zero counts are omitted. Copy in both languages; copy lint
+clean. Tests: `tests/watchlist-digest.test.js`; the older cell assertions now read the titles.
+
 ## Politician trades column, Today macro strip, open-access wording · 2026-09-21 (deployed)
 
 Released through `scripts/deploy_pages.sh`: main `e25dc9e3` (PRs #71 and #72) → Pages deployment `0f18d990` at
