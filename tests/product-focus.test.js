@@ -352,13 +352,13 @@ test('shared watchlist updates preserve reading focus and filters, and never res
 test('Today adopts a completed summary without rerunning searches, and withholds withdrawn text',async()=>{
  const root=setup();let reads=0;
  globalThis.fetch=async url=>{if(url!=='/watchlist'&&url!=='/macro/beta')reads++;return Response.json(url==='/me/stock-research'?{watchlist_count:1,items:[{ticker:'NVDA',status:'pending'}]}:{items:[change()],next_cursor:null});};
- const dispose=await today.mount(root);assert.ok(root.querySelector('.focus-latest .stock-open'));
+ const dispose=await today.mount(root);assert.equal(root.querySelector('.focus-latest .stock-open'),null);
  const search=root.querySelector('input[type=search]');search.value='my unsubmitted search';search.focus();
  assert.ok(sharedUpdate(root,'/me/stock-research',{items:[item()]}));assert.equal(document.activeElement,search);
  assert.match(root.querySelector('.focus-latest').textContent,/conditional on spending/);assert.equal(reads,2);
  assert.ok(sharedUpdate(root,'/me/stock-research',{items:[{...item(),status:'withdrawn',sources:[]}]}));
  assert.doesNotMatch(root.querySelector('.focus-latest').textContent,/conditional on spending/);
- assert.match(root.querySelector('.focus-latest').textContent,/withdrawn/);assert.equal(search.value,'my unsubmitted search');dispose();
+ assert.equal(root.querySelector('[data-reading-key="analysis:NVDA"]'),null);assert.equal(search.value,'my unsubmitted search');dispose();
 });
 
 test('Today sorts the full stock list by analysis time and exposes every stock without extra reads',async()=>{
@@ -371,7 +371,8 @@ test('Today sorts the full stock list by analysis time and exposes every stock w
  const tickers=()=>[...root.querySelectorAll('.today-analysis .ticker')].map(n=>n.textContent);
  assert.deepEqual(tickers(),['TSLA','NVDA','GLW','AMD','ALAB']);
  root.querySelector('.today-show-all').click();
- assert.deepEqual(tickers(),['TSLA','NVDA','GLW','AMD','ALAB','AEHR','AAPL','ZZZ']);
+ // ZZZ has no reviewed summary yet, so it never earns a card here; its digest lives on the watchlist row.
+ assert.deepEqual(tickers(),['TSLA','NVDA','GLW','AMD','ALAB','AEHR','AAPL']);
  assert.equal(root.querySelector('.today-show-all').getAttribute('aria-expanded'),'true');
  assert.equal(root.querySelector('[data-reading-key="analysis:ZZZ"] .today-analysis-top .small'),null);
  const row=root.querySelector('.today-analysis');assert.equal(row.open,false);
@@ -395,7 +396,7 @@ test('Today preserves expanded stocks on refresh and return, but never carries a
  assert.equal(root.querySelector('[data-reading-key="analysis:NVDA"]').open,true);
  assert.equal(root.querySelector('.change-card').open,true);
  assert.ok(sharedUpdate(root,'/me/stock-research',{items:items.map(i=>i.ticker==='NVDA'?{...i,status:'withdrawn',sources:[]}:i),watchlist_count:6}));
- assert.doesNotMatch(root.querySelector('[data-reading-key="analysis:NVDA"]').textContent,/conditional on spending/);
+ assert.equal(root.querySelector('[data-reading-key="analysis:NVDA"]'),null);
  dispose();setup();dispose=await today.mount(root);
  assert.equal(root.querySelectorAll('.today-analysis').length,5);assert.equal(root.querySelector('.change-card').open,false);dispose();
 });
@@ -447,17 +448,31 @@ test('column sorting toggles direction, keeps unknown values last and does not r
  assert.equal(root.querySelectorAll('[data-map-open]').length,3);dispose();
 });
 
-test('Explore has useful examples without watches, opens a seven-day feed and never generates on read',async()=>{
+test('Explore starts from the stocks being discussed now, opens a seven-day feed and never generates on read',async()=>{
  const {mount}=await import('../public/js/app/views/explore.js');
  const root=setup();store.set('watchlist',[]);const calls=[];
- globalThis.fetch=async(input,options)=>{calls.push({url:new URL(input,'https://ducky.test'),method:options.method});return Response.json({items:[]});};
- const dispose=await mount(root);
- assert.equal(root.querySelectorAll('.research-example').length,3);
- assert.ok(root.querySelector('a[href="#/evidence/GLW?example=GLW"]'));
+ const social={status:'ready',collected_at:'2026-09-21T12:00:00Z',items:[{ticker:'GLW',rank:2,mentions:120,change_pct:35},{ticker:'NVDA',rank:1,mentions:900,change_pct:-4},{ticker:'bad ticker',rank:3}]};
+ globalThis.fetch=async(input,options)=>{calls.push({url:new URL(input,'https://ducky.test'),method:options.method});return Response.json(String(input).startsWith('/radar/social.json')?social:{items:[]});};
+ const dispose=await mount(root);for(let i=0;i<6;i++)await new Promise(r=>setTimeout(r,0));
+ // The ranking, not a fixed list of old cases: rank order, a research-map link per stock, malformed rows dropped.
+ const cards=[...root.querySelectorAll('.research-example')];
+ assert.deepEqual(cards.map(c=>c.getAttribute('href')),['#/evidence/NVDA','#/evidence/GLW']);
+ assert.match(cards[0].textContent,/#1 · NVDA/);assert.match(cards[0].textContent,/900 mentions · 24h/);assert.match(cards[1].textContent,/\+35%/);
+ assert.match(root.querySelector('.research-examples h2').textContent,/Most discussed right now/);
  assert.equal(root.querySelector('.focus-filters select').value,'7');
  assert.ok(root.querySelector('a[href="#/creators?scope=discover"]'));
  assert.equal(root.querySelector('details.focus-tools'),null);
- assert.equal(calls.length,1);assert.equal(calls[0].method,'GET');assert.equal(calls[0].url.searchParams.get('scope'),'all');dispose();
+ assert.equal(calls.length,2);assert.ok(calls.every(c=>c.method==='GET'));
+ assert.ok(calls.some(c=>c.url.searchParams.get('scope')==='all'));assert.ok(calls.some(c=>c.url.pathname==='/radar/social.json'));dispose();
+});
+
+test('the Discover starters stay hidden when the ranking cannot be read, so nothing stale takes their place',async()=>{
+ const {discoverStarters,starterCards}=await import('../public/js/app/research-examples.js');
+ globalThis.fetch=async()=>new Response(JSON.stringify({error:'unauthorized'}),{status:401,headers:{'content-type':'application/json'}});
+ const box=discoverStarters();for(let i=0;i<6;i++)await new Promise(r=>setTimeout(r,0));
+ assert.equal(box.hidden,true);assert.equal(box.childElementCount,0);
+ assert.equal(starterCards({items:[{ticker:'NVDA'}]}).length,0);
+ assert.equal(starterCards({items:Array.from({length:9},(_,i)=>({ticker:'T'+i,rank:i+1}))}).length,6);
 });
 
 test('pending stock analysis still shows the saved information map without an extra fetch',async()=>{

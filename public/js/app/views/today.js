@@ -1,18 +1,18 @@
 import {el,clear,spinner,px,pct} from '../ui.js';
 import {sourceBadge,nodeSourceIdentity} from '../evidence-source.js';
 import {displayQuote} from '../watchlist-overview.js';
-import {researchExamples} from '../research-examples.js';
+import {discoverStarters} from '../research-examples.js';
 import {mountMacroStrip} from '../today-macro.js';
 import {s,LANG} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
-import {pick,stockHref,localTime,dayWindow,reading,researchError,replaceReading,syncSourceDialog} from '../stock-reading.js';
+import {pick,stockHref,localTime,dayWindow,reading,hasSummary,researchError,replaceReading,syncSourceDialog} from '../stock-reading.js';
 import {detail} from './evidence.js';
 
 // Remember only reading controls, never source text or an account's response.
 const readingStates=new Map();
 let readingEpoch=null;
-const SUMMARY_PREVIEW=5,PAGE_SIZE=12,WIDENED_DAYS=7,REVALIDATE_MS=60000;
+const SUMMARY_PREVIEW=5,PAGE_SIZE=12,WIDENED_DAYS=7,REVALIDATE_MS=60000,RECENT_DAYS=30;
 const timestamp=value=>typeof value==='string'&&Number.isFinite(Date.parse(value))?Date.parse(value):-Infinity;
 
 const dayOf=value=>{
@@ -172,22 +172,27 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
     for(const ticker of new Set([...shown,...items.map(item=>item.ticker)]))
       syncSourceDialog(ticker,items.find(item=>item.ticker===ticker)?.sources||[]);
     shown=items.map(item=>item.ticker);
-    watchlistEmpty=response.watchlist_count===0;analysesCount=items.length;
+    // Only reviewed summaries earn a card here: a stock whose analysis is not ready has nothing to
+    // read yet, and its digest already sits on the watchlist row.
+    const accepted=items.filter(hasSummary);
+    watchlistEmpty=response.watchlist_count===0;analysesCount=accepted.length;
     updates.hidden=watchlistEmpty;
     for(const node of [filters,status,feed,coverage])node.hidden=watchlistEmpty;
     more.hidden=watchlistEmpty||!cursor;
     lastSummary=response;
     if(response.watchlist_count===0){
-      renderStats();replaceReading(summaries,el('p',s('focus.start_following')),el('a.btn.btn-primary',{href:'#/watchlist'},s('focus.add_stocks')),researchExamples());return;
+      renderStats();replaceReading(summaries,el('p',s('focus.start_following')),el('a.btn.btn-primary',{href:'#/watchlist'},s('focus.add_stocks')),discoverStarters({signal}));return;
     }
     renderStats();
-    const ordered=latestAnalyses(items),selected=showAll?ordered:ordered.slice(0,SUMMARY_PREVIEW);
-    replaceReading(summaries,...(items.length?[el('header.today-section-heading',el('div',
-      el('h2.today-section-title',s('focus.latest_views'),el('span.today-count',String(items.length))),
+    // Recent summaries lead; older reviewed ones stay behind "Show all" instead of ageing on the page.
+    const ordered=latestAnalyses(accepted),recent=ordered.filter(item=>timestamp(item.as_of)>=Date.now()-RECENT_DAYS*864e5);
+    const selected=showAll?ordered:recent.slice(0,SUMMARY_PREVIEW),hidden=ordered.length-selected.length;
+    replaceReading(summaries,...(accepted.length?[el('header.today-section-heading',el('div',
+      el('h2.today-section-title',s('focus.latest_views'),el('span.today-count',String(accepted.length))),
       el('p.small.muted',s('focus.latest_views_note')))),el('div.today-analysis-list',...selected.map(item=>analysisCard(item,quotes)))]:[]),
-      ...(items.length>SUMMARY_PREVIEW?[el('button.btn.btn-ghost.today-show-all',{type:'button','aria-expanded':String(showAll),
+      ...(hidden>0||showAll?[el('button.btn.btn-ghost.today-show-all',{type:'button','aria-expanded':String(showAll),
         'data-reading-key':'analyses:all',onclick:()=>{showAll=!showAll;renderSummaries(lastSummary);}},
-        s(showAll?'focus.show_fewer_analyses':'focus.show_all_analyses',{count:items.length}))]:[]));
+        s(showAll?'focus.show_fewer_analyses':'focus.show_all_analyses',{count:accepted.length}))]:[]));
   }
   const update=event=>{
     if(disposed||signal?.aborted||epoch!==store.epoch())return;

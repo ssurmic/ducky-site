@@ -604,3 +604,30 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
  .watch-compact-table{min-width:1900px;}
  .watch-compact-table th[data-metric]{width:84px;}
 }
+
+/* Digest values keep the colour of their column: price up/down, buy/sell, put/call (2026-09-21). */
+.stock-digest-value{font-weight:600;}
+.stock-digest-value.is-up,.stock-digest-value.is-buy{color:var(--green);}
+.stock-digest-value.is-down{color:var(--red);}
+.stock-digest-value.is-sell{color:var(--orange);}
+.stock-digest-value.is-put,.stock-digest-value.is-call,.stock-digest-value.is-low{display:inline-block;padding:0 5px;border-radius:4px;font-size:11px;line-height:1.5;}
+.stock-digest-value.is-put{color:var(--green);background:color-mix(in srgb,var(--green) 12%,transparent);}
+.stock-digest-value.is-call{color:var(--orange);background:color-mix(in srgb,var(--orange) 12%,transparent);}
+.stock-digest-value.is-low{color:var(--muted);background:color-mix(in srgb,var(--muted) 14%,transparent);}
+/* Since-then lines in the signal cards are price moves, so red is allowed there. */
+.watch-since{margin:2px 0 0;font-weight:600;color:var(--text);}
+.watch-since.is-up{color:var(--green);}.watch-since.is-down{color:var(--red);}
+.watch-since-note{margin:0 0 10px;}
+/* Market backdrop tiles: a mixed reading is amber, and the liquidity tile explains its score. */
+.today-macro-tile.is-mid .today-macro-value{color:var(--yellow);}
+.today-macro-label{display:flex;align-items:center;gap:6px;}
+.today-macro-help{position:static;transform:none;flex:none;width:18px;height:18px;font-size:10px;}
+
+/* Option-wall rows read left to right inside a clipped cell: the kind chip and the price always
+   show, and only the distance text may shorten (2026-09-21, owner screenshot of clipped CALL/PUT). */
+.watch-compact-table tr>[data-signal=walls]{width:158px;}
+.watch-compact-table .watch-wall{justify-content:flex-start;min-width:0;}
+.watch-compact-table .watch-wall .watch-metric-value{flex:none;}
+.watch-compact-table .watch-wall-kind{flex:none;}
+.watch-compact-table .watch-wall-gap{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:left;}
+@media(max-width:600px){.watch-compact-table tr>[data-signal=walls]{width:150px;}}

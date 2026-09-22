@@ -3,7 +3,7 @@
 // and 13F records (GET /radar/archive.json). Nothing here forecasts, sets a target price or
 // promises a floor: every value is a sourced, dated reference with its own clock. Insider
 // trades and fund moves list newest first; open-market sales and trimmed positions read red.
-import {el,px,modal} from './ui.js';
+import {el,px,pct,modal} from './ui.js';
 import {s,LANG} from './strings.js';
 
 export const signalKeys=['insider','funds','politicians','walls','support'];
@@ -25,6 +25,8 @@ const shortDate=v=>day(v)?day(v).slice(5).replace('-','/'):'—';
 const money=v=>new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US',{style:'currency',currency:'USD',notation:'compact',maximumFractionDigits:1}).format(v);
 const gap=(level,price)=>finite(level)&&finite(price)&&price>0?(level/price-1)*100:null;
 const gapText=n=>!finite(n)?'':Math.abs(n)<0.05?s('watch.signal_at_price'):s(n<0?'watch.signal_below':'watch.signal_above',{n:Math.abs(n).toFixed(1)});
+// The wall rows have one line each, so the distance keeps only its direction and number; the full phrase sits in the title.
+const gapShort=n=>!finite(n)?'':Math.abs(n)<0.05?s('watch.signal_at_price'):s(n<0?'watch.signal_below_short':'watch.signal_above_short',{n:Math.abs(n).toFixed(1)});
 // Strikes are whole or half dollars; print them without a spurious ".00".
 const strike=v=>Number.isInteger(v)?'$'+new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US').format(v):px(v);
 
@@ -244,12 +246,12 @@ function mixChip(adds,trims,addOne='watch.signal_adds_one',addMany='watch.signal
 // A complete page allows a plain "none"; a truncated one only says where the stock was not found.
 const fundsNone=m=>m.complete?s('watch.signal_funds_none_tracked'):m.count?s('watch.signal_funds_none_page',{n:m.count}):s('watch.signal_funds_none');
 
-export function signalCell(key,sig,{ticker=''}={}){
+export function signalCell(key,sig,{ticker='',price=null,session=''}={}){
   const m=sig?.[key]||{status:'missing'},state=m.status||'missing';
   // The whole cell is one tap target: it opens the same flashcard the "?" explains, with the records behind the number.
   const cell=el(state==='missing'?'span.watch-metric.watch-signal':'button.watch-metric.watch-signal',{'data-metric':key,'data-status':state,
     ...(state==='missing'?{}:{type:'button','data-reading-key':ticker+':signal:'+key,'aria-label':signalLabel(key)+' · '+ticker+' · '+s('watch.signal_details'),
-      onclick:event=>{event.currentTarget.focus({preventScroll:true});modal(s('watch.signal_card_'+key)+(ticker?' · '+ticker:''),signalCard(key,sig,ticker));}})},el('span.watch-metric-label',signalLabel(key)));
+      onclick:event=>{event.currentTarget.focus({preventScroll:true});modal(s('watch.signal_card_'+key)+(ticker?' · '+ticker:''),signalCard(key,sig,ticker,{price,session}));}})},el('span.watch-metric-label',signalLabel(key)));
   if(state==='missing'){cell.append(el('strong.watch-metric-value','—'),el('span.watch-metric-note',s('watch.signal_unknown')));return cell;}
   if(key==='insider'){
     if(state!=='ready'){cell.append(chip(state),el('span.watch-metric-note',s('watch.signal_insider_none')));return cell;}
@@ -287,8 +289,9 @@ export function signalCell(key,sig,{ticker=''}={}){
     // Two single lines — kind, strike, distance — with the expiries in the title and the card.
     const expiry=m.expiries.length?s('watch.signal_expiry',{date:m.expiries.slice(0,2).map(shortDate).join(' / ')}):s('watch.signal_walls_basis');
     cell.title=expiry;
-    cell.append(el('span.watch-wall.is-call',{title:expiry},el('span.watch-wall-kind',s('watch.signal_call')),el('strong.watch-metric-value',finite(m.call)?strike(m.call):'—'),el('span.watch-wall-gap',gapText(gap(m.call,m.price)))),
-      el('span.watch-wall.is-put',{title:expiry},el('span.watch-wall-kind',s('watch.signal_put')),el('strong.watch-metric-value',finite(m.put)?strike(m.put):'—'),el('span.watch-wall-gap',gapText(gap(m.put,m.price)))));
+    const wallRow=(kind,level)=>{const d=gap(level,m.price);return el('span.watch-wall',{class:'is-'+kind,title:[gapText(d),expiry].filter(Boolean).join(' · ')},
+      el('span.watch-wall-kind',s('watch.signal_'+kind)),el('strong.watch-metric-value',finite(level)?strike(level):'—'),el('span.watch-wall-gap',gapShort(d)));};
+    cell.append(wallRow('call',m.call),wallRow('put',m.put));
     return cell;
   }
   if(state!=='ready'){cell.append(el('strong.watch-metric-value','—'),el('span.watch-metric-note',s('watch.signal_support_none')));return cell;}
@@ -317,9 +320,19 @@ function supportRange(m){
 const compact=n=>new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US',{notation:'compact',maximumFractionDigits:1}).format(n);
 const externalLink=(url,label)=>url?el('a.small',{href:url,target:'_blank',rel:'noopener noreferrer'},label+' ↗'):null;
 // One flashcard per signal: the records behind the cell, their dates and sources, then the same two exits every card has.
-export function signalCard(key,sig,ticker){
+// The move from a record's own reference price to the last price. A price change, so red is
+// allowed; the reference is where the record was made (a filing's average, a quarter-end mark, a
+// trade-date close), never a level to trade against.
+export function sinceLine(ref,price,key,vars={}){
+  if(!finite(ref)||!finite(price)||ref<=0||price<=0)return null;
+  const move=(price/ref-1)*100;
+  return el('p.small.watch-since',{class:move>0.05?'is-up':move<-0.05?'is-down':''},s(key,{...vars,n:pct(move,1)}));
+}
+const filingAverage=filing=>{const shares=filing.transactions.reduce((a,x)=>a+x.shares,0);return shares>0?filing.transactions.reduce((a,x)=>a+x.price*x.shares,0)/shares:null;};
+export function signalCard(key,sig,ticker,{price=null,session=''}={}){
   const m=sig?.[key]||{},body=el('div.watch-signal-card',{'data-signal':key});
   const list=el('div.watch-signal-items');
+  if(finite(price)&&price>0&&['insider','funds','politicians'].includes(key))body.append(el('p.small.muted.watch-since-note',s('watch.since_note',{price:px(price),session:session||'—'})));
   if(key==='insider'){
     // Every filing in the window, newest first, each with its side; the lead sums bought and sold.
     for(const filing of m.filings||[])list.append(el('article.watch-signal-item',{class:'is-'+filing.side},
@@ -327,6 +340,7 @@ export function signalCard(key,sig,ticker){
       el('p',sideChips([filing.side]),filing.owners.some(o=>o.role)?el('span.small.muted',' · '+filing.owners.map(o=>o.role).filter(Boolean).join(' · ')):null),
       el('ul.watch-signal-txns',...filing.transactions.map(x=>el('li',s('watch.signal_txn',{shares:compact(x.shares),price:px(x.price)}),x.date?el('span.muted',' · '+x.date):null))),
       el('p',el('strong',money(filing.value)),filing.side==='buy'?el('span.muted',' · '+s('watch.signal_avg_price',{price:px(filing.transactions.reduce((a,x)=>a+x.price*x.shares,0)/Math.max(1,filing.transactions.reduce((a,x)=>a+x.shares,0)))})):null),
+      finite(filingAverage(filing))?sinceLine(filingAverage(filing),price,'watch.since_filing',{price:px(filingAverage(filing))}):null,
       externalLink(filing.url,s('boards.source'))));
     const lead=[m.buys>0?[s('watch.signal_bought')+' '+money(m.bought),finite(m.average)?s('watch.signal_avg_price',{price:px(m.average)}):null,m.shares>0?s('watch.signal_shares',{n:compact(m.shares)}):null].filter(Boolean).join(' · '):null,
       m.sells>0?s('watch.signal_sold')+' '+money(m.sold):null].filter(Boolean);
@@ -338,6 +352,7 @@ export function signalCard(key,sig,ticker){
         move.shares.prior!==null&&move.shares.now!==null?s('watch.signal_shares_change',{prior:compact(move.shares.prior),now:compact(move.shares.now)}):''))),
       finite(move.quarterEnd)?el('p.small.muted',s('watch.signal_quarter_end_price',{price:px(move.quarterEnd)})):null,
       move.range?el('p.small.muted',s('watch.signal_quarter_range',{low:strike(move.range.low),high:strike(move.range.high)})):null,
+      sinceLine(move.quarterEnd,price,'watch.since_quarter_end',{date:move.periodEnd||move.period||'—'}),
       el('p.small.muted',move.filed?s('watch.signal_filed',{date:move.filed}):''),externalLink(move.url,s('boards.source'))));
   }else if(key==='politicians'){
     for(const t of m.trades||[])list.append(el('article.watch-signal-item',{class:'is-'+t.side},
@@ -345,6 +360,7 @@ export function signalCard(key,sig,ticker){
       el('p',sideChips([t.side]),el('span.muted',' · '+[OWNER_COPY[t.owner]?s(OWNER_COPY[t.owner]):null,s(t.asset==='OP'?'watch.signal_asset_option':'watch.signal_asset_stock'),amountText(t.amount)].filter(Boolean).join(' · '))),
       t.description?el('p.small.muted',t.description):null,
       finite(t.close)?el('p.small.muted',s('watch.signal_ref_close_on',{price:px(t.close),date:t.closeDate||t.date})):null,
+      sinceLine(t.close,price,'watch.since_trade_close',{price:finite(t.close)?px(t.close):'—'}),
       t.filed?el('p.small.muted',s('watch.signal_disclosed',{date:t.filed})):null,externalLink(t.url,s('boards.source'))));
   }else if(key==='walls'){
     list.append(el('article.watch-signal-item',el('p',el('span.watch-wall-kind',s('watch.signal_call')),' ',el('strong',finite(m.call)?strike(m.call):'—'),el('span.muted',' '+gapText(gap(m.call,m.price)))),

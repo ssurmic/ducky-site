@@ -4,7 +4,7 @@ import {freeGuide,quotaNote} from '../experience.js';
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
 import { overviewView, layoutOverview, retimeQuotes } from "../watchlist-overview.js";
 import { buildSignals } from "../watchlist-signals.js";
-import { digestText, listSummary } from "../watchlist-digest.js";
+import { digestNodes, listSummary } from "../watchlist-digest.js";
 import { companyContext } from "../company-context.js";
 import {reading,researchRow,replaceReading,syncSourceDialog} from '../stock-reading.js';
 import { icon } from "../icons.js";
@@ -268,7 +268,7 @@ export async function mount(root,{signal}={}) {
     if(loading && !overview && !research.size){clear(list).append(skeleton(items.length));return;}
     if (!items.length) {clear(list).append(empty(s('watch.empty')));return;}
     const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
-    const digestFor=t=>focused?digestText(rows.get(t),signals.get(t)):'';
+    const digestFor=t=>focused?digestNodes(rows.get(t),signals.get(t)):[];
     renderStrip(items.map(t=>rows.get(t)).filter(Boolean));
     if(view==='reading'){
       const ordered=[...items].filter(t=>[t,rows.get(t)?.company||''].join(' ').toLowerCase().includes(query.trim().toLowerCase()))
