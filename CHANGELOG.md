@@ -1,5 +1,12 @@
 # Change log
 
+## Today footer names each source's own date · 2026-09-21
+
+Owner caught the footer saying readings ran through 2026-09-18 on Monday evening 2026-09-21. Two causes: the backend macro
+document was dated one session late (its price download excluded the just-completed session; fixed in ducky-bot PR #172,
+effective from the next nightly run), and the footer folded three sources into one date. Site PR #82 (main `aea68812`,
+Pages deployment `e5fc5b4f`) now states the FRED / New York Fed panel date and the CNN Fear & Greed read time separately.
+
 ## Half-dials for Fear & Greed and USD liquidity; left-side and right-side readings under the digest · 2026-09-21
 
 Owner review round four (site PR #80, main `657d96d1`, Pages deployment `eeafe2b6`). The Fear & Greed tile is a CNN-style
