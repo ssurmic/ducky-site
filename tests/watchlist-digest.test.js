@@ -177,6 +177,9 @@ test('left-side and right-side readings render under the digest only when both a
  const cell=reading({ticker:'NVDA',status:'pending',records:3},{digest:digest.digestNodes(row,sig),views});
  const lines=[...cell.querySelectorAll('.stock-view')].map(n=>n.textContent);
  assert.deepEqual(lines,['Right side · trend viewTrend followers watch the close hold above the 20-day low.','Left side · long-term viewLong-term holders watch the pullback depth.']);
+ // The readings lead, coloured by side; the digest line follows them.
+ assert.deepEqual([...cell.querySelectorAll('.stock-view')].map(n=>n.className),['stock-view is-right','stock-view is-left']);
+ assert.equal(cell.firstElementChild.className,'stock-views');assert.equal(cell.querySelector('.stock-views').nextElementSibling.className,'stock-digest');
  assert.match(cell.querySelector('.stock-views-note').textContent,/not advice/);
  assert.equal(reading({ticker:'NVDA',status:'pending'},{digest:digest.digestNodes(row,sig),views:{...views,left:null}}).querySelector('.stock-views'),null);
  assert.equal(reading({ticker:'NVDA',status:'pending'},{digest:'',views}).querySelector('.stock-views'),null);

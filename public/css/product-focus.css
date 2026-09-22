@@ -666,7 +666,12 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
 .today-macro-history-value.is-sell{color:var(--orange);border-color:var(--orange);}
 .today-macro-history-value.is-mid{color:var(--yellow);border-color:var(--yellow);}
 /* Left-side / right-side readings under the digest, written once a day from the row's facts. */
-.stock-views{margin:8px 0 0;display:grid;gap:5px;}
-.stock-view{margin:0;font-size:12px;line-height:1.6;}
-.stock-view-label{display:inline-block;margin-right:6px;padding:0 6px;border-radius:4px;font-size:11px;font-weight:700;color:var(--muted);background:color-mix(in srgb,var(--muted) 14%,transparent);}
+.stock-views{margin:0 0 8px;display:grid;gap:6px;}
+.stock-view{margin:0;padding:6px 8px;border-left:3px solid var(--border);border-radius:0 6px 6px 0;font-size:12px;line-height:1.6;background:color-mix(in srgb,var(--border) 40%,transparent);}
+.stock-view.is-right{border-left-color:var(--blue);background:color-mix(in srgb,var(--blue) 9%,transparent);}
+.stock-view.is-left{border-left-color:var(--yellow);background:color-mix(in srgb,var(--yellow) 10%,transparent);}
+.stock-view-label{display:inline-block;margin-right:6px;padding:0 6px;border-radius:4px;font-size:11px;font-weight:700;}
+.stock-view.is-right .stock-view-label{color:var(--blue);background:color-mix(in srgb,var(--blue) 16%,transparent);}
+.stock-view.is-left .stock-view-label{color:var(--yellow);background:color-mix(in srgb,var(--yellow) 18%,transparent);}
 .stock-views-note{margin:0;font-size:10px;}
+.stock-views + .stock-digest{color:var(--muted);}

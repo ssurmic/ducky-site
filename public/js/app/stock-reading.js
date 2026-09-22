@@ -52,12 +52,13 @@ export function reading(item,{citations=true,digest='',views=null}={}){
     // pending state stays visible underneath as a caption instead of taking the whole cell.
     const line=Array.isArray(digest)?digest:digest?[digest]:[];
     if(line.length){
-      wrap.append(el('p.stock-digest',...line),el('p.small.muted.stock-digest-note',s(state?'focus.'+state:'watch.digest_note')));
-      // Two short readings written after the close from the same facts: a trend view and a long-term view.
+      // Two short readings written after the close from the same facts lead when they exist (the right
+      // side in blue, the left side in amber); the digest line follows as the facts behind them.
       if(views&&pick(views.right)&&pick(views.left))wrap.append(el('div.stock-views',
-        el('p.stock-view',el('span.stock-view-label',s('watch.view_right')),pick(views.right)),
-        el('p.stock-view',el('span.stock-view-label',s('watch.view_left')),pick(views.left)),
+        el('p.stock-view.is-right',el('span.stock-view-label',s('watch.view_right')),pick(views.right)),
+        el('p.stock-view.is-left',el('span.stock-view-label',s('watch.view_left')),pick(views.left)),
         el('p.small.muted.stock-views-note',s('watch.views_note'))));
+      wrap.append(el('p.stock-digest',...line),el('p.small.muted.stock-digest-note',s(state?'focus.'+state:'watch.digest_note')));
       return wrap;
     }
     wrap.append(el('p.muted',s(state?'focus.'+state:item?.records===0?'focus.no_research':'focus.analysis_waiting')));
