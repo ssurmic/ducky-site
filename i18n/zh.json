@@ -4595,5 +4595,11 @@
   "app.today.fng_year": "一年前",
   "app.watch.view_right": "右侧 · 趋势视角",
   "app.watch.view_left": "左侧 · 长线视角",
-  "app.watch.views_note": "根据本行事实在收盘后写成的两种解读，只是描述，不是建议。"
+  "app.watch.views_note": "根据本行事实在收盘后写成的两种解读，只是描述，不是建议。",
+  "app.watch.card_note": "今日点评",
+  "app.watch.card_digest": "信号摘要",
+  "app.watch.card_summary": "综合摘要",
+  "app.watch.deck_label": "概览卡片：用箭头、左右键或左右滑动切换",
+  "app.watch.deck_prev": "上一张",
+  "app.watch.deck_next": "下一张"
 }
