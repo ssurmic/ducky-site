@@ -12,10 +12,14 @@ const when=value=>{const t=Date.parse(value||'');return Number.isFinite(t)?new I
 
 export function starterCards(doc){
   const rows=(Array.isArray(doc?.items)?doc.items:[]).filter(r=>TICKER.test(r?.ticker||'')&&Number.isFinite(r?.rank)).sort((a,b)=>a.rank-b.rank).slice(0,LIMIT);
+  // A ranked stock that already has a written verdict (the shared reading of its watchlist row) shows
+  // that one sentence under the count; the ranking itself never invents one.
+  const verdict=r=>{const text=r?.overall?.[LANG==='en'?'en':'zh'];return typeof text==='string'&&text.trim()?el('span.research-example-overall',text.trim()):null;};
   return rows.map(r=>el('a.research-example',{href:'#/evidence/'+encodeURIComponent(r.ticker),'data-ticker':r.ticker,'data-reading-key':'discover:'+r.ticker},icon('evidence'),
     el('strong','#'+r.rank+' · '+r.ticker),
     el('span.small.muted',[Number.isFinite(r.mentions)?s('focus.discover_mentions',{n:new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US').format(r.mentions)}):null,
       Number.isFinite(r.change_pct)?s('focus.discover_change',{n:pct(r.change_pct,0)}):null].filter(Boolean).join(' · ')),
+    verdict(r),
     el('span.example-arrow',{'aria-hidden':'true'},'→')));
 }
 

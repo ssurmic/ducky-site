@@ -197,3 +197,47 @@ test('left-side and right-side readings render under the digest only when both a
  assert.equal(reading({ticker:'NVDA',status:'pending'},{digest:'',views}).querySelector('.stock-views'),null);
  for(const key of ['app.watch.view_right','app.watch.view_left','app.watch.views_note'])assert.ok(zh[key]&&!/[㐀-鿿]/.test(copy[key]),key);
 });
+
+test('the table gives each side its own column and the Overview cell opens with the verdict; a stale reading keeps its date, a missing one says so',async()=>{
+ const {overviewView}=await import('../public/js/app/watchlist-overview.js');
+ const {viewCell,overallLine}=await import('../public/js/app/stock-reading.js');
+ const views={status:'ready',session:'2026-09-21',generated_at:'2026-09-21T23:40:00-07:00',stale:false,
+  right:{en:'Trend followers watch the close hold above the 20-day low.',zh:'趋势派关注收盘能否守住 20 日低点。'},
+  left:{en:'Long-term holders watch the pullback depth.',zh:'长线持有者关注回调深度。'},
+  overall:{en:'Overall: after the newest creator view, the stock sits just under its call wall.',zh:'总的来说，股价贴着看涨墙之下。'}};
+ const item={ticker:'NVDA',status:'pending',records:3};
+ // In the table the note card stays out of the deck: the sides have their own cells, the verdict leads the cell.
+ const cell=reading(item,{digest:digest.digestNodes(row,sig),views,columns:true});
+ assert.equal(cell.firstChild.className,'stock-overall');assert.match(cell.querySelector('.stock-overall-text').textContent,/^Overall:/);
+ assert.equal(cell.querySelector('.stock-views'),null);assert.equal(cell.querySelector('.card-deck'),null);assert.ok(cell.querySelector('.stock-digest'));
+ assert.equal(cell.querySelector('.stock-overall-date'),null);
+ // The reading list (no columns) keeps the flashcards and still leads with the verdict.
+ const listed=reading(item,{digest:digest.digestNodes(row,sig),views});
+ assert.equal(listed.firstChild.className,'stock-overall');assert.equal(listed.querySelector('.card-deck').dataset.cards,'2');
+ // Stale: the sentence stays, its own date goes under it; the pending note appears before the first reading.
+ const stale={...views,stale:true};
+ assert.match(overallLine(stale).querySelector('.stock-overall-date').textContent,/Reading of 2026-09-21; the facts have moved/);
+ assert.equal(viewCell(stale,'left').className,'watch-view is-left');assert.match(viewCell(stale,'right').querySelector('.watch-view-date').textContent,/2026-09-21/);
+ assert.equal(viewCell(views,'right').querySelector('.watch-view-date'),null);
+ assert.equal(viewCell(null,'left').className,'small muted watch-view-pending');assert.match(viewCell(null,'left').textContent,/after the close/);
+ // A reviewed summary without a verdict shows no overall line and no empty placeholder.
+ const ready={ticker:'COIN',status:'ready',as_of:'2026-09-19T22:00:00Z',overview:{en:'A reviewed line.',zh:'一句。',citations:['s1']},sources:[{id:'s1',title:{en:'T',zh:'T'}}]};
+ assert.equal(reading(ready,{views:{...views,overall:null},columns:true}).querySelector('.stock-overall'),null);
+ assert.ok(reading(ready,{views,columns:true}).querySelector('.stock-card.is-summary'));
+ const root=overviewView([{ticker:'NVDA',company:'NVIDIA Corporation',market_cap:5.4e12,price:227.38,change_pct:2.3,price_session:'2026-09-21',metrics:row.metrics},
+   {ticker:'AMD',company:'AMD',market_cap:2.4e11,price:150,change_pct:-1,price_session:'2026-09-21',metrics:{}}],
+  {view:'list',renderResearch:t=>reading({...item,ticker:t},{digest:digest.digestNodes(row,sig),views:t==='NVDA'?views:null,columns:true}),viewsFor:t=>t==='NVDA'?views:null,
+   signals:new Map([['NVDA',sig]]),session:'2026-09-21'});
+ const heads=[...root.querySelectorAll('thead th')].map(th=>th.textContent.trim());
+ assert.deepEqual(heads.slice(0,6),['Stock / business','Price / day change','Overall','Left side','Right side','Market cap']);
+ assert.ok(root.querySelector('thead th.watch-view-col.is-left')&&root.querySelector('thead th.watch-cap-col'));
+ const first=root.querySelector('tbody tr');
+ assert.equal(first.querySelector('td.watch-view-cell.is-left .watch-view-text').textContent,'Long-term holders watch the pullback depth.');
+ assert.equal(first.querySelector('td.watch-view-cell.is-right .watch-view.is-right .watch-view-text').textContent,'Trend followers watch the close hold above the 20-day low.');
+ assert.match(first.querySelector('.watch-reading-preview').textContent,/^Overall:/);assert.equal(first.querySelector('.watch-reading-preview .stock-digest-value'),null);
+ assert.ok(first.querySelector('td.watch-cap-col'));
+ const second=root.querySelectorAll('tbody tr')[1];
+ assert.equal(second.querySelectorAll('.watch-view-pending').length,2);assert.ok(second.querySelector('.watch-reading-preview .stock-digest-value'));
+ for(const key of ['app.watch.col_left','app.watch.col_right','app.watch.view_pending','app.watch.view_as_of','app.watch.view_reading'])assert.ok(zh[key]&&!/[㐀-鿿]/.test(copy[key]),key);
+ assert.equal(zh['app.watch.view_reading'],'总评');
+});

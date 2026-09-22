@@ -38,6 +38,23 @@ export function localTime(value){
   return value&&Number.isFinite(date.getTime())?new Intl.DateTimeFormat(LANG==='en'?'en-US':'zh-CN',
     {year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}).format(date):'—';
 }
+const asOf=views=>typeof views?.generated_at==='string'&&/^\d{4}-\d{2}-\d{2}/.test(views.generated_at)?views.generated_at.slice(0,10):views?.session||'';
+// The one-line verdict (总评): the newest creator view or record first, then where the stock sits.
+// It never goes blank once written: a reading whose facts have moved on keeps its own date under it.
+export function overallLine(views){
+  const text=pick(views?.overall);
+  if(!text)return null;
+  return el('div.stock-overall',views.stale?{class:'is-stale'}:{},el('p.stock-overall-text',text),
+    views.stale?el('p.small.muted.stock-overall-date',s('watch.view_as_of',{date:asOf(views)})):null);
+}
+// One side of the reading as a table cell: the plain-language sentence with its side's colour,
+// a date caption when the facts moved since it was written, and a pending note before the first one.
+export function viewCell(views,side){
+  const text=pick(views?.[side]);
+  if(!text)return el('p.small.muted.watch-view-pending',s('watch.view_pending'));
+  return el('div.watch-view',{class:'is-'+side},el('p.watch-view-text',text),
+    views.stale?el('p.small.muted.watch-view-date',s('watch.view_as_of',{date:asOf(views)})):null);
+}
 // The day's note: two readings written after the close from the row's facts, or nothing at all.
 export function noteCard(views){
   if(!views||!pick(views.right)||!pick(views.left))return null;
@@ -51,9 +68,12 @@ export function hasSummary(item){
   const refs=item?.overview?.citations;
   return !!(['ready','refresh_pending'].includes(item?.status)&&pick(item?.overview)&&Array.isArray(refs)&&refs.length&&refs.every(id=>item.sources?.some(n=>n.id===id)));
 }
-export function reading(item,{citations=true,digest='',views=null}={}){
+// `columns`: the table shows the two sides in their own cells, so the note card stays out of the deck there.
+export function reading(item,{citations=true,digest='',views=null,columns=false}={}){
   const accepted=hasSummary(item);
   const wrap=el('div.stock-reading');
+  const overall=overallLine(views);
+  if(overall)wrap.append(overall);
   if(!accepted){
     const state={read_pending:'summary_loading',read_failed:'summary_read_failed',failed:'analysis_unavailable',insufficient:'analysis_insufficient',
       source_changed:'analysis_source_changed',withdrawn:'analysis_withdrawn'}[item?.status];
@@ -64,11 +84,11 @@ export function reading(item,{citations=true,digest='',views=null}={}){
       // Flashcards: the day's note (right side in blue, left side in amber) first, the digest line as
       // the facts behind it second; arrows, dots, keys and a swipe move between them.
       const digest=el('div.stock-card.is-digest',el('p.stock-digest',...line),el('p.small.muted.stock-digest-note',s(state?'focus.'+state:'watch.digest_note')));
-      const note=noteCard(views);
+      const note=columns?null:noteCard(views);
       wrap.append(note?cardDeck([{title:s('watch.card_note'),node:note},{title:s('watch.card_digest'),node:digest}],{label:s('watch.deck_label')}):digest);
       return wrap;
     }
-    wrap.append(el('p.muted',s(state?'focus.'+state:item?.records===0?'focus.no_research':'focus.analysis_waiting')));
+    if(!overall)wrap.append(el('p.muted',s(state?'focus.'+state:item?.records===0?'focus.no_research':'focus.analysis_waiting')));
     return wrap;
   }
   const line=el('p.stock-one-sentence',pick(item.overview));
@@ -79,14 +99,11 @@ export function reading(item,{citations=true,digest='',views=null}={}){
     line.append(el('button.brief-citation',{type:'button',onclick:()=>detail(source,{readingTicker:item.ticker,...(item.status==='refresh_pending'?{analysisAt:item.as_of}:{})}),
       'data-reading-key':`${item.ticker}:citation:${id}`,'aria-label':s('focus.read_source')},String(item.sources.indexOf(source)+1)));
   }
-  wrap.append(line);
-  if(cited.length)wrap.append(citationList(item,cited));
-  wrap.append(el('p.small.muted.stock-analysis-date',s(item.status==='refresh_pending'?'focus.previous_analysis':'focus.analysis_date',{date:localTime(item.as_of)})));
-  const note=noteCard(views);
-  if(note){
-    const summary=el('div.stock-card.is-summary',...[...wrap.childNodes]);
-    wrap.replaceChildren(cardDeck([{title:s('watch.card_summary'),node:summary},{title:s('watch.card_note'),node:note}],{label:s('watch.deck_label')}));
-  }
+  const summary=el('div.stock-card.is-summary',line);
+  if(cited.length)summary.append(citationList(item,cited));
+  summary.append(el('p.small.muted.stock-analysis-date',s(item.status==='refresh_pending'?'focus.previous_analysis':'focus.analysis_date',{date:localTime(item.as_of)})));
+  const note=columns?null:noteCard(views);
+  wrap.append(note?cardDeck([{title:s('watch.card_summary'),node:summary},{title:s('watch.card_note'),node:note}],{label:s('watch.deck_label')}):summary);
   return wrap;
 }
 const dateOnly=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}/.test(v)?v.slice(0,10):'—';

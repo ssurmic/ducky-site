@@ -145,6 +145,7 @@ body:has(.focus-nav) .watch-modes .btn{min-width:44px;}
 .research-examples{margin:24px 0 28px;}
 .research-examples>p{line-height:1.6;max-width:720px;}
 .research-example-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.research-example-overall{display:block;flex-basis:100%;margin-top:4px;font-size:12px;line-height:1.55;color:var(--text);}
 .research-example{position:relative;display:flex;flex-direction:column;gap:12px;padding:20px 22px;border:1px solid var(--border);border-radius:14px;text-decoration:none;color:var(--text);background:linear-gradient(125deg,color-mix(in srgb,var(--accent) 5%,var(--surface)),var(--surface));min-width:0;}
 .research-example>.app-icon{color:var(--accent-text,var(--accent));width:24px;height:24px;}
 .research-example strong{line-height:1.55;font-size:16px;padding-right:12px;}
@@ -230,7 +231,7 @@ body:has(.focus-nav) .watch-modes .btn{min-width:44px;}
 }
 /* A real compact table keeps the same columns and sorting on every screen. */
 .watch-table-scroll{overflow:auto;max-width:100%;border:1px solid var(--border);border-radius:12px;scroll-padding-left:130px;}
-.watch-compact-table{width:100%;min-width:1860px;border-collapse:separate;border-spacing:0;font-size:12px;table-layout:fixed;}
+.watch-compact-table{width:100%;min-width:2320px;border-collapse:separate;border-spacing:0;font-size:12px;table-layout:fixed;}
 .watch-compact-table th,.watch-compact-table td{border-bottom:1px solid var(--border);padding:12px;vertical-align:top;text-align:right;background:var(--surface);}
 .watch-compact-table th{font-weight:500;}
 .watch-compact-table tr:nth-child(even)>*{background:var(--surface-2);}
@@ -238,7 +239,8 @@ body:has(.focus-nav) .watch-modes .btn{min-width:44px;}
 .watch-compact-table tr>:first-child{position:sticky;left:0;z-index:1;width:130px;text-align:left;border-right:1px solid var(--border);}
 .watch-compact-table thead tr>:first-child{z-index:3;}
 .watch-compact-table tr>:nth-child(2){width:110px;}.watch-compact-table tr>:nth-child(3){width:280px;text-align:left;}
-.watch-compact-table tr>:nth-child(4){width:90px;}
+.watch-compact-table tr>.watch-cap-col{width:90px;}
+.watch-compact-table tr>.watch-view-col,.watch-compact-table tr>.watch-view-cell{width:230px;text-align:left;}
 .watch-compact-table tr:last-child td,.watch-compact-table tr:last-child th{border-bottom:0;}
 .watch-compact-table .stock-name{max-width:100%;min-height:44px;gap:2px;}
 .watch-compact-table .stock-name strong{font-size:15px;}
@@ -272,13 +274,14 @@ body:has(.focus-nav) .watch-modes .btn{min-width:44px;}
 .watch-inline-reading .stock-open{font-size:11px;}
 @media(max-width:600px){
  .watch-table-scroll{scroll-padding-left:114px;border-radius:10px;}
- .watch-compact-table{min-width:1640px;font-size:11px;}
+ .watch-compact-table{min-width:2060px;font-size:11px;}
  .watch-compact-table tr>[data-signal=insider]{width:132px;}.watch-compact-table tr>[data-signal=funds]{width:146px;}.watch-compact-table tr>[data-signal=walls]{width:118px;}.watch-compact-table tr>[data-signal=support]{width:136px;}
  .watch-signal-help{width:20px;height:20px;font-size:10px;right:2px;}
  .watch-compact-table th,.watch-compact-table td{padding:6px 8px;}
  .watch-compact-table thead th{height:44px;padding:0 6px;font-size:10px;}
  .watch-compact-table tr>:first-child{width:104px;}
  .watch-compact-table tr>:nth-child(2){width:88px;}.watch-compact-table tr>:nth-child(3){width:min(240px,calc(100vw - 140px));}
+ .watch-compact-table tr>.watch-view-col,.watch-compact-table tr>.watch-view-cell{width:min(210px,calc(100vw - 150px));}
  .watch-compact-table .watch-company{max-width:86px;}
  .watch-compact-table .stock-name strong{font-size:13px;}.watch-compact-table .watch-quote-cell>strong{font-size:12px;}
  .watch-compact-table .watch-change{font-size:11px;}
@@ -674,6 +677,18 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
 .stock-view.is-right .stock-view-label{color:var(--blue);background:color-mix(in srgb,var(--blue) 16%,transparent);}
 .stock-view.is-left .stock-view-label{color:var(--yellow);background:color-mix(in srgb,var(--yellow) 18%,transparent);}
 .stock-views-note{margin:0;font-size:10px;}
+/* The verdict line on top of the Overview cell, and the two sides as their own table cells. */
+.stock-overall{margin:0 0 8px;}.stock-overall-text{margin:0;font-size:12px;line-height:1.7;font-weight:600;}
+.stock-overall-date,.watch-view-date{margin:4px 0 0;font-size:10px;line-height:1.5;}
+.stock-overall.is-stale .stock-overall-text{font-weight:500;}
+.watch-view{margin:0;padding:6px 8px;border-left:3px solid var(--border);border-radius:0 6px 6px 0;background:color-mix(in srgb,var(--border) 40%,transparent);}
+.watch-view.is-right{border-left-color:var(--blue);background:color-mix(in srgb,var(--blue) 9%,transparent);}
+.watch-view.is-left{border-left-color:var(--yellow);background:color-mix(in srgb,var(--yellow) 10%,transparent);}
+.watch-view-text{margin:0;font-size:12px;line-height:1.65;}
+.watch-view-pending{margin:0;font-size:11px;line-height:1.5;}
+.watch-compact-table th.watch-view-col.is-left,.watch-compact-table th.watch-view-col.is-right{padding-left:14px;}
+.watch-compact-table th.watch-view-col.is-left{box-shadow:inset 3px 0 0 var(--yellow);}.watch-compact-table th.watch-view-col.is-right{box-shadow:inset 3px 0 0 var(--blue);}
+@media(max-width:600px){.watch-view-text,.stock-overall-text{font-size:11px;line-height:1.55;}.watch-view{padding:5px 6px;}}
 .stock-views + .stock-digest{color:var(--muted);}
 
 /* Overview flashcards (2026-09-22): one card at a time, arrows and dots, keys and swipe. */
