@@ -4595,7 +4595,7 @@
   "app.today.fng_year": "一年前",
   "app.watch.view_right": "右侧 · 趋势视角",
   "app.watch.view_left": "左侧 · 长线视角",
-  "app.watch.views_note": "根据本行事实在收盘后写成的两种解读，只是描述，不是建议。",
+  "app.watch.views_note": "根据本行事实写成的两种解读；价格换到某个位置的另一侧、墙或均线刷新、新的申报或记录出现时重写。只是描述，不是建议。",
   "app.watch.card_note": "今日点评",
   "app.watch.card_digest": "信号摘要",
   "app.watch.card_summary": "综合摘要",
@@ -4604,8 +4604,9 @@
   "app.watch.deck_next": "下一张",
   "app.watch.col_left": "左侧",
   "app.watch.col_right": "右侧",
-  "app.watch.view_pending": "收盘后由本行事实写成，稍后出现。",
+  "app.watch.view_pending": "按本行事实写成，稍后出现。",
   "app.watch.view_as_of": "{date} 的解读；此后事实已更新，新的一版稍后替换。",
   "app.focus.discover_research_note": "最近 7 天收录的作者观点和记录，按时间倒序；每条都保留作者、立场和出处。",
-  "app.watch.col_overall": "总评"
+  "app.watch.col_overall": "总评",
+  "app.watch.view_written": "{time} 写成"
 }
