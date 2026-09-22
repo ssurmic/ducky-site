@@ -1,5 +1,26 @@
 # Change log
 
+## Coloured digest values, liquidity score explained, Today kept to reviewed summaries, since-then moves, live Discover · 2026-09-21
+
+Owner review round three (site PR #78, main `9c32feba`, Pages deployment `90a60bee`). The Overview digest now carries the
+colour of each value's column: today's change green/red, YTD by sign, the distance under the 52-week high red, insider net
+buying green and net selling orange, fund adds green and trims orange, politician buys green and sales orange, the put wall
+as a green chip and the call wall as an orange chip (`watchlist-digest.js` v3: language-neutral parts `{key, vars}` with raw
+numbers, format names and tones; a digest saved on the projection row — `row.digest.parts`, produced once per session by the
+backend — wins over the browser pass, and unknown keys or copy in a stored document are dropped). The collapsed preview keeps
+the colours. Option-wall rows read left to right inside the clipped cell (158 px column) so the CALL/PUT chip and the price
+always show; the distance is short with the full phrase and expiry in the title. Today: the USD liquidity tile is coloured
+by its own funding-score band (60+ loose, 40–60 mixed/amber, under 40 tight) and a `?` explains the formula (SOFR−IORB, SOFR
+tail, standing-repo take-up, 65-session net-liquidity change, the 40/60 bands, the 60/40 combined backdrop); only reviewed
+summaries earn a card in "Latest stock analyses" (recent 30 days first, older behind "Show all") and the stat counts reviewed
+ones; Fear & Greed and the VIX term ratio render from the refreshed macro document. Signal cards show the move from each
+record's reference price (a filing's average, the quarter-end mark — a 13F reports no trade price — the trade-date close) to
+the last price. Discover/Explore starters come from the saved Reddit ranking ("Most discussed right now"), hidden when the
+ranking cannot be read, replacing the three fixed example cards. 790 node tests, copy lint and link check green; verified in
+the QA fixture frame (zh dark, en light, 1440 px).
+
+The previous entry (digest v2, PR #77) was released as main `7df32f09` → Pages deployment `7f978fcd`.
+
 ## Watchlist digest v2: today's close, the price against its references, volatility, then activity · 2026-09-21
 
 Owner review of the digest: it should say when a stock sits near a wall or support, how it is trading against
