@@ -237,9 +237,12 @@ export function overviewView(rows, options) {
         const q=displayQuote(row),shown=q||row;
         const reading=renderResearch(row.ticker),preview=reading.querySelector('.stock-one-sentence')?.firstChild?.textContent||reading.querySelector('p')?.textContent||'';
         const analysisDate=reading.querySelector('.stock-analysis-date')?.textContent;
+        // A digest preview keeps its coloured values; a reviewed summary previews as plain text.
+        const digestLine=reading.querySelector('.stock-digest');
+        const previewNode=digestLine?el('span.watch-reading-preview',...[...digestLine.childNodes].map(n=>n.cloneNode(true))):el('span.watch-reading-preview',preview);
         const overview=el('details.watch-inline-reading',{'data-reading-key':row.ticker+':overview'},
           el('summary',{'data-reading-key':row.ticker+':overview-toggle'},el('span',
-            el('span.watch-reading-preview',preview),analysisDate?el('small.watch-reading-date',analysisDate):null)),reading,
+            previewNode,analysisDate?el('small.watch-reading-date',analysisDate):null)),reading,
           el('a.stock-open',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':open'},s('focus.open_stock')+' →'));
         body.append(el('tr',{'data-reading-anchor':row.ticker,class:selection?.checked.has(row.ticker)?'is-selected':''},
           el('th',{scope:'row'},selection?selectBox(row.ticker):null,el('a.stock-name',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':name'},el('strong',row.ticker),el('span.watch-company',row.company||row.ticker)),
@@ -247,7 +250,7 @@ export function overviewView(rows, options) {
           el('td.watch-quote-cell',el('strong.mono',px(shown.price)),el('span.watch-change',{class:'watch-'+changeClass(shown.change_pct)},pct(shown.change_pct,2)),
             q?quoteNote(q,{received:quoteReceived}):el('small.muted',row.price_session||session||'—')),
           el('td.watch-overview-cell',overview),el('td.mono',row.security_type==='ETF'?'ETF':capText(row.market_cap)),
-          ...signalKeys.map((key,i)=>el('td.watch-signal-cell',{class:i?'':'is-first','data-signal':key},signalCell(key,signals?.get(row.ticker),{ticker:row.ticker}))),
+          ...signalKeys.map((key,i)=>el('td.watch-signal-cell',{class:i?'':'is-first','data-signal':key},signalCell(key,signals?.get(row.ticker),{ticker:row.ticker,price:Number.isFinite(shown.price)&&shown.price>0?shown.price:null,session:row.price_session||''}))),
           ...metricKeys.map(key=>el('td',metricCell(key,row.metrics?.[key])))));
       }
       table.append(body);root.append(el('div.watch-table-scroll',{tabindex:0,'aria-label':s('watch.display')},table),metricMethods(filtered));
