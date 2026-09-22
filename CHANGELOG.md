@@ -1,5 +1,17 @@
 # Change log
 
+## Half-dials for Fear & Greed and USD liquidity; left-side and right-side readings under the digest · 2026-09-21
+
+Owner review round four (site PR #80, main `657d96d1`, Pages deployment `eeafe2b6`). The Fear & Greed tile is a CNN-style
+half-dial in the app's own colour tokens (`today-gauge.js`, pure SVG): CNN's five bands (extreme fear, fear, neutral, greed,
+extreme greed), the active band lit, a needle at the score and the number inside, with the earlier readings CNN lists
+(previous close, 1 week, 1 month, 1 year) under it, each with its band colour. The USD liquidity tile gets the same dial
+with the 40/60 bands that already colour it (tight, mixed, loose). No reading, no dial. The expanded Overview shows two
+short readings under the digest when the projection row carries them ready for the same session ("右侧 · 趋势视角",
+"左侧 · 长线视角"; backend `stock_views`, produced once per session on the local model lane), with a note that they are
+descriptions written from the row's facts, not advice. 792 node tests and the copy lint green; verified in the QA fixture
+frame (zh dark, 1440 px).
+
 ## Coloured digest values, liquidity score explained, Today kept to reviewed summaries, since-then moves, live Discover · 2026-09-21
 
 Owner review round three (site PR #78, main `9c32feba`, Pages deployment `90a60bee`). The Overview digest now carries the
