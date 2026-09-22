@@ -220,7 +220,8 @@ test('the table gives each side its own column and the Overview cell opens with 
  assert.equal(viewCell(stale,'left').className,'watch-view is-left');assert.match(viewCell(stale,'right').querySelector('.watch-view-date').textContent,/2026-09-21/);
  assert.match(viewCell(views,'right').querySelector('.watch-view-date').textContent,/^written /);
  const {writtenAt}=await import('../public/js/app/stock-reading.js');
- assert.match(writtenAt(views,new Date('2026-09-21T12:00:00-07:00')),/\d:\d\d/);assert.match(writtenAt(views,new Date('2026-09-25T12:00:00-07:00')),/Sep 21/);
+ // Same day: clock time only; another day: month and day too (the runner's time zone decides which day).
+ const at=new Date(views.generated_at);assert.match(writtenAt(views,at),/^\d{1,2}:\d\d(?: [AP]M)?$/);assert.match(writtenAt(views,new Date(at.getTime()+4*864e5)),/^Sep \d{1,2}, \d{1,2}:\d\d(?: [AP]M)?$/);
  assert.equal(writtenAt({session:'2026-09-21'}),'2026-09-21');
  assert.equal(viewCell(null,'left').className,'small muted watch-view-pending');assert.match(viewCell(null,'left').textContent,/coming up/);
  // A reviewed summary without a verdict shows no overall line and no empty placeholder.
