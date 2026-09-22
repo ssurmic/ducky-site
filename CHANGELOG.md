@@ -1,5 +1,26 @@
 # Change log
 
+## Left-side and right-side columns; the Overview is the verdict; Discover leads with who said what · 2026-09-22
+
+Owner review round five (site PR #86, main `29e7c402`, Pages deployment `38661773`; PR #87, main `92d23f3e`, deployment `41d4e6a7`, keeps the view-mode button labelled 概览 / Overview and puts 总评 / Overall on the column header alone). The compact watchlist table gains two
+columns, 左侧 (amber) and 右侧 (blue), holding the plain-language readings written after the close from each row's own
+facts (`row.digest.views.left` / `.right`; `stock-reading.js: viewCell`). Before the first reading a cell says one is coming;
+a reading whose facts moved since it was written stays on the row with its own date instead of vanishing (backend
+`stock-views/2.5`, ducky-bot PR #187: a failed rewrite keeps the last good reading and records only the attempt).
+
+The Overview column is now 总评 / Overall: its preview and first line is the reading's one-sentence verdict
+(`views.overall`), which opens with the newest creator view or record and says where the stock sits; the reviewed summary
+and the signal digest stay beneath it as cards. Without a verdict the cell previews as before (digest line, or the reviewed
+sentence), so it is never empty. In the table the note card leaves the flashcard deck because the sides have their own
+cells; the reading list keeps the deck.
+
+Discover: the live Reddit ranking first, then "who said what this week" (the 7-day research feed, each record with its
+author, stance and source) ahead of the tools; a ranked stock that already has a written verdict shows that sentence under
+its count (`/radar/social.json` items carry `overall` when a reading exists; nothing is invented for an unwatched stock).
+
+Not built, by the product's own rule: explicit trade instructions (支持买入, a strike and term to buy, a target). Copy lint
+and the backend's banned-word checks refuse them; the readings state facts and what each side watches instead.
+
 ## Today footer names each source's own date · 2026-09-21
 
 Owner caught the footer saying readings ran through 2026-09-18 on Monday evening 2026-09-21. Two causes: the backend macro
