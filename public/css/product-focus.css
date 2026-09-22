@@ -194,6 +194,7 @@ body:has(.focus-nav) .watch-modes .btn{min-width:44px;}
  .app-nav.focus-nav>a{padding-inline:3px;gap:3px;font-size:10px;min-width:0;}
  .research-example-grid{grid-template-columns:1fr;gap:8px;}
  .research-example{display:grid;grid-template-columns:24px minmax(0,1fr);gap:6px 12px;padding:14px 32px 14px 14px;}
+ .research-example-overall{grid-column:2;margin-top:0;}
  .research-example>.app-icon{grid-row:1/3;}.research-example strong{font-size:14px;}
  .research-example .small{grid-column:2;font-size:11px;}
  .research-examples{margin:20px 0;}
