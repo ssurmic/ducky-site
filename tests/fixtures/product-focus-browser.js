@@ -54,7 +54,16 @@ const wallBriefs={items:[
  {ticker:'TSLA',status:'ready',evidence:[]},
  {ticker:'AMD',status:'pending'}
 ]};
-const price=(ticker,i=0)=>({ticker,company:{NVDA:'NVIDIA Corporation',AVGO:'Broadcom Inc.',AMD:'Advanced Micro Devices, Inc.',GLW:'Corning Incorporated'}[ticker]||ticker,
+// Readings for the table's verdict and side columns: NVDA current, AMD written for older facts (stale), others pending.
+const READINGS={NVDA:{status:'ready',session:'2026-09-09',generated_at:'2026-09-09T23:40:00-07:00',stale:false,
+  overall:{zh:'总的来说，Meta Muse 发布后英伟达贴着 240 的看涨墙之下收盘，内部人六月减持 4.1 亿美元后没有新动作。',en:'Overall, after the Meta Muse launch NVIDIA closed just under the call wall at 240, with no insider move since the $410 million of June sales.'},
+  right:{zh:'趋势派会看收盘能否重新站上 240 的看涨墙，站上去就顺势，站不上去就等。',en:'Trend followers watch whether the close reclaims the call wall at 240; above it they follow, below it they wait.'},
+  left:{zh:'长线加仓派会看回调是否在 221 的看跌墙附近企稳，同时盯着内部人是否继续净卖出。',en:'Long-term accumulators watch whether a pullback settles near the put wall at 221 while insiders keep net selling.'}},
+ AMD:{status:'ready',session:'2026-09-08',generated_at:'2026-09-08T23:40:00-07:00',stale:true,
+  overall:{zh:'总的来说，AMD 在财报后回落到 20 日区间中部，机构上季度净增持。',en:'Overall, AMD has drifted back to the middle of its 20-day range after earnings, with funds net adding last quarter.'},
+  right:{zh:'趋势派会看 20 日区间上沿能否收复。',en:'Trend followers watch whether the top of the 20-day range is recovered.'},
+  left:{zh:'长线加仓派会看回落是否停在区间下沿附近。',en:'Long-term accumulators watch whether the slide stops near the bottom of the range.'}}};
+const price=(ticker,i=0)=>({ticker,...(READINGS[ticker]?{digest:{views:READINGS[ticker]}}:{}),company:{NVDA:'NVIDIA Corporation',AVGO:'Broadcom Inc.',AMD:'Advanced Micro Devices, Inc.',GLW:'Corning Incorporated'}[ticker]||ticker,
  ...(['minute-quotes','saved-quotes'].includes(mode)?{quote:{price:218.25+i*23,change_pct:-2.42,status:mode==='saved-quotes'?'stale':'current',quote_at:new Date(Date.now()-(mode==='saved-quotes'?600000:1000)).toISOString(),provider:'yahoo',feed:'yahoo_regular_session'}}:{}),
  price:223.67+i*23,price_status:'ready',price_session:'2026-09-09',change_pct:i%2?3.2:-.91,market_cap:(5-i)*1e12,metrics:{ytd:{status:'ready',value:[20.1,-2,0,-12][i]},drawdown:{status:'ready',value:-5-i*5},relative:{status:'ready',value:-7+i*2,symbols:['SPY']},iv_hv:{status:i===2?'missing':'ready',value:i===2?null:.71+i*.25},attention:{status:'ready',value:75+i*5},degen:{status:'ready',value:48+i*4}},
  ...(mode==='wall-consistency'?{price:wallPrices[ticker],price_session:'2026-09-11',company:{NVDA:'NVIDIA Corporation',COIN:'Coinbase Global, Inc.',AVGO:'Broadcom Inc.',TSLA:'Tesla, Inc.',AMD:'Advanced Micro Devices, Inc.'}[ticker]}:{})});
@@ -81,6 +90,9 @@ window.fetch=async(input,options={})=>{
  }
  if(mode==='failure'&&path.includes('research'))return Response.json({error:'fixture_unavailable'},{status:503});
  if(mode==='wall-consistency'&&path==='/briefing/stocks')return Response.json(wallBriefs);
+ if(path==='/radar/social.json')return Response.json({status:'ready',collected_at:new Date(Date.now()-1800000).toISOString(),items:[
+  {ticker:'NVDA',rank:1,mentions:1240,change_pct:35,overall:READINGS.NVDA.overall},{ticker:'AMD',rank:2,mentions:910,change_pct:-10,overall:READINGS.AMD.overall},
+  {ticker:'GLW',rank:3,mentions:302,change_pct:120},{ticker:'AVGO',rank:4,mentions:180}]});
  if(path==='/watchlist')return Response.json({cap:50,items:watches.map(ticker=>({ticker})),overview:{items:watches.map(price),session:mode==='wall-consistency'?'2026-09-11':'2026-09-09'}});
  if(path==='/me/stock-research'){
   researchReads++;

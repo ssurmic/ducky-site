@@ -4142,7 +4142,7 @@
   "app.watch.ytd_adjustment_pending": "Adjusted prices awaiting update",
   "app.nav.today": "Today",
   "app.nav.explore": "Explore",
-  "app.watch.view_reading": "Overview",
+  "app.watch.view_reading": "Overall",
   "app.focus.today": "Today",
   "app.focus.today_intro": "Start with what changed for your stocks.",
   "app.focus.explore": "Explore",
@@ -4201,7 +4201,7 @@
   "app.focus.explore_company_events": "Radar",
   "app.focus.explore_company_events_note": "Look up company filings, insider trades and past disclosures.",
   "app.focus.more_tools": "More research tools",
-  "app.focus.discover_research": "Recently added research",
+  "app.focus.discover_research": "Who said what this week",
   "app.focus.chart_missing": "Not enough historical prices are available for a chart.",
   "app.focus.chart_label": "Recorded historical closing prices",
   "app.focus.inspect_close": "Choose a date to inspect its close",
@@ -4601,5 +4601,10 @@
   "app.watch.card_summary": "Reviewed summary",
   "app.watch.deck_label": "Overview cards: use the arrows, the left and right keys or a swipe",
   "app.watch.deck_prev": "Previous card",
-  "app.watch.deck_next": "Next card"
+  "app.watch.deck_next": "Next card",
+  "app.watch.col_left": "Left side",
+  "app.watch.col_right": "Right side",
+  "app.watch.view_pending": "Written from this row's facts after the close; coming up.",
+  "app.watch.view_as_of": "Reading of {date}; the facts have moved since and a new one follows.",
+  "app.focus.discover_research_note": "Creator views and records added in the last 7 days, newest first. Each keeps its author, stance and source."
 }

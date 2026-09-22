@@ -4142,7 +4142,7 @@
   "app.watch.ytd_adjustment_pending": "复权数据待更新",
   "app.nav.today": "今日",
   "app.nav.explore": "发现",
-  "app.watch.view_reading": "概览",
+  "app.watch.view_reading": "总评",
   "app.focus.today": "今日",
   "app.focus.today_intro": "先看与你的股票有关的新变化。",
   "app.focus.explore": "发现",
@@ -4201,7 +4201,7 @@
   "app.focus.explore_company_events": "雷达",
   "app.focus.explore_company_events_note": "查看公司公告、内部人交易与历史记录。",
   "app.focus.more_tools": "更多研究工具",
-  "app.focus.discover_research": "近期收录的研究",
+  "app.focus.discover_research": "这周谁在说什么",
   "app.focus.chart_missing": "暂时没有足够的历史价格来画图。",
   "app.focus.chart_label": "已保存的历史收盘价",
   "app.focus.inspect_close": "选择日期查看收盘价",
@@ -4601,5 +4601,10 @@
   "app.watch.card_summary": "综合摘要",
   "app.watch.deck_label": "概览卡片：用箭头、左右键或左右滑动切换",
   "app.watch.deck_prev": "上一张",
-  "app.watch.deck_next": "下一张"
+  "app.watch.deck_next": "下一张",
+  "app.watch.col_left": "左侧",
+  "app.watch.col_right": "右侧",
+  "app.watch.view_pending": "收盘后由本行事实写成，稍后出现。",
+  "app.watch.view_as_of": "{date} 的解读；此后事实已更新，新的一版稍后替换。",
+  "app.focus.discover_research_note": "最近 7 天收录的作者观点和记录，按时间倒序；每条都保留作者、立场和出处。"
 }
