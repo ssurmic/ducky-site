@@ -39,6 +39,13 @@ export function localTime(value){
     {year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}).format(date):'—';
 }
 const asOf=views=>typeof views?.generated_at==='string'&&/^\d{4}-\d{2}-\d{2}/.test(views.generated_at)?views.generated_at.slice(0,10):views?.session||'';
+// When the reading was written, short: today's readings show the clock time, older ones the day.
+export function writtenAt(views,now=new Date()){
+  const at=new Date(views?.generated_at||'');
+  if(!Number.isFinite(at.getTime()))return views?.session||'';
+  const sameDay=at.toDateString()===now.toDateString();
+  return new Intl.DateTimeFormat(LANG==='en'?'en-US':'zh-CN',sameDay?{hour:'2-digit',minute:'2-digit'}:{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(at);
+}
 // The one-line verdict (总评): the newest creator view or record first, then where the stock sits.
 // It never goes blank once written: a reading whose facts have moved on keeps its own date under it.
 export function overallLine(views){
@@ -53,7 +60,7 @@ export function viewCell(views,side){
   const text=pick(views?.[side]);
   if(!text)return el('p.small.muted.watch-view-pending',s('watch.view_pending'));
   return el('div.watch-view',{class:'is-'+side},el('p.watch-view-text',text),
-    views.stale?el('p.small.muted.watch-view-date',s('watch.view_as_of',{date:asOf(views)})):null);
+    el('p.small.muted.watch-view-date',s(views.stale?'watch.view_as_of':'watch.view_written',views.stale?{date:asOf(views)}:{time:writtenAt(views)})));
 }
 // The day's note: two readings written after the close from the row's facts, or nothing at all.
 export function noteCard(views){

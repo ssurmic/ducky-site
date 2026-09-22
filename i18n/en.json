@@ -4595,7 +4595,7 @@
   "app.today.fng_year": "1 year ago",
   "app.watch.view_right": "Right side · trend view",
   "app.watch.view_left": "Left side · long-term view",
-  "app.watch.views_note": "Two readings written from this row's facts after the close. Descriptions, not advice.",
+  "app.watch.views_note": "Two readings written from this row's facts; rewritten when the price changes side of a level, walls or averages refresh, or a filing or record arrives. Descriptions, not advice.",
   "app.watch.card_note": "Today's note",
   "app.watch.card_digest": "Signal digest",
   "app.watch.card_summary": "Reviewed summary",
@@ -4604,8 +4604,9 @@
   "app.watch.deck_next": "Next card",
   "app.watch.col_left": "Left side",
   "app.watch.col_right": "Right side",
-  "app.watch.view_pending": "Written from this row's facts after the close; coming up.",
+  "app.watch.view_pending": "Written from this row's facts; coming up.",
   "app.watch.view_as_of": "Reading of {date}; the facts have moved since and a new one follows.",
   "app.focus.discover_research_note": "Creator views and records added in the last 7 days, newest first. Each keeps its author, stance and source.",
-  "app.watch.col_overall": "Overall"
+  "app.watch.col_overall": "Overall",
+  "app.watch.view_written": "written {time}"
 }

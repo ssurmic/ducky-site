@@ -218,8 +218,12 @@ test('the table gives each side its own column and the Overview cell opens with 
  const stale={...views,stale:true};
  assert.match(overallLine(stale).querySelector('.stock-overall-date').textContent,/Reading of 2026-09-21; the facts have moved/);
  assert.equal(viewCell(stale,'left').className,'watch-view is-left');assert.match(viewCell(stale,'right').querySelector('.watch-view-date').textContent,/2026-09-21/);
- assert.equal(viewCell(views,'right').querySelector('.watch-view-date'),null);
- assert.equal(viewCell(null,'left').className,'small muted watch-view-pending');assert.match(viewCell(null,'left').textContent,/after the close/);
+ assert.match(viewCell(views,'right').querySelector('.watch-view-date').textContent,/^written /);
+ const {writtenAt}=await import('../public/js/app/stock-reading.js');
+ // Same day: clock time only; another day: month and day too (the runner's time zone decides which day).
+ const at=new Date(views.generated_at);assert.match(writtenAt(views,at),/^\d{1,2}:\d\d(?: [AP]M)?$/);assert.match(writtenAt(views,new Date(at.getTime()+4*864e5)),/^Sep \d{1,2}, \d{1,2}:\d\d(?: [AP]M)?$/);
+ assert.equal(writtenAt({session:'2026-09-21'}),'2026-09-21');
+ assert.equal(viewCell(null,'left').className,'small muted watch-view-pending');assert.match(viewCell(null,'left').textContent,/coming up/);
  // A reviewed summary without a verdict shows no overall line and no empty placeholder.
  const ready={ticker:'COIN',status:'ready',as_of:'2026-09-19T22:00:00Z',overview:{en:'A reviewed line.',zh:'一句。',citations:['s1']},sources:[{id:'s1',title:{en:'T',zh:'T'}}]};
  assert.equal(reading(ready,{views:{...views,overall:null},columns:true}).querySelector('.stock-overall'),null);
@@ -238,6 +242,6 @@ test('the table gives each side its own column and the Overview cell opens with 
  assert.ok(first.querySelector('td.watch-cap-col'));
  const second=root.querySelectorAll('tbody tr')[1];
  assert.equal(second.querySelectorAll('.watch-view-pending').length,2);assert.ok(second.querySelector('.watch-reading-preview .stock-digest-value'));
- for(const key of ['app.watch.col_left','app.watch.col_right','app.watch.col_overall','app.watch.view_pending','app.watch.view_as_of'])assert.ok(zh[key]&&!/[㐀-鿿]/.test(copy[key]),key);
+ for(const key of ['app.watch.col_left','app.watch.col_right','app.watch.col_overall','app.watch.view_pending','app.watch.view_as_of','app.watch.view_written'])assert.ok(zh[key]&&!/[㐀-鿿]/.test(copy[key]),key);
  assert.equal(zh['app.watch.col_overall'],'总评');assert.equal(zh['app.watch.view_reading'],'概览');
 });
