@@ -73,7 +73,11 @@ export function macroStrip(doc){
       dial?el('div.today-gauge-wrap',dial,el('span.today-gauge-word',tile.gauge.word)):el('strong.today-macro-value.mono',tile.value,tile.unit?el('span.today-macro-unit',tile.unit):null),
       el('span.today-macro-note',tile.note),historyList(tile.history)));
   }
-  box.append(grid,el('p.small.muted.today-macro-source',s('today.macro_source',{date:doc.as_of||'—'})+(doc.status==='stale'?' · '+s('macro.stale'):'')));
+  // Each source carries its own clock: the FRED / New York Fed panel ends at the last session it
+  // covers, the CNN index at the minute it was read, so the footer names both.
+  const fngAt=Date.parse(doc.fear_greed?.as_of||'');
+  const fng=Number.isFinite(fngAt)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).format(fngAt):'—';
+  box.append(grid,el('p.small.muted.today-macro-source',s('today.macro_source',{date:doc.as_of||'—',fng})+(doc.status==='stale'?' · '+s('macro.stale'):'')));
   return box;
 }
 
