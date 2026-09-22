@@ -228,7 +228,7 @@ export function overviewView(rows, options) {
         el('button.watch-sort',{type:'button','data-sort':key,'data-reading-key':'sort:'+key,onclick:()=>onSort?.(key),...(full&&full!==label?{'aria-label':full,title:full}:{})},
           el('span.watch-sort-label',label),el('span.watch-sort-icon',{'aria-hidden':'true'})));
       const table=el('table.watch-compact-table',el('thead',el('tr',sortHeader('ticker',s('watch.stock')),
-        sortHeader('change_pct',s('watch.metric_quote')),el('th',{scope:'col'},s('watch.view_reading')),
+        sortHeader('change_pct',s('watch.metric_quote')),el('th',{scope:'col'},s('watch.col_overall')),
         el('th.watch-view-col.is-left',{scope:'col'},s('watch.col_left')),el('th.watch-view-col.is-right',{scope:'col'},s('watch.col_right')),
         Object.assign(sortHeader('market_cap',s('watch.cap')),{className:'watch-cap-col'}),...signalKeys.map((key,i)=>{const th=sortHeader(key,signalLabel(key));th.classList.add('watch-signal-col');th.dataset.signal=key;if(!i)th.classList.add('is-first');
           th.append(signalHelpButton(key,signals?.meta||{}));return th;}),

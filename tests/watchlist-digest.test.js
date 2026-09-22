@@ -238,6 +238,6 @@ test('the table gives each side its own column and the Overview cell opens with 
  assert.ok(first.querySelector('td.watch-cap-col'));
  const second=root.querySelectorAll('tbody tr')[1];
  assert.equal(second.querySelectorAll('.watch-view-pending').length,2);assert.ok(second.querySelector('.watch-reading-preview .stock-digest-value'));
- for(const key of ['app.watch.col_left','app.watch.col_right','app.watch.view_pending','app.watch.view_as_of','app.watch.view_reading'])assert.ok(zh[key]&&!/[㐀-鿿]/.test(copy[key]),key);
- assert.equal(zh['app.watch.view_reading'],'总评');
+ for(const key of ['app.watch.col_left','app.watch.col_right','app.watch.col_overall','app.watch.view_pending','app.watch.view_as_of'])assert.ok(zh[key]&&!/[㐀-鿿]/.test(copy[key]),key);
+ assert.equal(zh['app.watch.col_overall'],'总评');assert.equal(zh['app.watch.view_reading'],'概览');
 });
