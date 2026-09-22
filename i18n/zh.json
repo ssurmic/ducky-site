@@ -4587,5 +4587,13 @@
   "app.focus.discover_mentions": "24 小时提及 {n}",
   "app.focus.discover_change": "较前一日 {n}",
   "app.watch.signal_above_short": "高于 {n}%",
-  "app.watch.signal_below_short": "低于 {n}%"
+  "app.watch.signal_below_short": "低于 {n}%",
+  "app.today.gauge_label": "{name} 仪表，{score}/100，{band}",
+  "app.today.fng_prev_close": "前一收盘",
+  "app.today.fng_week": "一周前",
+  "app.today.fng_month": "一个月前",
+  "app.today.fng_year": "一年前",
+  "app.watch.view_right": "右侧 · 趋势视角",
+  "app.watch.view_left": "左侧 · 长线视角",
+  "app.watch.views_note": "根据本行事实在收盘后写成的两种解读，只是描述，不是建议。"
 }

@@ -4587,5 +4587,13 @@
   "app.focus.discover_mentions": "{n} mentions · 24h",
   "app.focus.discover_change": "{n} vs the day before",
   "app.watch.signal_above_short": "{n}% above",
-  "app.watch.signal_below_short": "{n}% below"
+  "app.watch.signal_below_short": "{n}% below",
+  "app.today.gauge_label": "{name} gauge, {score} of 100, {band}",
+  "app.today.fng_prev_close": "Previous close",
+  "app.today.fng_week": "1 week ago",
+  "app.today.fng_month": "1 month ago",
+  "app.today.fng_year": "1 year ago",
+  "app.watch.view_right": "Right side · trend view",
+  "app.watch.view_left": "Left side · long-term view",
+  "app.watch.views_note": "Two readings written from this row's facts after the close. Descriptions, not advice."
 }

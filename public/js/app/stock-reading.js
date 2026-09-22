@@ -42,7 +42,7 @@ export function hasSummary(item){
   const refs=item?.overview?.citations;
   return !!(['ready','refresh_pending'].includes(item?.status)&&pick(item?.overview)&&Array.isArray(refs)&&refs.length&&refs.every(id=>item.sources?.some(n=>n.id===id)));
 }
-export function reading(item,{citations=true,digest=''}={}){
+export function reading(item,{citations=true,digest='',views=null}={}){
   const accepted=hasSummary(item);
   const wrap=el('div.stock-reading');
   if(!accepted){
@@ -53,6 +53,11 @@ export function reading(item,{citations=true,digest=''}={}){
     const line=Array.isArray(digest)?digest:digest?[digest]:[];
     if(line.length){
       wrap.append(el('p.stock-digest',...line),el('p.small.muted.stock-digest-note',s(state?'focus.'+state:'watch.digest_note')));
+      // Two short readings written after the close from the same facts: a trend view and a long-term view.
+      if(views&&pick(views.right)&&pick(views.left))wrap.append(el('div.stock-views',
+        el('p.stock-view',el('span.stock-view-label',s('watch.view_right')),pick(views.right)),
+        el('p.stock-view',el('span.stock-view-label',s('watch.view_left')),pick(views.left)),
+        el('p.small.muted.stock-views-note',s('watch.views_note'))));
       return wrap;
     }
     wrap.append(el('p.muted',s(state?'focus.'+state:item?.records===0?'focus.no_research':'focus.analysis_waiting')));
@@ -102,10 +107,10 @@ export function compactPrice(row){
     el('p.small',fresh.provider+' · '+fresh.feed),el('p.small',s('focus.quote_date',{date:dateTime(fresh.quote_at)}))));
   return wrap;
 }
-export function researchRow(ticker,row,item,{digest=''}={}){
+export function researchRow(ticker,row,item,{digest='',views=null}={}){
   return el('article.stock-list-row',{'data-reading-anchor':ticker},
     el('header',el('a.stock-name',{href:stockHref(ticker),'data-reading-key':`${ticker}:name`},el('strong',ticker),el('span.muted',row?.company||'')),compactPrice(row)),
-    reading({...item,ticker},{digest}),el('a.stock-open',{href:'#/evidence/'+encodeURIComponent(ticker),'data-reading-key':`${ticker}:map`,'data-tour':'stock.map','data-ticker':ticker},s('watch.open_map')+' →'),el('a.stock-open',{href:stockHref(ticker),'data-reading-key':`${ticker}:open`},s('focus.open_stock')+' →'));
+    reading({...item,ticker},{digest,views}),el('a.stock-open',{href:'#/evidence/'+encodeURIComponent(ticker),'data-reading-key':`${ticker}:map`,'data-tour':'stock.map','data-ticker':ticker},s('watch.open_map')+' →'),el('a.stock-open',{href:stockHref(ticker),'data-reading-key':`${ticker}:open`},s('focus.open_stock')+' →'));
 }
 
 export function dayWindow(now=new Date(),days=1){

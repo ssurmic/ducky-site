@@ -631,3 +631,42 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
 .watch-compact-table .watch-wall-kind{flex:none;}
 .watch-compact-table .watch-wall-gap{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:left;}
 @media(max-width:600px){.watch-compact-table tr>[data-signal=walls]{width:150px;}}
+
+/* Half-dials for the 0–100 readings on Today (Fear & Greed, USD liquidity): the app's own tokens,
+   the active band lit, a needle at the score (2026-09-21). */
+.today-macro-tile.has-gauge{gap:2px;}
+.today-gauge-wrap{display:grid;justify-items:center;gap:0;}
+.today-gauge{width:100%;max-width:210px;height:auto;display:block;}
+.today-gauge-band{fill:color-mix(in srgb,var(--border) 70%,transparent);stroke:var(--surface);stroke-width:1.5;}
+.today-gauge-band.is-up{fill:color-mix(in srgb,var(--green) 16%,transparent);}
+.today-gauge-band.is-down{fill:color-mix(in srgb,var(--red) 16%,transparent);}
+.today-gauge-band.is-sell{fill:color-mix(in srgb,var(--orange) 16%,transparent);}
+.today-gauge-band.is-mid{fill:color-mix(in srgb,var(--yellow) 16%,transparent);}
+.today-gauge-band.is-flat{fill:color-mix(in srgb,var(--muted) 14%,transparent);}
+.today-gauge-band.is-active{stroke-width:2;}
+.today-gauge-band.is-active.is-up{fill:color-mix(in srgb,var(--green) 42%,transparent);stroke:var(--green);}
+.today-gauge-band.is-active.is-down{fill:color-mix(in srgb,var(--red) 42%,transparent);stroke:var(--red);}
+.today-gauge-band.is-active.is-sell{fill:color-mix(in srgb,var(--orange) 42%,transparent);stroke:var(--orange);}
+.today-gauge-band.is-active.is-mid{fill:color-mix(in srgb,var(--yellow) 42%,transparent);stroke:var(--yellow);}
+.today-gauge-band.is-active.is-flat{fill:color-mix(in srgb,var(--muted) 36%,transparent);stroke:var(--muted);}
+.today-gauge-tick{fill:var(--muted);}
+.today-gauge-scale{fill:var(--muted);font-size:9px;font-family:inherit;}
+.today-gauge-needle{stroke:var(--text);stroke-width:3;stroke-linecap:round;}
+.today-gauge-hub{fill:var(--text);}
+.today-gauge-value{fill:var(--text);font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;font-family:inherit;}
+.today-gauge-word{font-size:13px;font-weight:600;margin-top:-2px;}
+.today-macro-tile.is-up .today-gauge-word{color:var(--green);}.today-macro-tile.is-down .today-gauge-word{color:var(--red);}.today-macro-tile.is-mid .today-gauge-word{color:var(--yellow);}
+.today-macro-history{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:4px;font-size:12px;}
+.today-macro-history li{display:flex;align-items:center;gap:6px;}
+.today-macro-history-label{color:var(--muted);}
+.today-macro-history-word{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-bottom:1px dotted var(--border);line-height:1.6;}
+.today-macro-history-value{display:inline-grid;place-items:center;min-width:30px;height:24px;padding:0 6px;border-radius:12px;border:1.5px solid var(--border);font-size:12px;font-weight:700;}
+.today-macro-history-value.is-up{color:var(--green);border-color:var(--green);}
+.today-macro-history-value.is-down{color:var(--red);border-color:var(--red);}
+.today-macro-history-value.is-sell{color:var(--orange);border-color:var(--orange);}
+.today-macro-history-value.is-mid{color:var(--yellow);border-color:var(--yellow);}
+/* Left-side / right-side readings under the digest, written once a day from the row's facts. */
+.stock-views{margin:8px 0 0;display:grid;gap:5px;}
+.stock-view{margin:0;font-size:12px;line-height:1.6;}
+.stock-view-label{display:inline-block;margin-right:6px;padding:0 6px;border-radius:4px;font-size:11px;font-weight:700;color:var(--muted);background:color-mix(in srgb,var(--muted) 14%,transparent);}
+.stock-views-note{margin:0;font-size:10px;}

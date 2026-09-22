@@ -171,3 +171,14 @@ test('wall rows keep the kind chip and the price visible; the distance is short 
  assert.deepEqual(rows.map(r=>r.textContent),['Call$2405.6% above','Put$2212.8% below']);
  assert.equal(rows[0].title,'5.6% above · Exp 09/21');assert.match(rows[1].title,/^2\.8% below · Exp/);
 });
+
+test('left-side and right-side readings render under the digest only when both are present and ready',()=>{
+ const views={status:'ready',session:'2026-09-19',right:{en:'Trend followers watch the close hold above the 20-day low.',zh:'趋势派关注收盘能否守住 20 日低点。'},left:{en:'Long-term holders watch the pullback depth.',zh:'长线持有者关注回调深度。'}};
+ const cell=reading({ticker:'NVDA',status:'pending',records:3},{digest:digest.digestNodes(row,sig),views});
+ const lines=[...cell.querySelectorAll('.stock-view')].map(n=>n.textContent);
+ assert.deepEqual(lines,['Right side · trend viewTrend followers watch the close hold above the 20-day low.','Left side · long-term viewLong-term holders watch the pullback depth.']);
+ assert.match(cell.querySelector('.stock-views-note').textContent,/not advice/);
+ assert.equal(reading({ticker:'NVDA',status:'pending'},{digest:digest.digestNodes(row,sig),views:{...views,left:null}}).querySelector('.stock-views'),null);
+ assert.equal(reading({ticker:'NVDA',status:'pending'},{digest:'',views}).querySelector('.stock-views'),null);
+ for(const key of ['app.watch.view_right','app.watch.view_left','app.watch.views_note'])assert.ok(zh[key]&&!/[㐀-鿿]/.test(copy[key]),key);
+});

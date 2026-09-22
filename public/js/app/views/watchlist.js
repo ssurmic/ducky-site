@@ -269,18 +269,19 @@ export async function mount(root,{signal}={}) {
     if (!items.length) {clear(list).append(empty(s('watch.empty')));return;}
     const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
     const digestFor=t=>focused?digestNodes(rows.get(t),signals.get(t)):[];
+    const viewsFor=t=>{const v=rows.get(t)?.digest?.views;return focused&&v?.status==='ready'?v:null;};
     renderStrip(items.map(t=>rows.get(t)).filter(Boolean));
     if(view==='reading'){
       const ordered=[...items].filter(t=>[t,rows.get(t)?.company||''].join(' ').toLowerCase().includes(query.trim().toLowerCase()))
         .sort((a,b)=>(rows.get(b)?.market_cap||0)-(rows.get(a)?.market_cap||0)||a.localeCompare(b));
-      replaceReading(list,el('div.stock-reading-list',...ordered.map(t=>researchRow(t,rows.get(t),research.get(t)||missingResearch(),{digest:digestFor(t)}))));
+      replaceReading(list,el('div.stock-reading-list',...ordered.map(t=>researchRow(t,rows.get(t),research.get(t)||missingResearch(),{digest:digestFor(t),views:viewsFor(t)}))));
       if(!ordered.length)list.append(el('p.muted',s('focus.no_matching_stocks')));
       reportPaint();
       return;
     }
     const tableLeft=list.querySelector('.watch-table-scroll')?.scrollLeft||0;
     replaceReading(list,overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
-      {view,query,sort,sortDirection,quoteReceived:overviewReceived,selection:focused?{checked,disabled:removing||adding,toggle:(tickers,value)=>{if(removing||adding)return;for(const t of tickers)value?checked.add(t):checked.delete(t);render();}}:null,onSort:key=>{sortDirection=key===sort?(sortDirection==='desc'?'asc':'desc'):key==='ticker'?'asc':'desc';sort=key;render();},area,signals:focused?signals:null,renderResearch:focused?t=>reading({...research.get(t),ticker:t,...(!research.has(t)?missingResearch():{})},{digest:digestFor(t)}):null,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
+      {view,query,sort,sortDirection,quoteReceived:overviewReceived,selection:focused?{checked,disabled:removing||adding,toggle:(tickers,value)=>{if(removing||adding)return;for(const t of tickers)value?checked.add(t):checked.delete(t);render();}}:null,onSort:key=>{sortDirection=key===sort?(sortDirection==='desc'?'asc':'desc'):key==='ticker'?'asc':'desc';sort=key;render();},area,signals:focused?signals:null,renderResearch:focused?t=>reading({...research.get(t),ticker:t,...(!research.has(t)?missingResearch():{})},{digest:digestFor(t),views:viewsFor(t)}):null,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
     reportPaint();
     const scroll=list.querySelector('.watch-table-scroll');
     if(scroll){scroll.scrollLeft=tableLeft;const shade=()=>scroll.classList.toggle('is-scrolled',scroll.scrollLeft>2);shade();scroll.addEventListener('scroll',shade,{passive:true});}
