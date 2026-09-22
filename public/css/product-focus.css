@@ -675,3 +675,15 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
 .stock-view.is-left .stock-view-label{color:var(--yellow);background:color-mix(in srgb,var(--yellow) 18%,transparent);}
 .stock-views-note{margin:0;font-size:10px;}
 .stock-views + .stock-digest{color:var(--muted);}
+
+/* Overview flashcards (2026-09-22): one card at a time, arrows and dots, keys and swipe. */
+.card-deck{outline:none;}
+.card-deck:focus-visible{box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 50%,transparent);border-radius:8px;}
+.card-deck-head{display:flex;align-items:center;gap:6px;margin:0 0 6px;}
+.card-deck-title{flex:1;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.02em;}
+.card-deck-nav{width:22px;height:22px;padding:0;border:1px solid var(--border);border-radius:50%;background:var(--surface);color:var(--muted);font:inherit;font-size:15px;line-height:1;cursor:pointer;}
+.card-deck-nav:hover,.card-deck-nav:focus-visible{color:var(--accent-text,var(--accent));border-color:var(--accent);}
+.card-deck-dots{display:flex;justify-content:center;gap:6px;margin:6px 0 0;}
+.card-deck-dot{width:7px;height:7px;padding:0;border:0;border-radius:50%;background:color-mix(in srgb,var(--muted) 40%,transparent);cursor:pointer;}
+.card-deck-dot.is-active{background:var(--accent);}
+.stock-card.is-digest .stock-digest{color:var(--text);}

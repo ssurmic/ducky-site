@@ -4595,5 +4595,11 @@
   "app.today.fng_year": "1 year ago",
   "app.watch.view_right": "Right side · trend view",
   "app.watch.view_left": "Left side · long-term view",
-  "app.watch.views_note": "Two readings written from this row's facts after the close. Descriptions, not advice."
+  "app.watch.views_note": "Two readings written from this row's facts after the close. Descriptions, not advice.",
+  "app.watch.card_note": "Today's note",
+  "app.watch.card_digest": "Signal digest",
+  "app.watch.card_summary": "Reviewed summary",
+  "app.watch.deck_label": "Overview cards: use the arrows, the left and right keys or a swipe",
+  "app.watch.deck_prev": "Previous card",
+  "app.watch.deck_next": "Next card"
 }

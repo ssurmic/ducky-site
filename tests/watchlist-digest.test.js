@@ -177,9 +177,21 @@ test('left-side and right-side readings render under the digest only when both a
  const cell=reading({ticker:'NVDA',status:'pending',records:3},{digest:digest.digestNodes(row,sig),views});
  const lines=[...cell.querySelectorAll('.stock-view')].map(n=>n.textContent);
  assert.deepEqual(lines,['Right side · trend viewTrend followers watch the close hold above the 20-day low.','Left side · long-term viewLong-term holders watch the pullback depth.']);
- // The readings lead, coloured by side; the digest line follows them.
+ // Flashcards: the day's note first (coloured by side), the digest card second; arrows, dots and keys move between them.
  assert.deepEqual([...cell.querySelectorAll('.stock-view')].map(n=>n.className),['stock-view is-right','stock-view is-left']);
- assert.equal(cell.firstElementChild.className,'stock-views');assert.equal(cell.querySelector('.stock-views').nextElementSibling.className,'stock-digest');
+ const deck=cell.querySelector('.card-deck');assert.equal(deck.dataset.cards,'2');assert.equal(deck.dataset.index,'0');
+ assert.equal(deck.querySelector('.card-deck-title').textContent,"Today's note");assert.equal(deck.querySelector('.stock-digest'),null);
+ deck.querySelector('.card-deck-nav.is-next').click();
+ assert.equal(deck.dataset.index,'1');assert.equal(deck.querySelector('.card-deck-title').textContent,'Signal digest');assert.ok(deck.querySelector('.stock-digest'));
+ deck.dispatchEvent(new window.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));assert.equal(deck.dataset.index,'0');
+ deck.dispatchEvent(new window.KeyboardEvent('keydown',{key:'ArrowLeft',bubbles:true}));assert.equal(deck.dataset.index,'1');
+ assert.deepEqual([...deck.querySelectorAll('.card-deck-dot')].map(d=>d.classList.contains('is-active')),[false,true]);
+ // A reviewed summary with a note becomes a two-card deck too; without a note nothing changes.
+ const ready={ticker:'COIN',status:'ready',as_of:'2026-09-19T22:00:00Z',overview:{en:'A reviewed line.',zh:'一句。',citations:['s1']},sources:[{id:'s1',title:{en:'T',zh:'T'}}]};
+ const both=reading(ready,{views});assert.equal(both.querySelector('.card-deck').dataset.cards,'2');assert.ok(both.querySelector('.stock-one-sentence'));
+ assert.equal(reading(ready,{}).querySelector('.card-deck'),null);
+ for(const key of ['app.watch.card_note','app.watch.card_digest','app.watch.card_summary','app.watch.deck_label','app.watch.deck_prev','app.watch.deck_next'])assert.ok(zh[key]&&!/[㐀-鿿]/.test(copy[key]),key);
+ deck.querySelector('.card-deck-nav.is-prev').click();assert.equal(deck.dataset.index,'0');
  assert.match(cell.querySelector('.stock-views-note').textContent,/not advice/);
  assert.equal(reading({ticker:'NVDA',status:'pending'},{digest:digest.digestNodes(row,sig),views:{...views,left:null}}).querySelector('.stock-views'),null);
  assert.equal(reading({ticker:'NVDA',status:'pending'},{digest:'',views}).querySelector('.stock-views'),null);

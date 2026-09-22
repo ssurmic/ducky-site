@@ -1,4 +1,5 @@
 // Shared presentation of one reviewed stock conclusion, with its own clock.
+import {cardDeck} from './card-deck.js';
 import {el,clear,px,pct,dateTime,errorBox,closeModal,toast} from './ui.js';
 import {s,LANG} from './strings.js';
 import {displayQuote,quoteLabel,quoteTime} from './watchlist-overview.js';
@@ -37,6 +38,14 @@ export function localTime(value){
   return value&&Number.isFinite(date.getTime())?new Intl.DateTimeFormat(LANG==='en'?'en-US':'zh-CN',
     {year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}).format(date):'—';
 }
+// The day's note: two readings written after the close from the row's facts, or nothing at all.
+export function noteCard(views){
+  if(!views||!pick(views.right)||!pick(views.left))return null;
+  return el('div.stock-views.stock-card',
+    el('p.stock-view.is-right',el('span.stock-view-label',s('watch.view_right')),pick(views.right)),
+    el('p.stock-view.is-left',el('span.stock-view-label',s('watch.view_left')),pick(views.left)),
+    el('p.small.muted.stock-views-note',s('watch.views_note')));
+}
 // A summary counts only when it is reviewed, has text and every citation resolves to a saved source.
 export function hasSummary(item){
   const refs=item?.overview?.citations;
@@ -52,13 +61,11 @@ export function reading(item,{citations=true,digest='',views=null}={}){
     // pending state stays visible underneath as a caption instead of taking the whole cell.
     const line=Array.isArray(digest)?digest:digest?[digest]:[];
     if(line.length){
-      // Two short readings written after the close from the same facts lead when they exist (the right
-      // side in blue, the left side in amber); the digest line follows as the facts behind them.
-      if(views&&pick(views.right)&&pick(views.left))wrap.append(el('div.stock-views',
-        el('p.stock-view.is-right',el('span.stock-view-label',s('watch.view_right')),pick(views.right)),
-        el('p.stock-view.is-left',el('span.stock-view-label',s('watch.view_left')),pick(views.left)),
-        el('p.small.muted.stock-views-note',s('watch.views_note'))));
-      wrap.append(el('p.stock-digest',...line),el('p.small.muted.stock-digest-note',s(state?'focus.'+state:'watch.digest_note')));
+      // Flashcards: the day's note (right side in blue, left side in amber) first, the digest line as
+      // the facts behind it second; arrows, dots, keys and a swipe move between them.
+      const digest=el('div.stock-card.is-digest',el('p.stock-digest',...line),el('p.small.muted.stock-digest-note',s(state?'focus.'+state:'watch.digest_note')));
+      const note=noteCard(views);
+      wrap.append(note?cardDeck([{title:s('watch.card_note'),node:note},{title:s('watch.card_digest'),node:digest}],{label:s('watch.deck_label')}):digest);
       return wrap;
     }
     wrap.append(el('p.muted',s(state?'focus.'+state:item?.records===0?'focus.no_research':'focus.analysis_waiting')));
@@ -75,6 +82,11 @@ export function reading(item,{citations=true,digest='',views=null}={}){
   wrap.append(line);
   if(cited.length)wrap.append(citationList(item,cited));
   wrap.append(el('p.small.muted.stock-analysis-date',s(item.status==='refresh_pending'?'focus.previous_analysis':'focus.analysis_date',{date:localTime(item.as_of)})));
+  const note=noteCard(views);
+  if(note){
+    const summary=el('div.stock-card.is-summary',...[...wrap.childNodes]);
+    wrap.replaceChildren(cardDeck([{title:s('watch.card_summary'),node:summary},{title:s('watch.card_note'),node:note}],{label:s('watch.deck_label')}));
+  }
   return wrap;
 }
 const dateOnly=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}/.test(v)?v.slice(0,10):'—';
