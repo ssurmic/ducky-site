@@ -2111,7 +2111,7 @@
   "app.today.fng_neutral": "Neutral",
   "app.today.fng_greed": "Greed",
   "app.today.fng_extreme_greed": "Extreme greed",
-  "app.today.macro_source": "FRED, New York Fed and CNN readings through {date}. Descriptive references, not a forecast.",
+  "app.today.macro_source": "FRED and New York Fed readings through {date}; Fear & Greed {fng} (CNN). Descriptive references, not a forecast.",
   "app.today.macro_unavailable": "Market backdrop unavailable.",
   "app.macro.eyebrow": "Funding, rates and technology stocks",
   "app.macro.title": "Market beta & liquidity",
