@@ -1,5 +1,13 @@
 # Change log
 
+## Readings are not close-only; each side cell shows when it was written · 2026-09-22
+
+Owner asked whether the left-side and right-side readings had to wait for the close. They never did, but the copy
+said so, and the backend's fact fingerprint changed with every price tick (ducky-bot PR #189 fixes that: a reading
+holds until the price changes side of a level, walls or averages refresh, or a filing or record arrives). Site PR #88
+(main `0a83e1e1`, Pages deployment `ce67b42c`): the pending and note copy describe when a reading is rewritten, and each
+side cell carries "written HH:MM" (or the date on another day) next to the stale caption.
+
 ## Left-side and right-side columns; the Overview is the verdict; Discover leads with who said what · 2026-09-22
 
 Owner review round five (site PR #86, main `29e7c402`, Pages deployment `38661773`; PR #87, main `92d23f3e`, deployment `41d4e6a7`, keeps the view-mode button labelled 概览 / Overview and puts 总评 / Overall on the column header alone). The compact watchlist table gains two
