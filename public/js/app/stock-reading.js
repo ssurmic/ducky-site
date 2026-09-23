@@ -38,7 +38,12 @@ export function localTime(value){
   return value&&Number.isFinite(date.getTime())?new Intl.DateTimeFormat(LANG==='en'?'en-US':'zh-CN',
     {year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}).format(date):'—';
 }
-const asOf=views=>typeof views?.generated_at==='string'&&/^\d{4}-\d{2}-\d{2}/.test(views.generated_at)?views.generated_at.slice(0,10):views?.session||'';
+// The reading's own day in the reader's time zone (an evening reading is not "tomorrow" because it was stored in UTC).
+const asOf=views=>{
+  const at=new Date(views?.generated_at||'');
+  if(Number.isFinite(at.getTime()))return new Intl.DateTimeFormat('en-CA',{year:'numeric',month:'2-digit',day:'2-digit'}).format(at);
+  return typeof views?.generated_at==='string'&&/^\d{4}-\d{2}-\d{2}/.test(views.generated_at)?views.generated_at.slice(0,10):views?.session||'';
+};
 // When the reading was written, short: today's readings show the clock time, older ones the day.
 export function writtenAt(views,now=new Date()){
   const at=new Date(views?.generated_at||'');
