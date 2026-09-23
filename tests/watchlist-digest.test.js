@@ -216,8 +216,11 @@ test('the table gives each side its own column and the Overview cell opens with 
  assert.equal(listed.firstChild.className,'stock-overall');assert.equal(listed.querySelector('.card-deck').dataset.cards,'2');
  // Stale: the sentence stays, its own date goes under it; the pending note appears before the first reading.
  const stale={...views,stale:true};
- assert.match(overallLine(stale).querySelector('.stock-overall-date').textContent,/Reading of 2026-09-21; the facts have moved/);
- assert.equal(viewCell(stale,'left').className,'watch-view is-left');assert.match(viewCell(stale,'right').querySelector('.watch-view-date').textContent,/2026-09-21/);
+ assert.match(overallLine(stale).querySelector('.stock-overall-date').textContent,/Reading of 2026-09-2[12]; the facts have moved/);
+ // The day is the reader's local day of the stored instant, never the UTC date of an evening reading.
+ const evening={...stale,generated_at:'2026-09-22T23:40:00-07:00'};
+ assert.equal(overallLine(evening).querySelector('.stock-overall-date').textContent.includes(new Intl.DateTimeFormat('en-CA',{year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(evening.generated_at))),true);
+ assert.equal(viewCell(stale,'left').className,'watch-view is-left');assert.match(viewCell(stale,'right').querySelector('.watch-view-date').textContent,/2026-09-2[12]/);
  assert.match(viewCell(views,'right').querySelector('.watch-view-date').textContent,/^written /);
  const {writtenAt}=await import('../public/js/app/stock-reading.js');
  // Same day: clock time only; another day: month and day too (the runner's time zone decides which day).
