@@ -1,5 +1,12 @@
 # Change log
 
+## Reading dates in the reader's local day · 2026-09-22
+
+An evening reading stored at 00:33 UTC on the 23rd showed "2026-09-23 的解读" in California on the evening of the 22nd.
+Site PR #89 (main `8d99f183`, Pages deployment `cf4df9f7`) formats the stored instant in the reader's time zone. The
+"facts have moved" caption that appeared on every fresh reading is a backend fault (the overview attached readings to a
+trimmed digest; ducky-bot PR #196).
+
 ## Readings are not close-only; each side cell shows when it was written · 2026-09-22
 
 Owner asked whether the left-side and right-side readings had to wait for the close. They never did, but the copy
