@@ -760,3 +760,16 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
 .today-lines-tip-row.is-liquidity i{background:var(--accent);}
 .today-lines-tip-row.is-qqq i{background:#4ea1ff;}
 .today-lines-tip-row.is-spy i{background:var(--green);}
+
+/* The 10-year line and its dots; on phones the two chart tiles take the full width and a taller chart,
+   and a tap holds the readings (2026-09-24, owner: "在手机上怎么直观地看"). */
+.today-lines-line.is-yield{stroke:var(--accent);stroke-width:2;}
+.today-lines-dot.is-yield,.today-lines-key.is-yield i,.today-lines-tip-row.is-yield i{fill:var(--accent);background:var(--accent);}
+.today-lines-dot{opacity:.9;}
+.today-lines-dot.is-last{stroke:var(--surface);stroke-width:1;}
+@media(max-width:600px){
+  .today-macro-tile:has(.today-lines){grid-column:1 / -1;}
+  .today-lines{aspect-ratio:240/110;}
+  .today-lines-tip{position:static;margin-bottom:4px;box-shadow:none;background:color-mix(in srgb,var(--accent) 6%,var(--surface));}
+  .today-macro-legend{display:flex;flex-wrap:wrap;gap:4px 10px;}
+}
