@@ -703,3 +703,30 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
 .card-deck-dot{width:7px;height:7px;padding:0;border:0;border-radius:50%;background:color-mix(in srgb,var(--muted) 40%,transparent);cursor:pointer;}
 .card-deck-dot.is-active{background:var(--accent);}
 .stock-card.is-digest .stock-digest{color:var(--text);}
+
+/* Paired mini-charts on the Today tiles (2026-09-24): bars = the tile's own day-to-day change, line = QQQ's
+   return the same day; the caption counts how often they moved opposite ways. Descriptive only. */
+.today-macro-chart{display:grid;gap:3px;margin-top:6px;padding-top:6px;border-top:1px solid color-mix(in srgb,var(--border) 70%,transparent);}
+.today-spark{width:100%;height:auto;display:block;}
+.today-spark-zero{stroke:var(--border);stroke-width:1;}
+.today-spark-bar.is-up{fill:color-mix(in srgb,var(--green) 72%,transparent);}
+.today-spark-bar.is-down{fill:color-mix(in srgb,var(--red) 72%,transparent);}
+.today-spark-bar.is-flat{fill:color-mix(in srgb,var(--muted) 50%,transparent);}
+.today-spark-line{stroke:var(--text);stroke-width:1.4;stroke-linejoin:round;stroke-linecap:round;}
+.today-spark-dot{fill:var(--accent);}
+.today-spark-axis{fill:var(--muted);font-size:8px;font-family:inherit;}
+.today-macro-legend{font-size:10px;color:var(--muted);letter-spacing:.2px;}
+.today-macro-caption{font-size:11px;color:var(--muted);line-height:1.45;}
+.today-macro-stamp{font-size:11px;}
+@media(min-width:601px) and (max-width:1100px){.today-macro-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+
+/* The close-of-day note above the tiles (2026-09-24): one card for every reader. */
+.today-digest{margin:0 0 12px;padding:14px 16px 12px;border:1px solid color-mix(in srgb,var(--accent) 28%,var(--border));border-radius:12px;background:color-mix(in srgb,var(--accent) 5%,var(--surface));display:grid;gap:10px;}
+.today-digest-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.today-digest-head .today-section-title{margin:0;}
+.today-digest-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 16px;}
+.today-digest-part p,.today-digest-tomorrow p{margin:4px 0 0;font-size:14px;line-height:1.65;}
+.today-digest-label{display:inline-block;font-size:11px;font-weight:650;letter-spacing:1px;text-transform:uppercase;color:var(--accent-text,var(--accent));}
+.today-digest-tomorrow{padding-top:8px;border-top:1px solid color-mix(in srgb,var(--border) 70%,transparent);}
+.today-digest-note{margin:0;}
+@media(max-width:900px){.today-digest-grid{grid-template-columns:1fr;}}

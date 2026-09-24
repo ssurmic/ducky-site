@@ -5,6 +5,7 @@ import {el,modal} from './ui.js';
 import {s,LANG} from './strings.js';
 import * as api from './api.js';
 import {gauge,bandFor} from './today-gauge.js';
+import {dailyPairs,summary,sparkPair} from './today-spark.js';
 
 const OK=v=>typeof v==='number'&&Number.isFinite(v);
 const num=(v,d=2)=>OK(v)?new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US',{minimumFractionDigits:d,maximumFractionDigits:d}).format(v):'—';
@@ -46,6 +47,17 @@ function reading(doc,key,{series}={}){
 }
 function clock(iso){const t=Date.parse(iso||'');return Number.isFinite(t)?new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hour12:false}).format(t):'—';}
 
+// The paired chart's data for a tile: day-to-day changes of one series against QQQ's return that day.
+function pairing(doc,pick,bars){
+  const pairs=dailyPairs(doc?.history,pick);
+  if(pairs.length<3)return null;
+  return {pairs,stats:summary(pairs),bars,line:s('today.chart_qqq')};
+}
+function captionFor(chart){
+  const {stats,bars,line}=chart,r=OK(stats.correlation)?(stats.correlation>0?'+':'')+stats.correlation.toFixed(2):'—';
+  return OK(stats.opposite)?s('today.chart_caption',{n:stats.n,bars,line,r,pct:stats.opposite}):s('today.chart_caption_short',{n:stats.n,bars,line,r});
+}
+
 export function macroTiles(doc){
   const latest=doc?.latest||{},m=latest.metrics||{},fng=doc?.fear_greed||null,la=doc?.latest_available?.metrics||{};
   const band=fundingBand(latest.funding_score);
@@ -58,14 +70,27 @@ export function macroTiles(doc){
     {key:'liquidity',label:s('today.macro_liquidity'),value:OK(latest.funding_score)?num(latest.funding_score,0):'—',unit:s('today.macro_score_unit'),
      tone:band==='supportive'?'up':band==='adverse'?'down':band==='mixed'?'mid':'flat',help:liquidityHelp(latest),
      gauge:{name:s('today.macro_liquidity'),score:OK(latest.funding_score)?latest.funding_score:null,bands:LIQUIDITY_BANDS(),word:s('today.macro_regime_'+band)},
-     note:[s('today.macro_regime_'+band),OK(netT)?s('today.macro_net_liquidity',{value:num(netT,2)}):null,OK(change)?s('today.macro_net_change',{value:signed(change)}):null].filter(Boolean).join(' · ')},
+     note:[s('today.macro_regime_'+band),OK(netT)?s('today.macro_net_liquidity',{value:num(netT,2)}):null,OK(change)?s('today.macro_net_change',{value:signed(change)}):null].filter(Boolean).join(' · '),
+     chart:pairing(doc,r=>r?.metrics?.net_liquidity_bn,s('today.chart_liquidity_bars')),chartUnit:'B'},
     {key:'yield',label:s('today.macro_10y'),value:OK(y10.value)?num(y10.value,2)+'%':'—',unit:'',tone:'flat',stamp:y10.stamp,
-     note:OK(bp)?s('today.macro_10y_change',{bp:signed(bp)}):s('today.macro_no_change')},
+     note:OK(bp)?s('today.macro_10y_change',{bp:signed(bp)}):s('today.macro_no_change'),
+     chart:pairing(doc,r=>OK(r?.metrics?.nominal_10y)?Math.round(r.metrics.nominal_10y*100):null,s('today.chart_yield_bars')),chartUnit:'bp'},
     {key:'vix',label:s('today.macro_vix'),value:OK(vix.value)?num(vix.value,1):'—',unit:'',tone:OK(ratio)?(ratio>1?'down':'up'):'flat',stamp:vix.stamp,
      note:OK(ratio)?s('today.macro_vix_ratio',{ratio:num(ratio,2)})+' · '+s(ratio>1?'today.macro_vix_stress':'today.macro_vix_calm'):s('today.macro_vix_missing')},
     {key:'fng',label:s('today.macro_fng'),value:OK(fng?.score)?num(fng.score,0):'—',unit:'',tone:OK(fng?.score)?(fng.score<45?'down':fng.score>55?'up':'mid'):'flat',
      gauge:{name:s('today.macro_fng'),score:OK(fng?.score)?fng.score:null,bands:FNG_BANDS(),word:fngWord||''},history:fngHistory(fng),
      note:fng&&OK(fng.score)?[fngWord,OK(fng.previous_close)?s('today.macro_fng_prev',{value:num(fng.previous_close,0)}):null].filter(Boolean).join(' · '):s('today.macro_fng_missing')}];
+}
+
+// Bars (the tile's own day-to-day change) against a line (QQQ's return the same day), with the plain
+// count of how often they moved opposite ways: co-movement a reader can see, never a forecast.
+function chartBlock(tile){
+  const {pairs,stats,bars,line}=tile.chart;
+  const fmtDate=d=>{const t=Date.parse(d+'T12:00:00Z');return Number.isFinite(t)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'2-digit',day:'2-digit'}).format(t):d;};
+  const fmtChange=v=>(v>0?'+':'')+num(v,0)+' '+tile.chartUnit;
+  return el('div.today-macro-chart',sparkPair(pairs,{unit:tile.chartUnit,labels:{bars,line},fmtChange,fmtDate}),
+    el('span.today-macro-legend',s('today.chart_legend',{bars,line})),
+    el('span.today-macro-caption',captionFor(tile.chart)));
 }
 
 function historyList(rows){
@@ -74,16 +99,36 @@ function historyList(rows){
     el('span.today-macro-history-value.mono',{class:'is-'+r.tone},String(r.value)))));
 }
 
+// The close-of-day note: four short paragraphs written from this site's own numbers and the
+// published schedule, the same for every reader. Shown only when it is ready; an old one says so.
+const sessionLabel=iso=>{const t=Date.parse((iso||'')+'T12:00:00Z');return Number.isFinite(t)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'numeric',day:'numeric',weekday:'short'}).format(t):(iso||'—');};
+export function digestBlock(digest){
+  if(!digest||!['ready','stale'].includes(digest.status))return null;
+  const text=key=>String(digest[key]?.[LANG==='zh'?'zh':'en']||'').trim();
+  const box=el('section.today-digest',{'aria-label':s('today.digest_title',{date:sessionLabel(digest.session)})});
+  box.append(el('div.today-digest-head',el('h2.today-section-title',s('today.digest_title',{date:sessionLabel(digest.session)})),
+    el('span.small.muted',s('today.digest_written',{time:clock(digest.generated_at)})+(digest.status==='stale'?' · '+s('today.digest_stale'):''))));
+  const grid=el('div.today-digest-grid');
+  for(const [key,label] of [['close','today.digest_close'],['sectors','today.digest_sectors'],['macro','today.digest_macro']])
+    if(text(key))grid.append(el('div.today-digest-part',el('span.today-digest-label',s(label)),el('p',text(key))));
+  box.append(grid);
+  if(text('tomorrow'))box.append(el('div.today-digest-tomorrow',el('span.today-digest-label',s('today.digest_tomorrow',{date:sessionLabel(digest.next_session)})),el('p',text('tomorrow'))));
+  box.append(el('p.small.muted.today-digest-note',s('today.digest_note')));
+  return box;
+}
+
 export function macroStrip(doc){
   const box=el('section.today-macro',{'aria-label':s('today.macro_title')});
   if(!doc||!doc.latest){box.append(el('p.small.muted',s('today.macro_unavailable')));return box;}
+  const digest=digestBlock(doc.digest);if(digest)box.append(digest);
   const grid=el('div.today-macro-grid');
   for(const tile of macroTiles(doc)){
     const dial=tile.gauge&&Number.isFinite(tile.gauge.score)?gauge(tile.gauge):null;
     grid.append(el('div.today-macro-tile',{'data-tile':tile.key,class:'is-'+tile.tone+(dial?' has-gauge':'')},
       el('span.today-macro-label',tile.label,tile.help||null),
       dial?el('div.today-gauge-wrap',dial,el('span.today-gauge-word',tile.gauge.word)):el('strong.today-macro-value.mono',tile.value,tile.unit?el('span.today-macro-unit',tile.unit):null),
-      el('span.today-macro-note',tile.note),tile.stamp?el('span.today-macro-stamp.small.muted',tile.stamp):null,historyList(tile.history)));
+      el('span.today-macro-note',tile.note),tile.stamp?el('span.today-macro-stamp.small.muted',tile.stamp):null,historyList(tile.history),
+      tile.chart?chartBlock(tile):null));
   }
   // Each source carries its own clock: the FRED / New York Fed panel ends at the last session it
   // covers, the CNN index at the minute it was read, so the footer names both.

@@ -1,5 +1,20 @@
 # Change log
 
+## Today: paired charts on the liquidity and yield tiles; the close-of-day note · 2026-09-24
+
+Owner (2026-09-24): the dollar-liquidity gauge must stay live; plot its day-to-day change against the Nasdaq so
+readers can see the correlation for themselves; the same for the 10-year yield; make the tiles better looking; and
+add a daily digest at the top that is the same for every reader.
+
+`today-spark.js` (new): a paired mini-chart — bars for the tile's own day-to-day change (net liquidity in $B, the
+10-year yield in bp), a line for QQQ's return the same day — with a legend and a caption that names the Pearson
+correlation over the last 60 sessions and the share of days the two moved opposite ways, written as a description,
+never a forecast. The data is the macro backdrop's own six-month history; nothing new is fetched.
+
+`today-macro.js`: `digestBlock` renders the close-of-day note above the tiles when the backdrop carries one (ducky-bot
+PR #214): the close, sectors and breadth, yields / VIX / liquidity / gold, and the next session's schedule, with the
+time it was written and a stale notice after 40 hours. The QA fixture stubs a 70-session history and a ready note.
+
 ## Two-week calendar restyled; big events on the calendar; Today tiles read the live print · 2026-09-24
 
 Site PR #90, main `1a94d420`, Pages deployment `1ffe9845`; the quote stamp wording ("最新报价 … 美东") followed in a small fix.
