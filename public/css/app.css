@@ -297,11 +297,12 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 
 
 /* ── investment calendar: month grid + two-week view (calendar.js) ───────── */
-.calendar-view { --c-earn:#19579a; --c-macro:#994800; --c-opex:#6c3ca3; --c-rebal:#156745; --c-session:#86500b; }
+.calendar-view { --c-earn:#19579a; --c-macro:#994800; --c-opex:#6c3ca3; --c-rebal:#156745; --c-session:#86500b; --c-geo:#b3261e; }
 @media (prefers-color-scheme:dark) {
-  :root:not([data-theme="light"]) .calendar-view { --c-earn:#78b8ff; --c-macro:#ffb45d; --c-opex:#cca4ff; --c-rebal:#63d6ab; --c-session:#ffd17a; }
+  :root:not([data-theme="light"]) .calendar-view { --c-earn:#78b8ff; --c-macro:#ffb45d; --c-opex:#cca4ff; --c-rebal:#63d6ab; --c-session:#ffd17a; --c-geo:#ff8a80; }
 }
-:root[data-theme="dark"] .calendar-view { --c-earn:#78b8ff; --c-macro:#ffb45d; --c-opex:#cca4ff; --c-rebal:#63d6ab; --c-session:#ffd17a; }
+:root[data-theme="dark"] .calendar-view { --c-earn:#78b8ff; --c-macro:#ffb45d; --c-opex:#cca4ff; --c-rebal:#63d6ab; --c-session:#ffd17a; --c-geo:#ff8a80; }
+.cal-kind-geo { --cal-tone:var(--c-geo); }
 .cal-kind-earnings { --cal-tone:var(--c-earn); }
 .cal-kind-macro { --cal-tone:var(--c-macro); }
 .cal-kind-expiry { --cal-tone:var(--c-opex); }
@@ -352,6 +353,10 @@ h3 { font-size: var(--fs-md); margin: 0 0 4px; }
 .pill { display: flex; align-items: center; gap: 6px; padding: 3px 8px 3px 5px; border-radius: 8px; font-size: var(--fs-xs); line-height: 1.4; border: 1px solid transparent; white-space: nowrap; overflow: hidden; letter-spacing: .1px; }
 .pill-earn { background: color-mix(in srgb, var(--c-earn) 15%, var(--surface)); border-color: color-mix(in srgb, var(--c-earn) 34%, transparent); color: color-mix(in srgb, var(--c-earn) 78%, var(--fg)); }
 .pill-earn.mine { background: color-mix(in srgb, var(--accent) 17%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 42%, transparent); color: color-mix(in srgb, var(--accent) 82%, var(--fg)); }
+.pill-geo { background: color-mix(in srgb, var(--c-geo) 14%, var(--surface)); border-color: color-mix(in srgb, var(--c-geo) 36%, transparent); color: color-mix(in srgb, var(--c-geo) 82%, var(--fg)); font-weight: 600; }
+.cal-t-geo .cal-title { color: color-mix(in srgb, var(--c-geo) 72%, var(--fg)); }
+.cal-tentative { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 12px; }
+.cal-tentative-label { font-size: var(--fs-2xs); color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
 .pill-macro { background: color-mix(in srgb, var(--c-macro) 13%, var(--surface)); border-color: color-mix(in srgb, var(--c-macro) 30%, transparent); color: color-mix(in srgb, var(--c-macro) 82%, var(--fg)); }
 .pill-opex, .pill-witching { background: color-mix(in srgb, var(--c-opex) 15%, var(--surface)); border-color: color-mix(in srgb, var(--c-opex) 32%, transparent); color: color-mix(in srgb, var(--c-opex) 78%, var(--fg)); }
 .pill-rebal { background: color-mix(in srgb, var(--c-rebal) 15%, var(--surface)); border-color: color-mix(in srgb, var(--c-rebal) 32%, transparent); color: color-mix(in srgb, var(--c-rebal) 74%, var(--fg)); }
@@ -1040,10 +1045,31 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 
 
 /* Two-week overview: readable day cards on phones, horizontal weeks on desktop. */
-.cal-biweeks { display:grid; gap:10px; }
+.cal-biweeks { display:grid; gap:6px; }
 .cal-biweek { min-width:0; }
-.cal-week-label, .cal-biweekday { display:none; }
-.cal-bidate { display:flex; align-items:center; gap:8px; width:100%; }
+/* two-week view: a legend of kinds, a week line to plan around, narrow weekend columns, today anchored */
+.cal-legend { display:flex; flex-wrap:wrap; gap:6px 16px; margin:0 0 6px; font-size:var(--fs-2xs); color:var(--muted); }
+.cal-legend-item { display:inline-flex; align-items:center; gap:6px; }
+.cal-legend-item i { width:8px; height:8px; border-radius:50%; background:var(--cal-tone, var(--muted)); }
+.cal-legend-n { color:var(--fg); }
+.cal-week-head { display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 14px; margin:12px 0 6px; }
+.cal-week-label { display:block; margin:0; font-size:var(--fs-2xs); font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--muted); }
+.cal-week-highlights { margin:0; font-size:var(--fs-xs); line-height:1.5; color:var(--fg); }
+.cal-biweek .cal-bigrid { grid-template-columns:.6fr repeat(5, 1fr) .6fr; gap:6px; }
+.cal-bicell { min-height:126px; padding:9px 9px 10px; gap:6px; }
+.cal-bicell.cal-wknd { background:color-mix(in srgb, var(--surface-2) 60%, var(--surface)); opacity:.8; }
+.cal-bicell.cal-wknd .cal-biquiet { display:none; }
+.cal-bicell.cal-weekend { opacity:.8; }
+.cal-bicell.cal-is-today { background:color-mix(in srgb, var(--accent) 8%, var(--surface)); border-color:color-mix(in srgb, var(--accent) 55%, var(--border)); box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent) inset, 0 8px 22px rgba(0,0,0,.2); opacity:1; }
+.cal-bicell.cal-is-today::before { content:""; position:absolute; inset:0 0 auto 0; height:3px; background:var(--accent); }
+.cal-biweekday { display:inline-block; font-size:var(--fs-2xs); letter-spacing:1.2px; text-transform:uppercase; font-weight:650; color:var(--muted); }
+.cal-bicell.cal-is-today .cal-biweekday { color:var(--accent-text, var(--accent)); }
+.cal-bisession { font-size:var(--fs-2xs); font-weight:650; color:var(--c-session); }
+.cal-biquiet { font-size:var(--fs-2xs); color:color-mix(in srgb, var(--muted) 70%, transparent); }
+.pill .pill-txt { flex:1 1 auto; min-width:0; }
+.pill-when { flex:0 0 auto; font-family:ui-monospace, Menlo, monospace; font-size:10px; opacity:.72; }
+.pill-major { border-inline-start-width:3px; font-weight:650; }
+.cal-bidate { display:flex; align-items:center; justify-content:space-between; gap:8px; width:100%; }
 .cal-bicell .cal-bidnum { font-size:20px; line-height:1.2; height:30px; min-width:30px; color:var(--text); }
 .cal-bicell.cal-weekend { opacity:1; background:var(--surface-2); }
 .cal-bicell:focus-visible { outline:3px solid var(--text); outline-offset:2px; }
@@ -1052,6 +1078,12 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
 .cal-bicell .pill { flex-wrap:wrap; gap:2px 5px; padding:5px 7px; border:0; border-inline-start:3px solid var(--cal-tone); border-radius:6px; background:color-mix(in srgb,var(--cal-tone) 8%,var(--surface)); font-size:13px; color:var(--cal-tone); }
 .cal-bicell .pill-kind { flex-basis:100%; min-width:0; font-size:12px; font-weight:600; line-height:1.35; white-space:normal; overflow-wrap:anywhere; }
 .cal-bicell .pill-ic { display:none; }
+/* The legend and the tone name the kind; inside a two-week cell only earnings keep their word (after the ticker). */
+.cal-bicell .pill:not(.pill-earn) .pill-kind { display:none; }
+.cal-bicell .pill-geo .pill-ic { display:inline-flex; width:13px; height:13px; }
+.cal-bicell .pill-geo .pill-ic .app-icon { width:13px; height:13px; }
+.cal-bicell .pill-when { order:9; margin-left:auto; }
+.cal-bicell.cal-wknd .cal-biweekday { font-size:9px; letter-spacing:.4px; white-space:nowrap; }
 .cal-bicell .pill-txt { white-space:normal; overflow-wrap:anywhere; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
 .cal-bicell .pill-tk { font-size:13px; overflow-wrap:anywhere; white-space:normal; }
 .cal-bicell .pill-holiday, .cal-bicell .pill-early_close { font-weight:650; }
@@ -1067,8 +1099,11 @@ html[data-theme="light"] .macro-beta { --macro-green:#147443; --macro-blue:#345d
   .cal-bibox > .cal-wdrow { display:none; }
   .cal-biweeks { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
   .cal-biweek { display:grid; grid-template-rows:auto 1fr; }
-  .cal-week-label { display:block; margin:0 0 10px; font-size:14px; line-height:1.5; color:var(--text); }
+  .cal-week-label { display:block; margin:0 0 10px; font-size:14px; line-height:1.5; color:var(--text); letter-spacing:0; text-transform:none; }
+  .cal-week-highlights { font-size:13px; }
   .cal-biweek .cal-bigrid { grid-template-columns:minmax(0,1fr); grid-auto-rows:1fr; gap:8px; }
+  .cal-bicell.cal-wknd { opacity:1; }
+  .cal-bicell.cal-wknd .cal-biquiet { display:inline; }
   .cal-biweek .cal-bicell { min-height:92px; padding:10px; align-items:stretch; gap:6px; border-radius:12px; }
   .cal-bicell .cal-bidnum { font-size:22px; padding:0; align-self:auto; }
   .cal-biweekday { display:block; font-size:14px; color:var(--muted); }

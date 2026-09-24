@@ -1,5 +1,24 @@
 # Change log
 
+## Two-week calendar restyled; big events on the calendar; Today tiles read the live print · 2026-09-24
+
+Owner (2026-09-23 night): the Today tiles had not updated and the 10-year yield was wrong, Wednesday's flash PMI was
+missing from the calendar, big events such as a state visit belonged on it, and the two-week view should look better.
+
+Calendar (`views/calendar.js`, `calendar-model.js` unchanged): a new kind 大事 (`type: geo`, globe icon, its own tone)
+for state visits, summits, trade deadlines and elections, curated in the backend store and mirrored for the static
+fallback in `scripts/geo_events.json`; a multi-day event shows "1/3" on each of its days; an undated one sits in a
+"日期待定" strip instead of a day cell. The two-week view gains a legend of kinds with counts, a one-line week
+summary to plan around (big events and heavy releases by weekday, then how many companies report and how many are
+watched), narrow weekend columns, today anchored with an accent bar, time badges ("08:30") and session badges
+("盘后") on pills, and a heavier pill for the releases a week turns on (FOMC, CPI, NFP, PCE, GDP, PMI, retail). The
+kind word inside a pill is dropped except after an earnings ticker; the tone and the legend carry it.
+
+Today (`today-macro.js`): the 10-year and VIX tiles read the live index print when the backdrop carries one, then the
+newest FRED close, then the session-aligned panel, and each tile says which ("盘中 09:41 美东", "FRED 收盘 09-23");
+the footer date follows the newest print. Backend: ducky-bot PR #212 (newest prints, intraday quotes, refresh after
+every liquidity pull; ISM and flash PMI on the calendar).
+
 ## Reading dates in the reader's local day · 2026-09-22
 
 An evening reading stored at 00:33 UTC on the 23rd showed "2026-09-23 的解读" in California on the evening of the 22nd.

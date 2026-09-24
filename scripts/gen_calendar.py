@@ -130,6 +130,69 @@ def macro_events(start, end):
     return out
 
 
+GEO_STORE = Path(__file__).resolve().parent / 'geo_events.json'   # mirror of ducky-bot bin/data/geo_events.json
+
+
+def geo_events(start, end):
+    """Owner-curated big events (state visits, summits, trade deadlines, elections) with an official source
+    each; a multi-day event appears on each of its days with its span."""
+    try:
+        rows = json.loads(GEO_STORE.read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return []
+    out = []
+    for row in rows if isinstance(rows, list) else []:
+        try:
+            first = date.fromisoformat(row['date']); last = date.fromisoformat(row.get('end_date') or row['date'])
+        except (KeyError, TypeError, ValueError):
+            continue
+        last = max(first, last); days = (last - first).days + 1
+        for i in range(days):
+            d = first + timedelta(days=i)
+            if not (start <= d <= end):
+                continue
+            e = {"date": d.isoformat(), "type": "geo", "tickers": list(row.get('tickers') or []), "title": str(row.get('title', '')),
+                 "title_en": str(row.get('title_en') or row.get('title', '')), "note": str(row.get('note', '')),
+                 "note_en": str(row.get('note_en') or row.get('note', '')), "source_url": row.get('source_url')}
+            if row.get('short'):
+                e["short"], e["short_en"] = str(row['short']), str(row.get('short_en') or row['short'])
+            if days > 1:
+                e["span"] = {"start": first.isoformat(), "end": last.isoformat(), "day": i + 1, "days": days}
+            if row.get('tentative'):
+                e["tentative"] = True
+            out.append(e)
+    return out
+
+
+FLASH_PMI_2026 = ["2026-09-23", "2026-10-23", "2026-11-23"]   # pmi.spglobal.com release calendar; 09:45 ET
+
+
+def _business_day(y, m, n, holidays=frozenset()):
+    d = date(y, m, 1); count = 0
+    while True:
+        if d.weekday() < 5 and d.isoformat() not in holidays:
+            count += 1
+            if count == n:
+                return d
+        d += timedelta(days=1)
+
+
+def pmi_events(start, end, holidays=frozenset()):
+    out = []
+    def m(d, title, title_en, note, note_en):
+        if start <= d <= end:
+            out.append({"date": d.isoformat(), "type": "macro", "title": title, "title_en": title_en, "tickers": [], "note": note, "note_en": note_en})
+    for y, mm in _months(start, end):
+        m(_business_day(y, mm, 1, holidays), "ISM 制造业 PMI", "ISM manufacturing PMI",
+          "10:00 ET 公布上月制造业采购经理指数；50 为荣枯线。", "Prior-month manufacturing PMI at 10:00 ET; 50 divides expansion from contraction.")
+        m(_business_day(y, mm, 3, holidays), "ISM 服务业 PMI", "ISM services PMI",
+          "10:00 ET 公布上月服务业采购经理指数；50 为荣枯线。", "Prior-month services PMI at 10:00 ET; 50 divides expansion from contraction.")
+    for ds in FLASH_PMI_2026:
+        m(date.fromisoformat(ds), "标普全球 美国 PMI 初值", "S&P Global flash US PMI",
+          "09:45 ET 公布本月制造业 / 服务业 PMI 初值；当月最早的景气读数。", "Flash manufacturing and services PMI for the current month at 09:45 ET; the month's first activity read.")
+    return out
+
+
 def build(days: int = 90, backfill: int = 5) -> list[dict]:
     today = datetime.now(timezone.utc).date()
     start = today - timedelta(days=backfill)   # cover recent past + absorb UTC/local date skew
@@ -180,7 +243,9 @@ def build(days: int = 90, backfill: int = 5) -> list[dict]:
     sessions = json.loads((Path(__file__).resolve().parents[1] / 'public/market-sessions.json').read_text())
     out.extend(e for e in sessions['events'] if start.isoformat() <= e['date'] <= end.isoformat())
     out.extend(macro_events(start, end))
-    out.sort(key=lambda e: (e["date"], {"holiday": -2, "early_close": -1, "macro": 0, "witching": 1, "opex": 2, "rebal": 3}.get(e["type"], 4)))
+    out.extend(pmi_events(start, end, {e['date'] for e in sessions['events'] if e.get('type') == 'holiday'}))
+    out.extend(geo_events(start, end))
+    out.sort(key=lambda e: (e["date"], {"holiday": -3, "early_close": -2, "geo": -1, "macro": 0, "witching": 1, "opex": 2, "rebal": 3}.get(e["type"], 4)))
     return out
 
 def main() -> int:
