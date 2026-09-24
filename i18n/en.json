@@ -2101,7 +2101,7 @@
   "app.today.macro_net_change": "{value}B vs 65 sessions ago",
   "app.today.macro_10y": "10-year Treasury",
   "app.today.macro_tile_as_of": "as of {date}",
-  "app.today.macro_intraday": "live {time} ET",
+  "app.today.macro_intraday": "quote {time} ET",
   "app.today.macro_fred_close": "FRED close {date}",
   "app.today.macro_10y_change": "{bp} bp over 20 sessions",
   "app.today.macro_no_change": "change unavailable",
