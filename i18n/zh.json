@@ -2101,7 +2101,7 @@
   "app.today.macro_net_change": "较 65 个交易日前 {value} 亿",
   "app.today.macro_10y": "十年期美债收益率",
   "app.today.macro_tile_as_of": "截至 {date}",
-  "app.today.macro_intraday": "盘中 {time} 美东",
+  "app.today.macro_intraday": "最新报价 {time} 美东",
   "app.today.macro_fred_close": "FRED 收盘 {date}",
   "app.today.macro_10y_change": "20 个交易日 {bp} bp",
   "app.today.macro_no_change": "变动暂无数据",
