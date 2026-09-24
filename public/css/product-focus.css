@@ -746,3 +746,17 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
 .today-lines-key.is-liquidity i{background:var(--accent);}
 .today-lines-key.is-qqq i{background:#4ea1ff;}
 .today-lines-key.is-spy i{background:var(--green);}
+
+/* Hover on the three-line chart: a guide at the date and the three readings above it. */
+.today-macro-chart.has-cursor{position:relative;}
+.today-lines{touch-action:pan-y;cursor:crosshair;}
+.today-lines-cursor{stroke:var(--text);stroke-width:1;stroke-dasharray:2 2;opacity:.7;}
+.today-lines-tip{position:absolute;top:0;left:0;right:0;z-index:2;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:5px 8px;border:1px solid var(--border);border-radius:8px;background:color-mix(in srgb,var(--surface) 92%,transparent);font-size:11px;line-height:1.4;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.18);}
+.today-lines-tip[hidden]{display:none;}
+.today-lines-tip-date{font-weight:700;font-variant-numeric:tabular-nums;}
+.today-lines-tip-row{display:inline-flex;align-items:center;gap:4px;color:var(--muted);}
+.today-lines-tip-row b,.today-lines-key b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:650;}
+.today-lines-tip-row i{width:8px;height:3px;border-radius:2px;background:var(--muted);display:inline-block;}
+.today-lines-tip-row.is-liquidity i{background:var(--accent);}
+.today-lines-tip-row.is-qqq i{background:#4ea1ff;}
+.today-lines-tip-row.is-spy i{background:var(--green);}

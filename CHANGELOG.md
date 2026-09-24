@@ -1,5 +1,12 @@
 # Change log
 
+## Liquidity chart: hover readings and each line's latest day change · 2026-09-24
+
+Owner: SPY must show next to QQQ (it does on real data; the QA fixture's SPY was flat), each line should say how much
+it moved from the day before, and hovering should give a number where liquidity sat still. The legend now carries
+each line's latest day-over-day change (net liquidity in $B, QQQ and SPY in %); moving the pointer over the chart
+draws a guide at the nearest date and lists the three readings for that day; a tap does the same on a phone.
+
 ## Liquidity tile: net liquidity, QQQ and SPY on one normalized chart · 2026-09-24
 
 Owner: one plot with the dollar-liquidity index normalized against QQQ and SPY, three lines, so the negative
