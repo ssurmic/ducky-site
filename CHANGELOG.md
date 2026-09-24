@@ -1,5 +1,25 @@
 # Change log
 
+## Today reads one set of numbers: closes by their own date, the liquidity index on its chart, creators on the macro backdrop · 2026-09-24
+
+Owner: the liquidity chart did not show the index falling from the sixties to 58; the 10-year legend read "4.96% (−5 bp)" on a
+day the yield rose to 5.11%; the close-of-day note said the same and its VIX was a day old. The cause was one source for all
+three: the score panel, which by design lags each print to when it was published, so the 10-year and VIX sat two sessions
+behind, while the liquidity line plotted the dollar amount (flat from week to week) rather than the index on the gauge.
+
+Site PR #96, with ducky-bot PR #216. The backdrop now carries an observed panel — each session's own closes (the quote feed's
+daily close, FRED's print on a day the feed skipped), the session's liquidity index, net liquidity as of its newest prints,
+and a `live` row while a session is trading. The liquidity tile's chart plots the index (the gauge's number) with QQQ and
+SPY; the legend and the hover read "57.5 (−5.0) · net liquidity $5.87T". The 10-year chart plots the observed closes, so
+its legend reads "5.11% (+15 bp)", the 20-session change comes from the same closes, and a session still trading draws a
+hollow marker labelled "live" in the hover. A tile's big number is the moving quote only while the session is open;
+before the open and after the close it is the last close, stamped "{date} close". The note's macro paragraph is written
+from the same rows (`market-digest/1.2`).
+
+Under the note, a creators-on-the-macro-backdrop block: what the creators this site follows said about rates, the Fed,
+inflation, tariffs or liquidity in the last day and a half, attributed and linked to the original video, newest first; a
+video whose analysis is still pending shows its title and link. A record of what was said, not this site's view.
+
 ## Today charts: the last two weeks, both indexes on both tiles, readings under the finger · 2026-09-24
 
 Owner: investors remember two weeks, not six months, for liquidity and for yields alike; QQQ and SPY belong on one

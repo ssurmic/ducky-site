@@ -773,3 +773,23 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
   .today-lines-tip{position:static;margin-bottom:4px;box-shadow:none;background:color-mix(in srgb,var(--accent) 6%,var(--surface));}
   .today-macro-legend{display:flex;flex-wrap:wrap;gap:4px 10px;}
 }
+
+/* A hollow marker is a session still trading (the observed panel's live row). */
+.today-lines-dot.is-live{fill:var(--surface);stroke-width:1.6;}
+.today-lines-dot.is-live.is-liquidity,.today-lines-dot.is-live.is-yield{stroke:var(--accent);}
+.today-lines-dot.is-live.is-qqq{stroke:#4ea1ff;}
+.today-lines-dot.is-live.is-spy{stroke:var(--green);}
+/* Creators on the macro backdrop: a short attributed list under the close-of-day note. */
+.today-creators{margin:0 0 12px;padding:12px 16px;border:1px solid var(--border);border-radius:12px;background:var(--surface);display:grid;gap:8px;}
+.today-creators-list{list-style:none;margin:0;padding:0;display:grid;gap:0;}
+.today-creators-list li{display:grid;gap:4px;padding:10px 0;border-top:1px solid var(--border);}
+.today-creators-list li:first-child{border-top:0;padding-top:0;}
+.today-creators-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+.today-creators .cr-take{display:inline-flex;align-items:center;padding:1px 8px;border-radius:999px;font-size:12px;line-height:1.5;}
+.today-creators .cr-bull{color:var(--green);background:color-mix(in srgb,var(--green) 12%,transparent);}
+.today-creators .cr-bear{color:#e5484d;background:color-mix(in srgb,#e5484d 12%,transparent);}
+.today-creators-title{margin:0;font-weight:600;}
+.today-creators-title a{color:inherit;}
+.today-creators-list p{margin:0;}
+.today-creators-tickers{display:flex;flex-wrap:wrap;gap:6px;}
+.today-creators-tickers .pill{padding:1px 8px;font-size:12px;}
