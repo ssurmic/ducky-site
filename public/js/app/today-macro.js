@@ -37,14 +37,22 @@ export function fngHistory(fng){
     .filter(([key])=>OK(fng?.[key])).map(([key,label])=>{const band=bandFor(bands,fng[key]);return {label:s(label),word:band.label,tone:band.tone,value:Math.round(fng[key])};});
 }
 
-// A reading and where it comes from: the live index print when the quote feed has one, else the newest
-// FRED close (published the evening of its day), else the session-aligned panel the scores use.
+// A reading and where it comes from. The observed panel is the truth the charts and the close-of-day note
+// share: each session's own close (the quote feed's, or FRED's print for that day). A quote taken while the
+// session is open is the moving print; one taken before the open or after the close is the last close, so it
+// is shown as that close with its date. Without an observed panel (an older document) the quote, then the
+// newest FRED print, then the session-aligned score panel.
 function reading(doc,key,{series}={}){
   const q=doc?.intraday||null,la=doc?.latest_available||null,m=doc?.latest?.metrics||{};
+  const rows=(doc?.observed||[]).filter(r=>OK(r?.[key])),last=rows[rows.length-1]||null;
+  if(OK(q?.[key])&&q.phase==='open')return {value:q[key],stamp:s('today.macro_intraday',{time:clock(q.quoted_at)})};
+  if(last)return {value:last[key],stamp:last.live?s('today.macro_intraday',{time:clock(doc?.observed_at)}):s('today.macro_close_on',{date:last.date})};
   if(OK(q?.[key]))return {value:q[key],stamp:s('today.macro_intraday',{time:clock(q.quoted_at)})};
   if(OK(la?.metrics?.[key]))return {value:la.metrics[key],stamp:s('today.macro_fred_close',{date:(series&&la.dates?.[series])||la.as_of||'—'})};
   return {value:m[key],stamp:OK(m[key])?s('today.macro_tile_as_of',{date:doc?.as_of||'—'}):''};
 }
+// The rows a tile's chart and its readings share: the observed panel, or the score panel of an older document.
+const panelRows=doc=>doc?.observed?.length?doc.observed:(doc?.history||[]);
 function clock(iso){const t=Date.parse(iso||'');return Number.isFinite(t)?new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hour12:false}).format(t):'—';}
 
 // A tile's chart: its own series (net liquidity, or the 10-year yield), QQQ and SPY on one chart over the last
@@ -52,31 +60,36 @@ function clock(iso){const t=Date.parse(iso||'');return Number.isFinite(t)?new In
 // change against each index's daily return over the same window. Investors remember two weeks, not six months.
 const SESSIONS=10;
 function linesFor(doc,primary){
-  const lines=normalizedLines(doc?.history,{sessions:SESSIONS,primary});
+  const rows=panelRows(doc);
+  const lines=normalizedLines(rows,{sessions:SESSIONS,primary});
   if(lines.series.length<2||!lines.series.some(s=>s.key===primary))return null;
   const pick=PRIMARY[primary];
-  const against=key=>summary(dailyPairs((doc?.history||[]).map(r=>({...r,qqq_index:r?.[key]})),r=>primary==='yield'?(OK(pick(r))?pick(r)*100:null):pick(r),{sessions:SESSIONS}));
+  const against=key=>summary(dailyPairs(rows.map(r=>({...r,qqq_index:r?.[key]})),r=>primary==='yield'?(OK(pick(r))?pick(r)*100:null):pick(r),{sessions:SESSIONS}));
   return {...lines,primary,qqq:against('qqq_index'),spy:against('spy_index')};
 }
-// One series' reading on one day: the liquidity level in $B with its day change, the yield with its bp change,
-// an index's day change.
-function lineReading(x,i){
-  if(x.key==='liquidity')return OK(x.raw[i])?s('today.lines_liquidity_value',{value:num(x.raw[i],0),change:OK(x.change[i])?signed(x.change[i],0):'—'}):'—';
+// One series' reading on one day: the liquidity index with its day change (and that day's net liquidity), the
+// yield with its bp change, an index's day change.
+function lineReading(x,i,rows){
+  if(x.key==='liquidity'){
+    if(!OK(x.raw[i]))return '—';
+    const net=rows?.[i]?.net_liquidity_bn;
+    return s('today.lines_liquidity_value',{value:num(x.raw[i],1),change:OK(x.change[i])?signed(x.change[i],1):'—'})+(OK(net)?' · '+s('today.lines_net_value',{value:num(net/1000,2)}):'');
+  }
   if(x.key==='yield')return OK(x.raw[i])?s('today.lines_yield_value',{value:num(x.raw[i],2),change:OK(x.change[i])?signed(x.change[i],0):'—'}):'—';
   return OK(x.change[i])?signed(x.change[i],2)+'%':'—';
 }
 function linesBlock(tile){
-  const {dates,series,qqq,spy,primary}=tile.lines;
+  const {dates,series,qqq,spy,primary,rows,live=[]}=tile.lines;
   const labels={liquidity:s('today.lines_liquidity'),yield:s('today.lines_yield'),qqq:s('today.lines_qqq'),spy:s('today.lines_spy')};
   const fmtDate=d=>{const t=Date.parse(d+'T12:00:00Z');return Number.isFinite(t)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'2-digit',day:'2-digit'}).format(t):d;};
   const r=v=>OK(v)?(v>0?'+':'')+v.toFixed(2):'—';
   const last=dates.length-1;
   // The legend carries each line's latest day-over-day change, so the last session reads without hovering.
-  const legend=el('span.today-macro-legend',...series.map(x=>el('span.today-lines-key.is-'+x.key,el('i'),labels[x.key]+' ',el('b',lineReading(x,last)))));
-  const chart=sparkLines({dates,series},{labels,fmtDate});
+  const legend=el('span.today-macro-legend',...series.map(x=>el('span.today-lines-key.is-'+x.key,el('i'),labels[x.key]+' ',el('b',lineReading(x,last,rows)))));
+  const chart=sparkLines({dates,series,live},{labels,fmtDate});
   const tip=el('div.today-lines-tip',{hidden:true,role:'status'});
-  const show=i=>{tip.hidden=false;tip.replaceChildren(el('span.today-lines-tip-date',fmtDate(dates[i])),
-    ...series.map(x=>el('span.today-lines-tip-row.is-'+x.key,el('i'),labels[x.key],el('b',lineReading(x,i)))));chart.moveCursor?.(i);};
+  const show=i=>{tip.hidden=false;tip.replaceChildren(el('span.today-lines-tip-date',fmtDate(dates[i])+(live[i]?' · '+s('today.lines_live'):'')),
+    ...series.map(x=>el('span.today-lines-tip-row.is-'+x.key,el('i'),labels[x.key],el('b',lineReading(x,i,rows)))));chart.moveCursor?.(i);};
   const hide=()=>{tip.hidden=true;chart.moveCursor?.(null);};
   chart.addEventListener('pointermove',e=>{const rect=chart.getBoundingClientRect();show(cursorIndex(e.clientX-rect.left,rect.width,dates.length));});
   chart.addEventListener('pointerleave',hide);
@@ -88,9 +101,14 @@ function linesBlock(tile){
 export function macroTiles(doc){
   const latest=doc?.latest||{},m=latest.metrics||{},fng=doc?.fear_greed||null,la=doc?.latest_available?.metrics||{};
   const band=fundingBand(latest.funding_score);
-  const netT=OK(m.net_liquidity_bn)?m.net_liquidity_bn/1000:null,change=m.net_liquidity_65d_change_bn;
+  // Net liquidity as of the newest prints (the observed panel), the 65-session change from the score panel.
+  const netRows=(doc?.observed||[]).filter(r=>OK(r?.net_liquidity_bn)),netLast=netRows[netRows.length-1];
+  const netT=OK(netLast?.net_liquidity_bn)?netLast.net_liquidity_bn/1000:OK(m.net_liquidity_bn)?m.net_liquidity_bn/1000:null,change=m.net_liquidity_65d_change_bn;
   const y10=reading(doc,'nominal_10y',{series:'DGS10'}),vix=reading(doc,'vix',{series:'VIXCLS'}),term=reading(doc,'vix_term_ratio',{series:'VXVCLS'});
-  const ratio=term.value,bp=OK(la.nominal_10y_20d_change_bp)?la.nominal_10y_20d_change_bp:m.nominal_10y_20d_change_bp;
+  // The 20-session change over the same closes the chart draws; the FRED-based figure when the panel is short.
+  const yRows=(doc?.observed||[]).filter(r=>OK(r?.nominal_10y));
+  const bp=yRows.length>=21?Math.round((yRows[yRows.length-1].nominal_10y-yRows[yRows.length-21].nominal_10y)*100):OK(la.nominal_10y_20d_change_bp)?la.nominal_10y_20d_change_bp:m.nominal_10y_20d_change_bp;
+  const ratio=term.value;
   const rating=RATINGS[String(fng?.rating||'').toLowerCase()];
   const fngWord=rating?s('today.fng_'+rating):OK(fng?.score)?bandFor(FNG_BANDS(),fng.score).label:null;
   return [

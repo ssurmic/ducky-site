@@ -3,6 +3,7 @@ import {sourceBadge,nodeSourceIdentity} from '../evidence-source.js';
 import {displayQuote} from '../watchlist-overview.js';
 import {discoverStarters} from '../research-examples.js';
 import {mountMacroStrip} from '../today-macro.js';
+import {mountCreatorMacro} from '../today-creators.js';
 import {s,LANG} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
@@ -114,7 +115,8 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   // Market-level references first (liquidity, 10-year yield, VIX term structure, Fear & Greed); the
   // saved macro backdrop is read once per mount and never delays the personal feed below.
   const macroHost=el('div.today-macro-host');
-  if(!embedded){main.append(macroHost);mountMacroStrip(macroHost,{signal});}
+  const creatorHost=el('div.today-creators-host');
+  if(!embedded){main.append(macroHost,creatorHost);mountMacroStrip(macroHost,{signal});mountCreatorMacro(creatorHost,{signal});}
   const stat=(value,label)=>el('span.today-stat',el('strong',String(value)),el('span',label));
   function renderStats(){
     if(embedded)return;

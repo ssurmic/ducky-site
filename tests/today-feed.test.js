@@ -44,6 +44,7 @@ test('cards carry the stance rail, source mark, author initial and the saved quo
 test('a quiet day widens once to the past week and says so; a manual range choice is respected',async()=>{
  const root=setup();const calls=[];
  globalThis.fetch=async url=>{const u=new URL(url,'https://ducky.test');
+  if(u.pathname.startsWith('/kol/'))return Response.json({posts:[]});   // the creators block reads the feed once; not a records request
   if(u.pathname==='/macro/beta')return Response.json({status:'unavailable',history:[]});   // the Today strip reads the saved backdrop once; not a feed request
   if(u.pathname==='/me/stock-research')return Response.json({items:[item()],watchlist_count:1});
   if(u.pathname==='/watchlist')return Response.json(watchlist);
@@ -66,6 +67,7 @@ test('the feed asks for twelve records per page and reads the newest publication
  t.mock.timers.enable({apis:['Date'],now:new Date(2026,8,14,12)});
  const root=setup();let limit=null;
  globalThis.fetch=async url=>{const u=new URL(url,'https://ducky.test');
+  if(u.pathname.startsWith('/kol/'))return Response.json({posts:[]});   // the creators block reads the feed once; not a records request
   if(u.pathname==='/macro/beta')return Response.json({status:'unavailable',history:[]});   // the Today strip reads the saved backdrop once; not a feed request
   if(u.pathname==='/me/stock-research')return Response.json({items:[item()],watchlist_count:1});
   if(u.pathname==='/watchlist')return Response.json({items:[],overview:{items:[]}});
@@ -83,6 +85,7 @@ test('an open Today re-reads its first page once a minute and adds newly publish
  t.mock.timers.enable({apis:['setInterval']});
  const root=setup();let reads=0;
  globalThis.fetch=async url=>{const u=new URL(url,'https://ducky.test');
+  if(u.pathname.startsWith('/kol/'))return Response.json({posts:[]});   // the creators block reads the feed once; not a records request
   if(u.pathname==='/macro/beta')return Response.json({status:'unavailable',history:[]});   // the Today strip reads the saved backdrop once; not a feed request
   if(u.pathname==='/me/stock-research')return Response.json({items:[item()],watchlist_count:1});
   if(u.pathname==='/watchlist')return Response.json(watchlist);

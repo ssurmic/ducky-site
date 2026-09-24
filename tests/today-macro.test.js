@@ -81,14 +81,14 @@ test('both chart tiles draw a two-week three-line chart with markers; the 10-yea
   const spark=await import('../public/js/app/today-spark.js');
   assert.equal(spark.pearson([1,2,3,4],[2,4,6,8]),1);assert.equal(spark.pearson([1,2,3,4],[8,6,4,2]),-1);assert.equal(spark.pearson([1,2],[1,2]),null);assert.equal(spark.pearson([1,1,1],[1,2,3]),null);
   const history=[];let q=100,sp=100,net=5800,y=4.1;
-  for(let i=0;i<70;i++){const up=i%2?1:-1;net+=up*30;q*=1-up*0.01;sp*=1-up*0.006;y+=up*0.05;history.push({date:'2026-0'+(1+Math.floor(i/28))+'-'+String(1+i%28).padStart(2,'0'),metrics:{net_liquidity_bn:net,nominal_10y:Math.round(y*100)/100},qqq_index:q,spy_index:sp});}
+  for(let i=0;i<70;i++){const up=i%2?1:-1;net+=up*30;q*=1-up*0.01;sp*=1-up*0.006;y+=up*0.05;history.push({date:'2026-0'+(1+Math.floor(i/28))+'-'+String(1+i%28).padStart(2,'0'),funding_score:55+up*8,nominal_10y:Math.round(y*100)/100,net_liquidity_bn:net,qqq_index:q,spy_index:sp});}
   const lines=spark.normalizedLines(history,{primary:'yield'});
   assert.equal(lines.dates.length,10);assert.deepEqual(lines.series.map(x=>x.key),['yield','qqq','spy']);
   assert.equal(Math.abs(lines.series[0].change[1]),5);   // bp
-  const tiles=macro.macroTiles({...doc,history});
+  const tiles=macro.macroTiles({...doc,observed:history});
   assert.equal(tiles[0].lines.primary,'liquidity');assert.equal(tiles[1].lines.primary,'yield');
   assert.equal(tiles[0].lines.dates.length,10);assert.equal(tiles[0].lines.qqq.n,10);assert.equal(tiles[1].lines.qqq.correlation,-1);
-  const strip=macro.macroStrip({...doc,history});
+  const strip=macro.macroStrip({...doc,observed:history});
   assert.equal(strip.querySelectorAll('.today-lines').length,2);
   assert.equal(strip.querySelectorAll('.today-lines-line').length,6);
   assert.equal(strip.querySelectorAll('[data-tile=yield] .today-lines-dot').length,30);   // a marker on every session
@@ -113,16 +113,16 @@ test('the close-of-day note renders above the tiles when ready, says when it is 
   assert.equal(macro.macroStrip(doc).querySelector('.today-digest'),null);
 });
 
-test('the liquidity tile draws net liquidity, QQQ and SPY on one chart, each scaled to its own range, with both correlations',async()=>{
+test('the liquidity tile draws the liquidity index, QQQ and SPY on one chart, each scaled to its own range, with both correlations',async()=>{
   const spark=await import('../public/js/app/today-spark.js');
   const history=[];let q=100,sp=100,net=5800;
-  for(let i=0;i<70;i++){const up=i%2?1:-1;net+=up*30;q*=1-up*0.01;sp*=1-up*0.006;history.push({date:'2026-0'+(1+Math.floor(i/28))+'-'+String(1+i%28).padStart(2,'0'),metrics:{net_liquidity_bn:net,nominal_10y:4.5},qqq_index:q,spy_index:sp});}
+  for(let i=0;i<70;i++){const up=i%2?1:-1;net+=up*30;q*=1-up*0.01;sp*=1-up*0.006;history.push({date:'2026-0'+(1+Math.floor(i/28))+'-'+String(1+i%28).padStart(2,'0'),funding_score:55+up*8,nominal_10y:4.5,net_liquidity_bn:net,qqq_index:q,spy_index:sp});}
   const lines=spark.normalizedLines(history);
   assert.equal(lines.dates.length,10);assert.deepEqual(lines.series.map(x=>x.key),['liquidity','qqq','spy']);
   for(const x of lines.series){assert.ok(x.values.every(v=>v>=0&&v<=100));assert.ok(x.values.includes(0)&&x.values.includes(100));}
-  const tiles=macro.macroTiles({...doc,history});
+  const tiles=macro.macroTiles({...doc,observed:history});
   assert.ok(tiles[0].lines&&tiles[0].lines.qqq.correlation===-1&&tiles[0].lines.spy.correlation===-1&&tiles[0].lines.qqq.opposite===100);
-  const strip=macro.macroStrip({...doc,history});
+  const strip=macro.macroStrip({...doc,observed:history});
   assert.equal(strip.querySelectorAll('.today-lines').length,2);
   assert.equal(strip.querySelectorAll('[data-tile=liquidity] .today-lines-line').length,3);
   assert.match(strip.querySelector('[data-tile=liquidity] .today-macro-caption').textContent,/-1\.00.*-1\.00|100%/);
@@ -132,13 +132,50 @@ test('the liquidity tile draws net liquidity, QQQ and SPY on one chart, each sca
 test('the legend carries each line\'s latest day change and hovering names the three readings at a date',async()=>{
   const spark=await import('../public/js/app/today-spark.js');
   const history=[];let q=100,sp=100,net=5800;
-  for(let i=0;i<70;i++){const up=i%2?1:-1;net+=up*30;q*=1-up*0.01;sp*=1-up*0.006;history.push({date:'2026-0'+(1+Math.floor(i/28))+'-'+String(1+i%28).padStart(2,'0'),metrics:{net_liquidity_bn:net,nominal_10y:4.5},qqq_index:q,spy_index:sp});}
+  for(let i=0;i<70;i++){const up=i%2?1:-1;net+=up*30;q*=1-up*0.01;sp*=1-up*0.006;history.push({date:'2026-0'+(1+Math.floor(i/28))+'-'+String(1+i%28).padStart(2,'0'),funding_score:55+up*8,nominal_10y:4.5,net_liquidity_bn:net,qqq_index:q,spy_index:sp});}
   assert.equal(spark.cursorIndex(0,0,10),9);assert.equal(spark.cursorIndex(50,100,61),30);assert.equal(spark.cursorIndex(-9,100,61),0);assert.equal(spark.cursorIndex(999,100,61),60);
-  const strip=macro.macroStrip({...doc,history});
+  const strip=macro.macroStrip({...doc,observed:history});
   const legend=strip.querySelector('[data-tile=liquidity] .today-macro-legend').textContent;
-  assert.match(legend,/\$5,[0-9]{3}B \([+-]30B\)/);assert.match(legend,/QQQ\)\s*[+-]1\.0[0-9]%/);assert.match(legend,/SPY\)\s*[+-]0\.6[0-9]%/);
+  assert.match(legend,/(63|47)\.0 \([+-]16\.0\) · net liquidity \$5\.[0-9]{2}T/);assert.match(legend,/QQQ\)\s*[+-]1\.0[0-9]%/);assert.match(legend,/SPY\)\s*[+-]0\.6[0-9]%/);
   const tip=strip.querySelector('.today-lines-tip');assert.ok(tip.hidden);
   strip.querySelector('.today-lines').dispatchEvent(new window.Event('pointermove',{bubbles:true}));
-  assert.ok(!tip.hidden);assert.match(tip.textContent,/\$5,[0-9]{3}B/);assert.equal(tip.querySelectorAll('.today-lines-tip-row').length,3);
+  assert.ok(!tip.hidden);assert.match(tip.textContent,/net liquidity \$5\.[0-9]{2}T/);assert.equal(tip.querySelectorAll('.today-lines-tip-row').length,3);
   strip.querySelector('.today-lines').dispatchEvent(new window.Event('pointerleave'));assert.ok(tip.hidden);
+});
+
+test('a tile reads the observed close with its date, the moving print only while the session is open, and the live row as a quote',()=>{
+  const observed=[{date:'2026-09-22',nominal_10y:4.96,funding_score:62.5},{date:'2026-09-23',nominal_10y:5.114,funding_score:57.5}];
+  const pre=macro.macroTiles({...doc,observed,intraday:{nominal_10y:5.114,quoted_at:'2026-09-24T06:40:19+00:00',session:'2026-09-24',phase:'pre'}})[1];
+  assert.equal(pre.value,'5.11%');assert.equal(pre.stamp,'2026-09-23 close');
+  const open=macro.macroTiles({...doc,observed,intraday:{nominal_10y:5.2,quoted_at:'2026-09-24T14:35:00+00:00',session:'2026-09-24',phase:'open'}})[1];
+  assert.equal(open.value,'5.20%');assert.equal(open.stamp,'quote 10:35 ET');
+  const live=macro.macroTiles({...doc,observed_at:'2026-09-24T12:31:00+00:00',observed:[...observed,{date:'2026-09-24',nominal_10y:5.16,live:true}],intraday:{nominal_10y:5.16,session:'2026-09-24',phase:'pre'}})[1];
+  assert.equal(live.value,'5.16%');assert.equal(live.stamp,'quote 08:31 ET');
+  const old=macro.macroTiles({...doc,intraday:{nominal_10y:5.114,quoted_at:'2026-09-24T06:40:19+00:00'}})[1];   // a document before the observed panel
+  assert.equal(old.value,'5.11%');assert.match(old.stamp,/quote 02:40 ET/);
+});
+
+test('the chart drops a trailing session it cannot draw and marks a live row with a hollow marker',async()=>{
+  const spark=await import('../public/js/app/today-spark.js');
+  const rows=[];for(let i=0;i<12;i++)rows.push({date:'2026-09-'+String(1+i).padStart(2,'0'),funding_score:50+(i%3)*5,nominal_10y:4.5+i*.01,qqq_index:100+i,spy_index:100+i/2});
+  const lines=spark.normalizedLines([...rows,{date:'2026-09-13',vix:15.2,live:true}],{primary:'liquidity'});
+  assert.equal(lines.dates[lines.dates.length-1],'2026-09-12');assert.equal(lines.series[0].change[1],-10);   // 60 → 50 inside the ten-session window
+  const withLive=spark.normalizedLines([...rows,{date:'2026-09-13',nominal_10y:4.7,live:true}],{primary:'yield'});
+  assert.equal(withLive.dates[withLive.dates.length-1],'2026-09-13');assert.deepEqual(withLive.live.slice(-2),[false,true]);
+  const chart=spark.sparkLines(withLive,{});
+  assert.equal(chart.querySelectorAll('.today-lines-dot.is-live').length,1);
+});
+
+test('the creators block lists macro takes from the last day and a half, newest first, and hides otherwise',async()=>{
+  const creators=await import('../public/js/app/today-creators.js');
+  const now=Date.parse('2026-09-24T12:00:00Z');
+  const post=(id,hours,extra)=>({id,kol_id:'k'+id,kol_name:'Creator '+id,url:'https://www.youtube.com/watch?v=v'+id,title:'Title '+id,published_at:new Date(now-hours*3600e3).toISOString(),tickers:[],take:'neutral',macro:true,summary:JSON.stringify({zh:'摘要 '+id,en:'Summary '+id}),...extra});
+  const feed={posts:[post(1,20),post(2,5,{take:'bear',tickers:['NVDA','TSLA']}),post(3,40),post(4,2,{macro:false}),post(5,8,{summary:JSON.stringify({zh:'',en:'',source:{status:'discovered'}})})]};
+  assert.deepEqual(creators.macroPosts(feed,{now}).map(p=>p.id),[2,5,1]);
+  const block=creators.creatorMacroBlock(feed,{now});
+  assert.match(block.querySelector('h2').textContent,/Creators on the macro backdrop/);
+  const items=[...block.querySelectorAll('li')];assert.equal(items.length,3);
+  assert.match(items[0].textContent,/Creator 2.*03:00 ET.*Bearish/);assert.equal(items[0].querySelector('a').href,'https://www.youtube.com/watch?v=v2');
+  assert.equal(items[0].querySelectorAll('.pill').length,2);assert.match(items[1].textContent,/Analysis pending/);
+  assert.equal(creators.creatorMacroBlock({posts:[post(6,2,{macro:false})]},{now}),null);
 });

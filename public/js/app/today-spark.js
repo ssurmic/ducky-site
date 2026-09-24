@@ -67,22 +67,29 @@ export function sparkPair(pairs,{unit='',labels={bars:'',line:''},fmtChange=v=>S
 }
 
 // Three lines on one chart, each scaled to its own range over the window (0 = the period's low,
-// 100 = its high): the dollar net liquidity level next to the QQQ and SPY index levels, so a reader can
-// see whether they moved together or against each other. Comparable shapes, never comparable units.
-// `primary` is the tile's own series: net liquidity ($B) or the 10-year yield (%); the indexes ride along.
-export const PRIMARY={liquidity:r=>r?.metrics?.net_liquidity_bn,yield:r=>r?.metrics?.nominal_10y};
-export function normalizedLines(history,{sessions=10,primary='liquidity'}={}){
-  const rows=(history||[]).filter(r=>r&&r.date).slice(-sessions);
+// 100 = its high): the tile's own series next to the QQQ and SPY index levels, so a reader can see whether
+// they moved together or against each other. Comparable shapes, never comparable units.
+// `primary` is the tile's own series: the dollar liquidity index (0–100, the number on the gauge) or the
+// 10-year yield (%); the indexes ride along. Rows are the backdrop's observed panel — each session's own
+// closes — or the score panel of a document that predates it.
+const pickYield=r=>OK(r?.nominal_10y)?r.nominal_10y:r?.metrics?.nominal_10y;
+export const PRIMARY={liquidity:r=>r?.funding_score,yield:pickYield};
+export function normalizedLines(rows,{sessions=10,primary='liquidity'}={}){
   const pick={[primary]:PRIMARY[primary]||PRIMARY.liquidity,qqq:r=>r?.qqq_index,spy:r=>r?.spy_index};
+  let all=(rows||[]).filter(r=>r&&r.date);
+  // A session the score panel has not reached (today, before the nightly close job) may carry nothing this
+  // chart draws; such trailing rows are dropped rather than drawn as an empty column.
+  while(all.length&&!Object.values(pick).some(fn=>OK(fn(all[all.length-1]))))all=all.slice(0,-1);
+  const window=all.slice(-sessions);
   const series=[];
   for(const [key,fn] of Object.entries(pick)){
-    const raw=rows.map(fn);
+    const raw=window.map(fn);
     const known=raw.filter(OK);if(known.length<3)continue;
     const lo=Math.min(...known),hi=Math.max(...known),span=hi-lo;
-    const change=raw.map((v,i)=>i>0&&OK(v)&&OK(raw[i-1])?(key==='liquidity'?v-raw[i-1]:key==='yield'?Math.round((v-raw[i-1])*100):raw[i-1]>0?Math.round((v/raw[i-1]-1)*10000)/100:null):null);
+    const change=raw.map((v,i)=>i>0&&OK(v)&&OK(raw[i-1])?(key==='liquidity'?Math.round((v-raw[i-1])*10)/10:key==='yield'?Math.round((v-raw[i-1])*100):raw[i-1]>0?Math.round((v/raw[i-1]-1)*10000)/100:null):null);
     series.push({key,values:raw.map(v=>OK(v)&&span>0?Math.round((v-lo)/span*1000)/10:null),raw,change,last:known[known.length-1],lo,hi});
   }
-  return {dates:rows.map(r=>r.date),series};
+  return {dates:window.map(r=>r.date),live:window.map(r=>!!r.live),rows:window,series};
 }
 
 // The nearest date to a pointer position over the chart; the last date when the chart has no size yet.
@@ -91,7 +98,7 @@ export function cursorIndex(x,width,n){
   return Math.max(0,Math.min(n-1,Math.round(x/width*(n-1))));
 }
 
-export function sparkLines({dates,series},{labels={},fmtDate=d=>d}={}){
+export function sparkLines({dates,series,live=[]},{labels={},fmtDate=d=>d}={}){
   const W=240,H=88,PAD_L=4,PAD_R=4,TOP=6,BOT=14,inner=H-TOP-BOT;
   const root=svg('svg',{class:'today-lines',viewBox:`0 0 ${W} ${H}`,role:'img'});
   const n=dates.length;if(n<3||!series.length){root.setAttribute('aria-hidden','true');return root;}
@@ -102,8 +109,8 @@ export function sparkLines({dates,series},{labels={},fmtDate=d=>d}={}){
     const line=svg('polyline',{class:'today-lines-line is-'+s.key,points:pts,fill:'none'});
     line.append(svg('title',{},`${labels[s.key]||s.key} · ${fmtDate(dates[0])} → ${fmtDate(dates[n-1])}`));
     root.append(line);
-    // A marker on every session when the window is short: a finger can land on a day.
-    if(n<=15)s.values.forEach((v,i)=>{if(OK(v))root.append(svg('circle',{class:'today-lines-dot is-'+s.key+(i===n-1?' is-last':''),cx:fix(PAD_L+i*step),cy:fix(y(v)),r:i===n-1?2.6:1.7}));});
+    // A marker on every session when the window is short: a finger can land on a day. A hollow marker is a session still trading.
+    if(n<=15)s.values.forEach((v,i)=>{if(OK(v))root.append(svg('circle',{class:'today-lines-dot is-'+s.key+(i===n-1?' is-last':'')+(live[i]?' is-live':''),cx:fix(PAD_L+i*step),cy:fix(y(v)),r:i===n-1?2.6:1.7}));});
     else{const lastIndex=s.values.map((v,i)=>OK(v)?i:-1).filter(i=>i>=0).pop();if(lastIndex>=0)root.append(svg('circle',{class:'today-lines-dot is-'+s.key+' is-last',cx:fix(PAD_L+lastIndex*step),cy:fix(y(s.values[lastIndex])),r:2.4}));}
   }
   // Every session labelled by its day of month when the window is two weeks; the ends otherwise.

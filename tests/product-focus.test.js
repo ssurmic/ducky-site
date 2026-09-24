@@ -236,8 +236,9 @@ test('old and unavailable content cannot appear as current quoted statements',()
 test('Today search reaches the backend, preserves pagination and performs no per-card requests',async()=>{
  const root=setup(),calls=[];
  globalThis.fetch=async(input,options)=>{const url=new URL(input,'https://ducky.test');
-  // The saved-quote decoration read and the market-backdrop strip read are not per-card requests.
-  if(!['/watchlist','/macro/beta'].includes(url.pathname))calls.push([url,options.method]);
+  // The saved-quote decoration read, the market-backdrop strip read and the creators block read are not per-card requests.
+  if(!['/watchlist','/macro/beta','/kol/feed','/kol/trial-feed'].includes(url.pathname))calls.push([url,options.method]);
+  if(url.pathname.startsWith('/kol/'))return Response.json({posts:[]});
   if(url.pathname==='/macro/beta')return Response.json({status:'unavailable',history:[]});
   if(url.pathname==='/me/stock-research')return Response.json({items:[item()]});
   return Response.json({items:[change(url.searchParams.has('q')?99:1)],next_cursor:url.searchParams.has('before')?null:'next'});
@@ -351,7 +352,7 @@ test('shared watchlist updates preserve reading focus and filters, and never res
 
 test('Today adopts a completed summary without rerunning searches, and withholds withdrawn text',async()=>{
  const root=setup();let reads=0;
- globalThis.fetch=async url=>{if(url!=='/watchlist'&&url!=='/macro/beta')reads++;return Response.json(url==='/me/stock-research'?{watchlist_count:1,items:[{ticker:'NVDA',status:'pending'}]}:{items:[change()],next_cursor:null});};
+ globalThis.fetch=async url=>{if(url!=='/watchlist'&&url!=='/macro/beta'&&!String(url).startsWith('/kol/'))reads++;return Response.json(url==='/me/stock-research'?{watchlist_count:1,items:[{ticker:'NVDA',status:'pending'}]}:{items:[change()],next_cursor:null});};
  const dispose=await today.mount(root);assert.equal(root.querySelector('.focus-latest .stock-open'),null);
  const search=root.querySelector('input[type=search]');search.value='my unsubmitted search';search.focus();
  assert.ok(sharedUpdate(root,'/me/stock-research',{items:[item()]}));assert.equal(document.activeElement,search);
@@ -366,7 +367,7 @@ test('Today sorts the full stock list by analysis time and exposes every stock w
  const items=['AAPL','AEHR','ALAB','AMD','GLW','NVDA','TSLA'].map((ticker,i)=>({...item(ticker),as_of:`2026-09-${String(i+1).padStart(2,'0')}T22:00:00Z`}));
  items.push({...item('ZZZ'),status:'pending',as_of:null,overview:null,sources:[]});
  assert.deepEqual(today.latestAnalyses([{ticker:'bad',as_of:'broken'},...items]).map(i=>i.ticker),['TSLA','NVDA','GLW','AMD','ALAB','AEHR','AAPL','bad','ZZZ']);
- globalThis.fetch=async url=>{if(url!=='/watchlist'&&url!=='/macro/beta')reads++;return Response.json(url==='/me/stock-research'?{items,watchlist_count:8}:{items:[change()],next_cursor:null});};
+ globalThis.fetch=async url=>{if(url!=='/watchlist'&&url!=='/macro/beta'&&!String(url).startsWith('/kol/'))reads++;return Response.json(url==='/me/stock-research'?{items,watchlist_count:8}:{items:[change()],next_cursor:null});};
  const dispose=await today.mount(root);
  const tickers=()=>[...root.querySelectorAll('.today-analysis .ticker')].map(n=>n.textContent);
  assert.deepEqual(tickers(),['TSLA','NVDA','GLW','AMD','ALAB']);
