@@ -1,5 +1,13 @@
 # Change log
 
+## Liquidity tile: net liquidity, QQQ and SPY on one normalized chart · 2026-09-24
+
+Owner: one plot with the dollar-liquidity index normalized against QQQ and SPY, three lines, so the negative
+correlation is visible; the 10-year tile keeps its paired chart. `today-spark.js` gains `normalizedLines` (each
+series scaled to its own range over the last 60 sessions: 0 = the period low, 100 = its high) and `sparkLines`; the
+caption names the correlation of net liquidity's daily change with QQQ's and SPY's daily returns and the share of
+days it moved opposite QQQ, as a description.
+
 ## Today: paired charts on the liquidity and yield tiles; the close-of-day note · 2026-09-24
 
 Owner (2026-09-24): the dollar-liquidity gauge must stay live; plot its day-to-day change against the Nasdaq so

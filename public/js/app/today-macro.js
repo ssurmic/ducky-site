@@ -5,7 +5,7 @@ import {el,modal} from './ui.js';
 import {s,LANG} from './strings.js';
 import * as api from './api.js';
 import {gauge,bandFor} from './today-gauge.js';
-import {dailyPairs,summary,sparkPair} from './today-spark.js';
+import {dailyPairs,summary,sparkPair,normalizedLines,sparkLines} from './today-spark.js';
 
 const OK=v=>typeof v==='number'&&Number.isFinite(v);
 const num=(v,d=2)=>OK(v)?new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US',{minimumFractionDigits:d,maximumFractionDigits:d}).format(v):'—';
@@ -47,6 +47,27 @@ function reading(doc,key,{series}={}){
 }
 function clock(iso){const t=Date.parse(iso||'');return Number.isFinite(t)?new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hour12:false}).format(t):'—';}
 
+// The liquidity tile's chart: net liquidity, QQQ and SPY on one chart, each scaled to its own range, with the
+// correlation of net liquidity's daily change against each index's daily return in the caption.
+function linesFor(doc){
+  const lines=normalizedLines(doc?.history);
+  if(lines.series.length<2||!lines.series.some(s=>s.key==='liquidity'))return null;
+  const against=key=>{
+    const pairs=dailyPairs((doc?.history||[]).map(r=>({...r,qqq_index:r?.[key]})),r=>r?.metrics?.net_liquidity_bn);
+    return summary(pairs);
+  };
+  return {...lines,qqq:against('qqq_index'),spy:against('spy_index')};
+}
+function linesBlock(tile){
+  const {dates,series,qqq,spy}=tile.lines;
+  const labels={liquidity:s('today.lines_liquidity'),qqq:s('today.lines_qqq'),spy:s('today.lines_spy')};
+  const fmtDate=d=>{const t=Date.parse(d+'T12:00:00Z');return Number.isFinite(t)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'2-digit',day:'2-digit'}).format(t):d;};
+  const r=v=>OK(v)?(v>0?'+':'')+v.toFixed(2):'—';
+  const legend=el('span.today-macro-legend',...series.map(x=>el('span.today-lines-key.is-'+x.key,el('i'),labels[x.key])));
+  return el('div.today-macro-chart',sparkLines({dates,series},{labels,fmtDate}),legend,
+    el('span.today-macro-caption',s('today.lines_caption',{n:dates.length,rq:r(qqq?.correlation),rs:r(spy?.correlation),pq:OK(qqq?.opposite)?qqq.opposite:'—'})));
+}
+
 // The paired chart's data for a tile: day-to-day changes of one series against QQQ's return that day.
 function pairing(doc,pick,bars){
   const pairs=dailyPairs(doc?.history,pick);
@@ -71,7 +92,7 @@ export function macroTiles(doc){
      tone:band==='supportive'?'up':band==='adverse'?'down':band==='mixed'?'mid':'flat',help:liquidityHelp(latest),
      gauge:{name:s('today.macro_liquidity'),score:OK(latest.funding_score)?latest.funding_score:null,bands:LIQUIDITY_BANDS(),word:s('today.macro_regime_'+band)},
      note:[s('today.macro_regime_'+band),OK(netT)?s('today.macro_net_liquidity',{value:num(netT,2)}):null,OK(change)?s('today.macro_net_change',{value:signed(change)}):null].filter(Boolean).join(' · '),
-     chart:pairing(doc,r=>r?.metrics?.net_liquidity_bn,s('today.chart_liquidity_bars')),chartUnit:'B'},
+     lines:linesFor(doc)},
     {key:'yield',label:s('today.macro_10y'),value:OK(y10.value)?num(y10.value,2)+'%':'—',unit:'',tone:'flat',stamp:y10.stamp,
      note:OK(bp)?s('today.macro_10y_change',{bp:signed(bp)}):s('today.macro_no_change'),
      chart:pairing(doc,r=>OK(r?.metrics?.nominal_10y)?Math.round(r.metrics.nominal_10y*100):null,s('today.chart_yield_bars')),chartUnit:'bp'},
@@ -128,7 +149,7 @@ export function macroStrip(doc){
       el('span.today-macro-label',tile.label,tile.help||null),
       dial?el('div.today-gauge-wrap',dial,el('span.today-gauge-word',tile.gauge.word)):el('strong.today-macro-value.mono',tile.value,tile.unit?el('span.today-macro-unit',tile.unit):null),
       el('span.today-macro-note',tile.note),tile.stamp?el('span.today-macro-stamp.small.muted',tile.stamp):null,historyList(tile.history),
-      tile.chart?chartBlock(tile):null));
+      tile.lines?linesBlock(tile):tile.chart?chartBlock(tile):null));
   }
   // Each source carries its own clock: the FRED / New York Fed panel ends at the last session it
   // covers, the CNN index at the minute it was read, so the footer names both.

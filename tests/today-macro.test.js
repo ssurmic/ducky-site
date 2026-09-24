@@ -87,12 +87,12 @@ test('paired charts: correlation and opposite-day share are computed from the hi
   const stats=spark.summary(pairs);assert.equal(stats.n,60);assert.equal(stats.correlation,-1);assert.equal(stats.opposite,100);
   assert.equal(spark.oppositeShare(pairs.slice(0,3)),null);
   const tiles=macro.macroTiles({...doc,history});
-  assert.ok(tiles[0].chart&&tiles[0].chart.stats.correlation===-1&&tiles[0].chartUnit==='B');
+  assert.ok(tiles[0].lines&&tiles[0].lines.qqq.correlation===-1);   // the liquidity tile draws the three-line chart
   assert.ok(tiles[1].chart&&tiles[1].chart.pairs.length===60&&tiles[1].chartUnit==='bp');
-  assert.equal(macro.macroTiles(doc)[0].chart,null);   // a one-row history draws nothing
+  assert.equal(macro.macroTiles(doc)[1].chart,null);   // a one-row history draws nothing
   const strip=macro.macroStrip({...doc,history});
-  assert.equal(strip.querySelectorAll('.today-spark').length,2);
-  assert.equal(strip.querySelectorAll('.today-spark-bar').length,120);
+  assert.equal(strip.querySelectorAll('.today-spark').length,1);
+  assert.equal(strip.querySelectorAll('.today-spark-bar').length,60);
   assert.match(strip.querySelector('.today-macro-caption').textContent,/60 sessions|60 个交易日/);
   assert.match(strip.querySelector('.today-macro-caption').textContent,/-1\.00/);
   assert.doesNotMatch(strip.textContent,/forecast says|will rise|target/i);
@@ -111,4 +111,22 @@ test('the close-of-day note renders above the tiles when ready, says when it is 
   assert.match(macro.macroStrip({...doc,digest:{...digest,status:'stale'}}).textContent,/Over 40 hours old/);
   assert.equal(macro.macroStrip({...doc,digest:{status:'unavailable'}}).querySelector('.today-digest'),null);
   assert.equal(macro.macroStrip(doc).querySelector('.today-digest'),null);
+});
+
+test('the liquidity tile draws net liquidity, QQQ and SPY on one chart, each scaled to its own range, with both correlations',async()=>{
+  const spark=await import('../public/js/app/today-spark.js');
+  const history=[];let q=100,sp=100,net=5800;
+  for(let i=0;i<70;i++){const up=i%2?1:-1;net+=up*30;q*=1-up*0.01;sp*=1-up*0.006;history.push({date:'2026-0'+(1+Math.floor(i/28))+'-'+String(1+i%28).padStart(2,'0'),metrics:{net_liquidity_bn:net,nominal_10y:4.5},qqq_index:q,spy_index:sp});}
+  const lines=spark.normalizedLines(history);
+  assert.equal(lines.dates.length,60);assert.deepEqual(lines.series.map(x=>x.key),['liquidity','qqq','spy']);
+  for(const x of lines.series){assert.ok(x.values.every(v=>v>=0&&v<=100));assert.ok(x.values.includes(0)&&x.values.includes(100));}
+  const tiles=macro.macroTiles({...doc,history});
+  assert.ok(tiles[0].lines&&tiles[0].lines.qqq.correlation===-1&&tiles[0].lines.spy.correlation===-1&&tiles[0].lines.qqq.opposite===100);
+  assert.ok(tiles[1].chart&&!tiles[1].lines);   // the 10-year tile keeps its paired chart
+  const strip=macro.macroStrip({...doc,history});
+  assert.equal(strip.querySelectorAll('.today-lines').length,1);
+  assert.equal(strip.querySelectorAll('.today-lines-line').length,3);
+  assert.equal(strip.querySelectorAll('.today-spark').length,1);
+  assert.match(strip.querySelector('[data-tile=liquidity] .today-macro-caption').textContent,/-1\.00.*-1\.00|100%/);
+  assert.equal(macro.macroTiles(doc)[0].lines,null);
 });
