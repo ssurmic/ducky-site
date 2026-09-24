@@ -1,5 +1,15 @@
 # Change log
 
+## Today charts: the last two weeks, both indexes on both tiles, readings under the finger · 2026-09-24
+
+Owner: investors remember two weeks, not six months, for liquidity and for yields alike; QQQ and SPY belong on one
+chart; a pointer on the chart must give the day's numbers; and it must read on a phone. Both tiles now draw the
+last 10 sessions: the tile's own series (net liquidity, or the 10-year yield) with QQQ and SPY, each scaled to its
+own range, a marker on every session, the day of month under each; the legend carries each line's latest day change
+(liquidity in $B, the yield in bp, the indexes in %), hovering or tapping a day lists its three readings, and the
+caption's correlation is computed over the same two weeks. On phones the two chart tiles take the full width with a
+taller chart, and the readings stay above the chart after a tap. The bars-and-line chart is gone.
+
 ## Liquidity chart: hover readings and each line's latest day change · 2026-09-24
 
 Owner: SPY must show next to QQQ (it does on real data; the QA fixture's SPY was flat), each line should say how much

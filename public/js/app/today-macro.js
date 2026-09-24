@@ -5,7 +5,7 @@ import {el,modal} from './ui.js';
 import {s,LANG} from './strings.js';
 import * as api from './api.js';
 import {gauge,bandFor} from './today-gauge.js';
-import {dailyPairs,summary,sparkPair,normalizedLines,sparkLines,cursorIndex} from './today-spark.js';
+import {dailyPairs,summary,normalizedLines,sparkLines,cursorIndex,PRIMARY} from './today-spark.js';
 
 const OK=v=>typeof v==='number'&&Number.isFinite(v);
 const num=(v,d=2)=>OK(v)?new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US',{minimumFractionDigits:d,maximumFractionDigits:d}).format(v):'—';
@@ -47,25 +47,27 @@ function reading(doc,key,{series}={}){
 }
 function clock(iso){const t=Date.parse(iso||'');return Number.isFinite(t)?new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hour12:false}).format(t):'—';}
 
-// The liquidity tile's chart: net liquidity, QQQ and SPY on one chart, each scaled to its own range, with the
-// correlation of net liquidity's daily change against each index's daily return in the caption.
-function linesFor(doc){
-  const lines=normalizedLines(doc?.history);
-  if(lines.series.length<2||!lines.series.some(s=>s.key==='liquidity'))return null;
-  const against=key=>{
-    const pairs=dailyPairs((doc?.history||[]).map(r=>({...r,qqq_index:r?.[key]})),r=>r?.metrics?.net_liquidity_bn);
-    return summary(pairs);
-  };
-  return {...lines,qqq:against('qqq_index'),spy:against('spy_index')};
+// A tile's chart: its own series (net liquidity, or the 10-year yield), QQQ and SPY on one chart over the last
+// two weeks of sessions, each scaled to its own range; the caption carries the correlation of the series' daily
+// change against each index's daily return over the same window. Investors remember two weeks, not six months.
+const SESSIONS=10;
+function linesFor(doc,primary){
+  const lines=normalizedLines(doc?.history,{sessions:SESSIONS,primary});
+  if(lines.series.length<2||!lines.series.some(s=>s.key===primary))return null;
+  const pick=PRIMARY[primary];
+  const against=key=>summary(dailyPairs((doc?.history||[]).map(r=>({...r,qqq_index:r?.[key]})),r=>primary==='yield'?(OK(pick(r))?pick(r)*100:null):pick(r),{sessions:SESSIONS}));
+  return {...lines,primary,qqq:against('qqq_index'),spy:against('spy_index')};
 }
-// One series' reading on one day: the liquidity level in $B with its day change; an index's day change.
+// One series' reading on one day: the liquidity level in $B with its day change, the yield with its bp change,
+// an index's day change.
 function lineReading(x,i){
   if(x.key==='liquidity')return OK(x.raw[i])?s('today.lines_liquidity_value',{value:num(x.raw[i],0),change:OK(x.change[i])?signed(x.change[i],0):'—'}):'—';
+  if(x.key==='yield')return OK(x.raw[i])?s('today.lines_yield_value',{value:num(x.raw[i],2),change:OK(x.change[i])?signed(x.change[i],0):'—'}):'—';
   return OK(x.change[i])?signed(x.change[i],2)+'%':'—';
 }
 function linesBlock(tile){
-  const {dates,series,qqq,spy}=tile.lines;
-  const labels={liquidity:s('today.lines_liquidity'),qqq:s('today.lines_qqq'),spy:s('today.lines_spy')};
+  const {dates,series,qqq,spy,primary}=tile.lines;
+  const labels={liquidity:s('today.lines_liquidity'),yield:s('today.lines_yield'),qqq:s('today.lines_qqq'),spy:s('today.lines_spy')};
   const fmtDate=d=>{const t=Date.parse(d+'T12:00:00Z');return Number.isFinite(t)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'2-digit',day:'2-digit'}).format(t):d;};
   const r=v=>OK(v)?(v>0?'+':'')+v.toFixed(2):'—';
   const last=dates.length-1;
@@ -80,18 +82,7 @@ function linesBlock(tile){
   chart.addEventListener('pointerleave',hide);
   chart.addEventListener('pointerdown',e=>{const rect=chart.getBoundingClientRect();show(cursorIndex(e.clientX-rect.left,rect.width,dates.length));});
   return el('div.today-macro-chart.has-cursor',tip,chart,legend,
-    el('span.today-macro-caption',s('today.lines_caption',{n:dates.length,rq:r(qqq?.correlation),rs:r(spy?.correlation),pq:OK(qqq?.opposite)?qqq.opposite:'—'})));
-}
-
-// The paired chart's data for a tile: day-to-day changes of one series against QQQ's return that day.
-function pairing(doc,pick,bars){
-  const pairs=dailyPairs(doc?.history,pick);
-  if(pairs.length<3)return null;
-  return {pairs,stats:summary(pairs),bars,line:s('today.chart_qqq')};
-}
-function captionFor(chart){
-  const {stats,bars,line}=chart,r=OK(stats.correlation)?(stats.correlation>0?'+':'')+stats.correlation.toFixed(2):'—';
-  return OK(stats.opposite)?s('today.chart_caption',{n:stats.n,bars,line,r,pct:stats.opposite}):s('today.chart_caption_short',{n:stats.n,bars,line,r});
+    el('span.today-macro-caption',s('today.lines_caption',{n:dates.length,what:labels[primary],rq:r(qqq?.correlation),rs:r(spy?.correlation),pq:OK(qqq?.opposite)?qqq.opposite:'—'})));
 }
 
 export function macroTiles(doc){
@@ -107,26 +98,15 @@ export function macroTiles(doc){
      tone:band==='supportive'?'up':band==='adverse'?'down':band==='mixed'?'mid':'flat',help:liquidityHelp(latest),
      gauge:{name:s('today.macro_liquidity'),score:OK(latest.funding_score)?latest.funding_score:null,bands:LIQUIDITY_BANDS(),word:s('today.macro_regime_'+band)},
      note:[s('today.macro_regime_'+band),OK(netT)?s('today.macro_net_liquidity',{value:num(netT,2)}):null,OK(change)?s('today.macro_net_change',{value:signed(change)}):null].filter(Boolean).join(' · '),
-     lines:linesFor(doc)},
+     lines:linesFor(doc,'liquidity')},
     {key:'yield',label:s('today.macro_10y'),value:OK(y10.value)?num(y10.value,2)+'%':'—',unit:'',tone:'flat',stamp:y10.stamp,
      note:OK(bp)?s('today.macro_10y_change',{bp:signed(bp)}):s('today.macro_no_change'),
-     chart:pairing(doc,r=>OK(r?.metrics?.nominal_10y)?Math.round(r.metrics.nominal_10y*100):null,s('today.chart_yield_bars')),chartUnit:'bp'},
+     lines:linesFor(doc,'yield')},
     {key:'vix',label:s('today.macro_vix'),value:OK(vix.value)?num(vix.value,1):'—',unit:'',tone:OK(ratio)?(ratio>1?'down':'up'):'flat',stamp:vix.stamp,
      note:OK(ratio)?s('today.macro_vix_ratio',{ratio:num(ratio,2)})+' · '+s(ratio>1?'today.macro_vix_stress':'today.macro_vix_calm'):s('today.macro_vix_missing')},
     {key:'fng',label:s('today.macro_fng'),value:OK(fng?.score)?num(fng.score,0):'—',unit:'',tone:OK(fng?.score)?(fng.score<45?'down':fng.score>55?'up':'mid'):'flat',
      gauge:{name:s('today.macro_fng'),score:OK(fng?.score)?fng.score:null,bands:FNG_BANDS(),word:fngWord||''},history:fngHistory(fng),
      note:fng&&OK(fng.score)?[fngWord,OK(fng.previous_close)?s('today.macro_fng_prev',{value:num(fng.previous_close,0)}):null].filter(Boolean).join(' · '):s('today.macro_fng_missing')}];
-}
-
-// Bars (the tile's own day-to-day change) against a line (QQQ's return the same day), with the plain
-// count of how often they moved opposite ways: co-movement a reader can see, never a forecast.
-function chartBlock(tile){
-  const {pairs,stats,bars,line}=tile.chart;
-  const fmtDate=d=>{const t=Date.parse(d+'T12:00:00Z');return Number.isFinite(t)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'2-digit',day:'2-digit'}).format(t):d;};
-  const fmtChange=v=>(v>0?'+':'')+num(v,0)+' '+tile.chartUnit;
-  return el('div.today-macro-chart',sparkPair(pairs,{unit:tile.chartUnit,labels:{bars,line},fmtChange,fmtDate}),
-    el('span.today-macro-legend',s('today.chart_legend',{bars,line})),
-    el('span.today-macro-caption',captionFor(tile.chart)));
 }
 
 function historyList(rows){
@@ -164,7 +144,7 @@ export function macroStrip(doc){
       el('span.today-macro-label',tile.label,tile.help||null),
       dial?el('div.today-gauge-wrap',dial,el('span.today-gauge-word',tile.gauge.word)):el('strong.today-macro-value.mono',tile.value,tile.unit?el('span.today-macro-unit',tile.unit):null),
       el('span.today-macro-note',tile.note),tile.stamp?el('span.today-macro-stamp.small.muted',tile.stamp):null,historyList(tile.history),
-      tile.lines?linesBlock(tile):tile.chart?chartBlock(tile):null));
+      tile.lines?linesBlock(tile):null));
   }
   // Each source carries its own clock: the FRED / New York Fed panel ends at the last session it
   // covers, the CNN index at the minute it was read, so the footer names both.

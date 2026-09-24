@@ -69,15 +69,17 @@ export function sparkPair(pairs,{unit='',labels={bars:'',line:''},fmtChange=v=>S
 // Three lines on one chart, each scaled to its own range over the window (0 = the period's low,
 // 100 = its high): the dollar net liquidity level next to the QQQ and SPY index levels, so a reader can
 // see whether they moved together or against each other. Comparable shapes, never comparable units.
-export function normalizedLines(history,{sessions=60}={}){
+// `primary` is the tile's own series: net liquidity ($B) or the 10-year yield (%); the indexes ride along.
+export const PRIMARY={liquidity:r=>r?.metrics?.net_liquidity_bn,yield:r=>r?.metrics?.nominal_10y};
+export function normalizedLines(history,{sessions=10,primary='liquidity'}={}){
   const rows=(history||[]).filter(r=>r&&r.date).slice(-sessions);
-  const pick={liquidity:r=>r?.metrics?.net_liquidity_bn,qqq:r=>r?.qqq_index,spy:r=>r?.spy_index};
+  const pick={[primary]:PRIMARY[primary]||PRIMARY.liquidity,qqq:r=>r?.qqq_index,spy:r=>r?.spy_index};
   const series=[];
   for(const [key,fn] of Object.entries(pick)){
     const raw=rows.map(fn);
     const known=raw.filter(OK);if(known.length<3)continue;
     const lo=Math.min(...known),hi=Math.max(...known),span=hi-lo;
-    const change=raw.map((v,i)=>i>0&&OK(v)&&OK(raw[i-1])?(key==='liquidity'?v-raw[i-1]:raw[i-1]>0?Math.round((v/raw[i-1]-1)*10000)/100:null):null);
+    const change=raw.map((v,i)=>i>0&&OK(v)&&OK(raw[i-1])?(key==='liquidity'?v-raw[i-1]:key==='yield'?Math.round((v-raw[i-1])*100):raw[i-1]>0?Math.round((v/raw[i-1]-1)*10000)/100:null):null);
     series.push({key,values:raw.map(v=>OK(v)&&span>0?Math.round((v-lo)/span*1000)/10:null),raw,change,last:known[known.length-1],lo,hi});
   }
   return {dates:rows.map(r=>r.date),series};
@@ -100,10 +102,13 @@ export function sparkLines({dates,series},{labels={},fmtDate=d=>d}={}){
     const line=svg('polyline',{class:'today-lines-line is-'+s.key,points:pts,fill:'none'});
     line.append(svg('title',{},`${labels[s.key]||s.key} · ${fmtDate(dates[0])} → ${fmtDate(dates[n-1])}`));
     root.append(line);
-    const lastIndex=s.values.map((v,i)=>OK(v)?i:-1).filter(i=>i>=0).pop();
-    if(lastIndex>=0)root.append(svg('circle',{class:'today-lines-dot is-'+s.key,cx:fix(PAD_L+lastIndex*step),cy:fix(y(s.values[lastIndex])),r:2.4}));
+    // A marker on every session when the window is short: a finger can land on a day.
+    if(n<=15)s.values.forEach((v,i)=>{if(OK(v))root.append(svg('circle',{class:'today-lines-dot is-'+s.key+(i===n-1?' is-last':''),cx:fix(PAD_L+i*step),cy:fix(y(v)),r:i===n-1?2.6:1.7}));});
+    else{const lastIndex=s.values.map((v,i)=>OK(v)?i:-1).filter(i=>i>=0).pop();if(lastIndex>=0)root.append(svg('circle',{class:'today-lines-dot is-'+s.key+' is-last',cx:fix(PAD_L+lastIndex*step),cy:fix(y(s.values[lastIndex])),r:2.4}));}
   }
-  root.append(svg('text',{class:'today-spark-axis',x:PAD_L,y:H-3},fmtDate(dates[0])),svg('text',{class:'today-spark-axis',x:W-PAD_R,y:H-3,'text-anchor':'end'},fmtDate(dates[n-1])));
+  // Every session labelled by its day of month when the window is two weeks; the ends otherwise.
+  if(n<=15)dates.forEach((d,i)=>root.append(svg('text',{class:'today-spark-axis',x:fix(PAD_L+i*step),y:H-3,'text-anchor':i===0?'start':i===n-1?'end':'middle'},String(Number(d.slice(-2))))));
+  else root.append(svg('text',{class:'today-spark-axis',x:PAD_L,y:H-3},fmtDate(dates[0])),svg('text',{class:'today-spark-axis',x:W-PAD_R,y:H-3,'text-anchor':'end'},fmtDate(dates[n-1])));
   // A cursor the caller moves: a vertical guide at one date, hidden until the pointer is over the chart.
   const cursor=svg('line',{class:'today-lines-cursor',x1:PAD_L,y1:TOP,x2:PAD_L,y2:TOP+inner,visibility:'hidden'});
   root.append(cursor);
