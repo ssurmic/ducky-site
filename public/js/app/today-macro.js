@@ -36,10 +36,22 @@ export function fngHistory(fng){
     .filter(([key])=>OK(fng?.[key])).map(([key,label])=>{const band=bandFor(bands,fng[key]);return {label:s(label),word:band.label,tone:band.tone,value:Math.round(fng[key])};});
 }
 
+// A reading and where it comes from: the live index print when the quote feed has one, else the newest
+// FRED close (published the evening of its day), else the session-aligned panel the scores use.
+function reading(doc,key,{series}={}){
+  const q=doc?.intraday||null,la=doc?.latest_available||null,m=doc?.latest?.metrics||{};
+  if(OK(q?.[key]))return {value:q[key],stamp:s('today.macro_intraday',{time:clock(q.quoted_at)})};
+  if(OK(la?.metrics?.[key]))return {value:la.metrics[key],stamp:s('today.macro_fred_close',{date:(series&&la.dates?.[series])||la.as_of||'—'})};
+  return {value:m[key],stamp:OK(m[key])?s('today.macro_tile_as_of',{date:doc?.as_of||'—'}):''};
+}
+function clock(iso){const t=Date.parse(iso||'');return Number.isFinite(t)?new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hour12:false}).format(t):'—';}
+
 export function macroTiles(doc){
-  const latest=doc?.latest||{},m=latest.metrics||{},fng=doc?.fear_greed||null;
+  const latest=doc?.latest||{},m=latest.metrics||{},fng=doc?.fear_greed||null,la=doc?.latest_available?.metrics||{};
   const band=fundingBand(latest.funding_score);
-  const netT=OK(m.net_liquidity_bn)?m.net_liquidity_bn/1000:null,change=m.net_liquidity_65d_change_bn,ratio=m.vix_term_ratio;
+  const netT=OK(m.net_liquidity_bn)?m.net_liquidity_bn/1000:null,change=m.net_liquidity_65d_change_bn;
+  const y10=reading(doc,'nominal_10y',{series:'DGS10'}),vix=reading(doc,'vix',{series:'VIXCLS'}),term=reading(doc,'vix_term_ratio',{series:'VXVCLS'});
+  const ratio=term.value,bp=OK(la.nominal_10y_20d_change_bp)?la.nominal_10y_20d_change_bp:m.nominal_10y_20d_change_bp;
   const rating=RATINGS[String(fng?.rating||'').toLowerCase()];
   const fngWord=rating?s('today.fng_'+rating):OK(fng?.score)?bandFor(FNG_BANDS(),fng.score).label:null;
   return [
@@ -47,9 +59,9 @@ export function macroTiles(doc){
      tone:band==='supportive'?'up':band==='adverse'?'down':band==='mixed'?'mid':'flat',help:liquidityHelp(latest),
      gauge:{name:s('today.macro_liquidity'),score:OK(latest.funding_score)?latest.funding_score:null,bands:LIQUIDITY_BANDS(),word:s('today.macro_regime_'+band)},
      note:[s('today.macro_regime_'+band),OK(netT)?s('today.macro_net_liquidity',{value:num(netT,2)}):null,OK(change)?s('today.macro_net_change',{value:signed(change)}):null].filter(Boolean).join(' · ')},
-    {key:'yield',label:s('today.macro_10y'),value:OK(m.nominal_10y)?num(m.nominal_10y,2)+'%':'—',unit:'',tone:'flat',
-     note:OK(m.nominal_10y_20d_change_bp)?s('today.macro_10y_change',{bp:signed(m.nominal_10y_20d_change_bp)}):s('today.macro_no_change')},
-    {key:'vix',label:s('today.macro_vix'),value:OK(m.vix)?num(m.vix,1):'—',unit:'',tone:OK(ratio)?(ratio>1?'down':'up'):'flat',
+    {key:'yield',label:s('today.macro_10y'),value:OK(y10.value)?num(y10.value,2)+'%':'—',unit:'',tone:'flat',stamp:y10.stamp,
+     note:OK(bp)?s('today.macro_10y_change',{bp:signed(bp)}):s('today.macro_no_change')},
+    {key:'vix',label:s('today.macro_vix'),value:OK(vix.value)?num(vix.value,1):'—',unit:'',tone:OK(ratio)?(ratio>1?'down':'up'):'flat',stamp:vix.stamp,
      note:OK(ratio)?s('today.macro_vix_ratio',{ratio:num(ratio,2)})+' · '+s(ratio>1?'today.macro_vix_stress':'today.macro_vix_calm'):s('today.macro_vix_missing')},
     {key:'fng',label:s('today.macro_fng'),value:OK(fng?.score)?num(fng.score,0):'—',unit:'',tone:OK(fng?.score)?(fng.score<45?'down':fng.score>55?'up':'mid'):'flat',
      gauge:{name:s('today.macro_fng'),score:OK(fng?.score)?fng.score:null,bands:FNG_BANDS(),word:fngWord||''},history:fngHistory(fng),
@@ -71,13 +83,13 @@ export function macroStrip(doc){
     grid.append(el('div.today-macro-tile',{'data-tile':tile.key,class:'is-'+tile.tone+(dial?' has-gauge':'')},
       el('span.today-macro-label',tile.label,tile.help||null),
       dial?el('div.today-gauge-wrap',dial,el('span.today-gauge-word',tile.gauge.word)):el('strong.today-macro-value.mono',tile.value,tile.unit?el('span.today-macro-unit',tile.unit):null),
-      el('span.today-macro-note',tile.note),historyList(tile.history)));
+      el('span.today-macro-note',tile.note),tile.stamp?el('span.today-macro-stamp.small.muted',tile.stamp):null,historyList(tile.history)));
   }
   // Each source carries its own clock: the FRED / New York Fed panel ends at the last session it
   // covers, the CNN index at the minute it was read, so the footer names both.
   const fngAt=Date.parse(doc.fear_greed?.as_of||'');
   const fng=Number.isFinite(fngAt)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).format(fngAt):'—';
-  box.append(grid,el('p.small.muted.today-macro-source',s('today.macro_source',{date:doc.as_of||'—',fng})+(doc.status==='stale'?' · '+s('macro.stale'):'')));
+  box.append(grid,el('p.small.muted.today-macro-source',s('today.macro_source',{date:doc.latest_available?.as_of||doc.as_of||'—',fng})+(doc.status==='stale'?' · '+s('macro.stale'):'')));
   return box;
 }
 

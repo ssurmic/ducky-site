@@ -1,147 +1,55 @@
 {
  "schema": "calendar/1",
- "generated_at": "2026-09-06T20:41:05+00:00",
- "as_of": "2026-09-06T20:41:05+00:00",
+ "generated_at": "2026-09-24T04:01:04+00:00",
+ "as_of": "2026-09-24T04:01:04+00:00",
  "window_days": 90,
  "partial": true,
  "source": "static-fallback",
  "events": [
   {
-   "date": "2026-09-02",
+   "date": "2026-09-23",
+   "type": "geo",
+   "tickers": [],
+   "title": "习近平对美国进行国事访问",
+   "title_en": "Xi Jinping state visit to the United States",
+   "note": "9 月 24 日白宫会谈与国宴；贸易休战延期、稀土出口、关税是议题。以白宫与外交部通报为准。",
+   "note_en": "White House summit and state dinner on Sep 24; the trade-truce extension, rare-earth exports and tariffs are on the table. Official readouts govern.",
+   "source_url": "https://www.whitehouse.gov/briefings-statements/2026/09/first-lady-melania-trump-releases-details-ahead-of-his-excellency-xi-jinping-president-of-the-peoples-republic-of-china-and-madame-peng-liyuans-visit-to-the-white-house/",
+   "short": "习近平访美",
+   "short_en": "Xi in Washington",
+   "span": {
+    "start": "2026-09-23",
+    "end": "2026-09-25",
+    "day": 1,
+    "days": 3
+   }
+  },
+  {
+   "date": "2026-09-23",
    "type": "macro",
-   "title": "小非农 · ADP 私营就业",
-   "title_en": "ADP private payrolls",
+   "title": "标普全球 美国 PMI 初值",
+   "title_en": "S&P Global flash US PMI",
    "tickers": [],
-   "note": "08:15 ET 公布上月 ADP 私营部门就业数据。",
-   "note_en": "Prior-month ADP private-sector employment at 08:15 ET."
+   "note": "09:45 ET 公布本月制造业 / 服务业 PMI 初值；当月最早的景气读数。",
+   "note_en": "Flash manufacturing and services PMI for the current month at 09:45 ET; the month's first activity read."
   },
   {
-   "date": "2026-09-03",
-   "type": "macro",
-   "title": "初请失业金",
-   "title_en": "Initial jobless claims",
+   "date": "2026-09-24",
+   "type": "geo",
    "tickers": [],
-   "note": "08:30 ET 公布每周首次申请失业救济金人数。",
-   "note_en": "Weekly initial jobless claims at 08:30 ET."
-  },
-  {
-   "date": "2026-09-04",
-   "type": "macro",
-   "title": "大非农 · 非农就业 (NFP)",
-   "title_en": "Nonfarm payrolls (NFP)",
-   "tickers": [],
-   "note": "08:30 ET 公布上月非农就业与失业率。",
-   "note_en": "Prior-month payrolls and unemployment at 08:30 ET."
-  },
-  {
-   "date": "2026-09-07",
-   "type": "holiday",
-   "session": "closed",
-   "title": "美股休市 · 美国劳动节",
-   "title_en": "US markets closed · Labor Day",
-   "tickers": [],
-   "note": "美股及股票期权全天休市；下次常规开盘为 2026-09-08 09:30（美东时间）。",
-   "note_en": "US stocks and equity options are closed all day. Next regular open: 2026-09-08 at 09:30 ET.",
-   "next_open_date": "2026-09-08",
-   "next_open_et": "09:30",
-   "url": "https://www.nyse.com/trade/hours-calendars",
-   "schedule_status": "source_scheduled",
-   "impacts": [
-    {
-     "title": "短期期权：时间仍在流逝",
-     "title_en": "Short-dated options: time still passes",
-     "body": "买入 Call 或 Put 后，即使休市，合约也在接近到期，时间价值仍可能减少（Theta）。越接近到期越要留意；假期影响可能已提前反映在报价中，不能直接按「一天 Theta × 休市天数」算实际亏损。",
-     "body_en": "Long calls and puts move closer to expiry while markets are closed, so time value can erode (Theta), especially near expiry. Quotes can reflect the holiday in advance; daily Theta multiplied by days closed is not a reliable measure of the actual loss.",
-     "url": "https://www.optionseducation.org/advancedconcepts/theta"
-    },
-    {
-     "title": "无法交易调整，复市可能跳空",
-     "title_en": "No exchange trading; reopening prices can gap",
-     "body": "美股及股票期权休市期间不能在这些交易所平仓。假期消息可能让复市价格跳离前收盘；卖出期权也仍有价格跳空和指派风险。",
-     "body_en": "You cannot close stock or equity-option positions on these exchanges during the closure. Holiday news can move reopening prices away from the prior close. Short options still carry gap and assignment risk."
-    },
-    {
-     "title": "核对到期和行权截止时间",
-     "title_en": "Check expiry and exercise deadlines",
-     "body": "不同合约的最后交易日、结算和券商行权截止时间可能不同。看具体合约通知；期货、部分指数期权和其他市场不一定一起休市。",
-     "body_en": "Last trading dates, settlement and broker exercise deadlines vary by contract. Check the contract notice; futures, some index options and other markets can follow different schedules."
-    }
-   ]
-  },
-  {
-   "date": "2026-09-10",
-   "type": "macro",
-   "title": "初请失业金",
-   "title_en": "Initial jobless claims",
-   "tickers": [],
-   "note": "08:30 ET 公布每周首次申请失业救济金人数。",
-   "note_en": "Weekly initial jobless claims at 08:30 ET."
-  },
-  {
-   "date": "2026-09-10",
-   "type": "macro",
-   "title": "PPI 生产者物价",
-   "title_en": "PPI (producer prices)",
-   "tickers": [],
-   "note": "08:30 ET 公布上月生产者物价指数。",
-   "note_en": "Prior-month Producer Price Index at 08:30 ET."
-  },
-  {
-   "date": "2026-09-11",
-   "type": "macro",
-   "title": "CPI 通胀数据",
-   "title_en": "CPI inflation",
-   "tickers": [],
-   "note": "08:30 ET 公布上月消费者物价指数。",
-   "note_en": "Prior-month Consumer Price Index at 08:30 ET."
-  },
-  {
-   "date": "2026-09-16",
-   "type": "macro",
-   "title": "美联储 FOMC 利率决议",
-   "title_en": "FOMC rate decision",
-   "tickers": [],
-   "note": "14:00 ET 公布利率决议,14:30 ET 主席发布会 · 含点阵图/经济预测(SEP)。",
-   "note_en": "Rate decision 14:00 ET, press conference 14:30 ET · with dot-plot / SEP."
-  },
-  {
-   "date": "2026-09-16",
-   "type": "macro",
-   "title": "零售销售",
-   "title_en": "Retail sales",
-   "tickers": [],
-   "note": "08:30 ET 公布上月零售销售数据。",
-   "note_en": "Prior-month retail sales at 08:30 ET."
-  },
-  {
-   "date": "2026-09-17",
-   "type": "macro",
-   "title": "初请失业金",
-   "title_en": "Initial jobless claims",
-   "tickers": [],
-   "note": "08:30 ET 公布每周首次申请失业救济金人数。",
-   "note_en": "Weekly initial jobless claims at 08:30 ET."
-  },
-  {
-   "date": "2026-09-18",
-   "type": "witching",
-   "title": "四巫日 · 标普/纳指季度调仓",
-   "title_en": "Quad witching · S&P/Nasdaq rebalance",
-   "tickers": [
-    "SPY",
-    "QQQ"
-   ],
-   "note": "季度衍生品到期与指数调整窗口。具体合约及指数变更以交易所和指数提供商公告为准。",
-   "note_en": "Quarterly derivatives expiration and index adjustment window. Check exchange and index-provider notices for specific contracts and changes."
-  },
-  {
-   "date": "2026-09-18",
-   "type": "opex",
-   "title": "月度期权交割 · OPEX",
-   "title_en": "Monthly OPEX",
-   "tickers": [],
-   "note": "月度股票期权到期。可查看相关合约的到期日和持仓变化。",
-   "note_en": "Monthly stock options expire. Review contract expirations and changes in open interest."
+   "title": "习近平对美国进行国事访问",
+   "title_en": "Xi Jinping state visit to the United States",
+   "note": "9 月 24 日白宫会谈与国宴；贸易休战延期、稀土出口、关税是议题。以白宫与外交部通报为准。",
+   "note_en": "White House summit and state dinner on Sep 24; the trade-truce extension, rare-earth exports and tariffs are on the table. Official readouts govern.",
+   "source_url": "https://www.whitehouse.gov/briefings-statements/2026/09/first-lady-melania-trump-releases-details-ahead-of-his-excellency-xi-jinping-president-of-the-peoples-republic-of-china-and-madame-peng-liyuans-visit-to-the-white-house/",
+   "short": "习近平访美",
+   "short_en": "Xi in Washington",
+   "span": {
+    "start": "2026-09-23",
+    "end": "2026-09-25",
+    "day": 2,
+    "days": 3
+   }
   },
   {
    "date": "2026-09-24",
@@ -151,6 +59,24 @@
    "tickers": [],
    "note": "08:30 ET 公布每周首次申请失业救济金人数。",
    "note_en": "Weekly initial jobless claims at 08:30 ET."
+  },
+  {
+   "date": "2026-09-25",
+   "type": "geo",
+   "tickers": [],
+   "title": "习近平对美国进行国事访问",
+   "title_en": "Xi Jinping state visit to the United States",
+   "note": "9 月 24 日白宫会谈与国宴；贸易休战延期、稀土出口、关税是议题。以白宫与外交部通报为准。",
+   "note_en": "White House summit and state dinner on Sep 24; the trade-truce extension, rare-earth exports and tariffs are on the table. Official readouts govern.",
+   "source_url": "https://www.whitehouse.gov/briefings-statements/2026/09/first-lady-melania-trump-releases-details-ahead-of-his-excellency-xi-jinping-president-of-the-peoples-republic-of-china-and-madame-peng-liyuans-visit-to-the-white-house/",
+   "short": "习近平访美",
+   "short_en": "Xi in Washington",
+   "span": {
+    "start": "2026-09-23",
+    "end": "2026-09-25",
+    "day": 3,
+    "days": 3
+   }
   },
   {
    "date": "2026-09-30",
@@ -200,6 +126,15 @@
    "note_en": "Weekly initial jobless claims at 08:30 ET."
   },
   {
+   "date": "2026-10-01",
+   "type": "macro",
+   "title": "ISM 制造业 PMI",
+   "title_en": "ISM manufacturing PMI",
+   "tickers": [],
+   "note": "10:00 ET 公布上月制造业采购经理指数；50 为荣枯线。",
+   "note_en": "Prior-month manufacturing PMI at 10:00 ET; 50 divides expansion from contraction."
+  },
+  {
    "date": "2026-10-02",
    "type": "macro",
    "title": "大非农 · 非农就业 (NFP)",
@@ -207,6 +142,15 @@
    "tickers": [],
    "note": "08:30 ET 公布上月非农就业与失业率。",
    "note_en": "Prior-month payrolls and unemployment at 08:30 ET."
+  },
+  {
+   "date": "2026-10-05",
+   "type": "macro",
+   "title": "ISM 服务业 PMI",
+   "title_en": "ISM services PMI",
+   "tickers": [],
+   "note": "10:00 ET 公布上月服务业采购经理指数；50 为荣枯线。",
+   "note_en": "Prior-month services PMI at 10:00 ET; 50 divides expansion from contraction."
   },
   {
    "date": "2026-10-08",
@@ -254,6 +198,15 @@
    "note_en": "Weekly initial jobless claims at 08:30 ET."
   },
   {
+   "date": "2026-10-23",
+   "type": "macro",
+   "title": "标普全球 美国 PMI 初值",
+   "title_en": "S&P Global flash US PMI",
+   "tickers": [],
+   "note": "09:45 ET 公布本月制造业 / 服务业 PMI 初值；当月最早的景气读数。",
+   "note_en": "Flash manufacturing and services PMI for the current month at 09:45 ET; the month's first activity read."
+  },
+  {
    "date": "2026-10-28",
    "type": "macro",
    "title": "美联储 FOMC 利率决议",
@@ -283,6 +236,27 @@
    "note_en": "Month-end rebalancing reference date. Fund disclosures determine whether and how much each fund adjusts."
   },
   {
+   "date": "2026-11-02",
+   "type": "macro",
+   "title": "ISM 制造业 PMI",
+   "title_en": "ISM manufacturing PMI",
+   "tickers": [],
+   "note": "10:00 ET 公布上月制造业采购经理指数；50 为荣枯线。",
+   "note_en": "Prior-month manufacturing PMI at 10:00 ET; 50 divides expansion from contraction."
+  },
+  {
+   "date": "2026-11-03",
+   "type": "geo",
+   "tickers": [],
+   "title": "美国中期选举",
+   "title_en": "US midterm elections",
+   "note": "国会两院与州级选举；结果影响财政、关税和监管预期。",
+   "note_en": "Congress and state elections; the outcome shapes fiscal, tariff and regulatory expectations.",
+   "source_url": "https://www.usa.gov/midterm-state-and-local-elections",
+   "short": "美国中期选举",
+   "short_en": "US midterms"
+  },
+  {
    "date": "2026-11-04",
    "type": "macro",
    "title": "小非农 · ADP 私营就业",
@@ -290,6 +264,15 @@
    "tickers": [],
    "note": "08:15 ET 公布上月 ADP 私营部门就业数据。",
    "note_en": "Prior-month ADP private-sector employment at 08:15 ET."
+  },
+  {
+   "date": "2026-11-04",
+   "type": "macro",
+   "title": "ISM 服务业 PMI",
+   "title_en": "ISM services PMI",
+   "tickers": [],
+   "note": "10:00 ET 公布上月服务业采购经理指数；50 为荣枯线。",
+   "note_en": "Prior-month services PMI at 10:00 ET; 50 divides expansion from contraction."
   },
   {
    "date": "2026-11-05",
@@ -311,6 +294,18 @@
   },
   {
    "date": "2026-11-10",
+   "type": "geo",
+   "tickers": [],
+   "title": "中美贸易休战到期",
+   "title_en": "US–China trade truce expires",
+   "note": "2025 年 11 月 10 日起为期一年的关税休战到期；美方 9 月提出延长 3–6 个月，是否延长以官方公告为准。",
+   "note_en": "The one-year tariff truce that began on Nov 10, 2025 expires; Washington proposed a 3–6 month extension in September. Official announcements govern.",
+   "source_url": "https://www.usnews.com/news/top-news/articles/2026-09-23/us-treasurys-bessent-chinas-he-to-meet-on-unfinished-business-before-trump-xi-summit",
+   "short": "中美休战到期",
+   "short_en": "Trade truce expiry"
+  },
+  {
+   "date": "2026-11-10",
    "type": "macro",
    "title": "CPI 通胀数据",
    "title_en": "CPI inflation",
@@ -326,6 +321,78 @@
    "tickers": [],
    "note": "08:30 ET 公布每周首次申请失业救济金人数。",
    "note_en": "Weekly initial jobless claims at 08:30 ET."
+  },
+  {
+   "date": "2026-11-17",
+   "type": "geo",
+   "tickers": [],
+   "title": "APEC 工商领导人峰会 · 深圳",
+   "title_en": "APEC CEO Summit · Shenzhen",
+   "note": "领导人非正式会议前的工商峰会。",
+   "note_en": "The business summit ahead of the leaders' meeting.",
+   "source_url": "https://news.cgtn.com/news/2026-09-10/2026-APEC-CEO-Summit-to-be-held-on-Nov-17-18-in-China-s-Shenzhen-1QkpMIz9M2s/p.html",
+   "short": "APEC 工商峰会",
+   "short_en": "APEC CEO Summit",
+   "span": {
+    "start": "2026-11-17",
+    "end": "2026-11-18",
+    "day": 1,
+    "days": 2
+   }
+  },
+  {
+   "date": "2026-11-18",
+   "type": "geo",
+   "tickers": [],
+   "title": "APEC 工商领导人峰会 · 深圳",
+   "title_en": "APEC CEO Summit · Shenzhen",
+   "note": "领导人非正式会议前的工商峰会。",
+   "note_en": "The business summit ahead of the leaders' meeting.",
+   "source_url": "https://news.cgtn.com/news/2026-09-10/2026-APEC-CEO-Summit-to-be-held-on-Nov-17-18-in-China-s-Shenzhen-1QkpMIz9M2s/p.html",
+   "short": "APEC 工商峰会",
+   "short_en": "APEC CEO Summit",
+   "span": {
+    "start": "2026-11-17",
+    "end": "2026-11-18",
+    "day": 2,
+    "days": 2
+   }
+  },
+  {
+   "date": "2026-11-18",
+   "type": "geo",
+   "tickers": [],
+   "title": "APEC 领导人非正式会议 · 深圳",
+   "title_en": "APEC Economic Leaders' Meeting · Shenzhen",
+   "note": "2026 年 APEC 东道主为中国；关注中美及区域贸易表态。",
+   "note_en": "China hosts APEC 2026; watch US–China and regional trade statements.",
+   "source_url": "https://news.cgtn.com/news/2025-12-13/2026-APEC-meeting-to-be-held-Nov-18-19-in-Shenzhen-China-1J43L2Fb2w0/index.html",
+   "short": "APEC 领导人会议",
+   "short_en": "APEC leaders",
+   "span": {
+    "start": "2026-11-18",
+    "end": "2026-11-19",
+    "day": 1,
+    "days": 2
+   }
+  },
+  {
+   "date": "2026-11-19",
+   "type": "geo",
+   "tickers": [],
+   "title": "APEC 领导人非正式会议 · 深圳",
+   "title_en": "APEC Economic Leaders' Meeting · Shenzhen",
+   "note": "2026 年 APEC 东道主为中国；关注中美及区域贸易表态。",
+   "note_en": "China hosts APEC 2026; watch US–China and regional trade statements.",
+   "source_url": "https://news.cgtn.com/news/2025-12-13/2026-APEC-meeting-to-be-held-Nov-18-19-in-Shenzhen-China-1J43L2Fb2w0/index.html",
+   "short": "APEC 领导人会议",
+   "short_en": "APEC leaders",
+   "span": {
+    "start": "2026-11-18",
+    "end": "2026-11-19",
+    "day": 2,
+    "days": 2
+   }
   },
   {
    "date": "2026-11-19",
@@ -344,6 +411,15 @@
    "tickers": [],
    "note": "月度股票期权到期。可查看相关合约的到期日和持仓变化。",
    "note_en": "Monthly stock options expire. Review contract expirations and changes in open interest."
+  },
+  {
+   "date": "2026-11-23",
+   "type": "macro",
+   "title": "标普全球 美国 PMI 初值",
+   "title_en": "S&P Global flash US PMI",
+   "tickers": [],
+   "note": "09:45 ET 公布本月制造业 / 服务业 PMI 初值；当月最早的景气读数。",
+   "note_en": "Flash manufacturing and services PMI for the current month at 09:45 ET; the month's first activity read."
   },
   {
    "date": "2026-11-26",
@@ -434,6 +510,15 @@
    "note_en": "MSCI semi-annual constituent-change reference date. Check the published MSCI list and effective date."
   },
   {
+   "date": "2026-12-01",
+   "type": "macro",
+   "title": "ISM 制造业 PMI",
+   "title_en": "ISM manufacturing PMI",
+   "tickers": [],
+   "note": "10:00 ET 公布上月制造业采购经理指数；50 为荣枯线。",
+   "note_en": "Prior-month manufacturing PMI at 10:00 ET; 50 divides expansion from contraction."
+  },
+  {
    "date": "2026-12-02",
    "type": "macro",
    "title": "小非农 · ADP 私营就业",
@@ -452,6 +537,15 @@
    "note_en": "Weekly initial jobless claims at 08:30 ET."
   },
   {
+   "date": "2026-12-03",
+   "type": "macro",
+   "title": "ISM 服务业 PMI",
+   "title_en": "ISM services PMI",
+   "tickers": [],
+   "note": "10:00 ET 公布上月服务业采购经理指数；50 为荣枯线。",
+   "note_en": "Prior-month services PMI at 10:00 ET; 50 divides expansion from contraction."
+  },
+  {
    "date": "2026-12-04",
    "type": "macro",
    "title": "大非农 · 非农就业 (NFP)",
@@ -459,6 +553,110 @@
    "tickers": [],
    "note": "08:30 ET 公布上月非农就业与失业率。",
    "note_en": "Prior-month payrolls and unemployment at 08:30 ET."
+  },
+  {
+   "date": "2026-12-09",
+   "type": "macro",
+   "title": "美联储 FOMC 利率决议",
+   "title_en": "FOMC rate decision",
+   "tickers": [],
+   "note": "14:00 ET 公布利率决议,14:30 ET 主席发布会 · 含点阵图/经济预测(SEP)。",
+   "note_en": "Rate decision 14:00 ET, press conference 14:30 ET · with dot-plot / SEP."
+  },
+  {
+   "date": "2026-12-10",
+   "type": "macro",
+   "title": "CPI 通胀数据",
+   "title_en": "CPI inflation",
+   "tickers": [],
+   "note": "08:30 ET 公布上月消费者物价指数。",
+   "note_en": "Prior-month Consumer Price Index at 08:30 ET."
+  },
+  {
+   "date": "2026-12-10",
+   "type": "macro",
+   "title": "初请失业金",
+   "title_en": "Initial jobless claims",
+   "tickers": [],
+   "note": "08:30 ET 公布每周首次申请失业救济金人数。",
+   "note_en": "Weekly initial jobless claims at 08:30 ET."
+  },
+  {
+   "date": "2026-12-14",
+   "type": "geo",
+   "tickers": [],
+   "title": "G20 峰会 · 迈阿密",
+   "title_en": "G20 summit · Miami",
+   "note": "美国主办，多拉尔（Doral）；贸易、能源与地缘议题。",
+   "note_en": "Hosted by the United States at Doral; trade, energy and geopolitics.",
+   "source_url": "https://g20.org/events-calendar/",
+   "short": "G20 峰会",
+   "short_en": "G20 Miami",
+   "span": {
+    "start": "2026-12-14",
+    "end": "2026-12-15",
+    "day": 1,
+    "days": 2
+   }
+  },
+  {
+   "date": "2026-12-15",
+   "type": "geo",
+   "tickers": [],
+   "title": "G20 峰会 · 迈阿密",
+   "title_en": "G20 summit · Miami",
+   "note": "美国主办，多拉尔（Doral）；贸易、能源与地缘议题。",
+   "note_en": "Hosted by the United States at Doral; trade, energy and geopolitics.",
+   "source_url": "https://g20.org/events-calendar/",
+   "short": "G20 峰会",
+   "short_en": "G20 Miami",
+   "span": {
+    "start": "2026-12-14",
+    "end": "2026-12-15",
+    "day": 2,
+    "days": 2
+   }
+  },
+  {
+   "date": "2026-12-17",
+   "type": "macro",
+   "title": "初请失业金",
+   "title_en": "Initial jobless claims",
+   "tickers": [],
+   "note": "08:30 ET 公布每周首次申请失业救济金人数。",
+   "note_en": "Weekly initial jobless claims at 08:30 ET."
+  },
+  {
+   "date": "2026-12-18",
+   "type": "witching",
+   "title": "四巫日 · 标普/纳指季度调仓",
+   "title_en": "Quad witching · S&P/Nasdaq rebalance",
+   "tickers": [
+    "SPY",
+    "QQQ"
+   ],
+   "note": "季度衍生品到期与指数调整窗口。具体合约及指数变更以交易所和指数提供商公告为准。",
+   "note_en": "Quarterly derivatives expiration and index adjustment window. Check exchange and index-provider notices for specific contracts and changes."
+  },
+  {
+   "date": "2026-12-18",
+   "type": "opex",
+   "title": "月度期权交割 · OPEX",
+   "title_en": "Monthly OPEX",
+   "tickers": [],
+   "note": "月度股票期权到期。可查看相关合约的到期日和持仓变化。",
+   "note_en": "Monthly stock options expire. Review contract expirations and changes in open interest."
+  },
+  {
+   "date": "2026-12-18",
+   "type": "rebal",
+   "title": "纳斯达克 100 年度重构生效",
+   "title_en": "Nasdaq-100 annual reconstitution",
+   "tickers": [
+    "QQQ"
+   ],
+   "note": "纳斯达克 100 年度成分调整参考日期；名单和生效时间以纳斯达克公告为准。",
+   "note_en": "Nasdaq-100 annual constituent-change reference date. Check Nasdaq notices for the list and effective time."
   }
  ]
 }

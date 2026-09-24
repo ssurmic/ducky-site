@@ -1,0 +1,66 @@
+[
+ {
+  "date": "2026-09-23",
+  "end_date": "2026-09-25",
+  "title": "习近平对美国进行国事访问",
+  "title_en": "Xi Jinping state visit to the United States",
+  "note": "9 月 24 日白宫会谈与国宴；贸易休战延期、稀土出口、关税是议题。以白宫与外交部通报为准。",
+  "note_en": "White House summit and state dinner on Sep 24; the trade-truce extension, rare-earth exports and tariffs are on the table. Official readouts govern.",
+  "source_url": "https://www.whitehouse.gov/briefings-statements/2026/09/first-lady-melania-trump-releases-details-ahead-of-his-excellency-xi-jinping-president-of-the-peoples-republic-of-china-and-madame-peng-liyuans-visit-to-the-white-house/",
+  "short": "习近平访美",
+  "short_en": "Xi in Washington"
+ },
+ {
+  "date": "2026-11-03",
+  "title": "美国中期选举",
+  "title_en": "US midterm elections",
+  "note": "国会两院与州级选举；结果影响财政、关税和监管预期。",
+  "note_en": "Congress and state elections; the outcome shapes fiscal, tariff and regulatory expectations.",
+  "source_url": "https://www.usa.gov/midterm-state-and-local-elections",
+  "short": "美国中期选举",
+  "short_en": "US midterms"
+ },
+ {
+  "date": "2026-11-10",
+  "title": "中美贸易休战到期",
+  "title_en": "US–China trade truce expires",
+  "note": "2025 年 11 月 10 日起为期一年的关税休战到期；美方 9 月提出延长 3–6 个月，是否延长以官方公告为准。",
+  "note_en": "The one-year tariff truce that began on Nov 10, 2025 expires; Washington proposed a 3–6 month extension in September. Official announcements govern.",
+  "source_url": "https://www.usnews.com/news/top-news/articles/2026-09-23/us-treasurys-bessent-chinas-he-to-meet-on-unfinished-business-before-trump-xi-summit",
+  "short": "中美休战到期",
+  "short_en": "Trade truce expiry"
+ },
+ {
+  "date": "2026-11-17",
+  "end_date": "2026-11-18",
+  "title": "APEC 工商领导人峰会 · 深圳",
+  "title_en": "APEC CEO Summit · Shenzhen",
+  "note": "领导人非正式会议前的工商峰会。",
+  "note_en": "The business summit ahead of the leaders' meeting.",
+  "source_url": "https://news.cgtn.com/news/2026-09-10/2026-APEC-CEO-Summit-to-be-held-on-Nov-17-18-in-China-s-Shenzhen-1QkpMIz9M2s/p.html",
+  "short": "APEC 工商峰会",
+  "short_en": "APEC CEO Summit"
+ },
+ {
+  "date": "2026-11-18",
+  "end_date": "2026-11-19",
+  "title": "APEC 领导人非正式会议 · 深圳",
+  "title_en": "APEC Economic Leaders' Meeting · Shenzhen",
+  "note": "2026 年 APEC 东道主为中国；关注中美及区域贸易表态。",
+  "note_en": "China hosts APEC 2026; watch US–China and regional trade statements.",
+  "source_url": "https://news.cgtn.com/news/2025-12-13/2026-APEC-meeting-to-be-held-Nov-18-19-in-Shenzhen-China-1J43L2Fb2w0/index.html",
+  "short": "APEC 领导人会议",
+  "short_en": "APEC leaders"
+ },
+ {
+  "date": "2026-12-14",
+  "end_date": "2026-12-15",
+  "title": "G20 峰会 · 迈阿密",
+  "title_en": "G20 summit · Miami",
+  "note": "美国主办，多拉尔（Doral）；贸易、能源与地缘议题。",
+  "note_en": "Hosted by the United States at Doral; trade, energy and geopolitics.",
+  "source_url": "https://g20.org/events-calendar/",
+  "short": "G20 峰会",
+  "short_en": "G20 Miami"
+ }
+]

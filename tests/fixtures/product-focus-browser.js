@@ -71,6 +71,34 @@ const stockSummary=ticker=>({ticker,status:mode==='pending'?'pending':mode==='pr
  as_of:mode==='today-large'?new Date(Date.now()-(watches.length-watches.indexOf(ticker))*86400000).toISOString():mode==='previous'?previousClock:clock,overview:mode==='pending'?null:overview,sources:(mode==='previous'?previousNodes:nodes).slice(0,2)});
 const record=i=>({id:'change-'+i,ticker:i%2?'AVGO':'NVDA',kind:i===1?'revised':'added',state:i===3?'unavailable':'available',earlier_content:i===2,
  initial_coverage:false,published_at:i===2?'2026-08-20':today,observed_at:clock,available_at:clock,node:i===3?null:nodes[i%3]});
+const calendarDoc=()=>{
+ const todayIso=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ const iso=n=>{const d=new Date(todayIso+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10);};
+ const ev=(n,type,title,title_en,extra={})=>({date:iso(n),type,title,title_en,tickers:[],note:'',note_en:'',...extra});
+ const visit=(n,day)=>ev(n,'geo','习近平对美国进行国事访问','Xi Jinping state visit to the United States',{short:'习近平访美',short_en:'Xi in Washington',span:{start:iso(0),end:iso(2),day,days:3},
+  note:'9 月 24 日白宫会谈与国宴；贸易休战延期、稀土出口、关税是议题。',note_en:'White House summit and state dinner; trade truce, rare earths and tariffs on the table.',source_url:'https://www.whitehouse.gov/'});
+ const earn=(n,t)=>ev(n,'earnings',t+' 财报',t+' earnings',{tickers:[t],note:'盘后',note_en:'After the close'});
+ return {schema:'calendar/1',generated_at:new Date().toISOString(),as_of:new Date().toISOString(),window_days:60,events:[
+  visit(0,1),visit(1,2),visit(2,3),
+  ev(0,'macro','标普全球 美国 PMI 初值','S&P Global flash US PMI',{note:'09:45 ET 公布本月 PMI 初值。',note_en:'Flash PMI at 09:45 ET.'}),
+  ev(0,'macro','新屋销售','New home sales',{note:'10:00 ET',note_en:'10:00 ET'}),
+  ev(1,'macro','初请失业金','Initial jobless claims',{note:'08:30 ET',note_en:'08:30 ET'}),
+  earn(1,'MU'),earn(1,'COST'),
+  ev(2,'macro','PCE 物价指数','PCE price index',{note:'08:30 ET 公布；美联储最看重的通胀指标。',note_en:'08:30 ET; the Fed\'s preferred inflation gauge.'}),
+  ev(4,'macro','美联储主席讲话','Fed Chair speaks',{note:'12:00 ET',note_en:'12:00 ET'}),
+  ev(5,'macro','ISM 制造业 PMI','ISM manufacturing PMI',{note:'10:00 ET；50 为荣枯线。',note_en:'10:00 ET; 50 divides expansion from contraction.'}),
+  earn(5,'NKE'),
+  ev(6,'rebal','月末调仓 · 基金再平衡','Month-end rebalance',{tickers:['SPY']}),
+  earn(7,'NVDA'),earn(7,'META'),earn(7,'AMD'),earn(7,'TSLA'),earn(7,'AVGO'),
+  ev(7,'macro','ISM 服务业 PMI','ISM services PMI',{note:'10:00 ET',note_en:'10:00 ET'}),
+  ev(8,'macro','初请失业金','Initial jobless claims',{note:'08:30 ET',note_en:'08:30 ET'}),
+  ev(9,'macro','大非农 · 非农就业 (NFP)','Nonfarm payrolls (NFP)',{note:'08:30 ET 公布上月非农就业与失业率。',note_en:'Prior-month payrolls at 08:30 ET.'}),
+  ev(12,'geo','美国中期选举','US midterm elections',{short:'中期选举',short_en:'US midterms',note:'国会两院与州级选举。',note_en:'Congress and state elections.',source_url:'https://www.usa.gov/'}),
+  ev(13,'macro','美联储 FOMC 利率决议','FOMC rate decision',{note:'14:00 ET 公布利率决议，14:30 ET 主席发布会 · 含点阵图。',note_en:'Rate decision 14:00 ET, press conference 14:30 ET · with dot plot.'}),
+  ev(13,'opex','月度期权交割 · OPEX','Monthly OPEX'),
+  ev(16,'holiday','休市 · 感恩节','Market closed · Thanksgiving'),
+ ]};
+};
 window.fetch=async(input,options={})=>{
  const url=new URL(String(input),location.origin);requests.push({path:url.pathname+url.search,method:options.method||'GET',
   ...(mode==='autocomplete-watchlist'&&options.body?{body:JSON.parse(options.body)}:{})});
@@ -93,6 +121,7 @@ window.fetch=async(input,options={})=>{
  if(path==='/radar/social.json')return Response.json({status:'ready',collected_at:new Date(Date.now()-1800000).toISOString(),items:[
   {ticker:'NVDA',rank:1,mentions:1240,change_pct:35,overall:READINGS.NVDA.overall},{ticker:'AMD',rank:2,mentions:910,change_pct:-10,overall:READINGS.AMD.overall},
   {ticker:'GLW',rank:3,mentions:302,change_pct:120},{ticker:'AVGO',rank:4,mentions:180}]});
+ if(path==='/public/calendar.json'||path==='/calendar')return Response.json(calendarDoc());
  if(path==='/watchlist')return Response.json({cap:50,items:watches.map(ticker=>({ticker})),overview:{items:watches.map(price),session:mode==='wall-consistency'?'2026-09-11':'2026-09-09'}});
  if(path==='/me/stock-research'){
   researchReads++;

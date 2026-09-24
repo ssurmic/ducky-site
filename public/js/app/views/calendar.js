@@ -15,11 +15,11 @@ import * as router from "../router.js";
 import { el, clear, spinner, empty, modal, closeModal } from "../ui.js";
 import { mountSeasonality } from "../seasonality.js";
 
-const ICON = { macro: "liquidity", earnings: "chart", opex: "calendar", witching: "calendar", rebal: "digest" };
-const DOTC = { macro: "var(--accent)", earnings: "#4ea1ff", opex: "#c07cff", witching: "#c07cff", rebal: "#33c793" };
-const FILTERS = ["all", "macro", "earnings", "opex", "rebal"];
-const FILTER_TYPES = { all: null, macro: ["macro"], earnings: ["earnings"], opex: ["opex", "witching"], rebal: ["rebal", "index_change"] };
-const CATEGORY = {earnings:"earnings", macro:"macro", opex:"expiry", witching:"expiry", rebal:"rebal", index_change:"rebal", holiday:"session", early_close:"session"};
+const ICON = { macro: "liquidity", earnings: "chart", opex: "calendar", witching: "calendar", rebal: "digest", geo: "globe" };
+const DOTC = { macro: "var(--accent)", earnings: "#4ea1ff", opex: "#c07cff", witching: "#c07cff", rebal: "#33c793", geo: "var(--c-geo)" };
+const FILTERS = ["all", "geo", "macro", "earnings", "opex", "rebal"];
+const FILTER_TYPES = { all: null, geo: ["geo"], macro: ["macro"], earnings: ["earnings"], opex: ["opex", "witching"], rebal: ["rebal", "index_change"] };
+const CATEGORY = {geo:"geo", earnings:"earnings", macro:"macro", opex:"expiry", witching:"expiry", rebal:"rebal", index_change:"rebal", holiday:"session", early_close:"session"};
 const visualType = e => e.type==='index_change'?'rebal':e.type;
 const category = e => CATEGORY[e.type] || "other";
 const categoryLabel = e => s("calendar.kind_" + category(e));
@@ -47,6 +47,8 @@ const MACRO_META = [
     impact: ["经济增长数据，可比较本期增速、预期值和前值修订。", "Economic growth data. Compare the growth rate with forecasts and revisions."] },
   { re: /FOMC|利率|rate decision|federal funds/i, abbr: ["FOMC", "FOMC"],
     impact: ["查看美联储利率决定、声明和发布会，留意政策预期的变化。", "Review the Fed rate decision, statement and press conference for changes in the policy outlook."] },
+  { re: /标普|S&P Global|flash|初值/i, abbr: ["PMI 初值", "Flash PMI"],
+    impact: ["当月最早的采购经理指数读数；50 是扩张与收缩的分界。", "The month's first purchasing managers reading; 50 separates expansion from contraction."] },
   { re: /ISM|PMI/i, abbr: ["ISM", "ISM"],
     impact: ["采购经理调查。50 是扩张与收缩的分界，需结合行业和分项数据查看。", "Purchasing managers survey. A reading of 50 separates expansion from contraction; review the sector and components as well."] },
 ];
@@ -67,12 +69,22 @@ function shortLabel(e, isZh, scopeTicker='') {
   if(e.type === "early_close") return s("calendar.early_short");
   if(e.type === "index_change") { const ticker=calendarEventTicker(e,scopeTicker); if(ticker)return ticker; }
   const full = isZh ? (e.title || "") : (e.title_en || e.title || "");
+  if (e.type === "geo") { const base = (isZh ? e.short : (e.short_en || e.short)) || full.split(/\s*[·:：]\s*/)[0] || full; return e.span ? base + " " + e.span.day + "/" + e.span.days : base; }
   if (e.type === "macro") { const m = macroMeta(e); if (m) return isZh ? m.abbr[0] : m.abbr[1]; }
   else { const h = _hay(e); for (const st of STRUCT_ABBR) if (st.re.test(h)) return isZh ? st.abbr[0] : st.abbr[1]; }
   return full;
 }
 function macroImpact(e, isZh) { if (e.type !== "macro") return ""; const m = macroMeta(e); return m ? (isZh ? m.impact[0] : m.impact[1]) : ""; }
 
+// The releases and events a reader plans a week around: they get the heavier pill and the week line.
+const MAJOR = /FOMC|利率决议|CPI|非农|NFP|nonfarm|payroll|PCE|\bGDP\b|PMI|零售|retail/i;
+const isMajor = e => e.type === "geo" || (e.type === "macro" && MAJOR.test(_hay(e)));
+// "08:30 ET" inside a note becomes the pill's time badge; an earnings note names the session.
+function whenBadge(e, isZh) {
+  const note = String(isZh ? (e.note || e.note_en || "") : (e.note_en || e.note || ""));
+  if (e.type === "earnings") { if (/盘后|after/i.test(note)) return isZh ? "盘后" : "AMC"; if (/盘前|before/i.test(note)) return isZh ? "盘前" : "BMO"; return ""; }
+  const m = note.match(/\b(\d{1,2}:\d{2})\s*ET/); return m ? m[1] : "";
+}
 function ymd(d) { const z = (n) => String(n).padStart(2, "0"); return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`; }
 function weekSunday(d) { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() - x.getDay()); return x; }
 function addDays(d, n) { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() + n); return x; }
@@ -122,7 +134,10 @@ export async function mount(root, route={}) {
   research=eventResearchSession(watch.includes(scopeTicker)?scopeTicker:'');
   const watchSet = new Set(watch);
   const evHasMine = (e) => (e.tickers || []).some((t) => watchSet.has(String(t).toUpperCase()) || (e.type === "earnings" && (links[String(t).toUpperCase()] || []).some(w => watchSet.has(w))));
-  const events = orderCalendarEvents((doc && doc.events) || [], {scopeTicker,isWatched:evHasMine});
+  const allEvents = orderCalendarEvents((doc && doc.events) || [], {scopeTicker,isWatched:evHasMine});
+  // A big event whose date is not confirmed yet is listed apart, never placed in a day cell.
+  const tentative = allEvents.filter(e => e.tentative);
+  const events = allEvents.filter(e => !e.tentative);
 
   // index events by date for O(1) day lookup
   const byDate = new Map();
@@ -234,6 +249,12 @@ export async function mount(root, route={}) {
     }
     card.appendChild(el('div.cal-toolbar', modeBar, filters));
     if (viewMode !== "list") card.appendChild(el("p.cal-grid-hint.muted.small", s(viewMode === "biweekly" ? "calendar.biweekly_hint" : "calendar.grid_hint")));
+    if (tentative.length && (filter === "all" || filter === "geo")) {
+      const strip = el("div.cal-tentative", el("span.cal-tentative-label", s("calendar.tentative")));
+      for (const e of tentative) strip.append(el("span.pill.pill-geo.cal-kind-geo", { title: isZh ? (e.note || "") : (e.note_en || e.note || "") },
+        el("span.pill-ic", { "aria-hidden": "true" }, icon("globe")), el("span.pill-txt", (isZh ? e.title : (e.title_en || e.title)) + (e.expected ? " · " + e.expected : ""))));
+      card.appendChild(strip);
+    }
 
     if (viewMode === "month") card.appendChild(monthGrid());
     else if (viewMode === "biweekly") card.appendChild(biweekly());
@@ -263,13 +284,15 @@ export async function mount(root, route={}) {
           pill.appendChild(el("span.pill-kind", categoryLabel(e)));
           if (e.logo) pill.appendChild(el("img.pill-logo", { src: e.logo, alt: sym, loading: "lazy" }));
           pill.appendChild(el("span.pill-tk", sym || "ER"));
+          const when = whenBadge(e, isZh); if (when) pill.appendChild(el("span.pill-when", when));
           box.appendChild(pill);
         } else {
           const full = isZh ? (e.title || "") : (e.title_en || e.title || "");
-          const pill = el("span.pill.pill-" + visualType(e) + ".cal-kind-" + category(e), { title: full });
+          const pill = el("span.pill.pill-" + visualType(e) + ".cal-kind-" + category(e) + (isMajor(e) ? ".pill-major" : ""), { title: full });
           pill.appendChild(el("span.pill-kind", categoryLabel(e)));
           pill.appendChild(el("span.pill-ic", { "aria-hidden": "true" }, icon(ICON[visualType(e)] || "calendar")));
           pill.appendChild(el("span.pill-txt", shortLabel(e, isZh, scopeTicker)));
+          const when = whenBadge(e, isZh); if (when) pill.appendChild(el("span.pill-when", when));
           box.appendChild(pill);
         }
       }
@@ -294,6 +317,38 @@ export async function mount(root, route={}) {
     }
 
     function weekdayRow() { const r = el("div.cal-wdrow"); for (const w of WD) r.appendChild(el("div.cal-wd", w)); return r; }
+
+    // What the fortnight holds, by kind, so the colours read at a glance and the counts say how busy it is.
+    function legend() {
+      const counts = new Map();
+      for (let i = 0; i < 14; i++) for (const e of dayEvents(ymd(addDays(biStart, i)))) { const c = category(e); if (c !== "session") counts.set(c, (counts.get(c) || 0) + 1); }
+      const row = el("div.cal-legend", { "aria-label": s("calendar.filters") });
+      const label = { geo: "calendar.f_geo", macro: "calendar.f_macro", earnings: "calendar.f_earnings", expiry: "calendar.f_opex", rebal: "calendar.f_rebal", other: "calendar.kind_other" };
+      for (const c of ["geo", "macro", "earnings", "expiry", "rebal", "other"]) {
+        if (!counts.get(c)) continue;
+        row.append(el("span.cal-legend-item.cal-kind-" + c, el("i"), el("span", s(label[c])), el("span.cal-legend-n.mono", String(counts.get(c)))));
+      }
+      return row;
+    }
+
+    // One line a reader plans the week around: the big events and heavy releases by weekday, then how
+    // many companies report (and how many of them are watched).
+    function weekHighlights(first) {
+      const wd = isZh ? ["周日","周一","周二","周三","周四","周五","周六"] : ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+      const items = [], seen = new Set(); let reports = 0, mineReports = 0;
+      for (let i = 0; i < 7; i++) {
+        const d = addDays(first, i), evs = dayEvents(ymd(d));
+        for (const e of evs) {
+          if (e.type === "earnings") { reports++; if (hasContextAccess && evHasMine(e)) mineReports++; continue; }
+          if (!isMajor(e) || (e.type === "geo" && e.span && e.span.day > 1)) continue;
+          const name = e.type === "geo" ? shortLabel(e, isZh, scopeTicker).replace(/\s+\d+\/\d+$/, "") : shortLabel(e, isZh, scopeTicker);
+          const key = e.type + name; if (seen.has(key) || items.length >= 3) continue;
+          seen.add(key); items.push(wd[d.getDay()] + " " + name);
+        }
+      }
+      if (reports) items.push(isZh ? `${reports} 家财报` + (mineReports ? `（${mineReports} 家自选）` : "") : `${reports} earnings` + (mineReports ? ` (${mineReports} watched)` : ""));
+      return items.join(" · ");
+    }
 
     function navHead(title, onPrev, onNext) {
       const head = el("div.cal-mhead");
@@ -354,7 +409,7 @@ export async function mount(root, route={}) {
       box.appendChild(navHead(span,
         () => shiftPeriod(-14),
         () => shiftPeriod(14)));
-      box.appendChild(weekdayRow());
+      box.appendChild(legend());
       const weeks = el("div.cal-biweeks");
       for (let week = 0; week < 2; week++) {
         const first = addDays(biStart, week * 7), last = addDays(first, 6);
@@ -362,7 +417,8 @@ export async function mount(root, route={}) {
           ? `${first.getMonth()+1}月${first.getDate()}日 – ${last.getMonth()+1}月${last.getDate()}日`
           : `${M[first.getMonth()]} ${first.getDate()} – ${M[last.getMonth()]} ${last.getDate()}`;
         const group = el("section.cal-biweek", {"aria-label": label});
-        group.append(el("h3.cal-week-label", label));
+        const highlights = weekHighlights(first);
+        group.append(el("div.cal-week-head", el("h3.cal-week-label", label), highlights ? el("p.cal-week-highlights", highlights) : null));
         const grid = el("div.cal-bigrid");
         for (let i = 0; i < 7; i++) {
           const d = addDays(first, i), iso = ymd(d), evs = dayEvents(iso);
@@ -372,8 +428,10 @@ export async function mount(root, route={}) {
           const weekday = new Intl.DateTimeFormat(isZh ? "zh-CN" : "en-US", {weekday:"short"}).format(d);
           const cell = el("button.cal-bicell" + (iso === todayIso ? ".cal-is-today" : "") + (iso === selected ? ".cal-sel" : "") + (evs.length ? ".cal-has" : "") + (mine ? ".cal-mine-cell" : "") + (wknd ? ".cal-weekend" : "") + (session?.type === "holiday" ? ".cal-closed" : "") + (session?.type === "early_close" ? ".cal-early" : ""),
             {type:"button", "data-date":iso,"data-tour":evs.length?"calendar.day":null, "aria-label":dateLabel(iso) + ", " + previewDescription(evs), "aria-pressed":String(iso === selected), "aria-haspopup":"dialog"});
-          const date = el("div.cal-bidate", el("span.cal-bidnum", String(d.getDate())), el("span.cal-biweekday", iso === todayIso ? s("calendar.today") : weekday));
+          if (wknd) cell.classList.add("cal-wknd");
+          const date = el("div.cal-bidate", el("span.cal-biweekday", iso === todayIso ? s("calendar.today") : weekday), el("span.cal-bidnum", String(d.getDate())));
           cell.append(date);
+          if (session) cell.append(el("span.cal-bisession", shortLabel(session, isZh)));
           if (evs.length) cell.append(pills(evs));
           else cell.append(el("span.cal-biquiet", s("calendar.no_events_short")));
           cell.addEventListener("click", () => openDay(iso));
