@@ -65,3 +65,37 @@ export function sparkPair(pairs,{unit='',labels={bars:'',line:''},fmtChange=v=>S
     svg('text',{class:'today-spark-axis',x:W-PAD_R,y:H-3,'text-anchor':'end'},fmtDate(last.date)));
   return root;
 }
+
+// Three lines on one chart, each scaled to its own range over the window (0 = the period's low,
+// 100 = its high): the dollar net liquidity level next to the QQQ and SPY index levels, so a reader can
+// see whether they moved together or against each other. Comparable shapes, never comparable units.
+export function normalizedLines(history,{sessions=60}={}){
+  const rows=(history||[]).filter(r=>r&&r.date).slice(-sessions);
+  const pick={liquidity:r=>r?.metrics?.net_liquidity_bn,qqq:r=>r?.qqq_index,spy:r=>r?.spy_index};
+  const series=[];
+  for(const [key,fn] of Object.entries(pick)){
+    const raw=rows.map(fn);
+    const known=raw.filter(OK);if(known.length<3)continue;
+    const lo=Math.min(...known),hi=Math.max(...known),span=hi-lo;
+    series.push({key,values:raw.map(v=>OK(v)&&span>0?Math.round((v-lo)/span*1000)/10:null),last:known[known.length-1],lo,hi});
+  }
+  return {dates:rows.map(r=>r.date),series};
+}
+
+export function sparkLines({dates,series},{labels={},fmtDate=d=>d}={}){
+  const W=240,H=88,PAD_L=4,PAD_R=4,TOP=6,BOT=14,inner=H-TOP-BOT;
+  const root=svg('svg',{class:'today-lines',viewBox:`0 0 ${W} ${H}`,role:'img'});
+  const n=dates.length;if(n<3||!series.length){root.setAttribute('aria-hidden','true');return root;}
+  const step=(W-PAD_L-PAD_R)/(n-1),y=v=>TOP+inner*(1-v/100);
+  for(const g of [0,50,100])root.append(svg('line',{class:'today-lines-grid',x1:PAD_L,y1:fix(y(g)),x2:W-PAD_R,y2:fix(y(g))}));
+  for(const s of series){
+    const pts=s.values.map((v,i)=>OK(v)?`${fix(PAD_L+i*step)},${fix(y(v))}`:null).filter(Boolean).join(' ');
+    const line=svg('polyline',{class:'today-lines-line is-'+s.key,points:pts,fill:'none'});
+    line.append(svg('title',{},`${labels[s.key]||s.key} · ${fmtDate(dates[0])} → ${fmtDate(dates[n-1])}`));
+    root.append(line);
+    const lastIndex=s.values.map((v,i)=>OK(v)?i:-1).filter(i=>i>=0).pop();
+    if(lastIndex>=0)root.append(svg('circle',{class:'today-lines-dot is-'+s.key,cx:fix(PAD_L+lastIndex*step),cy:fix(y(s.values[lastIndex])),r:2.4}));
+  }
+  root.append(svg('text',{class:'today-spark-axis',x:PAD_L,y:H-3},fmtDate(dates[0])),svg('text',{class:'today-spark-axis',x:W-PAD_R,y:H-3,'text-anchor':'end'},fmtDate(dates[n-1])));
+  return root;
+}

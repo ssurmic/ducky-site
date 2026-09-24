@@ -730,3 +730,19 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
 .today-digest-tomorrow{padding-top:8px;border-top:1px solid color-mix(in srgb,var(--border) 70%,transparent);}
 .today-digest-note{margin:0;}
 @media(max-width:900px){.today-digest-grid{grid-template-columns:1fr;}}
+
+/* Three normalized lines on the liquidity tile: net liquidity (accent), QQQ (blue), SPY (green). */
+.today-lines{width:100%;height:auto;display:block;}
+.today-lines-grid{stroke:color-mix(in srgb,var(--border) 80%,transparent);stroke-width:1;}
+.today-lines-line{stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;}
+.today-lines-line.is-liquidity{stroke:var(--accent);stroke-width:2;}
+.today-lines-line.is-qqq{stroke:#4ea1ff;}
+.today-lines-line.is-spy{stroke:var(--green);}
+.today-lines-dot.is-liquidity{fill:var(--accent);}
+.today-lines-dot.is-qqq{fill:#4ea1ff;}
+.today-lines-dot.is-spy{fill:var(--green);}
+.today-lines-key{display:inline-flex;align-items:center;gap:4px;margin-right:10px;}
+.today-lines-key i{width:10px;height:3px;border-radius:2px;background:var(--muted);display:inline-block;}
+.today-lines-key.is-liquidity i{background:var(--accent);}
+.today-lines-key.is-qqq i{background:#4ea1ff;}
+.today-lines-key.is-spy i{background:var(--green);}
