@@ -2112,6 +2112,7 @@
   "app.today.lines_liquidity": "dollar net liquidity",
   "app.today.lines_qqq": "Nasdaq-100 (QQQ)",
   "app.today.lines_spy": "S&P 500 (SPY)",
+  "app.today.lines_liquidity_value": "${value}B ({change}B)",
   "app.today.lines_caption": "Last {n} sessions, each line scaled to its own range (0 = the period low, 100 = its high). Correlation of net liquidity's daily change with QQQ's daily return {rq}, with SPY's {rs}; opposite QQQ on {pq}% of days. Past co-movement is a description, not a forecast.",
   "app.today.chart_yield_bars": "10-year yield, daily change",
   "app.today.chart_qqq": "QQQ daily return",

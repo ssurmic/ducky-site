@@ -77,9 +77,16 @@ export function normalizedLines(history,{sessions=60}={}){
     const raw=rows.map(fn);
     const known=raw.filter(OK);if(known.length<3)continue;
     const lo=Math.min(...known),hi=Math.max(...known),span=hi-lo;
-    series.push({key,values:raw.map(v=>OK(v)&&span>0?Math.round((v-lo)/span*1000)/10:null),last:known[known.length-1],lo,hi});
+    const change=raw.map((v,i)=>i>0&&OK(v)&&OK(raw[i-1])?(key==='liquidity'?v-raw[i-1]:raw[i-1]>0?Math.round((v/raw[i-1]-1)*10000)/100:null):null);
+    series.push({key,values:raw.map(v=>OK(v)&&span>0?Math.round((v-lo)/span*1000)/10:null),raw,change,last:known[known.length-1],lo,hi});
   }
   return {dates:rows.map(r=>r.date),series};
+}
+
+// The nearest date to a pointer position over the chart; the last date when the chart has no size yet.
+export function cursorIndex(x,width,n){
+  if(!(width>0)||n<2)return n-1;
+  return Math.max(0,Math.min(n-1,Math.round(x/width*(n-1))));
 }
 
 export function sparkLines({dates,series},{labels={},fmtDate=d=>d}={}){
@@ -97,5 +104,9 @@ export function sparkLines({dates,series},{labels={},fmtDate=d=>d}={}){
     if(lastIndex>=0)root.append(svg('circle',{class:'today-lines-dot is-'+s.key,cx:fix(PAD_L+lastIndex*step),cy:fix(y(s.values[lastIndex])),r:2.4}));
   }
   root.append(svg('text',{class:'today-spark-axis',x:PAD_L,y:H-3},fmtDate(dates[0])),svg('text',{class:'today-spark-axis',x:W-PAD_R,y:H-3,'text-anchor':'end'},fmtDate(dates[n-1])));
+  // A cursor the caller moves: a vertical guide at one date, hidden until the pointer is over the chart.
+  const cursor=svg('line',{class:'today-lines-cursor',x1:PAD_L,y1:TOP,x2:PAD_L,y2:TOP+inner,visibility:'hidden'});
+  root.append(cursor);
+  root.moveCursor=i=>{if(i===null){cursor.setAttribute('visibility','hidden');return;}const x=fix(PAD_L+i*step);cursor.setAttribute('x1',x);cursor.setAttribute('x2',x);cursor.setAttribute('visibility','visible');};
   return root;
 }

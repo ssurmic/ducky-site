@@ -71,9 +71,9 @@ const stockSummary=ticker=>({ticker,status:mode==='pending'?'pending':mode==='pr
  as_of:mode==='today-large'?new Date(Date.now()-(watches.length-watches.indexOf(ticker))*86400000).toISOString():mode==='previous'?previousClock:clock,overview:mode==='pending'?null:overview,sources:(mode==='previous'?previousNodes:nodes).slice(0,2)});
 const record=i=>({id:'change-'+i,ticker:i%2?'AVGO':'NVDA',kind:i===1?'revised':'added',state:i===3?'unavailable':'available',earlier_content:i===2,
  initial_coverage:false,published_at:i===2?'2026-08-20':today,observed_at:clock,available_at:clock,node:i===3?null:nodes[i%3]});
-const macroHistory=()=>{const rows=[];let q=100,net=5800,y=4.4,d=new Date(Date.UTC(2026,5,15));
- for(let i=0;i<70;i++){d.setUTCDate(d.getUTCDate()+(d.getUTCDay()===5?3:1));const up=Math.sin(i/3)+Math.cos(i/7);net+=up*22;q*=1-up*0.004+((i%5)-2)*0.001;y+=up*0.03-((i%4)-1.5)*0.02;
-  rows.push({date:d.toISOString().slice(0,10),funding_score:55+up*8,beta_score:56,regime:'mixed',metrics:{net_liquidity_bn:Math.round(net*10)/10,nominal_10y:Math.round(y*100)/100,vix:16},qqq_index:Math.round(q*1000)/1000,spy_index:100});}
+const macroHistory=()=>{const rows=[];let q=100,sp=100,net=5800,y=4.4,d=new Date(Date.UTC(2026,5,15));
+ for(let i=0;i<70;i++){d.setUTCDate(d.getUTCDate()+(d.getUTCDay()===5?3:1));const up=Math.sin(i/3)+Math.cos(i/7);net+=up*22;q*=1-up*0.004+((i%5)-2)*0.001;sp*=1-up*0.0025+((i%7)-3)*0.0006;y+=up*0.03-((i%4)-1.5)*0.02;
+  rows.push({date:d.toISOString().slice(0,10),funding_score:55+up*8,beta_score:56,regime:'mixed',metrics:{net_liquidity_bn:Math.round(net*10)/10,nominal_10y:Math.round(y*100)/100,vix:16},qqq_index:Math.round(q*1000)/1000,spy_index:Math.round(sp*1000)/1000});}
  return rows;};
 const calendarDoc=()=>{
  const todayIso=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());

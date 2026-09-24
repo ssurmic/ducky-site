@@ -5,7 +5,7 @@ import {el,modal} from './ui.js';
 import {s,LANG} from './strings.js';
 import * as api from './api.js';
 import {gauge,bandFor} from './today-gauge.js';
-import {dailyPairs,summary,sparkPair,normalizedLines,sparkLines} from './today-spark.js';
+import {dailyPairs,summary,sparkPair,normalizedLines,sparkLines,cursorIndex} from './today-spark.js';
 
 const OK=v=>typeof v==='number'&&Number.isFinite(v);
 const num=(v,d=2)=>OK(v)?new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US',{minimumFractionDigits:d,maximumFractionDigits:d}).format(v):'—';
@@ -58,13 +58,28 @@ function linesFor(doc){
   };
   return {...lines,qqq:against('qqq_index'),spy:against('spy_index')};
 }
+// One series' reading on one day: the liquidity level in $B with its day change; an index's day change.
+function lineReading(x,i){
+  if(x.key==='liquidity')return OK(x.raw[i])?s('today.lines_liquidity_value',{value:num(x.raw[i],0),change:OK(x.change[i])?signed(x.change[i],0):'—'}):'—';
+  return OK(x.change[i])?signed(x.change[i],2)+'%':'—';
+}
 function linesBlock(tile){
   const {dates,series,qqq,spy}=tile.lines;
   const labels={liquidity:s('today.lines_liquidity'),qqq:s('today.lines_qqq'),spy:s('today.lines_spy')};
   const fmtDate=d=>{const t=Date.parse(d+'T12:00:00Z');return Number.isFinite(t)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'2-digit',day:'2-digit'}).format(t):d;};
   const r=v=>OK(v)?(v>0?'+':'')+v.toFixed(2):'—';
-  const legend=el('span.today-macro-legend',...series.map(x=>el('span.today-lines-key.is-'+x.key,el('i'),labels[x.key])));
-  return el('div.today-macro-chart',sparkLines({dates,series},{labels,fmtDate}),legend,
+  const last=dates.length-1;
+  // The legend carries each line's latest day-over-day change, so the last session reads without hovering.
+  const legend=el('span.today-macro-legend',...series.map(x=>el('span.today-lines-key.is-'+x.key,el('i'),labels[x.key]+' ',el('b',lineReading(x,last)))));
+  const chart=sparkLines({dates,series},{labels,fmtDate});
+  const tip=el('div.today-lines-tip',{hidden:true,role:'status'});
+  const show=i=>{tip.hidden=false;tip.replaceChildren(el('span.today-lines-tip-date',fmtDate(dates[i])),
+    ...series.map(x=>el('span.today-lines-tip-row.is-'+x.key,el('i'),labels[x.key],el('b',lineReading(x,i)))));chart.moveCursor?.(i);};
+  const hide=()=>{tip.hidden=true;chart.moveCursor?.(null);};
+  chart.addEventListener('pointermove',e=>{const rect=chart.getBoundingClientRect();show(cursorIndex(e.clientX-rect.left,rect.width,dates.length));});
+  chart.addEventListener('pointerleave',hide);
+  chart.addEventListener('pointerdown',e=>{const rect=chart.getBoundingClientRect();show(cursorIndex(e.clientX-rect.left,rect.width,dates.length));});
+  return el('div.today-macro-chart.has-cursor',tip,chart,legend,
     el('span.today-macro-caption',s('today.lines_caption',{n:dates.length,rq:r(qqq?.correlation),rs:r(spy?.correlation),pq:OK(qqq?.opposite)?qqq.opposite:'—'})));
 }
 
