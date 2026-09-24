@@ -76,3 +76,39 @@ test('the Fear & Greed and liquidity tiles are half-dials in the provider bands,
  const zhCopy=JSON.parse(readFileSync('i18n/zh.json'));
  for(const key of ['app.today.gauge_label','app.today.fng_prev_close','app.today.fng_week','app.today.fng_month','app.today.fng_year'])assert.ok(zhCopy[key],key);
 });
+
+test('paired charts: correlation and opposite-day share are computed from the history, and the tiles carry them',async()=>{
+  const spark=await import('../public/js/app/today-spark.js');
+  assert.equal(spark.pearson([1,2,3,4],[2,4,6,8]),1);assert.equal(spark.pearson([1,2,3,4],[8,6,4,2]),-1);assert.equal(spark.pearson([1,2],[1,2]),null);assert.equal(spark.pearson([1,1,1],[1,2,3]),null);
+  const history=[];let q=100,net=5800,y=4.1;
+  for(let i=0;i<70;i++){net+=(i%2?-30:30);q*=(i%2?1.01:0.99);y+=(i%3?0.02:-0.05);history.push({date:'2026-0'+(1+Math.floor(i/28))+'-'+String(1+i%28).padStart(2,'0'),metrics:{net_liquidity_bn:net,nominal_10y:Math.round(y*100)/100},qqq_index:q});}
+  const pairs=spark.dailyPairs(history,r=>r.metrics.net_liquidity_bn);
+  assert.equal(pairs.length,60);assert.equal(pairs[0].change,pairs[0].change);assert.ok(Math.abs(pairs[59].ret)>0.9);
+  const stats=spark.summary(pairs);assert.equal(stats.n,60);assert.equal(stats.correlation,-1);assert.equal(stats.opposite,100);
+  assert.equal(spark.oppositeShare(pairs.slice(0,3)),null);
+  const tiles=macro.macroTiles({...doc,history});
+  assert.ok(tiles[0].chart&&tiles[0].chart.stats.correlation===-1&&tiles[0].chartUnit==='B');
+  assert.ok(tiles[1].chart&&tiles[1].chart.pairs.length===60&&tiles[1].chartUnit==='bp');
+  assert.equal(macro.macroTiles(doc)[0].chart,null);   // a one-row history draws nothing
+  const strip=macro.macroStrip({...doc,history});
+  assert.equal(strip.querySelectorAll('.today-spark').length,2);
+  assert.equal(strip.querySelectorAll('.today-spark-bar').length,120);
+  assert.match(strip.querySelector('.today-macro-caption').textContent,/60 sessions|60 个交易日/);
+  assert.match(strip.querySelector('.today-macro-caption').textContent,/-1\.00/);
+  assert.doesNotMatch(strip.textContent,/forecast says|will rise|target/i);
+});
+
+test('the close-of-day note renders above the tiles when ready, says when it is old, and hides otherwise',()=>{
+  const digest={status:'ready',session:'2026-09-23',next_session:'2026-09-24',generated_at:'2026-09-24T05:41:00+00:00',
+    close:{zh:'标普500 收跌。',en:'The S&P 500 closed down 0.8%.'},sectors:{zh:'能源领涨。',en:'Energy led.'},macro:{zh:'收益率上行。',en:'Yields rose 15bp.'},tomorrow:{zh:'明天初请。',en:'Jobless claims at 08:30 ET.'}};
+  const strip=macro.macroStrip({...doc,digest});
+  const note=strip.querySelector('.today-digest');
+  assert.ok(note && strip.firstElementChild===note);
+  assert.equal(note.querySelectorAll('.today-digest-part').length,3);
+  assert.match(note.querySelector('.today-digest-tomorrow').textContent,/Jobless claims at 08:30 ET/);
+  assert.match(note.textContent,/not a forecast or advice/);
+  assert.doesNotMatch(note.textContent,/Over 40 hours old/);
+  assert.match(macro.macroStrip({...doc,digest:{...digest,status:'stale'}}).textContent,/Over 40 hours old/);
+  assert.equal(macro.macroStrip({...doc,digest:{status:'unavailable'}}).querySelector('.today-digest'),null);
+  assert.equal(macro.macroStrip(doc).querySelector('.today-digest'),null);
+});

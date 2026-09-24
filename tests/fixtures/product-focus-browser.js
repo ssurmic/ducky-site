@@ -71,6 +71,10 @@ const stockSummary=ticker=>({ticker,status:mode==='pending'?'pending':mode==='pr
  as_of:mode==='today-large'?new Date(Date.now()-(watches.length-watches.indexOf(ticker))*86400000).toISOString():mode==='previous'?previousClock:clock,overview:mode==='pending'?null:overview,sources:(mode==='previous'?previousNodes:nodes).slice(0,2)});
 const record=i=>({id:'change-'+i,ticker:i%2?'AVGO':'NVDA',kind:i===1?'revised':'added',state:i===3?'unavailable':'available',earlier_content:i===2,
  initial_coverage:false,published_at:i===2?'2026-08-20':today,observed_at:clock,available_at:clock,node:i===3?null:nodes[i%3]});
+const macroHistory=()=>{const rows=[];let q=100,net=5800,y=4.4,d=new Date(Date.UTC(2026,5,15));
+ for(let i=0;i<70;i++){d.setUTCDate(d.getUTCDate()+(d.getUTCDay()===5?3:1));const up=Math.sin(i/3)+Math.cos(i/7);net+=up*22;q*=1-up*0.004+((i%5)-2)*0.001;y+=up*0.03-((i%4)-1.5)*0.02;
+  rows.push({date:d.toISOString().slice(0,10),funding_score:55+up*8,beta_score:56,regime:'mixed',metrics:{net_liquidity_bn:Math.round(net*10)/10,nominal_10y:Math.round(y*100)/100,vix:16},qqq_index:Math.round(q*1000)/1000,spy_index:100});}
+ return rows;};
 const calendarDoc=()=>{
  const todayIso=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
  const iso=n=>{const d=new Date(todayIso+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10);};
@@ -174,7 +178,11 @@ window.fetch=async(input,options={})=>{
     extra:{facts:{politician:'Josh Gottheimer',owner:'JT',transaction_code:'S',transaction_date:'2026-06-12',amount_range:'$15,001 - $50,000',asset_type:'OP',description:'Call options; Strike price $340; Expires 12/18/2026',filing_date:'2026-07-10',transaction_close:{close:19.8,date:'2026-06-12'}}}}]:[])]);
   return Response.json({items:kind==='insider'?insider:kind==='13f'?funds:kind==='political'?political:[],next_cursor:null});
  }
- if(path==='/macro/beta')return Response.json({schema:'macro-beta/1',status:'ok',as_of:'2026-09-18',observed_at:'2026-09-19T12:00:00Z',history:[{}],
+ if(path==='/macro/beta')return Response.json({digest:{status:'ready',version:'market-digest/1',session:'2026-09-23',next_session:'2026-09-24',generated_at:'2026-09-24T05:41:00+00:00',
+  close:{zh:'标普500 收跌 0.8%，纳指100 跌 1.2%，道指跌 0.5%，三大指数全线收低。',en:'The S&P 500 closed down 0.8%, the Nasdaq-100 fell 1.2% and the Dow slipped 0.5%; all three indexes finished lower.'},
+  sectors:{zh:'能源涨 1.4% 领涨，半导体跌 2.3% 垫底；库里 1361 只股票里 38% 收涨。',en:'Energy led with +1.4% while semiconductors lagged at -2.3%; 38% of the 1361 stocks in the store closed up.'},
+  macro:{zh:'十年期收益率 5.11%，比前一天上行 15bp，长期美债 TLT 跌 1.1%；恐慌指数 VIX 15.2，期限比值 0.84 仍低于 1；美元净流动性 5.87 万亿，较前一天 +2 亿；黄金跌 0.6%。同一天收益率上行、股指下跌。',en:'The 10-year yield rose 15bp to 5.11% and long Treasuries (TLT) fell 1.1%; VIX 15.2 with the term ratio at 0.84, still below 1; dollar net liquidity $5.87T, +$0.2B on the day; gold slipped 0.6%. Yields rose and stock indexes fell on the same day.'},
+  tomorrow:{zh:'明天 08:30 美东公布初请失业金；COST、MU 盘后出财报；习近平访美第二天，白宫会谈。',en:'Initial jobless claims at 08:30 ET; COST and MU report after the close; day two of the Xi Jinping state visit, with the White House summit.'}},history:macroHistory(),latest_available:{as_of:'2026-09-23',dates:{DGS10:'2026-09-22',VIXCLS:'2026-09-23'},metrics:{nominal_10y:4.96,nominal_10y_20d_change_bp:26,vix:14.2,vix_3m:17.6,vix_term_ratio:0.807}},intraday:{quoted_at:'2026-09-24T04:23:46+00:00',nominal_10y:5.114,vix:15.18,vix_3m:18.11,vix_term_ratio:0.838},schema:'macro-beta/1',status:'ok',as_of:'2026-09-18',observed_at:'2026-09-19T12:00:00Z',
   latest:{date:'2026-09-18',regime:'mixed',funding_score:54,rates_score:48,beta_score:51.6,metrics:{net_liquidity_bn:5850,net_liquidity_65d_change_bn:-120,nominal_10y:4.12,nominal_10y_20d_change_bp:9,vix:17.6,vix_3m:19.1,vix_term_ratio:0.9215}},
   fear_greed:{score:27,rating:'fear',previous_close:31,as_of:'2026-09-18T23:59:00+00:00'}});
  return Response.json({items:[],posts:[]});
