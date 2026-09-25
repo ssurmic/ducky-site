@@ -63,7 +63,7 @@ export async function mount(root, params = {}) {
     for (const a of items) {
       list.appendChild(el("article.card.alert-row", { "data-id": a.id, "data-state": a.state },
         el("div.alert-main",
-          el("a.ticker.mono", { href: "#/chart/" + a.ticker }, "$" + a.ticker),
+          el("a.ticker.mono", { href: "#/stock/" + encodeURIComponent(a.ticker) }, "$" + a.ticker),
           el("span.cond", a.condition)),
         el("div.alert-side",
           el("span.chip", { class: "chip-" + a.state }, s("alerts.state_" + a.state)),

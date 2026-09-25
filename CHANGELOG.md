@@ -1,5 +1,25 @@
 # Change log
 
+## The K-line is one tap away: stock heading, watchlist price, chart back link, consistent ticker links · 2026-09-24 (in review, not deployed)
+
+Owner instruction (chat, 2026-09-24): "我想看 K 线图，需要进到哪里、怎么找？… 我希望 UX 能更顺". The same day's
+audit measured the K-line at 2–4 taps behind the research map or a collapsed "Keep researching" block.
+
+- **Stock page**: the heading row now carries six one-tap tools — Research Map, Chart (K 线), History,
+  Creators, Calendar, Alerts — and the price-history section links "Open the K-line and option walls".
+  The collapsed "Keep researching" block, which repeated the map, chart, history and calendar, is
+  reduced to the past-briefs link.
+- **Watchlist**: the price in every row opens `#/chart/<T>` (labelled "Open the <T> chart"); the map
+  link stays where it was.
+- **Chart page**: a "← Stock page" link above the ticker; the chart was previously a dead end.
+- **One meaning for a ticker link**: a bare `$TICKER` or ticker-name link now opens the stock page
+  everywhere (stock briefs, alerts, oversold screens, Vibe ranking, calendar related tickers, company
+  peer chips); explicit "Open chart" buttons keep opening the chart.
+- **Today**: the macro strip links "Macro details" to `#/macro`, which had no entry inside the app.
+- Six new keys in both languages; `tests/company-context.test.js` follows the peer-chip target;
+  `tests/product-focus.test.js` and `tests/watchlist-overview.test.js` pin the new entries.
+- Evidence: [chart entry record](reports/CHART-ENTRY-2026-09-24.md).
+
 ## Today reads one set of numbers: closes by their own date, the liquidity index on its chart, creators on the macro backdrop · 2026-09-24
 
 Owner: the liquidity chart did not show the index falling from the sixties to 58; the 10-year legend read "4.96% (−5 bp)" on a

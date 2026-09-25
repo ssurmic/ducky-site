@@ -26,13 +26,13 @@ export function companyContext(p, rs = {}) {
     && !(p.version && rs.taxonomy_version && p.version!==rs.taxonomy_version);
   if (peers.length) {
     box.append(el('div.company-links',el('span.muted.small',s(p.comparison_enabled===false?'company.business_refs':'company.peers')),
-      ...peers.map(t=>el('a.chip',{href:'#/chart/'+encodeURIComponent(t)},'$'+t))));
+      ...peers.map(t=>el('a.chip',{href:'#/stock/'+encodeURIComponent(t)},'$'+t))));
     if (matching && Number.isFinite(rs.excess20)) {
       box.append(el('p.small',s('company.comparison',{n:20,value:(rs.excess20>0?'+':'')+num(rs.excess20,1)})));
     }
   } else box.append(el('p.muted.small',s('company.no_peers')));
   if (p.related?.length) box.append(el('div.company-links',el('span.muted.small',s('company.related')),
-    ...p.related.map(t=>el('a.chip',{href:'#/chart/'+encodeURIComponent(t)},'$'+t))));
+    ...p.related.map(t=>el('a.chip',{href:'#/stock/'+encodeURIComponent(t)},'$'+t))));
   const details = el('details.company-evidence', el('summary',s('company.evidence')));
   const reason = zh ? p.reason_zh : p.reason_en;
   if (reason) details.append(el('p.small',reason));

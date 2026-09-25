@@ -20,7 +20,7 @@ test('buyers and sellers are distinct, with business references separate from re
  assert.match(box.textContent,/Business references/);
  assert.equal(box.querySelectorAll('.company-flow > div').length,2);
  assert.equal(box.querySelectorAll('.company-source').length,1);
- assert.match(box.querySelector('a[href="#/chart/NBIS"]').textContent,/NBIS/);
+ assert.match(box.querySelector('a[href="#/stock/NBIS"]').textContent,/NBIS/);
  assert.doesNotMatch(box.textContent,/percentage points/);
 });
 
@@ -49,6 +49,6 @@ test('disabled, reclassified or mismatched comparisons cannot leak returns throu
  ]){
    const box=companyContext(profile,comparison);
    assert.doesNotMatch(box.textContent,/percentage points|2026-08-07|-12.3/);
-   assert.ok(box.querySelector('a[href="#/chart/CEG"]'),'Business identity remains available');
+   assert.ok(box.querySelector('a[href="#/stock/CEG"]'),'Business identity remains available');
  }
 });

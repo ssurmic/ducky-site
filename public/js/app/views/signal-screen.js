@@ -172,7 +172,7 @@ export function mountScreen(root,{signal,query,initialConfig,localOnly=false}={}
 export function resultCard(item){
   const tech=item.technical_status==='stale'?{}:(item.technical || {});
   const facts=[item.sector?sectorName(item.sector):s('screen.unknown_sector'),money(item.market_cap)];
-  const card=el('article.card.screen-match',el('div.screen-match-head',el('div',el('a.ticker',{href:'#/chart/'+encodeURIComponent(item.ticker)},'$'+item.ticker),
+  const card=el('article.card.screen-match',el('div.screen-match-head',el('div',el('a.ticker',{href:'#/stock/'+encodeURIComponent(item.ticker)},'$'+item.ticker),
     el('span',item.company || '')),link('#/boards?mode=archive&ticker='+encodeURIComponent(item.ticker),s('screen.records'))),
     el('p.muted.small',facts.join(' · ')),el('p.small',
       ['RSI '+(tech.rsi_d==null?'—':Number(tech.rsi_d).toFixed(1)), 'IV/HV '+(tech.iv_hv==null?'—':Number(tech.iv_hv).toFixed(2)),

@@ -166,6 +166,9 @@ test('adding a stock found by the search box shows the whole list again with the
   assert.deepEqual(store.get('watchlist'),['AAA','BBB','CCC','COIN']);
   // Before the fix the search text survived the add and the list showed COIN alone under "4/50".
   assert.deepEqual(members(root),['AAA','BBB','CCC','COIN']);
+  // Every row's price opens that stock's K-line; the map pill is unchanged.
+  assert.equal(root.querySelectorAll('a.watch-price-link[href^="#/chart/"]').length,4);
+  assert.equal(root.querySelector('a.watch-price-link[href="#/chart/COIN"]').getAttribute('aria-label'),'Open the $COIN chart');
   assert.equal(filter.value,'');assert.equal(root.querySelector('.watch-overview').classList.contains('is-filtered'),false);
   assert.equal(root.querySelector('.watch-search-offer').hidden,true);
   assert.match(root.querySelector('#watch-count').textContent,/4.*50/);
