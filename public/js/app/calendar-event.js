@@ -119,7 +119,7 @@ export function eventResearchSession(scopeTicker='') {
       for(const r of matched) {
         const allLanes=r.lanes||[];
         const lane=allLanes.slice(0,r.relation==='peer'?3:1).map(x=>LANG==='en'?x.en:x.zh).join(' / ');
-        chips.append(el('a.event-related',{href:'#/chart/'+encodeURIComponent(r.ticker)},
+        chips.append(el('a.event-related',{href:'#/stock/'+encodeURIComponent(r.ticker)},
           el('strong.mono',r.ticker),el('span',s('event.relation_'+r.relation)),
           lane?el('span.muted.small',lane):null));
       }

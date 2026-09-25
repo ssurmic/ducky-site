@@ -84,7 +84,8 @@ export async function mount(root, params) {
   const changeSymbol=el('button.btn.btn-ghost.chart-change',{type:'button','aria-expanded':'false','aria-controls':'chart-search',onclick:()=>{
     form.hidden=!form.hidden;changeSymbol.setAttribute('aria-expanded',String(!form.hidden));if(!form.hidden)input.focus();
   }},s('chart.change'));
-  const head = el("div.view-head.chart-heading", el('div.chart-identity',el("h1", ticker || s("chart.title"))), el("span.spot", { id: "chart-spot" }),ticker?changeSymbol:null,companyName);
+  // A chart reached from a row or a card can always go back to the stock's own page.
+  const head = el("div.view-head.chart-heading", el('div.chart-identity',ticker?el('a.small.muted.chart-back',{href:'#/stock/'+encodeURIComponent(ticker)},'← '+s('chart.back_to_stock')):null,el("h1", ticker || s("chart.title"))), el("span.spot", { id: "chart-spot" }),ticker?changeSymbol:null,companyName);
   const legendRow = el("div.legend", { id: "chart-legend" });
   const host = el("div.chart-host", { id: "chart-host" });
   const status = el("div", { id: "chart-status" });

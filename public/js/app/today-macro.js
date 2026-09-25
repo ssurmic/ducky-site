@@ -168,7 +168,8 @@ export function macroStrip(doc){
   // covers, the CNN index at the minute it was read, so the footer names both.
   const fngAt=Date.parse(doc.fear_greed?.as_of||'');
   const fng=Number.isFinite(fngAt)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).format(fngAt):'—';
-  box.append(grid,el('p.small.muted.today-macro-source',s('today.macro_source',{date:doc.latest_available?.as_of||doc.as_of||'—',fng})+(doc.status==='stale'?' · '+s('macro.stale'):'')));
+  box.append(grid,el('p.small.muted.today-macro-source',s('today.macro_source',{date:doc.latest_available?.as_of||doc.as_of||'—',fng})+(doc.status==='stale'?' · '+s('macro.stale'):''),
+    ' ',el('a.today-macro-more',{href:'#/macro'},s('today.macro_more')+' →')));
   return box;
 }
 

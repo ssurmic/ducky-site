@@ -11,7 +11,9 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
   if(!/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker||'')){location.hash='#/explore';return;}
   let disposed=false,followingBusy=false,lastEvidence=null,currentMap=null;
   const epoch=store.epoch(),current=()=>!disposed&&!signal?.aborted&&store.epoch()===epoch;
-  const shell=el('article.focus-stock'),body=el('div'),chart=el('section.focus-chart',el('h2',s('focus.price_history')),spinner());
+  const chartHead=()=>el('div.focus-chart-head',el('h2',s('focus.price_history')),
+    el('a.stock-open',{href:'#/chart/'+encodeURIComponent(ticker),'data-stock-tool':'kline'},s('focus.open_kline')+' →'));
+  const shell=el('article.focus-stock'),body=el('div'),chart=el('section.focus-chart',chartHead(),spinner());
   const from=['today','explore'].includes(query.get('from'))?query.get('from'):'watchlist';
   const company=el('p.small.muted',{hidden:true});
   const head=el('header.focus-heading',el('div',el('a.small.muted',{href:'#/'+from},'← '+s('nav.'+from)),el('h1',ticker),company));
@@ -25,9 +27,11 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
     catch(error){if(current()){toast(s('common.error',{msg:error.message}),'err');follow.disabled=false;}}
     finally{followingBusy=false;if(current())sync();}
   });
+  // Every core surface for this stock is one tap from its heading: the map, the K-line, the
+  // history, the creators, the calendar and the alert (owner, 2026-09-24: "K 线要能找到").
   const directTools=el('nav.stock-core-actions',{'aria-label':s('focus.deeper_research')},
-    ...[['evidence/','evidence'],['research/','history_short'],['creators?scope=discover&ticker=','creators_short'],['calendar?ticker=','calendar_short']].map(([route,key])=>
-      el('a.btn.btn-ghost',{href:'#/'+route+encodeURIComponent(ticker)},s('focus.'+key))));
+    ...[['evidence/','evidence'],['chart/','chart_short'],['research/','history_short'],['creators?scope=discover&ticker=','creators_short'],['calendar?ticker=','calendar_short'],['alerts?ticker=','alert_short']].map(([route,key])=>
+      el('a.btn.btn-ghost',{href:'#/'+route+encodeURIComponent(ticker),'data-stock-tool':key},s('focus.'+key))));
   head.append(follow);shell.append(head,directTools,body,chart);root.append(shell);
   const off=store.subscribe('watchlist',sync);
   const details=el('details.focus-history',el('summary',s('focus.research_history'))),historyBody=el('div');details.append(historyBody);shell.append(details);
@@ -48,9 +52,8 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
     finally{historyLoading=false;}
   }
   details.addEventListener('toggle',()=>{if(details.open&&!historyLoaded)loadHistory();});
-  shell.append(el('details.focus-tools',el('summary',s('focus.deeper_research')),el('div.focus-tool-links',
-    ...[['briefing?archive=1&ticker='+ticker,'past_stock_briefs'],['evidence/'+ticker,'evidence'],['chart/'+ticker,'full_chart'],['research/'+ticker,'track_record'],['calendar?ticker='+ticker,'upcoming'],['alerts?ticker='+ticker,'set_alert']].map(([route,key])=>
-      el('a.btn.btn-ghost',{href:'#/'+route},s('focus.'+key))))));
+  // The heading already carries the map, chart, history, calendar and alert; only the archive stays here.
+  shell.append(el('p.focus-tool-links',el('a.btn.btn-ghost',{href:'#/briefing?archive=1&ticker='+ticker},s('focus.past_stock_briefs'))));
   function renderEvidence(result){
     if(result?.ticker!==ticker||!Object.hasOwn(result,'evidence')||(result.evidence&&!Array.isArray(result.evidence.nodes)))throw new api.ApiError(502,{error:'invalid_research_response'});
     lastEvidence=result;
@@ -99,7 +102,7 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
     if(!Array.isArray(response)&&!Array.isArray(response?.bars)&&!Array.isArray(response?.items)&&!api.isAccepted(response))throw new api.ApiError(502,{error:'invalid_price_response'});
     const selected=chart.querySelector('.stock-chart-scrub[data-scrubbed]')?.getAttribute('aria-valuetext')?.slice(0,10);
     const focus=chart.contains(document.activeElement);
-    clear(chart);chart.append(el('h2',s('focus.price_history')));
+    clear(chart);chart.append(chartHead());
     if(api.isAccepted(response)){chart.append(el('p.muted',s('focus.chart_pending')));return;}
     const figure=closingChart(response,{selectedDate:selected});chart.append(figure);
     if(focus)figure.querySelector('input')?.focus({preventScroll:true});
@@ -119,7 +122,7 @@ export async function mount(root,{ticker,signal,query=new URLSearchParams()}={})
   if(saved)renderEvidence(saved);
   const priceTask=api.get('/bars/'+encodeURIComponent(ticker)+'?period=6mo',{signal}).then(response=>{
     if(current())renderPrices(response);
-  }).catch(error=>{if(current()){clear(chart);chart.append(el('h2',s('focus.price_history')),el('p.muted',s('focus.chart_unavailable')));}});
+  }).catch(error=>{if(current()){clear(chart);chart.append(chartHead(),el('p.muted',s('focus.chart_unavailable')));}});
   await Promise.all([loadEvidence(),priceTask]);
   return()=>{disposed=true;off();currentMap?.dispose?.();root.removeEventListener('ducky:shared-read',updates);};
 }

@@ -34,7 +34,7 @@ function eventRow(event){
 }
 function stockCard(row){
   const card=el('article.card.briefing-stock',{'data-ticker':row.ticker},
-    el('div.view-head',el('h3',el('a',{href:'#/chart/'+encodeURIComponent(row.ticker)},'$'+row.ticker)),
+    el('div.view-head',el('h3',el('a',{href:'#/stock/'+encodeURIComponent(row.ticker)},'$'+row.ticker)),
       el('span.small.muted',dateTime(row.latest_at,row.latest_precision))),row.company?el('p.muted',row.company):null);
   if(row.events?.length)card.append(el('ul',...row.events.slice(0,2).map(eventRow)));
   if(row.events?.length>2)card.append(el('details',el('summary',s('briefing.more_evidence',{n:row.events.length-2})),

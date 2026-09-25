@@ -481,6 +481,10 @@ test('pending stock analysis still shows the saved information map without an ex
   {ticker:'NEW',price:{price:22},evidence:{ticker:'NEW',nodes:[node()],analysis_status:'pending'}});};
  const dispose=await stock.mount(root,{ticker:'NEW'});
  assert.ok(root.querySelector('.stock-core-actions a[href="#/evidence/NEW"]'));
+ // The K-line and the alert are one tap from the heading; the price section links the chart too.
+ assert.ok(root.querySelector('.stock-core-actions a[href="#/chart/NEW"]'));assert.ok(root.querySelector('.stock-core-actions a[href="#/alerts?ticker=NEW"]'));
+ assert.ok(root.querySelector('.focus-chart-head a[href="#/chart/NEW"]'));assert.equal(root.querySelector('.focus-tool-links a[href^="#/chart/"]'),null);
+ assert.ok([...root.querySelectorAll('.focus-tool-links a')].some(a=>a.getAttribute('href').startsWith('#/briefing?archive=1')));
  assert.ok(root.querySelector('.stock-information-map .evidence-node'));
  assert.equal(root.querySelectorAll('.evidence-analysis').length,1);assert.equal(calls.length,2);dispose();
 });

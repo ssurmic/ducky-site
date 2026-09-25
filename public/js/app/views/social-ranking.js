@@ -28,7 +28,7 @@ export function rankingRow(row,{samples=[],details}={}) {
   const rank=el('span.social-rank-number',el('strong',String(row.rank??'—')),
     el('small.muted',delta===null?'—':delta===0?'·':(delta>0?'↑':'↓')+Math.abs(delta)));
   const summary=el('div.social-rank-summary',rank,
-    el('div.social-rank-stock',el('a',{href:'#/chart/'+encodeURIComponent(row.ticker)},row.ticker),el('span.muted',row.company)),
+    el('div.social-rank-stock',el('a',{href:'#/stock/'+encodeURIComponent(row.ticker)},row.ticker),el('span.muted',row.company)),
     el('div.social-rank-value',el('small',s('social.mentions_short')),el('strong',num(row.mentions,0))),
     el('div.social-rank-value',el('small',s('social.change_short')),el('span',row.change_pct==null?'—':pct(row.change_pct,0))),
     el('div.social-rank-value.social-rank-votes',el('small',s('social.votes_short')),el('span',num(row.upvotes,0))),attentionTrend(samples));
