@@ -1,6 +1,6 @@
 # K-line entry points · 2026-09-24
 
-Status: implemented and tested on `codex/stock-chart-entry-20260924`; not merged, not deployed.
+Status: deployed. PR #97 merged as main `daca0a76`, Pages `af56316b` (2026-09-25 01:37 UTC); the feature-cuts release `855b14b3` / Pages `3000617b` (01:42 UTC) carries the same change. Owner verification in the signed-in app is still pending.
 
 ## Problem
 

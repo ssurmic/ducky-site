@@ -1,6 +1,8 @@
 # Change log
 
-## Feature cuts: simulation, leaderboard, research brief, orphan routes, dead billing links · 2026-09-24 (in review, not deployed)
+## Feature cuts: simulation, leaderboard, research brief, orphan routes, dead billing links · 2026-09-24 (deployed)
+
+Released through `scripts/deploy_pages.sh`: main `855b14b3` (PR #98, rebased onto the K-line release) → Pages `3000617b` at 2026-09-25 01:42 UTC; the live `config.js` serves VERSION `855b14b3`. Gate before publishing: 757/757 Node tests, export unit tests, copy lint, internal links. Owner verification in the signed-in app is still pending.
 
 Owner decision in chat, 2026-09-24 ("该砍的都砍，开始做"): the creator simulation ("Simulate a view", 观点模拟) and the
 creator leaderboard (博主排行榜) approved on 2026-09-05 (KOL-07/08) are withdrawn, together with the never-linked Research
@@ -49,7 +51,9 @@ research record's `options` stream linked `#/watchlist?ticker=T`, which the list
 
 Report: [reports/UX-CUTS-2026-09-24.md](reports/UX-CUTS-2026-09-24.md). Not deployed.
 
-## The K-line is one tap away: stock heading, watchlist price, chart back link, consistent ticker links · 2026-09-24 (in review, not deployed)
+## The K-line is one tap away: stock heading, watchlist price, chart back link, consistent ticker links · 2026-09-24 (deployed)
+
+Released through `scripts/deploy_pages.sh`: main `daca0a76` (PR #97) → Pages `af56316b` at 2026-09-25 01:37 UTC (superseded twelve minutes later by the feature-cuts release above, which carries the same change). Gate before publishing: 800/800 Node tests, export unit tests, copy lint, internal links.
 
 Owner instruction (chat, 2026-09-24): "我想看 K 线图，需要进到哪里、怎么找？… 我希望 UX 能更顺". The same day's
 audit measured the K-line at 2–4 taps behind the research map or a collapsed "Keep researching" block.
