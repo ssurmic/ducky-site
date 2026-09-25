@@ -2,7 +2,7 @@
 const query=new URLSearchParams(location.search),mode=query.get('case')||'data';
 document.documentElement.dataset.theme=query.get('theme')==='dark'?'dark':'light';
 document.documentElement.dataset.tg='web';
-window.DUCKY={API_BASE:'/qa-api',PRODUCT_FOCUS_ENABLED:true,RESEARCH_BRIEF_ENABLED:true,BILLING_ENABLED:false};
+window.DUCKY={API_BASE:'/qa-api',PRODUCT_FOCUS_ENABLED:true,BILLING_ENABLED:false};
 const clock=new Date().toISOString(),today=clock.slice(0,10),requests=[],errors=[];
 window.addEventListener('error',event=>errors.push(event.message));
 window.addEventListener('unhandledrejection',event=>errors.push(String(event.reason)));

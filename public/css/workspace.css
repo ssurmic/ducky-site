@@ -41,7 +41,6 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .app-nav>a[data-route=profile]{margin-top:auto}
  .page-app .app-nav>a[data-route=billing]{font-size:.875rem}
  .page-app .app-main{grid-column:2;grid-row:2;padding:30px clamp(24px,3vw,52px) 40px}
- .page-app .nav-more{display:none}
  body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route=reset],[data-route=oauth]) .app-main{grid-column:1/-1}
  .page-app .app-view .route-page{min-width:0}
 }
@@ -64,22 +63,6 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 .calendar-dialog .cal-title{font-size:1rem;line-height:1.5;margin:4px 0 8px}
 .calendar-dialog .cal-note{font-size:.875rem;line-height:1.65}
 .calendar-dialog .cal-ev:last-child{border-bottom:0}
-.market-dialog .market-topic{padding:0;border:0}
-.market-dialog .market-topic>h3{display:none}
-.market-dialog .market-evidence{margin-bottom:0}
-/* Five quiet topic entrances replace the wall of equally dominant cards. */
-.page-app .market-compact{padding:16px 18px;margin:0 0 18px;background:var(--surface)}
-.market-compact .market-context-heading{display:inline-block;margin-right:12px}
-.market-compact .market-context-heading h2{font-size:.9375rem;margin:0}
-.market-compact>.small{display:inline;font-size:.75rem}
-.market-compact .market-topics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;margin:14px 0 0;border-top:1px solid var(--border)}
-.market-topic-trigger{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:5px;min-width:0;padding:14px 25px 4px 14px;border:0;border-left:1px solid var(--border);background:none;color:var(--text);font:inherit;font-size:.875rem;text-align:left;cursor:pointer}
-.market-topic-trigger:first-child{border-left:0;padding-left:0}
-.market-topic-trigger:hover>span:first-child{color:var(--accent-text)}
-.market-topic-status{font-size:.75rem;color:var(--muted)}
-.market-topic-arrow{position:absolute;right:10px;top:16px;font-size:.875rem;color:var(--muted)}
-.market-compact .market-notes{margin:10px 0 0}
-.market-compact .market-notes>summary{min-height:28px;font-size:.75rem}
 .radar-market-panel:has(.spinner){min-height:100px}
 .page-app .radar-heading{margin:0 0 22px}
 .page-app .radar-heading h1{font-size:1.75rem}
@@ -107,7 +90,6 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 .page-app .radar-filter-actions{grid-column:4;grid-row:1;align-items:end}
 .page-app .radar-extra:has(.radar-dates:not([hidden]))+.radar-filter-actions{grid-column:4;grid-row:1}
 .page-app .radar-extra .radar-dates{grid-column:1/-1}
-@media(min-width:721px){.market-compact{position:relative}.market-compact .market-notes:not([open]){position:absolute;top:10px;right:18px;margin:0}.market-compact .market-topics{margin-top:10px}.page-app .market-compact{padding-bottom:14px}}
 /* Calendar controls share one compact header; grid dates open details in a dialog. */
 .page-app .calendar-view{padding:24px}
 .calendar-heading{display:flex;align-items:start;justify-content:space-between;gap:20px}
@@ -201,7 +183,7 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 @media(max-width:999px){
  .page-app .app-main{padding:22px 18px 30px}
  .page-app .app-top{padding-inline:18px;min-height:56px}
- .page-app .app-nav>a,.page-app .nav-more>summary{font-size:.75rem;border-radius:9px;min-height:52px}
+ .page-app .app-nav>a{font-size:.75rem;border-radius:9px;min-height:52px}
  .page-app .radar-layout{grid-template-columns:150px minmax(0,1fr);gap:18px}
  .page-app .app-nav{padding-bottom:max(7px,var(--safe-bottom))}
 }
@@ -221,12 +203,6 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .radar-filter-actions,.page-app .radar-extra:has(.radar-dates:not([hidden]))+.radar-filter-actions{grid-row:2;grid-column:2;justify-self:end}
  .page-app .radar-filter-actions>.btn{flex:none}
  .page-app .filters-expanded .radar-extra{grid-row:3;grid-template-columns:repeat(2,minmax(0,1fr))}
- .page-app .market-compact{padding:14px}
- .market-compact .market-topics{grid-template-columns:minmax(0,1fr);margin-top:10px}
- .market-topic-trigger{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;min-height:48px;padding:10px 22px 10px 0;border-left:0;border-bottom:1px solid var(--border);font-size:.875rem}
- .market-topic-trigger:last-child{border-bottom:0}
- .market-topic-arrow{right:0;top:50%;transform:translateY(-50%)}
- .market-compact>.small{display:block;margin-top:5px}
  .page-app .calendar-view{padding:16px}
  .calendar-heading{gap:10px;flex-wrap:wrap}
  .calendar-heading p{font-size:.875rem}
@@ -333,17 +309,15 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .categories-open .radar-categories{margin-top:8px}
  .page-app .radar-filter-actions{gap:6px}
  .page-app .radar-filters{grid-template-columns:minmax(0,1fr) minmax(90px,1fr);gap:10px}
- .page-app :is(.market-notes,.radar-browse,.radar-coverage,.cal-filters,.cr-sections,.study-detail,.creator-stock-options)>summary{min-height:44px;align-content:center}
+ .page-app :is(.radar-browse,.radar-coverage,.cal-filters,.cr-sections,.study-detail,.creator-stock-options)>summary{min-height:44px;align-content:center}
  .page-app .cr-post .creator-page-actions{gap:8px 14px}
  .page-app .cr-post .creator-page-actions .btn{min-height:44px}
- .page-app .nav-more-panel{grid-template-columns:minmax(0,1fr);max-height:calc(100dvh - 150px - var(--safe-top) - var(--safe-bottom));overflow-y:auto;overscroll-behavior:contain;left:auto;width:min(290px,calc(100vw - 24px))}
- .page-app .nav-more-panel a{min-height:48px;padding:10px 14px}
  .page-app #modal{padding:max(12px,var(--safe-top)) max(12px,env(safe-area-inset-right)) max(12px,var(--safe-bottom)) max(12px,env(safe-area-inset-left))}
  .page-app .modal-box{max-height:calc(100dvh - max(12px,var(--safe-top)) - max(12px,var(--safe-bottom)))}
  .page-app .modal-heading{padding:10px 14px;gap:10px}
  .page-app .modal-body{padding:14px;overflow-wrap:anywhere}
  .page-app .modal-actions{padding:10px 14px;flex-wrap:wrap}
- .page-app :is(.btn,.seg button,.cal-mnav,.cal-today,.cal-mode,.market-topic-trigger,.radar-category,.nav-more summary){touch-action:manipulation}
+ .page-app :is(.btn,.seg button,.cal-mnav,.cal-today,.cal-mode,.radar-category){touch-action:manipulation}
 }
 @media(max-width:580px){
  .page-app .watch-controls{display:grid;grid-template-columns:minmax(0,1fr) auto}
@@ -369,7 +343,6 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .app-nav{padding:16px 12px;gap:3px;scrollbar-width:thin}
  .page-app .app-nav>a{min-height:40px;padding:8px 12px;font-size:.875rem}
  .page-app .app-nav>a[data-route=opportunities]{margin-top:15px}
- .page-app .app-nav>.nav-mobile-primary{display:none}
 
  .page-app .app-nav>a[data-route=profile]{margin-top:auto}
  .page-app .radar-sidebar{display:none}
@@ -392,7 +365,7 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 .opportunity-filters{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 10px}
 .opportunity-filters label{display:grid;gap:6px;flex:1;min-width:180px;font-size:.8125rem}
 .ducky-empty img{border-radius:50%;margin-bottom:8px}
-@media(max-width:720px){.opportunity-grid{grid-template-columns:minmax(0,1fr)}.opportunity-filters label{min-width:120px}.page-app .nav-more-panel{max-height:calc(100dvh - 150px);overscroll-behavior:contain}}
+@media(max-width:720px){.opportunity-grid{grid-template-columns:minmax(0,1fr)}.opportunity-filters label{min-width:120px}}
 @media(max-width:480px){
  .opportunity-filters{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
  .opportunity-filters label{min-width:0;width:100%}
@@ -400,23 +373,6 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
 }
 
 .page-app .billing-benefits{font-size:.875rem;line-height:1.65;color:var(--muted);margin:8px 0 16px}
-/* Navigation groups own destinations; only the current link receives an accent. */
-.nav-desktop-tree{display:none}
-.nav-tree>summary{display:flex;align-items:center;list-style:none;min-height:44px;cursor:pointer;border-radius:7px;color:var(--muted)}
-.nav-tree>summary::-webkit-details-marker{display:none}
-.nav-tree>summary>a{display:flex;gap:10px;align-items:center;flex:1;min-height:44px;padding:8px 10px;text-decoration:none;color:inherit;font-size:.875rem}
-.nav-tree>summary>.nav-chevron{display:grid;place-items:center;min-width:44px;min-height:44px;margin:0}
-.nav-tree[open]>summary>.nav-chevron{transform:rotate(180deg)}
-.nav-tree.on>summary{background:var(--surface-2);color:var(--text)}
-.nav-tree-links{display:grid;margin:2px 0 8px 20px;border-left:1px solid var(--border);padding-left:12px;gap:1px}
-.app-nav .nav-tree-links>a{display:flex;align-items:center;min-height:40px;text-decoration:none;color:var(--muted);font-size:.8125rem;line-height:1.4;padding:6px 9px;border-radius:5px}
-.app-nav .nav-tree-links>a.on{color:var(--accent-text);background:color-mix(in srgb,var(--accent) 8%,transparent)}
-.app-nav .nav-tree .app-icon{color:inherit}
-.app-nav .nav-tree a.on .app-icon{color:var(--accent-text)}
-.nav-more-panel>.nav-tree{grid-column:1/-1;border-top:1px solid var(--border)}
-.nav-more-panel .nav-tree-links{grid-template-columns:repeat(2,minmax(0,1fr))}
-.nav-more-panel .nav-tree-links>a{min-height:44px}
-@media(min-width:1000px){.nav-desktop-tree{display:block;flex:none}.page-app .app-nav>.nav-desktop-tree:first-of-type{margin-top:12px}}
 /* A list entry is a reference. The canonical reader owns the full body. */
 .radar-record-toggle{text-decoration:none;color:var(--text);display:block}
 .radar-record-title{font-size:.875rem;line-height:1.65;color:var(--muted)}
@@ -462,11 +418,6 @@ body:is([data-route=login],[data-route=register],[data-route=forgot],[data-route
  .page-app .radar-filters:not(.filters-expanded)>.radar-filter-toggle{grid-column:2;grid-row:1}
  .page-app .radar-day{margin:12px 0 8px}
  .page-app .radar-record-toggle{padding:14px}
-}
-@media(max-width:600px){
- .page-app .nav-more-panel{grid-template-columns:repeat(2,minmax(0,1fr))}
- .page-app .nav-more-panel>a{padding:8px;gap:8px;font-size:.8125rem;min-height:52px}
- .page-app .nav-more-panel>a .app-icon{flex:none;width:18px;height:18px}
 }
 
 /* The account avatar adds a fifth header control. Keep English logout inside 320px. */

@@ -112,7 +112,7 @@ export function startOnboarding(){
       el('strong',s('tour.title')),button('tour.exit',()=>save('pause'))));
     if(progress.trial_ends_at)card.append(el('p.tour-expiry',s('tour.until',{date:dateTime(progress.trial_ends_at)})));
     if(!store.canResearch()){
-      card.append(el('p',s('tour.expired')),el('a.btn.btn-primary',{href:'#/billing',onclick:hide},s('tour.pro')));return;
+      card.append(el('p',s('tour.expired')),el('a.btn.btn-primary',{href:'#/profile',onclick:hide},s('common.account')));return;
     }
     if(note)card.append(el('p.tour-notice',{role:'status'},note));
     if(progress.status==='new'){

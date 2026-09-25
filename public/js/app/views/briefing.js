@@ -72,7 +72,7 @@ export function renderBriefing(doc){
   section.append(notes);body.append(section);
   const creators=el('section.card',el('h2',s('briefing.creators')));
   if(doc.creator_access!=='available')creators.append(el('p',s('briefing.creator_locked')),
-    el('a.btn.btn-ghost',{href:'#/billing'},s('briefing.membership')));
+    el('a.btn.btn-ghost',{href:'#/profile'},s('common.account')));
   else{
     creators.append(el('p.small.muted',s('briefing.creator_basis')));
     if(coverage.creator_status!=='ready')creators.append(el('p.data-notice',s('briefing.creator_stale')));

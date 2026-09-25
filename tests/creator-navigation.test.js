@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
-const dom=new JSDOM('<html lang="en"><body><main id="view"></main></body></html>',{url:'https://ducky.test/app/#/creators?tab=lab&preview=fictional'});
+const dom=new JSDOM('<html lang="en"><body><main id="view"></main></body></html>',{url:'https://ducky.test/app/#/creators?tab=research'});
 for(const key of ['window','document','Node','location','history'])globalThis[key]=dom.window[key];
 const copy=JSON.parse(readFileSync('i18n/en.json'));
 const strings=document.createElement('script');strings.id='ducky-strings';
@@ -28,12 +28,13 @@ test('creator research uses private endpoint and does not fall back when Pro exp
 });
 
 test('creator feature links retain only safe public navigation choices through sign-in',()=>{
-  const input='#/creators?tab=lab&scope=discover&creator=channel-a&preview=fictional&cash=100&token=SECRET&q=private';
-  const expected='#/creators?tab=lab&scope=discover&creator=channel-a&preview=fictional';
+  const input='#/creators?tab=research&scope=discover&creator=channel-a&preview=fictional&cash=100&token=SECRET&q=private';
+  const expected='#/creators?tab=research&scope=discover&creator=channel-a';
   assert.equal(safeTarget(input),expected);
   rememberTarget(input);assert.equal(takeTarget(),expected);
   assert.ok(!window.sessionStorage.getItem('ducky.login-target'));
   assert.equal(creatorTarget(creatorRoute(new URLSearchParams('tab=bad&creator=../../secret&preview=unknown'))),'#/creators');
+  for(const retired of ['lab','rank'])assert.equal(creatorTarget(creatorRoute(new URLSearchParams('tab='+retired+'&preview=fictional'))),'#/creators','retired creator tabs fall back to the feed');
   assert.equal(safeTarget('#/creators?token=SECRET'),'#/creators');
   for(const screen of ['insider-oversold','institution-oversold']) {
     rememberTarget('#/boards?screen='+screen+'&token=SECRET&email=private');
@@ -56,38 +57,6 @@ test('stock matching spans creators but is exact, quality-aware and not a direct
   assert.equal(posts[0].calls,undefined,'mention filtering must not manufacture a call');
   const studies=[{id:1,revision_id:1,kol_id:'other',calls:[{sym:'MU'},{sym:'TSLA'}]}];
   assert.deepEqual(researchRows(studies,{tickers:['MU']}).map(r=>r.call.sym),['MU']);
-});
-
-test('simulation deep links, tab navigation and ranking preserve settings without publishing holdings',async()=>{
-  store.set('me',{tier:'pro'});
-  const rows=[{kol_id:'eligible',name:'Eligible Creator',eligible:true,rank:1,n:20,rate:55,wrong:9,pending:0,missing:0,repeated:0,flat:0,coverage:100,span_days:100},
-    {kol_id:'incomplete',name:'Incomplete Creator',eligible:false,n:2,rate:50,wrong:1,pending:2,missing:1,repeated:3,flat:0,coverage:50,span_days:4}];
-  globalThis.fetch=async(url,opts)=>{
-    assert.ok(!opts?.method || opts.method==='GET','UI navigation must not create records');
-    return Response.json(String(url).includes('/leaderboard')?{rows,as_of:'2026-09-06'}:String(url).includes('/subs')?{subs:[],analysis:{}}:{items:[],kols:[],posts:[]});
-  };
-  const root=document.querySelector('#view');
-  const dispose=await mount(root,{query:new URLSearchParams('tab=lab&preview=fictional')});
-  await tick();await tick();
-  assert.ok(root.querySelector('.creator-sim-chart'));
-  assert.equal(root.querySelector('.creator-intake'),null);
-  const capital=root.querySelector('[aria-label="'+copy['app.creatorlab.capital']+'"]');
-  capital.value='25000';capital.dispatchEvent(new window.Event('input'));
-  assert.equal(location.hash.includes('25000'),false);
-  [...root.querySelectorAll('.creator-workspace-tabs button')].find(b=>b.textContent===copy['app.creatorrank.tab']).click();
-  await tick();await tick();
-  assert.equal(location.hash,'#/creators?tab=rank');
-  const collecting=root.querySelector('details.creator-rank-collecting');
-  assert.ok(collecting);assert.equal(collecting.open,false);
-  assert.ok(collecting.textContent.includes('Incomplete Creator'));
-  assert.ok(collecting.textContent.includes('opposite outcomes'));
-  assert.equal(root.querySelectorAll('.creator-rank-row').length,2);
-  assert.ok(!collecting.textContent.includes('Eligible Creator'));
-  [...root.querySelectorAll('.creator-workspace-tabs button')].find(b=>b.textContent===copy['app.creatorlab.tab']).click();
-  await tick();await tick();
-  assert.equal(root.querySelector('[aria-label="'+copy['app.creatorlab.capital']+'"]').value,'25000');
-  assert.equal(location.hash,'#/creators?tab=lab&preview=fictional');
-  dispose();
 });
 
 test('an exact research point remains shareable through login and language route serialization',()=>{

@@ -13,14 +13,11 @@ const ROUTES = {
   today: () => import('./views/today.js'),
   explore: () => import('./views/explore.js'),
   stock: () => import('./views/stock.js'),
-  ...(window.DUCKY?.RESEARCH_BRIEF_ENABLED === true ? { 'research-brief': () => import('./views/research-brief.js') } : {}),
   reports: () => import('./views/boards.js'),
   record: () => import('./views/record.js'),
   evidence: () => import('./views/evidence.js'),
   opportunities: () => import('./views/opportunities.js'),
-  degen: () => import('./views/discovery.js'),
   vibe: () => import('./views/discovery.js'),
-  market: () => import('./views/discovery.js'),
   macro: () => import('./views/discovery.js'),
   screens: () => import('./views/discovery.js'),
   research: () => import("./views/research.js"),
@@ -115,14 +112,14 @@ export async function render() {
   if (my !== seq) return;
   current = route;
   clear(page);
-  if(store.canResearch()&&!PUBLIC.has(route.name)&&!['profile','billing','alerts','research-brief'].includes(route.name)){
+  if(store.canResearch()&&!PUBLIC.has(route.name)&&!['profile','billing','alerts'].includes(route.name)){
     // Keep this outside the view's DOM so its local render cannot erase the notice.
     sharedReadRefresh(root,{signal:controller.signal,interval:window.DUCKY?.PRODUCT_FOCUS_ENABLED?30000:60000,
       reload:()=>{store.set('snapshots',{});render();}});
   }
   if(authed&&!store.canResearch()&&!['profile','billing','watchlist','alerts'].includes(route.name)){
     page.append(el('section.card',el('h1',s('trial.ended')),el('p',s('trial.manager_note')),
-      el('a.btn.btn-primary',{href:'#/billing'},s('trial.manage')),el('a.btn.btn-ghost',{href:'#/watchlist'},s('tour.return'))));
+      el('a.btn.btn-primary',{href:'#/profile'},s('common.account')),el('a.btn.btn-ghost',{href:'#/watchlist'},s('tour.return'))));
     return;
   }
   let ret;
@@ -148,20 +145,6 @@ export async function render() {
 export function start() {
   document.querySelector('.skip[href="#main"]')?.addEventListener('click', event => {
     event.preventDefault(); document.getElementById('main')?.focus({preventScroll:true});
-  });
-  document.addEventListener("keydown", (event) => {
-    const more = document.querySelector(".nav-more[open]");
-    if (event.key === "Escape" && more) {
-      more.open = false;
-      more.querySelector("summary")?.focus();
-    }
-  });
-  document.addEventListener("click", (event) => {
-    const more = document.querySelector(".nav-more[open]");
-    if (more && (!more.contains(event.target) || event.target.closest("a[data-route]"))) {
-      if(more.querySelector('.nav-more-panel')?.contains(document.activeElement)) more.querySelector('summary')?.focus({preventScroll:true});
-      more.open = false;
-    }
   });
   window.addEventListener("hashchange", render);
   store.subscribe("me", (me) => { if (!me && current && !PUBLIC.has(current.name)) render(); });

@@ -17,48 +17,34 @@ const response=body=>new Response(JSON.stringify(body),{headers:{'content-type':
 const flush=async()=>{for(let i=0;i<5;i++)await new Promise(r=>setTimeout(r,0));};
 
 test('new destinations survive sign-in and radar links select one matching category',()=>{
- for(const name of ['opportunities','degen','vibe','market','macro','screens']){
+ for(const name of ['opportunities','vibe','macro','screens']){
   assert.equal(parse('#/'+name).name,name);assert.equal(safeTarget('#/'+name),'#/'+name);
+ }
+ for(const retired of ['market','degen']){
+  assert.equal(parse('#/'+retired).name,parse('#/').name,'retired discovery routes fall back to the default page');
+  assert.equal(safeTarget('#/'+retired),null,'retired discovery routes are not remembered through sign-in');
  }
  assert.equal(parse('#/ducky').name,'evidence');assert.equal(safeTarget('#/ducky'),'#/evidence');
  assert.equal(safeTarget('#/boards?board=insider&token=secret'),'#/boards?board=insider');
  const shell=new JSDOM(readFileSync('dist/app/index.html','utf8')).window.document;
  const nav=document.importNode(shell.querySelector('.app-nav'),true);document.body.append(nav);
- if(nav.classList.contains('focus-nav')){
-  selectNavigation('boards',new URLSearchParams('board=insider'));
-  assert.equal(nav.querySelector('[aria-current=page]').dataset.route,'explore');
-  selectNavigation('stock');assert.equal(nav.querySelector('[aria-current=page]').dataset.route,'watchlist');
-  nav.remove();return;
- }
+ assert.ok(nav.classList.contains('focus-nav'));assert.equal(nav.querySelector('.nav-more,.nav-tree'),null,'the old menu is gone');
  selectNavigation('boards',new URLSearchParams('board=insider'));
- assert.ok(nav.querySelector('.nav-desktop-tree[data-group=boards]').open);
- assert.equal(nav.querySelector('.nav-desktop-tree[data-group=boards] [aria-current=page]').dataset.board,'insider');
- selectNavigation('degen');assert.equal(nav.querySelector('[data-route=degen]'),null);
- assert.ok(nav.querySelector('[data-route=vibe]').classList.contains('on'));
- assert.equal(nav.querySelector('.nav-desktop-tree[data-group=boards] [aria-current=page]'),null);nav.remove();
+ assert.equal(nav.querySelector('[aria-current=page]').dataset.route,'explore');
+ selectNavigation('stock');assert.equal(nav.querySelector('[aria-current=page]').dataset.route,'watchlist');
+ nav.remove();
 });
-test('phone navigation promotes enabled research and keeps displaced tools reachable in More',()=>{
- const briefEnabled=readFileSync('dist/config.js','utf8').includes('"RESEARCH_BRIEF_ENABLED": true');
- const expected=briefEnabled?['watchlist','research-brief','calendar','boards']:['watchlist','calendar','evidence','boards'];
+test('phone navigation is the same five tabs in both languages and never grows a More menu',()=>{
+ assert.ok(!readFileSync('dist/config.js','utf8').includes('RESEARCH_BRIEF_ENABLED'),'the research brief switch no longer ships');
  for(const prefix of ['zh/', 'en/']){
   const shell=new JSDOM(readFileSync(`dist/${prefix}app/index.html`,'utf8')).window.document;
   const nav=document.importNode(shell.querySelector('.app-nav'),true);document.body.append(nav);
   const primary=[...nav.querySelectorAll(':scope > [data-mobile-primary]')];
-  if(nav.classList.contains('focus-nav')){
-   assert.deepEqual(primary.map(a=>a.dataset.route),['today','watchlist','explore','calendar','creators']);
-   assert.equal(nav.querySelector('.nav-more'),null);
-   for(const route of ['today','watchlist','explore','calendar','creators']){selectNavigation(route);assert.equal(nav.querySelector('[aria-current=page]').dataset.route,route);}
-   for(const route of ['opportunities','vibe','reports']){selectNavigation(route);assert.equal(nav.querySelector('[aria-current=page]').dataset.route,'explore');}
-   nav.remove();continue;
-  }
-  assert.deepEqual(primary.map(a=>a.dataset.route),expected);
-  assert.ok(nav.querySelector('.nav-more-panel [data-route=alerts]'));
-  assert.equal(Boolean(nav.querySelector('.nav-more-panel [data-route=evidence]')),briefEnabled);
-  for(const route of expected){selectNavigation(route);assert.equal(nav.querySelector('.nav-more').classList.contains('on'),false,route);}
-  if(briefEnabled){selectNavigation('evidence');assert.ok(nav.querySelector('.nav-more').classList.contains('on'));}
-  for(const route of ['alerts','updates','chart','vibe']){selectNavigation(route);assert.ok(nav.querySelector('.nav-more').classList.contains('on'),route);}
-  const more=nav.querySelector('.nav-more');more.open=true;more.querySelector('[data-route=alerts]').focus();
-  selectNavigation('evidence');assert.equal(more.open,false);assert.equal(document.activeElement,more.querySelector('summary'));
+  assert.ok(nav.classList.contains('focus-nav'));
+  assert.deepEqual(primary.map(a=>a.dataset.route),['today','watchlist','explore','calendar','creators']);
+  assert.equal(nav.querySelector('.nav-more,.nav-tree,[data-route=research-brief],[data-route=market],[data-route=degen]'),null);
+  for(const route of ['today','watchlist','explore','calendar','creators']){selectNavigation(route);assert.equal(nav.querySelector('[aria-current=page]').dataset.route,route);}
+  for(const route of ['opportunities','vibe','macro','reports']){selectNavigation(route);assert.equal(nav.querySelector('[aria-current=page]').dataset.route,'explore');}
   nav.remove();
  }
 });

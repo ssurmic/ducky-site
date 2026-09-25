@@ -276,7 +276,7 @@ test('untrusted captions stay text and unsafe source links are rejected',()=>{
 test('free users read their selections without fetching an unselected map',async()=>{
  store.set('me',{tier:'free'});let calls=[];globalThis.fetch=async url=>{calls.push(String(url));return response(fixture());};
  const root=document.createElement('div');const cleanup=await mount(root,{ticker:'AVGO'});
- assert.deepEqual(calls,['/me/evidence']);assert.ok(root.querySelector('a[href="#/billing"]'));assert.equal(root.querySelectorAll('.evidence-node').length,0);cleanup();
+ assert.deepEqual(calls,['/me/evidence']);assert.equal(root.querySelector('a[href="#/billing"]'),null);assert.equal(root.querySelectorAll('.evidence-node').length,0);cleanup();
 });
 test('direct route uses shared API, logout removes data and old responses cannot return',async()=>{
  store.set('me',{tier:'pro'});let resolve;globalThis.fetch=()=>new Promise(r=>resolve=r);

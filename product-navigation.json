@@ -122,9 +122,6 @@
     "screens": {
       "access": "pro"
     },
-    "market": {
-      "access": "mixed"
-    },
     "briefing": {
       "access": "pro"
     },
@@ -192,9 +189,6 @@
     {
       "route": "reports",
       "children": [
-        {
-          "route": "market"
-        },
         {
           "route": "macro"
         },

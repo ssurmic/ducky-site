@@ -376,7 +376,7 @@ export function signalCard(key,sig,ticker,{price=null,session=''}={}){
     s('watch.signal_card_empty')));
   body.append(list,el('p.small.muted',s(key==='funds'?'watch.signal_card_note_funds':key==='insider'?'watch.signal_card_note_insider':key==='politicians'?'watch.signal_card_note_politicians':'watch.signal_method_'+key)));
   if(ticker)body.append(el('div.watch-signal-card-actions',
-    el('a.btn.btn-ghost.btn-sm',{href:key==='insider'?'#/boards?board=insider&ticker='+encodeURIComponent(ticker):key==='funds'?'#/boards?board=partner&ticker='+encodeURIComponent(ticker):key==='politicians'?'#/boards?board=political&ticker='+encodeURIComponent(ticker):'#/chart/'+encodeURIComponent(ticker)},s(['insider','funds'].includes(key)?'watch.signal_open_filings':'radar.chart')),
+    el('a.btn.btn-ghost.btn-sm',{href:key==='insider'?'#/boards?board=insider&ticker='+encodeURIComponent(ticker):key==='funds'?'#/boards?board=partner&ticker='+encodeURIComponent(ticker):key==='politicians'?'#/boards?board=political&ticker='+encodeURIComponent(ticker):'#/chart/'+encodeURIComponent(ticker)},s(['insider','funds'].includes(key)?'watch.signal_open_filings':key==='politicians'?'watch.signal_open_disclosures':'radar.chart')),
     el('a.btn.btn-ghost.btn-sm',{href:'#/evidence/'+encodeURIComponent(ticker)},s('watch.signal_open_map'))));
   return body;
 }

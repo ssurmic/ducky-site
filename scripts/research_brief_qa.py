@@ -1,7 +1,8 @@
 """Loopback-only UI fixture server. No production account/API/worker; no writes accepted.
 
-Build first, then open /qa-frame?lang=en&theme=light&route=research-brief.
-Use --baseline to serve the frozen pre-change build. All business requests are stubbed.
+Build first, then open /qa-frame?lang=en&theme=light. The product-focus fixture
+(tests/fixtures/product-focus-browser.js) is the only mode; --product-focus is accepted as a
+no-op for older instructions. All business requests are stubbed.
 """
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
@@ -13,10 +14,9 @@ import json
 ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--port',type=int,default=8920)
-parser.add_argument('--baseline',action='store_true')
-parser.add_argument('--product-focus',action='store_true')
+parser.add_argument('--product-focus',action='store_true',help='accepted for compatibility; the product-focus fixture is the only mode')
 args = parser.parse_args()
-DIST = (Path('/tmp/ducky-brief-baseline-20260909') if args.baseline else ROOT / 'dist').resolve()
+DIST = (ROOT / 'dist').resolve()
 
 class Handler(SimpleHTTPRequestHandler):
     def end_headers(self):
@@ -36,15 +36,12 @@ class Handler(SimpleHTTPRequestHandler):
             body = body.replace('</head>', '<script src="/vendor/lightweight-charts/lightweight-charts.standalone.production.js"></script><script type="module" src="/qa-main.js"></script></head>')
             self.out(body,'text/html; charset=utf-8'); return
         if url.path == '/qa-main.js':
-            module = (ROOT / 'tests/fixtures' / ('product-focus-browser.js' if args.product_focus else 'research-brief-browser.js')).read_text()
-            module = module.replace('/*QA_BASELINE*/false',str(args.baseline).lower())
+            module = (ROOT / 'tests/fixtures/product-focus-browser.js').read_text()
             version = json.loads((DIST / 'app-release.json').read_text())['version']
             module = module.replace("'/js/app/", "'/app-assets/" + version + '/')
             self.out(module,'text/javascript; charset=utf-8'); return
         if url.path == '/qa-old.js':
             module = (ROOT / 'reports/mobile-ui-20260908/fixture.js').read_text()
-            module = module.replace("window.DUCKY={API_BASE:",
-                "window.DUCKY={RESEARCH_BRIEF_ENABLED:" + str(not args.baseline).lower() + " && q.get('brief')==='on',API_BASE:")
             module = module.replace('calls:qaCalls,errors:qaErrors',
                 "calls:qaCalls,errors:qaErrors,actualTheme:document.documentElement.dataset.theme,resources:performance.getEntriesByType('resource').map(r=>({name:new URL(r.name).pathname,duration:r.duration,bytes:r.transferSize}))")
             version = json.loads((DIST / 'app-release.json').read_text())['version']

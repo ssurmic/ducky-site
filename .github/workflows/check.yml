@@ -31,8 +31,6 @@ jobs:
           python3 -m unittest discover -s tests -p 'test_home_creator_source.py'
       - name: app module release isolation
         run: python3 -m unittest discover -s tests -p 'test_build_assets.py'
-      - name: research preview release and rollback switch
-        run: python3 -m unittest discover -s tests -p 'test_research_brief_config.py'
       - name: build (zh + en, i18n key parity)
         run: python3 build.py
       - run: npm test

@@ -57,7 +57,7 @@ test('a chosen free map stays locked until explicit save; unavailable data costs
  ready=true;root.querySelector('.card .btn-primary').click();await tick();await tick();
  assert.match(root.textContent,/Research stocks 1 \/ 3/);assert.match(root.textContent,/Saved evidence/);
  assert.equal(root.querySelectorAll('.evidence-node').length,1);
- assert.ok(root.querySelector('a[href="#/billing"]').textContent);stop();root.remove();closeModal();
+ assert.equal(root.querySelector('a[href="#/billing"]'),null);stop();root.remove();closeModal();
 });
 
 

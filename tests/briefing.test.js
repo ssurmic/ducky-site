@@ -35,7 +35,7 @@ test('free historical period and unavailable evidence cannot appear as current o
  const root=renderBriefing(doc);
  assert.ok(root.textContent.includes(copy['app.briefing.delayed']));
  assert.ok(root.textContent.includes(copy['app.briefing.facts_unavailable']));
- assert.ok(root.querySelector('a[href="#/billing"]'));assert.ok(root.querySelector('a[href="#/calendar"]'));
+ assert.equal(root.querySelector('a[href="#/billing"]'),null);assert.ok(root.querySelector('a[href="#/profile"]'));assert.ok(root.querySelector('a[href="#/calendar"]'));
 });
 test('unsafe sources remain plain text and new users get a useful watchlist action',()=>{
  const doc=fixture();doc.watchlist_count=0;doc.stock_changes[0].events[0].source_url='javascript:alert(1)';

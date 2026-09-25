@@ -276,7 +276,7 @@ function methodCard() {
     el('a', {href:(LANG === 'en' ? '/en' : '/zh') + '/research-records/'}, label('backtest')));
 }
 function paywall() {
-  return el('section.card', el('h2', label('lock_title')), el('p', label('lock_note')), link('#/billing', 'nav.billing'));
+  return el('section.card', el('h2', label('lock_title')), el('p', label('lock_note')), link('#/profile', 'common.account'));
 }
 
 export async function mount(root, route={}) {
