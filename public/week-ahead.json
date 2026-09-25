@@ -1,18 +1,9 @@
 {
  "schema": "week-ahead/1",
- "generated_at": "2026-09-23T06:49:09+00:00",
- "as_of": "2026-09-23T06:49:09+00:00",
+ "generated_at": "2026-09-24T06:41:17+00:00",
+ "as_of": "2026-09-24T06:41:17+00:00",
  "week_of": "09/21–09/25",
  "events": [
-  {
-   "dow": "周二",
-   "dow_en": "Tue",
-   "date": "09/22",
-   "et": "6:30am et",
-   "name": "Fed Goolsbee Speaks",
-   "kind": "macro",
-   "tier": "fed"
-  },
   {
    "dow": "周三",
    "dow_en": "Wed",
@@ -54,56 +45,11 @@
    "dow": "周四",
    "dow_en": "Thu",
    "date": "09/24",
-   "et": "10:05am et",
-   "name": "Fed Vice Chair for Supervision Barr Speaks",
-   "kind": "macro",
-   "tier": "fed"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/24",
-   "et": "12:00pm et",
-   "name": "Fed Goolsbee Speaks",
-   "kind": "macro",
-   "tier": "fed"
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/24",
    "et_zh": "盘后",
    "et_en": "AH",
    "name": "COST",
    "kind": "earnings",
    "watch": false
-  },
-  {
-   "dow": "周五",
-   "dow_en": "Fri",
-   "date": "09/25",
-   "et": "8:30am et",
-   "name": "Continuing Jobless Claims",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周五",
-   "dow_en": "Fri",
-   "date": "09/25",
-   "et": "8:30am et",
-   "name": "Initial Jobless Claims",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周五",
-   "dow_en": "Fri",
-   "date": "09/25",
-   "et": "8:30am et",
-   "name": "Jobless Claims 4-Week Avg.",
-   "kind": "macro",
-   "tier": "high"
   }
  ]
 }
