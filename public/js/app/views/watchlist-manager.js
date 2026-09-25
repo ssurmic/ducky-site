@@ -46,7 +46,7 @@ export async function mount(root,{signal}={}){
     addTicker(ticker,candidate?.ticker===ticker?candidate:null);
   }},picker.wrap,add);
   root.append(el('h1',s('watch.title')),el('p',s('trial.manager_note')),
-    el('a.btn.btn-primary',{href:'#/billing'},s('trial.manage')),form,notice,list);
+    el('a.btn.btn-primary',{href:'#/profile'},s('common.account')),form,notice,list);
   const unsub=store.subscribe('watchlist',refresh);
   async function load(){
     const response=await api.watchlist.list({signal});if(!current())return;

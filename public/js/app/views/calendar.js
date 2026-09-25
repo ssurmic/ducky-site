@@ -199,7 +199,7 @@ export async function mount(root, route={}) {
       card.appendChild(el("div.cr-pro-banner",
         el("span.cr-pro-badge", s("calendar.pro_badge")),
         el("span", " " + s("calendar.pro_hint") + " "),
-        el("a.btn.btn-primary.btn-sm", { href: "#/billing" }, s("calendar.upgrade"))));
+        el("a.btn.btn-primary.btn-sm", { href: "#/profile" }, s("common.account"))));
     }
 
     const earningsFailed=doc?.earnings_source_status==='fetch_failed';
@@ -229,7 +229,7 @@ export async function mount(root, route={}) {
     }
     const mineBtn = el("button.cal-fchip.cal-mine" + (mineOnly ? ".on" : ""), { type: "button", "aria-pressed":String(mineOnly) },
       (mineOnly ? "★ " : "☆ ") + s("calendar.mine_only") + (hasContextAccess ? "" : " 🔒"));
-    mineBtn.addEventListener("click", () => { if (!hasContextAccess) { router.go("#/billing"); return; } mineOnly = !mineOnly; render(); });
+    mineBtn.addEventListener("click", () => { if (!hasContextAccess) { router.go("#/profile"); return; } mineOnly = !mineOnly; render(); });
     bar.appendChild(mineBtn);
     const filters=el("details.cal-filters", el("summary", s("calendar.filters")), bar, el("p.small.muted",s("calendar.timing_note")));
     filters.open=filter!=="all" || mineOnly;

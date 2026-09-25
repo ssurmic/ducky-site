@@ -117,7 +117,7 @@ test('unmount and token changes stop late DOM writes, including missing epoch ch
 });
 test('payment expiry presents access information and never keeps candidate cards',async()=>{
  const root=await open(async()=>response({detail:'pro_required'},402));
- assert.equal(root.querySelector('.opportunity-card'),null);assert.ok(root.querySelector('a[href="#/billing"]'));
+ assert.equal(root.querySelector('.opportunity-card'),null);assert.equal(root.querySelector('a[href="#/billing"]'),null);assert.ok(root.querySelector('a[href="#/profile"]'));
 });
 
 test('a complete universe directory does not imply its price scan is complete',async()=>{

@@ -6,7 +6,7 @@ import { evidenceHref } from './evidence-route.js';
 import {communities} from './social-communities.js';
 const KEY = "ducky.login-target";
 const MAX_AGE = 20 * 60 * 1000;
-const SIMPLE = new Set(["watchlist", "alerts", "billing", "profile", "creators", "calendar", "boards", "reports", "opportunities", "degen", "vibe", "ducky", "market", "macro", "screens"]);
+const SIMPLE = new Set(["watchlist", "alerts", "billing", "profile", "creators", "calendar", "boards", "reports", "opportunities", "vibe", "ducky", "macro", "screens"]);
 
 export function safeTarget(hash) {
   if (typeof hash !== "string" || hash.length > 2048) return null;
@@ -15,15 +15,6 @@ export function safeTarget(hash) {
   if(/^#\/stock\/[A-Za-z][A-Za-z0-9.-]{0,9}$/.test(path)){
     const from=new URLSearchParams(hash.split('?')[1]||'').get('from');
     return path.toUpperCase().replace('#/STOCK/','#/stock/')+(['today','explore'].includes(from)?'?from='+from:'');
-  }
-  if (path === '#/research-brief' && window.DUCKY?.RESEARCH_BRIEF_ENABLED === true) {
-    const q = new URLSearchParams(hash.split('?')[1] || ''), target = new URLSearchParams();
-    const ticker = (q.get('ticker') || '').toUpperCase(), creator = q.get('creator') || '';
-    if (/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker)) target.set('ticker',ticker);
-    if (/^[A-Za-z0-9_-]{1,100}$/.test(creator)) target.set('creator',creator);
-    if (['30','all'].includes(q.get('days'))) target.set('days',q.get('days'));
-    if (q.get('scope') === 'all') target.set('scope','all');
-    return path + (target.size ? '?' + target : '');
   }
   if(path==='#/evidence'){
     const example=new URLSearchParams(hash.split('?')[1]||'').get('example');
@@ -69,7 +60,7 @@ export function safeTarget(hash) {
     const ticker=(query.get('ticker')||'').toUpperCase();
     return '#/briefing'+(/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker)?'?ticker='+encodeURIComponent(ticker):'');
   }
-  if(path==='#/vibe'||path==='#/degen'){
+  if(path==='#/vibe'){
     const query=new URLSearchParams(hash.split('?')[1]||''),target=new URLSearchParams();
     const ticker=(query.get('ticker')||'').toUpperCase();
     if(/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker))target.set('ticker',ticker);

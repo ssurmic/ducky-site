@@ -334,7 +334,9 @@ test('politician disclosures count buys and sells, show the latest with its amou
  assert.equal(card.querySelectorAll('.watch-signal-item').length,3);assert.equal(card.querySelectorAll('.watch-signal-item.is-sell').length,1);
  assert.match(card.textContent,/Nancy Pelosi.*spouse · stock · \$500K–\$1M/);assert.match(card.textContent,/Close on 2026-07-24: \$22\.50/);assert.match(card.textContent,/Disclosed 2026-08-20/);
  assert.match(card.textContent,/options · \$1M–\$5M/);assert.match(card.textContent,/Call options; Strike price \$20/);
- assert.match(card.textContent,/Amounts are disclosed as ranges/);assert.ok([...card.querySelectorAll('a')].some(a=>a.getAttribute('href')==='#/boards?board=political&ticker=INTC'));
+ assert.match(card.textContent,/Amounts are disclosed as ranges/);
+ const politicalLink=[...card.querySelectorAll('a')].find(a=>a.getAttribute('href')==='#/boards?board=political&ticker=INTC');
+ assert.equal(politicalLink.textContent,'View disclosures','the political board link says what it opens, not "Open chart"');
  assert.ok(signals.signalSortValue(all.get('INTC'),'politicians')>signals.signalSortValue(all.get('AAPL'),'politicians'));
  assert.doesNotMatch(cell.textContent+card.textContent,/target|guarantee|floor|buy now/i);
 });

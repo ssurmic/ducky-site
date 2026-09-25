@@ -53,7 +53,7 @@ export async function mount(root,route={}){
       el('p.view-intro.muted',s('updates.intro')));
     if(locked){shell.append(el('section.card.updates-gate',el('span.chip','Pro'),el('h2',s('updates.gate_title')),
       el('p',s('updates.gate_body')),el('ul',el('li',s('updates.gate_stock')),el('li',s('updates.gate_source')),el('li',s('updates.gate_inapp'))),
-      link('#/billing',s('updates.upgrade')),link('#/creators?scope=discover',s('updates.browse_creators'))));
+      link('#/profile',s('common.account')),link('#/creators?scope=discover',s('updates.browse_creators'))));
       if(flight)shell.append(spinner());
       if(status||loadError)shell.append(el('p.updates-status',{role:'status'},status||loadError));
       if(topics.length){const manage=el('section.card.updates-gate',el('h2',s('updates.manage_existing')),el('p.muted',s('updates.manage_hint')));

@@ -85,14 +85,14 @@ export function renderTierBadge() {
   host.appendChild(tierBadge(me.tier));
 }
 
-/** Lock overlay for gated content: wraps `inner` blurred + a link to #/billing. */
+/** Lock overlay for gated content: wraps `inner` blurred + a link to the account page. */
 export function lock(inner, hint) {
   const wrap = el("div.locked");
   const content = el("div.locked-content", { "aria-hidden": "true" }, inner);
-  const veil = el("a.locked-veil", { href: "#/billing" },
+  const veil = el("a.locked-veil", { href: "#/profile" },
     el("span.locked-icon", { "aria-hidden": "true" }, "🔒"),
     el("span.locked-text", hint || s("common.lock_hint")),
-    el("span.locked-cta.mono", s("common.unlock")));
+    el("span.locked-cta.mono", s("common.account") + " →"));
   wrap.append(content, veil);
   return wrap;
 }
@@ -193,5 +193,5 @@ export function upsell(info) {
     el('p.muted',quota?s('experience.replace'):s('billing.pick_pro')));
   modal(quota?s('experience.limit_title'):s('upsell.title'),body,
     [{label:s('experience.keep_free')},
-     {label:s('experience.compare'),primary:true,href:'#/billing'}]);
+     {label:s('common.account'),primary:true,href:'#/profile'}]);
 }

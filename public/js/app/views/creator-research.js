@@ -162,9 +162,6 @@ export async function mountResearch(root, selection) {
         row.append(el('p.study-window',s('creators.twenty_day_result')+' ',el('strong.mono',{class:out.ret<0?'neg':out.ret>0?'pos':''},pct(out.ret))));
       }
       if(status!=='ready')row.append(el('p.study-status',s(status==='pending'?'creators.twenty_day_pending':'creators.status_'+status)));
-      // Verified directional views can be taken straight into the simulator, pre-selected.
-      if(selection?.onSimulate&&['bull','bear'].includes(stance)&&call.comparison_eligible!==false)
-        row.append(el('button.btn.btn-ghost.btn-sm.study-simulate',{type:'button',onclick:()=>selection.onSimulate(post,call)},s('creatorlab.simulate_post')));
       const evidence=el('div.cr-evidence',
         call.evidence?el('blockquote',call.evidence):el('p.small.muted',s('creatorclaim.source_link')),
         el('p.muted.small',s('creators.version_recorded')+' '+dateTime(post.recorded_at)));

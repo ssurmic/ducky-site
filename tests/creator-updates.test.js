@@ -149,7 +149,7 @@ test('late authenticated responses cannot log out, upsell, or populate a replace
 test('free members only load their saved settings and can pause or remove without paying',async()=>{
  const f=setup({tier:'free',topics:[topic]});const push=mockPush();await f.mount();
  assert.deepEqual(f.calls.map(call=>call.path),['/creator-notifications/topics']);assert.equal(f.root.querySelector('.updates-item'),null);
- assert.ok(f.root.querySelector('a[href="#/billing"]'));assert.equal(push.requests,0);
+ assert.equal(f.root.querySelector('a[href="#/billing"]'),null);assert.ok(f.root.querySelector('a[href="#/profile"]'));assert.equal(push.requests,0);
  f.root.querySelector('[data-topic-pause]').click();await flush();
  assert.deepEqual(f.calls.find(call=>call.method==='PUT').body,{topic_type:'ticker',topic_key:'INTC',enabled:false,web_push:false});
  f.root.querySelector('[data-topic-remove]').click();await flush();assert.equal(f.calls.filter(call=>call.method==='DELETE').length,1);

@@ -141,7 +141,7 @@ export async function mount(root, route={}) {
   const header=el('header.radar-heading',el('div',el('h1',s(reports?'nav.reports':'boards.h1')),el('p.muted',s(reports?'reader.library_hint':'radar.subtitle'))),
     el('a.btn.btn-ghost.btn-sm',{href:'#/calendar'},icon('calendar'),s('watch.events')));
   const accessNote=el('div.radar-access-note',el('p',s(currentAccess?'radar.access_current':'radar.access_delayed')),
-    currentAccess?null:el('a.btn.btn-ghost.btn-sm',{href:'#/billing'},s('radar.access_upgrade')));
+    currentAccess?null:el('a.btn.btn-ghost.btn-sm',{href:'#/profile'},s('common.account')));
   const screenPanel=el('div.radar-screen-panel');
   const screenEntry=Boolean(params.get('screen') || params.get('screening'));
   const disposeScreen=screenEntry?mountScreen(screenPanel,{signal:route.signal,query:params}):()=>{};

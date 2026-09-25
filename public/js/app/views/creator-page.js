@@ -68,8 +68,7 @@ export function renderCreatorPage(root,{creator,page={},onTab=()=>{},tickers=nul
   root.append(highlightsNode);
   if(page.mentions?.length)root.append(el('div.creator-mentions',el('span.small.muted',s('creatorpage.mentions')),
     ...page.mentions.map(m=>el('a.cr-chip',{href:'#/chart/'+encodeURIComponent(m.ticker)},'$'+m.ticker))));
-  root.append(el('div.evidence-controls',el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>onTab('lab')},s('creatorlab.tab')),
-    el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>onTab('research')},s('creators.research'))));
+  root.append(el('div.evidence-controls',el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>onTab('research')},s('creators.research'))));
   const detail=el('details.creator-page-about',el('summary',s('creators.about')),el('p.small',creator.profile?.description||creator.descr||s('creators.profile_pending')));
   detail.append(el('p.small.muted',s('creatorpage.coverage',{ready:coverage.reviewed??'—',total:coverage.indexed??'—'})));
   detail.append(el('p.small.muted',s('creatorpage.coverage_scope')));

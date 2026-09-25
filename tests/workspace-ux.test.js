@@ -7,7 +7,6 @@ for(const name of ['window','document','Node','location','history'])globalThis[n
 const copy=JSON.parse(readFileSync('i18n/en.json'));
 const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
 const {modal,closeModal,el}=await import('../public/js/app/ui.js');
-const {renderMarketContext}=await import('../public/js/app/views/market-context.js');
 const {filterPosts,conciseSummary,previewTitle}=await import('../public/js/app/views/creators.js');
 
 test('dialog traps focus, closes by Escape or backdrop and restores the original scroll and trigger',()=>{
@@ -20,14 +19,6 @@ test('dialog traps focus, closes by Escape or backdrop and restores the original
  document.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
  assert.ok(host.hidden);assert.equal(document.activeElement,opener);assert.equal(main.scrollTop,380);assert.equal(document.querySelector('.app-shell').inert,false);
  modal('Another day','No events');host.click();assert.ok(host.hidden);assert.equal(document.activeElement,opener);
-});
-test('compact market topics reveal the full inference, missing evidence and original sources on demand',()=>{
- const doc={status:'stale',observed_at:'2026-09-05T12:00:00Z',topics:[{label_en:'Rates',fact_ids:['n'],synthesis:{summary_en:'A reviewed inference.',unknown_en:'Forecast missing.',next_check_en:'Check the release.'}}],evidence:[{id:'n',title:'Source title',publisher:'Publisher',published_at:'2026-09-04',source_url:'https://example.com/'}]};
- const box=renderMarketContext(doc,{compact:true});document.querySelector('main').append(box);
- assert.equal(box.querySelectorAll('.market-topic-trigger').length,1);assert.equal(box.querySelectorAll('.market-topic').length,0);
- box.querySelector('button').focus();box.querySelector('button').click();
- const dialog=document.querySelector('[role=dialog]');assert.match(dialog.textContent,/A reviewed inference/);assert.match(dialog.textContent,/Forecast missing/);assert.ok(dialog.querySelector('a[href="https://example.com/"]'));
- closeModal();box.remove();
 });
 test('creator search sorts by publication, never processing time, retains undated posts and does not mutate the feed',()=>{
  const posts=[{id:1,published_at:'2026-09-01',fetched_at:'2026-09-09',title:'AI old'},{id:2,published_at:null,title:'AI unknown'},{id:3,published_at:'2026-09-06',title:'AI latest'}];

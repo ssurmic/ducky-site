@@ -14,7 +14,7 @@
     <div class="desk-feature-tags">
      {% if route in ['boards','reports'] %}{% for group in navigation.tree if group.route == route %}{% for child in group.children %}<a href="{{ url('/app/') }}#/{{ child.route }}{{ '?board=' ~ child.get('board') if child.get('board') else '' }}">{{ t('app.boards.t_' ~ child.board) if child.get('board') else t('app.nav.' ~ child.route) }} ↗</a>{% endfor %}{% endfor %}
      {% elif route in ['opportunities','chart','screens'] %}<span>RSI</span><span>IV / HV</span><span>20D</span>
-     {% elif route in ['degen','vibe'] %}<span>Reddit</span><span>{{ t('app.social.history') }}</span>
+     {% elif route == 'vibe' %}<span>Reddit</span><span>{{ t('app.social.history') }}</span>
      {% endif %}
     </div>
     <div class="desk-feature-access"><span>{{ t('desk.access_title') }}</span><p>{{ t('desk.access.' ~ route) }}</p></div>

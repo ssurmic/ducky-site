@@ -13,7 +13,7 @@ const value=v=>v===null||v===undefined||v===''?'—':String(v);
 const link=(href,label)=>el('a.btn.btn-ghost.btn-sm',{href},label);
 function destination(stream,ticker) {
   const tk=encodeURIComponent(ticker);
-  return ({price:'#/chart/'+tk,technical:'#/chart/'+tk,options:'#/watchlist?ticker='+tk,
+  return ({price:'#/chart/'+tk,technical:'#/chart/'+tk,options:'#/chart/'+tk,
     vibe:'#/boards?board=social&ticker='+tk,radar:'#/boards?mode=archive&ticker='+tk,
     creator:'#/creators?ticker='+tk,calendar:'#/calendar',digest:'#/briefing'})[stream];
 }

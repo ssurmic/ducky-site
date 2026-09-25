@@ -20,10 +20,6 @@ if(scene === 'newview') {
   root.className = 'stage-source';
   root.innerHTML = await (await fetch('/source-video-en.html')).text();
   root.prepend(el('p.stage-label','Real public summary · Creator views retain their source and publication time · No stock recommendation'));
-} else if(scene === 'simulation') {
-  store.set('me',{tier:'free'});
-  const {mountSimulation} = await import('/js/app/views/creator-simulation.js');
-  await mountSimulation(root,{state:{demo:true}});
 } else if(scene === 'screen') {
   store.set('me',{tier:'pro'});
   heading('YOUR CONDITIONS','Combine signals on the same stock.','Open-market insider buying and oversold conditions, with your sector and market-cap filters.');

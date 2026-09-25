@@ -27,7 +27,7 @@ export function startEntitlements(){
     if(clockKey!==key){clockKey=key;clockStart=performance.now();}
     const date=ent.valid_until||ent.trial?.expires_at;
     banner.append(el('span',s(ent.source==='trial'?'trial.active':ent.capabilities?.research?'trial.member':'trial.ended',
-      {date:date?dateTime(date):''})),el('a',{href:'#/billing'},s('trial.manage')));
+      {date:date?dateTime(date):''})),el('a',{href:'#/profile'},s('common.account')));
     if(ent.capabilities?.research&&ent.valid_until){
       const delay=Date.parse(ent.next_change_at||ent.valid_until)-Date.parse(ent.server_time)-(performance.now()-clockStart);
       if(Number.isFinite(delay))timer=setTimeout(()=>refresh(),Math.max(0,Math.min(delay,86400000)));

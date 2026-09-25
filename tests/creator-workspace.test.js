@@ -8,43 +8,8 @@ dom.window.HTMLDialogElement.prototype.showModal=function(){this.open=true;};
 dom.window.HTMLDialogElement.prototype.close=function(){this.open=false;};
 const strings=document.createElement('script');strings.id='ducky-strings';
 const copy=JSON.parse(readFileSync('i18n/en.json'));strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
-const {simulate,mountSimulation,simulationRows}=await import('../public/js/app/views/creator-simulation.js');
 const {confirmCreator,mountSetup}=await import('../public/js/app/views/creator-setup.js');
 const store=await import('../public/js/app/store.js');
-const cfg={capital:10000,cash:20,stock:40,dca:true,budget:40,cadence:1,reduce:true,trim:50,pause:true,accelerate:false,fee:0};
-const path=[{d:'D00',stock:0,spy:0},{d:'D01',stock:-20,spy:0},{d:'D02',stock:10,spy:0}];
-
-test('simulation conserves capital, cash budget, and includes missed rebounds',()=>{
- const rows=simulate(path,cfg,'bear');assert.equal(rows[0].value,10400);assert.equal(rows[0].trades,0);
- assert.equal(rows[1].trades,2);assert.equal(rows[1].cash,1200);assert.equal(rows[1].value,10550);
- assert.equal(rows[2].cash,4000);assert.equal(rows[2].value,10200);assert.equal(rows[2].trades,1);
- assert.ok(rows[2].value<rows[0].value);assert.ok(rows[0].drawdown<0);
- const fees=simulate(path,{...cfg,fee:10},'bear');assert.equal(fees[2].cost,2);assert.equal(fees[2].value,10198);
- assert.equal(simulate(path,{...cfg,stock:0,cash:100,dca:false},'bear')[2].value,10000);
- assert.equal(simulate(path,{...cfg,cadence:5},'neutral')[1].trades,0);
- assert.throws(()=>simulate(path,{...cfg,cash:80},'bear'));
- assert.throws(()=>simulate(path,{...cfg,capital:NaN},'bear'));
- assert.throws(()=>simulate([...path].reverse(),cfg,'bear'));
-});
-
-test('simulation selects earliest verified version, never a revised successful take',()=>{
- const rows=simulationRows([{id:1,revision_id:1,kol_id:'x',calls:[]},{id:1,revision_id:2,first_verified_revision_id:2,kol_id:'x',calls:[{stance:'bear'}]},{id:1,revision_id:3,first_verified_revision_id:2,kol_id:'x',calls:[{stance:'bull'}]}]);
- assert.equal(rows.length,1);assert.equal(rows[0].call.stance,'bear');
- assert.equal(simulationRows([{id:1,revision_id:3,first_verified_revision_id:2,calls:[{stance:'bull'}]}]).length,0);
-});
-
-test('simulation uses singular day and trade labels only for a count of one',async()=>{
- const prior=store.get('me');store.set('me',null);
- const root=document.createElement('main');document.body.append(root);
- try {
-  await mountSimulation(root,{state:{demo:true,config:{...cfg}}});
-  const cadence=root.querySelector('[aria-label="'+copy['app.creatorlab.cadence']+'"]');
-  assert.deepEqual([...cadence.options].map(o=>o.textContent),['+1 trading day','+5 trading days','+20 trading days']);
-  const results=[...root.querySelectorAll('.creator-sim-results article > p')].map(p=>p.textContent);
-  assert.ok(results.some(text=>/· 0 trades$/.test(text)));assert.ok(results.some(text=>/· 1 trade$/.test(text)));
-  assert.ok(results.some(text=>/· 20 trades$/.test(text)));assert.ok(results.every(text=>!/\b1 trades\b/.test(text)));
- } finally {root.remove();store.set('me',prior);}
-});
 
 test('identity dialog never subscribes before affirmative confirmation, including cancel',async()=>{
  let calls=0,followed=0;const creator={name:'Same Name',channel_id:'UCabc',url:'https://www.youtube.com/channel/UCabc',recent:[{title:'Finance example',published_at:'2025-01-01'}]};
@@ -54,16 +19,6 @@ test('identity dialog never subscribes before affirmative confirmation, includin
  confirmCreator(creator,async()=>{calls++;return {kol_id:'test',subscribed:true};},()=>followed++);
  document.querySelector('dialog .btn-primary').click();await new Promise(r=>setTimeout(r,0));assert.equal(calls,1);assert.equal(followed,1);
 });
-
-test('free simulation reads scoped history and fictional returns require explicit selection',async()=>{
- store.set('me',{tier:'free'});globalThis.fetch=async url=>{assert.match(url,/^\/kol\/research/);return Response.json({items:[]});};
- const root=document.createElement('section');document.body.append(root);await mountSimulation(root,{});
- assert.equal(root.querySelector('.creator-sim-chart'),null);
- [...root.querySelectorAll('button')].find(b=>b.textContent==='Try a fictional scenario').click();
- assert.ok(root.textContent.includes('fictional prices'));assert.ok(root.querySelector('.creator-sim-chart'));
- assert.ok(!root.textContent.includes('BACKTEST'));root.remove();
-});
-
 
 test('an accepted follow cannot be presented as cancelled while its request is pending',async()=>{
  let finish;confirmCreator({name:'Channel'},()=>new Promise(resolve=>finish=resolve),()=>{});
@@ -153,7 +108,6 @@ test('follow feedback persists and analysis completion is read automatically',as
  assert.ok(root.querySelector('.creator-follow-success').textContent.includes('ready to read'));
  assert.ok(root.querySelector('.creator-page-heading').textContent.includes('Joseph Carlson'));assert.equal(root.querySelector('.creator-video-archive').open,true);cleanup();root.remove();
 });
-
 
 test('progress reads are single-flight, back off on failure and pause in hidden tabs',async t=>{
  t.mock.timers.enable({apis:['setTimeout']});

@@ -55,14 +55,14 @@ export function socialCard(row,{stale=false,onHistory}={}) {
 }
 
 export async function mountSocial(root,route={}) {
-  const degen=route.view==='degen', standalone=['degen','vibe'].includes(route.view);
+  const standalone=route.view==='vibe';
   const ctl=new AbortController(), epoch=store.epoch();let alive=true,doc=null,watchState='unloaded',watches=[],expiry=null;
   let subreddit=communities.includes(route.query?.get('subreddit'))?route.query.get('subreddit'):'all-stocks',loadVersion=0;
-  let viewQuery=route.query?.get('ticker')||'',viewScope=['all','hot','watchlist'].includes(route.query?.get('scope'))?route.query.get('scope'):(degen?'hot':'all');
+  let viewQuery=route.query?.get('ticker')||'',viewScope=['all','hot','watchlist'].includes(route.query?.get('scope'))?route.query.get('scope'):'all';
   function syncFilterUrl(){
     const params=new URLSearchParams(standalone?{}:{board:'social'});
     if(viewQuery.trim())params.set('ticker',viewQuery.trim());
-    if(viewScope!=='all'||degen)params.set('scope',viewScope);
+    if(viewScope!=='all')params.set('scope',viewScope);
     if(subreddit!=='all-stocks')params.set('subreddit',subreddit);
     const hash=(standalone?'#/vibe':'#/boards')+(params.size?'?'+params:'');
     history.replaceState(null,'',location.pathname+location.search+hash);
@@ -110,7 +110,7 @@ export async function mountSocial(root,route={}) {
     } catch(e) {
       if(!valid()||version!==loadVersion)return;clear(content);
       content.append(el('section.card.social-empty',el('h2',s(e.status===402?'social.lock_title':'social.load_error')),
-        e.status===402?el('a.btn.btn-primary',{href:'#/billing'},s('radar.access_upgrade')):
+        e.status===402?el('a.btn.btn-primary',{href:'#/profile'},s('common.account')):
           el('button.btn.btn-ghost',{type:'button',onclick:load},s('common.retry'))));
     }
   }

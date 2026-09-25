@@ -1,5 +1,54 @@
 # Change log
 
+## Feature cuts: simulation, leaderboard, research brief, orphan routes, dead billing links · 2026-09-24 (in review, not deployed)
+
+Owner decision in chat, 2026-09-24 ("该砍的都砍，开始做"): the creator simulation ("Simulate a view", 观点模拟) and the
+creator leaderboard (博主排行榜) approved on 2026-09-05 (KOL-07/08) are withdrawn, together with the never-linked Research
+Brief route and the orphan `#/market` / `#/degen` routes. Baseline `main` `f1b63bf`; branch `codex/ux-cuts-20260924`.
+
+Removed (68 files changed, +166 / −2,164 lines):
+
+- **Simulate a view.** `views/creator-simulation.js` (101 lines) and its wiring: the `lab` tab, the "Simulate this view"
+  buttons on posts, in the view dialog, on the creator page and on Call-history rows, the `?tab=lab&preview=fictional`
+  route state (`creator-route.js`), 51 `app.creatorlab.*` keys per language, the `creator-lab-*` / `creator-sim-*` /
+  `creator-field` / `creator-toggle` / `allocation-*` / `study-simulate` CSS, the demo-recording `simulation` scene.
+- **Creator leaderboard.** `views/creator-leaderboard.js` (39 lines), the `rank` tab, 23 `app.creatorrank.*` keys per
+  language, the `creator-rank-*` / `creator-ranking-*` CSS. The backend `/kol/leaderboard` endpoint is untouched (separate
+  decision); the site simply no longer calls it.
+- **Research Brief route.** `views/research-brief.js` (248), `research-brief-model.js` (144), `research-brief-prices.js`
+  (79) — both imported only by the view — and `css/research-brief.css` (74); the `research-brief` route in `router.js`,
+  `login-target.js`, `navigation.js` and `templates/app.html`; the `research_brief_preview` flag in `site.config.json`, its
+  `RESEARCH_BRIEF_ENABLED` emission and `--research-brief-preview` CLI switch in `build.py`; 92 `app.researchbrief.*`
+  keys per language; the "research preview release and rollback switch" step in `.github/workflows/check.yml`; the README
+  paragraph. `scripts/research_brief_qa.py` stays as the local synthetic-UI fixture server, now serving only the product-focus
+  fixture (`--product-focus` accepted as a no-op; `--baseline` and the research-brief fixture removed).
+- **Orphan routes `#/market` and `#/degen`.** `views/market-context.js` (90 lines), the `market` / `degen` entries in
+  `router.js`, `views/discovery.js`, `login-target.js` and `navigation.js`, the dead `degen` view branch in
+  `views/social-tracking.js`, the `market` catalogue entry and reports-tree child in `product-navigation.json` (which also
+  removes the homepage tool-catalogue link to `/app/#/market`), 29 `app.market.*` keys used only by that view plus
+  `app.nav.market`, `app.nav.degen`, `app.degen.*` (3) and `desk.*.market` (3). `#/vibe`, `#/macro`, `macro-beta.js`, the
+  homepage `market-context-preview` page and the `app.market.*` keys used by calendar odds, radar and screens stay.
+- **Dead old-menu code.** The non-product-focus `<nav>` block, `tree_group` macro and `research-brief` mobile-route logic in
+  `templates/app.html`; the `nav-tree` / `nav-more` handling in `navigation.js` and `router.js`; their CSS in `app.css` and
+  `workspace.css`; `app.nav.more` and `app.nav.evidence_short`. The five-tab focus nav is now the only shell;
+  `PRODUCT_FOCUS_ENABLED` still ships because the app modules read it.
+- **Dead `#/billing` links.** Billing is paused (OPEN-ACCESS-01) and `#/billing` renders Profile, so the 20 remaining
+  upgrade / manage / "Sign in →" links in the app modules now point at `#/profile` with one neutral label,
+  `app.common.account` ("账户" / "Account"); the two pure upsells in `experience.js` ("Compare Free and Pro", "See Pro
+  limits") are dropped. 12 orphaned label keys removed. The `billing.js` view and the `#/billing` route alias are kept.
+
+i18n: 219 keys removed and 2 added per language (4,645 → 4,428); key sets remain identical. Tests: 800 → 757 node cases
+(−43: 32 research-brief, 4 simulation, 2 simulation-target, 3 market-context, 1 leaderboard navigation, 1 compact market
+dialog) plus the 3 Python cases of `test_research_brief_config.py`; `creator-simulation-target.test.js` became
+`creator-analyze-contract.test.js` (keeps the `api.kol.analyze` contract) and `market-context.test.js` became
+`calendar-prediction.test.js` (keeps the two calendar-odds cases).
+
+Two bug fixes: the politician-trades card button on the watchlist opened the political radar board while labelled
+"查看图表 / Open chart" — it now reads "查看披露记录 / View disclosures" (`app.watch.signal_open_disclosures`); and the
+research record's `options` stream linked `#/watchlist?ticker=T`, which the list ignores — it now opens `#/chart/T`.
+
+Report: [reports/UX-CUTS-2026-09-24.md](reports/UX-CUTS-2026-09-24.md). Not deployed.
+
 ## The K-line is one tap away: stock heading, watchlist price, chart back link, consistent ticker links · 2026-09-24 (in review, not deployed)
 
 Owner instruction (chat, 2026-09-24): "我想看 K 线图，需要进到哪里、怎么找？… 我希望 UX 能更顺". The same day's

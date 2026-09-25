@@ -95,11 +95,6 @@ def load_config(api_base: str | None) -> dict:
     return cfg
 
 
-def research_brief_enabled(cfg: dict, override: bool | None = None) -> bool:
-    """Absent/invalid settings stay off; an explicit CLI choice overrides site config."""
-    return override if override is not None else cfg.get("research_brief_preview") is True
-
-
 def load_i18n() -> dict[str, dict[str, str]]:
     tables = {lang: json.loads((I18N / f"{lang}.json").read_text(encoding="utf-8")) for lang in LANGS}
     base = set(tables[LANGS[0]])
@@ -597,7 +592,6 @@ def write_config_js(cfg: dict, version: str, filename: str = 'config.js') -> Non
         "FEED_JSON": cfg.get("feed_json", "/feed.json"), "PRICES": None, "VERSION": version,
         "BILLING_ENABLED": cfg.get("trial_access") is True,
         "TRIAL_ACCESS_ENABLED": cfg.get("trial_access") is True,
-        "RESEARCH_BRIEF_ENABLED": cfg.get("research_brief_preview") is True,
         "PRODUCT_FOCUS_ENABLED": cfg.get("product_focus") is True,
         "SHARED_STOCK_BRIEFS_ENABLED": True,
     }
@@ -671,8 +665,6 @@ def main() -> None:
                     help="build the trial product; deployment still requires backend activation")
     ap.add_argument("--product-focus", action=argparse.BooleanOptionalAction, default=None,
                     help="preview the simplified Today / Watchlist / Explore workflow")
-    ap.add_argument("--research-brief-preview", action=argparse.BooleanOptionalAction, default=None,
-                    help="override the Research Brief site setting (absent setting: disabled)")
     args = ap.parse_args()
 
     cfg = load_config(args.api_base)
@@ -688,7 +680,6 @@ def main() -> None:
         print(f"[build] gen_calendar skipped: {e}")
 
     tables, version = load_i18n(), git_sha()
-    cfg["research_brief_preview"] = research_brief_enabled(cfg, args.research_brief_preview)
     if args.product_focus is not None:cfg["product_focus"] = args.product_focus
     pages, env, liq, track_n = page_targets(), make_env(), load_liquidity(), load_track_n()
     track_stats = load_track_stats()   # §5.3.4/5 — graceful {'ok': False} when the notary JSON is absent

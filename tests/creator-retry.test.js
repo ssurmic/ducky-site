@@ -59,7 +59,7 @@ test('an exact source denied by the API shows Pro access instead of an endless r
   const root=document.createElement('section');document.body.append(root);
   const dispose=await mount(root,{query:new URLSearchParams('scope=discover&creator=talk&post=abcdefghijk')});
   assert.match(root.querySelector('.cr-pro-banner').textContent,/Pro/);
-  assert.equal(root.querySelector('.cr-pro-banner a').getAttribute('href'),'#/billing');
+  assert.equal(root.querySelector('.cr-pro-banner a').getAttribute('href'),'#/profile');
   assert.equal(root.querySelector('[role=alert]'),null);assert.equal(root.querySelector('.cr-post'),null);
   assert.ok(!requests.includes('/kol/feed'));dispose();root.remove();
 });

@@ -17,6 +17,8 @@ test('records retain actual zero, missing scores, full dates and safe links',()=
  assert.match(recordCard({...row,payload:{index:42.5,mentions:30}}).textContent,/42.5 \/ 100/);
  const doc=renderRecord({ticker:'NVDA',items:[row],streams:[]});assert.equal(doc.querySelectorAll('.research-stream').length,8);
  assert.ok([...doc.getElementsByTagName('a')].some(a=>a.getAttribute('href')==='#/boards?board=social&ticker=NVDA'));
+ assert.ok([...doc.getElementsByTagName('a')].some(a=>a.getAttribute('href')==='#/chart/NVDA'),'the options stream opens the stock chart');
+ assert.ok(![...doc.getElementsByTagName('a')].some(a=>(a.getAttribute('href')||'').startsWith('#/watchlist?ticker=')),'no stream links to a watchlist query the list ignores');
  assert.match(doc.textContent,/No record yet/);assert.doesNotMatch(doc.textContent,/undefined|null|record\./);
 });
 test('legacy heat is not relabeled as a historical bull/bear balance',()=>{
