@@ -34,7 +34,23 @@
       document.cookie = cookieName + "=" + match[1] + "; Path=/; Max-Age=31536000; SameSite=Lax" +
         (location.protocol === "https:" ? "; Secure" : "");
     } catch (_) { /* Language links still work when cookies are blocked. */ }
+    saveOnAccount(match[1]);
   }, true);
+
+  // A signed-in reader's choice follows the account to every browser (POST /me/profile {lang}); the
+  // keepalive request outlives the page load the link starts. Nothing is sent without a session token.
+  function saveOnAccount(language) {
+    try {
+      var token = window.localStorage.getItem("ducky.token");
+      var base = window.DUCKY && window.DUCKY.API_BASE;
+      if (!token || !base || typeof fetch !== "function") return;
+      fetch(String(base).replace(/\/+$/, "") + "/me/profile", {
+        method: "POST", keepalive: true, credentials: "omit",
+        headers: { "Authorization": "Bearer " + token, "Content-Type": "application/json" },
+        body: JSON.stringify({ lang: language })
+      }).catch(function () {});
+    } catch (_) { /* the cookie already holds the choice for this browser */ }
+  }
 
   if (/^\/(?:en|zh)(?:\/|$)/.test(location.pathname)) return;
   // Previously issued Chinese recovery/OAuth URLs have their own routing owner.

@@ -5,7 +5,7 @@
 import * as api from "./api.js";
 import * as store from "./store.js";
 import * as tg from "./tg.js";
-import { CFG } from "./strings.js";
+import { CFG, LANG } from "./strings.js";
 import {readTelegramLinkReturn, finishTelegramLink, failTelegramLink} from './telegram-link.js';
 import {startNonceFlow} from './nonce-flow.js';
 
@@ -66,7 +66,33 @@ async function hydrate() {
   if (epoch !== store.epoch() || token !== store.get("token")) throw new api.ApiError(0,{detail:"session_changed"});
   store.set("me", me);
   if (wl) store.set("watchlist", normalizeWatch(wl));
+  followAccountLanguage(me);
   return me;
+}
+
+/** The account's language ('zh' | 'en' from /me, ui_lang first, sign-up lang as the fallback) or null. */
+export function accountLanguage(me) {
+  const m = /^(en|zh)(?:-|$)/i.exec(String(me?.ui_lang || me?.lang || ""));
+  return m ? m[1].toLowerCase() : null;
+}
+
+/** A signed-in reader gets the language saved on the account, whatever browser they open (owner request
+ *  2026-09-26): when /me says another language than this page, save the cookie and load the same route under
+ *  that prefix. One hop per page load; the served page then matches, so no loop. Returns the target or null. */
+export function followAccountLanguage(me, { lang = LANG, loc = location } = {}) {
+  const want = accountLanguage(me);
+  if (!want || want === lang) return null;
+  let hopped = null;
+  try { hopped = window.sessionStorage.getItem("ducky.lang-hop"); } catch {}
+  if (hopped === want) return null;
+  try { window.sessionStorage.setItem("ducky.lang-hop", want); } catch {}
+  try {
+    document.cookie = "ducky_lang=" + want + "; Path=/; Max-Age=31536000; SameSite=Lax" + (loc.protocol === "https:" ? "; Secure" : "");
+  } catch {}
+  const path = loc.pathname.replace(/^\/(?:en|zh)(?=\/|$)/, "");
+  const target = "/" + want + (path || "/") + loc.search + loc.hash;
+  loc.replace(target);
+  return target;
 }
 
 /** Extract [TICKER] from a /watchlist payload without importing a view module (keeps boot lean). */

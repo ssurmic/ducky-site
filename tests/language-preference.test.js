@@ -194,3 +194,32 @@ test('locale selection loads synchronously before the public and app scripts', (
     assert.ok(template.indexOf(scripts[selection][0]) < template.indexOf('</head>'));
   }
 });
+
+
+test('a signed-in reader\'s toggle is saved on the account with a keepalive request; without a session nothing is sent', () => {
+  for (const [token, expectedCalls] of [['tok.en', 1], [null, 0]]) {
+    const dom = new JSDOM('<a data-lang-toggle href="/zh/app/#/today">中文</a>', {url: 'https://duckybot.app/app/#/today'});
+    const current = new URL('https://duckybot.app/app/#/today'), writes = [], requests = [];
+    const location = {href: current.href, origin: current.origin, protocol: current.protocol, pathname: current.pathname,
+      search: current.search, hash: current.hash, replace: () => {}};
+    Object.defineProperty(dom.window.document, 'cookie', {configurable: true, get() { return ''; }, set(value) { writes.push(value); }});
+    const context = {document: dom.window.document, location, navigator: {languages: ['en-US'], language: 'en-US'}, URL,
+      localStorage: {getItem: key => (key === 'ducky.token' ? token : null)}, DUCKY: {API_BASE: 'https://api.duckybot.app/'},
+      fetch: (url, init) => { requests.push({url, init}); return Promise.resolve({ok: true}); }, JSON};
+    context.window = context;
+    vm.runInNewContext(source(), context);
+    const event = new dom.window.MouseEvent('click', {bubbles: true, cancelable: true});
+    dom.window.document.addEventListener('click', e => e.preventDefault(), {once: true});
+    dom.window.document.querySelector('a').dispatchEvent(event);
+    assert.equal(requests.length, expectedCalls, `token ${token}`);
+    if (expectedCalls) {
+      assert.equal(requests[0].url, 'https://api.duckybot.app/me/profile');
+      assert.equal(requests[0].init.method, 'POST');
+      assert.equal(requests[0].init.keepalive, true);
+      assert.equal(requests[0].init.headers.Authorization, 'Bearer tok.en');
+      assert.deepEqual(JSON.parse(requests[0].init.body), {lang: 'zh'});
+    }
+    assert.match(writes[0], /^ducky_lang=zh;/);
+    dom.window.close();
+  }
+});
