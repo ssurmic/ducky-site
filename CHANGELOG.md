@@ -1,5 +1,22 @@
 # Change log
 
+## The language follows the account, and the browser's choice is remembered · 2026-09-26
+
+Owner request in chat: whichever browser a reader opens, the app should come up signed in and in the language they
+last chose, not in whatever language the URL happens to carry. Two layers:
+
+- **Browser** (the 2026-09-20 work, PR #66, now merged here): `public/js/language-preference.js` runs first on every
+  page; a no-prefix visit uses the saved `ducky_lang` cookie (one year, written only by a language toggle), else the
+  browser profile's ordered languages, English as the static fallback. Explicit `/en/` and `/zh/` links keep their
+  language; legacy no-prefix OAuth and reset callbacks keep their own routing.
+- **Account** (new): after sign-in `auth.js` reads `ui_lang` (then `lang`) from `GET /me` and, when it differs from the
+  served page, saves the cookie and loads the same route under that prefix — once per page load, so no loop. A
+  signed-in reader's toggle also writes `POST /me/profile {lang}` with a keepalive request, so the choice reaches
+  every other browser on the next sign-in. Backend counterpart: ssurmic/ducky-bot `GET /me` `ui_lang`.
+
+Sessions were already persistent (30 idle days, 90 days absolute, renewed on boot). Tests:
+`tests/language-preference.test.js` (+ the account save), `tests/account-language.test.js`.
+
 ## Today page: the close-of-day note says "today" only for the current session · 2026-09-26 (deployed)
 
 Released through `scripts/deploy_pages.sh`: main `80d2ffaa` (PR #100) → Pages production at 2026-09-26 01:04 UTC; the
