@@ -1,5 +1,18 @@
 # Change log
 
+## Today page: the close-of-day note says "today" only for the current session · 2026-09-26 (deployed)
+
+Released through `scripts/deploy_pages.sh`: main `80d2ffaa` (PR #100) → Pages production at 2026-09-26 01:04 UTC; the
+live `config.js` serves VERSION `80d2ffaa`. Gate (build + node tests + export test + lint_copy + check_links) green.
+
+Owner report in chat, 2026-09-25: the Today page read "今日收盘总结 · 9/23周三" on a Friday. The heading in
+`views/today-macro.js` always said "today" whatever session the note covered. Now `app.today.digest_title`
+("今日收盘总结 · {date}" / "Today's close-of-day note · {date}") is used only while the note's session is the current
+New York date; otherwise the new `app.today.digest_title_past` ("收盘总结 · {date}" / "Close-of-day note · {date}").
+The look-ahead label is "下一交易日前瞻 · {date}" (was "明日前瞻", wrong on a weekend). `tests/today-macro.test.js`
+asserts both headings. The stale note itself was a backend fault (a refused Thursday note and a locked nightly prices
+run), fixed in ssurmic/ducky-bot#230.
+
 ## Feature cuts: simulation, leaderboard, research brief, orphan routes, dead billing links · 2026-09-24 (deployed)
 
 Released through `scripts/deploy_pages.sh`: main `855b14b3` (PR #98, rebased onto the K-line release) → Pages `3000617b` at 2026-09-25 01:42 UTC; the live `config.js` serves VERSION `855b14b3`. Gate before publishing: 757/757 Node tests, export unit tests, copy lint, internal links. Owner verification in the signed-in app is still pending.
