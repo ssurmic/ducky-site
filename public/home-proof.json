@@ -1,11 +1,11 @@
 {
  "schema": "home-proof/1",
  "coverage_scope": "archived_records",
- "as_of": "2026-09-25",
- "generated_at": "2026-09-25T02:15:15+00:00",
+ "as_of": "2026-09-26",
+ "generated_at": "2026-09-26T02:15:17+00:00",
  "creators": 34,
- "videos_tracked": 1043,
- "tickers_with_evidence": 4237,
- "source_documents": 37920,
+ "videos_tracked": 1065,
+ "tickers_with_evidence": 4255,
+ "source_documents": 38351,
  "method": "Archived records collected by Ducky; includes retained history and does not establish current readability or complete source coverage."
 }
