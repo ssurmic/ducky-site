@@ -135,12 +135,16 @@ function historyList(rows){
 
 // The close-of-day note: four short paragraphs written from this site's own numbers and the
 // published schedule, the same for every reader. Shown only when it is ready; an old one says so.
+// "Today's" only while the note is for the current New York session; during the next day it is the last
+// close and the heading says so (a Friday showed "today" over Wednesday's note, 2026-09-25).
+const nySession=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const sessionLabel=iso=>{const t=Date.parse((iso||'')+'T12:00:00Z');return Number.isFinite(t)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'numeric',day:'numeric',weekday:'short'}).format(t):(iso||'—');};
 export function digestBlock(digest){
   if(!digest||!['ready','stale'].includes(digest.status))return null;
   const text=key=>String(digest[key]?.[LANG==='zh'?'zh':'en']||'').trim();
-  const box=el('section.today-digest',{'aria-label':s('today.digest_title',{date:sessionLabel(digest.session)})});
-  box.append(el('div.today-digest-head',el('h2.today-section-title',s('today.digest_title',{date:sessionLabel(digest.session)})),
+  const title=s(digest.session===nySession()?'today.digest_title':'today.digest_title_past',{date:sessionLabel(digest.session)});
+  const box=el('section.today-digest',{'aria-label':title});
+  box.append(el('div.today-digest-head',el('h2.today-section-title',title),
     el('span.small.muted',s('today.digest_written',{time:clock(digest.generated_at)})+(digest.status==='stale'?' · '+s('today.digest_stale'):''))));
   const grid=el('div.today-digest-grid');
   for(const [key,label] of [['close','today.digest_close'],['sectors','today.digest_sectors'],['macro','today.digest_macro']])

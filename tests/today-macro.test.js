@@ -108,6 +108,10 @@ test('the close-of-day note renders above the tiles when ready, says when it is 
   assert.match(note.querySelector('.today-digest-tomorrow').textContent,/Jobless claims at 08:30 ET/);
   assert.match(note.textContent,/not a forecast or advice/);
   assert.doesNotMatch(note.textContent,/Over 40 hours old/);
+  // A note for an earlier session is "the close", never "today's"; only the current New York session earns "today".
+  assert.match(note.querySelector('.today-section-title').textContent,/^Close-of-day note · Wed, 9\/23/);
+  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+  assert.match(macro.macroStrip({...doc,digest:{...digest,session:today}}).querySelector('.today-section-title').textContent,/^Today's close-of-day note · /);
   assert.match(macro.macroStrip({...doc,digest:{...digest,status:'stale'}}).textContent,/Over 40 hours old/);
   assert.equal(macro.macroStrip({...doc,digest:{status:'unavailable'}}).querySelector('.today-digest'),null);
   assert.equal(macro.macroStrip(doc).querySelector('.today-digest'),null);
