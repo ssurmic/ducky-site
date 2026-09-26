@@ -1,6 +1,10 @@
 # Change log
 
-## The language follows the account, and the browser's choice is remembered · 2026-09-26
+## The language follows the account, and the browser's choice is remembered · 2026-09-26 (deployed)
+
+Released through `scripts/deploy_pages.sh`: main `bbcc2206` (PR #102) → Pages production at 2026-09-26 09:18 UTC (the edge
+served the new VERSION about a minute after the script's 30 s check); `config.js` serves VERSION `bbcc2206`,
+`/js/language-preference.js` is live.
 
 Owner request in chat: whichever browser a reader opens, the app should come up signed in and in the language they
 last chose, not in whatever language the URL happens to carry. Two layers:
