@@ -1,7 +1,7 @@
 {
  "schema": "week-ahead/1",
- "generated_at": "2026-09-25T06:45:02+00:00",
- "as_of": "2026-09-25T06:45:02+00:00",
+ "generated_at": "2026-09-26T06:39:09+00:00",
+ "as_of": "2026-09-26T06:39:09+00:00",
  "week_of": "09/21–09/25",
  "events": [
   {
@@ -72,8 +72,8 @@
    "dow": "周四",
    "dow_en": "Thu",
    "date": "09/24",
-   "et_zh": "盘后",
-   "et_en": "AH",
+   "et_zh": "",
+   "et_en": "",
    "name": "COST",
    "kind": "earnings",
    "watch": false
@@ -83,7 +83,7 @@
    "dow_en": "Fri",
    "date": "09/25",
    "et": "8:30am et",
-   "name": "Continuing Jobless Claims",
+   "name": "Core Durable Goods Orders",
    "kind": "macro",
    "tier": "high"
   },
@@ -92,7 +92,7 @@
    "dow_en": "Fri",
    "date": "09/25",
    "et": "8:30am et",
-   "name": "Initial Jobless Claims",
+   "name": "Durable Goods Orders",
    "kind": "macro",
    "tier": "high"
   },
@@ -100,10 +100,64 @@
    "dow": "周五",
    "dow_en": "Fri",
    "date": "09/25",
-   "et": "8:30am et",
-   "name": "Jobless Claims 4-Week Avg.",
+   "et": "10:00am et",
+   "name": "Michigan 1-Year Inflation Expectations",
    "kind": "macro",
    "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/25",
+   "et": "10:00am et",
+   "name": "Michigan 5-Year Inflation Expectations",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/25",
+   "et": "10:00am et",
+   "name": "Michigan Consumer Expectations",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/25",
+   "et": "10:00am et",
+   "name": "Michigan Consumer Sentiment",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/25",
+   "et": "10:00am et",
+   "name": "Michigan Current Conditions",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/25",
+   "et": "10:20am et",
+   "name": "Atlanta Fed GDPNow",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "09/25",
+   "et": "9:20am et",
+   "name": "Fed Schmid Speaks",
+   "kind": "macro",
+   "tier": "fed"
   }
  ]
 }
