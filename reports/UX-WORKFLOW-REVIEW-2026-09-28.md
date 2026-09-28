@@ -1,6 +1,6 @@
 # Integrated workflow review · 2026-09-28
 
-Status: deployed follow-up `e22240f3` after production `0c904fa3`; see the [release receipt](#production-release-receipt). Three independent persona reviews and root integration are complete. The candidate findings, local checks and measurements below are preserved as pre-release evidence. Scoped authenticated phone and desktop production checks passed at 20:07–20:10 UTC; their limited coverage is recorded below. Deployment and local fixture success do not establish source freshness or physical-device acceptance.
+Status: the workflow follow-up deployed as `e22240f3` after `0c904fa3`; the later Chart return correction is now deployed as `7fb28406`. See the original [workflow receipt](#production-release-receipt) and [Chart release addendum](#chart-return-release-addendum). Three independent persona reviews and root integration are complete. Candidate findings, local checks and 20:07–20:10 UTC live measurements remain their original evidence. The exact Chart return chain passed at 20:25:30 UTC. Deployment and scoped browser checks do not establish source freshness or physical-device acceptance.
 
 ## Review roles and decisions
 
@@ -96,15 +96,34 @@ Logs: `/tmp/ducky-ux-workflow-final-tests.log`; individual review logs are named
   source, live follows/unfollows, account changes, alert submission/delivery, source semantic
   fidelity or complete/current coverage. Backend release identity and broader recovery acceptance
   remain in the shared engineering record.
-- **Known remaining navigation limitation:** a later live check found that returning from Chart
-  loses the exact stock tab/from route and original creator filter context in `e22240f3`. A
-  [bounded local correction](UX-CHART-RETURN-2026-09-28.md) now has complete-chain and unsafe-state
-  regression coverage; its release and production confirmation remain pending. The successful
-  direct Creator → Stock → Creator return and chart rendering above did not establish the complete
-  Chart return chain.
+- **Failure retained from this release:** a later live check found that returning from Chart
+  lost the exact stock tab/from route and original creator filter context in `e22240f3`.
+  The successful direct Creator → Stock → Creator return and chart rendering above had not
+  established the complete Chart return chain. The bounded correction was subsequently released
+  as `7fb28406` and verified live; see the addendum below rather than treating the earlier smoke
+  as if it had passed that path.
 
 The original `0c904fa3` / Pages `697e48fc` receipt remains in
 [UX-PRODUCTION-2026-09-28.md](UX-PRODUCTION-2026-09-28.md#production-release-receipt).
 That earlier release and this follow-up are separate receipts. The private backend's independently
 gated AWS repair/release is recorded by its owner in the shared engineering documents; frontend
 deployment alone does not establish that backend release or its end-to-end recovery.
+
+## Chart return release addendum
+
+[PR #107](https://github.com/ssurmic/ducky-site/pull/107) merged as
+`7fb28406cc89ac363309392599f945f0ab931e0a` at 20:23:34 UTC. The existing publisher passed
+**823 Node and 14 Python tests**, build/copy checks and **2,103 internal links**, then published
+[Pages `809bdbf9`](https://809bdbf9.ducky-site.pages.dev). Production `VERSION=7fb28406` and CSP
+were verified at **2026-09-28 20:24:20 UTC**.
+
+At **20:25:30 UTC**, the actual authenticated production app at **390 × 700, Chinese/dark** passed
+Creators → 投资TALK君 → Research MU → History → K-line → Stock page → selected creator. The
+Stock page link retained `#/stock/MU?from=creators&tab=history`, and the following creator link
+retained `#/creators?creator=touzi-talk`. The author title and Research MU focus were restored,
+with no document overflow. This resolves the inspected Chart return failure; it does not certify
+all workflows, physical devices, account writes or source fidelity.
+
+The [Chart report](UX-CHART-RETURN-2026-09-28.md#production-release-receipt) keeps the original
+failure, candidate validation, negative-state coverage and exact publisher log together. The
+current document update records the release; it does not redeploy the frontend.
