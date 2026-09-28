@@ -113,13 +113,27 @@ await test('Integrated preview journeys',async t=>{
   for(const series of normalizedSeries(MACRO_ROWS)){assert.equal(Math.min(...series.values),0);assert.equal(Math.max(...series.values),100);}
   assert.deepEqual([39,40,59,60,null].map(fundingBand),['tight','mixed','mixed','loose','unknown']);
  });
+ await t.test('activity filters link a source record back to the same stock',async()=>{
+  await go('#/explore?view=activity');assert.equal(document.querySelectorAll('.ac-record').length,6);
+  await click(text('activity.category_holdings'));assert.equal(document.querySelectorAll('.ac-record').length,1);
+  assert.match(document.querySelector('.ac-record').textContent,/2026-06-30.*2026-08-14/);
+  await click(text('activity.open_record'));assert.ok(document.querySelector('dialog a[href="#/stock/MU"]'));
+  assert.ok(document.querySelector('dialog').textContent.includes(text('activity.limit_holdings')));document.querySelector('dialog').close();
+  await go('#/explore?view=activity&kind=all&ticker=NVDA');assert.equal(document.querySelectorAll('.ac-record').length,2);
+  await click(text('activity.clear_stock'));const search=document.querySelector('.ac-search input');search.value='ORCL';search.dispatchEvent(new Event('input',{bubbles:true}));
+  assert.equal(document.querySelectorAll('.ac-record').length,1);assert.ok(document.querySelector('.ac-record').textContent.includes(text('activity.unknown_date')));
+  await click(text('activity.open_record'));await click(text('activity.follow'));
+  assert.equal(document.querySelector('.ac-search input').value,'ORCL');assert.equal(document.querySelectorAll('.ac-record').length,1);
+  assert.equal(document.activeElement.className,'ac-title');
+  await go('#/watchlist?view=list');assert.ok([...document.querySelectorAll('a')].some(a=>a.getAttribute('href')==='#/explore?view=activity&ticker=NVDA'),[...document.querySelectorAll('.ac-row-link')].map(a=>a.outerHTML).join('\n'));
+ });
  await t.test('every core page renders in both languages with no unresolved copy or null values',async()=>{
   for(const lang of ['zh','en']){
    if(document.documentElement.lang!==lang){const langButton=document.querySelector('.lang-btn');langButton.click();await tick();}
-   for(const hash of ['#/today','#/watchlist','#/explore','#/creators','#/calendar','#/stock/NVDA','#/stock/AAPL','#/stock/TSM','#/stock/NVDA?tab=metrics','#/stock/TSM?tab=metrics','#/watchlist?view=metrics','#/alerts']){
+   for(const hash of ['#/today','#/watchlist','#/explore','#/creators','#/calendar','#/stock/NVDA','#/stock/AAPL','#/stock/TSM','#/stock/NVDA?tab=metrics','#/stock/TSM?tab=metrics','#/watchlist?view=metrics','#/explore?view=activity','#/explore?view=activity&kind=holdings','#/alerts']){
     await go(hash);const main=document.querySelector('main');assert.ok(main.querySelector('h1'),'page heading '+hash);
     assert.doesNotMatch(main.textContent,/\b(?:undefined|null|NaN)\b/,hash);
-    assert.doesNotMatch(main.textContent,/\b(?:watch|stock|calendar|today|explore|creators|metrics|macro)\.[a-z_]+/,hash);
+    assert.doesNotMatch(main.textContent,/\b(?:watch|stock|calendar|today|explore|creators|metrics|macro|activity)\.[a-z_]+/,hash);
     if(lang==='en')assert.doesNotMatch(main.textContent,/[\u3400-\u9fff]/,hash+' English');
    }
   }

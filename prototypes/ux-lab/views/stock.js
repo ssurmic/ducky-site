@@ -1,3 +1,4 @@
+import {activityPreview} from './activity.js';
 import {metricLinks,stockMetrics} from './metrics.js';
 import {h,t,button,link,badge,icon,money,percent,showDialog,toast} from '../ui.js';
 
@@ -74,6 +75,7 @@ export function mountStock(root,ctx,params={}){
   function perspective(record){return h('article',{class:'st-perspective st-'+record.lane},h('div',{class:'st-perspective-head'},badge(t('stock.lane_'+record.lane),record.lane==='support'?'positive':'negative'),h('span',{class:'small muted'},record.date)),h('p',{},t(record.title)),h('button',{class:'st-source-button',type:'button',onClick:()=>source(record)},icon('users',14),t(record.author),h('span',{class:'muted'},t('stock.read_basis')),icon('arrow',14)));}
   function overview(){
     const left=h('div',{class:'st-overview-main'},h('section',{class:'st-quick-take'},h('div',{class:'row'},h('span',{class:'eyebrow'},t('stock.quick_take')),badge(t('stock.illustrative'))),h('h2',{},t(stock.summary)),h('div',{class:'st-quick-meta small muted'},h('span',{},t('stock.snapshot_date')),h('button',{class:'text-link',type:'button',onClick:()=>source(records[0])},t('stock.view_basis'))),metricLinks(stock)),h('section',{class:'st-perspectives'},h('div',{class:'section-head'},h('h2',{},t('stock.different_views')),button(t('stock.all_evidence'),()=>switchTab('evidence'),'text-link')),perspective(records[0]),perspective(records[3])),h('section',{class:'st-chart-section'},h('div',{class:'st-chart-head'},h('h2',{},t('stock.price_context')),h('div',{class:'segmented',role:'group','aria-label':t('stock.chart_period')},...['1m','3m','6m'].map(key=>h('button',{type:'button',class:key===period?'active':'','aria-pressed':String(key===period),onClick:()=>{period=key;draw();}},t('stock.period_'+key))))),sampleChart(stock,period),h('p',{class:'small muted st-chart-note'},t('stock.chart_note'))));
+    left.append(activityPreview(ctx,stock.ticker));
     return h('div',{class:'st-overview-grid'},left,pricePlan());
   }
   function node(record){

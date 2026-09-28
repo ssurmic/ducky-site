@@ -2,6 +2,12 @@
 
 Status: design proposals, no backend implementation or activation in this change. Use existing owned read models and writes; final field names must be agreed with their owners. Most reordering requires no new API.
 
+September 28 follow-up: the activity archive needs frontend integration with existing APIs,
+not a new firehose backend. See the [verified mapping and public read checks](../../reports/UX-ACTIVITY-REFERENCE-2026-09-28.md).
+The local pure adapter is tested against those field meanings; authentication, access-delay rendering,
+coverage freshness and server pagination remain production wiring work. Track all UX decisions in
+the [change register](change-register.md).
+
 | UI need | Existing capability | Proposed addition / required behavior |
 |---|---|---|
 | Compact watchlist and overview | `/watchlist`, `/me/stock-research`, `/briefing/stocks?fields=signals` | Reuse existing quote clocks and reviewed overview; distinguish missing summary, stale retained summary, withdrawn evidence and valid empty data. No new inference on read. |

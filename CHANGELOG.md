@@ -1,5 +1,18 @@
 # Change log
 
+## Company and money activity in the UX preview · 2026-09-28 (local prototype)
+
+Explore now has a visible activity tab for insider filings, 13F holdings, political disclosures
+and company events, with compact fact rows, category/stock/search scopes and source details.
+Today, stock pages and Watchlist link into the same sample records. A pure adapter uses the existing
+Radar archive shape; typed dates, amount ranges, unknown values and unsupported stock actions are
+checked independently. Two public Radar reads returned HTTP 200 with explicit five-day access delay.
+The browser remains a synthetic prototype and has not been connected to authenticated production reads.
+
+The [activity report](reports/UX-ACTIVITY-REFERENCE-2026-09-28.md) records the reference review,
+API compatibility and validation. The [persistent change register](docs/ux/change-register.md)
+tracks this redesign's completed changes and remaining production wiring.
+
 ## Restore analytical context in the UX preview · 2026-09-28 (local prototype; not deployed)
 
 Owner review identified useful analysis omitted by the first redesign. Watchlist now exposes a

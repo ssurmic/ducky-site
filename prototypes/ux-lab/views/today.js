@@ -1,3 +1,4 @@
+import {activityPreview} from './activity.js';
 import {h,t,button,link,badge,icon,money,percent,stockLink,sectionHead,showDialog} from '../ui.js';
 import {macroPanel} from './macro.js';
 
@@ -54,6 +55,7 @@ export function mountToday(root,ctx) {
           h('div',{class:'row today-lead-links'},stockLink('NVDA'),stockLink('MU'),stockLink('ORCL'),link(t('today.explore_context'),'#/explore'))),
         h('div',{class:'today-lead-focus'},h('span',{class:'eyebrow'},t('today.next_focus')),h('strong',{},t('today.next_focus_title')),
           h('p',{class:'small muted'},t('today.next_focus_body')),link(t('today.inspect_schedule'),'#/calendar?date=2026-10-02'))),
+      activityPreview(ctx),
       h('div',{class:'today-columns'},
         h('section',{class:'today-news'},
           sectionHead(t('today.changes'),h('div',{class:'segmented','aria-label':t('today.filter_label')},

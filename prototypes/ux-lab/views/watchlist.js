@@ -1,3 +1,4 @@
+import {activityHref} from './activity.js';
 import {lensPair,metricLinks,metricsTable,metricSortValue} from './metrics.js';
 import {h,t,button,link,badge,icon,money,percent,showDialog,sectionHead} from '../ui.js';
 
@@ -53,7 +54,7 @@ export function mountWatchlist(root,ctx,params={}){
     shell.append(h('div',{class:'wl-empty-grid'},intro,preview),notice());
   }
   function tools(stock){return h('div',{class:'wl-row-tools'},h('button',{class:'icon-btn',type:'button',title:t('watch.alert_stock',{ticker:stock.ticker}),'aria-label':t('watch.alert_stock',{ticker:stock.ticker}),onClick:()=>ctx.openAlert(stock.ticker)},icon('bell')),h('button',{class:'icon-btn',type:'button',title:t('watch.manage_stock',{ticker:stock.ticker}),'aria-label':t('watch.manage_stock',{ticker:stock.ticker}),onClick:()=>manage(stock)},icon('settings')));}
-  function insight(stock){return h('div',{class:'wl-insight'},h('button',{class:'wl-insight-toggle',type:'button','aria-expanded':String(expanded===stock.ticker),onClick:()=>{expanded=expanded===stock.ticker?null:stock.ticker;draw();}},h('span',{},summaryText(stock)),icon('chevron',15)),sourceBadge(stock),lensPair(stock));}
+  function insight(stock){return h('div',{class:'wl-insight'},h('button',{class:'wl-insight-toggle',type:'button','aria-expanded':String(expanded===stock.ticker),onClick:()=>{expanded=expanded===stock.ticker?null:stock.ticker;draw();}},h('span',{},summaryText(stock)),icon('chevron',15)),sourceBadge(stock),lensPair(stock),link(t('activity.row_link'),activityHref(stock.ticker),'text-link ac-row-link'));}
   function evidenceStrip(stock){return h('div',{class:'wl-expanded'},h('div',{class:'wl-expanded-view'},h('span',{class:'wl-side-label positive'},t('watch.supports')),h('p',{},t(stock.bull))),h('div',{class:'wl-expanded-view'},h('span',{class:'wl-side-label negative'},t('watch.risks')),h('p',{},t(stock.bear))),h('div',{class:'row wl-expanded-links'},link(t('watch.full_research'),stockHref(stock.ticker)),link(t('watch.evidence_map'),stockHref(stock.ticker,'evidence')),button(t('watch.use_reference'),()=>ctx.openAlert(stock.ticker,referenceFor(stock)?.[1]),'btn btn-quiet')),h('p',{class:'small muted'},t('watch.expand_source')));}
   function table(stocks){
     const sortButton=(key,label)=>h('button',{class:'wl-sort',type:'button','data-watch-sort':key,onClick:()=>{direction=sort===key?(direction==='asc'?'desc':'asc'):'asc';sort=key;draw();}},label,h('span',{'aria-hidden':'true'},sort===key?(direction==='asc'?'↑':'↓'):'↕'));
@@ -75,7 +76,7 @@ export function mountWatchlist(root,ctx,params={}){
         button(t(ownPlan?'watch.edit_plan':'watch.make_plan'),()=>ctx.openAlert(stock.ticker,ownPlan?undefined:referenceFor(stock)?.[1]),'btn btn-quiet'));
       return h('article',{class:'wl-overview-card'},
         h('header',{class:'wl-overview-head'},h('div',{},link(stock.ticker,stockHref(stock.ticker)),h('span',{class:'small muted'},stock.name)),quote(stock)),
-        planStrip,metricLinks(stock),
+        planStrip,metricLinks(stock),link(t('activity.row_link'),activityHref(stock.ticker),'text-link ac-overview-link'),
         h('div',{class:'wl-overview-change'},h('span',{class:'eyebrow'},t('watch.latest_change')),h('p',{},summaryText(stock)),sourceBadge(stock)),
         lensPair(stock),h('div',{class:'wl-card-perspectives'},
           h('div',{},h('span',{class:'small positive'},t('watch.supports')),h('p',{},t(stock.bull))),

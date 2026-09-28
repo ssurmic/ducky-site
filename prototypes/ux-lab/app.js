@@ -15,7 +15,7 @@ let displayState='ready',cleanup,currentRoute;
 const scrollPositions=new Map();
 window.addEventListener('scroll',()=>{if(currentRoute)scrollPositions.set(currentRoute,window.scrollY);},{passive:true});
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state));}catch{toast(t('common.storageUnavailable'));}};
-function resetDemo(){for(const key of ['watchlist','authors','alerts','saved'])state[key]=[];for(const key of ['watchUI','stockUI','exploreUI','creatorsUI'])delete state[key];state.scenario='new';displayState='ready';scrollPositions.clear();save();}
+function resetDemo(){for(const key of ['watchlist','authors','alerts','saved'])state[key]=[];for(const key of ['watchUI','stockUI','exploreUI','creatorsUI','activityUI'])delete state[key];state.scenario='new';displayState='ready';scrollPositions.clear();save();}
 const navigation=[['today','home'],['watchlist','list'],['explore','compass'],['calendar','calendar'],['creators','users']];
 const views={today:mountToday,watchlist:mountWatchlist,explore:mountExplore,calendar:mountCalendar,creators:mountCreators,stock:mountStock,alerts:mountAlerts};
 function navigate(path){document.querySelectorAll('dialog[open]').forEach(d=>d.close());location.hash='#/'+path;}

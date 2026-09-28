@@ -1,3 +1,4 @@
+import {mountActivity,exploreTabs} from './activity.js';
 import {h,t,button,link,badge,icon,money,percent,sectionHead,showDialog,toast} from '../ui.js';
 
 const THEMES=[
@@ -8,6 +9,7 @@ const THEMES=[
 const HEAT=[{ticker:'MU',n:104},{ticker:'SPY',n:66},{ticker:'AMD',n:34},{ticker:'META',n:34},{ticker:'NVDA',n:29}];
 
 export function mountExplore(root,ctx,params={}) {
+  if(params.query?.get('view')==='activity')return mountActivity(root,ctx,params);
   const prior=ctx.state.exploreUI||{},themes=['all',...THEMES.map(item=>item.id)];
   const routeTheme=params.query?.get('theme');
   let theme=themes.includes(routeTheme)?routeTheme:themes.includes(prior.theme)?prior.theme:'all',
@@ -48,6 +50,7 @@ export function mountExplore(root,ctx,params={}) {
       h('div',{},h('div',{class:'eyebrow'},t('explore.eyebrow')),h('h1',{},t('explore.title')),h('p',{class:'muted'},t('explore.subtitle'))),
       h('div',{class:'explore-search'},icon('search'),h('input',{type:'search',value:query,placeholder:t('explore.search'),
         'aria-label':t('explore.search'),onInput:e=>{query=e.target.value;renderResults();}}))));
+    shell.append(exploreTabs('research'));
     const themes=h('section',{class:'explore-themes','aria-label':t('explore.start')});
     themes.append(sectionHead(t('explore.start'),badge(t('explore.illustration'),'neutral')));
     themes.append(h('div',{class:'explore-theme-grid'},...THEMES.map(item=>{
