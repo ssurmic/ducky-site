@@ -17,6 +17,13 @@ Review these journeys:
 3. Creators → read views from several authors → filter by ticker → source drawer → author profile → stock.
 4. Calendar → event impact → related stock → price plan.
 5. Switch to English/light theme and repeat at 390×650 and 320×600.
+6. Watchlist → Metrics → compare long-term/trend views, walls, support and IV/HV20 → select a metric for its meaning → stock metrics → save an editable local price-watch draft.
+7. Today → dollar liquidity → compare the three lines → select a date for raw readings → switch the first line to 10-year yield.
+
+The follow-up review restored analytical features omitted from the initial preview. List remains
+the default and Overview remains second; Metrics is a visible third option. Degen is labelled
+attention, not undervaluation. A separate valuation score has not been invented. The Today chart
+uses each series' own ten-session minimum and maximum, so its aligned lines compare shape only.
 
 All prices, dates, opinions, and fictional creators in the prototype are illustrative. No real portfolio, creator subscription, alert, account, financial transaction, or production source is changed. Production request semantics and source validation remain authoritative for future integration.
 
@@ -25,6 +32,7 @@ All prices, dates, opinions, and fictional creators in the prototype are illustr
 - [User journeys](user-journeys.md)
 - [Proposed backend contracts](proposed-backend-changes.md)
 - [Acceptance record](../../reports/UX-REDESIGN-2026-09-28.md)
+- [Metrics and liquidity follow-up](../../reports/UX-METRICS-RESTORATION-2026-09-28.md)
 
 Validation:
 

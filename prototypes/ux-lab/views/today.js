@@ -1,4 +1,5 @@
 import {h,t,button,link,badge,icon,money,percent,stockLink,sectionHead,showDialog} from '../ui.js';
+import {macroPanel} from './macro.js';
 
 const STORIES = [
   {id:'demand',type:'research',ticker:'NVDA',related:['NVDA','MSFT'],time:'09:10',tone:'accent'},
@@ -11,6 +12,7 @@ const UPCOMING=[{day:'30',month:'09',id:'memory',ticker:'MU',date:'2026-09-30'},
 
 export function mountToday(root,ctx) {
   let filter='all';
+  const macroState={primary:'liquidity',index:9};
   const mine=()=>new Set(ctx.state.watchlist||[]);
   const watched=()=>ctx.stocks.filter(stock=>mine().has(stock.ticker));
   function readStory(story){
@@ -45,6 +47,7 @@ export function mountToday(root,ctx) {
           h('div',{class:'today-market-item'},h('div',{class:'row'},h('span',{class:'small muted'},t('today.market.'+ticker)),h('span',{class:'today-market-sample'},t('today.sample_short'))),
             h('div',{class:'today-market-values'},h('strong',{class:'mono'},ticker==='US10Y'?value+'%':value),
               h('span',{class:'mono small '+(change<0?'negative':'positive')},ticker==='US10Y'?t('today.basis_points',{n:2}):percent(change)))))),
+      macroPanel(ctx,macroState),
       h('section',{class:'today-lead'},
         h('div',{class:'today-lead-body'},h('div',{class:'row'},h('span',{class:'eyebrow'},t('today.lead_label')),badge(t('today.sample'),'neutral')),
           h('h2',{},t('today.lead_title')),h('p',{},t('today.lead_body')),

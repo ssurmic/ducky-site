@@ -83,13 +83,43 @@ await test('Integrated preview journeys',async t=>{
   document.querySelector('.st-map-node').click();document.querySelector('.st-save-toggle').click();
   assert.equal(document.querySelector('.st-save-toggle').getAttribute('aria-pressed'),'false');document.querySelector('dialog').close();
  });
+ await t.test('watchlist exposes both perspectives and sortable metrics with missing values last',async()=>{
+  await go('#/watchlist');await click(text('common.search'));
+  const search=document.querySelector('dialog input');search.value='TSM';search.dispatchEvent(new Event('input',{bubbles:true}));
+  await click(text('common.followStock').replace('{ticker}','TSM'));document.querySelector('dialog').close();
+  await go('#/watchlist?view=metrics');const input=document.querySelector('.wl-filter-input');input.value='';input.dispatchEvent(new Event('input',{bubbles:true}));
+  assert.ok(document.querySelector('.mx-table'));assert.match(document.querySelector('.mx-table').textContent,/左侧.*长线.*右侧.*趋势/);
+  for(let i=0;i<2;i++){[...document.querySelectorAll('.mx-sort')].find(b=>b.textContent.startsWith(text('metrics.volatility'))).click();assert.match(document.querySelector('.mx-table tbody tr:last-child th').textContent,/TSM/);}
+  document.querySelector('.mx-table-scroll').scrollLeft=500;const sortButton=document.querySelector('[data-watch-sort=ratio]');sortButton.focus();sortButton.click();
+  assert.equal(document.querySelector('.mx-table-scroll').scrollLeft,500);assert.equal(document.activeElement.dataset.watchSort,'ratio');
+  await go('#/stock/NVDA?tab=metrics');assert.match(document.querySelector('main').textContent,/0.89×/);
+  assert.match(document.querySelector('main').textContent,/2026-10-16/);
+  await click(text('metrics.help_label').replace('{metric}',text('metrics.volatility')));
+  assert.ok(document.querySelector('dialog').textContent.includes(text('metrics.limit_volatility')));document.querySelector('dialog').close();
+  await go('#/stock/TSM?tab=metrics');assert.doesNotMatch(document.querySelector('.mx-detail-grid').textContent,/0.00|NaN/);
+ });
+ await t.test('Today compares three separately normalized series with dated raw readings',async()=>{
+  await go('#/today');assert.equal(document.querySelectorAll('.ux-macro-line').length,3);
+  const range=document.querySelector('.ux-macro-range');
+  range.dispatchEvent(new KeyboardEvent('keydown',{key:'Home',bubbles:true,cancelable:true}));
+  assert.match(range.getAttribute('aria-valuetext'),/2026-09-14.*54.*468.20.*560.84/);
+  document.querySelector('[data-macro-primary="yield"]').click();
+  const yieldRange=document.querySelector('.ux-macro-range');
+  assert.match(yieldRange.getAttribute('aria-valuetext'),/2026-09-14.*4.22%.*468.20/);
+  yieldRange.dispatchEvent(new KeyboardEvent('keydown',{key:'End',bubbles:true,cancelable:true}));
+  assert.match(yieldRange.getAttribute('aria-valuetext'),/2026-09-25.*4.12%.*490.80.*574.42/);
+  await click(text('macro.help_title'));assert.ok(document.querySelector('dialog').textContent.includes(text('macro.help_normalize')));document.querySelector('dialog').close();
+  const {normalizedSeries,MACRO_ROWS,fundingBand}=await import('./views/macro.js');
+  for(const series of normalizedSeries(MACRO_ROWS)){assert.equal(Math.min(...series.values),0);assert.equal(Math.max(...series.values),100);}
+  assert.deepEqual([39,40,59,60,null].map(fundingBand),['tight','mixed','mixed','loose','unknown']);
+ });
  await t.test('every core page renders in both languages with no unresolved copy or null values',async()=>{
   for(const lang of ['zh','en']){
    if(document.documentElement.lang!==lang){const langButton=document.querySelector('.lang-btn');langButton.click();await tick();}
-   for(const hash of ['#/today','#/watchlist','#/explore','#/creators','#/calendar','#/stock/NVDA','#/stock/AAPL','#/stock/TSM','#/alerts']){
+   for(const hash of ['#/today','#/watchlist','#/explore','#/creators','#/calendar','#/stock/NVDA','#/stock/AAPL','#/stock/TSM','#/stock/NVDA?tab=metrics','#/stock/TSM?tab=metrics','#/watchlist?view=metrics','#/alerts']){
     await go(hash);const main=document.querySelector('main');assert.ok(main.querySelector('h1'),'page heading '+hash);
     assert.doesNotMatch(main.textContent,/\b(?:undefined|null|NaN)\b/,hash);
-    assert.doesNotMatch(main.textContent,/\b(?:watch|stock|calendar|today|explore|creators)\.[a-z_]+/,hash);
+    assert.doesNotMatch(main.textContent,/\b(?:watch|stock|calendar|today|explore|creators|metrics|macro)\.[a-z_]+/,hash);
     if(lang==='en')assert.doesNotMatch(main.textContent,/[\u3400-\u9fff]/,hash+' English');
    }
   }

@@ -1,5 +1,18 @@
 # Change log
 
+## Restore analytical context in the UX preview · 2026-09-28 (local prototype; not deployed)
+
+Owner review identified useful analysis omitted by the first redesign. Watchlist now exposes a
+third Metrics view beside List and Overview, with separate long-term/trend perspectives, option
+walls, support references, IV/HV20 and Degen attention. Overview and stock pages link directly to
+the full metrics. Today restores dollar liquidity alongside a dated, interactive three-line
+comparison with QQQ and SPY, with a 10-year yield alternative. All readings remain synthetic.
+
+The UI distinguishes attention from valuation, options expiry from quote date, and each chart
+series' normalized shape from its original unit. Missing metrics remain missing. Mobile sorting
+preserves the horizontal position and keyboard focus. See the
+[follow-up acceptance record](reports/UX-METRICS-RESTORATION-2026-09-28.md).
+
 ## Integrated UX design preview · 2026-09-28 (local prototype; not deployed)
 
 The empty-watchlist journey and cross-page research flow are implemented as an isolated, bilingual

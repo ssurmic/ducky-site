@@ -1,3 +1,4 @@
+import {lensPair,metricLinks,metricsTable,metricSortValue} from './metrics.js';
 import {h,t,button,link,badge,icon,money,percent,showDialog,sectionHead} from '../ui.js';
 
 const valueText=value=>Number.isFinite(value)?money(value):t('watch.unknown');
@@ -15,8 +16,8 @@ function notice(){return h('p',{class:'wl-fixture small muted'},icon('info',14),
 
 export function mountWatchlist(root,ctx,params={}){
   const prior=ctx.state.watchUI||{};
-  let view=['list','overview'].includes(params.query?.get('view'))?params.query.get('view'):['list','overview'].includes(prior.view)?prior.view:'list';
-  let filter=['all','changes','price','events'].includes(prior.filter)?prior.filter:'all',sort=['ticker','price'].includes(prior.sort)?prior.sort:'ticker',direction=prior.direction==='desc'?'desc':'asc',query=typeof prior.query==='string'?prior.query:'',expanded=prior.expanded||null;
+  let view=['list','overview','metrics'].includes(params.query?.get('view'))?params.query.get('view'):['list','overview','metrics'].includes(prior.view)?prior.view:'list';
+  let filter=['all','changes','price','events'].includes(prior.filter)?prior.filter:'all',sort=['ticker','price','put','low20','ratio','degen'].includes(prior.sort)?prior.sort:'ticker',direction=prior.direction==='desc'?'desc':'asc',query=typeof prior.query==='string'?prior.query:'',expanded=prior.expanded||null;
   const planFor=stock=>ctx.state.alerts?.find(item=>item.ticker===stock.ticker);
   const shownReference=stock=>finitePlan(planFor(stock))?money(planFor(stock).price):referenceLabel(stock);
   const finitePlan=plan=>Number.isFinite(plan?.price)&&plan.price>0;
@@ -52,10 +53,10 @@ export function mountWatchlist(root,ctx,params={}){
     shell.append(h('div',{class:'wl-empty-grid'},intro,preview),notice());
   }
   function tools(stock){return h('div',{class:'wl-row-tools'},h('button',{class:'icon-btn',type:'button',title:t('watch.alert_stock',{ticker:stock.ticker}),'aria-label':t('watch.alert_stock',{ticker:stock.ticker}),onClick:()=>ctx.openAlert(stock.ticker)},icon('bell')),h('button',{class:'icon-btn',type:'button',title:t('watch.manage_stock',{ticker:stock.ticker}),'aria-label':t('watch.manage_stock',{ticker:stock.ticker}),onClick:()=>manage(stock)},icon('settings')));}
-  function insight(stock){return h('div',{class:'wl-insight'},h('button',{class:'wl-insight-toggle',type:'button','aria-expanded':String(expanded===stock.ticker),onClick:()=>{expanded=expanded===stock.ticker?null:stock.ticker;draw();}},h('span',{},summaryText(stock)),icon('chevron',15)),sourceBadge(stock));}
+  function insight(stock){return h('div',{class:'wl-insight'},h('button',{class:'wl-insight-toggle',type:'button','aria-expanded':String(expanded===stock.ticker),onClick:()=>{expanded=expanded===stock.ticker?null:stock.ticker;draw();}},h('span',{},summaryText(stock)),icon('chevron',15)),sourceBadge(stock),lensPair(stock));}
   function evidenceStrip(stock){return h('div',{class:'wl-expanded'},h('div',{class:'wl-expanded-view'},h('span',{class:'wl-side-label positive'},t('watch.supports')),h('p',{},t(stock.bull))),h('div',{class:'wl-expanded-view'},h('span',{class:'wl-side-label negative'},t('watch.risks')),h('p',{},t(stock.bear))),h('div',{class:'row wl-expanded-links'},link(t('watch.full_research'),stockHref(stock.ticker)),link(t('watch.evidence_map'),stockHref(stock.ticker,'evidence')),button(t('watch.use_reference'),()=>ctx.openAlert(stock.ticker,referenceFor(stock)?.[1]),'btn btn-quiet')),h('p',{class:'small muted'},t('watch.expand_source')));}
   function table(stocks){
-    const sortButton=(key,label)=>h('button',{class:'wl-sort',type:'button',onClick:()=>{direction=sort===key?(direction==='asc'?'desc':'asc'):'asc';sort=key;draw();}},label,h('span',{'aria-hidden':'true'},sort===key?(direction==='asc'?'↑':'↓'):'↕'));
+    const sortButton=(key,label)=>h('button',{class:'wl-sort',type:'button','data-watch-sort':key,onClick:()=>{direction=sort===key?(direction==='asc'?'desc':'asc'):'asc';sort=key;draw();}},label,h('span',{'aria-hidden':'true'},sort===key?(direction==='asc'?'↑':'↓'):'↕'));
     const tableNode=h('table',{class:'wl-table'},h('thead',{},h('tr',{},h('th',{scope:'col','aria-sort':sort==='ticker'?(direction==='asc'?'ascending':'descending'):'none'},sortButton('ticker',t('watch.column_stock'))),h('th',{scope:'col','aria-sort':sort==='price'?(direction==='asc'?'ascending':'descending'):'none'},sortButton('price',t('watch.column_price'))),h('th',{scope:'col'},t('watch.column_change')),h('th',{scope:'col'},t('watch.column_reference')),h('th',{scope:'col'},t('watch.column_event')),h('th',{scope:'col'},t('watch.column_actions')))));
     const body=h('tbody',{});tableNode.append(body);
     for(const stock of stocks){
@@ -74,9 +75,9 @@ export function mountWatchlist(root,ctx,params={}){
         button(t(ownPlan?'watch.edit_plan':'watch.make_plan'),()=>ctx.openAlert(stock.ticker,ownPlan?undefined:referenceFor(stock)?.[1]),'btn btn-quiet'));
       return h('article',{class:'wl-overview-card'},
         h('header',{class:'wl-overview-head'},h('div',{},link(stock.ticker,stockHref(stock.ticker)),h('span',{class:'small muted'},stock.name)),quote(stock)),
-        planStrip,
+        planStrip,metricLinks(stock),
         h('div',{class:'wl-overview-change'},h('span',{class:'eyebrow'},t('watch.latest_change')),h('p',{},summaryText(stock)),sourceBadge(stock)),
-        h('div',{class:'wl-card-perspectives'},
+        lensPair(stock),h('div',{class:'wl-card-perspectives'},
           h('div',{},h('span',{class:'small positive'},t('watch.supports')),h('p',{},t(stock.bull))),
           h('div',{},h('span',{class:'small negative'},t('watch.risks')),h('p',{},t(stock.bear)))),
         h('div',{class:'wl-card-event'},icon('calendar',16),h('span',{class:'small'},(stock.eventDate||'—')+' · '+(stock.event?t(stock.event):t('watch.no_event')))),
@@ -86,18 +87,22 @@ export function mountWatchlist(root,ctx,params={}){
   function draw(){
     ctx.state.watchUI={view,filter,sort,direction,query,expanded};ctx.save();
     const active=shell.querySelector('input')===document.activeElement;const focusAt=active?shell.querySelector('input').selectionStart:null;
+    const scrollLeft=shell.querySelector('.mx-table-scroll,.wl-table-scroll')?.scrollLeft||0;
+    const focusedSort=shell.contains(document.activeElement)?document.activeElement?.dataset.watchSort:null;
     shell.replaceChildren();const stocks=selectedStocks();
     shell.append(h('header',{class:'page-heading wl-page-heading'},h('div',{},h('div',{class:'row'},h('h1',{},t('watch.title')),stocks.length?badge(countLabel('watch.count',stocks.length)):null),h('p',{class:'muted'},t(stocks.length?'watch.subtitle':'watch.empty_subtitle'))),stocks.length?button(t('watch.add_stock'),()=>ctx.openSearch(),'btn btn-primary'):null));
     if(!stocks.length){drawEmpty();return;}
     const search=h('input',{class:'wl-filter-input',type:'search',placeholder:t('watch.search'),value:query,'aria-label':t('watch.search'),onInput:event=>{query=event.target.value;draw();}});
-    const display=h('div',{class:'segmented',role:'group','aria-label':t('watch.display')},...['list','overview'].map(key=>h('button',{type:'button',class:view===key?'active':'','aria-pressed':String(view===key),onClick:()=>switchView(key)},icon(key==='list'?'list':'grid',16),t('watch.view_'+key))));
+    const display=h('div',{class:'segmented',role:'group','aria-label':t('watch.display')},...['list','overview','metrics'].map(key=>h('button',{type:'button',class:view===key?'active':'','aria-pressed':String(view===key),onClick:()=>switchView(key)},icon(key==='list'?'list':'grid',16),t('watch.view_'+key))));
     shell.append(h('div',{class:'wl-toolbar'},filters(stocks),h('div',{class:'row wl-toolbar-right'},h('div',{class:'wl-search-wrap'},icon('search',17),search),display)));
     let shown=stocks.filter(stock=>(!query||[stock.ticker,stock.name].join(' ').toLowerCase().includes(query.toLowerCase()))&&(filter==='all'||filter==='changes'&&changed(stock)||filter==='price'&&nearPlan(stock)||filter==='events'&&eventSoon(stock)));
-    shown.sort((a,b)=>{if(sort==='ticker')return a.ticker.localeCompare(b.ticker)*(direction==='asc'?1:-1);if(!Number.isFinite(a[sort]))return Number.isFinite(b[sort])?1:0;if(!Number.isFinite(b[sort]))return -1;return(a[sort]-b[sort])*(direction==='asc'?1:-1);});
+    shown.sort((a,b)=>{if(sort==='ticker')return a.ticker.localeCompare(b.ticker)*(direction==='asc'?1:-1);const av=metricSortValue(a,sort),bv=metricSortValue(b,sort);if(!Number.isFinite(av))return Number.isFinite(bv)?1:0;if(!Number.isFinite(bv))return -1;return(av-bv)*(direction==='asc'?1:-1);});
     shell.append(h('div',{class:'wl-result-meta small muted'},h('span',{},t('watch.showing',{shown:shown.length,total:stocks.length})),h('span',{},t('watch.example_date'))));
     if(!shown.length)shell.append(h('div',{class:'empty-state'},icon('search',28),h('h2',{},t('watch.no_results')),h('p',{class:'muted'},t('watch.no_results_body')),button(t('watch.clear_filters'),()=>{query='';filter='all';draw();},'btn btn-quiet')));
-    else shell.append(view==='list'?table(shown):overview(shown));
+    else shell.append(view==='list'?table(shown):view==='metrics'?metricsTable(shown,{sort,direction,onSort:key=>{direction=sort===key?(direction==='asc'?'desc':'asc'):'asc';sort=key;draw();}}):overview(shown));
     shell.append(h('div',{class:'wl-bottom-note'},notice(),link(t('watch.see_today'),'#/today')));
+    const scrollTable=shell.querySelector('.mx-table-scroll,.wl-table-scroll');if(scrollTable)scrollTable.scrollLeft=scrollLeft;
+    if(focusedSort)shell.querySelector('[data-watch-sort="'+focusedSort+'"]')?.focus({preventScroll:true});
     if(active){search.focus({preventScroll:true});try{search.setSelectionRange(focusAt,focusAt);}catch{}}
   }
   draw();
