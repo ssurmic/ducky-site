@@ -113,10 +113,11 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
     el('a.btn.btn-ghost',{href:'#/calendar'},s('focus.upcoming')));
   if(!embedded)main.append(title);
   // Market-level references first (liquidity, 10-year yield, VIX term structure, Fear & Greed); the
-  // saved macro backdrop is read once per mount and never delays the personal feed below.
+  // saved macro backdrop refreshes while visible and never delays the personal feed below.
   const macroHost=el('div.today-macro-host');
   const creatorHost=el('div.today-creators-host');
-  if(!embedded){main.append(macroHost,creatorHost);mountMacroStrip(macroHost,{signal}).then(()=>{
+  let macroTask=null;
+  if(!embedded){main.append(macroHost,creatorHost);macroTask=mountMacroStrip(macroHost,{signal});macroTask.then(()=>{
     if(!disposed&&!signal?.aborted&&epoch===store.epoch())restoreDisclosures(macroHost);
   });mountCreatorMacro(creatorHost,{signal});}
   const stat=(value,label,target,disabled=false)=>el('button.today-stat',{type:'button',disabled,
@@ -259,6 +260,6 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   }
   await Promise.all([restoreReading(),summaryTask]);
   restoreDisclosures(summaries);
-  return()=>{disposed=true;seq++;if(timer)clearInterval(timer);root.removeEventListener('ducky:shared-read',update);if(epoch===store.epoch())readingStates.set(stateKey,{days,query,pages,showAll,
+  return()=>{disposed=true;seq++;macroTask?.stop();if(timer)clearInterval(timer);root.removeEventListener('ducky:shared-read',update);if(epoch===store.epoch())readingStates.set(stateKey,{days,query,pages,showAll,
     opened:[...main.querySelectorAll('details[open][data-reading-key]')].map(node=>node.dataset.readingKey)});};
 }

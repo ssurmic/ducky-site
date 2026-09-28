@@ -1,4 +1,5 @@
 // SYNTHETIC UI validation. Not included by build.py or connected to production.
+import {closeMacro} from './qa-close-data.js';
 const query=new URLSearchParams(location.search),mode=query.get('case')||'data';
 document.documentElement.dataset.theme=query.get('theme')==='dark'?'dark':'light';
 document.documentElement.dataset.tg='web';
@@ -288,6 +289,7 @@ window.fetch=async(input,options={})=>{
   return Response.json({items:kind==='insider'?insider:kind==='13f'?funds:kind==='political'?political:[],next_cursor:null});
  }
  if(path==='/kol/feed'||path==='/kol/trial-feed')return Response.json(kolFeed());
+ if(mode==='today-close-preview'&&path==='/macro/beta')return Response.json(closeMacro());
  if(mode==='today-freshness'&&path==='/macro/beta')return Response.json(todayFreshnessMacro());
  if(path==='/macro/beta')return Response.json({digest:{status:'ready',version:'market-digest/1',session:'2026-09-23',next_session:'2026-09-24',generated_at:'2026-09-24T05:41:00+00:00',
   close:{zh:'标普500 收跌 0.8%，纳指100 跌 1.2%，道指跌 0.5%，三大指数全线收低。',en:'The S&P 500 closed down 0.8%, the Nasdaq-100 fell 1.2% and the Dow slipped 0.5%; all three indexes finished lower.'},

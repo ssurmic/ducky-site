@@ -7,6 +7,8 @@ import * as api from './api.js';
 import * as store from './store.js';
 import {gauge,bandFor} from './today-gauge.js';
 import {dailyPairs,summary,normalizedLines,sparkLines,cursorIndex,PRIMARY} from './today-spark.js';
+import {digestPreview} from './today-preview.js';
+import {material} from './shared-read-refresh.js';
 
 const OK=v=>typeof v==='number'&&Number.isFinite(v);
 const num=(v,d=2)=>OK(v)?new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US',{minimumFractionDigits:d,maximumFractionDigits:d}).format(v):'—';
@@ -91,6 +93,7 @@ function linesBlock(tile){
   const tip=el('div.today-lines-tip',{hidden:true,role:'status'});
   let selected=last;
   chart.setAttribute('tabindex','0');chart.setAttribute('role','slider');chart.setAttribute('aria-orientation','horizontal');
+  chart.dataset.readingKey='macro-chart:'+primary;
   chart.setAttribute('aria-label',labels[primary]+' / '+labels.qqq+' / '+labels.spy+'. '+s('today.lines_keyboard'));
   chart.setAttribute('aria-valuemin','0');chart.setAttribute('aria-valuemax',String(last));
   const describe=i=>fmtDate(dates[i])+(live[i]?' · '+s('today.lines_live'):'')+'; '+series.map(x=>labels[x.key]+': '+lineReading(x,i,rows)).join('; ');
@@ -107,6 +110,8 @@ function linesBlock(tile){
     const next={ArrowLeft:selected-1,ArrowDown:selected-1,ArrowRight:selected+1,ArrowUp:selected+1,Home:0,End:last}[event.key];
     if(next===undefined)return;event.preventDefault();show(Math.max(0,Math.min(last,next)));
   });
+  chart.readingDate=()=>dates[selected];
+  chart.restoreReadingDate=date=>{const i=dates.indexOf(date);if(i>=0)show(i);};
   return el('div.today-macro-chart.has-cursor',tip,chart,legend,
     el('span.today-macro-caption',s('today.lines_caption',{n:dates.length,what:labels[primary],rq:r(qqq?.correlation),rs:r(spy?.correlation),pq:OK(qqq?.opposite)?qqq.opposite:'—'})));
 }
@@ -167,18 +172,31 @@ export function digestBlock(digest,{now=new Date()}={}){
   if(!digest||!['ready','stale'].includes(digest.status))return null;
   const text=key=>String(digest[key]?.[LANG==='zh'?'zh':'en']||'').trim();
   const current=digestState(digest,{now})==='current';
-  const title=s(current?'today.digest_title':'today.digest_title_past',{date:sessionLabel(digest.session)});
-  const box=el('section.today-digest',{'aria-label':title});
+  const edition=['close_snapshot','daily_close'].includes(digest.edition)?digest.edition:null;
+  const title=s(edition?'today.digest_'+edition:current?'today.digest_title':'today.digest_title_past',{date:sessionLabel(digest.session)});
+  const box=el('section.today-digest',{'aria-label':title,'data-reading-anchor':'macro-note:'+String(digest.session||'undated')});
   box.append(el('div.today-digest-head',el('h2.today-section-title',title),
     el('span.small.muted',s('today.digest_written',{time:writtenAt(digest.generated_at)})+(digest.status==='stale'?' · '+s('today.digest_stale'):''))));
+  if(edition){
+    const publication=digest.publication||{},coverage=publication.coverage||{};
+    const dataStamp=validSession(publication.data_as_of)?s('today.digest_data_session',{date:sessionLabel(publication.data_as_of)}):s('today.digest_data_as_of',{time:writtenAt(publication.data_as_of)});
+    const meta=el('div.today-digest-publication',el('p.small',dataStamp),
+      el('p.small.muted',s(edition==='close_snapshot'?'today.digest_snapshot_basis':'today.digest_daily_basis')));
+    if(Number.isInteger(coverage.available)&&Number.isInteger(coverage.expected))meta.append(el('p.small.muted',s('today.digest_coverage',{n:coverage.available,total:coverage.expected})));
+    const missing=(Array.isArray(coverage.missing)?coverage.missing:[]).map(item=>typeof item==='string'?item:item?.ticker).filter(Boolean);
+    if(missing.length)meta.append(el('p.small.muted',s('today.digest_missing',{tickers:missing.join(', ')})));
+    if(publication.phase==='revised')meta.append(el('span.small.muted',s('today.digest_revised')));
+    box.append(meta);
+  }
   const grid=el('div.today-digest-grid');
   for(const [key,label] of [['close','today.digest_close'],['sectors','today.digest_sectors'],['macro','today.digest_macro']])
     if(text(key))grid.append(el('div.today-digest-part',el('span.today-digest-label',s(label)),el('p',text(key))));
   box.append(grid);
   if(text('tomorrow'))box.append(el('div.today-digest-tomorrow',el('span.today-digest-label',s(current?'today.digest_tomorrow':'today.digest_tomorrow_saved',{date:sessionLabel(digest.next_session)})),el('p',text('tomorrow'))));
+  const preview=digestPreview(digest.preview,digest.session);if(preview)box.append(preview);
   box.append(el('p.small.muted.today-digest-note',s('today.digest_note')));
   if(!current)return el('details.today-digest-archive',{'data-reading-key':'macro-digest:'+String(digest.session||'undated')},
-    el('summary',el('span',s('today.digest_archive',{date:sessionLabel(digest.session)})),el('span.small.muted',s('today.digest_read_full'))),
+    el('summary',{'data-reading-key':'macro-digest:'+String(digest.session||'undated')+':toggle'},el('span',edition?title:s('today.digest_archive',{date:sessionLabel(digest.session)})),el('span.small.muted',s('today.digest_read_full'))),
     el('p.small.muted.today-digest-context',s('today.digest_saved_context',{date:sessionLabel(digest.session)})),box);
   return box;
 }
@@ -198,7 +216,7 @@ export function marketReadingState(doc){
 
 function marketHeading(doc,state){
   const reading=marketReadingState(doc),digest=doc.digest;
-  const head=el('header.today-market-heading',el('h2.today-section-title',s('today.market_readings')));
+  const head=el('header.today-market-heading',{'data-reading-anchor':'macro-market'},el('h2.today-section-title',s('today.market_readings')));
   if(reading.returns.some(r=>OK(r.value))){
     head.append(el('div.today-market-indices',el('span.small.muted',s(reading.live?'today.market_quote_date':'today.market_close_date',{date:reading.returnDate})),
       ...reading.returns.map(r=>el('span',r.key.toUpperCase()+' ',el('strong.mono',{class:OK(r.value)?r.value>0?'pos':r.value<0?'neg':'':''},OK(r.value)?signed(r.value,2)+'%':'—')))));
@@ -223,7 +241,7 @@ export function macroStrip(doc,{now=new Date()}={}){
   const grid=el('div.today-macro-grid');
   for(const tile of macroTiles(doc)){
     const dial=tile.gauge&&Number.isFinite(tile.gauge.score)?gauge(tile.gauge):null;
-    grid.append(el('div.today-macro-tile',{'data-tile':tile.key,class:'is-'+tile.tone+(dial?' has-gauge':'')},
+    grid.append(el('div.today-macro-tile',{'data-tile':tile.key,'data-reading-anchor':'macro-tile:'+tile.key,class:'is-'+tile.tone+(dial?' has-gauge':'')},
       el('span.today-macro-label',tile.label,tile.help||null),
       dial?el('div.today-gauge-wrap',dial,el('span.today-gauge-word',tile.gauge.word)):el('strong.today-macro-value.mono',tile.value,tile.unit?el('span.today-macro-unit',tile.unit):null),
       el('span.today-macro-note',tile.note),tile.stamp?el('span.today-macro-stamp.small.muted',tile.stamp):null,historyList(tile.history),
@@ -240,10 +258,47 @@ export function macroStrip(doc,{now=new Date()}={}){
 
 // Never blocks or delays the research feed. A failed GET is a read error, not a missing or failed
 // daily note. Retry only reads the existing shared document; it never requests generation.
-export function mountMacroStrip(host,{signal}={}){
-  const epoch=store.epoch(),active=()=>!signal?.aborted&&epoch===store.epoch();
-  const load=()=>api.get('/macro/beta',{signal,silent402:true,observe:false}).then(doc=>{if(!active())return;host.hidden=false;host.replaceChildren(macroStrip(doc));})
-    .catch(()=>{if(!active())return;host.hidden=false;const retry=el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{retry.disabled=true;load();}},s('common.retry'));
-      host.replaceChildren(el('div.today-macro-read-error',el('p.small.muted',{role:'status'},s('today.macro_read_error')),retry));});
-  return load();
+export function mountMacroStrip(host,{signal,interval=60000}={}){
+  const epoch=store.epoch(),controller=new AbortController();
+  let alive=true,running=false,timer=null,signature=null,lastAttempt=0;
+  const active=()=>alive&&!signal?.aborted&&epoch===store.epoch();
+  const status=el('p.small.muted',{role:'status'}),refresh=el('button.btn.btn-ghost.btn-sm',
+    {type:'button','data-reading-key':'macro-refresh',onclick:()=>load()},s('today.macro_refresh'));
+  const controls=el('div.today-macro-refresh',refresh,status);
+  function replace(doc){
+    const focused=host.contains(document.activeElement)?document.activeElement?.dataset.readingKey:null;
+    const selectedDate=focused?document.activeElement?.readingDate?.():null;
+    const opened=new Set([...host.querySelectorAll('details[open][data-reading-key]')].map(n=>n.dataset.readingKey));
+    const scroller=host.closest('.app-main'),top=scroller?.getBoundingClientRect().top;
+    const anchor=scroller?.scrollTop>0?[...host.querySelectorAll('[data-reading-anchor]')].find(n=>n.getBoundingClientRect().bottom>top):null;
+    const anchorKey=anchor?.dataset.readingAnchor,before=anchor?.getBoundingClientRect().top;
+    host.replaceChildren(macroStrip(doc),controls);
+    for(const node of host.querySelectorAll('details[data-reading-key]'))if(opened.has(node.dataset.readingKey))node.open=true;
+    if(focused){const target=[...host.querySelectorAll('[data-reading-key]')].find(n=>n.dataset.readingKey===focused);target?.focus({preventScroll:true});if(selectedDate)target?.restoreReadingDate?.(selectedDate);}
+    const after=anchorKey?[...host.querySelectorAll('[data-reading-anchor]')].find(n=>n.dataset.readingAnchor===anchorKey):null;
+    if(after&&scroller)scroller.scrollTop+=after.getBoundingClientRect().top-before;
+  }
+  const visible=()=>document.visibilityState!=='hidden'&&window.navigator?.onLine!==false;
+  function schedule(){clearTimeout(timer);if(active()){timer=setTimeout(check,Math.max(60000,interval));timer.unref?.();}}
+  async function load(){
+    if(!active()||running)return;
+    running=true;lastAttempt=Date.now();refresh.disabled=true;
+    try{
+      const doc=await api.get('/macro/beta',{signal:controller.signal,silent402:true,observe:false});
+      if(!active())return;
+      const next=material(doc);if(next!==signature){replace(doc);signature=next;}
+      host.hidden=false;status.textContent='';refresh.textContent=s('today.macro_refresh');
+    }catch(error){
+      if(!active())return;
+      // Transient reads keep the accepted version; access denials must revoke it.
+      if(!signature||[401,402,403].includes(error.status)){signature=null;host.replaceChildren(controls);}
+      host.hidden=false;status.textContent=s('today.macro_read_error');refresh.textContent=s('common.retry');
+    }finally{running=false;refresh.disabled=false;schedule();}
+  }
+  function check(){if(!active()||!host.isConnected){stop();return;}if(visible())load();else schedule();}
+  function onVisible(){if(visible()&&Date.now()-lastAttempt>=60000)check();}
+  function stop(){alive=false;clearTimeout(timer);controller.abort();document.removeEventListener('visibilitychange',onVisible);window.removeEventListener('online',onVisible);window.removeEventListener('pageshow',onVisible);}
+  document.addEventListener('visibilitychange',onVisible);window.addEventListener('online',onVisible);window.addEventListener('pageshow',onVisible);
+  signal?.addEventListener('abort',stop,{once:true});
+  const initial=load();initial.stop=stop;return initial;
 }

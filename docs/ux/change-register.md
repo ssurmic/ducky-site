@@ -2,6 +2,12 @@
 
 Updated: 2026-09-28. This English register is the canonical presentation handoff for the UX redesign. User-facing copy remains bilingual. The private backend's shared documents remain the system-design authority; this register records public UI behavior and integration boundaries only.
 
+**Unreleased candidate:** Today renders source-labelled close snapshots and complete saved
+event previews, plus visible-only minute refresh of the existing shared endpoint. It preserves
+the original historical note/calendar association, conditional impacts and source clocks.
+This does not change the deployed receipt below or certify settled prices. See the
+[candidate acceptance](../../reports/TODAY-CLOSE-PREVIEW-2026-09-28.md).
+
 **Delivery status: deployed at duckybot.app, version `9ab95315`, verified on 2026-09-28 at 22:40:24 UTC.**
 [PR #109](https://github.com/ssurmic/ducky-site/pull/109) merged at 22:39:29 UTC as
 `9ab9531545fcd3294614318b3b04ff52b499a9be`. The publisher passed 831 Node tests, 14 Python tests,
