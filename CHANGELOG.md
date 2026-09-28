@@ -1,5 +1,14 @@
 # Change log
 
+## Preserve the stock entry when returning from K-line · 2026-09-28 (local candidate)
+
+K-line now returns to the exact stock tab and the original selected author or research entry.
+The return is bound to the current account, chart history entry and ticker; unrelated stock
+navigation and symbol changes cannot inherit old context. No data reads or account writes were
+added. The complete Creator → Stock → Chart → Stock → Creator path and invalid return states
+have mounted-route regressions. See the [candidate acceptance](reports/UX-CHART-RETURN-2026-09-28.md).
+Production remains at the `e22240f3` receipt below until this correction is released.
+
 ## Research workflow and phone usability follow-up · 2026-09-28 (deployed)
 
 Released through [PR #105](https://github.com/ssurmic/ducky-site/pull/105), merged at

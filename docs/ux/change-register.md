@@ -75,7 +75,7 @@ Account epochs, cancellation, access and withdrawal handling remain authoritativ
 
 ## Exclusions and remaining acceptance
 
-- A later production check found that Chart return loses the exact stock tab/from and original creator filter context. A separate bounded correction is pending; successful direct creator/stock returns and chart rendering do not certify that complete chain.
+- A later production check found that Chart return loses the exact stock tab/from and original creator filter context. A [bounded correction](../../reports/UX-CHART-RETURN-2026-09-28.md) is implemented as a local candidate, with the complete creator/stock/chart return chain covered by regression tests; production release remains pending. The earlier direct creator/stock and chart-rendering checks did not certify that complete chain.
 - The prototype's fictional authors, nine-stock fixture, six activity records, handmade entry bounds and scenario selector remain confined to prototypes/ux-lab.
 - Prototype cross-stock Metrics in Explore, thematic stock filters, shared bookmarks and My watch plans are not production additions. Production Explore links to per-stock Metrics; Watchlist retains its real comparison table.
 - No new entry-range calculation, valuation score, semantic claim merging, verified creator performance, historical delivery or broader source coverage is claimed. [Proposed contracts](proposed-backend-changes.md) remain proposals, not activated capabilities.

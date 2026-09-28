@@ -96,7 +96,7 @@ export async function render() {
     const old=history.state?.duckyStockReturn;
     const origin=route.params.query?.get('from')||'watchlist';
     const inherited=sameAccount&&current?.name==='stock'&&current.params.ticker===route.params.ticker?current.params.returnTo:
-      sameAccount&&current?.name==='alerts'&&location.hash===current.params.returnTo&&safeStock(current.params.returnTo,route.params.ticker)?current.params.stockReturn:null;
+      sameAccount&&['alerts','chart'].includes(current?.name)&&location.hash===current.params.returnTo&&safeStock(current.params.returnTo,route.params.ticker)?current.params.stockReturn:null;
     const returnTo=old?.epoch===store.epoch()&&old?.ticker===route.params.ticker?old.href:inherited||(previous?.name===origin?previousHash:'#/'+origin);
     route.params.returnTo=safeOrigin(returnTo)?returnTo:'#/watchlist';
     history.replaceState({...history.state,duckyStockReturn:{epoch:store.epoch(),ticker:route.params.ticker,href:route.params.returnTo}},'',location.hash);
@@ -110,6 +110,17 @@ export async function render() {
       const origin=saved?old.stockReturn:fromStock?current.params.returnTo:null;
       route.params.stockReturn=safeOrigin(origin)?origin:'#/watchlist';
       history.replaceState({...history.state,duckyAlertReturn:{epoch,at:location.hash,ticker,href:route.params.returnTo,stockReturn:route.params.stockReturn}},'',location.hash);
+    }
+  }
+  if(route.name==='chart'){
+    const ticker=route.params.ticker,old=history.state?.duckyChartReturn;
+    if(/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker)){
+      const saved=old?.epoch===epoch&&old?.at===location.hash&&old?.ticker===ticker&&safeStock(old.href,ticker);
+      const fromStock=sameAccount&&previous?.name==='stock'&&previous.params.ticker===ticker&&current?.name==='stock'&&current.params.ticker===ticker;
+      route.params.returnTo=saved?old.href:fromStock?previousHash:'#/stock/'+ticker;
+      const origin=saved?old.stockReturn:fromStock?current.params.returnTo:null;
+      route.params.stockReturn=safeOrigin(origin)?origin:'#/watchlist';
+      history.replaceState({...history.state,duckyChartReturn:{epoch,at:location.hash,ticker,href:route.params.returnTo,stockReturn:route.params.stockReturn}},'',location.hash);
     }
   }
   if(route.name==='record'){

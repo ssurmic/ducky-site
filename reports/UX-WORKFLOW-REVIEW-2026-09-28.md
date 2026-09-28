@@ -97,9 +97,11 @@ Logs: `/tmp/ducky-ux-workflow-final-tests.log`; individual review logs are named
   fidelity or complete/current coverage. Backend release identity and broader recovery acceptance
   remain in the shared engineering record.
 - **Known remaining navigation limitation:** a later live check found that returning from Chart
-  loses the exact stock tab/from route and original creator filter context. A bounded correction
-  is pending separately. The successful direct Creator → Stock → Creator return and chart rendering
-  above do not establish the complete Chart return chain.
+  loses the exact stock tab/from route and original creator filter context in `e22240f3`. A
+  [bounded local correction](UX-CHART-RETURN-2026-09-28.md) now has complete-chain and unsafe-state
+  regression coverage; its release and production confirmation remain pending. The successful
+  direct Creator → Stock → Creator return and chart rendering above did not establish the complete
+  Chart return chain.
 
 The original `0c904fa3` / Pages `697e48fc` receipt remains in
 [UX-PRODUCTION-2026-09-28.md](UX-PRODUCTION-2026-09-28.md#production-release-receipt).
