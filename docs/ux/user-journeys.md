@@ -1,12 +1,11 @@
 # User journeys and content map
 
-Status: production UI deployed as version `0c904fa3`, 2026-09-28; see the [release receipt](../../reports/UX-PRODUCTION-2026-09-28.md#production-release-receipt). These are reading paths and acceptance scenarios, not measured usability gains. Earlier prototype scenarios remain in the [prototype journey report](../../reports/UX-JOURNEYS-2026-09-28.md) and [preview guide](README.md).
+Status: production UI deployed as version `e22240f3`, verified 2026-09-28 at 20:06:21 UTC; see the [follow-up release receipt](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md#production-release-receipt). PR #105 merged as `e22240f3bc4b7de2641d248585020e47f47d9eb7`; the release gate passed 821 Node and 14 Python tests plus copy/link checks, then published Pages `fcad2151`. These are reading paths and acceptance scenarios, not measured usability gains. Scoped phone and desktop production reads passed at 20:07–20:10 UTC; their exact limits are recorded in the receipt. The [initial `0c904fa3` receipt](../../reports/UX-PRODUCTION-2026-09-28.md#production-release-receipt), [prototype journey report](../../reports/UX-JOURNEYS-2026-09-28.md) and [preview guide](README.md) remain historical evidence.
 
-Follow-up status: implemented local candidate; final combined gate and release are pending. The
-candidate extends these reading paths with consistent starter/creator stock entries, Today section
+The released follow-up extends these reading paths with consistent starter/creator stock entries, Today section
 jumps and chart keyboard access, a compact Calendar phone stack, metric-first comparison and visible
 historical states, direct disclosure archives, and preserved creator/activity/record/alert return
-context. None of those follow-up fixes inherits the earlier production receipt. The
+context. These fixes have their own release receipt; they do not inherit the earlier acceptance. The
 [integrated review](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md) coordinates the independent
 [newcomer](../../reports/UX-WORKFLOW-NEWCOMER-2026-09-28.md),
 [experienced-user](../../reports/UX-WORKFLOW-EXPERT-2026-09-28.md), and
@@ -26,7 +25,7 @@ The stock workspace answers four questions: **What is the case? What do price an
 | Stock beginner | Wants a starting point without interpreting a metric table. | Today or Explore → an available dated stock record → company/research context → support and risk sources → optional follow → Watchlist → Calendar or activity. | Explain the claim and uncertainty, distinguish a view from a fact and find its source. No fabricated first-use example is injected into production. |
 | Experienced user | Wants to triage watched stocks and inspect levels. | Watchlist List → Overview for reasons or Metrics for comparison → Stock Metrics → dated reference → above/below alert draft → review → explicit confirmation. | Inspect basis/expiry, keep unknown distinct from zero and create a condition deliberately. Prefill alone does not activate an alert or prove delivery. |
 
-## Follow-up candidate: complete paths and returns
+## Released follow-up: complete paths and returns
 
 | Task | Entry and next action | Return and preserved context |
 |---|---|---|
@@ -50,7 +49,7 @@ entry, with supported internal routes and matching ticker/record identity requir
 
 | Content or task | Primary home | Explore entry | Watchlist entry | Detail and next action |
 |---|---|---|---|---|
-| Market backdrop / liquidity | Existing Today and report routes | Optional Reports tool; Today navigation | Today navigation | Existing published readings and dates. The candidate adds keyboard date access and section jumps without replacing the production data path with prototype fixtures. |
+| Market backdrop / liquidity | Existing Today and report routes | Optional Reports tool; Today navigation | Today navigation | Existing published readings and dates. The follow-up adds keyboard date access and section jumps without replacing the production data path with prototype fixtures. |
 | Company and summary | Stock Overview | Search or named Overview link | Ticker / Overview card | Available company name, saved summary, support/risk and sources. Missing identity data is not invented. |
 | Long-term and trend perspectives | Watchlist context and stock reading | Same stock workspace | List / Overview; Metrics comparison | Preserve the two existing perspectives; neither is a popularity vote. |
 | Option walls / price references | Stock Metrics | Named Metrics link | Named metric / Metrics table | Walls retain option expiry; 20-session low/high retain their own basis; explanations remain available. |
@@ -91,8 +90,16 @@ The released integration's tests, viewport matrix and scoped live-content checks
 [production acceptance](../../reports/UX-PRODUCTION-2026-09-28.md). The broader follow-up has the
 [integrated workflow record](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md) and the earlier bounded
 [disclosure record](../../reports/STOCK-DISCLOSURE-ENTRY-2026-09-28.md). Focused DOM/router tests and
-local viewport observations are evidence for those candidate paths; the integrating agent still
-owns the final combined gate and release. Synthetic browser fixtures do not certify live source
+local viewport observations remain pre-release evidence. The exact-revision combined gate and
+deployment passed; the follow-up receipt records real Today reads/jumps, NVDA Metrics/disclosure
+archives and exact record return, plus desktop Watchlist Metrics ordering without document overflow.
+Creator Following, the inspected touzi-talk source/MU return and the real MU chart were also readable
+after the separate backend repair. This scoped check does not establish all creators or production
+workflows. Synthetic browser fixtures do not certify live source
 freshness or semantic fidelity, physical-device behavior, account writes or notification delivery.
 Prototype bookmarks, plans, themes, synthetic liquidity comparison and scenario switching remain
 historical design references.
+
+Known remaining limitation in `e22240f3`: Chart return loses the exact stock tab/from and original
+creator filter context. A separate correction is pending. Direct Creator → Stock → Creator return
+and chart rendering passed their scoped checks; the longer Chart return chain did not.

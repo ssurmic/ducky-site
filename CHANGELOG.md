@@ -1,11 +1,23 @@
 # Change log
 
-## Research workflow and phone usability follow-up · 2026-09-28 (local candidate; final gate and release pending)
+## Research workflow and phone usability follow-up · 2026-09-28 (deployed)
+
+Released through [PR #105](https://github.com/ssurmic/ducky-site/pull/105), merged at
+2026-09-28 20:05:32 UTC as `e22240f3bc4b7de2641d248585020e47f47d9eb7`.
+`scripts/deploy_pages.sh` reran 821 Node tests, 14 Python tests and copy/link checks before
+publishing [Pages deployment `fcad2151`](https://fcad2151.ducky-site.pages.dev).
+Production `VERSION=e22240f3` and CSP were verified at 20:06:21 UTC. Scoped authenticated Today
+reads and new-record jump passed at 20:07 UTC; NVDA Metrics → Insider/Fund archives, the exact
+record return and desktop Watchlist Metrics passed scoped checks through 20:09 UTC. At 20:10 UTC,
+Creators Following, one author's exact source/stock return and the real MU chart were readable
+after the separate backend read repair. The
+[release receipt](reports/UX-WORKFLOW-REVIEW-2026-09-28.md#production-release-receipt)
+separates deployment from that limited live acceptance.
 
 Independent newcomer, experienced-user and mobile reviews challenged the complete reading paths,
-not only individual screens. The candidate keeps the existing visual system, useful daily digest,
+not only individual screens. The release keeps the existing visual system, useful daily digest,
 liquidity/QQQ/SPY chart and full source content, while making the next action and return destination
-consistent. This entry records implemented follow-up work; it is not a new release receipt.
+consistent. The independent reports retain their earlier candidate findings and focused checks.
 
 Today’s existing research counts now jump to and focus their section headings. Dated starter
 companies enter the stock workspace with a separate named Map action. The three-line macro chart
@@ -40,8 +52,8 @@ Evidence: [newcomer review](reports/UX-WORKFLOW-NEWCOMER-2026-09-28.md),
 [mobile review](reports/UX-WORKFLOW-MOBILE-2026-09-28.md),
 [integrated workflow review](reports/UX-WORKFLOW-REVIEW-2026-09-28.md), and
 [disclosure entry acceptance](reports/STOCK-DISCLOSURE-ENTRY-2026-09-28.md). Focused checks and local
-browser measurements are recorded there; the integrating agent owns the final combined gate and
-release. No physical-device, live-write, notification-delivery or semantic-fidelity acceptance is
+browser measurements are recorded there; the final gate and deployment are recorded above.
+No physical-device, live-write, notification-delivery or semantic-fidelity acceptance is
 claimed. The production receipt below remains the evidence for version `0c904fa3` only.
 
 ## Integrated research workspace · 2026-09-28 (deployed)

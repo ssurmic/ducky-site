@@ -1,6 +1,6 @@
 # Integrated workflow review · 2026-09-28
 
-Status: follow-up candidate after production `0c904fa3`. Three independent persona reviews and root integration are complete. Final candidate gate and release receipts are recorded separately; local fixture success does not establish production data freshness or physical-device acceptance.
+Status: deployed follow-up `e22240f3` after production `0c904fa3`; see the [release receipt](#production-release-receipt). Three independent persona reviews and root integration are complete. The candidate findings, local checks and measurements below are preserved as pre-release evidence. Scoped authenticated phone and desktop production checks passed at 20:07–20:10 UTC; their limited coverage is recorded below. Deployment and local fixture success do not establish source freshness or physical-device acceptance.
 
 ## Review roles and decisions
 
@@ -42,7 +42,7 @@ Browser business data is explicitly synthetic on the local QA server, except the
 
 ## Integration and scope
 
-Existing API families, source gates and account ownership remain unchanged. This is a presentation/continuity follow-up. The separate private backend release repairs the observed AWS creator-cache and chart-metadata failures; those engineering and deployment receipts belong in the shared root `handoff.md`, `design-current-status.md`, `continuation.md` and `SYSTEMDESIGN.md`, not a competing public architecture document.
+Existing API families, source gates and account ownership remain unchanged. This is a presentation/continuity follow-up. A separate private backend change repairs the observed creator-cache and chart-metadata read failures. The scoped 20:10 UTC browser check below confirms the inspected read paths after that repair. Its engineering and deployment receipts belong in the shared root `handoff.md`, `design-current-status.md`, `continuation.md` and `SYSTEMDESIGN.md`, not a competing public architecture document.
 
 No new acquisition, semantic inference, price recommendation, verified performance or notification delivery is claimed. Final live acceptance must distinguish UI visibility from source correctness and current coverage.
 
@@ -53,3 +53,56 @@ Final stable source build: **821 Node tests passed, 0 failed or skipped**. The t
 After the final source freeze, a 390px English browser check confirmed the exact NVDA scope chip remains visible with zero matches while advanced filters remain collapsed. Clearing that chip removed only the ticker, retained the keyword/category/archive scopes and restored focus to search. Temporary viewport overrides were reset.
 
 Logs: `/tmp/ducky-ux-workflow-final-tests.log`; individual review logs are named in their reports. These are candidate checks, not a production release receipt.
+
+## Production release receipt
+
+- Frontend [PR #105](https://github.com/ssurmic/ducky-site/pull/105) merged into `main` at
+  **2026-09-28 20:05:32 UTC**. Exact merged revision:
+  `e22240f3bc4b7de2641d248585020e47f47d9eb7`.
+- The existing `scripts/deploy_pages.sh` ran its gate on that revision at 20:05:34 UTC:
+  **821 Node tests and 14 Python tests passed**, with copy lint and internal-link checks passing.
+  No test failure was waived for release. The local candidate checks above remain their own evidence.
+- The script published the main-branch release at 20:06:06 UTC to
+  [Pages deployment `fcad2151`](https://fcad2151.ducky-site.pages.dev).
+- At **20:06:21 UTC**, production `https://duckybot.app` served `VERSION=e22240f3`;
+  the production CSP was also verified. Deployment log:
+  `/tmp/ducky-ux-workflow-production-deploy.log`.
+- **Scoped production browser read verification completed through 20:10 UTC.** At **20:07 UTC**, the integrating
+  agent checked the authenticated production Today route at 390 × 700, Chinese/dark. The actual
+  September 25 four-part digest and stale warning remained visible at y=175.9–565.0, above the
+  footer at y=647. The real liquidity/QQQ/SPY chart rendered with its accessible slider. Activating
+  the existing new-record count focused the research-updates heading at y=69.2. No account write
+  was performed. These are production browser viewport observations, not physical-device results.
+- At **20:08 UTC**, the real Explore → NVDA Metrics → Insider trades path opened the exact NVDA
+  full archive with `content=all` and `purchases=all`. The exact-ticker chip was visible, advanced
+  filters stayed collapsed, and 40 typed records plus Load more rendered. The inspected first
+  record preserved the September 21 trade date separately from the September 23 filing date and
+  retained its transaction amount. No subscription or account write occurred.
+- At **20:09 UTC**, NVDA Fund holdings · 13F showed 13 real records. The inspected Appaloosa record
+  retained 1,525,000 reported shares, June 30 report period and August 14 filing date. Its breadcrumb
+  returned to Funds + NVDA + archive + all-record scopes. This confirms rendering/navigation and
+  typed dates; it does not establish current holdings or an executed trade.
+- Also at **20:09 UTC**, authenticated desktop Watchlist → Metrics at **1440 × 900** showed
+  stock/quote followed by all six metric headers and the Insider signal first. No horizontal
+  document overflow was observed. Both desktop and phone remain acceptance targets.
+- At **20:10 UTC**, after the separate backend read repair, Creators Following rendered real
+  authors, principal views and tickers. The inspected `touzi-talk` author page and its exact latest
+  MU source dialog retained the publication date and timestamped YouTube links. Creator → MU Stock
+  → return preserved `#/creators?creator=touzi-talk`. The MU chart rendered real candles, RSI,
+  MACD and option walls while retaining completion-awaiting-verification and older-latest-day
+  warnings. This establishes scoped availability/rendering and return behavior, not source fidelity
+  or a completed/fresh price receipt.
+- The scoped frontend verification above is complete. It does **not** verify every creator or
+  source, live follows/unfollows, account changes, alert submission/delivery, source semantic
+  fidelity or complete/current coverage. Backend release identity and broader recovery acceptance
+  remain in the shared engineering record.
+- **Known remaining navigation limitation:** a later live check found that returning from Chart
+  loses the exact stock tab/from route and original creator filter context. A bounded correction
+  is pending separately. The successful direct Creator → Stock → Creator return and chart rendering
+  above do not establish the complete Chart return chain.
+
+The original `0c904fa3` / Pages `697e48fc` receipt remains in
+[UX-PRODUCTION-2026-09-28.md](UX-PRODUCTION-2026-09-28.md#production-release-receipt).
+That earlier release and this follow-up are separate receipts. The private backend's independently
+gated AWS repair/release is recorded by its owner in the shared engineering documents; frontend
+deployment alone does not establish that backend release or its end-to-end recovery.
