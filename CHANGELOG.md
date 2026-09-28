@@ -1,5 +1,19 @@
 # Change log
 
+## Integrated UX design preview · 2026-09-28 (local prototype; not deployed)
+
+The empty-watchlist journey and cross-page research flow are implemented as an isolated, bilingual
+prototype under `prototypes/ux-lab/`, outside the production build. Watchlist List/Overview, cross-author
+views, theme-led Explore, event impacts, stock evidence/history and editable price-watch plans share
+navigation and local state. Reference ranges, creators and schedules are explicitly illustrative;
+saves never enable monitoring or contact a production account.
+
+The design retains the five primary destinations and the existing duck asset. Mobile filters disclose
+progressively; source dialogs retain context; unavailable data stays unavailable. Existing product
+routes and backend behavior are unchanged. The [review guide](docs/ux/README.md),
+[proposed integration contracts](docs/ux/proposed-backend-changes.md) and
+[acceptance record](reports/UX-REDESIGN-2026-09-28.md) distinguish the prototype from production work.
+
 ## The language follows the account, and the browser's choice is remembered · 2026-09-26 (deployed)
 
 Released through `scripts/deploy_pages.sh`: main `bbcc2206` (PR #102) → Pages production at 2026-09-26 09:18 UTC (the edge
