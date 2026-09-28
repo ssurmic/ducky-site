@@ -69,3 +69,15 @@ Focused log: `/tmp/ducky-explore-compare-focused.log`. Preview:
 `http://127.0.0.1:8941/qa-frame?lang=zh&theme=dark&case=explore-grid#/explore`.
 Use `lang=en` and `theme=light` for the alternate language/theme. This branch changes Explore only;
 the integrating agent's separate Today work is outside this report.
+
+## Refresh-state follow-up
+
+Read-only review found that expanding or collapsing a retained ranking after an HTTP 503 removed
+the refresh-failure notice, even though no new read succeeded. The local presentation render now
+leaves read-state notices untouched; only the request flow updates them. The regression starts with
+a dated stale ranking, fails a refresh, expands and collapses without another request, verifies the
+same failure notice and Retry control remain, then confirms a successful retry clears the failure.
+Same-account expansion restoration and account-withdrawal boundaries remain covered by the existing
+focused suite. The original 8941 preview service was stopped before combined integration testing.
+After this follow-up, the same two focused test files pass **45 tests, zero failed or skipped**;
+module syntax and whitespace checks pass. Log: `/tmp/ducky-explore-notice-focused.log`.

@@ -61,9 +61,8 @@ export async function mount(root,{signal}={}){
   function render(doc){
     const rows=discoveryRows(doc,LANG);
     const focus=document.activeElement?.dataset.exploreLink;
-    clear(list);clear(notice);
+    clear(list);
     date.textContent=s('explore.discussion_date',{date:discoveryDate(doc?.collected_at)});
-    if(doc?.status==='stale')notice.append(el('p.small.muted',s('explore.discussion_stale')));
     if(rows.length)list.append(...(showAll?rows:rows.slice(0,12)).map(discoveryStockRow));
     else list.append(el('div.explore-empty',el('p',s('explore.discussion_empty')),el('button.btn.btn-ghost',{type:'button',onclick:()=>input.focus()},s('explore.search_instead'))));
     more.hidden=rows.length<=12;more.textContent=s(showAll?'explore.show_top':'explore.show_all',{n:rows.length});more.setAttribute('aria-expanded',String(showAll));
@@ -80,6 +79,7 @@ export async function mount(root,{signal}={}){
       if(!current()||mine!==sequence)return;
       if(!doc||!Array.isArray(doc.items)||!['ready','stale','pending','unavailable','empty'].includes(doc.status))throw new api.ApiError(502,{error:'invalid_discovery_response'});
       lastDoc=doc;render(doc);
+      if(doc.status==='stale')notice.append(el('p.small.muted',s('explore.discussion_stale')));
     }catch(error){
       if(!current()||mine!==sequence)return;
       if(!lastDoc||[401,402,403,404,410].includes(error.status)){lastDoc=null;clear(list);clear(notesList);notes.hidden=true;more.hidden=true;date.textContent='';}

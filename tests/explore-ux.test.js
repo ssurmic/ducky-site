@@ -93,6 +93,27 @@ test('twelve real rows lead the comparison, additional rows and complete views e
  assert.equal(root.querySelector('.explore-notes').open,false);dispose();
 });
 
+test('local expansion preserves failed-refresh status until a successful ranking read',async()=>{
+ const root=setup(),tickers=['SPY','MU','NVDA','AMD','META','TSLA','GOOG','MSFT','AAPL','INTC','PLTR','AMZN','AVGO'];
+ const doc={...ranking,status:'stale',items:tickers.map((ticker,i)=>({...ranking.items[0],ticker,rank:i+1}))};
+ let mode='stale',calls=0;
+ globalThis.fetch=async()=>{calls++;return mode==='offline'?Response.json({error:'offline'},{status:503}):Response.json({...doc,status:mode});};
+ const dispose=await mount(root),notice=root.querySelector('.explore-read-notice');
+ assert.match(notice.textContent,/older ranking/);
+ mode='offline';root.querySelector('.explore-section-heading button').click();await tick();
+ assert.equal(calls,2);assert.match(notice.textContent,/previous ranking/);
+ const failureText=notice.textContent,retry=notice.querySelector('button'),date=root.querySelector('.explore-data-date').textContent;
+ for(const count of [13,12]){
+  root.querySelector('.explore-show-all').click();
+  assert.equal(root.querySelectorAll('.explore-stock-row').length,count);
+  assert.equal(notice.textContent,failureText);assert.equal(notice.querySelector('button'),retry);
+  assert.equal(root.querySelector('.explore-data-date').textContent,date);assert.equal(calls,2);
+ }
+ mode='ready';retry.click();await tick();
+ assert.equal(calls,3);assert.equal(notice.textContent,'');
+ assert.equal(root.querySelectorAll('.explore-stock-row').length,12);dispose();
+});
+
 test('empty ranking keeps search usable and does not invent example stocks',async()=>{
  const root=setup();globalThis.fetch=async()=>Response.json({status:'pending',items:[]});
  const dispose=await mount(root);
