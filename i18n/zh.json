@@ -5510,5 +5510,17 @@
   "app.stockux.disclosure_insider": "内部人交易",
   "app.stockux.disclosure_funds": "基金持仓 · 13F",
   "app.today.lines_keyboard": "用方向键切换日期，Home 和 End 查看首日与最新记录。",
-  "app.calendar.timezone_short": "美东时间 · ET"
+  "app.calendar.timezone_short": "美东时间 · ET",
+  "app.today.market_readings": "最新市场读数",
+  "app.today.market_close_date": "{date} 收盘",
+  "app.today.market_quote_date": "{date} 报价",
+  "app.today.market_cadence": "行情、研究与收盘总结分别更新。",
+  "app.today.digest_newer_readings": "已有 {date} 市场读数；最新收盘总结仍为 {summary}。",
+  "app.today.digest_latest": "最新已发布收盘总结：{date}。",
+  "app.today.digest_unavailable": "此处暂无已发布的收盘总结。",
+  "app.today.digest_archive": "最新收盘总结 · {date}",
+  "app.today.digest_read_full": "展开全文",
+  "app.today.digest_saved_context": "这是 {date} 的收盘总结。下文“明日”和下一交易日前瞻均指写作当时。",
+  "app.today.digest_tomorrow_saved": "当时的下一交易日 · {date}",
+  "app.today.macro_read_error": "市场读数未能加载，无法据此判断是否已有新的收盘总结。"
 }

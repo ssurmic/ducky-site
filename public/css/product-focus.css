@@ -704,6 +704,21 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
 .today-digest-label{display:inline-block;font-size:11px;font-weight:650;letter-spacing:1px;text-transform:uppercase;color:var(--accent-text,var(--accent));}
 .today-digest-tomorrow{padding-top:8px;border-top:1px solid color-mix(in srgb,var(--border) 70%,transparent);}
 .today-digest-note{margin:0;}
+.today-market-heading{margin:0 0 10px;display:grid;gap:5px;}
+.today-market-heading .today-section-title{margin:0;font-size:16px;line-height:1.35;}
+.today-market-indices{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 14px;font-size:14px;line-height:1.45;}
+.today-market-indices>span{white-space:nowrap;}
+.today-market-status,.today-market-cadence{margin:0;line-height:1.45;}
+.today-digest-archive{margin:0 0 10px;border-top:1px solid var(--border);}
+.today-digest-archive>summary{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:3px 12px;min-height:44px;padding:8px 0;font-size:13px;font-weight:600;cursor:pointer;}
+.today-digest-archive>summary::before{content:'▸';color:var(--muted);}
+.today-digest-archive[open]>summary::before{content:'▾';}
+.today-digest-archive>summary>span:first-child{flex:1;}
+.today-digest-archive>summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+.today-digest-context{margin:0 0 8px;line-height:1.45;}
+.today-macro-read-error{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px;}
+.today-macro-read-error .btn{min-height:44px;flex:none;}
+@media(max-width:760px){.today-market-heading{gap:4px;margin-bottom:8px;}.today-market-heading .today-section-title{font-size:15px;}.today-market-indices{font-size:13px;gap:3px 12px;}.today-market-status,.today-market-cadence{font-size:11px;}.today-digest-archive>summary{font-size:12px;}}
 @media(max-width:900px){.today-digest-grid{grid-template-columns:1fr;}}
 
 /* Three normalized lines on the liquidity tile: net liquidity (accent), QQQ (blue), SPY (green). */

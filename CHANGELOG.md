@@ -1,5 +1,21 @@
 # Change log
 
+## Today distinguishes market readings from the last published note · 2026-09-28 (candidate)
+
+Today now leads with dated market readings when its saved close-of-day note belongs to another
+New York date. The last note remains one click away in a dated disclosure above the macro tiles;
+its complete text, generation date, stale label and original next-session outlook remain intact.
+An outlook written earlier no longer appears to describe the reader's current “tomorrow.”
+The same-day note keeps its complete four-part presentation. A compact QQQ/SPY change row uses
+only consecutive saved observed rows and preserves zero versus unavailable values. The liquidity
+score now shows its own saved date. An unsuccessful macro read has an explicit GET-only retry,
+separate from an unavailable note; aborted and previous-account reads cannot repaint the view.
+
+No producer status, holiday schedule, generation progress or completion time is inferred. This
+candidate adds no API endpoint, background refresh, account action or inference request. The
+[acceptance record](reports/TODAY-FRESHNESS-2026-09-28.md) separates focused tests from the pending
+integrated browser and release checks. It has not been deployed.
+
 ## Preserve the stock entry when returning from K-line · 2026-09-28 (deployed)
 
 Released through [PR #107](https://github.com/ssurmic/ducky-site/pull/107), merged at

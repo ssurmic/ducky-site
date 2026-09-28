@@ -5510,5 +5510,17 @@
   "app.stockux.disclosure_insider": "Insider trades",
   "app.stockux.disclosure_funds": "Fund holdings · 13F",
   "app.today.lines_keyboard": "Use arrow keys to change the date; Home and End select the first and latest reading.",
-  "app.calendar.timezone_short": "Eastern Time · ET"
+  "app.calendar.timezone_short": "Eastern Time · ET",
+  "app.today.market_readings": "Latest market readings",
+  "app.today.market_close_date": "{date} close",
+  "app.today.market_quote_date": "{date} quotes",
+  "app.today.market_cadence": "Market data, research and the close-of-day note update separately.",
+  "app.today.digest_newer_readings": "Market readings include {date}; the latest close-of-day note is still for {summary}.",
+  "app.today.digest_latest": "Latest published close-of-day note: {date}.",
+  "app.today.digest_unavailable": "No published close-of-day note is available in this view.",
+  "app.today.digest_archive": "Latest close-of-day note · {date}",
+  "app.today.digest_read_full": "Read full note",
+  "app.today.digest_saved_context": "Saved note for {date}. “Tomorrow” and the next-session outlook below refer to when this note was written.",
+  "app.today.digest_tomorrow_saved": "Next session as viewed then · {date}",
+  "app.today.macro_read_error": "Market readings could not load. This does not indicate whether a new close-of-day note has been published."
 }

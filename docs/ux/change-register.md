@@ -28,6 +28,17 @@ receipt. The [integrated review](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md)
 challenges. Earlier audit measurements remain evidence of the first pass, not measurements of the
 final candidate.
 
+## Candidate Today freshness correction (not released)
+
+The owner observed newer market readings alongside a still-expanded September 25 close note.
+The candidate separates those clocks: a dated QQQ/SPY change row and market-reading context lead,
+then a compact disclosure opens the complete last published note before the full macro tiles.
+Its original next-session outlook is explicitly framed as written then. Same-day notes remain
+fully expanded; weekends and unknown dates do not imply a missed trading-day publication.
+The existing four tiles, three-line charts, research-count jumps and creator/research streams
+remain. The [focused acceptance record](../../reports/TODAY-FRESHNESS-2026-09-28.md) is evidence
+for this candidate only. The deployed receipts above are unchanged.
+
 ## Released Chart return correction (`7fb28406`)
 
 The existing Chart Stock page action now restores the exact incoming stock tab/from URL and its
