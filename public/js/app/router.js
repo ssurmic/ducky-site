@@ -39,9 +39,14 @@ const ROUTES = {
 };
 const PUBLIC = new Set(["login", "forgot", "reset", "register", "oauth"]);
 export function isPublic(hash) { return PUBLIC.has(parse(hash).name); }
-let current = null, cleanup = null, seq = 0, controller = null;
+let current = null, currentEpoch = null, cleanup = null, seq = 0, controller = null;
 const scrollPositions=new Map();
-let previousPageKey=null;
+let previousPageKey=null,previousHash=null;
+function keepRouteState(){
+  const main=document.querySelector('.app-main');
+  if(previousPageKey&&main)scrollPositions.set(previousPageKey,main.scrollTop);
+  previousHash=location.hash;previousPageKey=store.epoch()+'|'+previousHash;
+}
 
 export function parse(hash) {
   // finding router.js:20 — strip the query string BEFORE matching, else '#/profile?next=billing' yields the
@@ -81,6 +86,16 @@ export async function render() {
   if (authed && route.name === "login") {
     const target = takeTarget(); history.replaceState(null, "", target); route = parse(target);
   }
+  if(route.name==='stock'){
+    const old=history.state?.duckyStockReturn;
+    const origin=route.params.query?.get('from')||'watchlist';
+    const previous=previousHash&&previousPageKey?.startsWith(store.epoch()+'|')?parse(previousHash):null;
+    const inherited=currentEpoch===store.epoch()&&current?.name==='stock'&&current.params.ticker===route.params.ticker?current.params.returnTo:null;
+    const returnTo=old?.epoch===store.epoch()&&old?.ticker===route.params.ticker?old.href:inherited||(previous?.name===origin?previousHash:'#/'+origin);
+    route.params.returnTo=/^#\/(today|explore|watchlist|creators|calendar|boards)(?:\?|$)/.test(returnTo)?returnTo:'#/watchlist';
+    history.replaceState({...history.state,duckyStockReturn:{epoch:store.epoch(),ticker:route.params.ticker,href:route.params.returnTo}},'',location.hash);
+  }
+  previousHash=location.hash;
   const my = ++seq;
   closeModal();
   if (controller) controller.abort();
@@ -110,7 +125,7 @@ export async function render() {
     return;
   }
   if (my !== seq) return;
-  current = route;
+  current = route;currentEpoch=store.epoch();
   clear(page);
   if(store.canResearch()&&!PUBLIC.has(route.name)&&!['profile','billing','alerts'].includes(route.name)){
     // Keep this outside the view's DOM so its local render cannot erase the notice.
@@ -131,6 +146,11 @@ export async function render() {
   if (my !== seq) { if (typeof ret === "function") ret(); return; }
   cleanup = typeof ret === "function" ? ret : null;
   if(main&&window.DUCKY?.PRODUCT_FOCUS_ENABLED)main.scrollTop=scrollPositions.get(pageKey)||0;
+  const focus=route.params.query?.get('focus');
+  if(route.name==='stock'&&focus&&history.state?.duckyMetricFocus!==location.hash){
+    const target=page.querySelector('[data-metric-focus="'+(['walls','support','volatility','plan'].includes(focus)?focus:'none')+'"]');
+    if(target&&!target.closest('[hidden]')){target.scrollIntoView?.({block:'start'});target.focus?.({preventScroll:true});history.replaceState({...history.state,duckyMetricFocus:location.hash},'',location.hash);}
+  }
   // Telegram chrome
   if (route.name === "billing" && typeof mod.mainButton === "function") {
     const mb = mod.mainButton();
@@ -147,6 +167,7 @@ export function start() {
     event.preventDefault(); document.getElementById('main')?.focus({preventScroll:true});
   });
   window.addEventListener("hashchange", render);
+  window.addEventListener("ducky:route-state",keepRouteState);
   store.subscribe("me", (me) => { if (!me && current && !PUBLIC.has(current.name)) render(); });
   return render();
 }

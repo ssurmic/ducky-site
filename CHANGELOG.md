@@ -1,5 +1,70 @@
 # Change log
 
+## Integrated research workspace · 2026-09-28 (production candidate)
+
+Watchlist and Explore now open one stock workspace with Overview, Metrics, Evidence and History.
+Existing long-term/trend views, option walls, support references and IV/HV remain directly reachable.
+Creators lead with source-bound views and tickers; exact repeats from one author collapse with every
+original dated record retained. Evidence keeps green support and red risk cards. Radar presents
+insider, fund, political and company activity with typed values, dates and original records.
+
+The change uses existing read and account-action contracts. Reference links open editable alert
+drafts; no verified entry range is invented. Today and Calendar retain their existing data paths.
+Phone layouts use compact headings, cards and a single row of stock tabs, retaining 44px hit areas.
+Account-bound return context, revoked source dialogs, late responses and pending snapshot retry
+received explicit regression coverage. See the [English integration register](docs/ux/change-register.md)
+and [acceptance record](reports/UX-PRODUCTION-2026-09-28.md) for checks, limits and release evidence.
+
+## Coherent research journeys · 2026-09-28 (local prototype)
+
+Explore now compares unwatched stocks with the same metrics as Watchlist, with named stock/map/metric
+entries. Stock pages retain their entry context and source identity; shared creator views can be saved
+and retrieved across pages. Today restores priority to the lead and important changes while retaining
+the liquidity comparison. Price actions distinguish above/below conditions, and local plans are named
+honestly. The [English change register](docs/ux/change-register.md) and
+[three-persona journey map](docs/ux/user-journeys.md) record content placement and production boundaries.
+See the [review and acceptance record](reports/UX-JOURNEYS-2026-09-28.md). No backend or deployment change.
+
+## Company and money activity in the UX preview · 2026-09-28 (local prototype)
+
+Explore now has a visible activity tab for insider filings, 13F holdings, political disclosures
+and company events, with compact fact rows, category/stock/search scopes and source details.
+Today, stock pages and Watchlist link into the same sample records. A pure adapter uses the existing
+Radar archive shape; typed dates, amount ranges, unknown values and unsupported stock actions are
+checked independently. Two public Radar reads returned HTTP 200 with explicit five-day access delay.
+The browser remains a synthetic prototype and has not been connected to authenticated production reads.
+
+The [activity report](reports/UX-ACTIVITY-REFERENCE-2026-09-28.md) records the reference review,
+API compatibility and validation. The [persistent change register](docs/ux/change-register.md)
+tracks this redesign's completed changes and remaining production wiring.
+
+## Restore analytical context in the UX preview · 2026-09-28 (local prototype; not deployed)
+
+Owner review identified useful analysis omitted by the first redesign. Watchlist now exposes a
+third Metrics view beside List and Overview, with separate long-term/trend perspectives, option
+walls, support references, IV/HV20 and Degen attention. Overview and stock pages link directly to
+the full metrics. Today restores dollar liquidity alongside a dated, interactive three-line
+comparison with QQQ and SPY, with a 10-year yield alternative. All readings remain synthetic.
+
+The UI distinguishes attention from valuation, options expiry from quote date, and each chart
+series' normalized shape from its original unit. Missing metrics remain missing. Mobile sorting
+preserves the horizontal position and keyboard focus. See the
+[follow-up acceptance record](reports/UX-METRICS-RESTORATION-2026-09-28.md).
+
+## Integrated UX design preview · 2026-09-28 (local prototype; not deployed)
+
+The empty-watchlist journey and cross-page research flow are implemented as an isolated, bilingual
+prototype under `prototypes/ux-lab/`, outside the production build. Watchlist List/Overview, cross-author
+views, theme-led Explore, event impacts, stock evidence/history and editable price-watch plans share
+navigation and local state. Reference ranges, creators and schedules are explicitly illustrative;
+saves never enable monitoring or contact a production account.
+
+The design retains the five primary destinations and the existing duck asset. Mobile filters disclose
+progressively; source dialogs retain context; unavailable data stays unavailable. Existing product
+routes and backend behavior are unchanged. The [review guide](docs/ux/README.md),
+[proposed integration contracts](docs/ux/proposed-backend-changes.md) and
+[acceptance record](reports/UX-REDESIGN-2026-09-28.md) distinguish the prototype from production work.
+
 ## The language follows the account, and the browser's choice is remembered · 2026-09-26 (deployed)
 
 Released through `scripts/deploy_pages.sh`: main `bbcc2206` (PR #102) → Pages production at 2026-09-26 09:18 UTC (the edge

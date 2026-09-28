@@ -16,14 +16,15 @@ import { mountResearch, safeSource, dateTime, metric } from './creator-research.
 
 import {mountSetup,confirmCreator,avatar} from './creator-setup.js';
 import {progressPoll,renderProgress} from './creator-progress.js';
-import {groundedClaim,claimDetails} from './creator-claim.js';
+import {groundedClaim,claimDetails,claimQualifications} from './creator-claim.js';
+import {collateCreatorViews} from '../creator-view-groups.js';
 import {renderCreatorPage} from './creator-page.js';
 import {creatorRoute,creatorTarget} from '../creator-route.js';
 import {matchesStocks,taggedTickers} from '../creator-match.js';
 import {readingPreview} from '../reading-preview.js';
 
 const TAKE_CLS = { bull: "cr-bull", bear: "cr-bear", neutral: "cr-neutral" };
-const VIEWS_SHOWN = 4;   // lines per creator before the "more" disclosure
+const VIEWS_SHOWN = 1;   // Other authors' main views stay within reach before the archive.
 const CALL_ARROW = { bull: "▲", bear: "▼", neutral: "•" };
 
 function pickSummary(x, isZh) {
@@ -180,8 +181,13 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   // Explicit stock links retain their ticker; discovery can also use current watchlist symbols.
   // A channel lookup is independent from these read-only content filters.
   let stockTicker=initial.watched?'':initial.ticker;
-  let mine = stockTicker?false:initial.mine, watched=false;
+  let mine = stockTicker||(!following.size&&!routeQuery?.has('scope')&&!initial.selected&&initial.tab==='feed')?false:initial.mine, watched=false;
   let query = "", discoveryScope=watchedTickers.length?'watchlist':'all';
+  let filtersOpen=false;
+  const phoneMedia=window.matchMedia?.('(max-width:600px)');
+  const phone=()=>phoneMedia?.matches??window.innerWidth<=600;
+  const resizeFilters=()=>{const detail=card.querySelector('.creators-ux-filters');if(detail)detail.open=phone()?filtersOpen:true;};
+  phoneMedia?.addEventListener('change',resizeFilters);
   mergeDiscovery();
   let selected=kols.some(k=>k.id===initial.selected)?initial.selected:'', tab=initial.tab, shown=30;
   const histories={}, archiveOpen=new Set();
@@ -190,7 +196,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     onValue:page=>{if(page.kol_id!==selected)return;const old=doc.pages?.[selected];if(page.content_hash===old?.content_hash&&page.status===old?.status)return;
       doc.pages={...(doc.pages||{}),[selected]:page};renderContent();}});
   if(!sourceOnly&&!mine&&!selected&&(stockTicker||discoveryScope==='watchlist'))await loadDiscovery(false);
-  if(disposed||epoch!==store.epoch()||signal?.aborted)return ()=>{};
+  if(disposed||epoch!==store.epoch()||signal?.aborted){phoneMedia?.removeEventListener('change',resizeFilters);return ()=>{};}
   mergeDiscovery();render();progress.schedule();
 
   function render() {
@@ -213,13 +219,15 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       card.appendChild(banner);
     }
 
-    card.append(el('div.creator-starters-host'));
+    const startersHost=el('div.creator-starters-host');
     const controls = el("div.creators-controls");
     for (const [value,key] of [['following',"creators.mine"],['discover',"creators.discover"]]) {
       controls.appendChild(el("button.btn.btn-ghost.btn-sm", {type:"button",'data-creator-scope':value, "aria-pressed":String(value==='following'?mine:!mine), onclick:()=>{mine=value==='following';stockTicker='';selected='';query='';showSetup=false;shown=30;render();if(!mine)loadDiscovery();}},s(key)));
     }
     card.appendChild(controls);
-    const search=el('div.creator-person-search');controls.append(search);
+    const filterPanel=el('details.creators-ux-filters',{open:!phone()||filtersOpen},el('summary',s('creatorsux.filters')));
+    filterPanel.addEventListener('toggle',()=>{if(phone())filtersOpen=filterPanel.open;});
+    const search=el('div.creator-person-search');filterPanel.append(search);controls.append(filterPanel);
     const field=el('input.input',{type:'search',maxlength:100,value:query,
       'aria-label':s('creatordiscovery.search'),placeholder:s('creatordiscovery.search'),autocomplete:'off'});
     const form=el('form.creator-discovery-search',field,el('button.btn.btn-ghost',{type:'submit'},s('creatordiscovery.search_button')));
@@ -233,6 +241,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       setupCleanup=mountSetup(setup,{onFollow:followed,state:setupState,compact:true,restore:true});
     }
     card.appendChild(el("div.creators-content"));
+    card.append(startersHost);
     renderContent();
   }
 
@@ -263,11 +272,13 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         }catch{if(!disposed&&epoch===store.epoch())toast(s('creatorflow.follow_error'),'err');}
         finally{button.disabled=false;}
       }});
-      if(starters)startersHost.append(starters);
+      if(starters)startersHost.append(el('details.creators-ux-starters',el('summary',s('creatorsux.choose_author')),starters));
     }
     const outerControls=card.querySelector('.creators-controls');
     outerControls.style.display=selected&&tab==='feed'?'none':'';
     outerControls.querySelector('.creator-person-search').hidden=tab!=='feed'||mine;
+    outerControls.querySelector('.creators-ux-filters').hidden=tab!=='feed'||mine||!!selected;
+    outerControls.querySelectorAll('.creator-discovery-controls,.creator-discovery-basis').forEach(node=>node.remove());
     for(const button of outerControls.querySelectorAll('[data-creator-scope]'))button.setAttribute('aria-pressed',String(button.dataset.creatorScope==='following'?mine:!mine));
     card.querySelector('.evidence-page-head').hidden=!!selected&&tab==='feed';
     card.querySelector('.creator-page-actions').hidden=!!selected&&tab==='feed';
@@ -302,7 +313,9 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         el('option',{value:'watchlist',selected:!stockTicker&&discoveryScope==='watchlist'},s('creatordiscovery.watchlist')),
         el('option',{value:'all',selected:!stockTicker&&discoveryScope==='all'},s('creatordiscovery.everyone')));
       scope.addEventListener('change',()=>{if(scope.value!=='stock'){stockTicker='';discoveryScope=scope.value;}directoryLimit=6;loadDiscovery();});
-      content.append(el('div.creator-discovery-controls',
+      const filterPanel=outerControls.querySelector('.creators-ux-filters');
+      filterPanel.querySelector('summary').textContent=s('creatorsux.filters')+(stockTicker?' · '+stockTicker:discoveryScope==='watchlist'?' · '+s('creatordiscovery.watchlist'):'')+(discoveryStance!=='all'?' · '+s('creatordiscovery.'+discoveryStance):'');
+      filterPanel.append(el('div.creator-discovery-controls',
         el('label',el('span',s('creatordiscovery.scope')),scope),
         el('label',el('span',s('creatordiscovery.filter')),filter)),el('p.creator-discovery-basis',s('creatordiscovery.basis')));
       if(discovery.coverage?.truncated||discovery.coverage?.scan_limited)content.append(el('p.small.muted',s('creatordiscovery.result_limit')));
@@ -366,12 +379,24 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         return;
       }
       if(!sourceOnly){
+        const readable=filterPosts(histories[selected]?.items||posts,{following,mine:false,archive:false,tickers:stockFilter}).filter(p=>p.kol_id===selected);
+        const group=creatorViews(readable).find(row=>row.kolId===selected);
+        if(group?.views.length){
+          const mainViews=el('section.creators-ux-author-views',el('h2',s('creatorsux.author_views')),
+            el('p.small.muted',s('creatorsux.author_views_hint')));
+          const rows=el('ol.creator-view-list');
+          for(const view of group.views.slice(0,4))rows.append(viewRow(view,creator));
+          mainViews.append(rows);
+          if(group.views.length>4){const rest=el('ol.creator-view-list');for(const view of group.views.slice(4))rest.append(viewRow(view,creator));
+            mainViews.append(el('details.creator-views-more',el('summary',s('creators.more_views',{n:group.views.length-4})),rest));}
+          content.append(mainViews);
+        }
         const delivery=renderProgress(analysis[selected]?.progress);if(delivery)content.append(delivery);
         const overview=el('section.creator-page');content.append(el('details.creator-overview',el('summary',s('creators.overview_short')),overview));
         renderCreatorPage(overview,{creator,page:doc.pages?.[selected]||{},tickers:stockFilter,onTab:value=>{tab=value;renderContent();}});
       }
     }
-    const feedContent=selected?el('details.creator-video-archive',{open:true},el('summary',s('creators.latest'))):el('section.creator-recent-feed');
+    const feedContent=selected?el('details.creator-video-archive',{open:!!focusedPost||archiveOpen.has(selected)||!content.querySelector('.creators-ux-author-views')},el('summary',s('creators.latest'))):el('section.creator-recent-feed');
     if(selected){const kid=selected;feedContent.addEventListener('toggle',()=>{if(feedContent.open){archiveOpen.add(kid);}else archiveOpen.delete(kid);});}
     content.append(feedContent);
     if(!selected)feedContent.append(el('header.creator-feed-heading',el('h2.creator-latest-title',s('creators.latest'))));
@@ -470,7 +495,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     for(const p of readable){
       const rows=verifiedSpans(p).filter(row=>row.intent!=='mention'&&row.basis==='attributed_opinion');
       const views=rows.map(row=>({post:p,ticker:row.ticker,tickers:[row.ticker],stance:{support:'bull',counter:'bear'}[row.stance]||'neutral',pointId:row.point_id||'',
-        text:row.title?.[isZh?'zh':'en']||row.title?.zh||row.title?.en||'',seconds:row.start_seconds}));
+        text:row.title?.[isZh?'zh':'en']||row.title?.zh||row.title?.en||'',seconds:row.start_seconds,record:row}));
       for(const call of legacyCalls(p))views.push({post:p,ticker:call.sym,tickers:[call.sym],stance:['bull','bear'].includes(call.stance)?call.stance:'neutral',pointId:call.point_id||call.claim_id||'',
         text:pickSummary(call.note,isZh)||conciseSummary(p.summary,isZh),seconds:call.action_start_seconds??call.start_seconds});
       // A reviewed video without an attributed view keeps its summary line; the stocks it tagged stay
@@ -482,17 +507,18 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       group.latest=[group.latest,p.published_at||''].sort().pop();
       groups.set(p.kol_id,group);
     }
-    for(const group of groups.values())group.views.sort((a,b)=>(Date.parse(b.post.published_at)||0)-(Date.parse(a.post.published_at)||0)||(b.seconds??-1)-(a.seconds??-1));
+    for(const group of groups.values())group.views=collateCreatorViews(group.views.sort((a,b)=>(Date.parse(b.post.published_at)||0)-(Date.parse(a.post.published_at)||0)||(b.seconds??-1)-(a.seconds??-1)));
     return [...groups.values()].sort((a,b)=>(Date.parse(b.latest)||0)-(Date.parse(a.latest)||0));
   }
   function latestViews(available,stockFilter){
     const section=el('section.creator-latest-views');
-    section.append(el('header.creator-feed-heading',el('div',el('h2.creator-latest-title',s('creators.latest_views')),el('p.small.muted',s('creators.latest_views_hint')))));
+    section.append(el('header.creator-feed-heading',el('div',el('h2.creator-latest-title',s('creators.latest_views')),el('p.small.muted',s('creatorsux.main_views_hint')))));
     const readable=filterPosts(posts,{following,mine:true,archive:false,tickers:stockFilter});
     const groups=creatorViews(readable);
     // Every followed creator keeps a row, so a creator without readable views can still be opened.
     for(const k of available)if(!groups.some(g=>g.kolId===k.id))groups.push({kolId:k.id,views:[],latest:''});
     if(!groups.length){section.append(empty(s('creators.no_readable_views')));return section;}
+    const grid=el('div.creators-ux-main-grid');section.append(grid);
     for(const group of groups){
       const creator=kols.find(k=>k.id===group.kolId)||{id:group.kolId,name:readable.find(p=>p.kol_id===group.kolId)?.kol_name||group.kolId};
       const open=()=>{selected=creator.id;query='';showSetup=false;shown=30;render();};
@@ -500,7 +526,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       article.append(el('header.creator-views-head',avatar(creator),el('div.creator-views-title',
         el('button.creator-name',{type:'button','aria-label':s('creators.open_creator')+' · '+(creator.name||creator.id),onclick:open},creator.name||creator.id),
         el('p.small.muted',group.views.length?s('creators.views_count',{n:group.views.length})+' · '+s('creators.latest_at',{date:String(group.latest||'').slice(0,10)}):''))));
-      if(!group.views.length){article.append(el('p.small.muted.creator-views-none',s('creators.no_views_creator')));section.append(article);continue;}
+      if(!group.views.length){article.append(el('p.small.muted.creator-views-none',s('creators.no_views_creator')));grid.append(article);continue;}
       const list=el('ol.creator-view-list');
       const rows=group.views.map(view=>viewRow(view,creator));
       for(const row of rows.slice(0,VIEWS_SHOWN))list.append(row);
@@ -509,21 +535,32 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         const rest=el('ol.creator-view-list');for(const row of rows.slice(VIEWS_SHOWN))rest.append(row);
         article.append(el('details.creator-views-more',el('summary',s('creators.more_views',{n:rows.length-VIEWS_SHOWN})),rest));
       }
-      section.append(article);
+      grid.append(article);
     }
     return section;
   }
   function viewRow(view,creator){
     const p=view.post,tickers=(view.tickers||[]).filter(Boolean).slice(0,3);
-    const chips=tickers.length?tickers.map(t=>el('span.cr-take',{class:t===view.ticker?(TAKE_CLS[view.stance]||'cr-neutral'):'cr-neutral'},
+    const chips=tickers.length?tickers.map(t=>el('a.cr-take',{href:'#/stock/'+encodeURIComponent(t)+'?from=creators','aria-label':s('creatorsux.research_stock',{ticker:t}),class:t===view.ticker?(TAKE_CLS[view.stance]||'cr-neutral'):'cr-neutral'},
       '$'+t+(t===view.ticker&&['bull','bear'].includes(view.stance)?' '+s('creators.take_'+view.stance):''))):[el('span.cr-take.cr-neutral',s('creators.summary_ready'))];
     const matched=tickers.filter(t=>watchedTickers.includes(t));
     const button=el('button.creator-view-open',{type:'button','data-post':p.platform_post_id||p.id||'','data-point':view.pointId,onclick:()=>openView(view,creator)},
-      el('span.creator-view-takes',...chips),
       el('span.creator-view-text',view.text),
       el('span.creator-view-meta.small.muted',[String(p.published_at||'').slice(0,10),previewTitle(p.title)].filter(Boolean).join(' · '),
         matched.length?el('span.creator-watch-match',' · '+s('creatorstocks.matched')+' '+matched.map(t=>'$'+t).join(' ')):null));
-    return el('li.creator-view-row',{class:'is-'+view.stance},button);
+    const row=el('li.creator-view-row',{class:'is-'+view.stance},el('div.creator-view-takes',...chips),button);
+    const qualifications=view.record?claimQualifications(view.record):null;if(qualifications)row.append(qualifications);
+    if(view.records?.length>1){
+      const receipts=el('details.creators-ux-repeated',el('summary',s('creatorsux.repeated',{n:view.records.length})),el('p.small.muted',s('creatorsux.repeat_note')));
+      const list=el('ol.creators-ux-receipts');
+      for(const record of view.records){
+        list.append(el('li',el('button',{type:'button','data-post':record.post.platform_post_id,'data-point':record.pointId,onclick:()=>openView(record,creator)},
+          el('time',{datetime:record.post.published_at||''},videoDate(record.post.published_at,isZh?'zh-CN':'en-US')),
+          el('span',previewTitle(record.post.title)||s('creators.orig')))));
+      }
+      receipts.append(list);row.append(receipts);
+    }
+    return row;
   }
   // The source behind one line: the video, its attributed views (the chosen one focused), the full
   // summary with its timestamps, and the same exits the cards offer.
@@ -538,9 +575,15 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       body.append(el('h4',s('creators.view_summary')),el('p.cr-attribution.muted.small',s('creators.attribution',{name:p.kol_name||creator.name||''})),el('p.cr-sum',fullSummary));
       for(const section of source.sections||[])body.append(el('div.creator-view-section',safeSource(p.url)?el('a',{href:atTime(p.url,section.start_seconds),target:'_blank',rel:'noopener noreferrer'},`${Math.floor(section.start_seconds/60)}:${String(Math.floor(section.start_seconds)%60).padStart(2,'0')} ↗`):null,el('p',pickSummary(section,isZh))));
     }
+    body.append(el('details.creator-audit',el('summary',s('creators.source_details')),
+      el('p.small.muted',s('creators.first_seen')+' '+dateTime(p.first_seen_at)),
+      el('p.small.muted',s('creators.analysis_updated')+' '+dateTime(p.fetched_at)),
+      p.title?el('p.creator-original-title',p.title):null));
     const actions=el('div.evidence-controls.creator-page-actions');
     if(safeSource(p.url))actions.append(el('a.cr-orig.btn.btn-primary.btn-sm',{href:Number.isFinite(view.seconds)?atTime(p.url,view.seconds):p.url,target:'_blank',rel:'noopener noreferrer'},s('creators.orig')+' ↗'));
     actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{closeModal();selected=p.kol_id;tab='research';renderContent();}},s('creators.research')));
+    if(p.platform_post_id&&p.kol_id)actions.append(el('a.btn.btn-ghost.btn-sm',{
+      href:creatorTarget({tab:'feed',mine:false,selected:p.kol_id,post:p.platform_post_id,point:view.pointId}),onclick:closeModal},s('creatorsux.open_record')));
     if(view.ticker)actions.append(evidenceLink(view.ticker,view.pointId));
     body.append(actions);
     modal((creator.name||p.kol_name||'')+' · '+String(p.published_at||'').slice(0,10),body);
@@ -626,5 +669,5 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       analysis=mineDoc.analysis||{};following.clear();for(const id of mineDoc.subs||[])following.add(id);await loadDiscovery(false);if(disposed||epoch!==store.epoch())return;render();progress.schedule();
     }catch{if(!disposed&&!automatic)toast(s('creators.load_error'),'err');}finally{refreshing=false;}
   }
-  return () => {disposed=true;clearTimeout(discoveryTimer);discoveryController?.abort();progress.stop();pageProgress.stop();setupCleanup();document.querySelector('dialog.creator-confirm')?.remove();};
+  return () => {disposed=true;phoneMedia?.removeEventListener('change',resizeFilters);clearTimeout(discoveryTimer);discoveryController?.abort();progress.stop();pageProgress.stop();setupCleanup();document.querySelector('dialog.creator-confirm')?.remove();};
 }

@@ -13,3 +13,11 @@ For each technical change, update the affected shared status/continuation sectio
 change log and acceptance report. Separate proposed, implemented, deployed and end-to-end accepted.
 If private repository access is unavailable, state that limitation rather than inventing its current
 state. A review request does not resume paused processing or authorize paid model calls.
+
+## UX redesign continuation (2026-09-28)
+
+Before continuing this redesign, read [the change and integration register](docs/ux/change-register.md)
+and its latest acceptance record. Record new changes there and keep prototype, API compatibility,
+production wiring and deployment status distinct. The preview lives under `prototypes/ux-lab/`; production integration is recorded in
+[the production acceptance report](reports/UX-PRODUCTION-2026-09-28.md). Keep synthetic preview
+features distinct from the production routes and actual release receipt.

@@ -1,0 +1,124 @@
+/* Production stock workspace. Scope layout changes to the stock and evidence surfaces. */
+.stock-workspace-tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin:12px 0 22px;}
+.stock-workspace-tabs a{display:flex;align-items:center;justify-content:center;min-height:48px;padding:10px 18px;color:var(--muted);text-decoration:none;border-bottom:3px solid transparent;font-weight:600;}
+.stock-workspace-tabs a[aria-current=page]{color:var(--accent);border-color:var(--accent);}
+.focus-stock [hidden]{display:none!important;}
+.stock-extra-tools{margin:20px 0;border-top:1px solid var(--border);padding-top:10px;}
+.stock-extra-tools summary{min-height:44px;cursor:pointer;padding:10px 0;}
+.stock-extra-tools .stock-core-actions{margin:12px 0;}
+.stock-key-evidence{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.stock-key-evidence h2{grid-column:1/-1;}
+.stock-reference-plan{margin:28px 0;padding:22px;border:1px solid var(--border);border-radius:12px;}
+.stock-reference-plan h2{font-size:20px;margin:0 0 12px;}
+.stock-plan-actions{display:flex;gap:12px;flex-wrap:wrap;}
+.stock-metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0;}
+.stock-metric-card{padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;min-width:0;}
+.stock-metric-card h3{font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px;}
+.stock-metric-card .watch-metric{font-size:24px;}
+.stock-reference-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:28px 0;}
+.stock-metric-section{min-width:0;padding:20px;border:1px solid var(--border);border-radius:12px;scroll-margin-top:20px;}
+.stock-metric-section h2{font-size:20px;margin:0 0 12px;}
+.stock-level{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
+.stock-level strong{font-size:22px;font-variant-numeric:tabular-nums;}
+.stock-level-alert{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:16px;align-items:center;}
+.stock-level-alert>span{width:100%;font-size:13px;color:var(--muted);}
+.stock-level-alert a{display:inline-flex;align-items:center;min-height:44px;}
+.stock-source-card.is-support,.evidence-node.is-support{--ux-stance:var(--evidence-support,#168358);}
+.stock-source-card.is-counter,.evidence-node.is-counter{--ux-stance:var(--evidence-counter,#ce5267);}
+.stock-source-card:is(.is-support,.is-counter),.evidence-node:is(.is-support,.is-counter){border:1px solid color-mix(in srgb,var(--ux-stance) 65%,var(--border));border-left:4px solid var(--ux-stance);background:color-mix(in srgb,var(--ux-stance) 9%,var(--surface));}
+.stock-source-card:is(.is-support,.is-counter):hover,.evidence-node:is(.is-support,.is-counter):hover{border-color:var(--ux-stance);background:color-mix(in srgb,var(--ux-stance) 14%,var(--surface));}
+.evidence-repeat-group{margin-bottom:12px;min-width:0;}
+.evidence-repeat-group>.evidence-node{margin-bottom:0;}
+.evidence-repeat-group>details{border:1px solid var(--border);border-top:0;border-radius:0 0 10px 10px;padding:8px 12px;}
+.evidence-repeat-group summary{min-height:44px;padding:10px 0;cursor:pointer;font-size:13px;}
+.evidence-repeat-group details .evidence-node{margin-top:10px;}
+@media(max-width:650px){
+ .stock-workspace-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;}
+ .stock-workspace-tabs a{padding:10px 6px;font-size:14px;min-width:0;}
+ .stock-key-evidence{grid-template-columns:1fr;}
+ .stock-metric-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+ .stock-metric-card{padding:12px;}.stock-metric-card h3{font-size:12px;}
+ .stock-reference-grid{grid-template-columns:1fr;gap:12px;}
+ .stock-reference-plan,.stock-metric-section{padding:16px;}
+ .stock-plan-actions .btn{width:100%;}
+ .focus-stock>.focus-heading{gap:10px;flex-wrap:wrap;}
+}
+
+.stock-metric-card .watch-signal-help{position:static;transform:none;min-width:44px;min-height:44px;flex:none;background:transparent;border:0;font-size:16px;}
+.stock-metric-card .watch-metric{display:flex;flex-direction:column;align-items:flex-start;gap:4px;}
+.stock-metric-card .watch-metric-value{font-size:24px;}
+.stock-metric-card .watch-metric-note{font-size:12px;}
+
+@media(max-width:650px){
+ .stock-map-panel .stock-information-map{margin-top:0;}
+ .stock-map-panel .stock-information-map>.focus-heading{margin:0 0 8px;justify-content:flex-end;}
+ .stock-map-panel .stock-information-map>.focus-heading>div{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);}
+ .stock-map-panel .stock-information-map>.focus-heading>a{min-height:44px;display:flex;align-items:center;}
+ .stock-map-panel .evidence-tools{margin-bottom:8px;}
+ .stock-map-panel .evidence-group.is-support{order:1;}
+ .stock-map-panel .evidence-group.is-counter{order:2;}
+ .stock-map-panel .evidence-group.is-context{order:3;}
+}
+@media(max-width:650px){
+ .focus-stock>.focus-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 10px;margin:6px 0 12px;align-items:start;}
+ .focus-stock>.focus-heading>div{grid-row:span 2;min-width:0;}
+ .focus-stock>.focus-heading>.btn{grid-column:2;justify-self:end;min-height:44px;}
+ .stock-workspace-tabs{margin:10px 0 16px;}
+ .stock-metrics>h2{margin-top:0;}
+ .stock-metric-grid{margin-top:12px;}
+}
+/* Phone reading density: one row of tabs, tighter cards, full source wording. */
+@media(max-width:650px){
+ .page-app .focus-stock{font-size:13px;line-height:1.55;}
+ .page-app .focus-stock>.focus-heading{margin:0 0 4px;gap:2px 8px;}
+ .page-app .focus-stock>.focus-heading h1{font-size:21px;line-height:1.15;margin:2px 0 3px;}
+ .page-app .focus-stock>.focus-heading p{font-size:11px;line-height:1.4;margin:2px 0;}
+ .page-app .focus-stock>.focus-heading a.small{display:inline-flex;align-items:center;min-height:44px;font-size:11px;}
+ .page-app .focus-stock>.focus-heading>.btn{font-size:12px;padding:6px 9px;}
+ .page-app .focus-stock .stock-workspace-tabs{grid-template-columns:repeat(4,minmax(0,1fr));margin:4px 0 10px;gap:0;}
+ .page-app .focus-stock .stock-workspace-tabs a{min-height:44px;padding:5px 3px;font-size:12px;line-height:1.25;text-align:center;white-space:normal;border-bottom-width:2px;}
+ .page-app .focus-stock .stock-price{gap:3px 8px;}
+ .page-app .focus-stock .stock-price>strong{font-size:22px;line-height:1.25;}
+ .page-app .focus-stock .stock-price>span{font-size:13px;}
+ .page-app .focus-stock .stock-price>small{font-size:11px;line-height:1.45;}
+ .page-app .focus-stock .evidence-analysis{margin:10px 0 12px;padding:10px 11px 2px;border-radius:9px;}
+ .page-app .focus-stock .evidence-analysis-heading{gap:2px;}
+ .page-app .focus-stock .evidence-analysis-overview{font-size:13px;line-height:1.6;margin:6px 0 0;}
+ .page-app .focus-stock .evidence-analysis-status{font-size:12px;line-height:1.5;margin:5px 0 8px;}
+ .page-app .focus-stock .evidence-analysis-details>summary{padding:6px 0;min-height:44px;}
+ .page-app .focus-stock .evidence-analysis-body{gap:10px;padding:10px 0;}
+ .page-app .focus-stock .evidence-analysis-body p{font-size:13px;line-height:1.55;}
+ .page-app .focus-stock .evidence-analysis .brief-citation{min-width:44px;min-height:44px;}
+ .page-app .focus-stock .stock-key-evidence{gap:7px;}
+ .page-app .focus-stock .stock-key-evidence h2,.page-app .focus-stock .focus-chart h2{font-size:18px;margin:4px 0;}
+ .page-app .focus-stock .stock-source-card{gap:5px;padding:10px 11px;font-size:13px;line-height:1.5;border-radius:9px;min-height:44px;}
+ .page-app .focus-stock .stock-source-card .small{font-size:11px;line-height:1.45;}
+ .page-app .focus-stock .stock-reference-plan{margin:14px 0;padding:11px;border-radius:9px;}
+ .page-app .focus-stock .stock-reference-plan h2,.page-app .focus-stock .stock-metrics>h2,.page-app .focus-stock .stock-metric-section h2{font-size:18px;line-height:1.3;margin:0 0 6px;}
+ .page-app .focus-stock .stock-reference-plan p{font-size:13px;line-height:1.55;margin:6px 0 8px;}
+ .page-app .focus-stock .stock-plan-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;}
+ .page-app .focus-stock .stock-plan-actions .btn{font-size:12px;padding:7px;min-height:44px;white-space:normal;line-height:1.3;}
+ .page-app .focus-stock .stock-metrics>p{font-size:12px;line-height:1.5;margin:5px 0 8px;}
+ .page-app .focus-stock .stock-metric-grid{gap:6px;margin:8px 0 10px;}
+ .page-app .focus-stock .stock-metric-card{padding:7px 10px 9px;border-radius:8px;}
+ .page-app .focus-stock .stock-metric-card h3{font-size:13px;line-height:1.3;gap:3px;margin:0 0 1px;min-height:44px;}
+ .page-app .focus-stock .stock-metric-card .watch-signal-help{min-width:44px;min-height:44px;padding:0;font-size:15px;}
+ .page-app .focus-stock .stock-metric-card .watch-metric{gap:2px;line-height:1.3;}
+ .page-app .focus-stock .stock-metric-card .watch-metric-value{font-size:20px;line-height:1.2;}
+ .page-app .focus-stock .stock-metric-card .watch-metric-note,.page-app .focus-stock .stock-metric-card .watch-metric-status{font-size:11px;line-height:1.35;}
+ .page-app .focus-stock .stock-reference-grid{gap:8px;margin:14px 0;}
+ .page-app .focus-stock .stock-metric-section{padding:11px;border-radius:9px;}
+ .page-app .focus-stock .stock-metric-section>p{font-size:12px;line-height:1.5;margin:6px 0;}
+ .page-app .focus-stock .stock-level{gap:8px;padding:7px 0;font-size:13px;}
+ .page-app .focus-stock .stock-level strong{font-size:19px;}
+ .page-app .focus-stock .stock-level-alert{gap:2px 12px;margin-top:8px;}
+ .page-app .focus-stock .stock-level-alert>span{font-size:12px;}
+ .page-app .focus-stock .stock-level-alert a{font-size:12px;min-height:44px;}
+ .page-app .focus-stock .focus-chart{margin:18px 0;}
+ .page-app .focus-stock .stock-closing-chart{padding:8px 0;}
+ .page-app .focus-stock .stock-extra-tools{margin:12px 0;padding-top:3px;}
+ .page-app .focus-stock .evidence-repeat-group{margin-bottom:8px;}
+ .page-app .focus-stock .evidence-repeat-group>details{padding:2px 10px;}
+ .page-app .focus-stock .evidence-repeat-group summary{padding:6px 0;font-size:12px;min-height:44px;}
+ .page-app .focus-stock :is(input,select,textarea){font-size:16px;}
+}

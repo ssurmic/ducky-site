@@ -236,7 +236,7 @@ test('the table gives each side its own column and the Overview cell opens with 
   {view:'list',renderResearch:t=>reading({...item,ticker:t},{digest:digest.digestNodes(row,sig),views:t==='NVDA'?views:null,columns:true}),viewsFor:t=>t==='NVDA'?views:null,
    signals:new Map([['NVDA',sig]]),session:'2026-09-21'});
  const heads=[...root.querySelectorAll('thead th')].map(th=>th.textContent.trim());
- assert.deepEqual(heads.slice(0,6),['Stock / business','Price / day change','Overall','Left side','Right side','Market cap']);
+ assert.deepEqual(heads.slice(0,6),['Stock / business','Price / day change','Overall','Left side · long-term view','Right side · trend view','Market cap']);
  assert.ok(root.querySelector('thead th.watch-view-col.is-left')&&root.querySelector('thead th.watch-cap-col'));
  const first=root.querySelector('tbody tr');
  assert.equal(first.querySelector('td.watch-view-cell.is-left .watch-view-text').textContent,'Long-term holders watch the pullback depth.');

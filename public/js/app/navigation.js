@@ -13,7 +13,8 @@ export function selectNavigation(name, query=new URLSearchParams()) {
     // Five destinations. Stock-scoped tools light the tab they belong to; account and
     // sign-in pages light nothing rather than pretending to be Explore.
     const account=['profile','billing','login','register','forgot','reset','oauth','recovery'];
-    name=name==='stock'&&['today','explore'].includes(query.get('from'))?query.get('from'):
+    name=name==='stock'&&['today','explore','creators','calendar'].includes(query.get('from'))?query.get('from'):
+      name==='stock'&&query.get('from')==='boards'?'explore':
       ['today','watchlist','explore','calendar','creators'].includes(name)?name:
       ['stock','evidence','chart','research','alerts','updates','briefing'].includes(name)?'watchlist':
       account.includes(name)?'':'explore';

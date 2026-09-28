@@ -10,8 +10,8 @@ const title={zh:'若客户保持资本支出，新增产能可能支持订单增
 const counter={zh:'支出增长可能先压低利润率，订单是否兑现还需要确认。',en:'Higher spending could pressure margins before new orders materialize.'};
 const node=(id,stance='support')=>({id,kind:'creator',intent:'opinion',priority:'direct',stance,conditional:true,title:stance==='counter'?counter:title,
  published_at:today,observed_at:clock,reason:stance==='counter'?counter:title,evidence:[{id:'ev-'+id,kind:'creator',author:stance==='counter'?'Sample Cautious Author':'Sample Author',
- platform:'youtube',creator_id:stance==='counter'?'sample-cautious':'sample-author',post_id:'sample-original',title:stance==='counter'?counter:title,reason:stance==='counter'?counter:title,published_at:today,observed_at:clock,
- condition_text:'If customers maintain capital spending',source_url:'https://example.com/synthetic-source',start_seconds:75,end_seconds:92}]});
+ basis:'attributed_opinion',platform:'youtube',creator_id:stance==='counter'?'sample-cautious':'sample-author',post_id:'sample-original',title:stance==='counter'?counter:title,reason:stance==='counter'?counter:title,published_at:today,observed_at:clock,
+ condition_text:'If customers maintain capital spending',source_url:'https://www.youtube.com/watch?v=sample-original',start_seconds:75,end_seconds:92}]});
 const nodes=[node('first'),node('second','counter'),node('third'),node('context1','context'),node('context2','context'),node('context3','context'),node('context4','context')];
 const previousClock=new Date(Date.now()-3*86400000).toISOString();
 const previousNodes=nodes.map(n=>({...n,published_at:previousClock.slice(0,10),observed_at:previousClock,
@@ -117,6 +117,70 @@ const calendarDoc=()=>{
   ev(16,'holiday','休市 · 感恩节','Market closed · Thanksgiving'),
  ]};
 };
+// Rich acceptance data is isolated to case=ux-review. Shapes mirror the successful
+// creator-production-overview and radar-activity tests; every person/claim is synthetic.
+const uxReview=(()=>{
+ const ago=(days,hour=14)=>{const d=new Date(Date.now()-days*86400000);d.setUTCHours(hour,0,0,0);return d.toISOString();};
+ const creators=[{id:'sample-alpha',name:'示例 · Sample Long-term Research',lang:'zh',platform:'youtube'},
+  {id:'sample-beta',name:'示例 · Sample Risk Notebook',lang:'en',platform:'youtube'},
+  {id:'sample-gamma',name:'示例 · Sample Industry Notes',lang:'zh',platform:'youtube'}];
+ const margin={zh:'示例观点：产品组合改善可能支持利润率，但取决于合约价格保持稳定。',en:'Sample view: A better product mix could support margins if contract pricing holds.'};
+ const risk={zh:'示例反证：客户支出增加不等于已确认订单，扩产可能先压低现金流。',en:'Sample counterview: Customer spending is not booked orders; expansion could pressure cash flow first.'};
+ const demand={zh:'示例观点：新设备需求可能改善，仍需下一季度订单和交付数据确认。',en:'Sample view: Equipment demand may improve, subject to next-quarter orders and deliveries.'};
+ const post=(id,author,ticker,days,title,stance='support',condition='Contract pricing must hold.')=>({id,kol_id:author,kol_name:creators.find(c=>c.id===author).name,platform_post_id:id,platform:'youtube',
+  title:'Synthetic source · '+id,url:'https://www.youtube.com/watch?v='+id,published_at:ago(days),first_seen_at:ago(days,15),tickers:[ticker],calls:[],
+  summary:{quality:'no_call',zh:'合成验收材料：讨论公司的条件、机会与风险。',en:'Synthetic acceptance material: company conditions, opportunities and risks.',source:{kind:'transcript',status:'ready',summary_reviewed:true}},
+  reviewed_spans:[{creator_id:author,post_id:id,point_id:'point:'+id,ticker,basis:'attributed_opinion',intent:'opinion',stance,title,
+   conditional:true,condition_text:condition,horizon_text:'Next quarter',reason:{zh:'示例：核对下一季度披露。',en:'Sample: Check next-quarter disclosures.'},
+   source_url:'https://www.youtube.com/watch?v='+id,source_hash:'synthetic:'+id,published_at:ago(days),observed_at:ago(days,15),
+   start_seconds:60,end_seconds:90,evidence:'Synthetic source excerpt: '+title.en+' Condition: '+condition}]});
+ const posts=[post('uxalpha0001','sample-alpha','NVDA',1,margin),post('uxalpha0002','sample-alpha','NVDA',4,margin),
+  post('uxalpha0003','sample-alpha','NVDA',2,risk,'counter','Customer orders must cover the added capacity.'),
+  post('uxalpha0004','sample-alpha','NVDA',3,margin,'support','Contract pricing must rise.'),
+  post('uxbeta00001','sample-beta','AMD',1,risk,'counter','Customer orders must cover the added capacity.'),
+  post('uxgamma0001','sample-gamma','AVGO',2,demand)];
+ const pages=Object.fromEntries(creators.map(c=>[c.id,{kol_id:c.id,status:'ready',content_hash:'synthetic:'+c.id,coverage:{reviewed:posts.filter(p=>p.kol_id===c.id).length}}]));
+ const discovery=creators.map(creator=>{const p=posts.find(p=>p.kol_id===creator.id),view=p.reviewed_spans[0];return {creator,status:'available',latest_view:{...view,text:view.title},coverage:{scan_limited:false}};});
+ const source='https://www.sec.gov/Archives/edgar/data/0/synthetic-acceptance.html';
+ const record=(id,kind,ticker,days,extra={})=>({id,kind,ticker,issuer_name:'Synthetic '+ticker+' Company',provenance:'BACKFILL',ts:ago(days),observed_at:ago(0),source_url:source,
+  sector:'Technology',market_cap:2e10,summary:'Synthetic acceptance record',extra:{source_published_at:ago(days),message_zh:'合成验收记录：用于检查披露日期、数值与来源展示。',message_en:'Synthetic acceptance record: checks disclosure dates, values and attribution.',...extra}});
+ const rows=[
+  {...record('sec:ux:buy','insider','NVDA',1,{facts:{form:'4',side:'buy',total_value:450000,owners:[{name:'Sample Director A',role:'Director'}],transactions:[{date:ago(3).slice(0,10),price:225,shares:2000,value:450000}]}}),open_market_value:450000,direction:1},
+  {...record('sec:ux:sell','insider','AMD',2,{facts:{form:'4',side:'sell',total_value:320000,owners:[{name:'Sample Officer B',title:'Chief Financial Officer'}],transactions:[{date:ago(4).slice(0,10),price:160,shares:2000,value:320000}]}}),open_market_value:0,direction:-1},
+  {...record('13f:ux:added','13f','AVGO',1,{facts:{form:'13F-HR',position_change:'increased',new_shares:150000,prior_shares:100000,report_period:'2026-06-30',filing_date:ago(1).slice(0,10)}}),reporter_name:'Sample Long-term Fund'},
+  {...record('13f:ux:closed','13f','AMD',2,{facts:{form:'13F-HR',position_change:'closed',new_shares:0,prior_shares:100000,report_period:'2026-06-30',filing_date:ago(2).slice(0,10)}}),reporter_name:'Sample Balanced Fund'},
+  record('house:ux:purchase','political','NVDA',1,{facts:{politician:'Sample Official A',transaction_type:'Purchase',transaction_date:ago(12).slice(0,10),amount_range:'$15,001 - $50,000',asset_type:'ST',filing_date:ago(1).slice(0,10)}}),
+  record('house:ux:option','political','AMD',2,{facts:{politician:'Sample Official B',transaction_type:'Exercise',transaction_date:ago(10).slice(0,10),amount_range:'$1,001 - $15,000',asset_type:'OP',date_review_required:true}}),
+  record('company:ux:partner','partner','GLW',1,{publisher:'Sample issuer filing',facts:{form:'8-K'},message_zh:'合成公司事件：合作备忘录仍附带后续执行条件，不代表已实现收入。',message_en:'Synthetic company event: A partnership memorandum remains conditional and does not establish revenue.'}),
+  record('company:ux:index','index','AVGO',2,{publisher:'Sample index notice',effective_at:ago(-5),facts:{},message_zh:'合成指数公告：生效日与公告日期分别展示。',message_en:'Synthetic index notice: The effective date is separate from publication.'}),
+  record('sec:ux:missing','insider','GLW',3,{source_published_at:null,facts:{form:'4',side:'buy',owners:[{name:'Sample Director C'}]}}),
+ ];
+ const reply=(path,params)=>{
+  if(path==='/alerts')return {items:[]};
+  if(path==='/screens')return {items:[],cap:10,active_ids:[],evaluation_enabled:true};
+  if(path==='/screens/hits')return {items:[]};
+  if(path==='/kol/feed'||path==='/kol/trial-feed')return {schema:'kol-feed/1',kols:creators,posts,pages};
+  if(path==='/me/kols')return {subs:['sample-alpha','sample-beta'],creators:[],cap:50,analysis:{}};
+  if(path==='/kol/discover'){
+   const tickers=(params.get('ticker')||params.get('tickers')||'').split(',').filter(Boolean),stance=params.get('stance'),q=(params.get('q')||'').toLowerCase();
+   return {status:'ready',items:discovery.filter(r=>(!tickers.length||tickers.includes(r.latest_view.ticker))&&(!stance||stance==='all'||r.latest_view.stance===stance)&&(!q||JSON.stringify(r).toLowerCase().includes(q))),coverage:{scan_limited:false}};
+  }
+  const creatorPath=path.match(/^\/kol\/([^/]+)\/(page|posts)(?:\/([^/]+))?$/);
+  if(creatorPath){const [,id,kind,postId]=creatorPath,creator=creators.find(c=>c.id===id);if(!creator)return null;
+   if(kind==='page')return pages[id];
+   if(postId)return {creator,post:posts.find(p=>p.kol_id===id&&p.platform_post_id===postId)};
+   return {items:posts.filter(p=>p.kol_id===id),next_cursor:null};
+  }
+  if(path==='/radar/archive.json'||path==='/public/radar/archive.json'){
+   const kinds=(params.get('kind')||'').split(',').filter(Boolean),tickers=(params.get('ticker')||params.get('tickers')||'').split(',').filter(Boolean);
+   return {filter_version:3,items:rows.filter(r=>(!kinds.length||kinds.includes(r.kind))&&(!tickers.length||tickers.includes(r.ticker))),next_cursor:null,partial:false,access:{mode:'current'}};
+  }
+  if(path==='/radar/record.json'||path==='/public/radar/record.json')return {item:rows.find(r=>r.id===params.get('id'))};
+  if(path==='/radar/coverage.json'||path==='/public/radar/coverage.json')return {sources:[{source:'insider-bulk',kind:'insider',records:3},{source:'13f',kind:'13f',records:2},{source:'house',kind:'political',records:2},{source:'partner',kind:'partner',records:1},{source:'index',kind:'index',records:1}],partial:false};
+  return null;
+ };
+ return {reply};
+})();
 window.fetch=async(input,options={})=>{
  const url=new URL(String(input),location.origin);requests.push({path:url.pathname+url.search,method:options.method||'GET',
   ...(mode==='autocomplete-watchlist'&&options.body?{body:JSON.parse(options.body)}:{})});
@@ -134,6 +198,7 @@ window.fetch=async(input,options={})=>{
   }
   throw Error('Writes forbidden in synthetic fixture');
  }
+ if(mode==='ux-review'){const value=uxReview.reply(path,url.searchParams);if(value)return Response.json(value);}
  if(mode==='failure'&&path.includes('research'))return Response.json({error:'fixture_unavailable'},{status:503});
  if(mode==='wall-consistency'&&path==='/briefing/stocks')return Response.json(wallBriefs);
  if(path==='/radar/social.json')return Response.json({status:'ready',collected_at:new Date(Date.now()-1800000).toISOString(),items:[
@@ -156,6 +221,7 @@ window.fetch=async(input,options={})=>{
  if(path.startsWith('/stock-research/')){const ticker=path.split('/').at(-1);return Response.json({ticker,price:price(ticker),evidence:{ticker,nodes,display_price:price(ticker),
   analysis_status:mode==='pending'?'pending':mode==='previous'?'refresh_pending':'ready',analysis:mode==='pending'?null:analysis,
   analysis_generated_at:mode==='previous'?previousClock:clock,...(mode==='previous'?{analysis_nodes:previousNodes,analysis_snapshot_id:'synthetic-old'}:{})}});}
+ if(path.startsWith('/snapshot/')){const ticker=path.split('/').at(-1);return mode==='pending'?Response.json({ticker,status:'building'},{status:202}):Response.json({ticker,built_at:'2026-09-25T22:00:00Z',snapshot:{ok:true,ticker,spot:223.67,gamma:{put_wall:215,call_wall:240,scope:{expiries:['2026-10-02'],retrieved_at:'2026-09-25T21:55:00Z'}},vol:{iv:31,hv:35,ratio:.89},retrace:{d20:{lo:210.96,hi:230.10}}}});}
  if(path.startsWith('/bars/'))return Response.json({bars:mode==='pending'?[]:Array.from({length:90},(_,i)=>({t:new Date(Date.UTC(2026,5,1+i)).toISOString().slice(0,10),c:170+i*.48+Math.sin(i*.18)*12}))});
  if(path==='/public/symbols'){
  if(mode==='autocomplete-watchlist'){

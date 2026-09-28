@@ -37,7 +37,7 @@ test('event categories, canonical links and explicit excerpt mode stay usable',a
  assert.equal(root.querySelector('.signal-screen'),null);
  assert.equal(root.querySelector('.radar-market-panel'),null);
  assert.equal(document.activeElement,document.body);
- assert.equal(root.querySelectorAll('.radar-category').length,8);
+ assert.equal(root.querySelectorAll('.radar-category').length,5);
  root.querySelector('[name="ticker"]').value='TTMI';root.querySelector('[name="ticker"]').dispatchEvent(new window.Event('input'));
  root.querySelector('[data-board="insider"]').click();assert.equal(root.querySelectorAll('.radar-record').length,1);
  const link=root.querySelector('.radar-record-toggle');assert.equal(link.getAttribute('href'),'#/record/1');
@@ -172,16 +172,14 @@ test('official lowercase live and revision provenance never reuse a historical-b
  finally{cleanup();}
 });
 
-test('phone category picker exposes every category, preserves its selection and restores focus after choosing',async()=>{
- window.matchMedia=()=>({matches:true});
+test('compact category tabs remain visible with selection and keyboard focus preserved',async()=>{
  globalThis.fetch=async()=>response({items:sample,sectors:[],filter_version:3});
  const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams('board=insider')});
- const toggle=root.querySelector('.radar-category-toggle');
- assert.equal(toggle.getAttribute('aria-expanded'),'false');assert.ok(root.querySelector('#'+toggle.getAttribute('aria-controls')));
- toggle.click();assert.equal(toggle.getAttribute('aria-expanded'),'true');assert.equal(root.querySelectorAll('.radar-category').length,8);
+ assert.equal(root.querySelector('.radar-category-toggle'),null);
+ assert.deepEqual([...root.querySelectorAll('.radar-category')].map(node=>node.dataset.board),['all','insider','funds','political','company']);
  const political=root.querySelector('.radar-categories [data-board=political]');political.focus();political.click();await flush();
- assert.equal(toggle.getAttribute('aria-expanded'),'false');assert.equal(document.activeElement,toggle);
- assert.match(toggle.textContent,/Congress/);assert.equal(root.querySelector('.radar-categories [data-board=political]').getAttribute('aria-pressed'),'true');
- toggle.click();assert.equal(toggle.getAttribute('aria-expanded'),'true');
- cleanup();root.remove();delete window.matchMedia;
+ const selected=root.querySelector('.radar-categories [data-board=political]');
+ assert.equal(document.activeElement,selected);assert.equal(selected.getAttribute('aria-pressed'),'true');
+ assert.equal(new URLSearchParams(location.hash.split('?')[1]).get('board'),'political');
+ cleanup();root.remove();
 });
