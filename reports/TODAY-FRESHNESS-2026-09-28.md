@@ -72,3 +72,26 @@ fixed-date synthetic fixture: September 25 note, September 26 generation time, S
 original outlook and observed market rows. Its values and paragraphs are labelled synthetic;
 the default fixture is unchanged, account writes and external traffic remain blocked. A Node VM
 check verified its source dates, QQQ/SPY changes, default-case isolation and those traffic guards.
+
+
+## Integrated acceptance (before publication)
+
+The combined Today/Explore candidate passed **831/831 Node tests**, 14 Python export/home
+checks, and four app-asset checks (one additional local environment case skipped), bilingual
+build, copy lint and 2,103 internal links. The generated calendar export was excluded.
+
+Browser acceptance used Chrome viewport overrides, not a physical phone. Explore showed all
+12 default entries at 1440 x 900, six complete entries at 390 x 700 and four complete entries
+at 320 x 600; no horizontal overflow was observed. The 14-entry expansion, return to 12,
+complete related views and Metrics-to-Explore route were exercised. English/light and
+Chinese/dark layouts were inspected.
+
+Today was inspected at 390 x 700 (Chinese/dark), 320 x 600 (English/light) and 1440 x 900
+(English/light). The dated September 28 readings precede the September 25 disclosure. The full
+saved note, original writing time and original next-session context remain accessible.
+Expanding the note, leaving Today and returning preserves expansion. The two review findings
+(disclosure restoration and refresh-error preservation during local ranking expansion) are
+fixed and covered by regressions.
+
+The fixed-date browser data is synthetic and has no production API connection. Deployment and
+live-source acceptance remain a separate step; no producer schedule or backend write changed.
