@@ -1,23 +1,59 @@
 {
  "schema": "week-ahead/1",
- "generated_at": "2026-09-26T06:39:09+00:00",
- "as_of": "2026-09-26T06:39:09+00:00",
- "week_of": "09/21–09/25",
+ "generated_at": "2026-09-27T06:40:25+00:00",
+ "as_of": "2026-09-27T06:40:25+00:00",
+ "week_of": "09/28–10/02",
  "events": [
   {
    "dow": "周二",
    "dow_en": "Tue",
-   "date": "09/22",
-   "et": "6:30am et",
-   "name": "Fed Goolsbee Speaks",
+   "date": "09/29",
+   "et": "8:15am et",
+   "name": "FOMC Member Bowman Speaks",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周二",
+   "dow_en": "Tue",
+   "date": "09/29",
+   "et": "1:30pm et",
+   "name": "FOMC Member Barkin Speaks",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周二",
+   "dow_en": "Tue",
+   "date": "09/29",
+   "et": "1:25pm et",
+   "name": "Fed Governor Cook Speaks",
    "kind": "macro",
    "tier": "fed"
   },
   {
    "dow": "周三",
    "dow_en": "Wed",
-   "date": "09/23",
-   "et": "10:05am et",
+   "date": "09/30",
+   "et": "10:00am et",
+   "name": "CB Consumer Confidence",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周三",
+   "dow_en": "Wed",
+   "date": "09/30",
+   "et": "10:00am et",
+   "name": "JOLTS Job Openings",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周三",
+   "dow_en": "Wed",
+   "date": "09/30",
+   "et": "2:00pm et",
    "name": "FOMC Member Williams Speaks",
    "kind": "macro",
    "tier": "high"
@@ -25,45 +61,162 @@
   {
    "dow": "周三",
    "dow_en": "Wed",
-   "date": "09/23",
-   "et": "1:00pm et",
-   "name": "FOMC Member Barkin Speaks",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周三",
-   "dow_en": "Wed",
-   "date": "09/23",
-   "et": "10:20am et",
-   "name": "Fed Governor Jefferson Speaks",
-   "kind": "macro",
-   "tier": "fed"
-  },
-  {
-   "dow": "周三",
-   "dow_en": "Wed",
-   "date": "09/23",
-   "et_zh": "",
-   "et_en": "",
-   "name": "CTAS",
-   "kind": "earnings",
-   "watch": false
-  },
-  {
-   "dow": "周四",
-   "dow_en": "Thu",
-   "date": "09/24",
-   "et": "10:05am et",
+   "date": "09/30",
+   "et": "12:40pm et",
    "name": "Fed Vice Chair for Supervision Barr Speaks",
    "kind": "macro",
    "tier": "fed"
   },
   {
+   "dow": "周三",
+   "dow_en": "Wed",
+   "date": "09/30",
+   "et": "1:00pm et",
+   "name": "Fed Goolsbee Speaks",
+   "kind": "macro",
+   "tier": "fed"
+  },
+  {
+   "dow": "周三",
+   "dow_en": "Wed",
+   "date": "09/30",
+   "et": "3:00pm et",
+   "name": "Fed Waller Speaks",
+   "kind": "macro",
+   "tier": "fed"
+  },
+  {
+   "dow": "周三",
+   "dow_en": "Wed",
+   "date": "09/30",
+   "et_zh": "盘后",
+   "et_en": "AH",
+   "name": "MU",
+   "kind": "earnings",
+   "watch": true
+  },
+  {
    "dow": "周四",
    "dow_en": "Thu",
-   "date": "09/24",
-   "et": "12:00pm et",
+   "date": "10/01",
+   "et": "8:15am et",
+   "name": "ADP Nonfarm Employment Change",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "10/01",
+   "et": "8:30am et",
+   "name": "Core PCE Price Index",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "10/01",
+   "et": "8:30am et",
+   "name": "Core PCE Prices",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "10/01",
+   "et": "8:30am et",
+   "name": "GDP",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "10/01",
+   "et": "8:30am et",
+   "name": "GDP Price Index",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "10/01",
+   "et": "8:30am et",
+   "name": "GDP Sales",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "10/01",
+   "et": "8:30am et",
+   "name": "PCE price index",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "10/01",
+   "et": "8:30am et",
+   "name": "PCE Price index",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "10/01",
+   "et": "8:30am et",
+   "name": "PCE Prices",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "10/01",
+   "et": "10:00am et",
+   "name": "Atlanta Fed GDPNow",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "10/01",
+   "et": "10:00am et",
+   "name": "Dallas Fed PCE",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "10/01",
+   "et": "6:00pm et",
+   "name": "FOMC Member Kashkari Speaks",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "10/01",
+   "et": "3:25pm et",
+   "name": "Fed Governor Cook Speaks",
+   "kind": "macro",
+   "tier": "fed"
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "10/01",
+   "et": "5:10pm et",
    "name": "Fed Goolsbee Speaks",
    "kind": "macro",
    "tier": "fed"
@@ -71,91 +224,137 @@
   {
    "dow": "周四",
    "dow_en": "Thu",
-   "date": "09/24",
-   "et_zh": "",
-   "et_en": "",
-   "name": "COST",
+   "date": "10/01",
+   "et_zh": "盘前",
+   "et_en": "BMO",
+   "name": "ACN",
+   "kind": "earnings",
+   "watch": false
+  },
+  {
+   "dow": "周四",
+   "dow_en": "Thu",
+   "date": "10/01",
+   "et_zh": "盘后",
+   "et_en": "AH",
+   "name": "NKE",
    "kind": "earnings",
    "watch": false
   },
   {
    "dow": "周五",
    "dow_en": "Fri",
-   "date": "09/25",
+   "date": "10/02",
    "et": "8:30am et",
-   "name": "Core Durable Goods Orders",
+   "name": "Continuing Jobless Claims",
    "kind": "macro",
    "tier": "high"
   },
   {
    "dow": "周五",
    "dow_en": "Fri",
-   "date": "09/25",
+   "date": "10/02",
    "et": "8:30am et",
-   "name": "Durable Goods Orders",
+   "name": "Initial Jobless Claims",
    "kind": "macro",
    "tier": "high"
   },
   {
    "dow": "周五",
    "dow_en": "Fri",
-   "date": "09/25",
+   "date": "10/02",
+   "et": "8:30am et",
+   "name": "Jobless Claims 4-Week Avg.",
+   "kind": "macro",
+   "tier": "high"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "10/02",
    "et": "10:00am et",
-   "name": "Michigan 1-Year Inflation Expectations",
+   "name": "ISM Manufacturing Employment",
    "kind": "macro",
    "tier": "high"
   },
   {
    "dow": "周五",
    "dow_en": "Fri",
-   "date": "09/25",
+   "date": "10/02",
    "et": "10:00am et",
-   "name": "Michigan 5-Year Inflation Expectations",
+   "name": "ISM Manufacturing New Orders Index",
    "kind": "macro",
    "tier": "high"
   },
   {
    "dow": "周五",
    "dow_en": "Fri",
-   "date": "09/25",
+   "date": "10/02",
    "et": "10:00am et",
-   "name": "Michigan Consumer Expectations",
+   "name": "ISM Manufacturing PMI",
    "kind": "macro",
    "tier": "high"
   },
   {
    "dow": "周五",
    "dow_en": "Fri",
-   "date": "09/25",
+   "date": "10/02",
    "et": "10:00am et",
-   "name": "Michigan Consumer Sentiment",
+   "name": "ISM Manufacturing Prices",
    "kind": "macro",
    "tier": "high"
   },
   {
    "dow": "周五",
    "dow_en": "Fri",
-   "date": "09/25",
-   "et": "10:00am et",
-   "name": "Michigan Current Conditions",
+   "date": "10/02",
+   "et": "9:05am et",
+   "name": "Fed Collins Speaks",
    "kind": "macro",
-   "tier": "high"
+   "tier": "fed"
   },
   {
    "dow": "周五",
    "dow_en": "Fri",
-   "date": "09/25",
-   "et": "10:20am et",
-   "name": "Atlanta Fed GDPNow",
-   "kind": "macro",
-   "tier": "high"
-  },
-  {
-   "dow": "周五",
-   "dow_en": "Fri",
-   "date": "09/25",
-   "et": "9:20am et",
+   "date": "10/02",
+   "et": "9:05am et",
    "name": "Fed Schmid Speaks",
+   "kind": "macro",
+   "tier": "fed"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "10/02",
+   "et": "10:00am et",
+   "name": "Fed Waller Speaks",
+   "kind": "macro",
+   "tier": "fed"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "10/02",
+   "et": "1:30pm et",
+   "name": "Fed Governor Jefferson Speaks",
+   "kind": "macro",
+   "tier": "fed"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "10/02",
+   "et": "3:30pm et",
+   "name": "Fed Governor Cook Speaks",
+   "kind": "macro",
+   "tier": "fed"
+  },
+  {
+   "dow": "周五",
+   "dow_en": "Fri",
+   "date": "10/02",
+   "et": "6:45pm et",
+   "name": "Fed Logan Speaks",
    "kind": "macro",
    "tier": "fed"
   }
