@@ -1,6 +1,6 @@
 # User journeys and content map
 
-Status: production UI deployed as version `e22240f3`, verified 2026-09-28 at 20:06:21 UTC; see the [follow-up release receipt](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md#production-release-receipt). PR #105 merged as `e22240f3bc4b7de2641d248585020e47f47d9eb7`; the release gate passed 821 Node and 14 Python tests plus copy/link checks, then published Pages `fcad2151`. These are reading paths and acceptance scenarios, not measured usability gains. Scoped phone and desktop production reads passed at 20:07–20:10 UTC; their exact limits are recorded in the receipt. The [initial `0c904fa3` receipt](../../reports/UX-PRODUCTION-2026-09-28.md#production-release-receipt), [prototype journey report](../../reports/UX-JOURNEYS-2026-09-28.md) and [preview guide](README.md) remain historical evidence.
+Status: production UI deployed as version `7fb28406`, verified 2026-09-28 at 20:24:20 UTC; see the [Chart correction receipt](../../reports/UX-CHART-RETURN-2026-09-28.md#production-release-receipt). PR #107 merged as `7fb28406cc89ac363309392599f945f0ab931e0a`; the publisher passed 823 Node and 14 Python tests, build/copy checks and 2,103 internal links, then published Pages `809bdbf9`. The exact Creator → MU History → Chart → MU History → selected-author chain passed on production at 20:25:30 UTC, with restored focus and no document overflow. These are scoped reading-path checks, not measured usability gains or physical-device acceptance. The [workflow `e22240f3` receipt](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md#production-release-receipt), [initial `0c904fa3` receipt](../../reports/UX-PRODUCTION-2026-09-28.md#production-release-receipt), [prototype journey report](../../reports/UX-JOURNEYS-2026-09-28.md) and [preview guide](README.md) retain their earlier evidence.
 
 The released follow-up extends these reading paths with consistent starter/creator stock entries, Today section
 jumps and chart keyboard access, a compact Calendar phone stack, metric-first comparison and visible
@@ -37,6 +37,7 @@ The stock workspace answers four questions: **What is the case? What do price an
 | Check support and opposition | Stock Overview key sources → exact source, or Watchlist Map → Stock Evidence. | Available opposing evidence gets a preview slot within the existing important evidence; all inline citations and the full map remain. Colors and counts do not invent corroboration. |
 | Find insider trades or fund filings | Any stock tab → Insider trades / Fund holdings · 13F → same ticker's complete archive → exact record. Watchlist filing dialogs use the same entries even when their preview is empty. | Record breadcrumbs retain category, ticker and applied query/direction, including alias-to-canonical ID changes. Broad all-record filters start compact; restrictive active filters remain exposed. |
 | Turn a price reference into a condition | Stock Metrics → explicit above/below reference → editable Alerts draft. | Existing stock return preserves exact tab/from/focus and then the stock's original source entry. Opening does not translate, submit or activate the draft; unrelated stocks cannot inherit that context. |
+| Inspect a chart without losing the research entry | Selected creator → Stock History → K-line → Stock page → creator breadcrumb. | The exact stock tab/from URL and validated original author return survive the Chart visit. Context is bound to account epoch, chart history entry and ticker; other stocks, entries and accounts do not inherit it. |
 | Review the next two weeks | Calendar → named event/ticker or event details. On phones, concise timezone precedes dates; full introduction and watchlist scope remain inside existing filters. | Closure, early-close and unconfirmed-time states, watched tickers, category counts and failed-read warnings stay visible. Historical views keep sample counts and losses. Quiet dates are not hidden to make the first event appear higher. |
 
 All filing links preserve typed facts: Fund holdings selects 13F records only, with no seven-day
@@ -85,6 +86,7 @@ entry, with supported internal routes and matching ticker/record identity requir
 9. Repeat stock tabs, source dialogs, creator filters and return paths in both languages/themes. Confine table scrolling and preserve keyboard focus. Check desktop after mobile layout changes.
 10. Use Today's count jumps and confirm target-heading focus, disabled empty targets and unchanged digest/macro order. Select chart dates by keyboard and verify announced values, including missing readings, plus the 44px help target.
 11. On phone Calendar, verify the short timezone, readable dates/event labels and full context inside filters. Confirm watched earnings, closure/early-close/unconfirmed states, source warnings and historical losses remain; distinguish quiet date cells from excess introductory chrome.
+12. From a selected author, visit a stock's History tab, open K-line, return to that exact stock tab and then to the selected author with focus restored. Reject external/mismatched return routes, another history entry, old account state and changed chart symbols.
 
 The released integration's tests, viewport matrix and scoped live-content checks are recorded in
 [production acceptance](../../reports/UX-PRODUCTION-2026-09-28.md). The broader follow-up has the
@@ -100,5 +102,10 @@ freshness or semantic fidelity, physical-device behavior, account writes or noti
 Prototype bookmarks, plans, themes, synthetic liquidity comparison and scenario switching remain
 historical design references.
 
-Known remaining limitation in `e22240f3`: Chart return loses the exact stock tab/from and original
-creator filter context. A [local correction](../../reports/UX-CHART-RETURN-2026-09-28.md) now preserves the exact stock URL and account-bound origin, including the selected author. The complete chain has regression coverage; release and production confirmation remain pending. Direct Creator → Stock → Creator return and chart rendering passed the earlier scoped checks; the longer Chart return chain did not.
+Historical failure in `e22240f3`: Chart return lost the exact stock tab/from and original creator
+filter context. Direct Creator → Stock → Creator return and chart rendering had passed, but the
+longer Chart return chain had not. The [correction released as `7fb28406`](../../reports/UX-CHART-RETURN-2026-09-28.md#production-release-receipt)
+preserves the exact stock URL and account-bound origin. At 20:25:30 UTC, the authenticated live
+chain returned to `#/stock/MU?from=creators&tab=history`, then `#/creators?creator=touzi-talk`, with
+the selected author title and Research MU focus restored. This resolves the inspected navigation
+failure without changing chart data or claiming broader source fidelity.

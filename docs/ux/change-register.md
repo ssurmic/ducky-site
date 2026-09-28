@@ -2,7 +2,15 @@
 
 Updated: 2026-09-28. This English register is the canonical presentation handoff for the UX redesign. User-facing copy remains bilingual. The private backend's shared documents remain the system-design authority; this register records public UI behavior and integration boundaries only.
 
-**Delivery status: deployed at duckybot.app, version `e22240f3`, verified on 2026-09-28 at 20:06:21 UTC.** [PR #105](https://github.com/ssurmic/ducky-site/pull/105) merged as `e22240f3bc4b7de2641d248585020e47f47d9eb7`; the existing release script reran 821 Node tests, 14 Python tests and copy/link checks before publishing [Pages `fcad2151`](https://fcad2151.ducky-site.pages.dev). Production VERSION and CSP were verified. Scoped authenticated Today, NVDA disclosure/return, desktop Watchlist Metrics, Creator/source/stock return and MU chart checks passed at 20:07–20:10 UTC. See the [follow-up release receipt](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md#production-release-receipt) for exact scope and limitations.
+**Delivery status: deployed at duckybot.app, version `7fb28406`, verified on 2026-09-28 at 20:24:20 UTC.** [PR #107](https://github.com/ssurmic/ducky-site/pull/107) merged as `7fb28406cc89ac363309392599f945f0ab931e0a`; the publisher passed 823 Node tests, 14 Python tests, build/copy checks and 2,103 internal links before publishing [Pages `809bdbf9`](https://809bdbf9.ducky-site.pages.dev). Production VERSION and CSP were verified. The exact Creator → MU History → Chart → MU History → selected-author return chain passed authenticated production verification at 20:25:30 UTC, including restored focus and no document overflow. See the [Chart correction receipt](../../reports/UX-CHART-RETURN-2026-09-28.md#production-release-receipt).
+
+**Workflow release retained:** `e22240f3` / [PR #105](https://github.com/ssurmic/ducky-site/pull/105)
+was verified at 20:06:21 UTC after 821 Node and 14 Python tests plus copy/link checks, through
+[Pages `fcad2151`](https://fcad2151.ducky-site.pages.dev). Its scoped Today, NVDA disclosure/return,
+desktop Watchlist Metrics, Creator/source/stock and MU chart checks at 20:07–20:10 UTC remain in
+the [workflow receipt](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md#production-release-receipt).
+The later Chart return failure and its correction are separate evidence; the original smoke did
+not establish that longer return chain.
 
 **Earlier production receipt retained:** version `0c904fa3` was verified at 19:05:25 UTC through
 [PR #104](https://github.com/ssurmic/ducky-site/pull/104), after 809 Node tests and its release checks.
@@ -19,6 +27,15 @@ receipt. The [integrated review](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md)
 [mobile](../../reports/UX-WORKFLOW-MOBILE-2026-09-28.md) reports, including accepted and rejected peer
 challenges. Earlier audit measurements remain evidence of the first pass, not measurements of the
 final candidate.
+
+## Released Chart return correction (`7fb28406`)
+
+The existing Chart Stock page action now restores the exact incoming stock tab/from URL and its
+validated research origin. The stock breadcrumb can then return to the selected author or other
+original entry. Context is bound to the account epoch, chart history entry and ticker; refresh of
+that same entry retains it, while unrelated routes and symbol changes cannot inherit it. The fix
+adds no API calls, account actions or chart-data changes. Regression coverage and the scoped live
+chain are recorded in the [Chart report](../../reports/UX-CHART-RETURN-2026-09-28.md).
 
 ## Released workflow follow-up (`e22240f3`)
 
@@ -75,7 +92,7 @@ Account epochs, cancellation, access and withdrawal handling remain authoritativ
 
 ## Exclusions and remaining acceptance
 
-- A later production check found that Chart return loses the exact stock tab/from and original creator filter context. A [bounded correction](../../reports/UX-CHART-RETURN-2026-09-28.md) is implemented as a local candidate, with the complete creator/stock/chart return chain covered by regression tests; production release remains pending. The earlier direct creator/stock and chart-rendering checks did not certify that complete chain.
+- The production Chart return failure in `e22240f3` is retained as historical evidence. The [bounded correction](../../reports/UX-CHART-RETURN-2026-09-28.md#production-release-receipt) was released as `7fb28406`, and the inspected creator/stock/chart return chain passed live at 20:25:30 UTC. The earlier direct creator/stock and chart-rendering checks alone did not certify it; this focused acceptance does not cover every source or account workflow.
 - The prototype's fictional authors, nine-stock fixture, six activity records, handmade entry bounds and scenario selector remain confined to prototypes/ux-lab.
 - Prototype cross-stock Metrics in Explore, thematic stock filters, shared bookmarks and My watch plans are not production additions. Production Explore links to per-stock Metrics; Watchlist retains its real comparison table.
 - No new entry-range calculation, valuation score, semantic claim merging, verified creator performance, historical delivery or broader source coverage is claimed. [Proposed contracts](proposed-backend-changes.md) remain proposals, not activated capabilities.
@@ -91,6 +108,7 @@ Account epochs, cancellation, access and withdrawal handling remain authoritativ
 | Sep 28 · 3987be2 | Prototype persona review, source continuity and English handoff | [Journey acceptance](../../reports/UX-JOURNEYS-2026-09-28.md) |
 | Sep 28 · 0c904fa3 | Production route/API integration and compact phone layout; released through PR #104 | [Production integration and release](../../reports/UX-PRODUCTION-2026-09-28.md), [creator preservation](../../reports/CREATOR-UX-INTEGRATION-2026-09-28.md) |
 | Sep 28 · e22240f3 | Three-persona workflow corrections: phone density, Today jumps/chart keyboard access, Calendar stack, Metrics ordering/status, source balance, creator/alert/record/filter returns, and direct disclosure archives; released through PR #105 / Pages fcad2151 | [Integrated review and release](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md#production-release-receipt), [original disclosure candidate evidence](../../reports/STOCK-DISCLOSURE-ENTRY-2026-09-28.md) |
+| Sep 28 · 7fb28406 | Chart restores exact stock tab/from and validated original research entry; released through PR #107 / Pages 809bdbf9, scoped live chain passed | [Chart correction and release](../../reports/UX-CHART-RETURN-2026-09-28.md#production-release-receipt) |
 
 Read this register, the [current journeys](user-journeys.md), and the latest acceptance record before continuing. Update release status only from actual committed, deployed and readable-content receipts; preserve prior prototype reports as historical evidence.
 

@@ -1,13 +1,22 @@
 # Change log
 
-## Preserve the stock entry when returning from K-line · 2026-09-28 (local candidate)
+## Preserve the stock entry when returning from K-line · 2026-09-28 (deployed)
+
+Released through [PR #107](https://github.com/ssurmic/ducky-site/pull/107), merged at
+2026-09-28 20:23:34 UTC as `7fb28406cc89ac363309392599f945f0ab931e0a`.
+The publisher reran 823 Node tests, 14 Python tests, build/copy checks and 2,103 internal links,
+then published [Pages `809bdbf9`](https://809bdbf9.ducky-site.pages.dev). Production
+`VERSION=7fb28406` and CSP were verified at 20:24:20 UTC. At 20:25:30 UTC, the authenticated
+390 × 700 Chinese/dark Creator → MU History → K-line → MU History → selected-author chain
+passed on production, including exact return links and restored Research MU focus, without
+document overflow. This is browser viewport acceptance, not a physical-device or account-write test.
 
 K-line now returns to the exact stock tab and the original selected author or research entry.
 The return is bound to the current account, chart history entry and ticker; unrelated stock
 navigation and symbol changes cannot inherit old context. No data reads or account writes were
 added. The complete Creator → Stock → Chart → Stock → Creator path and invalid return states
-have mounted-route regressions. See the [candidate acceptance](reports/UX-CHART-RETURN-2026-09-28.md).
-Production remains at the `e22240f3` receipt below until this correction is released.
+have mounted-route regressions. See the [acceptance and release receipt](reports/UX-CHART-RETURN-2026-09-28.md#production-release-receipt).
+The `e22240f3` receipt and its observed Chart return failure remain historical evidence below.
 
 ## Research workflow and phone usability follow-up · 2026-09-28 (deployed)
 
