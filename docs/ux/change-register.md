@@ -2,15 +2,26 @@
 
 Updated: 2026-09-28. This English register is the canonical presentation handoff for the UX redesign. User-facing copy remains bilingual. The private backend's shared documents remain the system-design authority; this register records public UI behavior and integration boundaries only.
 
-**Local Explore comparison candidate:** the long six-row discussion list is replaced with a
-six-column desktop/two-column phone grid, initially showing 12 valid source-ranked companies.
-Additional rows and full available summaries expand on request without another ranking read.
-One primary research action and lighter Metrics/Map links replace four equal actions and repeated
-fallback prose. Source time, real zero/missing states, attention meaning, withdrawal and account
-boundaries remain. [Candidate evidence](../../reports/UX-EXPLORE-COMPARISON-2026-09-28.md) is separate
-from the current production receipt below; no deployment is claimed.
+**Delivery status: deployed at duckybot.app, version `9ab95315`, verified on 2026-09-28 at 22:40:24 UTC.**
+[PR #109](https://github.com/ssurmic/ducky-site/pull/109) merged at 22:39:29 UTC as
+`9ab9531545fcd3294614318b3b04ff52b499a9be`. The publisher passed 831 Node tests, 14 Python tests,
+bilingual build, copy lint (4,104 files) and 2,103 links, then published
+[Pages `dc10d45f`](https://dc10d45f.ducky-site.pages.dev). The first edge read returned the prior
+version; the second verified the new VERSION and CSP. Production Today and Explore reads and
+Explore → MU Metrics → Explore passed scoped checks at 22:40–22:43 UTC. At 22:44 UTC, the
+expanded Today note survived an Explore return and desktop Today retained its dated readings
+and four macro tiles without overflow. Missing MU summary
+metrics remained missing; this receipt does not establish full field coverage. See the
+[Today](../../reports/TODAY-FRESHNESS-2026-09-28.md#production-release-receipt) and
+[Explore](../../reports/UX-EXPLORE-COMPARISON-2026-09-28.md#production-release-receipt) release records.
 
-**Delivery status: deployed at duckybot.app, version `7fb28406`, verified on 2026-09-28 at 20:24:20 UTC.** [PR #107](https://github.com/ssurmic/ducky-site/pull/107) merged as `7fb28406cc89ac363309392599f945f0ab931e0a`; the publisher passed 823 Node tests, 14 Python tests, build/copy checks and 2,103 internal links before publishing [Pages `809bdbf9`](https://809bdbf9.ducky-site.pages.dev). Production VERSION and CSP were verified. The exact Creator → MU History → Chart → MU History → selected-author return chain passed authenticated production verification at 20:25:30 UTC, including restored focus and no document overflow. See the [Chart correction receipt](../../reports/UX-CHART-RETURN-2026-09-28.md#production-release-receipt).
+**Released Explore comparison:** a six-column desktop/two-column phone grid initially shows up
+to 12 valid source-ranked companies. Extra response rows and complete summaries expand without
+another ranking read. One primary research action and lighter Metrics/Map links replace the old
+four equal actions. Company activity remains available from Explore's primary activity destination
+and the stock workspace. Source time, zero/missing states and attention-only meaning remain.
+
+**Previous Chart release retained:** version `7fb28406` was verified on 2026-09-28 at 20:24:20 UTC. [PR #107](https://github.com/ssurmic/ducky-site/pull/107) merged as `7fb28406cc89ac363309392599f945f0ab931e0a`; the publisher passed 823 Node tests, 14 Python tests, build/copy checks and 2,103 internal links before publishing [Pages `809bdbf9`](https://809bdbf9.ducky-site.pages.dev). Production VERSION and CSP were verified. The exact Creator → MU History → Chart → MU History → selected-author return chain passed authenticated production verification at 20:25:30 UTC, including restored focus and no document overflow. See the [Chart correction receipt](../../reports/UX-CHART-RETURN-2026-09-28.md#production-release-receipt).
 
 **Workflow release retained:** `e22240f3` / [PR #105](https://github.com/ssurmic/ducky-site/pull/105)
 was verified at 20:06:21 UTC after 821 Node and 14 Python tests plus copy/link checks, through
@@ -36,16 +47,16 @@ receipt. The [integrated review](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md)
 challenges. Earlier audit measurements remain evidence of the first pass, not measurements of the
 final candidate.
 
-## Candidate Today freshness correction (not released)
+## Released Today freshness correction (`9ab95315`)
 
 The owner observed newer market readings alongside a still-expanded September 25 close note.
-The candidate separates those clocks: a dated QQQ/SPY change row and market-reading context lead,
+The implementation separates those clocks: a dated QQQ/SPY change row and market-reading context lead,
 then a compact disclosure opens the complete last published note before the full macro tiles.
 Its original next-session outlook is explicitly framed as written then. Same-day notes remain
 fully expanded; weekends and unknown dates do not imply a missed trading-day publication.
 The existing four tiles, three-line charts, research-count jumps and creator/research streams
 remain. The [focused acceptance record](../../reports/TODAY-FRESHNESS-2026-09-28.md) is evidence
-for this candidate only. The deployed receipts above are unchanged.
+for the focused candidate; its [release receipt](../../reports/TODAY-FRESHNESS-2026-09-28.md#production-release-receipt) records the later publication and scoped live reads. The earlier receipts above remain historical evidence.
 
 ## Released Chart return correction (`7fb28406`)
 
@@ -128,6 +139,7 @@ Account epochs, cancellation, access and withdrawal handling remain authoritativ
 | Sep 28 · 0c904fa3 | Production route/API integration and compact phone layout; released through PR #104 | [Production integration and release](../../reports/UX-PRODUCTION-2026-09-28.md), [creator preservation](../../reports/CREATOR-UX-INTEGRATION-2026-09-28.md) |
 | Sep 28 · e22240f3 | Three-persona workflow corrections: phone density, Today jumps/chart keyboard access, Calendar stack, Metrics ordering/status, source balance, creator/alert/record/filter returns, and direct disclosure archives; released through PR #105 / Pages fcad2151 | [Integrated review and release](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md#production-release-receipt), [original disclosure candidate evidence](../../reports/STOCK-DISCLOSURE-ENTRY-2026-09-28.md) |
 | Sep 28 · 7fb28406 | Chart restores exact stock tab/from and validated original research entry; released through PR #107 / Pages 809bdbf9, scoped live chain passed | [Chart correction and release](../../reports/UX-CHART-RETURN-2026-09-28.md#production-release-receipt) |
+| Sep 28 · 9ab95315 | Source-dated Today readings and preserved old-note disclosure; compact Explore comparison; released through PR #109 / Pages dc10d45f | [Today release](../../reports/TODAY-FRESHNESS-2026-09-28.md#production-release-receipt), [Explore release](../../reports/UX-EXPLORE-COMPARISON-2026-09-28.md#production-release-receipt) |
 
 Read this register, the [current journeys](user-journeys.md), and the latest acceptance record before continuing. Update release status only from actual committed, deployed and readable-content receipts; preserve prior prototype reports as historical evidence.
 
@@ -135,8 +147,11 @@ Read this register, the [current journeys](user-journeys.md), and the latest acc
 
 Implemented in the initial production release: compact phone shell, one-row stock tabs, denser Watchlist
 List/Overview and author cards, shorter Explore introduction and full-width research actions.
-320px Stock Metrics now shows all six readings in the first screen. 390px Explore fits two complete
-company rows plus the next summary. Inputs remain 16px; primary touch areas remain 44px.
+In that initial viewport check, 320px Stock Metrics showed all six readings in the first screen.
+The then-current 390px Explore fit two complete
+company rows plus the next summary. The later comparison-grid release supersedes that Explore
+layout; these measurements remain the initial-release record. Inputs remained 16px and primary
+touch areas remained 44px.
 The final local suite reached 809 passing tests. A 52-route locale/theme/viewport sweep found no
 horizontal document overflow. See the production acceptance report for measurements and limitations.
 Published with the production release recorded above.

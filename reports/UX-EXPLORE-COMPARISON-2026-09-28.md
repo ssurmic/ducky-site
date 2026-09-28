@@ -1,6 +1,8 @@
 # Explore discussion comparison
 
-Date: 2026-09-28. Status: local candidate from frontend `cb0d3405`; not deployed.
+Date: 2026-09-28. Status: deployed through PR #109 / Pages `dc10d45f`, production version
+`9ab95315` verified at 22:40:24 UTC. Merged source: `9ab9531545fcd3294614318b3b04ff52b499a9be`.
+The original isolated candidate was based on frontend `cb0d3405`.
 
 ## Problem and design decision
 
@@ -9,7 +11,7 @@ an uninformative overview fallback, and gave every row four equally weighted act
 agent's production check at 390 × 700 saw two complete rows and part of a third. The response already
 contained more ranked companies; the frontend's six-item cap hid them.
 
-The candidate uses a comparison grid: six columns on a wide desktop, four on a narrower desktop,
+The implementation uses a comparison grid: six columns on a wide desktop, four on a narrower desktop,
 and two on phones. It shows the first 12 valid, distinct, source-ranked stocks by default. Show all
 appears only if the saved response contains additional rows; it makes no extra request. A stock's
 main area opens its research workspace, with lighter Metrics and Map entries beneath it. Company
@@ -44,7 +46,7 @@ comparison layout; no new branding, hero or animation was introduced.
 - The primary tile has an explicit Research ticker accessible name and a description containing both
   measurements. Metric/map actions retain 44px minimum targets; input text remains 16px.
 
-## Validation
+## Original isolated validation (before integration)
 
 - `tests/explore-ux.test.js` plus `tests/product-focus.test.js`: **44 passed, zero failed or skipped**.
   Tests cover source ordering, valid/missing/zero values, default 12, expansion without new reads,
@@ -67,8 +69,8 @@ comparison layout; no new branding, hero or animation was introduced.
 
 Focused log: `/tmp/ducky-explore-compare-focused.log`. Preview:
 `http://127.0.0.1:8941/qa-frame?lang=zh&theme=dark&case=explore-grid#/explore`.
-Use `lang=en` and `theme=light` for the alternate language/theme. This branch changes Explore only;
-the integrating agent's separate Today work is outside this report.
+Use `lang=en` and `theme=light` for the alternate language/theme. The original isolated branch changed Explore only; the later combined release includes the
+separately documented Today correction.
 
 ## Refresh-state follow-up
 
@@ -102,5 +104,32 @@ Expanding the note, leaving Today and returning preserves expansion. The two rev
 (disclosure restoration and refresh-error preservation during local ranking expansion) are
 fixed and covered by regressions.
 
-The fixed-date browser data is synthetic and has no production API connection. Deployment and
-live-source acceptance remain a separate step; no producer schedule or backend write changed.
+The fixed-date browser data was synthetic and had no production API connection. This
+pre-publication check did not claim deployment or live-source acceptance. The subsequent receipt
+below records those separate observations; no producer schedule or backend write changed.
+
+## Production release receipt
+
+Released through [PR #109](https://github.com/ssurmic/ducky-site/pull/109), merged at
+2026-09-28 22:39:29 UTC as `9ab9531545fcd3294614318b3b04ff52b499a9be`.
+The publisher reran **831 Node tests**, **14 Python tests**, bilingual build, copy lint
+(**4,104 files**) and **2,103 internal links**, all passing, before publishing
+[Pages `dc10d45f`](https://dc10d45f.ducky-site.pages.dev). Production `VERSION=9ab95315`
+and CSP were verified at **22:40:24 UTC**. The first edge read still returned the prior version;
+the second confirmed the new version. The hosted PR check had passed in 1m41s.
+
+Authenticated production browser reads at **22:40–22:43 UTC** used Chinese/dark. At
+**1440 × 900**, all 12 default companies were complete. The Show all button indicated **100**
+available stocks; expanding those production rows was not exercised. The 14-row expansion and
+return to 12 described above used the local synthetic fixture. At **390 × 700**, six complete
+companies fit above navigation: the sixth tile ended at
+**y=643.74**, before the navigation at **y=647**. No horizontal document overflow was observed.
+Explore → MU Metrics → Explore returned successfully. MU option walls, price range and IV/HV
+were readable, while the six summary metrics above remained dashes. That missing-data boundary
+is retained; readable snapshot sections do not certify full metric coverage.
+
+This scoped acceptance used desktop-browser viewport overrides, not physical devices. It did
+not perform account writes, alert activation, notification sends, producer activation or model
+requests. Source semantic fidelity and completeness remain separate from successful rendering.
+The previous `7fb28406` deployment remains the rollback reference; this receipt adds no backend
+release claim. Documentation-only follow-ups do not require another runtime deployment.

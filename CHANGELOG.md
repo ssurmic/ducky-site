@@ -1,6 +1,14 @@
 # Change log
 
-## Today distinguishes market readings from the last published note · 2026-09-28 (candidate)
+## Today distinguishes market readings from the last published note · 2026-09-28 (deployed)
+
+Released through [PR #109](https://github.com/ssurmic/ducky-site/pull/109), merged at
+2026-09-28 22:39:29 UTC as `9ab9531545fcd3294614318b3b04ff52b499a9be`.
+The publisher reran **831 Node tests**, **14 Python tests**, bilingual build, copy lint
+(**4,104 files**) and **2,103 internal links**, all passing, before publishing
+[Pages `dc10d45f`](https://dc10d45f.ducky-site.pages.dev). Production `VERSION=9ab95315`
+and CSP were verified at **22:40:24 UTC**. The first edge read still returned the prior version;
+the second confirmed the new version. The hosted PR check had passed in 1m41s.
 
 Today now leads with dated market readings when its saved close-of-day note belongs to another
 New York date. The last note remains one click away in a dated disclosure above the macro tiles;
@@ -14,22 +22,32 @@ The saved note’s expanded state also survives a stock visit and delayed macro 
 same account, without carrying to another note session.
 
 No producer status, holiday schedule, generation progress or completion time is inferred. This
-candidate adds no API endpoint, background refresh, account action or inference request. The
-[acceptance record](reports/TODAY-FRESHNESS-2026-09-28.md) separates focused tests from the pending
-integrated browser and release checks. It has not been deployed.
+release adds no API endpoint, background refresh, account action or inference request. At
+22:40–22:43 UTC, the authenticated 390 × 700 Chinese/dark Today page showed September 28
+QQQ/SPY changes and liquidity in the first screen, with the September 25 note collapsed but
+its complete text and original dates retained. At 22:44 UTC, the expanded note survived an
+Explore return; desktop Today retained its dated context and four macro tiles without overflow.
+The [acceptance record](reports/TODAY-FRESHNESS-2026-09-28.md#production-release-receipt)
+separates tests, synthetic viewport checks and this scoped production read.
 
-## Compare discussion leaders in one grid · 2026-09-28 (local candidate)
+## Compare discussion leaders in one grid · 2026-09-28 (deployed)
 
 Explore now shows the first 12 source-ranked stocks in a compact six-column desktop/two-column
 phone grid, with extra rows available only when the response contains them. Mention counts and
 previous-day changes align for comparison; collection time and the attention-not-sentiment note
 appear once. Each stock has one primary research link and lighter Metrics/Map entries. Repeated
 fallback prose is removed, while full available summaries remain expandable. Existing read/access
-states and same-account query, disclosure and focus restoration remain. Today is unchanged.
+states and same-account query, disclosure and focus restoration remain. The same release includes
+the separate Today freshness correction above.
 
-[Candidate design and checks](reports/UX-EXPLORE-COMPARISON-2026-09-28.md). This is not included in
-the `7fb28406` production receipt below; final combined acceptance and release belong to the
-integrating agent.
+Released through PR #109 / Pages `dc10d45f` with the gate recorded above. Production viewport
+checks at 22:40–22:43 UTC showed 12 complete stocks at 1440 × 900 and six at 390 × 700. The
+Show all button indicated 100 available stocks; production expansion was not exercised. The
+14-to-12 expansion/collapse check belongs to the local synthetic fixture. Explore → MU Metrics
+→ Explore returned successfully. Option walls,
+price range and IV/HV were readable; missing summary metrics remained dashes. The [release
+receipt](reports/UX-EXPLORE-COMPARISON-2026-09-28.md#production-release-receipt) retains that coverage limit.
+The earlier `7fb28406` receipt below describes the preceding Chart return correction only.
 
 ## Preserve the stock entry when returning from K-line · 2026-09-28 (deployed)
 
