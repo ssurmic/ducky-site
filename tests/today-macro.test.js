@@ -145,6 +145,19 @@ test('the legend carries each line\'s latest day change and hovering names the t
   strip.querySelector('.today-lines').dispatchEvent(new window.Event('pointermove',{bubbles:true}));
   assert.ok(!tip.hidden);assert.match(tip.textContent,/net liquidity \$5\.[0-9]{2}T/);assert.equal(tip.querySelectorAll('.today-lines-tip-row').length,3);
   strip.querySelector('.today-lines').dispatchEvent(new window.Event('pointerleave'));assert.ok(tip.hidden);
+  const chart=strip.querySelector('.today-lines');
+  assert.equal(chart.getAttribute('role'),'slider');assert.equal(chart.getAttribute('tabindex'),'0');
+  chart.dispatchEvent(new window.Event('focus'));assert.equal(tip.hidden,false);
+  chart.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Home',cancelable:true}));
+  assert.equal(chart.getAttribute('aria-valuenow'),'0');const first=chart.getAttribute('aria-valuetext');
+  chart.dispatchEvent(new window.KeyboardEvent('keydown',{key:'ArrowLeft',cancelable:true}));
+  assert.equal(chart.getAttribute('aria-valuenow'),'0');
+  chart.dispatchEvent(new window.KeyboardEvent('keydown',{key:'ArrowRight',cancelable:true}));
+  assert.equal(chart.getAttribute('aria-valuenow'),'1');assert.notEqual(chart.getAttribute('aria-valuetext'),first);
+  assert.match(chart.getAttribute('aria-valuetext'),/QQQ.*SPY/);
+  chart.dispatchEvent(new window.KeyboardEvent('keydown',{key:'End',cancelable:true}));
+  assert.equal(chart.getAttribute('aria-valuenow'),chart.getAttribute('aria-valuemax'));
+  chart.dispatchEvent(new window.Event('blur'));assert.equal(tip.hidden,true);
 });
 
 test('a tile reads the observed close with its date, the moving print only while the session is open, and the live row as a quote',()=>{

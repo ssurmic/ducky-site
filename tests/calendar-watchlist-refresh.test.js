@@ -29,6 +29,8 @@ test('calendar re-reads a nonempty cached watchlist on each visit and prioritize
  let close=await calendar.mount(root);
  assert.deepEqual(store.get('watchlist'),['NVDA','ORCL']);
  assert.match(root.querySelector('.event-scope-note').textContent,/Stocks in your watchlist: 2/);
+ assert.match(root.querySelector('.cal-filters .event-scope-note').textContent,/Stocks in your watchlist: 2.*not a record of your holdings/,'the compact phone header retains the exact watch scope in filter context');
+ assert.equal(root.querySelector('.cal-filters').open,false,'reading context does not activate a filter or expand the default toolbar');
  assert.ok(root.querySelector(`[data-date="${day}"] .pill-tk`).textContent.includes('ORCL'));
  button(root,'app.calendar.mode_list').click();root.querySelector('.cal-mine').click();
  assert.equal(root.querySelectorAll('.cal-mine-ev').length,1);
@@ -43,6 +45,7 @@ test('failed or pending watchlist reads preserve saved membership and show an ex
   const {root}=fixture(()=>response({retry_after:5},status));const close=await calendar.mount(root);
   assert.deepEqual(store.get('watchlist'),['NVDA']);
   assert.match(root.querySelector('.calendar-watch-warning').textContent,/Couldn't refresh.*saved in this browser \(1\)/);
+  assert.equal(root.querySelector('.calendar-watch-warning').closest('details'),null,'failed membership reads remain visible outside the compact disclosure');
   assert.ok(button(root,'app.common.retry'));assert.equal(root.querySelector('.event-scope-note'),null);
   assert.equal(root.querySelectorAll('.cal-bicell').length,14,'shared calendar remains usable');
   close();root.remove();
@@ -72,6 +75,7 @@ test('calendar retains earnings and their acquisition clocks during a source fai
  const source={partial:true,earnings_source_status:'fetch_failed',earnings_source_coverage:{last_success_at:'2026-09-06T12:00:00Z',last_attempt_at:'2026-09-08T17:00:00Z'}};
  const {root}=fixture(()=>response({items:['ORCL']}),source);let close=await calendar.mount(root);
  const warning=root.querySelector('.calendar-source-warning');assert.ok(warning);
+ assert.equal(warning.closest('.cal-filters'),null,'source failures remain outside the optional filter context');
  assert.match(warning.textContent,/Last successful retrieval: 2026-09-06 12:00 UTC/);
  assert.match(warning.textContent,/Last attempt: 2026-09-08 17:00 UTC/);
  assert.ok(root.querySelector(`[data-date="${day}"] .pill-tk`).textContent.includes('ORCL'));

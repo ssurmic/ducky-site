@@ -128,7 +128,7 @@ export async function registerDiscoveryChain(lang) {
     assert.ok(!state.requests.some(req=>req.path==='/kol/resolve'));
   });
 
-  test(`${lang}: returning from a search-selected creator reloads the directory after clearing the query`,async t=>{
+  test(`${lang}: returning from a search-selected creator restores the query and fetches only its scoped directory`,async t=>{
     const alpha=entry('Alpha'),beta=entry('Beta');const state=backend([alpha,beta]);
     const {root}=await view(t,{tier:'pro'});
     state.discovery=req=>Response.json(documentOf(req.params.get('q')==='Alpha'?[alpha]:[alpha,beta]));
@@ -137,11 +137,11 @@ export async function registerDiscoveryChain(lang) {
     assert.equal(root.querySelector('.creator-selected-heading h1').textContent,alpha.creator.name);
     assert.equal(root.querySelector('input[type=search]').value,'');
     const count=state.requests.filter(req=>req.path==='/kol/discover').length;
-    [...root.querySelectorAll('button')].find(b=>b.textContent==='← '+copy['app.creatorpage.all']).click();await settle();
-    assert.equal(root.querySelector('input[type=search]').value,'');
-    assert.deepEqual(new Set(cards(root)),new Set([alpha.creator.name,beta.creator.name]));
+    [...root.querySelectorAll('button')].find(b=>b.textContent==='← '+copy['app.creators.discover']).click();await settle();
+    assert.equal(root.querySelector('input[type=search]').value,'Alpha');
+    assert.deepEqual(cards(root),[alpha.creator.name]);
     const queries=state.requests.filter(req=>req.path==='/kol/discover');
-    assert.equal(queries.length,count+1);assert.equal(queries.at(-1).params.has('q'),false);
+    assert.equal(queries.length,count+1);assert.equal(queries.at(-1).params.get('q'),'Alpha');
     assert.equal(queries.at(-1).params.get('tickers'),'NVDA');
   });
 

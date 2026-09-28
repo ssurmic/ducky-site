@@ -62,6 +62,25 @@ test('historical industry deep links stay reachable and active filters remain ex
  assert.ok(root.querySelector('[data-board=industry]'));assert.equal(root.querySelector('[data-board=industry]').getAttribute('aria-pressed'),'true');
  assert.ok(calls.some(url=>url.includes('kind=nvdev')));assert.equal(root.querySelector('.radar-active-rule').hidden,true);dispose();root.remove();
  const all=document.createElement('section');document.body.append(all);const cleanup=await mount(all,{query:new URLSearchParams('ticker=EX')});
- assert.equal(all.querySelector('.radar-filter-toggle').getAttribute('aria-expanded'),'false');assert.equal(all.querySelector('[name=ticker]').value,'EX');assert.equal(all.querySelector('.radar-active-rule').hidden,false);
- assert.ok(all.querySelector('.radar-active-rule').textContent.includes('$200,000'));cleanup();all.remove();
+ assert.equal(all.querySelector('.radar-filter-toggle').getAttribute('aria-expanded'),'false');assert.equal(all.querySelector('[name=ticker]').value,'EX');assert.equal(all.querySelector('.radar-active-rule').hidden,true);
+ cleanup();all.remove();
+ const insider=document.createElement('section');document.body.append(insider);const stop=await mount(insider,{query:new URLSearchParams('board=insider')});
+ assert.equal(insider.querySelector('.radar-active-rule').hidden,false);assert.match(insider.querySelector('.radar-active-rule').textContent,/purchases or sales/);stop();insider.remove();
+});
+
+test('an empty ticker archive exposes its exact clearable scope outside collapsed advanced filters',async()=>{
+ store.set('me',{tier:'pro'});store.set('route',{name:'boards'});const calls=[];
+ globalThis.fetch=async(url,options={})=>{assert.equal(options.method||'GET','GET');calls.push(String(url));return Response.json({items:[],filter_version:3,sectors:[],sources:[]});};
+ const root=document.createElement('section');document.body.append(root);
+ const dispose=await mount(root,{query:new URLSearchParams('mode=archive&board=insider&ticker=NVDA&q=Chief&content=all&purchases=all')});
+ try{
+  const chip=root.querySelector('.radar-ticker-scope');assert.ok(chip);assert.match(chip.textContent,/Ticker · NVDA/);
+  assert.equal(chip.closest('.radar-filters,.radar-extra,[hidden]'),null);assert.equal(chip.style.minHeight,'44px');
+  assert.equal(root.querySelectorAll('.radar-record').length,0);assert.equal(root.querySelector('.radar-filter-toggle').getAttribute('aria-expanded'),'false');
+  assert.match(chip.getAttribute('aria-label'),/NVDA/);chip.click();await new Promise(resolve=>setTimeout(resolve,10));
+  assert.equal(root.querySelector('.radar-ticker-scope'),null);assert.equal(root.querySelector('[name=ticker]').value,'');assert.equal(root.querySelector('[name=q]').value,'Chief');
+  const request=new URL(calls.filter(url=>url.includes('/radar/archive.json')).at(-1),'https://ducky.test');
+  assert.equal(request.searchParams.has('ticker'),false);assert.equal(request.searchParams.get('q'),'Chief');assert.equal(request.searchParams.get('kind'),'insider,cluster');assert.equal(request.searchParams.get('purchases'),'all');
+  assert.equal(root.querySelector('.radar-filter-toggle').getAttribute('aria-expanded'),'false');assert.equal(document.activeElement,root.querySelector('[name=q]'));
+ }finally{dispose();root.remove();}
 });

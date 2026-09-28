@@ -41,17 +41,16 @@ export function metricCell(key,m={}) {
   const state=m.status||'missing';
   const reasonCopy={anchor_missing:'watch.ytd_anchor_missing',latest_session_missing:'watch.ytd_close_pending',adjustment_vintage_mismatch:'watch.ytd_adjustment_pending'};
   const status=ready?'':s(key==='ytd'&&state==='retained'?'watch.ytd_retained':key==='ytd'&&reasonCopy[m.reason]||stateCopy[state]||stateCopy.missing);
-  // An unavailable or dated value keeps its exact state and date in the title (and in the method
-  // disclosure below the table) rather than as a second and third line in every cell.
+  // Detailed basis remains in the title/method disclosure. A usable older value
+  // must also carry its state and date visibly: phone readers cannot hover.
   const title=[ready?'':status+(m.as_of?' · '+date(m.as_of):''),key==='iv_hv'&&valid&&m.expiry?s('watch.metric_expiry',{date:m.expiry}):''].filter(Boolean).join(' · ');
-  // A saved year-to-date return is the one value whose date changes the reading: it keeps its
-  // "saved · date" line in the cell.
   const retained=key==='ytd'&&state==='retained'&&valid;
+  const dated=valid&&!ready;
   return el('span.watch-metric',{'data-metric':key,'data-status':state,...(title&&!retained?{title}:{})},
     el('span.watch-metric-label',metricLabel(key)),
     el('strong.watch-metric-value',{class:tone,...(title&&!retained?{'aria-label':value+' · '+title}:{})},value),
     note?el('span.watch-metric-note',note):null,
-    retained?el('span.watch-metric-status',status,el('time.watch-metric-date',{datetime:m.as_of},date(m.as_of))):null);
+    dated?el('span.watch-metric-status',status,m.as_of?el('time.watch-metric-date',{datetime:m.as_of},date(m.as_of)):null):null);
 }
 
 export function metricMethods(rows){

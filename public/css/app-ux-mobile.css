@@ -1,4 +1,7 @@
 /* Compact phone chrome; controls retain 44px hit areas and text inputs retain 16px. */
+.page-app .today-lines:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.page-app .today-macro-help{width:44px;height:44px;min-width:44px;min-height:44px;font-size:13px}
+.calendar-view .cal-phone-context,.calendar-view .cal-timezone{display:none}
 @media(max-width:760px){
  .page-app .app-top{padding:calc(4px + var(--safe-top)) 12px 4px;gap:8px;min-height:52px}
  .page-app .app-top .brand{min-height:44px;display:flex;align-items:center;font-size:14px;gap:7px}
@@ -7,4 +10,72 @@
  .page-app .app-nav>a{min-height:44px;padding:4px 2px;gap:3px;border-radius:8px;font-size:10px;line-height:1.2}
  .page-app .app-nav .app-icon{width:18px;height:18px}
  .page-app .app-main{padding-top:8px}
+
+ /* Lead with the daily reading. Dates and stale-data notices remain visible. */
+ .page-app .today-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px;padding:0 0 8px;margin:0 0 10px}
+ .page-app .today-heading>div{display:contents}
+ .page-app .today-heading h1{grid-column:1;grid-row:1;margin:0;font-size:22px;line-height:1.25}
+ .page-app .today-heading .today-date{grid-column:1;grid-row:2;margin:0;font-size:11px;line-height:1.4}
+ .page-app .today-heading>a{grid-column:2;grid-row:1 / 3;padding:6px 9px;align-self:center}
+ .page-app .today-heading p.muted{display:none}
+ .page-app .today-heading .today-stats{grid-column:1/-1;grid-row:3;gap:6px;margin-top:5px}
+ .page-app .today-stat{gap:4px;padding:3px 6px;font-size:11px;line-height:1.35;border-radius:6px}
+ .page-app .today-stat strong{font-size:14px}
+ .page-app .today-digest{padding:10px;gap:7px;margin-bottom:10px;border-radius:9px}
+ .page-app .today-digest-head{gap:3px;display:grid}
+ .page-app .today-digest-head .today-section-title{font-size:16px;line-height:1.35}
+ .page-app .today-digest-head>.small{font-size:11px;line-height:1.35}
+ .page-app .today-digest-grid{gap:7px}
+ .page-app .today-digest-part,.page-app .today-digest-tomorrow{font-size:13px;line-height:1.48}
+ .page-app .today-digest-label{display:inline;font-size:11px;letter-spacing:0;margin-right:6px}
+ .page-app .today-digest-part p,.page-app .today-digest-tomorrow p{display:inline;font-size:13px;line-height:1.48;margin:0}
+ .page-app .today-digest-tomorrow{padding-top:7px}
+ .page-app .today-digest-note{font-size:11px;line-height:1.4}
+
+ /* Keep event controls close to the dates; full context stays in the existing filters. */
+ .page-app .calendar-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px;margin:0 0 4px}
+ .page-app .calendar-heading>div{display:contents}
+ .page-app .calendar-heading h1{grid-column:1;grid-row:1;margin:0;font-size:21px;line-height:1.25}
+ .page-app .calendar-heading .calendar-intro,.page-app .calendar-view>.calendar-scope-summary{display:none}
+ .page-app .calendar-heading .cal-timezone{display:block;grid-column:1;grid-row:2;margin:0;font-size:11px;line-height:1.4}
+ .page-app .calendar-heading .cal-history-link{grid-column:2;grid-row:1 / 3;align-self:center;min-height:44px}
+ .page-app .calendar-view .cal-phone-context{display:block}
+ .page-app .calendar-view .cal-phone-context p{margin:6px 0;font-size:12px;line-height:1.45}
+ .page-app .calendar-view .cal-toolbar{margin-top:6px}
+ .page-app .calendar-view .cal-mhead{margin:6px 0}
+ .page-app .calendar-view .cal-legend{gap:3px 10px;margin:0 0 3px;line-height:1.4}
+ .page-app .calendar-view .cal-legend-item{gap:4px}
+ .page-app .calendar-view .cal-week-head{gap:2px;margin:6px 0}
+ .page-app .calendar-view .cal-week-label{margin:0 0 3px}
+
+ /* Compare both indices in the same row instead of two phone-sized cards. */
+ .page-app .calendar-view>h1{font-size:22px;line-height:1.3;margin:2px 0 4px}
+ .page-app .calendar-view>p,.page-app .calendar-view .cal-note{font-size:12px;line-height:1.45;margin-bottom:8px}
+ .page-app .seasonality-view{margin-top:16px}
+ .page-app .seasonality-view h2{font-size:17px;line-height:1.35;margin:0 0 5px}
+ .page-app .seasonality-view>p{font-size:12px;line-height:1.45;margin:5px 0}
+ .page-app .seasonality-view .season-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:10px 0 8px}
+ .page-app .seasonality-view .season-controls label{width:auto;font-size:11px;gap:3px}
+ .page-app .seasonality-view .season-controls select{font-size:16px;padding:6px;min-height:44px}
+ .page-app .seasonality-view .season-controls>button{grid-column:1/-1;justify-self:start;min-height:44px;padding:6px 9px;font-size:12px}
+ .page-app .season-reading{margin:10px 0;padding:2px 0 2px 8px}
+ .page-app .season-reading h3{font-size:14px;margin:0 0 4px}
+ .page-app .season-reading p{font-size:12px;line-height:1.5}
+ .page-app .season-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:10px 0}
+ .page-app .season-metrics article{padding:10px;border-radius:8px}
+ .page-app .season-metrics article>b{font-size:12px;line-height:1.4;margin-bottom:5px}
+ .page-app .season-metrics strong{font-size:21px;line-height:1.3;margin:4px 0 8px}
+ .page-app .season-metrics article>.small{font-size:11px;line-height:1.45}
+ .page-app .season-metrics p{margin:6px 0 0}
+ .page-app .season-limit{font-size:11px;line-height:1.45;margin:8px 0}
+ .page-app .season-details{margin-top:7px}
+ .page-app .season-details>summary{min-height:44px;padding:10px 0;font-size:12px;line-height:1.6}
 }
+@media(max-width:360px){
+ .page-app .season-metrics strong{font-size:18px;white-space:nowrap}
+}
+/* Existing Today counts double as direct reading shortcuts; the macro stays expanded. */
+.page-app button.today-stat{min-height:44px;align-items:center;text-align:left;font-family:inherit;cursor:pointer}
+.page-app button.today-stat:not(:disabled):hover{border-color:var(--accent-text,var(--accent));color:var(--text)}
+.page-app button.today-stat:disabled{cursor:default;opacity:.7}
+.page-app button.today-stat:focus-visible{outline:2px solid var(--accent-text,var(--accent));outline-offset:2px}

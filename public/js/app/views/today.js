@@ -117,11 +117,14 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   const macroHost=el('div.today-macro-host');
   const creatorHost=el('div.today-creators-host');
   if(!embedded){main.append(macroHost,creatorHost);mountMacroStrip(macroHost,{signal});mountCreatorMacro(creatorHost,{signal});}
-  const stat=(value,label)=>el('span.today-stat',el('strong',String(value)),el('span',label));
+  const stat=(value,label,target,disabled=false)=>el('button.today-stat',{type:'button',disabled,
+    onclick:()=>{const heading=target();if(heading){heading.scrollIntoView?.({block:'start'});heading.focus({preventScroll:true});}}},
+    el('strong',String(value)),el('span',label));
   function renderStats(){
     if(embedded)return;
     clear(stats);stats.hidden=watchlistEmpty;
-    stats.append(stat(feed.childElementCount,s('focus.stat_fresh',{days})),stat(analysesCount,s('focus.stat_analyses')));
+    stats.append(stat(feed.childElementCount,s('focus.stat_fresh',{days}),()=>updates.querySelector('h2')),
+      stat(analysesCount,s('focus.stat_analyses'),()=>summaries.querySelector('h2'),analysesCount===0));
   }
   const search=el('input.input',{type:'search',maxlength:80,placeholder:s('focus.search_research'),'aria-label':s('focus.search_research')});
   const widenedNote=el('p.small.today-widened',{hidden:true,role:'status'},s('focus.widened_note',{days:WIDENED_DAYS}));
@@ -130,7 +133,7 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   range.value=days;search.value=query;
   const filters=el('form.focus-filters',{onsubmit:e=>{e.preventDefault();query=search.value.trim();autoWiden=false;widenedNote.hidden=true;load();}},
     range,search,el('button.btn.btn-ghost',{type:'submit'},s('focus.search')));
-  const updates=el('section.today-updates',el('h2.today-section-title',s('focus.recent_changes')),filters,widenedNote,status,feed);
+  const updates=el('section.today-updates',el('h2.today-section-title',{tabindex:'-1'},s('focus.recent_changes')),filters,widenedNote,status,feed);
   main.append(updates);
   const more=el('button.btn.btn-ghost',{type:'button',hidden:true,onclick:()=>load(true)},s('focus.more_changes'));
   const coverage=el('p.small.muted',s('focus.coverage_note'));
@@ -190,7 +193,7 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
     const ordered=latestAnalyses(accepted),recent=ordered.filter(item=>timestamp(item.as_of)>=Date.now()-RECENT_DAYS*864e5);
     const selected=showAll?ordered:recent.slice(0,SUMMARY_PREVIEW),hidden=ordered.length-selected.length;
     replaceReading(summaries,...(accepted.length?[el('header.today-section-heading',el('div',
-      el('h2.today-section-title',s('focus.latest_views'),el('span.today-count',String(accepted.length))),
+      el('h2.today-section-title',{tabindex:'-1'},s('focus.latest_views'),el('span.today-count',String(accepted.length))),
       el('p.small.muted',s('focus.latest_views_note')))),el('div.today-analysis-list',...selected.map(item=>analysisCard(item,quotes)))]:[]),
       ...(hidden>0||showAll?[el('button.btn.btn-ghost.today-show-all',{type:'button','aria-expanded':String(showAll),
         'data-reading-key':'analyses:all',onclick:()=>{showAll=!showAll;renderSummaries(lastSummary);}},

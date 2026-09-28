@@ -35,7 +35,7 @@ test('a failed creator read retries the same source route with GETs and does not
   assert.ok(document.querySelector('.creators-view').textContent.includes('Talk'));
   assert.ok(document.querySelector('.creators-view').textContent.includes('Exact source'));
   assert.equal(document.querySelector('.creator-overview'),null);
-  [...document.querySelectorAll('.creators-view button')].find(b=>b.textContent==='← '+copy['app.creatorpage.all']).click();
+  [...document.querySelectorAll('.creators-view button')].find(b=>b.textContent==='← '+copy['app.creators.discover']).click();
   await router.render();
   assert.equal(requests.filter(([url])=>url==='/kol/feed').length,1);
   assert.ok(document.querySelector('.creators-view').textContent.includes('Another creator'));

@@ -1,0 +1,48 @@
+# Newcomer workflow review · 2026-09-28
+
+Status: independently reviewed and locally amended in the frontend follow-up candidate. No commit, deployment or production-account mutation is claimed here. The integrating agent owns the full gate and release receipt.
+
+## Persona and evidence
+
+The reader is signed in, has no watched stocks and little stock-market vocabulary. Their first task is to understand one company's case, inspect a source and decide whether to follow it. Existing account access still applies; this review does not propose bypassing an entitlement.
+
+I traced current production modules and the UX register/journeys, then used synthetic, GET-only DOM/router regression tests. I did not use the shared browser. The independent mobile reviewer supplied viewport observations, identified separately below. I applied the installed frontend-design skill's guidance on concrete content, consistent action names, and useful empty states; no new visual theme, large hero or introductory paragraph was added.
+
+## Ranked findings and smallest repairs
+
+All four findings are P2 continuity/discoverability issues. Existing global navigation provides a workaround; none was presented as complete loss of the underlying function.
+
+1. **An entry stock led to a map without an obvious route to the company or follow action.** Today with no watchlist offered a valid Add stocks action, but its dated discussion cards opened the standalone map. Explore opened the stock workspace for the same company. A newcomer therefore learned two different meanings for a stock card. The standalone map preserved research but did not expose the stock workspace's follow/header return. Current repair: `public/js/app/research-examples.js:18` gives the stock a named workspace route with `from=today`, alongside an explicit Map action selecting the same workspace's evidence tab. Full map, source and history capabilities remain available from the stock. Ranking counts/dates remain attention, not a sentiment recommendation. The empty-watchlist Add stocks action remains intact.
+2. **Creator discovery and exact sources had no clear company-research next step.** Discover showed a ticker as plain text; Read this view correctly opened the exact source, whose ticker chiefly led to the separate map. Newcomers wanting company context or Follow had to leave and search again. Current repair: `public/js/app/views/creator-discovery.js:13` makes the existing ticker a research link; `views/creators.js:444` adds a named Research ticker action beside the original source ticker/map. Legacy claims and the source dialog also retain both stock research and the exact-point map (`creators.js:106`, `creators.js:601`). Dates, qualifications, original URL and precise post/point identity are unchanged.
+3. **Returning from a stock could lose the selected author or discovery filters.** Creator selection changed the hash using replaceState without notifying the router's remembered entry. Search, stance and scope lived only in mount variables. Current repair: `views/creators.js:190` restores a bounded map of reading controls for the current account epoch; `creators.js:617` saves query, scope, stance, expansion and focus keys; `creators.js:625` notifies the existing route-state mechanism. The stock header now returns to the selected author/exact source; discovery search/filter state, keyboard focus and scroll survive the stock visit. Private query text is not written into the shareable URL. Account changes discard the state. No whole archive is fetched to reconstruct a view.
+4. **Today had useful research below a long macro stack, while its useful counts did not navigate.** The mobile reviewer measured research below roughly y=1685–1779 at 320px. Shrinking text further would harm reading; hiding the liquidity chart would discard a surface the owner likes. Current repair: `views/today.js:120` turns the two existing counts into buttons targeting and focusing the corresponding section heading. `public/css/app-ux-mobile.css:61` makes those controls at least 44px high, with visible keyboard focus. The zero-analysis control is disabled rather than jumping to an empty target. Embedded feeds gain no header or new chrome. Macro content, its order and its expanded state are unchanged.
+
+## Cross-review: challenges accepted and rejected
+
+- **Accepted from the Watchlist reviewer:** Today Add stocks is a legitimate explicit intent, not itself a defect. The repair changes the starter route; it does not remove that action or make Follow a prerequisite for reading.
+- **Accepted from both reviewers:** creator exact sources and exact-point maps must stay. A named stock link supplements them; it does not replace the source with a generic overview.
+- **Rejected as unnecessary/private:** putting the discovery query into the URL or retrieving the complete creator archive to restore the page. Account-scoped memory and the existing bounded server reads solve the continuity problem.
+- **Challenge sent to the Watchlist reviewer:** keep an opposing-source preview when available, but select it from the existing relevant candidates; do not fabricate a counterargument or remove the complete citation list. Preserve stale numerical values with a short visible status rather than replacing valid historical readings with a dash.
+- **Challenge sent to the mobile reviewer:** keep the owner-approved liquidity chart open. Reuse the existing counts as shortcuts instead of collapsing the whole macro stack or reducing body text below its current readable size.
+- **Calendar challenge accepted:** the first nonempty event's y-position includes actual quiet days, so it is not by itself proof of excess chrome. The mobile reviewer separated toolbar/legend end (324px), week summary start (350px), first day (437px) and first nonempty event (~543px). Generic duplicate explanations may be condensed; closure/early-close/unconfirmed-time labels and watched earnings tickers must remain in the date cells.
+- **Independent mobile confirmation:** at 320px, the followed-author view already showed one complete claim with condition/horizon. Discover's ticker was indeed plain text before this repair. No extra first-screen prose was requested.
+
+## Successful newcomer journey
+
+Today with an empty watchlist offers Add stocks and available dated discussion examples. The reader can instead choose the primary Explore destination, type a company/ticker, select the verified search result and open its Overview without following first. The stock presents the saved case and its source dates; the reader opens an exact supporting or risk source, closes the dialog, selects Evidence or Metrics as needed, and explicitly follows the stock from the header. The contextual return leads back to the entry; Watchlist remains a separate personal revisit destination. The new Today starter now reaches this same stock workspace.
+
+On Creators, Discover starts across available authors when no watchlist exists. A ticker opens company research directly, while Read this view preserves the exact source. From that source, Research ticker opens the same stock workspace and its return goes back to the source route. Original video, conditions and the precise point map remain separate actions. A creator follow is explicit and does not happen as a side effect of reading.
+
+## Vocabulary and empty-state audit
+
+The first stock view does not force a metric table. Metrics retain per-item help; IV/HV is explained as volatility pricing rather than cheapness, and price references explicitly say that a verified entry range is unavailable. Those distinctions stay: this pass does not rename technical measures into unsupported buy advice. Existing plan/access checks remain authoritative.
+
+Explore has a focused-search alternative when discussion candidates are absent and an explicit retry when they cannot be read. Creator source failure remains a retry/access state, not an empty successful archive. The empty Following view still offers Discover; publication/observation and uncertain conditions remain visible. Further content-quality review is separate from UI reachability.
+
+## Local validation and limits
+
+`tests/newcomer-workflow.test.js` has four passing workflow regressions: dated starter/creator routes with exact-source preservation; in-place author and exact-source return context; query/stance/scope/disclosure/focus/scroll plus account isolation; and Today section jumps with unchanged macro order, no embedded chrome and a disabled empty target. Requests in this fixture are GET-only. Existing creator/source tests are also rerun by this candidate; final focused count is appended below.
+
+This is DOM/router validation, not touch or physical-device acceptance. The shared browser reviewer owns final 320/390px checks in both languages/themes. The full repository gate, actual backend repair/release, production content availability, semantic fidelity and notification delivery remain distinct acceptance claims owned by the integrating agent.
+
+Final focused run: `node --test tests/creator*.test.js tests/product-focus.test.js tests/newcomer-workflow.test.js` passed **164/164**, zero skipped. Syntax and whitespace checks passed. The earlier run exposed two obsolete expectations that return should clear the creator search, and a starter fixture sharing the preceding test's account epoch. The bilingual return assertions now require the same bounded filtered request; the fixture starts a new account epoch. The source-retry test follows the clearer Discover creators return label. No production access/source guarantee was weakened to make those tests pass.

@@ -1,6 +1,16 @@
 # User journeys and content map
 
-Status: production UI integration implemented locally, 2026-09-28; final acceptance and deployment pending. These are reading paths and acceptance scenarios, not measured usability gains. Earlier prototype scenarios remain in the [prototype journey report](../../reports/UX-JOURNEYS-2026-09-28.md) and [preview guide](README.md).
+Status: production UI deployed as version `0c904fa3`, 2026-09-28; see the [release receipt](../../reports/UX-PRODUCTION-2026-09-28.md#production-release-receipt). These are reading paths and acceptance scenarios, not measured usability gains. Earlier prototype scenarios remain in the [prototype journey report](../../reports/UX-JOURNEYS-2026-09-28.md) and [preview guide](README.md).
+
+Follow-up status: implemented local candidate; final combined gate and release are pending. The
+candidate extends these reading paths with consistent starter/creator stock entries, Today section
+jumps and chart keyboard access, a compact Calendar phone stack, metric-first comparison and visible
+historical states, direct disclosure archives, and preserved creator/activity/record/alert return
+context. None of those follow-up fixes inherits the earlier production receipt. The
+[integrated review](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md) coordinates the independent
+[newcomer](../../reports/UX-WORKFLOW-NEWCOMER-2026-09-28.md),
+[experienced-user](../../reports/UX-WORKFLOW-EXPERT-2026-09-28.md), and
+[mobile](../../reports/UX-WORKFLOW-MOBILE-2026-09-28.md) findings and their peer challenges.
 
 ## One research destination, several reasons to enter
 
@@ -16,11 +26,31 @@ The stock workspace answers four questions: **What is the case? What do price an
 | Stock beginner | Wants a starting point without interpreting a metric table. | Today or Explore → an available dated stock record → company/research context → support and risk sources → optional follow → Watchlist → Calendar or activity. | Explain the claim and uncertainty, distinguish a view from a fact and find its source. No fabricated first-use example is injected into production. |
 | Experienced user | Wants to triage watched stocks and inspect levels. | Watchlist List → Overview for reasons or Metrics for comparison → Stock Metrics → dated reference → above/below alert draft → review → explicit confirmation. | Inspect basis/expiry, keep unknown distinct from zero and create a condition deliberately. Prefill alone does not activate an alert or prove delivery. |
 
+## Follow-up candidate: complete paths and returns
+
+| Task | Entry and next action | Return and preserved context |
+|---|---|---|
+| Start with no watchlist | Today dated company → Stock Overview, or its separate Map action → Stock Evidence; Explore search reaches the same workspace. | Stock returns to Today or the Explore entry. Add stocks remains an explicit personal-list action; reading does not follow automatically. Full map and exact sources remain available. |
+| Read personal research after the market digest | Today's existing new-record/latest-analysis counts → corresponding section. | The target heading receives keyboard focus. The full digest and liquidity/QQQ/SPY stack remain open and in their original order; an empty analysis target is disabled. |
+| Inspect historical macro readings | Focus the three-line chart → Arrow keys or Home/End select a date; pointer/touch selection remains. | The selected date and each series' value are announced. Missing data remains missing, and the liquidity help control has a 44px target. |
+| Investigate a creator's claim | Discover/Following → principal view → exact source → named Research ticker; the visible ticker can also enter Stock directly. | Return restores the author/exact-source route and local query, scope/stance, expansion, focus and scroll. Original post/point map and source link are preserved. Search text stays out of the URL and account changes discard the reading state. |
+| Compare watched stocks | Watchlist Metrics → stock/quote, six readings, five signal groups, market cap, then full narrative → named Stock Metrics or Evidence. | Sorting, query, view and scroll remain. List keeps its own original column order. Finite stale/expired/previous-sample values show state/date instead of appearing current or being erased. |
+| Check support and opposition | Stock Overview key sources → exact source, or Watchlist Map → Stock Evidence. | Available opposing evidence gets a preview slot within the existing important evidence; all inline citations and the full map remain. Colors and counts do not invent corroboration. |
+| Find insider trades or fund filings | Any stock tab → Insider trades / Fund holdings · 13F → same ticker's complete archive → exact record. Watchlist filing dialogs use the same entries even when their preview is empty. | Record breadcrumbs retain category, ticker and applied query/direction, including alias-to-canonical ID changes. Broad all-record filters start compact; restrictive active filters remain exposed. |
+| Turn a price reference into a condition | Stock Metrics → explicit above/below reference → editable Alerts draft. | Existing stock return preserves exact tab/from/focus and then the stock's original source entry. Opening does not translate, submit or activate the draft; unrelated stocks cannot inherit that context. |
+| Review the next two weeks | Calendar → named event/ticker or event details. On phones, concise timezone precedes dates; full introduction and watchlist scope remain inside existing filters. | Closure, early-close and unconfirmed-time states, watched tickers, category counts and failed-read warnings stay visible. Historical views keep sample counts and losses. Quiet dates are not hidden to make the first event appear higher. |
+
+All filing links preserve typed facts: Fund holdings selects 13F records only, with no seven-day
+window or amount/direction restriction. Report period, filing date and reported share changes do
+not establish current ownership or executed trades. These are navigation changes, not new data
+acquisition. Alert/record/activity return state is bounded by the current account epoch and history
+entry, with supported internal routes and matching ticker/record identity required.
+
 ## Where information belongs
 
 | Content or task | Primary home | Explore entry | Watchlist entry | Detail and next action |
 |---|---|---|---|---|
-| Market backdrop / liquidity | Existing Today and report routes | Optional Reports tool; Today navigation | Today navigation | Existing published readings and dates. The prototype's normalized three-line chart is not newly connected. |
+| Market backdrop / liquidity | Existing Today and report routes | Optional Reports tool; Today navigation | Today navigation | Existing published readings and dates. The candidate adds keyboard date access and section jumps without replacing the production data path with prototype fixtures. |
 | Company and summary | Stock Overview | Search or named Overview link | Ticker / Overview card | Available company name, saved summary, support/risk and sources. Missing identity data is not invented. |
 | Long-term and trend perspectives | Watchlist context and stock reading | Same stock workspace | List / Overview; Metrics comparison | Preserve the two existing perspectives; neither is a popularity vote. |
 | Option walls / price references | Stock Metrics | Named Metrics link | Named metric / Metrics table | Walls retain option expiry; 20-session low/high retain their own basis; explanations remain available. |
@@ -43,16 +73,26 @@ The stock workspace answers four questions: **What is the case? What do price an
 - Missing, stale, partial, pending and denied states remain explicit. Pending summaries do not hide facts; denied material cannot return through late responses.
 - Follow, alert submission and alert confirmation are explicit actions. Production bookmarks and Saved views are outside this integration.
 
-## Candidate acceptance scenarios
+## Follow-up acceptance scenarios
 
 1. With no watched stocks, search from Explore, inspect Metrics/Evidence, open an exact source and return to the same search without an implicit follow.
-2. At 320/390 px, reach results without opening research questions or the weekly feed. Keep primary navigation and named stock actions usable.
-3. Open a stock from filtered activity, switch to Metrics and return to that activity scope. Reject unsafe returns and account-stale history state.
-4. Read support and risk before the full archive; preserve missing-source states without substituting sample claims.
-5. Read several authors' main views, expand one author's repetitions and reach every original post/point/date. Changed conditions and opposing stances remain separate.
-6. Sort Watchlist Metrics with missing readings last. Inspect expiry separately from quote time. Open an above/below reference and verify editable alert input without automatic submission.
+2. At 320/390 px, reach results without opening research questions or the weekly feed. Keep primary navigation, 16px inputs and 44px frequent controls; measure actual useful content rather than document overflow alone.
+3. Apply activity filters locally, enter a stock, switch tabs and return to the exact scope/scroll. Open an aliased record and check its breadcrumb after canonicalization. Reject external, mismatched ticker/record, wrong-entry and old-account state.
+4. Read support and risk before the full archive, including three initial same-side citations with a relevant opposite view available. Preserve every inline citation and missing-source states without substituting sample claims.
+5. Read several authors' main views, expand repetitions and reach each original post/point/date. Visit Stock from a creator or exact source and return with query, scope/stance, expansion, focus and scroll intact; changing accounts must clear that state. Changed conditions and opposing stances remain separate.
+6. Select Watchlist Metrics and see numeric columns before narrative. Sort with unknown values last and actual zero retained. Inspect visible historical state/date and expiry separately from quote time. Open an above/below draft without submission, then return to the exact stock section and original source.
 7. Exercise pending 202 and denied research. Retry pending metrics; denied data cannot reappear when older snapshot, bar or history requests finish.
 8. Check Form 4 trade/filing dates, 13F period/filing date, political ranges and company effective dates. Do not label a reported 13F share change an executed trade.
-9. Repeat stock tabs, source dialogs, creator filters and return paths in both languages/themes. Confine table scrolling and preserve keyboard focus.
+9. Repeat stock tabs, source dialogs, creator filters and return paths in both languages/themes. Confine table scrolling and preserve keyboard focus. Check desktop after mobile layout changes.
+10. Use Today's count jumps and confirm target-heading focus, disabled empty targets and unchanged digest/macro order. Select chart dates by keyboard and verify announced values, including missing readings, plus the 44px help target.
+11. On phone Calendar, verify the short timezone, readable dates/event labels and full context inside filters. Confirm watched earnings, closure/early-close/unconfirmed states, source warnings and historical losses remain; distinguish quiet date cells from excess introductory chrome.
 
-Focused tests and an initial phone check are recorded in [production acceptance](../../reports/UX-PRODUCTION-2026-09-28.md). The final combined viewport matrix and release/live-content receipt remain pending. Prototype bookmarks, plans, themes, synthetic liquidity comparison and scenario switching remain historical design references.
+The released integration's tests, viewport matrix and scoped live-content checks are recorded in
+[production acceptance](../../reports/UX-PRODUCTION-2026-09-28.md). The broader follow-up has the
+[integrated workflow record](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md) and the earlier bounded
+[disclosure record](../../reports/STOCK-DISCLOSURE-ENTRY-2026-09-28.md). Focused DOM/router tests and
+local viewport observations are evidence for those candidate paths; the integrating agent still
+owns the final combined gate and release. Synthetic browser fixtures do not certify live source
+freshness or semantic fidelity, physical-device behavior, account writes or notification delivery.
+Prototype bookmarks, plans, themes, synthetic liquidity comparison and scenario switching remain
+historical design references.

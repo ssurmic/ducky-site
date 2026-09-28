@@ -181,11 +181,14 @@ const uxReview=(()=>{
  };
  return {reply};
 })();
+const fixtureAssetFetch=window.fetch.bind(window);
 window.fetch=async(input,options={})=>{
  const url=new URL(String(input),location.origin);requests.push({path:url.pathname+url.search,method:options.method||'GET',
   ...(mode==='autocomplete-watchlist'&&options.body?{body:JSON.parse(options.body)}:{})});
  if(url.origin!==location.origin)throw Error('External traffic forbidden in synthetic fixture');
  const path=url.pathname.replace('/qa-api',''),method=options.method||'GET';
+ // The published historical asset is local to this build; all business reads remain stubbed.
+ if(method==='GET'&&url.pathname==='/seasonality.json')return fixtureAssetFetch('/seasonality.json',options);
  if(method!=='GET'){
   if(writable&&method==='DELETE'&&/^\/watchlist\/[A-Z0-9]+$/.test(path)){
    const ticker=path.split('/').at(-1),removed=watches.includes(ticker);watches=watches.filter(t=>t!==ticker);return Response.json({ticker,removed});

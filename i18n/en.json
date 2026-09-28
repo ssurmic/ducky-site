@@ -5474,7 +5474,7 @@
   "app.radar.ux.about_category": "About {category}",
   "app.radar.ux.guide_funds": "13F filings report holdings at a quarter end and are published later. Changes in reported shares do not establish executed trades or current holdings. Open a record for its filing and source.",
   "app.radar.ux.guide_company": "Company announcements, earnings, index changes and partnerships in one place. Publication and effective dates stay separate; an event alone does not establish a price direction.",
-  "app.radar.ux.active_purchase_rule": "Insider filter: evidenced open-market purchases of at least $200,000 per filing.",
+  "app.radar.ux.active_purchase_rule": "Filter: insider filings with at least $200,000 in reported open-market transactions. Each record identifies purchases or sales.",
   "app.radar.ux.report_period": "Report period",
   "app.radar.ux.transaction_date": "Transaction date",
   "app.radar.ux.published_date": "Published",
@@ -5505,5 +5505,10 @@
   "app.radar.ux.action_gift": "Gift",
   "app.radar.ux.action_exchange": "Exchange",
   "app.radar.ux.instrument_option": "Option",
-  "app.stockux.snapshot_pending": "Saved price references are being prepared. Try again shortly."
+  "app.stockux.snapshot_pending": "Saved price references are being prepared. Try again shortly.",
+  "app.stockux.disclosures": "Insider trades and fund filings for {ticker}",
+  "app.stockux.disclosure_insider": "Insider trades",
+  "app.stockux.disclosure_funds": "Fund holdings · 13F",
+  "app.today.lines_keyboard": "Use arrow keys to change the date; Home and End select the first and latest reading.",
+  "app.calendar.timezone_short": "Eastern Time · ET"
 }

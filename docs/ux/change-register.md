@@ -2,9 +2,40 @@
 
 Updated: 2026-09-28. This English register is the canonical presentation handoff for the UX redesign. User-facing copy remains bilingual. The private backend's shared documents remain the system-design authority; this register records public UI behavior and integration boundaries only.
 
-**Delivery status: production UI integration implemented in the local worktree; not yet deployed.** The candidate uses existing production route modules and the API client. The combined test suite passes 805/805; final browser acceptance and release checks are still in progress. The earlier isolated prototype remains available through the [preview guide](README.md); its fixtures and browser-local interactions are not production features.
+**Delivery status: deployed at duckybot.app, version `0c904fa3`, on 2026-09-28 at 19:05:25 UTC.** [PR #104](https://github.com/ssurmic/ducky-site/pull/104) passed hosted checks and merged before the existing Pages release script published the exact main tip. All 809 Node tests and the release checks passed; authenticated production reads confirmed the new research routes and existing data. See the [release receipt](../../reports/UX-PRODUCTION-2026-09-28.md#production-release-receipt). The earlier isolated prototype remains available through the [preview guide](README.md); its fixtures and browser-local interactions are not production features.
 
-## Current production integration
+**Follow-up candidate, final combined gate and release pending:** the implemented slice now includes
+the three-persona workflow review, phone density/accessibility corrections, and direct disclosure
+entries. It is broader than the initial disclosure patch and is not included in the `0c904fa3`
+receipt. The [integrated review](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md) coordinates the frozen
+[newcomer](../../reports/UX-WORKFLOW-NEWCOMER-2026-09-28.md),
+[experienced-user](../../reports/UX-WORKFLOW-EXPERT-2026-09-28.md), and
+[mobile](../../reports/UX-WORKFLOW-MOBILE-2026-09-28.md) reports, including accepted and rejected peer
+challenges. Earlier audit measurements remain evidence of the first pass, not measurements of the
+final candidate.
+
+## Implemented follow-up candidate
+
+| Area | Candidate behavior | Preserved boundary |
+|---|---|---|
+| Phone density | Compact reading chrome, spacing and duplicate headings leave more room for actual records. Metrics and disclosure actions retain named destinations. | Full claims, conditions, dates and primary navigation remain. Inputs stay 16px and frequent controls retain 44px targets; no physical-device result is claimed. |
+| Today | Existing research counts jump to and focus the matching heading; dated starters open Stock with a separate Map action. Macro history supports Arrow/Home/End date selection and announced readings; liquidity help has a 44px target. | The digest, three-line liquidity/QQQ/SPY chart, order and expanded macro content remain. A zero-analysis jump is disabled; embedded feeds gain no extra header. |
+| Calendar | Phones keep a short explicit Eastern Time label and move repeated introduction/watchlist-scope prose into the existing filter disclosure. Gaps are reduced. | Two-week default, 18px dates, 12px event labels, category counts, closure/early-close/unconfirmed states and watched tickers remain. Failed membership/source warnings stay visible. |
+| Watchlist comparison | Metrics orders stock/quote, six metrics, five signal groups, market cap, then the complete overview and both perspectives. Older finite values carry visible status/date. | List ordering, actual zero, unknown-last sorting, frozen stock identity, local horizontal scroll, all narrative columns and source methods remain. |
+| Stock evidence | Watchlist Map opens the stock Evidence tab. Key-source previews retain an available support and counter side within existing important evidence. | The full map and every original inline citation remain; no stance or opposing claim is inferred to fill a slot. |
+| Creator continuity | Named ticker/stock entries supplement exact-source and point-map actions. Author, query, scope/stance, expansion, focus and scroll survive a stock visit. | State is bounded to the account epoch; private query text stays out of URLs. Existing bounded reads, access, source identity and explicit follows remain. |
+| Disclosure discovery | Every stock tab and Watchlist filing dialog links to the ticker's complete Insider trades or exact 13F archive, without an arbitrary seven-day window or amount/direction restriction. | Existing records, pagination and access; no added stock-page read or acquisition. 13F is not mixed with strategic-partner records or labelled current ownership. |
+| Activity and record return | Applied filters notify the existing route-state mechanism. Record aliases retain the valid archive context through canonical-ID replacement. Broad all-record entries keep advanced filters collapsed. | Restrictive active filters remain exposed. Returns are validated against account epoch, history entry, ticker/record identity and supported internal routes. |
+| Alert return | A reference draft retains the exact stock tab/from/focus URL and the stock's prior source context. | Opening remains a prefill only. Unrelated stock links do not inherit it; submission, review, confirmation and actual delivery remain separate. |
+
+The [disclosure report](../../reports/STOCK-DISCLOSURE-ENTRY-2026-09-28.md) retains the initial bounded
+patch checks. Persona reports retain focused regression results; the integrated report owns the
+combined local browser observations. Final committed-candidate gate, deployment and any scoped live
+read receipt remain pending. This frontend follow-up does not add a backend API, inference, account
+write or notification test; separate backend repair/release evidence stays in the shared private
+engineering handoff.
+
+## Released production integration (`0c904fa3`)
 
 | Area | Implemented behavior | Boundary |
 |---|---|---|
@@ -17,7 +48,7 @@ Updated: 2026-09-28. This English register is the canonical presentation handoff
 | Repeated views | Eligible exact repetitions from one stable author collapse behind an original lead with all records expandable. Support stays green and risk red, with text labels. | Both languages, stance, scope and semantic fields must match. Changed/uncertain claims stay separate. Counts describe records, not independent corroboration. |
 | Company and capital activity | Existing Radar records appear in insider, fund, political and company categories with server filters, source details and valid stock actions. | Typed amounts/dates, access, partial results, coverage and cursors remain intact. No synthetic records or amount rankings. |
 | Alert entry | A selected reference prefills the existing alert draft with explicit direction. Review and confirmation use the existing workflow. | Opening the form does not submit or create an alert. Compiler availability and delivery require separate evidence. |
-| Continuity and failures | Stock return context is tied to its history entry/account epoch, including activity entry. Pending metrics offer retry; denied research rejects late responses. | Focused regressions passed; final combined browser acceptance remains pending. |
+| Continuity and failures | Stock return context is tied to its history entry/account epoch, including activity entry. Pending metrics offer retry; denied research rejects late responses. | Focused regressions and final browser acceptance passed; see the release receipt. |
 | Today and Calendar | Existing production destinations and source rules remain in place. | Prototype examples/liquidity comparison and Calendar mockups do not replace these routes. |
 
 ## Existing read and action contracts
@@ -39,7 +70,7 @@ Account epochs, cancellation, access and withdrawal handling remain authoritativ
 - The prototype's fictional authors, nine-stock fixture, six activity records, handmade entry bounds and scenario selector remain confined to prototypes/ux-lab.
 - Prototype cross-stock Metrics in Explore, thematic stock filters, shared bookmarks and My watch plans are not production additions. Production Explore links to per-stock Metrics; Watchlist retains its real comparison table.
 - No new entry-range calculation, valuation score, semantic claim merging, verified creator performance, historical delivery or broader source coverage is claimed. [Proposed contracts](proposed-backend-changes.md) remain proposals, not activated capabilities.
-- The combined test suite passes 805/805. Final build/copy/link checks, 320/390 px and desktop checks in both languages/themes, exact candidate release and live readable-content checks remain with the integrating agent. The [production acceptance record](../../reports/UX-PRODUCTION-2026-09-28.md) separates these stages.
+- The released integration passed 809 Node tests, final build/copy/link checks and its viewport matrix. Live verification was limited to the routes and readable content named in the [release receipt](../../reports/UX-PRODUCTION-2026-09-28.md#production-release-receipt); it does not establish every creator or source as current. The broader workflow/disclosure follow-up has its own candidate records and is not included in that release. Local fixture and viewport checks do not certify source prose, current coverage, physical-device behavior or notification delivery.
 
 ## Change history
 
@@ -49,16 +80,17 @@ Account epochs, cancellation, access and withdrawal handling remain authoritativ
 | Sep 28 · a6d4948 | Prototype metrics and USD liquidity comparison | [Metric correction](../../reports/UX-METRICS-RESTORATION-2026-09-28.md) |
 | Sep 28 · 9e174ea | Prototype activity layout, API mapping and adapter tests | [Activity acceptance](../../reports/UX-ACTIVITY-REFERENCE-2026-09-28.md) |
 | Sep 28 · 3987be2 | Prototype persona review, source continuity and English handoff | [Journey acceptance](../../reports/UX-JOURNEYS-2026-09-28.md) |
-| Sep 28 · local candidate after 3987be2 | Production route/API integration; acceptance and release pending | [Production integration](../../reports/UX-PRODUCTION-2026-09-28.md), [creator preservation](../../reports/CREATOR-UX-INTEGRATION-2026-09-28.md) |
+| Sep 28 · 0c904fa3 | Production route/API integration and compact phone layout; released through PR #104 | [Production integration and release](../../reports/UX-PRODUCTION-2026-09-28.md), [creator preservation](../../reports/CREATOR-UX-INTEGRATION-2026-09-28.md) |
+| Sep 28 · local candidate after 0c904fa3 | Three-persona workflow corrections: phone density, Today jumps/chart keyboard access, Calendar stack, Metrics ordering/status, source balance, creator/alert/record/filter returns, and direct disclosure archives; final gate/release pending | [Integrated workflow review](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md), [disclosure entry acceptance](../../reports/STOCK-DISCLOSURE-ENTRY-2026-09-28.md) |
 
 Read this register, the [current journeys](user-journeys.md), and the latest acceptance record before continuing. Update release status only from actual committed, deployed and readable-content receipts; preserve prior prototype reports as historical evidence.
 
-### Phone density follow-up · 2026-09-28
+### Initial released phone density · 2026-09-28 (`0c904fa3`)
 
-Implemented in the production candidate: compact phone shell, one-row stock tabs, denser Watchlist
+Implemented in the initial production release: compact phone shell, one-row stock tabs, denser Watchlist
 List/Overview and author cards, shorter Explore introduction and full-width research actions.
 320px Stock Metrics now shows all six readings in the first screen. 390px Explore fits two complete
 company rows plus the next summary. Inputs remain 16px; primary touch areas remain 44px.
 The final local suite reached 809 passing tests. A 52-route locale/theme/viewport sweep found no
 horizontal document overflow. See the production acceptance report for measurements and limitations.
-Publication/live receipt remains a separate release step.
+Published with the production release recorded above.

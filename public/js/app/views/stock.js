@@ -6,6 +6,7 @@ import {analysisPanel,detail,mapView} from './evidence.js';
 import {pick,compactPrice,dayWindow,localTime,researchError,replaceReading,syncSourceDialog,noteCard} from '../stock-reading.js';
 import {closingChart} from '../stock-price-chart.js';
 import {stockMetrics,priceReferencePlan} from '../stock-metrics.js';
+import {stockDisclosureLinks} from '../stock-disclosures.js';
 import {unpackSnapshot} from '../snapshot-model.js';
 import {changeCard} from './today.js';
 
@@ -66,7 +67,7 @@ export async function mount(root,{ticker,signal,returnTo,query=new URLSearchPara
   overviewPanel.append(body,priceReferencePlan(ticker,from),chart);
   const tools=el('details.stock-extra-tools',el('summary',s('focus.deeper_research')),directTools);
   head.append(el('a.btn.btn-ghost',{href:'#/chart/'+ticker,'data-stock-tool':'kline'},s('focus.chart_short')));
-  shell.append(head,tabs,overviewPanel,metricsPanel,mapPanel,historyPanel,tools);root.append(shell);
+  shell.append(head,tabs,stockDisclosureLinks(ticker),overviewPanel,metricsPanel,mapPanel,historyPanel,tools);root.append(shell);
   const off=store.subscribe('watchlist',sync);
   const details=el('details.focus-history',el('summary',s('focus.research_history'))),historyBody=el('div');details.append(historyBody);historyPanel.append(details);
   let historyCursor=null,historyLoaded=false,historyLoading=false;
@@ -98,8 +99,17 @@ export async function mount(root,{ticker,signal,returnTo,query=new URLSearchPara
     const direct=available.filter(n=>n.priority==='direct'),important=direct.length?direct:available;
     const refs=doc.analysis?.overview?.citations||[];
     const cited=refs.map(id=>available.find(n=>n.id===id)).filter(Boolean);
-    const opposed=important.find(n=>n.stance==='counter');
-    const selected=[...new Map([...cited,...(opposed?[opposed]:[]),...important].map(n=>[n.id,n])).values()].slice(0,3);
+    const selected=[...new Map([...cited,...important].map(n=>[n.id,n])).values()].slice(0,3);
+    // A short preview must not make a two-sided record look unanimous. Keep the
+    // earliest cited sources, reserving one slot for each available important side.
+    // The analysis above retains every original inline citation.
+    for(const stance of ['support','counter']){
+      const representative=important.find(n=>n.stance===stance);
+      if(!representative||selected.some(n=>n.stance===stance))continue;
+      if(selected.length<3){selected.push(representative);continue;}
+      const replace=selected.findLastIndex(n=>!['support','counter'].includes(n.stance)||selected.filter(other=>other.stance===n.stance).length>1);
+      if(replace>=0)selected[replace]=representative;
+    }
     const sources=el('section.stock-key-evidence',el('h2',s('focus.key_sources')));
     if(!selected.length)sources.append(el('p.muted',s('focus.no_research')));
     for(const node of selected){

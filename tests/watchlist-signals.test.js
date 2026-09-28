@@ -69,7 +69,7 @@ test('signal cells read bought/sold with amounts, walls carry their distance to 
  assert.match(fundsCell.querySelector('.watch-signal-net').textContent,/^2 added$/);assert.match(fundsCell.textContent,/Bridgewater Associates added · 2026 Q2/);assert.match(fundsCell.querySelector('.watch-signal-event').getAttribute('title'),/13F filed 08\/14/);
  const ranged=signals.buildSignals(briefs,{items:[{...funds.items[0],extra:{facts:{position_change:'increased',report_period:'2026-06-30',prior_shares:1000000,new_shares:1500000,new_value:2.4e8,quarter_price_range:{low:150,high:178.5,sessions:63}}}}]},['NVDA']);
  const rangedCell=signals.signalCell('funds',ranged.get('NVDA'),{ticker:'NVDA'});assert.match(rangedCell.querySelector('.watch-signal-event').getAttribute('title'),/\$150–\$178\.50/);
- const fundCard=signals.signalCard('funds',ranged.get('NVDA'),'NVDA');assert.match(fundCard.textContent,/Shares 1M → 1\.5M/);assert.match(fundCard.textContent,/Quarter-end reported price ≈ \$160\.00/);assert.match(fundCard.textContent,/Quarter price range \$150–\$178\.50/);assert.ok([...fundCard.querySelectorAll('a')].some(a=>a.getAttribute('href')==='#/boards?board=partner&ticker=NVDA'));
+ const fundCard=signals.signalCard('funds',ranged.get('NVDA'),'NVDA');assert.match(fundCard.textContent,/Shares 1M → 1\.5M/);assert.match(fundCard.textContent,/Quarter-end reported price ≈ \$160\.00/);assert.match(fundCard.textContent,/Quarter price range \$150–\$178\.50/);assert.ok([...fundCard.querySelectorAll('a')].some(a=>a.getAttribute('href')==='#/boards?board=funds&ticker=NVDA&mode=archive&content=all&purchases=all'));
  const walls=signals.signalCell('walls',all.get('NVDA'));
  assert.match(walls.querySelector('.watch-wall.is-call').textContent,/\$240/);assert.match(walls.querySelector('.watch-wall.is-call').textContent,/9\.9% above/);
  assert.match(walls.querySelector('.watch-wall.is-put').textContent,/8\.4% below/);assert.match(walls.title,/Exp 09\/18 \/ 10\/16/);
@@ -184,7 +184,7 @@ test('the watchlist metric comparison retains five sortable signal columns from 
  first.querySelector('button.watch-signal[data-metric=insider]').click();
  const card=document.querySelector('.modal-body .watch-signal-card');assert.ok(card);
  assert.match(card.textContent,/Jane Doe/);assert.match(card.textContent,/5K sh × \$200\.00/);assert.match(card.textContent,/Avg \$201\.67/);
- assert.ok([...card.querySelectorAll('a')].some(a=>a.getAttribute('href')==='#/boards?board=insider&ticker=NVDA'));assert.ok(card.querySelector('a[href="#/evidence/NVDA"]'));closeModal();
+ assert.ok([...card.querySelectorAll('a')].some(a=>a.getAttribute('href')==='#/boards?board=insider&ticker=NVDA&mode=archive&content=all&purchases=all'));assert.ok(card.querySelector('a[href="#/evidence/NVDA"]'));closeModal();
  assert.equal(root.querySelectorAll('button a, a button').length,0);
  root.querySelector('[data-sort=insider]').click();
  assert.deepEqual([...root.querySelectorAll('tbody tr')].map(n=>n.dataset.readingAnchor),['NVDA','AAPL','TSLA']);
@@ -338,7 +338,7 @@ test('politician disclosures count buys and sells, show the latest with its amou
  assert.match(card.textContent,/Nancy Pelosi.*spouse · stock · \$500K–\$1M/);assert.match(card.textContent,/Close on 2026-07-24: \$22\.50/);assert.match(card.textContent,/Disclosed 2026-08-20/);
  assert.match(card.textContent,/options · \$1M–\$5M/);assert.match(card.textContent,/Call options; Strike price \$20/);
  assert.match(card.textContent,/Amounts are disclosed as ranges/);
- const politicalLink=[...card.querySelectorAll('a')].find(a=>a.getAttribute('href')==='#/boards?board=political&ticker=INTC');
+ const politicalLink=[...card.querySelectorAll('a')].find(a=>a.getAttribute('href')==='#/boards?board=political&ticker=INTC&mode=archive&content=all&purchases=all');
  assert.equal(politicalLink.textContent,'View disclosures','the political board link says what it opens, not "Open chart"');
  assert.ok(signals.signalSortValue(all.get('INTC'),'politicians')>signals.signalSortValue(all.get('AAPL'),'politicians'));
  assert.doesNotMatch(cell.textContent+card.textContent,/target|guarantee|floor|buy now/i);

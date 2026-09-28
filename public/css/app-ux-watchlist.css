@@ -25,8 +25,11 @@
 .watch-row-disclosures{display:flex;align-items:center;min-height:44px;width:fit-content;font-size:11px;margin-top:3px}
 .watch-comparison-table.watch-compact-table tr>:first-child{min-width:176px;width:176px}
 .watch-comparison-table.watch-compact-table.watch-selectable tr>:first-child{width:194px;padding-left:42px}
+.watch-comparison-table.watch-selectable .watch-stock-actions{flex-wrap:nowrap;margin-left:-30px}
 .watch-comparison-table.watch-compact-table .stock-name{padding-right:0}
 .watch-comparison-table.watch-compact-table .watch-company{max-width:138px}
+.watch-comparison-table.watch-compact-table tr>.watch-help-col,.watch-comparison-table.watch-compact-table tr>.watch-metric-cell{width:96px;text-align:right}
+.watch-comparison-table.watch-compact-table tr>.watch-overview-col,.watch-comparison-table.watch-compact-table tr>.watch-overview-cell{width:300px;text-align:left}
 .watch-scroll-hint{display:none;margin:0 0 6px}
 .watch-first-use{max-width:640px;margin:20px auto;padding:28px;text-align:center;border:1px solid var(--border);border-radius:14px;background:var(--surface)}
 .watch-first-use>img{object-fit:contain;margin-bottom:12px}
@@ -100,7 +103,7 @@
  .watchlist-view .watch-compact-table .watch-view-text,.watchlist-view .watch-compact-table .watch-view-pending{font-size:13px;line-height:1.5;margin:0}
  .watchlist-view .watch-reading-date,.watchlist-view .watch-view-date{font-size:11px;line-height:1.35;margin-top:3px}
  .watchlist-view .watch-row-disclosures{font-size:11px;margin-top:0}
- .watch-comparison-table.watch-compact-table tr>:first-child,.watch-comparison-table.watch-compact-table.watch-selectable tr>:first-child{width:150px;padding-left:44px;padding-right:5px}
+ .watch-comparison-table.watch-compact-table tr>:first-child,.watch-comparison-table.watch-compact-table.watch-selectable tr>:first-child{min-width:150px;width:150px;padding-left:44px;padding-right:5px}
  .watch-comparison-table.watch-compact-table .watch-company{max-width:101px;font-size:11px;line-height:1.35}
  .watch-comparison-table .watch-select{width:44px;left:0}
  /* Reuse the selection gutter below the identity, keeping all three 44px actions. */

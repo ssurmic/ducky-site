@@ -5474,7 +5474,7 @@
   "app.radar.ux.about_category": "关于{category}",
   "app.radar.ux.guide_funds": "13F 记录基金在报告期末申报的股数，通常晚于报告期披露。股数变化不等于已验证的买卖，也不能证明当前持仓；完整申报和来源可在记录中查看。",
   "app.radar.ux.guide_company": "公司公告、财报、指数调整与合作事件放在一起查看。披露日期与生效日期分别列出；事件本身不代表价格会朝某个方向变化。",
-  "app.radar.ux.active_purchase_rule": "高管交易当前筛选：有依据的公开市场买入，每份申报至少 $200,000。",
+  "app.radar.ux.active_purchase_rule": "筛选条件：内部人申报的公开市场交易金额至少 $200,000。买卖方向见各条记录。",
   "app.radar.ux.report_period": "报告期末",
   "app.radar.ux.transaction_date": "交易日期",
   "app.radar.ux.published_date": "披露日期",
@@ -5505,5 +5505,10 @@
   "app.radar.ux.action_gift": "捐赠/赠与",
   "app.radar.ux.action_exchange": "交换/分拆",
   "app.radar.ux.instrument_option": "期权",
-  "app.stockux.snapshot_pending": "价位资料正在准备中，请稍后重试。"
+  "app.stockux.snapshot_pending": "价位资料正在准备中，请稍后重试。",
+  "app.stockux.disclosures": "查看 {ticker} 的内部人交易与基金申报",
+  "app.stockux.disclosure_insider": "内部人交易",
+  "app.stockux.disclosure_funds": "基金持仓 · 13F",
+  "app.today.lines_keyboard": "用方向键切换日期，Home 和 End 查看首日与最新记录。",
+  "app.calendar.timezone_short": "美东时间 · ET"
 }

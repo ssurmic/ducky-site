@@ -197,7 +197,7 @@ export async function mount(root, route={}) {
     el('div.radar-filter-actions',el('button.btn.btn-primary',{type:'submit'},s('radar.apply')),
     el('button.btn.btn-ghost',{type:'button',onclick:reset},s('radar.reset'))));
   const guide=el(reports?'div.radar-guide':'details.radar-guide');
-  const advancedActive=['sector','cap','direction','start','end'].some(key=>state[key]) || state.purchases!=='open_market' || state.content!=='readable' || state.days!=='7';
+  const advancedActive=['sector','cap','direction','start','end'].some(key=>state[key]) || !['open_market','all'].includes(state.purchases) || state.content==='missing' || (state.mode==='recent'&&state.days!=='7');
   filter.classList.toggle('filters-expanded',advancedActive);
   filterToggle.setAttribute('aria-expanded',String(advancedActive));
   const summary=el('div.radar-result-summary',{role:'status','aria-live':'polite'});
@@ -240,7 +240,7 @@ export async function mount(root, route={}) {
   return cleanup;
 
   function cleanup(){disposeScreen();clearTimeout(recentDebounce);alive=false;requestId++;archiveCtl?.abort();staticCtl.abort();clearTimeout(timer);}
-  function persist(){const p=new URLSearchParams();for(const [k,v] of Object.entries(state))if(v && k!=='reports')p.set(k,v);history.replaceState(null,'','#/'+(reports?'reports':'boards')+'?'+p);selectNavigation(reports?'reports':'boards',p);}
+  function persist(){const p=new URLSearchParams();for(const [k,v] of Object.entries(state))if(v && k!=='reports')p.set(k,v);history.replaceState(history.state,'','#/'+(reports?'reports':'boards')+'?'+p);selectNavigation(reports?'reports':'boards',p);window.dispatchEvent(new window.CustomEvent('ducky:route-state'));}
   function readFilters(){state.q=query.value.trim();state.ticker=ticker.value.trim().toUpperCase().replace(/^\$/,'');state.content=content.value;state.direction=direction.value;state.sector=sector.value;state.cap=cap.value;state.purchases=purchases.value;state.days=days.value;state.start=start.value;state.end=end.value;}
   function apply(){
     readFilters();end.setCustomValidity(state.start && state.end && state.start>state.end?s('radar.date_error'):'');
@@ -307,8 +307,13 @@ export async function mount(root, route={}) {
     if(['all','insider'].includes(state.board))guide.append(el('details.radar-purchase-rule',el('summary',s('market.details')),el('p',s('radar.purchase_rule'))));
     guide.hidden=state.board==='all' && state.purchases==='all';
     const stocks=new Set(shown.filter(r=>r.kind!=='nvdev').map(r=>r.ticker).filter(Boolean)).size;
-    summary.textContent=pending?s('common.loading'):s(reports?'reader.report_count':'radar.result_count',{n:shown.length,stocks});
-    activeRule.hidden=reports||state.mode==='excerpts'||!['all','insider'].includes(state.board)||state.purchases!=='open_market';
+    clear(summary);
+    if(state.ticker)summary.append(el('button.btn.btn-ghost.radar-ticker-scope',{type:'button',
+      style:{minHeight:'44px',fontSize:'12px',padding:'4px 8px',marginInlineEnd:'8px'},
+      'aria-label':s('radar.reset')+' · '+s('radar.ticker')+' '+state.ticker,
+      onclick:()=>{ticker.value='';apply();query.focus({preventScroll:true});}},s('radar.ticker')+' · '+state.ticker+' ×'));
+    summary.append(el('span',pending?s('common.loading'):s(reports?'reader.report_count':'radar.result_count',{n:shown.length,stocks})));
+    activeRule.hidden=reports||state.mode==='excerpts'||state.board!=='insider'||state.purchases!=='open_market';
     activeRule.textContent=s('radar.ux.active_purchase_rule');
     accessNote.querySelector('p').textContent=s(currentAccess?'radar.access_current':'radar.access_delayed')+
       (!currentAccess && accessInfo?.available_before?' '+s('radar.access_cutoff',{date:dateTime(accessInfo.available_before)}):'');

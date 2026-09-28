@@ -88,12 +88,24 @@ function linesBlock(tile){
   const legend=el('span.today-macro-legend',...series.map(x=>el('span.today-lines-key.is-'+x.key,el('i'),labels[x.key]+' ',el('b',lineReading(x,last,rows)))));
   const chart=sparkLines({dates,series,live},{labels,fmtDate});
   const tip=el('div.today-lines-tip',{hidden:true,role:'status'});
-  const show=i=>{tip.hidden=false;tip.replaceChildren(el('span.today-lines-tip-date',fmtDate(dates[i])+(live[i]?' · '+s('today.lines_live'):'')),
-    ...series.map(x=>el('span.today-lines-tip-row.is-'+x.key,el('i'),labels[x.key],el('b',lineReading(x,i,rows)))));chart.moveCursor?.(i);};
+  let selected=last;
+  chart.setAttribute('tabindex','0');chart.setAttribute('role','slider');chart.setAttribute('aria-orientation','horizontal');
+  chart.setAttribute('aria-label',labels[primary]+' / '+labels.qqq+' / '+labels.spy+'. '+s('today.lines_keyboard'));
+  chart.setAttribute('aria-valuemin','0');chart.setAttribute('aria-valuemax',String(last));
+  const describe=i=>fmtDate(dates[i])+(live[i]?' · '+s('today.lines_live'):'')+'; '+series.map(x=>labels[x.key]+': '+lineReading(x,i,rows)).join('; ');
+  chart.setAttribute('aria-valuenow',String(last));chart.setAttribute('aria-valuetext',describe(last));
+  const show=i=>{selected=i;tip.hidden=false;tip.replaceChildren(el('span.today-lines-tip-date',fmtDate(dates[i])+(live[i]?' · '+s('today.lines_live'):'')),
+    ...series.map(x=>el('span.today-lines-tip-row.is-'+x.key,el('i'),labels[x.key],el('b',lineReading(x,i,rows)))));chart.moveCursor?.(i);
+    chart.setAttribute('aria-valuenow',String(i));chart.setAttribute('aria-valuetext',describe(i));};
   const hide=()=>{tip.hidden=true;chart.moveCursor?.(null);};
   chart.addEventListener('pointermove',e=>{const rect=chart.getBoundingClientRect();show(cursorIndex(e.clientX-rect.left,rect.width,dates.length));});
-  chart.addEventListener('pointerleave',hide);
+  chart.addEventListener('pointerleave',()=>{if(document.activeElement!==chart)hide();});
   chart.addEventListener('pointerdown',e=>{const rect=chart.getBoundingClientRect();show(cursorIndex(e.clientX-rect.left,rect.width,dates.length));});
+  chart.addEventListener('focus',()=>show(selected));chart.addEventListener('blur',hide);
+  chart.addEventListener('keydown',event=>{
+    const next={ArrowLeft:selected-1,ArrowDown:selected-1,ArrowRight:selected+1,ArrowUp:selected+1,Home:0,End:last}[event.key];
+    if(next===undefined)return;event.preventDefault();show(Math.max(0,Math.min(last,next)));
+  });
   return el('div.today-macro-chart.has-cursor',tip,chart,legend,
     el('span.today-macro-caption',s('today.lines_caption',{n:dates.length,what:labels[primary],rq:r(qqq?.correlation),rs:r(spy?.correlation),pq:OK(qqq?.opposite)?qqq.opposite:'—'})));
 }
