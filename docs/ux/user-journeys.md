@@ -1,12 +1,29 @@
 # User journeys and content map
 
-Local Explore candidate: compare up to 12 source-ranked companies side by side (two columns on
-phones), then enter a stock through its main tile or direct Metrics/Map action. Additional response
-rows and complete summaries are optional expansions. The source time and attention-only meaning
-appear once; reading still never follows a stock. [Candidate checks](../../reports/UX-EXPLORE-COMPARISON-2026-09-28.md)
-are separate from the deployed journeys below.
+Status: production UI deployed as `9ab95315`, verified on 2026-09-28 at 22:40:24 UTC through
+[Pages `dc10d45f`](https://dc10d45f.ducky-site.pages.dev). [PR #109](https://github.com/ssurmic/ducky-site/pull/109)
+merged at 22:39:29 UTC as `9ab9531545fcd3294614318b3b04ff52b499a9be`; the publisher passed
+831 Node and 14 Python tests, bilingual build, copy lint and 2,103 links. Scoped production reads
+at 22:40–22:43 UTC verified dated Today content, the compact Explore grid and an Explore → MU
+Metrics → Explore return. MU option walls, price range and IV/HV were readable; the six missing
+summary metrics remained dashes. At 22:44 UTC, Today → Explore → Today restored the open old
+note after its asynchronous read; desktop Today also showed its dated context and four macro
+tiles without overflow. This is not complete field-coverage or physical-device acceptance.
 
-Status: production UI deployed as version `7fb28406`, verified 2026-09-28 at 20:24:20 UTC; see the [Chart correction receipt](../../reports/UX-CHART-RETURN-2026-09-28.md#production-release-receipt). PR #107 merged as `7fb28406cc89ac363309392599f945f0ab931e0a`; the publisher passed 823 Node and 14 Python tests, build/copy checks and 2,103 internal links, then published Pages `809bdbf9`. The exact Creator → MU History → Chart → MU History → selected-author chain passed on production at 20:25:30 UTC, with restored focus and no document overflow. These are scoped reading-path checks, not measured usability gains or physical-device acceptance. The [workflow `e22240f3` receipt](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md#production-release-receipt), [initial `0c904fa3` receipt](../../reports/UX-PRODUCTION-2026-09-28.md#production-release-receipt), [prototype journey report](../../reports/UX-JOURNEYS-2026-09-28.md) and [preview guide](README.md) retain their earlier evidence.
+Explore compares up to 12 source-ranked companies side by side by default (two columns on
+phones), then enters a stock through its main tile or direct Metrics/Map action. Additional
+response rows and complete summaries expand on request; opening research never follows a stock.
+Today separates the latest dated market readings from the last published close note. A note for
+the current New York date stays fully expanded; an older note lives in a dated native disclosure
+above the macro tiles, with its full original text and next-session context. [Today evidence](../../reports/TODAY-FRESHNESS-2026-09-28.md)
+and [Explore evidence](../../reports/UX-EXPLORE-COMPARISON-2026-09-28.md) distinguish tests from live acceptance.
+
+The [Chart `7fb28406` receipt](../../reports/UX-CHART-RETURN-2026-09-28.md#production-release-receipt),
+[workflow `e22240f3` receipt](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md#production-release-receipt),
+[initial `0c904fa3` receipt](../../reports/UX-PRODUCTION-2026-09-28.md#production-release-receipt),
+[prototype journey report](../../reports/UX-JOURNEYS-2026-09-28.md) and [preview guide](README.md)
+retain their earlier evidence. Those receipts apply to their measured scopes, not automatically
+to later changes or every source. Browser viewport acceptance is not a physical-device or account-write test.
 
 The released follow-up extends these reading paths with consistent starter/creator stock entries, Today section
 jumps and chart keyboard access, a compact Calendar phone stack, metric-first comparison and visible
@@ -27,7 +44,7 @@ The stock workspace answers four questions: **What is the case? What do price an
 
 | Perspective | Starting question | Current production path | Successful outcome |
 |---|---|---|---|
-| Researcher | No watchlist yet; wants to investigate a company and verify its evidence. | Explore → search or dated candidate → Overview / Metrics / Map → exact source → History → optionally follow. An activity record can enter the same workspace. | Read unwatched research within account access, inspect opposing evidence/dates and return to the entry scope. Explore provides per-stock metrics; the prototype's cross-stock comparison is not integrated. |
+| Researcher | No watchlist yet; wants to investigate a company and verify its evidence. | Explore → search or dated candidate → Overview / Metrics / Map → exact source → History → optionally follow. An activity record can enter the same workspace. | Read unwatched research within account access, inspect opposing evidence/dates and return to the entry scope. Explore compares discussion attention and provides per-stock metrics; the prototype's cross-stock metric comparison is not integrated. |
 | Stock beginner | Wants a starting point without interpreting a metric table. | Today or Explore → an available dated stock record → company/research context → support and risk sources → optional follow → Watchlist → Calendar or activity. | Explain the claim and uncertainty, distinguish a view from a fact and find its source. No fabricated first-use example is injected into production. |
 | Experienced user | Wants to triage watched stocks and inspect levels. | Watchlist List → Overview for reasons or Metrics for comparison → Stock Metrics → dated reference → above/below alert draft → review → explicit confirmation. | Inspect basis/expiry, keep unknown distinct from zero and create a condition deliberately. Prefill alone does not activate an alert or prove delivery. |
 
@@ -36,7 +53,7 @@ The stock workspace answers four questions: **What is the case? What do price an
 | Task | Entry and next action | Return and preserved context |
 |---|---|---|
 | Start with no watchlist | Today dated company → Stock Overview, or its separate Map action → Stock Evidence; Explore search reaches the same workspace. | Stock returns to Today or the Explore entry. Add stocks remains an explicit personal-list action; reading does not follow automatically. Full map and exact sources remain available. |
-| Read personal research after the market digest | Today's existing new-record/latest-analysis counts → corresponding section. | The target heading receives keyboard focus. The full digest and liquidity/QQQ/SPY stack remain open and in their original order; an empty analysis target is disabled. |
+| Read personal research alongside the market backdrop | Today's existing new-record/latest-analysis counts → corresponding section. | The target heading receives keyboard focus. The current-date note stays expanded; an older note is a dated native disclosure above the macro tiles. Full text, original outlook date and source clocks remain accessible, and same-account expansion survives a stock visit. An empty analysis target is disabled. |
 | Inspect historical macro readings | Focus the three-line chart → Arrow keys or Home/End select a date; pointer/touch selection remains. | The selected date and each series' value are announced. Missing data remains missing, and the liquidity help control has a 44px target. |
 | Investigate a creator's claim | Discover/Following → principal view → exact source → named Research ticker; the visible ticker can also enter Stock directly. | Return restores the author/exact-source route and local query, scope/stance, expansion, focus and scroll. Original post/point map and source link are preserved. Search text stays out of the URL and account changes discard the reading state. |
 | Compare watched stocks | Watchlist Metrics → stock/quote, six readings, five signal groups, market cap, then full narrative → named Stock Metrics or Evidence. | Sorting, query, view and scroll remain. List keeps its own original column order. Finite stale/expired/previous-sample values show state/date instead of appearing current or being erased. |
@@ -57,13 +74,13 @@ entry, with supported internal routes and matching ticker/record identity requir
 | Content or task | Primary home | Explore entry | Watchlist entry | Detail and next action |
 |---|---|---|---|---|
 | Market backdrop / liquidity | Existing Today and report routes | Optional Reports tool; Today navigation | Today navigation | Existing published readings and dates. The follow-up adds keyboard date access and section jumps without replacing the production data path with prototype fixtures. |
-| Company and summary | Stock Overview | Search or named Overview link | Ticker / Overview card | Available company name, saved summary, support/risk and sources. Missing identity data is not invented. |
+| Company and summary | Stock Overview | Search or primary Research tile | Ticker / Overview card | Available company name, saved summary, support/risk and sources. Missing identity data is not invented. |
 | Long-term and trend perspectives | Watchlist context and stock reading | Same stock workspace | List / Overview; Metrics comparison | Preserve the two existing perspectives; neither is a popularity vote. |
 | Option walls / price references | Stock Metrics | Named Metrics link | Named metric / Metrics table | Walls retain option expiry; 20-session low/high retain their own basis; explanations remain available. |
 | IV/HV / technical readings | Stock Metrics; Watchlist Metrics | Per-stock Metrics without following | Sortable comparison → stock | Actual values, dates and missing states. IV/HV is not a valuation score. |
-| Discussion attention | Explore candidates; existing metrics | Dated ranking | Existing metric cells | Counts/rank changes are attention only. Missing stance is not neutral or bullish. |
+| Discussion attention | Explore comparison grid; existing metrics | Up to 12 source-ranked companies by default; show additional response rows without another ranking read | Existing metric cells | Mention counts and previous-day changes are attention only. Complete available summaries expand separately. Missing stance is not neutral or bullish. |
 | Creator views | Creators | Creators destination or stock tool | Stock tool / map | Main claim/ticker before archive; full qualifications and exact post/point/source; explicit follow. |
-| Insider / fund / political / company records | Company and capital activity | Named destination / candidate activity link | Ticker-scoped activity link | Original record and typed dates/values; stock actions only for valid linked equities. |
+| Insider / fund / political / company records | Company and capital activity | Primary activity destination or the stock workspace | Ticker-scoped activity link | Original record and typed dates/values; stock actions only for valid linked equities. |
 | Support and counterevidence | Stock Evidence / full map | Named Map link | Direct map entry | Green support/red risk with text; exact sources; repeated wording retains every record/date. |
 | History | Stock History; creator history/archive | Stock → History | Stock → History | Server-paginated changes and original source records, not automatically verified performance. |
 | Events | Existing Calendar | Stock Calendar tool | Calendar / stock tool | Existing two-week default and explicit timing state. Scheduled dates do not imply confirmed times. |
@@ -82,7 +99,7 @@ entry, with supported internal routes and matching ticker/record identity requir
 ## Follow-up acceptance scenarios
 
 1. With no watched stocks, search from Explore, inspect Metrics/Evidence, open an exact source and return to the same search without an implicit follow.
-2. At 320/390 px, reach results without opening research questions or the weekly feed. Keep primary navigation, 16px inputs and 44px frequent controls; measure actual useful content rather than document overflow alone.
+2. At 320/390 px, compare source-ranked Explore stocks in two columns without opening the weekly feed. Verify the default maximum of 12, expand only when additional response rows exist, read complete related summaries and return from Metrics to the same entry. Keep primary navigation, 16px inputs and 44px frequent controls; measure actual useful content rather than document overflow alone.
 3. Apply activity filters locally, enter a stock, switch tabs and return to the exact scope/scroll. Open an aliased record and check its breadcrumb after canonicalization. Reject external, mismatched ticker/record, wrong-entry and old-account state.
 4. Read support and risk before the full archive, including three initial same-side citations with a relevant opposite view available. Preserve every inline citation and missing-source states without substituting sample claims.
 5. Read several authors' main views, expand repetitions and reach each original post/point/date. Visit Stock from a creator or exact source and return with query, scope/stance, expansion, focus and scroll intact; changing accounts must clear that state. Changed conditions and opposing stances remain separate.
@@ -90,7 +107,7 @@ entry, with supported internal routes and matching ticker/record identity requir
 7. Exercise pending 202 and denied research. Retry pending metrics; denied data cannot reappear when older snapshot, bar or history requests finish.
 8. Check Form 4 trade/filing dates, 13F period/filing date, political ranges and company effective dates. Do not label a reported 13F share change an executed trade.
 9. Repeat stock tabs, source dialogs, creator filters and return paths in both languages/themes. Confine table scrolling and preserve keyboard focus. Check desktop after mobile layout changes.
-10. Use Today's count jumps and confirm target-heading focus, disabled empty targets and unchanged digest/macro order. Select chart dates by keyboard and verify announced values, including missing readings, plus the 44px help target.
+10. Use Today's count jumps and confirm target-heading focus and disabled empty targets. Verify current-date notes remain expanded, older notes preserve full text and original outlook dates in a native disclosure, and expansion survives a stock return. Source-dated QQQ/SPY changes must not relabel old data as current. Select chart dates by keyboard and verify announced values, including missing readings, plus the 44px help target.
 11. On phone Calendar, verify the short timezone, readable dates/event labels and full context inside filters. Confirm watched earnings, closure/early-close/unconfirmed states, source warnings and historical losses remain; distinguish quiet date cells from excess introductory chrome.
 12. From a selected author, visit a stock's History tab, open K-line, return to that exact stock tab and then to the selected author with focus restored. Reject external/mismatched return routes, another history entry, old account state and changed chart symbols.
 
