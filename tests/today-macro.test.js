@@ -98,23 +98,103 @@ test('both chart tiles draw a two-week three-line chart with markers; the 10-yea
   assert.equal(macro.macroTiles(doc)[0].lines,null);assert.equal(macro.macroTiles(doc)[1].lines,null);
 });
 
-test('the close-of-day note renders above the tiles when ready, says when it is old, and hides otherwise',()=>{
-  const digest={status:'ready',session:'2026-09-23',next_session:'2026-09-24',generated_at:'2026-09-24T05:41:00+00:00',
-    close:{zh:'标普500 收跌。',en:'The S&P 500 closed down 0.8%.'},sectors:{zh:'能源领涨。',en:'Energy led.'},macro:{zh:'收益率上行。',en:'Yields rose 15bp.'},tomorrow:{zh:'明天初请。',en:'Jobless claims at 08:30 ET.'}};
-  const strip=macro.macroStrip({...doc,digest});
-  const note=strip.querySelector('.today-digest');
-  assert.ok(note && strip.firstElementChild===note);
+const savedDigest={status:'ready',session:'2026-09-25',next_session:'2026-09-28',generated_at:'2026-09-26T04:34:19Z',
+  close:{zh:'标普500 收跌。',en:'The S&P 500 closed down 0.8%.'},sectors:{zh:'能源领涨。',en:'Energy led.'},macro:{zh:'收益率上行。',en:'Yields rose 15bp.'},tomorrow:{zh:'明日无重大数据。',en:'Tomorrow has no major data releases.'}};
+const monday={now:new Date('2026-09-28T22:15:00Z')};
+
+test('Friday note is preserved in a dated collapsed archive below Monday market readings, without a generation claim',()=>{
+  const strip=macro.macroStrip({...doc,digest:{...savedDigest,status:'stale'},observed:[
+    {date:'2026-09-25',qqq_index:100,spy_index:100,nominal_10y:5.2},
+    {date:'2026-09-28',qqq_index:98.93,spy_index:99.26,nominal_10y:5.24}]},monday);
+  const archive=strip.querySelector('.today-digest-archive'),note=archive.querySelector('.today-digest');
+  assert.equal(archive.open,false);assert.equal(strip.children[1],archive);
+  assert.equal(archive.nextElementSibling.className,'today-macro-grid');
+  assert.equal(strip.firstElementChild.className,'today-market-heading');
+  assert.match(strip.querySelector('.today-market-status').textContent,/include 2026-09-28.*still for.*9\/25\/2026/);
+  assert.match(strip.querySelector('.today-market-indices').textContent,/2026-09-28 close.*QQQ -1.07%.*SPY -0.74%/);
   assert.equal(note.querySelectorAll('.today-digest-part').length,3);
-  assert.match(note.querySelector('.today-digest-tomorrow').textContent,/Jobless claims at 08:30 ET/);
-  assert.match(note.textContent,/not a forecast or advice/);
-  assert.doesNotMatch(note.textContent,/Over 40 hours old/);
-  // A note for an earlier session is "the close", never "today's"; only the current New York session earns "today".
-  assert.match(note.querySelector('.today-section-title').textContent,/^Close-of-day note · Wed, 9\/23/);
-  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-  assert.match(macro.macroStrip({...doc,digest:{...digest,session:today}}).querySelector('.today-section-title').textContent,/^Today's close-of-day note · /);
-  assert.match(macro.macroStrip({...doc,digest:{...digest,status:'stale'}}).textContent,/Over 40 hours old/);
-  assert.equal(macro.macroStrip({...doc,digest:{status:'unavailable'}}).querySelector('.today-digest'),null);
-  assert.equal(macro.macroStrip(doc).querySelector('.today-digest'),null);
+  assert.equal(note.querySelector('.today-digest-tomorrow p').textContent,savedDigest.tomorrow.en);
+  assert.match(note.querySelector('.today-digest-tomorrow').textContent,/Next session as viewed then.*9\/28\/2026/);
+  assert.match(archive.querySelector('.today-digest-context').textContent,/Tomorrow.*when this note was written/);
+  assert.match(note.querySelector('.today-digest-head').textContent,/9\/26\/2026, 00:34 ET.*Over 40 hours old/);
+  assert.doesNotMatch(strip.querySelector('.today-market-heading').textContent,/failed|generating|trading day|tomorrow|22:15/);
+  archive.open=true;assert.equal(archive.querySelector('.today-digest-part p').textContent,savedDigest.close.en);
+});
+
+test('same New York day keeps the full four-part note first, with the complete generation date',()=>{
+  const strip=macro.macroStrip({...doc,digest:{...savedDigest,session:'2026-09-28',next_session:'2026-09-29'}},monday);
+  assert.equal(strip.firstElementChild.className,'today-digest');
+  assert.equal(strip.querySelector('.today-digest-archive'),null);
+  assert.match(strip.querySelector('.today-digest .today-section-title').textContent,/^Today's close-of-day note/);
+  assert.match(strip.querySelector('.today-digest-tomorrow .today-digest-label').textContent,/^Next session/);
+  assert.equal(strip.querySelector('.today-digest-grid').children.length,3);
+  assert.match(strip.textContent,/not a forecast or advice/);
+});
+
+test('weekends and unknown dates never imply that a trading-day note should have been published',()=>{
+  const saturday=macro.macroStrip({...doc,digest:savedDigest,observed:[{date:'2026-09-25',nominal_10y:5.2}]},{now:new Date('2026-09-26T18:00:00Z')});
+  assert.match(saturday.querySelector('.today-market-status').textContent,/Latest published close-of-day note/);
+  assert.doesNotMatch(saturday.querySelector('.today-market-heading').textContent,/not yet|unpublished|late|failed|2026-09-26/);
+  // A future requested quote session/read timestamp does not prove newer observed market data.
+  const dated=macro.macroStrip({...doc,digest:savedDigest,intraday:{session:'2026-09-28'},observed_at:'2026-09-28T22:00:00Z'},monday);
+  assert.doesNotMatch(dated.querySelector('.today-market-status').textContent,/include 2026-09-28/);
+  const unknown=macro.macroStrip({...doc,digest:{...savedDigest,session:'2026-02-30',generated_at:null}},monday);
+  assert.match(unknown.querySelector('.today-digest-archive>summary').textContent,/note · —/);
+  assert.match(unknown.querySelector('.today-digest-head').textContent,/Written at — ET/);
+  assert.doesNotMatch(unknown.textContent,/Invalid Date|NaN|null|undefined/);
+  // 00:15 UTC is still the prior New York date.
+  assert.equal(macro.digestState(savedDigest,{now:new Date('2026-09-26T00:15:00Z')}),'current');
+});
+
+test('market index strip retains zero and missing values and never bridges a missing session',()=>{
+  const observed=[{date:'2026-09-24',qqq_index:100,spy_index:100},{date:'2026-09-25',qqq_index:100,spy_index:null}];
+  const strip=macro.macroStrip({...doc,observed},monday);
+  assert.match(strip.querySelector('.today-market-indices').textContent,/QQQ 0.00%.*SPY —/);
+  assert.deepEqual(macro.marketReadingState({observed:[...observed,{date:'2026-09-28',qqq_index:null,spy_index:101}]}).returns.map(x=>x.value),[null,null]);
+  assert.deepEqual(macro.marketReadingState({observed:[{date:'2026-09-24',qqq_index:100},{date:'invalid',qqq_index:101},{date:'2026-09-28',qqq_index:102}]}).returns.map(x=>x.value),[null,null]);
+  const invalid=macro.macroStrip({...doc,observed:[{date:'invalid',qqq_index:100},{date:'2026-09-28',qqq_index:101}]},monday);
+  assert.equal(invalid.querySelector('.today-market-indices'),null);
+  assert.match(strip.querySelector('[data-tile=liquidity] .today-macro-stamp').textContent,/2026-09-18/);
+});
+
+test('missing/unavailable note is separate from unavailable macro data and never discards a readable note',()=>{
+  for(const digest of [undefined,{status:'unavailable'},{...savedDigest,status:'failed'}]){
+    const strip=macro.macroStrip({...doc,digest},monday);
+    assert.equal(strip.querySelector('.today-digest'),null);
+    assert.match(strip.querySelector('.today-market-status').textContent,/No published close-of-day note is available/);
+    assert.equal(strip.querySelectorAll('.today-macro-tile').length,4);
+  }
+  const noMacro=macro.macroStrip({status:'unavailable',digest:savedDigest},monday);
+  assert.ok(noMacro.querySelector('.today-digest'));
+  assert.match(noMacro.textContent,/Market backdrop unavailable/);
+  assert.doesNotMatch(macro.macroStrip(null,monday).textContent,/null|undefined/);
+});
+
+test('failed market read has an explicit GET-only retry; route abort and account changes cannot repaint',async()=>{
+  const store=await import('../public/js/app/store.js');
+  const originalFetch=globalThis.fetch,requests=[];
+  let failure=true;
+  globalThis.fetch=async(url,opts)=>{requests.push([url,opts.method]);return new Response(JSON.stringify(failure?{error:'unavailable'}:doc),{status:failure?503:200,headers:{'Content-Type':'application/json'}});};
+  try{
+    const host=document.createElement('div');document.body.append(host);
+    await macro.mountMacroStrip(host);
+    assert.match(host.textContent,/Market readings could not load/);
+    assert.doesNotMatch(host.textContent,/No published close-of-day note/);
+    assert.equal(host.hidden,false);
+    failure=false;host.querySelector('button').click();
+    await new Promise(resolve=>setTimeout(resolve,0));
+    assert.equal(host.querySelectorAll('.today-macro-tile').length,4);
+    assert.deepEqual(requests,[['/macro/beta','GET'],['/macro/beta','GET']]);
+    for(const boundary of ['abort','epoch']){
+      let resolve;globalThis.fetch=()=>new Promise(r=>{resolve=r;});
+      const ctl=new AbortController(),other=document.createElement('div');other.textContent='Existing view';
+      const pending=macro.mountMacroStrip(other,{signal:ctl.signal});
+      if(boundary==='abort')ctl.abort();else store.bumpEpoch();
+      resolve(new Response(JSON.stringify(doc),{status:200,headers:{'Content-Type':'application/json'}}));
+      await pending;assert.equal(other.textContent,'Existing view');
+    }
+    host.remove();
+  }finally{globalThis.fetch=originalFetch;}
 });
 
 test('the liquidity tile draws the liquidity index, QQQ and SPY on one chart, each scaled to its own range, with both correlations',async()=>{

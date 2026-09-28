@@ -466,8 +466,9 @@ test('Explore opens stock research without following and reads the seven-day fee
  assert.deepEqual(rows.map(row=>row.dataset.ticker),['NVDA','GLW']);
  assert.match(rows[0].textContent,/900 mentions · 24h/);assert.match(rows[1].textContent,/\+35%/);
  for(const tab of ['metrics','evidence'])assert.ok([...rows[0].querySelectorAll('a')].some(a=>{const [path,query='']=a.getAttribute('href').split('?');const params=new URLSearchParams(query);return path==='#/stock/NVDA'&&params.get('from')==='explore'&&params.get('tab')===tab;}),rows[0].innerHTML);
- assert.ok(rows[0].querySelector('a[href="#/boards?ticker=NVDA"]'));
- assert.match(root.querySelector('.explore-candidates h2').textContent,/Most discussed right now/);
+ assert.ok(root.querySelector('.explore-primary-tools a[href="#/boards"]'));
+ assert.equal(rows[0].querySelector('.explore-stock-open').getAttribute('href'),'#/stock/NVDA?from=explore');
+ assert.match(root.querySelector('.explore-candidates h2').textContent,/Most discussed/);
  assert.equal(root.querySelector('.focus-filters'),null);
   assert.ok(root.querySelector('a[href="#/creators?scope=discover"]'));
  assert.equal(calls.length,1);assert.equal(calls[0].url.pathname,'/radar/social.json');

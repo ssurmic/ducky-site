@@ -4,6 +4,7 @@
 import {el,modal} from './ui.js';
 import {s,LANG} from './strings.js';
 import * as api from './api.js';
+import * as store from './store.js';
 import {gauge,bandFor} from './today-gauge.js';
 import {dailyPairs,summary,normalizedLines,sparkLines,cursorIndex,PRIMARY} from './today-spark.js';
 
@@ -127,6 +128,7 @@ export function macroTiles(doc){
     {key:'liquidity',label:s('today.macro_liquidity'),value:OK(latest.funding_score)?num(latest.funding_score,0):'—',unit:s('today.macro_score_unit'),
      tone:band==='supportive'?'up':band==='adverse'?'down':band==='mixed'?'mid':'flat',help:liquidityHelp(latest),
      gauge:{name:s('today.macro_liquidity'),score:OK(latest.funding_score)?latest.funding_score:null,bands:LIQUIDITY_BANDS(),word:s('today.macro_regime_'+band)},
+     stamp:OK(latest.funding_score)?s('today.macro_tile_as_of',{date:latest.date||doc?.as_of||'—'}):null,
      note:[s('today.macro_regime_'+band),OK(netT)?s('today.macro_net_liquidity',{value:num(netT,2)}):null,OK(change)?s('today.macro_net_change',{value:signed(change)}):null].filter(Boolean).join(' · '),
      lines:linesFor(doc,'liquidity')},
     {key:'yield',label:s('today.macro_10y'),value:OK(y10.value)?num(y10.value,2)+'%':'—',unit:'',tone:'flat',stamp:y10.stamp,
@@ -149,28 +151,75 @@ function historyList(rows){
 // published schedule, the same for every reader. Shown only when it is ready; an old one says so.
 // "Today's" only while the note is for the current New York session; during the next day it is the last
 // close and the heading says so (a Friday showed "today" over Wednesday's note, 2026-09-25).
-const nySession=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-const sessionLabel=iso=>{const t=Date.parse((iso||'')+'T12:00:00Z');return Number.isFinite(t)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'numeric',day:'numeric',weekday:'short'}).format(t):(iso||'—');};
-export function digestBlock(digest){
+const nySession=now=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(now);
+const validSession=iso=>typeof iso==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(iso)&&Number.isFinite(Date.parse(iso+'T12:00:00Z'))&&new Date(iso+'T12:00:00Z').toISOString().slice(0,10)===iso;
+const sessionLabel=iso=>validSession(iso)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{timeZone:'America/New_York',year:'numeric',month:'numeric',day:'numeric',weekday:'short'}).format(new Date(iso+'T12:00:00Z')):'—';
+const writtenAt=iso=>{const t=Date.parse(iso||'');return Number.isFinite(t)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{timeZone:'America/New_York',year:'numeric',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(t):'—';};
+
+// A calendar date determines whether a saved note may say "today", not whether the exchange
+// traded or a producer failed. Weekend/holiday readers still see the last published note.
+export function digestState(digest,{now=new Date()}={}){
+  if(!digest||!['ready','stale'].includes(digest.status))return 'unavailable';
+  if(!validSession(digest.session))return 'undated';
+  return digest.session===nySession(now)?'current':'previous';
+}
+export function digestBlock(digest,{now=new Date()}={}){
   if(!digest||!['ready','stale'].includes(digest.status))return null;
   const text=key=>String(digest[key]?.[LANG==='zh'?'zh':'en']||'').trim();
-  const title=s(digest.session===nySession()?'today.digest_title':'today.digest_title_past',{date:sessionLabel(digest.session)});
+  const current=digestState(digest,{now})==='current';
+  const title=s(current?'today.digest_title':'today.digest_title_past',{date:sessionLabel(digest.session)});
   const box=el('section.today-digest',{'aria-label':title});
   box.append(el('div.today-digest-head',el('h2.today-section-title',title),
-    el('span.small.muted',s('today.digest_written',{time:clock(digest.generated_at)})+(digest.status==='stale'?' · '+s('today.digest_stale'):''))));
+    el('span.small.muted',s('today.digest_written',{time:writtenAt(digest.generated_at)})+(digest.status==='stale'?' · '+s('today.digest_stale'):''))));
   const grid=el('div.today-digest-grid');
   for(const [key,label] of [['close','today.digest_close'],['sectors','today.digest_sectors'],['macro','today.digest_macro']])
     if(text(key))grid.append(el('div.today-digest-part',el('span.today-digest-label',s(label)),el('p',text(key))));
   box.append(grid);
-  if(text('tomorrow'))box.append(el('div.today-digest-tomorrow',el('span.today-digest-label',s('today.digest_tomorrow',{date:sessionLabel(digest.next_session)})),el('p',text('tomorrow'))));
+  if(text('tomorrow'))box.append(el('div.today-digest-tomorrow',el('span.today-digest-label',s(current?'today.digest_tomorrow':'today.digest_tomorrow_saved',{date:sessionLabel(digest.next_session)})),el('p',text('tomorrow'))));
   box.append(el('p.small.muted.today-digest-note',s('today.digest_note')));
+  if(!current)return el('details.today-digest-archive',{'data-reading-key':'macro-digest:'+String(digest.session||'undated')},
+    el('summary',el('span',s('today.digest_archive',{date:sessionLabel(digest.session)})),el('span.small.muted',s('today.digest_read_full'))),
+    el('p.small.muted.today-digest-context',s('today.digest_saved_context',{date:sessionLabel(digest.session)})),box);
   return box;
 }
 
-export function macroStrip(doc){
+// Only actual observed rows establish a newer market date. The read time, a quote's requested
+// session and the score snapshot date cannot establish a trading session or a completed close.
+export function marketReadingState(doc){
+  const rows=doc?.observed||[];
+  const observed=rows.filter(r=>validSession(r?.date)&&['qqq_index','spy_index','nominal_10y','vix'].some(key=>OK(r[key]))).at(-1);
+  const current=rows.at(-1),prior=rows.at(-2);
+  const returns=['qqq','spy'].map(key=>{
+    const value=current?.[key+'_index'],base=prior?.[key+'_index'];
+    return {key,value:validSession(current?.date)&&validSession(prior?.date)&&OK(value)&&OK(base)&&base>0&&prior.date<current.date?Math.round((value/base-1)*10000)/100:null};
+  });
+  return {date:observed?.date||null,returnDate:current?.date||null,live:!!current?.live,returns};
+}
+
+function marketHeading(doc,state){
+  const reading=marketReadingState(doc),digest=doc.digest;
+  const head=el('header.today-market-heading',el('h2.today-section-title',s('today.market_readings')));
+  if(reading.returns.some(r=>OK(r.value))){
+    head.append(el('div.today-market-indices',el('span.small.muted',s(reading.live?'today.market_quote_date':'today.market_close_date',{date:reading.returnDate})),
+      ...reading.returns.map(r=>el('span',r.key.toUpperCase()+' ',el('strong.mono',{class:OK(r.value)?r.value>0?'pos':r.value<0?'neg':'':''},OK(r.value)?signed(r.value,2)+'%':'—')))));
+  }
+  if(state!=='current'){
+    const hasNote=state!=='unavailable';
+    const newer=hasNote&&validSession(digest.session)&&reading.date>digest.session;
+    head.append(el('p.small.muted.today-market-status',newer?s('today.digest_newer_readings',{date:reading.date,summary:sessionLabel(digest.session)}):
+      hasNote?s('today.digest_latest',{date:sessionLabel(digest.session)}):s('today.digest_unavailable')));
+  }
+  head.append(el('p.small.muted.today-market-cadence',s('today.market_cadence')));
+  return head;
+}
+
+export function macroStrip(doc,{now=new Date()}={}){
   const box=el('section.today-macro',{'aria-label':s('today.macro_title')});
-  if(!doc||!doc.latest){box.append(el('p.small.muted',s('today.macro_unavailable')));return box;}
-  const digest=digestBlock(doc.digest);if(digest)box.append(digest);
+  const state=digestState(doc?.digest,{now}),digest=digestBlock(doc?.digest,{now});
+  if(!doc||!doc.latest){box.append(el('p.small.muted',s('today.macro_unavailable')));if(digest)box.append(digest);return box;}
+  if(state==='current'&&digest)box.append(digest);
+  box.append(marketHeading(doc,state));
+  if(state!=='current'&&digest)box.append(digest);
   const grid=el('div.today-macro-grid');
   for(const tile of macroTiles(doc)){
     const dial=tile.gauge&&Number.isFinite(tile.gauge.score)?gauge(tile.gauge):null;
@@ -189,8 +238,12 @@ export function macroStrip(doc){
   return box;
 }
 
-// Never blocks or delays the feed; a failed read hides the strip instead of showing zeros.
+// Never blocks or delays the research feed. A failed GET is a read error, not a missing or failed
+// daily note. Retry only reads the existing shared document; it never requests generation.
 export function mountMacroStrip(host,{signal}={}){
-  return api.get('/macro/beta',{signal,silent402:true,observe:false}).then(doc=>{if(signal?.aborted)return;host.replaceChildren(macroStrip(doc));})
-    .catch(()=>{host.hidden=true;});
+  const epoch=store.epoch(),active=()=>!signal?.aborted&&epoch===store.epoch();
+  const load=()=>api.get('/macro/beta',{signal,silent402:true,observe:false}).then(doc=>{if(!active())return;host.hidden=false;host.replaceChildren(macroStrip(doc));})
+    .catch(()=>{if(!active())return;host.hidden=false;const retry=el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{retry.disabled=true;load();}},s('common.retry'));
+      host.replaceChildren(el('div.today-macro-read-error',el('p.small.muted',{role:'status'},s('today.macro_read_error')),retry));});
+  return load();
 }

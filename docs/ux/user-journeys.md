@@ -1,5 +1,11 @@
 # User journeys and content map
 
+Local Explore candidate: compare up to 12 source-ranked companies side by side (two columns on
+phones), then enter a stock through its main tile or direct Metrics/Map action. Additional response
+rows and complete summaries are optional expansions. The source time and attention-only meaning
+appear once; reading still never follows a stock. [Candidate checks](../../reports/UX-EXPLORE-COMPARISON-2026-09-28.md)
+are separate from the deployed journeys below.
+
 Status: production UI deployed as version `7fb28406`, verified 2026-09-28 at 20:24:20 UTC; see the [Chart correction receipt](../../reports/UX-CHART-RETURN-2026-09-28.md#production-release-receipt). PR #107 merged as `7fb28406cc89ac363309392599f945f0ab931e0a`; the publisher passed 823 Node and 14 Python tests, build/copy checks and 2,103 internal links, then published Pages `809bdbf9`. The exact Creator → MU History → Chart → MU History → selected-author chain passed on production at 20:25:30 UTC, with restored focus and no document overflow. These are scoped reading-path checks, not measured usability gains or physical-device acceptance. The [workflow `e22240f3` receipt](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md#production-release-receipt), [initial `0c904fa3` receipt](../../reports/UX-PRODUCTION-2026-09-28.md#production-release-receipt), [prototype journey report](../../reports/UX-JOURNEYS-2026-09-28.md) and [preview guide](README.md) retain their earlier evidence.
 
 The released follow-up extends these reading paths with consistent starter/creator stock entries, Today section
