@@ -716,6 +716,29 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
 .today-digest-archive>summary>span:first-child{flex:1;}
 .today-digest-archive>summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
 .today-digest-context{margin:0 0 8px;line-height:1.45;}
+.today-digest-publication{display:flex;flex-wrap:wrap;gap:3px 12px;align-items:baseline;}
+.today-digest-publication p{margin:0;line-height:1.4;}
+.today-preview{border-top:1px solid var(--border);padding-top:8px;min-width:0;}
+.today-preview-heading{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
+.today-preview-heading h3{font-size:14px;line-height:1.4;margin:0;}
+.today-preview-window,.today-preview-coverage{margin:4px 0;line-height:1.45;}
+.today-preview-day{font-size:12px;color:var(--muted);margin:10px 0 3px;}
+.today-preview-event{padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;line-height:1.5;overflow-wrap:anywhere;}
+.today-preview-event-head{display:flex;flex-wrap:wrap;gap:2px 9px;align-items:baseline;}
+.today-preview-event-head strong{font-weight:600;}
+.today-preview-time{font-size:12px;color:var(--muted);}
+.today-preview-tickers{font-size:12px;}
+.today-preview-impact{margin:3px 0 0;max-width:80ch;}
+.today-preview-basis>summary,.today-preview-more>summary{min-height:44px;display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;}
+.today-preview-basis>summary::before,.today-preview-more>summary::before{content:'▸';}
+.today-preview-basis[open]>summary::before,.today-preview-more[open]>summary::before{content:'▾';}
+.today-preview-basis p{margin:0 0 6px;max-width:80ch;}
+.today-preview-source,.today-preview-calendar{display:inline-flex;align-items:center;min-height:44px;font-size:12px;margin-right:12px;}
+.today-preview-clock{margin:7px 0 0;line-height:1.45;}
+.today-macro-refresh{display:flex;align-items:center;gap:8px;margin:5px 0 12px;}
+.today-macro-refresh button{min-height:44px;flex-shrink:0;}
+.today-macro-refresh p{margin:0;line-height:1.4;}
+@media(max-width:760px){.today-digest-publication .small,.today-preview .small{font-size:11px;}.today-preview-event{font-size:13px;padding:5px 0;}.today-preview-heading h3{font-size:13px;}.today-preview-day{margin-top:7px;}.today-preview-window{font-size:11px;}}
 .today-macro-read-error{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px;}
 .today-macro-read-error .btn{min-height:44px;flex:none;}
 @media(max-width:760px){.today-market-heading{gap:4px;margin-bottom:8px;}.today-market-heading .today-section-title{font-size:15px;}.today-market-indices{font-size:13px;gap:3px 12px;}.today-market-status,.today-market-cadence{font-size:11px;}.today-digest-archive>summary{font-size:12px;}}

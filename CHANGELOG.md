@@ -1,5 +1,18 @@
 # Change log
 
+## Close snapshots and complete dated event previews · 2026-09-28 (candidate)
+
+Today accepts additive close-snapshot/daily-close editions from the saved macro endpoint,
+showing source time, available coverage and missing instruments. Near-close quotes are
+explicitly distinguished from final settlement. Its saved event preview preserves all
+returned events, timing uncertainty, conditional impacts and sources, with three initial
+rows and a counted disclosure for the rest. Older previews stay bound to the original note.
+Visible Today pages reread shared data every minute, with explicit refresh, account/route
+guards, retained disclosure/focus/chart selection and GET-only failure recovery. No request
+generates content. This candidate is not yet merged or deployed; [local acceptance and
+remaining boundaries](reports/TODAY-CLOSE-PREVIEW-2026-09-28.md) are separate from the earlier
+production receipts below.
+
 ## Today distinguishes market readings from the last published note · 2026-09-28 (deployed)
 
 Released through [PR #109](https://github.com/ssurmic/ducky-site/pull/109), merged at

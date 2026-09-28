@@ -1,5 +1,12 @@
 # User journeys and content map
 
+Unreleased addition: Today → source-labelled close snapshot → dated preview → remaining
+events / details and sources → Calendar on the saved date. The preview distinguishes the
+next calendar day from the next market session and preserves after-close/unconfirmed events.
+An already-open visible Today page rereads published data once a minute without triggering
+generation; accepted reading state remains. See the [candidate record](../../reports/TODAY-CLOSE-PREVIEW-2026-09-28.md).
+The production journeys and receipts below remain the last verified deployment.
+
 Status: production UI deployed as `9ab95315`, verified on 2026-09-28 at 22:40:24 UTC through
 [Pages `dc10d45f`](https://dc10d45f.ducky-site.pages.dev). [PR #109](https://github.com/ssurmic/ducky-site/pull/109)
 merged at 22:39:29 UTC as `9ab9531545fcd3294614318b3b04ff52b499a9be`; the publisher passed

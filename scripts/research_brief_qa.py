@@ -35,6 +35,8 @@ class Handler(SimpleHTTPRequestHandler):
             body = re.sub(r'<script(?![^>]*type="application/json")[^>]*>.*?</script>','',body,flags=re.S)
             body = body.replace('</head>', '<script src="/vendor/lightweight-charts/lightweight-charts.standalone.production.js"></script><script type="module" src="/qa-main.js"></script></head>')
             self.out(body,'text/html; charset=utf-8'); return
+        if url.path == '/qa-close-data.js':
+            self.out((ROOT / 'tests/fixtures/today-close-data.js').read_text(), 'text/javascript; charset=utf-8'); return
         if url.path == '/qa-main.js':
             module = (ROOT / 'tests/fixtures/product-focus-browser.js').read_text()
             version = json.loads((DIST / 'app-release.json').read_text())['version']
