@@ -2,9 +2,15 @@
 
 Updated: 2026-09-28. This English register is the canonical presentation handoff for the UX redesign. User-facing copy remains bilingual. The private backend's shared documents remain the system-design authority; this register records public UI behavior and integration boundaries only.
 
-**Delivery status: deployed at duckybot.app, version `0c904fa3`, on 2026-09-28 at 19:05:25 UTC.** [PR #104](https://github.com/ssurmic/ducky-site/pull/104) passed hosted checks and merged before the existing Pages release script published the exact main tip. All 809 Node tests and the release checks passed; authenticated production reads confirmed the new research routes and existing data. See the [release receipt](../../reports/UX-PRODUCTION-2026-09-28.md#production-release-receipt). The earlier isolated prototype remains available through the [preview guide](README.md); its fixtures and browser-local interactions are not production features.
+**Delivery status: deployed at duckybot.app, version `e22240f3`, verified on 2026-09-28 at 20:06:21 UTC.** [PR #105](https://github.com/ssurmic/ducky-site/pull/105) merged as `e22240f3bc4b7de2641d248585020e47f47d9eb7`; the existing release script reran 821 Node tests, 14 Python tests and copy/link checks before publishing [Pages `fcad2151`](https://fcad2151.ducky-site.pages.dev). Production VERSION and CSP were verified. Scoped authenticated Today, NVDA disclosure/return, desktop Watchlist Metrics, Creator/source/stock return and MU chart checks passed at 20:07–20:10 UTC. See the [follow-up release receipt](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md#production-release-receipt) for exact scope and limitations.
 
-**Follow-up candidate, final combined gate and release pending:** the implemented slice now includes
+**Earlier production receipt retained:** version `0c904fa3` was verified at 19:05:25 UTC through
+[PR #104](https://github.com/ssurmic/ducky-site/pull/104), after 809 Node tests and its release checks.
+Its [original acceptance record](../../reports/UX-PRODUCTION-2026-09-28.md#production-release-receipt)
+remains evidence for that release only. The earlier isolated prototype remains available through the
+[preview guide](README.md); its fixtures and browser-local interactions are not production features.
+
+**Follow-up released as `e22240f3`:** the implemented slice includes
 the three-persona workflow review, phone density/accessibility corrections, and direct disclosure
 entries. It is broader than the initial disclosure patch and is not included in the `0c904fa3`
 receipt. The [integrated review](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md) coordinates the frozen
@@ -14,9 +20,9 @@ receipt. The [integrated review](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md)
 challenges. Earlier audit measurements remain evidence of the first pass, not measurements of the
 final candidate.
 
-## Implemented follow-up candidate
+## Released workflow follow-up (`e22240f3`)
 
-| Area | Candidate behavior | Preserved boundary |
+| Area | Released behavior | Preserved boundary |
 |---|---|---|
 | Phone density | Compact reading chrome, spacing and duplicate headings leave more room for actual records. Metrics and disclosure actions retain named destinations. | Full claims, conditions, dates and primary navigation remain. Inputs stay 16px and frequent controls retain 44px targets; no physical-device result is claimed. |
 | Today | Existing research counts jump to and focus the matching heading; dated starters open Stock with a separate Map action. Macro history supports Arrow/Home/End date selection and announced readings; liquidity help has a 44px target. | The digest, three-line liquidity/QQQ/SPY chart, order and expanded macro content remain. A zero-analysis jump is disabled; embedded feeds gain no extra header. |
@@ -30,8 +36,10 @@ final candidate.
 
 The [disclosure report](../../reports/STOCK-DISCLOSURE-ENTRY-2026-09-28.md) retains the initial bounded
 patch checks. Persona reports retain focused regression results; the integrated report owns the
-combined local browser observations. Final committed-candidate gate, deployment and any scoped live
-read receipt remain pending. This frontend follow-up does not add a backend API, inference, account
+combined local browser observations. The exact-revision release gate and Pages deployment passed;
+the release receipt records the limited authenticated production checks separately from local fixtures.
+This frontend follow-up
+does not add a backend API, inference, account
 write or notification test; separate backend repair/release evidence stays in the shared private
 engineering handoff.
 
@@ -67,10 +75,11 @@ Account epochs, cancellation, access and withdrawal handling remain authoritativ
 
 ## Exclusions and remaining acceptance
 
+- A later production check found that Chart return loses the exact stock tab/from and original creator filter context. A separate bounded correction is pending; successful direct creator/stock returns and chart rendering do not certify that complete chain.
 - The prototype's fictional authors, nine-stock fixture, six activity records, handmade entry bounds and scenario selector remain confined to prototypes/ux-lab.
 - Prototype cross-stock Metrics in Explore, thematic stock filters, shared bookmarks and My watch plans are not production additions. Production Explore links to per-stock Metrics; Watchlist retains its real comparison table.
 - No new entry-range calculation, valuation score, semantic claim merging, verified creator performance, historical delivery or broader source coverage is claimed. [Proposed contracts](proposed-backend-changes.md) remain proposals, not activated capabilities.
-- The released integration passed 809 Node tests, final build/copy/link checks and its viewport matrix. Live verification was limited to the routes and readable content named in the [release receipt](../../reports/UX-PRODUCTION-2026-09-28.md#production-release-receipt); it does not establish every creator or source as current. The broader workflow/disclosure follow-up has its own candidate records and is not included in that release. Local fixture and viewport checks do not certify source prose, current coverage, physical-device behavior or notification delivery.
+- The initial integration passed 809 Node tests, final build/copy/link checks and its viewport matrix. Its live evidence is limited to the routes and readable content named in the [original release receipt](../../reports/UX-PRODUCTION-2026-09-28.md#production-release-receipt). The workflow follow-up passed 821 Node and 14 Python tests plus copy/link checks and has its own [release receipt](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md#production-release-receipt), including limited phone and desktop production reads. Neither receipt certifies every source's prose, current coverage, physical-device behavior or notification delivery. The creator/chart smoke confirms the inspected read paths after the separate backend repair; it is not that backend's engineering or deployment receipt.
 
 ## Change history
 
@@ -81,7 +90,7 @@ Account epochs, cancellation, access and withdrawal handling remain authoritativ
 | Sep 28 · 9e174ea | Prototype activity layout, API mapping and adapter tests | [Activity acceptance](../../reports/UX-ACTIVITY-REFERENCE-2026-09-28.md) |
 | Sep 28 · 3987be2 | Prototype persona review, source continuity and English handoff | [Journey acceptance](../../reports/UX-JOURNEYS-2026-09-28.md) |
 | Sep 28 · 0c904fa3 | Production route/API integration and compact phone layout; released through PR #104 | [Production integration and release](../../reports/UX-PRODUCTION-2026-09-28.md), [creator preservation](../../reports/CREATOR-UX-INTEGRATION-2026-09-28.md) |
-| Sep 28 · local candidate after 0c904fa3 | Three-persona workflow corrections: phone density, Today jumps/chart keyboard access, Calendar stack, Metrics ordering/status, source balance, creator/alert/record/filter returns, and direct disclosure archives; final gate/release pending | [Integrated workflow review](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md), [disclosure entry acceptance](../../reports/STOCK-DISCLOSURE-ENTRY-2026-09-28.md) |
+| Sep 28 · e22240f3 | Three-persona workflow corrections: phone density, Today jumps/chart keyboard access, Calendar stack, Metrics ordering/status, source balance, creator/alert/record/filter returns, and direct disclosure archives; released through PR #105 / Pages fcad2151 | [Integrated review and release](../../reports/UX-WORKFLOW-REVIEW-2026-09-28.md#production-release-receipt), [original disclosure candidate evidence](../../reports/STOCK-DISCLOSURE-ENTRY-2026-09-28.md) |
 
 Read this register, the [current journeys](user-journeys.md), and the latest acceptance record before continuing. Update release status only from actual committed, deployed and readable-content receipts; preserve prior prototype reports as historical evidence.
 

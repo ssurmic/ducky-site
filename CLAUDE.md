@@ -1,8 +1,8 @@
 # ducky-site — agent notes
 
 **Read first:** [AGENTS.md](AGENTS.md) links to the private backend's shared
-[design-current-status.md](https://github.com/ssurmic/ducky-bot/blob/codex/design-current-status-20260912/design-current-status.md) and
-[continuation.md](https://github.com/ssurmic/ducky-bot/blob/codex/design-current-status-20260912/continuation.md). All agents use that same document set.
+[design-current-status.md](https://github.com/ssurmic/ducky-bot/blob/web/design-current-status.md) and
+[continuation.md](https://github.com/ssurmic/ducky-bot/blob/web/continuation.md). All agents use that same document set on backend `web`.
 Then read backend `SYSTEMDESIGN.md` §0 invariants, §3.1 ownership and §5 frontend rules.
 This file adds frontend-specific guidance; it is not a second current system design.
 Use a current backend checkout, not an assumed machine-specific directory.
