@@ -1,4 +1,4 @@
-import test from 'node:test';
+import test,{beforeEach} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
@@ -10,6 +10,8 @@ const strings=document.createElement('script');strings.id='ducky-strings';string
 const {starterChoices,creatorStarters}=await import('../public/js/app/views/creator-starters.js');
 const {mount}=await import('../public/js/app/views/creators.js');
 const store=await import('../public/js/app/store.js');
+// Each fixture is a fresh account session; one test's private search must not seed the next.
+beforeEach(()=>{store.bumpEpoch();history.replaceState(null,'','#/creators');});
 const tick=()=>new Promise(r=>setImmediate(r));
 const at=Date.now();
 const entry=(id,{age=2,lang='zh',...extra}={})=>({creator:{id,name:'Creator '+id,lang,platform:'youtube',avatar:'https://yt3.googleusercontent.com/'+id},status:'available',latest_view:{

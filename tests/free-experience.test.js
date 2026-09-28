@@ -112,7 +112,8 @@ test('Discovery keeps stance, timestamped source and missing English explicit',a
   source_url:'https://www.youtube.com/watch?v=fixture&t=123s',condition_text:'If demand slows.',conditional:true};
  const card=discoveryPreview({latest_view:view,coverage:{scan_limited:false}});
  assert.match(card.textContent,/Bearish.*NVDA/);assert.match(card.textContent,/Margins may weaken/);assert.match(card.textContent,/If demand slows/);
- assert.ok(card.querySelector('a').href.endsWith('t=123s'));
+ assert.equal(card.querySelector('.creator-discovery-stance a').getAttribute('href'),'#/stock/NVDA?from=creators');
+ assert.equal(card.querySelector('.creator-discovery-links a[target="_blank"]').href,view.source_url,'the distinct original-source action keeps its exact timestamp');
  const qualifications=card.querySelector('.creator-discovery-qualifications');
  assert.ok(qualifications);assert.equal(qualifications.closest('details'),null);
  assert.equal(qualifications.hidden,false);assert.match(qualifications.textContent,/If demand slows/);

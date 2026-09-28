@@ -90,6 +90,7 @@ test('alert deep link prefills ticker and logout discards a late list',async()=>
  const root=document.createElement('div');document.body.appendChild(root);
  const pending=alerts.mount(root,{query:new URLSearchParams('ticker=nvda')});
  assert.equal(root.querySelector('input').value,'NVDA');
+ assert.equal(root.querySelector('.alert-stock-return').getAttribute('href'),'#/stock/NVDA?tab=metrics');
  assert.equal(root.querySelectorAll('.empty').length,0);
  store.bumpEpoch(); resolve(response({items:[{id:1,ticker:'PRIVATE'}]}));
  const cleanup=await pending;assert.deepEqual(store.get('alerts'),[]);cleanup();root.remove();

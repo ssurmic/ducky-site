@@ -18,13 +18,16 @@ export async function mount(root,route={}){
   }else data=await api.get((!!store.get('me')?'/radar/record.json?':'/public/radar/record.json?')+new URLSearchParams({id:route.id||''}),{auth:!!store.get('me'),signal:route.signal});
   if(route.signal?.aborted || epoch!==store.epoch())return;
   const row=data.item,parent=(REPORT_KINDS.has(row.kind)||['liquidity','digest','volscan','hiring'].includes(row.board))?'reports':'boards';
+  const returnTo=typeof route.returnTo==='string'&&new RegExp('^#/'+parent+'(?:\\?|$)').test(route.returnTo)?route.returnTo:'#/'+parent;
   // Both translation receipts and source-delivery aliases resolve to this one address.
-  history.replaceState(null,'',recordHref(row));selectNavigation(parent);
+  const canonical=recordHref(row);
+  history.replaceState({...history.state,duckyRecordReturn:{epoch,at:canonical,id:String(row.id),href:returnTo}},'',canonical);selectNavigation(parent);
+  window.dispatchEvent(new window.CustomEvent('ducky:route-state'));
   const page=el('article.record-reader'),content=el('div'),controls=el('div.record-language');
   const render=language=>{clear(content);content.append(itemRow(row,{standalone:true,language}));
    controls.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.language===language)));};
   if(row.extra?.message_en && row.extra?.message_zh)for(const language of ['zh','en'])controls.append(el('button.btn.btn-ghost.btn-sm',{type:'button','data-language':language,onclick:()=>render(language)},language==='zh'?'中文':'English'));
-  page.append(el('nav.record-breadcrumb',{'aria-label':s('reader.location')},el('a',{href:'#/'+parent},s('nav.'+parent)),el('span',{'aria-hidden':'true'},'/'),el('span',s('reader.record'))),
+  page.append(el('nav.record-breadcrumb',{'aria-label':s('reader.location')},el('a',{href:returnTo},s('nav.'+parent)),el('span',{'aria-hidden':'true'},'/'),el('span',s('reader.record'))),
    controls,content);root.append(page);render(LANG);
   if(['insider','cluster'].includes(row.kind)&&content.querySelector('.radar-purchase-rule')){
     const source=content.querySelector('[data-source-record]');

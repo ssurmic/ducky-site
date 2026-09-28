@@ -1,6 +1,6 @@
 # UX production integration and acceptance
 
-Date: 2026-09-28. **Status: implemented in the local frontend candidate; not deployed.** The combined npm test suite passes 809/809. Browser acceptance and local release checks are complete; publication and live verification remain pending. Append the final candidate SHA and release/live checks before treating this as delivery evidence.
+Date: 2026-09-28. **Status: deployed to production; release receipt below.** The combined npm test suite passes 809/809. Browser acceptance and local release checks are complete; production release and authenticated reads have been verified. Append the final candidate SHA and release/live checks before treating this as delivery evidence.
 
 Frontend base: 3987be2, the prototype journey iteration. Selected designs are integrated into existing production route modules; the prototype is not served as the application. No backend API/schema/producer change, model call, historical rewrite or new account-storage contract belongs to this slice. Private shared documents remain the architecture authority.
 
@@ -111,3 +111,21 @@ Retained historical reports: [initial](UX-REDESIGN-2026-09-28.md), [metrics](UX-
 ## Release handoff
 
 Append final source SHA, complete gate, final browser matrix, actual merge/deployment identifiers and post-release readable-source/route checks. Verify allowed and denied access without recording account data. Update the [register](../docs/ux/change-register.md), [journeys](../docs/ux/user-journeys.md) and central private status from that receipt. Keep missing range, source coverage and alert delivery limitations explicit. Deployment alone does not prove every upstream source is current.
+
+## Production release receipt
+
+- Reviewed frontend PR: https://github.com/ssurmic/ducky-site/pull/104 (merged).
+- Production source: `0c904fa35a04466d4896a3aa8bb5b9b529811f26`; UI candidate: `8d6ade2b8bb4c2582467d139dfdd917242a07734`.
+- Hosted build-and-lint passed in 2m7s. The exact merged tip was then released with `scripts/deploy_pages.sh`, which reran all 809 Node tests, 14 Python tests, copy/link lint and landing checks.
+- Pages deployment: https://697e48fc.ducky-site.pages.dev . Production: https://duckybot.app .
+- `config.js` returned `VERSION: 0c904fa3` at 2026-09-28 19:05:25 UTC; CSP remained present.
+- Authenticated production browser reads confirmed the new Explore candidates and direct routes, then real stock metrics, dated option walls, 20-session range and source clocks. IV gaps and insufficient attention samples remained explicit rather than becoming zero.
+- Public Radar returned HTTP 200 with 40 records and its existing five-day delayed-access envelope. This does not certify current coverage of every source.
+
+The release uses real production modules and data. The local synthetic preview is not deployed as the app.
+No stock subscriptions or alerts were created by the acceptance pass. No backend runtime change, paid
+inference, backfill or producer restart was performed. Roll back UI code by reverting PR #104 through
+the standard reviewed-main Pages release process; no data rollback is required.
+
+This documentation receipt is a later, documentation-only revision. It does not change the deployed
+UI artifact or its version.

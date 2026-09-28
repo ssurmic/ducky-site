@@ -219,7 +219,7 @@ test('each of fifty stock rows has a separate direct map link without opening de
  const view=overviewView(rows,{view:'list',onSelect:()=>selected++});
  assert.equal(view.querySelectorAll('a.watch-map-link').length,50);
  assert.equal(view.querySelectorAll('button a, a button').length,0);
- const last=view.querySelector('a[href="#/evidence/T49"]');assert.ok(last);
+ const last=view.querySelector('a[href="#/stock/T49?tab=evidence"]');assert.ok(last);
  assert.match(last.getAttribute('aria-label'),/T49/);last.click();assert.equal(selected,0);
 });
 
@@ -258,6 +258,18 @@ test('metric sorting puts valid zero and losses ahead of missing or stale compar
  const rows=[['LOSS',-5,'ready'],['MISSING',null,'missing'],['FLAT',0,'ready'],['OLD',50,'stale']].map(([t,v,status])=>({...row(t,1e9),metrics:{ytd:{value:v,status}}}));
  const view=overviewView(rows,{view:'list',sort:'ytd',onSelect:()=>{}});
  assert.deepEqual([...view.querySelectorAll('button.watch-row')].map(n=>n.dataset.open),['FLAT','LOSS','MISSING','OLD']);
+});
+
+test('usable stale and expired metrics keep their values with visible status and source date on touch',async()=>{
+ const {metricCell}=await import('../public/js/app/watchlist-metrics.js');
+ for(const [key,state,value,label]of [['drawdown','stale',-24.2,'Earlier data'],['iv_hv','expired',.84,'Expired contract'],['attention','outside_latest_sample',0,'Previous sample']]){
+  const cell=metricCell(key,{value,status:state,as_of:'2026-01-05'});
+  const status=cell.querySelector('.watch-metric-status');assert.ok(status);assert.match(status.textContent,new RegExp(label));
+  assert.equal(status.querySelector('time').textContent,'2026-01-05');assert.equal(status.querySelector('time').getAttribute('datetime'),'2026-01-05');
+  assert.notEqual(cell.querySelector('.watch-metric-value').textContent,'—');
+ }
+ assert.equal(metricCell('iv_hv',{value:.84,status:'ready'}).querySelector('.watch-metric-status'),null);
+ assert.equal(metricCell('attention',{value:null,status:'missing'}).querySelector('.watch-metric-value').textContent,'—');
 });
 
 test('retained YTD stays readable and sortable with its original date; other stale metrics stay unknown',async()=>{

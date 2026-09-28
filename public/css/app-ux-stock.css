@@ -122,3 +122,17 @@
  .page-app .focus-stock .evidence-repeat-group summary{padding:6px 0;font-size:12px;min-height:44px;}
  .page-app .focus-stock :is(input,select,textarea){font-size:16px;}
 }
+
+/* Filings are visible from every stock tab, with no new read or follow required. */
+.focus-stock .stock-disclosure-links{display:flex;gap:8px;flex-wrap:wrap;margin:-10px 0 16px;}
+.focus-stock .stock-disclosure-links>a{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:7px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-size:13px;line-height:1.35;text-decoration:none;}
+.focus-stock .stock-disclosure-links>a:hover{border-color:var(--accent);color:var(--accent-text,var(--accent));}
+.focus-stock .stock-disclosure-links>a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.focus-stock .stock-disclosure-links>a>span:last-child{color:var(--muted);}
+@media(max-width:650px){
+ .page-app .focus-stock .stock-disclosure-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:-3px 0 10px;}
+ .page-app .focus-stock .stock-disclosure-links>a{min-width:0;min-height:44px;gap:4px;padding:6px 8px;font-size:12px;}
+ /* The active tab already names this section; retain its heading for assistive navigation. */
+ .page-app .focus-stock .stock-metrics>h2:first-child{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
+ .page-app .focus-stock .stock-metrics>h2:first-child+p{display:none;}
+}

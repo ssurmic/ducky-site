@@ -4,7 +4,7 @@ import {icon} from './icons.js';
 import * as api from './api.js';
 
 // Where to start: the stocks people are talking about right now, from the saved Reddit ranking
-// (GET /radar/social.json, collected off the request path), each opening its research map. A live
+// (GET /radar/social.json, collected off the request path), each opening the stock workspace. A live
 // ranking, never a fixed list of old cases; the section stays hidden when the ranking cannot be
 // read (plan or outage) so nothing stale takes its place.
 const TICKER=/^[A-Z][A-Z0-9.\-]{0,9}$/,LIMIT=6;
@@ -15,12 +15,13 @@ export function starterCards(doc){
   // A ranked stock that already has a written verdict (the shared reading of its watchlist row) shows
   // that one sentence under the count; the ranking itself never invents one.
   const verdict=r=>{const text=r?.overall?.[LANG==='en'?'en':'zh'];return typeof text==='string'&&text.trim()?el('span.research-example-overall',text.trim()):null;};
-  return rows.map(r=>el('a.research-example',{href:'#/evidence/'+encodeURIComponent(r.ticker),'data-ticker':r.ticker,'data-reading-key':'discover:'+r.ticker},icon('evidence'),
-    el('strong','#'+r.rank+' · '+r.ticker),
+  return rows.map(r=>el('article.research-example',{'data-ticker':r.ticker},icon('evidence'),
+    el('a.stock-open',{href:'#/stock/'+encodeURIComponent(r.ticker)+'?from=today','data-reading-key':'discover:'+r.ticker},el('strong','#'+r.rank+' · '+r.ticker)),
     el('span.small.muted',[Number.isFinite(r.mentions)?s('focus.discover_mentions',{n:new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US').format(r.mentions)}):null,
       Number.isFinite(r.change_pct)?s('focus.discover_change',{n:pct(r.change_pct,0)}):null].filter(Boolean).join(' · ')),
-    verdict(r),
-    el('span.example-arrow',{'aria-hidden':'true'},'→')));
+    verdict(r),el('nav.small',{'aria-label':s('explore.stock_routes',{ticker:r.ticker})},
+      el('a.btn.btn-ghost.btn-sm',{href:'#/stock/'+encodeURIComponent(r.ticker)+'?from=today'},s('focus.open_stock')),
+      el('a.btn.btn-ghost.btn-sm',{href:'#/stock/'+encodeURIComponent(r.ticker)+'?from=today&tab=evidence'},s('watch.open_map')))));
 }
 
 export function discoverStarters({signal}={}){

@@ -73,13 +73,18 @@ test('the strip counts stocks, not filings, and hides until any signal column ha
  assert.equal(digest.listSummary([{ticker:'NVDA'}],new Map()).loaded,false);
 });
 
-test('metric cells carry the number and at most one qualifier; states and dates move to the title',()=>{
+test('metric cells retain concise qualifiers and show usable older readings with their state and date',()=>{
  const stale=metricCell('relative',row.metrics.relative);
- assert.equal(stale.querySelectorAll('.watch-metric-status').length,0);
+ assert.equal(stale.querySelectorAll('.watch-metric-status').length,1);
+ assert.equal(stale.querySelector('.watch-metric-status').firstChild.textContent,copy['app.watch.metric_stale']);
+ assert.equal(stale.querySelector('time.watch-metric-date').getAttribute('datetime'),'2026-09-21');
+ assert.equal(stale.querySelector('time.watch-metric-date').textContent,'2026-09-21');
+ assert.match(stale.querySelector('.watch-metric-value').textContent,/-24\.1/);
  assert.equal(stale.getAttribute('title'),copy['app.watch.metric_stale']+' · 2026-09-21');
  assert.equal(stale.querySelector('.watch-metric-note').textContent,'AMD');
  const ytd=metricCell('ytd',row.metrics.ytd);
  assert.equal(ytd.querySelector('.watch-metric-note'),null);assert.equal(ytd.querySelector('.watch-metric-value').textContent,'+22.2%');
+ assert.equal(ytd.querySelector('.watch-metric-status'),null,'a ready reading does not acquire an older-data warning');
  const thin=metricCell('degen',row.metrics.degen);
  assert.equal(thin.querySelector('.watch-metric-value').textContent,'—');
  assert.equal(thin.querySelector('.watch-metric-note'),null);
@@ -198,7 +203,7 @@ test('left-side and right-side readings render under the digest only when both a
  for(const key of ['app.watch.view_right','app.watch.view_left','app.watch.views_note'])assert.ok(zh[key]&&!/[㐀-鿿]/.test(copy[key]),key);
 });
 
-test('the table gives each side its own column and the Overview cell opens with the verdict; a stale reading keeps its date, a missing one says so',async()=>{
+test('List leads with the verdict and both perspectives while Metrics leads with numeric comparison; stale and missing readings remain explicit',async()=>{
  const {overviewView}=await import('../public/js/app/watchlist-overview.js');
  const {viewCell,overallLine}=await import('../public/js/app/stock-reading.js');
  const views={status:'ready',session:'2026-09-21',generated_at:'2026-09-21T23:40:00-07:00',stale:false,
@@ -231,12 +236,16 @@ test('the table gives each side its own column and the Overview cell opens with 
  const ready={ticker:'COIN',status:'ready',as_of:'2026-09-19T22:00:00Z',overview:{en:'A reviewed line.',zh:'一句。',citations:['s1']},sources:[{id:'s1',title:{en:'T',zh:'T'}}]};
  assert.equal(reading(ready,{views:{...views,overall:null},columns:true}).querySelector('.stock-overall'),null);
  assert.ok(reading(ready,{views,columns:true}).querySelector('.stock-card.is-summary'));
- const root=overviewView([{ticker:'NVDA',company:'NVIDIA Corporation',market_cap:5.4e12,price:227.38,change_pct:2.3,price_session:'2026-09-21',metrics:row.metrics},
-   {ticker:'AMD',company:'AMD',market_cap:2.4e11,price:150,change_pct:-1,price_session:'2026-09-21',metrics:{}}],
-  {view:'list',renderResearch:t=>reading({...item,ticker:t},{digest:digest.digestNodes(row,sig),views:t==='NVDA'?views:null,columns:true}),viewsFor:t=>t==='NVDA'?views:null,
-   signals:new Map([['NVDA',sig]]),session:'2026-09-21'});
+ const rows=[{ticker:'NVDA',company:'NVIDIA Corporation',market_cap:5.4e12,price:227.38,change_pct:2.3,price_session:'2026-09-21',metrics:row.metrics},
+   {ticker:'AMD',company:'AMD',market_cap:2.4e11,price:150,change_pct:-1,price_session:'2026-09-21',metrics:{}}];
+ const options={view:'list',renderResearch:t=>reading({...item,ticker:t},{digest:digest.digestNodes(row,sig),views:t==='NVDA'?views:null,columns:true}),viewsFor:t=>t==='NVDA'?views:null,
+   signals:new Map([['NVDA',sig]]),session:'2026-09-21'};
+ const root=overviewView(rows,options);
  const heads=[...root.querySelectorAll('thead th')].map(th=>th.textContent.trim());
- assert.deepEqual(heads.slice(0,6),['Stock / business','Price / day change','Overall','Left side · long-term view','Right side · trend view','Market cap']);
+ assert.deepEqual(heads.slice(0,2),['Stock / business','Price / day change']);
+ assert.deepEqual([...root.querySelectorAll('thead th')].slice(2,8).map(th=>th.dataset.metric),['ytd','drawdown','relative','iv_hv','attention','degen']);
+ assert.deepEqual(heads.slice(-4),['Market cap','Overall','Left side · long-term view','Right side · trend view']);
+ assert.equal(heads.length,17,'all metrics, signals, market cap and narrative columns remain');
  assert.ok(root.querySelector('thead th.watch-view-col.is-left')&&root.querySelector('thead th.watch-cap-col'));
  const first=root.querySelector('tbody tr');
  assert.equal(first.querySelector('td.watch-view-cell.is-left .watch-view-text').textContent,'Long-term holders watch the pullback depth.');
@@ -245,6 +254,12 @@ test('the table gives each side its own column and the Overview cell opens with 
  assert.ok(first.querySelector('td.watch-cap-col'));
  const second=root.querySelectorAll('tbody tr')[1];
  assert.equal(second.querySelectorAll('.watch-view-pending').length,2);assert.ok(second.querySelector('.watch-reading-preview .stock-digest-value'));
+ const compactList=overviewView(rows,{...options,compact:true});
+ assert.deepEqual([...compactList.querySelectorAll('thead th')].map(th=>th.textContent.trim()),['Stock / business','Price / day change','Overall','Left side · long-term view','Right side · trend view']);
+ assert.equal(compactList.querySelector('.watch-metric-cell'),null);
+ const listedFirst=compactList.querySelector('tbody tr');
+ assert.match(listedFirst.querySelector('.watch-reading-preview').textContent,/^Overall:/);
+ for(const side of ['left','right'])assert.equal(listedFirst.querySelector('.watch-view-cell.is-'+side+' .watch-view-text').textContent,first.querySelector('.watch-view-cell.is-'+side+' .watch-view-text').textContent);
  for(const key of ['app.watch.col_left','app.watch.col_right','app.watch.col_overall','app.watch.view_pending','app.watch.view_as_of','app.watch.view_written'])assert.ok(zh[key]&&!/[㐀-鿿]/.test(copy[key]),key);
  assert.equal(zh['app.watch.col_overall'],'总评');assert.equal(zh['app.watch.view_reading'],'概览');
 });

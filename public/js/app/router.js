@@ -42,6 +42,9 @@ export function isPublic(hash) { return PUBLIC.has(parse(hash).name); }
 let current = null, currentEpoch = null, cleanup = null, seq = 0, controller = null;
 const scrollPositions=new Map();
 let previousPageKey=null,previousHash=null;
+const safeOrigin=href=>typeof href==='string'&&/^#\/(today|explore|watchlist|creators|calendar|boards)(?:\?|$)/.test(href);
+const safeArchive=href=>typeof href==='string'&&/^#\/(boards|reports)(?:\?|$)/.test(href);
+const safeStock=(href,ticker)=>typeof href==='string'&&/^#\/stock\/[A-Z][A-Z0-9.-]{0,9}(?:\?|$)/.test(href)&&parse(href).params.ticker===ticker;
 function keepRouteState(){
   const main=document.querySelector('.app-main');
   if(previousPageKey&&main)scrollPositions.set(previousPageKey,main.scrollTop);
@@ -86,14 +89,37 @@ export async function render() {
   if (authed && route.name === "login") {
     const target = takeTarget(); history.replaceState(null, "", target); route = parse(target);
   }
+  const epoch=store.epoch();
+  const previous=previousHash&&previousPageKey?.startsWith(epoch+'|')?parse(previousHash):null;
+  const sameAccount=currentEpoch===epoch;
   if(route.name==='stock'){
     const old=history.state?.duckyStockReturn;
     const origin=route.params.query?.get('from')||'watchlist';
-    const previous=previousHash&&previousPageKey?.startsWith(store.epoch()+'|')?parse(previousHash):null;
-    const inherited=currentEpoch===store.epoch()&&current?.name==='stock'&&current.params.ticker===route.params.ticker?current.params.returnTo:null;
+    const inherited=sameAccount&&current?.name==='stock'&&current.params.ticker===route.params.ticker?current.params.returnTo:
+      sameAccount&&current?.name==='alerts'&&location.hash===current.params.returnTo&&safeStock(current.params.returnTo,route.params.ticker)?current.params.stockReturn:null;
     const returnTo=old?.epoch===store.epoch()&&old?.ticker===route.params.ticker?old.href:inherited||(previous?.name===origin?previousHash:'#/'+origin);
-    route.params.returnTo=/^#\/(today|explore|watchlist|creators|calendar|boards)(?:\?|$)/.test(returnTo)?returnTo:'#/watchlist';
+    route.params.returnTo=safeOrigin(returnTo)?returnTo:'#/watchlist';
     history.replaceState({...history.state,duckyStockReturn:{epoch:store.epoch(),ticker:route.params.ticker,href:route.params.returnTo}},'',location.hash);
+  }
+  if(route.name==='alerts'){
+    const ticker=(route.params.query?.get('ticker')||'').toUpperCase(),old=history.state?.duckyAlertReturn;
+    if(/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker)){
+      const saved=old?.epoch===epoch&&old?.at===location.hash&&old?.ticker===ticker&&safeStock(old.href,ticker);
+      const fromStock=sameAccount&&previous?.name==='stock'&&previous.params.ticker===ticker&&current?.name==='stock'&&current.params.ticker===ticker;
+      route.params.returnTo=saved?old.href:fromStock?previousHash:'#/stock/'+ticker+'?tab=metrics';
+      const origin=saved?old.stockReturn:fromStock?current.params.returnTo:null;
+      route.params.stockReturn=safeOrigin(origin)?origin:'#/watchlist';
+      history.replaceState({...history.state,duckyAlertReturn:{epoch,at:location.hash,ticker,href:route.params.returnTo,stockReturn:route.params.stockReturn}},'',location.hash);
+    }
+  }
+  if(route.name==='record'){
+    const old=history.state?.duckyRecordReturn;
+    const saved=old?.epoch===epoch&&old?.at===location.hash&&old?.id===route.params.id&&safeArchive(old.href);
+    const returnTo=saved?old.href:previous&&['boards','reports'].includes(previous.name)&&safeArchive(previousHash)?previousHash:null;
+    if(returnTo){
+      route.params.returnTo=returnTo;
+      history.replaceState({...history.state,duckyRecordReturn:{epoch,at:location.hash,id:route.params.id,href:returnTo}},'',location.hash);
+    }
   }
   previousHash=location.hash;
   const my = ++seq;

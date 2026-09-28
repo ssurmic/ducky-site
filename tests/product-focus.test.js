@@ -57,11 +57,11 @@ test('first watchlist paints the just-followed saved overview while its first re
  const mount=watch.mount(root);
  try{
   assert.match(root.textContent,/conditional on spending/);
-  assert.ok(root.querySelector('a[href="#/evidence/NVDA"]'));
+  assert.ok(root.querySelector('a[href="#/stock/NVDA?tab=evidence"]'));
  }finally{
   for(const resolve of pending)resolve(Response.json({error:'offline'},{status:503}));
   const dispose=await mount;
-  try{assert.match(root.textContent,/conditional on spending/);assert.ok(root.querySelector('a[href="#/evidence/NVDA"]'));}
+  try{assert.match(root.textContent,/conditional on spending/);assert.ok(root.querySelector('a[href="#/stock/NVDA?tab=evidence"]'));}
   finally{dispose();}
  }
 });
@@ -159,7 +159,7 @@ test('add from a new stock then return to watchlist: previous research remains w
  const mount=watch.mount(root);
  assert.match(root.textContent,/conditional on spending/);assert.equal(root.querySelectorAll('tbody tr').length,2);
  assert.equal(root.querySelectorAll('.stock-one-sentence').length,1);
- assert.ok(root.querySelector('a[href="#/evidence/AMD"]'));
+ assert.ok(root.querySelector('a[href="#/stock/AMD?tab=evidence"]'));
  await pause();for(const [url,resolve] of pending)resolve(Response.json(url==='/watchlist'?{...prices,items:['NVDA','AMD']}:
   {items:[item(),{ticker:'AMD',status:'pending',records:0}],watchlist_count:2}));
  dispose=await mount;assert.match(root.textContent,/conditional on spending/);assert.equal(root.querySelectorAll('.stock-one-sentence').length,1);
@@ -285,7 +285,7 @@ test('watchlist defaults to a compact list with shared research and direct maps'
  const dispose=await watch.mount(root);assert.equal(root.querySelectorAll('.watch-compact-table tbody tr').length,1);
  assert.equal(root.querySelector('.stock-name').getAttribute('href'),'#/stock/NVDA');assert.match(root.textContent,/conditional on spending/);
  assert.equal(root.querySelectorAll('.watch-compact-table thead th').length,5);
- assert.ok(root.querySelector('a[href="#/stock/NVDA?tab=metrics"]'));assert.ok(root.querySelector('a[href="#/evidence/NVDA"]'));assert.equal(root.querySelector('[data-mode=list]').getAttribute('aria-pressed'),'true');
+ assert.ok(root.querySelector('a[href="#/stock/NVDA?tab=metrics"]'));assert.ok(root.querySelector('a[href="#/stock/NVDA?tab=evidence"]'));assert.equal(root.querySelector('[data-mode=list]').getAttribute('aria-pressed'),'true');
  root.querySelector('[data-mode=metrics]').click();assert.ok(root.querySelector('.watch-metric'));dispose();
 });
 
@@ -304,7 +304,7 @@ test('quotes render before slow research; a failed refresh retains saved rows an
  let pending=watch.mount(root);await pause();assert.match(root.querySelector('.watch-compact-table tbody tr').textContent,/98/);
  assert.equal(root.querySelector('.stock-reading').textContent,copy['app.focus.summary_loading']);
  assert.equal(root.querySelector('button[data-mode="list"]').getAttribute('aria-pressed'),'true');
- assert.ok(root.querySelector('a[href="#/evidence/NVDA"]'));
+ assert.ok(root.querySelector('a[href="#/stock/NVDA?tab=evidence"]'));
  finish(Response.json({items:[item()]}));let dispose=await pending;
  assert.match(root.querySelector('.stock-one-sentence').textContent,/conditional on spending/);
  assert.doesNotMatch(root.querySelector('.stock-reading').textContent,/Loading saved analysis/);
@@ -314,18 +314,22 @@ test('quotes render before slow research; a failed refresh retains saved rows an
  finish(Response.json({items:[item()]}));dispose=await pending;assert.ok(root.querySelector('.errbox'));assert.ok(root.querySelector('.watch-compact-table tbody tr'));dispose();
 });
 
-test('stock overview preserves opposing evidence and loads history only on expansion',async()=>{
- const root=setup(),calls=[];const n=node(),other=node('counter','counter');
- globalThis.fetch=async input=>{const url=new URL(input,'https://ducky.test');calls.push(url.pathname);
-  if(url.pathname.startsWith('/bars/'))return Response.json({bars:[{t:'2026-09-08',c:100},{t:'2026-09-09',c:95}]});
-  if(url.pathname==='/me/research-changes')return Response.json({items:[change()],next_cursor:null});
-  return Response.json({ticker:'NVDA',price:{price:95,price_session:'2026-09-09'},evidence:{ticker:'NVDA',nodes:[n,node('b'),node('c'),other],analysis_status:'ready',analysis_generated_at:item().as_of,
-    analysis:{overview:item().overview,sections:[]}}});
- };
- const dispose=await stock.mount(root,{ticker:'NVDA'});assert.equal(calls.length,2);
- assert.equal(root.querySelectorAll('.stock-source-card').length,3);assert.ok([...root.querySelectorAll('.stock-source-card')].some(card=>/Bearish view/.test(card.textContent)));
- assert.equal(root.querySelector('.focus-history').open,false);root.querySelector('.focus-history').open=true;await pause();
- assert.equal(calls.filter(p=>p==='/me/research-changes').length,1);dispose();
+test('stock overview preserves both important stances even when its three inline citations share one side',async()=>{
+ for(const stance of ['support','counter']){
+  const root=setup(),calls=[];const cited=[node('source',stance),node('b',stance),node('c',stance)],other=node('other',stance==='support'?'counter':'support');
+  globalThis.fetch=async input=>{const url=new URL(input,'https://ducky.test');calls.push(url.pathname);
+   if(url.pathname.startsWith('/bars/'))return Response.json({bars:[{t:'2026-09-08',c:100},{t:'2026-09-09',c:95}]});
+   if(url.pathname==='/me/research-changes')return Response.json({items:[change()],next_cursor:null});
+   return Response.json({ticker:'NVDA',price:{price:95,price_session:'2026-09-09'},evidence:{ticker:'NVDA',nodes:[...cited,other],analysis_status:'ready',analysis_generated_at:item().as_of,
+     analysis:{overview:{...item().overview,citations:['source','b','c']},sections:[]}}});
+  };
+  const dispose=await stock.mount(root,{ticker:'NVDA'});assert.equal(calls.length,2);
+  assert.equal(root.querySelectorAll('.stock-source-card').length,3);
+  assert.ok(root.querySelector('.stock-source-card.is-counter'));assert.ok(root.querySelector('.stock-source-card.is-support'));
+  assert.equal(root.querySelectorAll('.evidence-analysis-overview .evidence-analysis-citations button').length,3,'every original inline citation remains accessible');
+  assert.equal(root.querySelector('.focus-history').open,false);root.querySelector('.focus-history').open=true;await pause();
+  assert.equal(calls.filter(p=>p==='/me/research-changes').length,1);dispose();
+ }
 });
 
 test('price inspection retains losses, missing quotes and the actual closing date',()=>{

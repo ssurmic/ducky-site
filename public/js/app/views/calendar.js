@@ -189,12 +189,13 @@ export async function mount(root, route={}) {
   function render() {
     if(disposed) return;
     clear(card);
-    card.append(el("header.calendar-heading", el("div", el("h1", s("calendar.h1")), el("p.muted", s("calendar.sub"))),
+    card.append(el("header.calendar-heading", el("div", el("h1", s("calendar.h1")), el("p.calendar-intro.muted", s("calendar.sub")),
+      el("p.cal-timezone.muted.small",s("calendar.timezone_short"))),
       el("button.btn.btn-ghost.btn-sm.cal-history-link", {type:"button", "aria-controls":"seasonality-history", onclick:()=>{historyCard.scrollIntoView({block:"start"});historyCard.focus({preventScroll:true});}}, s("calendar.history_short") + " ↓")));
     if(watchError)card.append(el('div.data-notice.calendar-watch-warning',{role:'status'},
       el('p',s('calendar.watchlist_unavailable',{n:watch.length})),
       el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>router.go(location.hash)},s('common.retry'))));
-    else if(hasContextAccess) card.appendChild(el("p.event-scope-note.muted.small",s("event.scope_note",{n:watch.length})));
+    else if(hasContextAccess) card.appendChild(el("p.event-scope-note.calendar-scope-summary.muted.small",s("event.scope_note",{n:watch.length})));
     if (!hasContextAccess) {
       card.appendChild(el("div.cr-pro-banner",
         el("span.cr-pro-badge", s("calendar.pro_badge")),
@@ -231,7 +232,10 @@ export async function mount(root, route={}) {
       (mineOnly ? "★ " : "☆ ") + s("calendar.mine_only") + (hasContextAccess ? "" : " 🔒"));
     mineBtn.addEventListener("click", () => { if (!hasContextAccess) { router.go("#/profile"); return; } mineOnly = !mineOnly; render(); });
     bar.appendChild(mineBtn);
-    const filters=el("details.cal-filters", el("summary", s("calendar.filters")), bar, el("p.small.muted",s("calendar.timing_note")));
+    // Phones disclose explanatory context with the existing filters; source/access warnings stay above.
+    const phoneContext=el('div.cal-phone-context',el('p.small.muted',s('calendar.sub')),
+      hasContextAccess&&!watchError?el('p.event-scope-note.small.muted',s('event.scope_note',{n:watch.length})):null);
+    const filters=el("details.cal-filters", el("summary", s("calendar.filters")), bar, phoneContext, el("p.small.muted",s("calendar.timing_note")));
     filters.open=filter!=="all" || mineOnly;
 
     // view-mode toggle: 两周 (at-a-glance earnings) | 月

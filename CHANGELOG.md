@@ -1,6 +1,54 @@
 # Change log
 
-## Integrated research workspace · 2026-09-28 (production candidate)
+## Research workflow and phone usability follow-up · 2026-09-28 (local candidate; final gate and release pending)
+
+Independent newcomer, experienced-user and mobile reviews challenged the complete reading paths,
+not only individual screens. The candidate keeps the existing visual system, useful daily digest,
+liquidity/QQQ/SPY chart and full source content, while making the next action and return destination
+consistent. This entry records implemented follow-up work; it is not a new release receipt.
+
+Today’s existing research counts now jump to and focus their section headings. Dated starter
+companies enter the stock workspace with a separate named Map action. The three-line macro chart
+supports keyboard date selection and announced readings, and its help target is 44px. Phone spacing
+is tighter without hiding the digest or macro chart. Calendar retains its timezone and event timing
+labels while moving repeated introductory context into its existing phone filter disclosure.
+
+Watchlist Metrics puts six readings and five signal groups before the preserved narrative columns;
+List retains its original order. Retained stale, expired and previous-sample values visibly carry
+their state and date. Map actions enter the stock Evidence tab, with the full map still available.
+Stock key-source previews reserve room for available opposing evidence within the existing relevant
+scope, without removing original citations or inventing a counterargument.
+
+Creator tickers and exact sources now offer named stock-research entries alongside original sources
+and point maps. Author selection, private search, stance/scope, expansion, focus and scroll survive
+the return within the current account epoch. Activity filters, record-ID canonicalization and alert
+draft links likewise preserve their exact entry context; opening an alert draft does not submit it.
+
+Every stock tab now exposes Insider trades and Fund holdings · 13F immediately below the tabs.
+Each link opens that ticker's filing archive with all directions and amounts, without a seven-day
+window. The 13F entry excludes strategic-partner and stake disclosures. Watchlist filing dialogs
+use the same destinations, including when their short preview is empty. These links add no reads
+to the stock page and do not follow a stock.
+
+Radar's transaction-value filter notice is shown only in the insider category and describes the
+actual threshold; it no longer calls all matching records purchases. Broad all-record archive links
+start with compact filters; genuinely restrictive filters remain exposed. Trade dates, filing dates,
+quarter-end holdings and reported changes retain their existing meanings.
+
+Evidence: [newcomer review](reports/UX-WORKFLOW-NEWCOMER-2026-09-28.md),
+[experienced-user review](reports/UX-WORKFLOW-EXPERT-2026-09-28.md),
+[mobile review](reports/UX-WORKFLOW-MOBILE-2026-09-28.md),
+[integrated workflow review](reports/UX-WORKFLOW-REVIEW-2026-09-28.md), and
+[disclosure entry acceptance](reports/STOCK-DISCLOSURE-ENTRY-2026-09-28.md). Focused checks and local
+browser measurements are recorded there; the integrating agent owns the final combined gate and
+release. No physical-device, live-write, notification-delivery or semantic-fidelity acceptance is
+claimed. The production receipt below remains the evidence for version `0c904fa3` only.
+
+## Integrated research workspace · 2026-09-28 (deployed)
+
+Released through PR #104 and `scripts/deploy_pages.sh`: production `0c904fa3` verified at
+2026-09-28 19:05:25 UTC, Pages deployment `697e48fc`. Full release gate: 809 Node and 14 Python
+tests passed, copy/link checks passed.
 
 Watchlist and Explore now open one stock workspace with Overview, Metrics, Evidence and History.
 Existing long-term/trend views, option walls, support references and IV/HV remain directly reachable.

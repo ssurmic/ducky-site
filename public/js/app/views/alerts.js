@@ -38,6 +38,9 @@ export async function mount(root, params = {}) {
   root.append(head);
   head.append(el('a.btn.btn-ghost.btn-sm',{href:'#/updates'},s('updates.entry_open')));
   const price=Number(params.query?.get('price')),direction=params.query?.get('direction'),ticker=(params.query?.get('ticker')||'').toUpperCase();
+  const returnTo=typeof params.returnTo==='string'&&new RegExp('^#/stock/'+ticker.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?:\\?|$)').test(params.returnTo)?params.returnTo:'#/stock/'+encodeURIComponent(ticker)+'?tab=metrics';
+  if(/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker))head.append(el('a.btn.btn-ghost.btn-sm.alert-stock-return',
+    {href:returnTo},'← '+ticker+' · '+s('chart.back_to_stock')));
   const initialText=/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker)&&Number.isFinite(price)&&price>0&&['above','below'].includes(direction)?s('stockux.alert_prompt_'+direction,{ticker,price}):'';
   const disposeDraft = mountDraft(root, { signal: params.signal, initialText, company: (params.query?.get("ticker") || "").toUpperCase(), onCreated: load });
   root.append(list);
