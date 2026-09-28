@@ -10,6 +10,8 @@ The same-day note keeps its complete four-part presentation. A compact QQQ/SPY c
 only consecutive saved observed rows and preserves zero versus unavailable values. The liquidity
 score now shows its own saved date. An unsuccessful macro read has an explicit GET-only retry,
 separate from an unavailable note; aborted and previous-account reads cannot repaint the view.
+The saved note’s expanded state also survives a stock visit and delayed macro read within the
+same account, without carrying to another note session.
 
 No producer status, holiday schedule, generation progress or completion time is inferred. This
 candidate adds no API endpoint, background refresh, account action or inference request. The

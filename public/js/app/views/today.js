@@ -116,7 +116,9 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   // saved macro backdrop is read once per mount and never delays the personal feed below.
   const macroHost=el('div.today-macro-host');
   const creatorHost=el('div.today-creators-host');
-  if(!embedded){main.append(macroHost,creatorHost);mountMacroStrip(macroHost,{signal});mountCreatorMacro(creatorHost,{signal});}
+  if(!embedded){main.append(macroHost,creatorHost);mountMacroStrip(macroHost,{signal}).then(()=>{
+    if(!disposed&&!signal?.aborted&&epoch===store.epoch())restoreDisclosures(macroHost);
+  });mountCreatorMacro(creatorHost,{signal});}
   const stat=(value,label,target,disabled=false)=>el('button.today-stat',{type:'button',disabled,
     onclick:()=>{const heading=target();if(heading){heading.scrollIntoView?.({block:'start'});heading.focus({preventScroll:true});}}},
     el('strong',String(value)),el('span',label));

@@ -38,7 +38,7 @@ publication estimates or hardcoded operational times.
 
 ## Checks and boundary
 
-`node --test tests/today-macro.test.js tests/newcomer-workflow.test.js`: **21 passed**.
+`node --test tests/today-macro.test.js tests/newcomer-workflow.test.js`: **22 passed**.
 The checks cover the Friday-note/Monday-reading case; complete old content and its expansion;
 same-day presentation; New York midnight; weekends; missing/invalid dates; a requested quote
 session that does not establish observed data; actual zero and missing comparisons; missing
@@ -52,3 +52,23 @@ keyboard controls and Today jump/focus behavior also pass.
 Browser viewport, touch emulation,
 physical-device, merge, deployment and production acceptance are not claimed by these tests.
 The integrating owner owns the combined full gate and actual 320/390px and desktop checks.
+
+## Independent follow-up review
+
+The review found one bounded return-state defect: Today saved the new archive disclosure key,
+but restored disclosures only in research sections. The macro read now applies the existing
+saved disclosure state after its asynchronous render, with disposal, route-abort and account-epoch
+guards. A mounted Today → Stock → Today regression delays that read and verifies the open note
+is restored; another account and another note session both start collapsed. No other Today state
+or macro request policy changes.
+
+The remaining date/return checks found no release blocker: index changes retain observed dates,
+no expected trading day is inferred, and a failed GET is distinct from missing saved content.
+The existing one-read-per-mount policy remains; relative same-day headings are evaluated when
+mounted, not through a new midnight refresh loop.
+
+For integrated browser acceptance, `case=today-freshness&route=today` now supplies a separate,
+fixed-date synthetic fixture: September 25 note, September 26 generation time, September 28
+original outlook and observed market rows. Its values and paragraphs are labelled synthetic;
+the default fixture is unchanged, account writes and external traffic remain blocked. A Node VM
+check verified its source dates, QQQ/SPY changes, default-case isolation and those traffic guards.

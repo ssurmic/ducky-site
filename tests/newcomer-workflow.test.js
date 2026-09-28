@@ -23,13 +23,13 @@ const point={creator_id:'sample',post_id:'sample-post',point_id:'point:sample',t
 const post={id:1,kol_id:creator.id,kol_name:creator.name,platform_post_id:point.post_id,published_at:point.published_at,title:'Synthetic source',tickers:['MU'],calls:[],url:point.source_url,
   reviewed_spans:[point],summary:{quality:'no_call',en:'Synthetic summary.',source:{kind:'transcript',status:'ready',summary_reviewed:true}}};
 const requests=[];
-let hasAnalysis=true;
+let hasAnalysis=true,macroReply={status:'unavailable'},deferredMacro=null;
 globalThis.fetch=async(url,options={})=>{
   assert.equal(options.method||'GET','GET','reading must not subscribe or mutate an account');requests.push(url);
   if(url==='/kol/feed')return Response.json({kols:[creator],posts:[post],pages:{}});
   if(url==='/me/kols')return Response.json({subs:[],analysis:{}});
   if(url==='/watchlist')return Response.json({items:[]});
-  if(url==='/macro/beta')return Response.json({status:'unavailable'});
+  if(url==='/macro/beta')return deferredMacro?await deferredMacro:Response.json(macroReply);
   if(url==='/me/stock-research')return Response.json({watchlist_count:1,items:hasAnalysis?[{ticker:'MU',status:'ready',as_of:new Date().toISOString(),
     overview:{en:'The exact synthetic condition.',citations:['source']},sources:[{id:'source',title:{en:'Margins depend on pricing.'},stance:'support',kind:'creator',evidence:[]}]}]:[]});
   if(url.startsWith('/me/research-changes'))return Response.json({items:[],next_cursor:null});
@@ -140,4 +140,31 @@ test('existing Today counts jump and focus their reading sections without hiding
   hasAnalysis=false;store.bumpEpoch();store.set('me',{user_id:903,tier:'pro'});store.set('token','synthetic-third');
   await visit('#/today');
   assert.equal(root.querySelectorAll('button.today-stat')[1].disabled,true,'zero analyses do not jump into an empty target');
+});
+
+
+test('an expanded saved Today note survives stock return after a delayed macro read, but not another account',async()=>{
+  macroReply={schema:'macro-beta/1',status:'ok',as_of:'2026-09-28',latest:{date:'2026-09-28',funding_score:50,metrics:{}},
+    digest:{status:'stale',session:'2026-09-25',next_session:'2026-09-28',generated_at:'2026-09-26T04:34:19Z',close:{en:'A synthetic saved close note.'}}};
+  await visit('#/today');
+  const archive=root.querySelector('.today-digest-archive');assert.ok(archive);assert.equal(archive.open,false);
+  archive.open=true;
+  await visit('#/stock/MU?from=today');
+  const back=root.querySelector('.focus-heading a.small.muted');assert.equal(back.getAttribute('href'),'#/today');
+  let resolveMacro;deferredMacro=new Promise(resolve=>{resolveMacro=resolve;});
+  await visit(back.getAttribute('href'));
+  assert.equal(root.querySelector('.today-digest-archive'),null,'the macro request has not resolved yet');
+  resolveMacro(Response.json(macroReply));deferredMacro=null;await settle();
+  assert.equal(root.querySelector('.today-digest-archive').open,true,'restore only after the saved document is rendered');
+  assert.match(root.querySelector('.today-digest-part p').textContent,/synthetic saved close note/);
+  await visit('#/stock/MU?from=today');
+  store.bumpEpoch();store.set('me',{user_id:904,tier:'pro'});store.set('token','synthetic-fourth');
+  await visit('#/today');
+  assert.equal(root.querySelector('.today-digest-archive').open,false,'prior-account disclosure state is not inherited');
+  // A different note is a different reading key, even inside the same account.
+  root.querySelector('.today-digest-archive').open=true;
+  await visit('#/stock/MU?from=today');
+  macroReply={...macroReply,digest:{...macroReply.digest,session:'2026-09-24'}};
+  await visit('#/today');
+  assert.equal(root.querySelector('.today-digest-archive').open,false,'a newly read session starts collapsed');
 });
