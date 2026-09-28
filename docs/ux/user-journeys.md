@@ -101,5 +101,4 @@ Prototype bookmarks, plans, themes, synthetic liquidity comparison and scenario 
 historical design references.
 
 Known remaining limitation in `e22240f3`: Chart return loses the exact stock tab/from and original
-creator filter context. A separate correction is pending. Direct Creator → Stock → Creator return
-and chart rendering passed their scoped checks; the longer Chart return chain did not.
+creator filter context. A [local correction](../../reports/UX-CHART-RETURN-2026-09-28.md) now preserves the exact stock URL and account-bound origin, including the selected author. The complete chain has regression coverage; release and production confirmation remain pending. Direct Creator → Stock → Creator return and chart rendering passed the earlier scoped checks; the longer Chart return chain did not.

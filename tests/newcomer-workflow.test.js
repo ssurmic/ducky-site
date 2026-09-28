@@ -37,6 +37,7 @@ globalThis.fetch=async(url,options={})=>{
   if(url==='/kol/sample/posts/sample-post')return Response.json({creator,post});
   if(url==='/kol/sample/page')return Response.json({kol_id:'sample',status:'ready'});
   if(url==='/stock-research/MU')return Response.json({ticker:'MU',price:{ticker:'MU',company:'Synthetic company',price:100},evidence:{ticker:'MU',nodes:[],analysis_status:'pending'}});
+  if(url.startsWith('/public/company/'))return Response.json({ticker:url.split('/').pop(),company:'Synthetic company'});
   if(url.startsWith('/bars/'))return Response.json({bars:[]});
   if(url==='/radar/social.json')return Response.json({status:'empty',items:[]});
   throw Error('Unexpected read '+url);
@@ -77,6 +78,26 @@ test('selecting an author in place updates stock return context and retains the 
   assert.ok(stock);assert.ok(root.querySelector('a[href^="#/evidence/MU"]'),'the exact-point map remains accessible');
   await visit(stock.getAttribute('href'));
   assert.equal(root.querySelector('.focus-heading a.small.muted').getAttribute('href'),exact);
+});
+
+test('selected creator to stock to chart returns to the exact stock tab and original author',async()=>{
+  await visit('#/creators?scope=discover');
+  root.querySelector('.creator-name').click();await settle();
+  const authorRoute=location.hash;
+  const ticker=root.querySelector('.creator-view-takes a');ticker.focus();main.scrollTop=371;
+  await visit(ticker.getAttribute('href'));
+  await visit(root.querySelector('[data-stock-tab=history]').getAttribute('href'));
+  const stockRoute=location.hash;main.scrollTop=283;
+  await visit(root.querySelector('[data-stock-tool=kline]').getAttribute('href'));
+  assert.equal(root.querySelector('.chart-back').getAttribute('href'),stockRoute);
+  await router.render();assert.equal(root.querySelector('.chart-back').getAttribute('href'),stockRoute,'reread retains this chart entry');
+  await visit(root.querySelector('.chart-back').getAttribute('href'));
+  assert.equal(root.querySelector('[data-stock-tab=history]').getAttribute('aria-current'),'page');
+  assert.equal(root.querySelector('.focus-heading a.small.muted').getAttribute('href'),authorRoute);
+  assert.equal(main.scrollTop,283);
+  await visit(root.querySelector('.focus-heading a.small.muted').getAttribute('href'));
+  assert.equal(location.hash,authorRoute);assert.equal(main.scrollTop,371);
+  assert.equal(document.activeElement?.dataset.readingKey,'creator-view:sample-post:point:sample:MU:stock');
 });
 
 test('creator search, stance, scope and disclosure survive a stock visit and rerender but never another account',async()=>{

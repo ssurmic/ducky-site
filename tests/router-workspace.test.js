@@ -22,6 +22,7 @@ globalThis.fetch=async(url,options={})=>{
  if(url==='/me/stock-research')return Response.json({items:[{ticker:'NVDA',status:'pending'}],watchlist_count:1});
  if(url==='/stock-research/NVDA')return Response.json({ticker:'NVDA',price:{...row,company:user+' synthetic company'},evidence:{ticker:'NVDA',nodes:[],analysis_status:'pending'}});
  if(url==='/snapshot/NVDA')return Response.json({ticker:'NVDA',built_at:'2026-09-25T20:00:00Z',snapshot:{ok:true,retrace:{d20:{lo:205,hi:240}},gamma:{put_wall:210,call_wall:230,scope:{expiries:['2026-10-16']}},vol:{iv:40,hv:50,ratio:.8}}});
+ if(url.startsWith('/public/company/'))return Response.json({ticker:url.split('/').pop(),company:'Synthetic company'});
  if(url.startsWith('/bars/'))return Response.json({bars:[]});
  if(url.startsWith('/me/research-changes'))return Response.json({items:[],next_cursor:null});
  if(url==='/briefing/stocks?fields=signals'||url.startsWith('/radar/archive.json'))return Response.json({items:archiveRows,next_cursor:null,filter_version:3});
@@ -118,6 +119,39 @@ test('Explore to a stock metric price draft returns to its exact tab and origina
  await visit(alertHash,{duckyAlertReturn:{...alertState.duckyAlertReturn,stockReturn:'https://example.com'}});
  await visit(root.querySelector('.alert-stock-return').getAttribute('href'));
  assert.equal(backLink().getAttribute('href'),'#/watchlist','the inherited source return is separately validated');
+});
+
+test('chart return binds the account, entry and ticker and does not leak an origin to generic or changed-stock routes',async()=>{
+ await visit('#/explore');
+ await visit('#/stock/NVDA?from=explore&tab=overview');
+ const stockHash=location.hash;
+ await visit(root.querySelector('[data-stock-tool=kline]').getAttribute('href'));
+ const chartHash=location.hash,chartState=structuredClone(history.state);
+ assert.equal(root.querySelector('.chart-back').getAttribute('href'),stockHash);
+ for(const change of [{href:'https://example.com'}, {href:'javascript:alert(1)'}, {href:'#/stock/OTHER?tab=overview'}, {href:'#/stock/NVDA/invalid'}, {ticker:'OTHER'}, {at:'#/chart/OTHER'}, {epoch:store.epoch()-1}]){
+  await visit('#/watchlist');
+  await visit(chartHash,{duckyChartReturn:{...chartState.duckyChartReturn,...change}});
+  assert.equal(root.querySelector('.chart-back').getAttribute('href'),'#/stock/NVDA','unsafe, unrelated or old-account history falls back locally');
+ }
+ await visit('#/watchlist');
+ await visit(chartHash,{duckyChartReturn:{...chartState.duckyChartReturn,stockReturn:'https://example.com'}});
+ await visit(root.querySelector('.chart-back').getAttribute('href'));
+ assert.equal(backLink().getAttribute('href'),'#/watchlist','the origin is separately validated');
+ await visit(chartHash,chartState);
+ await visit('#/stock/NVDA');
+ assert.equal(backLink().getAttribute('href'),'#/watchlist','a generic stock entry is not the exact chart return');
+ await visit(chartHash,chartState);
+ await visit('#/chart/OTHER',chartState);
+ assert.equal(root.querySelector('.chart-back').getAttribute('href'),'#/stock/OTHER','changing symbols drops the prior stock context');
+ await visit('#/chart/NVDA');
+ await visit(root.querySelector('.chart-back').getAttribute('href'));
+ assert.equal(backLink().getAttribute('href'),'#/watchlist','changing back does not resurrect a prior chart entry');
+ await visit(chartHash,chartState);
+ store.bumpEpoch();store.set('token','synthetic-new-epoch');
+ await router.render();
+ assert.equal(root.querySelector('.chart-back').getAttribute('href'),'#/stock/NVDA','an actual account epoch change revokes the mounted chart context');
+ await visit(root.querySelector('.chart-back').getAttribute('href'));
+ assert.equal(backLink().getAttribute('href'),'#/watchlist');
 });
 
 test('stock filings open with compact filters and exact record breadcrumbs retain applied filters through canonical aliases',async()=>{
