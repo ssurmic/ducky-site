@@ -284,7 +284,9 @@ test('watchlist defaults to a compact list with shared research and direct maps'
   {items:[{ticker:'NVDA'}],overview:{items:[{ticker:'NVDA',company:'NVIDIA',price:98,price_status:'ready',price_session:'2026-09-09',change_pct:0}]}});
  const dispose=await watch.mount(root);assert.equal(root.querySelectorAll('.watch-compact-table tbody tr').length,1);
  assert.equal(root.querySelector('.stock-name').getAttribute('href'),'#/stock/NVDA');assert.match(root.textContent,/conditional on spending/);
- assert.ok(root.querySelector('.watch-metric'));assert.ok(root.querySelector('a[href="#/evidence/NVDA"]'));assert.equal(root.querySelector('[data-mode=list]').getAttribute('aria-pressed'),'true');dispose();
+ assert.equal(root.querySelectorAll('.watch-compact-table thead th').length,5);
+ assert.ok(root.querySelector('a[href="#/stock/NVDA?tab=metrics"]'));assert.ok(root.querySelector('a[href="#/evidence/NVDA"]'));assert.equal(root.querySelector('[data-mode=list]').getAttribute('aria-pressed'),'true');
+ root.querySelector('[data-mode=metrics]').click();assert.ok(root.querySelector('.watch-metric'));dispose();
 });
 
 test('an explicitly empty watchlist shows onboarding, while unreadable research does not imply no watches',async()=>{
@@ -438,6 +440,7 @@ test('column sorting toggles direction, keeps unknown values last and does not r
  globalThis.fetch=async url=>{if(!/^\/(briefing|radar)\//.test(url))reads++;return Response.json(url==='/me/stock-research'?{items:rows.map(r=>item(r.ticker))}:{items:rows,overview:{items:rows}});};
  const dispose=await watch.mount(root),order=()=>[...root.querySelectorAll('tbody tr')].map(n=>n.dataset.readingAnchor);
  assert.deepEqual(order(),['BBB','AAA','CCC']);
+ root.querySelector('[data-mode=metrics]').click();
  const select=()=>root.querySelector('[data-sort=ytd]');select().click();assert.deepEqual(order(),['AAA','BBB','CCC']);
  assert.equal(select().parentElement.getAttribute('aria-sort'),'descending');select().focus();select().click();
  assert.deepEqual(order(),['BBB','AAA','CCC']);assert.equal(document.activeElement.dataset.readingKey,'sort:ytd');
@@ -445,25 +448,28 @@ test('column sorting toggles direction, keeps unknown values last and does not r
  const table=root.querySelector('.watch-table-scroll');table.scrollLeft=380;
  root.querySelector('[data-sort=ticker]').click();assert.equal(root.querySelector('.watch-table-scroll').scrollLeft,380);
  assert.equal(root.querySelector('.watch-controls select'),null);
- assert.deepEqual([...root.querySelectorAll('[data-mode]')].map(n=>n.dataset.mode),['list','reading','heatmap']);
+ assert.deepEqual([...root.querySelectorAll('[data-mode]')].map(n=>n.dataset.mode),['list','reading','metrics','heatmap']);
  assert.equal(root.querySelectorAll('[data-map-open]').length,3);dispose();
 });
 
-test('Explore starts from the stocks being discussed now, opens a seven-day feed and never generates on read',async()=>{
+test('Explore opens stock research without following and reads the seven-day feed only on expansion',async()=>{
  const {mount}=await import('../public/js/app/views/explore.js');
  const root=setup();store.set('watchlist',[]);const calls=[];
  const social={status:'ready',collected_at:'2026-09-21T12:00:00Z',items:[{ticker:'GLW',rank:2,mentions:120,change_pct:35},{ticker:'NVDA',rank:1,mentions:900,change_pct:-4},{ticker:'bad ticker',rank:3}]};
  globalThis.fetch=async(input,options)=>{calls.push({url:new URL(input,'https://ducky.test'),method:options.method});return Response.json(String(input).startsWith('/radar/social.json')?social:{items:[]});};
  const dispose=await mount(root);for(let i=0;i<6;i++)await new Promise(r=>setTimeout(r,0));
- // The ranking, not a fixed list of old cases: rank order, a research-map link per stock, malformed rows dropped.
- const cards=[...root.querySelectorAll('.research-example')];
- assert.deepEqual(cards.map(c=>c.getAttribute('href')),['#/evidence/NVDA','#/evidence/GLW']);
- assert.match(cards[0].textContent,/#1 · NVDA/);assert.match(cards[0].textContent,/900 mentions · 24h/);assert.match(cards[1].textContent,/\+35%/);
- assert.match(root.querySelector('.research-examples h2').textContent,/Most discussed right now/);
+ const rows=[...root.querySelectorAll('.explore-stock-row')];
+ assert.deepEqual(rows.map(row=>row.dataset.ticker),['NVDA','GLW']);
+ assert.match(rows[0].textContent,/900 mentions · 24h/);assert.match(rows[1].textContent,/\+35%/);
+ for(const tab of ['metrics','evidence'])assert.ok([...rows[0].querySelectorAll('a')].some(a=>{const [path,query='']=a.getAttribute('href').split('?');const params=new URLSearchParams(query);return path==='#/stock/NVDA'&&params.get('from')==='explore'&&params.get('tab')===tab;}),rows[0].innerHTML);
+ assert.ok(rows[0].querySelector('a[href="#/boards?ticker=NVDA"]'));
+ assert.match(root.querySelector('.explore-candidates h2').textContent,/Most discussed right now/);
+ assert.equal(root.querySelector('.focus-filters'),null);
+  assert.ok(root.querySelector('a[href="#/creators?scope=discover"]'));
+ assert.equal(calls.length,1);assert.equal(calls[0].url.pathname,'/radar/social.json');
+ root.querySelector('.explore-weekly').open=true;await pause();
  assert.equal(root.querySelector('.focus-filters select').value,'7');
- assert.ok(root.querySelector('a[href="#/creators?scope=discover"]'));
- assert.equal(root.querySelector('details.focus-tools'),null);
- assert.equal(calls.length,2);assert.ok(calls.every(c=>c.method==='GET'));
+  assert.equal(calls.length,2);assert.ok(calls.every(c=>c.method==='GET'));
  assert.ok(calls.some(c=>c.url.searchParams.get('scope')==='all'));assert.ok(calls.some(c=>c.url.pathname==='/radar/social.json'));dispose();
 });
 

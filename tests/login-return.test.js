@@ -44,7 +44,9 @@ test('expired, malformed, future-dated or modified return state falls back safel
 });
 
 test('homepage creator link survives boot, password login and destination rendering',async()=>{
+  const calls=[];
   globalThis.fetch=async(url,options)=>{
+    calls.push([String(url),options?.method||'GET']);
     if(url.endsWith('/auth/providers'))return reply({google:true});
     if(url.endsWith('/auth/password'))return reply({token:'test-token'});
     if(url.endsWith('/me'))return reply({user_id:12,tier:'free'});
@@ -57,7 +59,9 @@ test('homepage creator link survives boot, password login and destination render
   document.querySelector('.pw-form [name=password]').value='test-password';
   document.querySelector('.pw-form').dispatchEvent(new window.Event('submit',{cancelable:true}));
   await waitFor(()=>document.body.dataset.route==='creators');
-  assert.equal(location.hash,'#/creators');
+  assert.equal(location.hash,'#/creators?scope=discover');
+  assert.ok(calls.some(([url,method])=>url.includes('/kol/discover?')&&method==='GET'));
+  assert.ok(!calls.some(([url,method])=>/\/kol\/[^/]+\/sub/.test(url)&&method!=='GET'));
   assert.equal(window.sessionStorage.getItem('ducky.login-target'),null);
 });
 

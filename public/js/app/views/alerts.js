@@ -37,7 +37,9 @@ export async function mount(root, params = {}) {
   const list = el("div.alist", { id: "alerts-list" });
   root.append(head);
   head.append(el('a.btn.btn-ghost.btn-sm',{href:'#/updates'},s('updates.entry_open')));
-  const disposeDraft = mountDraft(root, { signal: params.signal, company: (params.query?.get("ticker") || "").toUpperCase(), onCreated: load });
+  const price=Number(params.query?.get('price')),direction=params.query?.get('direction'),ticker=(params.query?.get('ticker')||'').toUpperCase();
+  const initialText=/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker)&&Number.isFinite(price)&&price>0&&['above','below'].includes(direction)?s('stockux.alert_prompt_'+direction,{ticker,price}):'';
+  const disposeDraft = mountDraft(root, { signal: params.signal, initialText, company: (params.query?.get("ticker") || "").toUpperCase(), onCreated: load });
   root.append(list);
   const disposeScreens=mountSavedScreens(root,{signal:params.signal});
 

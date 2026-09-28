@@ -1,45 +1,64 @@
 # UX change and integration register
 
-Updated: 2026-09-28. This English register is the canonical handoff for continuing the UX redesign. Append each accepted change here and link its evidence. User-facing copy remains bilingual.
+Updated: 2026-09-28. This English register is the canonical presentation handoff for the UX redesign. User-facing copy remains bilingual. The private backend's shared documents remain the system-design authority; this register records public UI behavior and integration boundaries only.
 
-**Delivery status: local interactive prototype.** These changes have not replaced production routes, been connected to account APIs, or been deployed. See the [preview guide](README.md) for running and reviewing it. The private backend's shared documents remain the system-design authority; this register records presentation scope and integration boundaries only.
+**Delivery status: production UI integration implemented in the local worktree; not yet deployed.** The candidate uses existing production route modules and the API client. The combined test suite passes 805/805; final browser acceptance and release checks are still in progress. The earlier isolated prototype remains available through the [preview guide](README.md); its fixtures and browser-local interactions are not production features.
 
-## Implemented presentation
+## Current production integration
 
-| Area | Current UX | Integration boundary |
+| Area | Implemented behavior | Boundary |
 |---|---|---|
-| Primary navigation | Today, Watchlist, Explore, Calendar and Creators stay visible. Stock research keeps its entry context. | Prototype routes only; no production replacement. |
-| First use | Dated examples are readable with no watchlist. Following is an explicit decision after research. | Browser-local demo state; production follows must use existing account writes. |
-| Today | Lead story and important changes precede secondary activity. The liquidity / QQQ / SPY comparison remains accessible, with retained chart choices. | Synthetic data; live surfaces must read the same shared research versions. |
-| Explore | Search and stock results come first. Summary and metric comparison work without following; themes are optional. | Same stock/metric components as Watchlist. No new per-user calculations. |
-| Watchlist | List is the default, Overview explains context, Metrics compares readings. Direct stock, map, metric and disclosure entries remain available. | Reuse `/watchlist` and shared stock research. Preserve filters, sorting and reading position. |
-| Stock research | One destination for company context, support/risk, reference plan, metrics, evidence and chronology. Related creator, disclosure and calendar links retain the ticker. | Quote time, source withdrawal, expiry, access and missing fields must retain backend meaning. |
-| Metrics | Long-term/trend perspectives, option walls, support references, IV/HV20 and Degen attention stay discoverable. Level actions distinguish upward/downward conditions. | Use existing definitions. Attention is not valuation; unknown is not zero. |
-| Creators | Views precede the directory. Linked stock views share creator/source IDs and bookmarks with the creator archive. | Server-side scope filtering precedes pagination. Production saved-view ownership still needs a contract. |
-| Company and capital activity | Insider disclosures, 13F holdings, political disclosures and company events have typed values and dates, with source details. | Pure read adapter is implemented and tested; browser still uses six synthetic archive-shaped records. |
-| Activity across pages | Today has a secondary preview; stocks show related records; Watchlist links are ticker-scoped. The metric entry no longer requires a populated watchlist. | Reuse record IDs and shared projections, not copied per-user feeds. |
-| Calendar | Two-week default; date, event meaning, related stock and timing status lead. Source and historical examples expand on demand. | Reuse existing event/date rules; no forecast or event producer changes. |
-| Personal watch plans | Reference levels open editable conditions and expiry. The destination is explicitly named My watch plans. | Local drafts only. Notification creation, compilation and delivery are separate production states. |
-| Saved material | Creator views share one saved-view identity across stock and author surfaces. Other evidence markers remain on their stock map; unused theme saving was removed. | No implied account synchronization or universal saved-research backend. |
-| Responsive and bilingual UI | Chinese/English, light/dark themes, narrow-phone layouts and isolated demo storage. | Browser viewport verification, not physical-device testing. |
+| Primary navigation | Today, Watchlist, Explore, Calendar and Creators remain primary. Stock research has Overview, Metrics, Evidence and History tabs. | Existing routes and account access remain authoritative. |
+| Explore | Stock search precedes compact, dated discussion candidates. Each candidate names Overview, Metrics, Map and activity destinations. Research questions and the weekly feed expand on request. | Saved discussion data supplies candidates. Popularity is attention, not sentiment. Searching requires no follow; research access still follows account entitlements. |
+| Watchlist | List remains default; Overview explains the case, Metrics keeps comparison, and Heatmap remains available. Stock/map/metric/alert/activity entries stay visible. | Existing shared research and metric definitions; presentation state is scoped to the account session, not a new preference service. |
+| Stock | Summary, support/risk, references, metrics, evidence and recorded changes share one workspace. Chart, creator, calendar, alert and full-map tools remain reachable. | Source-backed reads only. Quote time, snapshot time, source dates and expiry keep their own meanings. |
+| Metrics | Existing long-term/trend perspectives, option walls, 20-session low/high, technical readings and IV/HV remain discoverable. Level actions explicitly choose above/below. | A verified new entry range is unavailable. Existing levels are references, not a newly calculated buy recommendation. |
+| Creators | A no-follow visitor enters discovery unless explicitly requesting Following. Compact author cards expose views and tickers before archives; conditions stay visible. | Existing feeds, server-filtered discovery/history, subscriptions and exact source routes. No production Saved-views feature is added. |
+| Repeated views | Eligible exact repetitions from one stable author collapse behind an original lead with all records expandable. Support stays green and risk red, with text labels. | Both languages, stance, scope and semantic fields must match. Changed/uncertain claims stay separate. Counts describe records, not independent corroboration. |
+| Company and capital activity | Existing Radar records appear in insider, fund, political and company categories with server filters, source details and valid stock actions. | Typed amounts/dates, access, partial results, coverage and cursors remain intact. No synthetic records or amount rankings. |
+| Alert entry | A selected reference prefills the existing alert draft with explicit direction. Review and confirmation use the existing workflow. | Opening the form does not submit or create an alert. Compiler availability and delivery require separate evidence. |
+| Continuity and failures | Stock return context is tied to its history entry/account epoch, including activity entry. Pending metrics offer retry; denied research rejects late responses. | Focused regressions passed; final combined browser acceptance remains pending. |
+| Today and Calendar | Existing production destinations and source rules remain in place. | Prototype examples/liquidity comparison and Calendar mockups do not replace these routes. |
 
-## Production connection checklist
+## Existing read and action contracts
 
-1. Use existing `api.js`, account epochs, request cancellation and access control. Prototype localStorage is never an account database.
-2. Radar reads use `/radar/archive.json`, `/radar/record.json` and `/radar/coverage.json`; public routes add `/public`. The public endpoints were verified as `access.mode=delayed`, `delay_days=5`. Authenticated reads require separate acceptance.
-3. Apply kind, ticker, search and time filters on the server before following `next_cursor`. Six sample records do not establish market-wide counts. The existing API does not supply amount rankings, exact person profiles or complete category totals.
-4. Preserve Form 4 trade dates versus filing dates; 13F report periods versus filing dates; political amount ranges; and company effective dates. First observation must not become publication time. Options or unresolved securities must not generate invalid stock actions.
-5. Display `access`, `partial` and real coverage fields: `status`, `last_success`, `gap_count`, `limitations`. Readable archived records do not prove current acquisition. Uncovered sources are not healthy sources.
-6. Track production reference-range, personal-plan and bookmark contracts in [integration gaps](proposed-backend-changes.md). The UI must not invent a valuation score or imply that handmade reference bounds are calculated.
-7. Reuse stable stock, author, source and view IDs across entry points. Navigation origin and presentation preferences are UI state; following controls personal scope, not permission to research a company.
+| Surface | Endpoint family | Retained meaning |
+|---|---|---|
+| Explore | Symbol search; /radar/social.json; optional existing Today feed | Collection date, stale/unavailable states; rank is not stance. |
+| Watchlist | /watchlist, /me/stock-research, /briefing/stocks?fields=signals, scoped Radar reads | Membership, shared research, independent quotes and dated signals. |
+| Stock | /stock-research/{ticker}, /bars/{ticker}?period=6mo, /snapshot/{ticker}, /me/research-changes | Shared evidence, historical prices, metrics and server-paginated changes. Accepted 202 remains pending. |
+| Creators | /kol/discover, /kol/feed or /kol/trial-feed, /kol/{id}/page, /kol/{id}/history, /kol/{id}/posts/{post} | Access, scope/cursors, source withdrawal and stable author/post/point identity. |
+| Activity | /radar/archive.json, /radar/record.json, /radar/coverage.json, /radar/facets.json; public equivalents add /public | Filters before pagination; response-owned access/partial/coverage. Archive availability alone is not fresh collection. |
+| Explicit follows | Existing watchlist actions and /kol/{id}/sub | User-initiated account changes; reading never follows automatically. |
+| Explicit alert draft | /alerts/translate, /alerts/drafts/{id}, /alerts/drafts/{id}/confirm | Submission, draft readiness and confirmation are separate states. Prefill is not an active alert. |
 
-## Local change history
+Account epochs, cancellation, access and withdrawal handling remain authoritative. This slice adds no backend schema, producer, model invocation or per-viewer research generation.
+
+## Exclusions and remaining acceptance
+
+- The prototype's fictional authors, nine-stock fixture, six activity records, handmade entry bounds and scenario selector remain confined to prototypes/ux-lab.
+- Prototype cross-stock Metrics in Explore, thematic stock filters, shared bookmarks and My watch plans are not production additions. Production Explore links to per-stock Metrics; Watchlist retains its real comparison table.
+- No new entry-range calculation, valuation score, semantic claim merging, verified creator performance, historical delivery or broader source coverage is claimed. [Proposed contracts](proposed-backend-changes.md) remain proposals, not activated capabilities.
+- The combined test suite passes 805/805. Final build/copy/link checks, 320/390 px and desktop checks in both languages/themes, exact candidate release and live readable-content checks remain with the integrating agent. The [production acceptance record](../../reports/UX-PRODUCTION-2026-09-28.md) separates these stages.
+
+## Change history
 
 | Date / commit | Delivered slice | Evidence |
 |---|---|---|
-| Sep 28 · `d1a9cdc` | Integrated five-page and stock prototype | [Initial acceptance](../../reports/UX-REDESIGN-2026-09-28.md) |
-| Sep 28 · `a6d4948` | Restored metrics and USD liquidity comparison | [Metric correction](../../reports/UX-METRICS-RESTORATION-2026-09-28.md) |
-| Sep 28 · `9e174ea` | Stocks.News reference, activity layout, API mapping and adapter tests | [Activity acceptance](../../reports/UX-ACTIVITY-REFERENCE-2026-09-28.md) |
-| Sep 28 · this change | Three-persona review, Explore/Watchlist parity, source continuity and English handoff | [Journey acceptance](../../reports/UX-JOURNEYS-2026-09-28.md) |
+| Sep 28 · d1a9cdc | Isolated five-page and stock prototype | [Initial acceptance](../../reports/UX-REDESIGN-2026-09-28.md) |
+| Sep 28 · a6d4948 | Prototype metrics and USD liquidity comparison | [Metric correction](../../reports/UX-METRICS-RESTORATION-2026-09-28.md) |
+| Sep 28 · 9e174ea | Prototype activity layout, API mapping and adapter tests | [Activity acceptance](../../reports/UX-ACTIVITY-REFERENCE-2026-09-28.md) |
+| Sep 28 · 3987be2 | Prototype persona review, source continuity and English handoff | [Journey acceptance](../../reports/UX-JOURNEYS-2026-09-28.md) |
+| Sep 28 · local candidate after 3987be2 | Production route/API integration; acceptance and release pending | [Production integration](../../reports/UX-PRODUCTION-2026-09-28.md), [creator preservation](../../reports/CREATOR-UX-INTEGRATION-2026-09-28.md) |
 
-Before continuing, read this register, the [persona journeys and content map](user-journeys.md), and the latest acceptance record. Each new entry point must name its shared data owner, current wiring status and remaining gaps.
+Read this register, the [current journeys](user-journeys.md), and the latest acceptance record before continuing. Update release status only from actual committed, deployed and readable-content receipts; preserve prior prototype reports as historical evidence.
+
+### Phone density follow-up · 2026-09-28
+
+Implemented in the production candidate: compact phone shell, one-row stock tabs, denser Watchlist
+List/Overview and author cards, shorter Explore introduction and full-width research actions.
+320px Stock Metrics now shows all six readings in the first screen. 390px Explore fits two complete
+company rows plus the next summary. Inputs remain 16px; primary touch areas remain 44px.
+The final local suite reached 809 passing tests. A 52-route locale/theme/viewport sweep found no
+horizontal document overflow. See the production acceptance report for measurements and limitations.
+Publication/live receipt remains a separate release step.

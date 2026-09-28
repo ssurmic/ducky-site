@@ -10,7 +10,7 @@ import {factText} from './stock-briefs.js';
 import {waterLevel,marketDetail,priceBadge} from '../evidence-context.js';
 import {icon} from '../icons.js';
 import {evidenceTarget,creatorTarget} from '../creator-route.js';
-import {groupAuthors,sourceOccurrences,originalSourceKey,authorIdentity} from '../evidence-grouping.js';
+import {groupAuthors,sourceOccurrences,originalSourceKey,authorIdentity,exactAuthorRepeats} from '../evidence-grouping.js';
 import {topicGroups} from '../evidence-topics.js';
 import {comparisonBadge,comparisonDetails} from '../comparison-context.js';
 import {sourceIdentity,nodeSourceIdentity,sourceBadge,sourceMark} from '../evidence-source.js';
@@ -269,10 +269,12 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
   function paint(){
     controls.forEach(([key,b])=>b.setAttribute('aria-pressed',String(key===scope)));filterSelect.value=scope;
     const filtered=readingOrder(nodes.filter(n=>scope==='all'||n.stance===scope));
+    const repeatGroups=exactAuthorRepeats(filtered,{ticker:doc.ticker});
     // Balanced first screen; selecting All never silently buries opposition.
+    // Exact repeated records occupy one reading slot, with all receipts retained.
     const first=[];
-    if(scope==='all'){for(const stance of ['support','counter','context'])first.push(...filtered.filter(n=>n.stance===stance).slice(0,2));}
-    const ordered=[...first,...filtered.filter(n=>!first.includes(n))];
+    if(scope==='all'){for(const stance of ['support','counter','context'])first.push(...repeatGroups.filter(group=>group[0].stance===stance).slice(0,2));}
+    const ordered=[...first,...repeatGroups.filter(group=>!first.includes(group))];
     clear(branches);
     const groups=new Map();
     for(const stance of ['support','context','counter']){
@@ -281,7 +283,7 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
       const group=el('section.evidence-group',{class:'is-'+stance},el('h2.evidence-group-heading',el('span',s('evidence.'+stance)),el('span.evidence-group-count',String(count))),list);
       groups.set(stance,{group,list});
     }
-    const visible=ordered.slice(0,limit);
+    const visible=ordered.slice(0,limit).flat();
     center.style.gridRow='1 / '+(Math.min(3,Math.ceil(visible.length/2))+1);
     map.classList.toggle('is-empty',!visible.length);
     cards=new Map();
@@ -321,10 +323,20 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
       const block=el('section.evidence-author-group',{'data-author':bucket.author.id},
         el('header.evidence-author-heading',el('a',{href:creatorTarget({selected:bucket.author.id,mine:false,ticker:doc.ticker}),'aria-label':bucket.author.name+' · '+s('evidence.author_archive')},bucket.author.name),
           el('span.small.muted',s(bucket.nodes.length===1?'evidence.author_points_single':'evidence.author_points',{n:bucket.nodes.length})+(bucket.sources.size?' · '+s(bucket.sources.size===1?'evidence.author_sources_single':'evidence.author_sources',{n:bucket.sources.size}):''))));
-      for(const node of bucket.nodes.slice(0,2))block.append(cards.get(node.id));
-      if(bucket.nodes.length>2){
+      const bundles=exactAuthorRepeats(bucket.nodes,{ticker:doc.ticker});
+      const bundleCard=records=>{
+        if(records.length===1)return cards.get(records[0].id);
+        const folded=el('details',{'data-reading-key':doc.ticker+':repeat:'+stance+':'+records[0].id},
+          el('summary',s('stockux.repeat_history',{n:records.length})),el('p.small.muted',s('stockux.repeat_note')),
+          ...records.slice(1).map(node=>cards.get(node.id)));
+        folded.addEventListener('toggle',()=>connections.refresh());
+        return el('div.evidence-repeat-group',el('p.small.muted',s('stockux.repeated',{n:records.length})),cards.get(records[0].id),folded);
+      };
+      for(const records of bundles.slice(0,2))block.append(bundleCard(records));
+      if(bundles.length>2){
+        const remainingRecords=bundles.slice(2).flat().length;
         const rest=el('details.evidence-author-more',{'data-reading-key':doc.ticker+':author:'+stance+':'+bucket.author.id},
-          el('summary',s(bucket.nodes.length===3?'evidence.author_more_single':'evidence.author_more',{n:bucket.nodes.length-2})),...bucket.nodes.slice(2).map(n=>cards.get(n.id)));
+          el('summary',s(remainingRecords===1?'evidence.author_more_single':'evidence.author_more',{n:remainingRecords})),...bundles.slice(2).map(bundleCard));
         rest.addEventListener('toggle',()=>connections.refresh());block.append(rest);
       }
       return block;
@@ -364,8 +376,9 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
     }
     reset.hidden=scope==='all';
     if(!filtered.length)branches.append(el('p.empty',s('evidence.no_match')));
-    total.textContent=s('evidence.showing',{shown:Math.min(limit,filtered.length),total:filtered.length});
-    const remaining=filtered.length-limit;
+    total.textContent=s('evidence.showing',{shown:visible.length,total:filtered.length});
+    const remaining=ordered.length-limit;
+    step.textContent=s('evidence.show_more',{n:ordered.slice(limit,limit+STEP).flat().length});
     step.hidden=remaining<=STEP;more.hidden=remaining<=0;
     relate(null);connections.refresh();
   }

@@ -59,6 +59,51 @@ export function capText(value) {
 }
 export function changeClass(value) { return !finite(value) ? 'unknown' : value > 0 ? 'up' : value < 0 ? 'down' : 'flat'; }
 
+// The same destinations belong to every watched stock, without opening a second detail panel.
+export function stockActions(ticker){
+  const symbol=encodeURIComponent(ticker);
+  return el('nav.watch-stock-actions',{'aria-label':s('watch.ux_stock_actions',{ticker})},
+    el('a.watch-map-link',{href:'#/evidence/'+symbol,'data-map-open':ticker,'data-tour':'stock.map','data-ticker':ticker,
+      'data-reading-key':ticker+':map','aria-label':s('watch.open_stock_map',{ticker})},icon('evidence'),el('span',s('watch.open_map'))),
+    el('a.watch-metrics-link',{href:'#/stock/'+symbol+'?tab=metrics','data-reading-key':ticker+':metrics',
+      'aria-label':s('watch.ux_open_metrics',{ticker})},icon('chart'),el('span',s('watch.ux_metrics_short'))),
+    el('a.watch-plan-link',{href:'#/alerts?ticker='+symbol,'data-reading-key':ticker+':plan',
+      'aria-label':s('watch.ux_open_plan',{ticker})},icon('bell'),el('span',s('watch.ux_plan_short'))));
+}
+
+// These are separate saved reference levels, never a calculated entry range. Their own clocks
+// remain visible even when an independent quote is newer than the saved option/history inputs.
+export function referenceSummary(row,signals){
+  const walls=signals?.walls||{},support=signals?.support||{},symbol=encodeURIComponent(row.ticker);
+  const values=[['put',walls.put,'walls'],['call',walls.call,'walls'],['low20',support.low,'support']];
+  return el('section.watch-reference-strip',{'aria-label':s('watch.ux_references')},
+    el('div.watch-reference-values',...values.map(([key,value,focus])=>el('a.watch-reference-level',{
+      href:'#/stock/'+symbol+'?tab=metrics&focus='+focus,'data-reading-key':row.ticker+':reference:'+key},
+      el('span.small.muted',s('watch.ux_reference_'+key)),el('strong.mono',finite(value)&&value>0?px(value):'—')))),
+    el('p.small.muted.watch-reference-date',s('watch.ux_reference_dates',{walls:walls.as_of||'—',support:support.as_of||'—'})),
+    walls.expiries?.length?el('p.small.muted.watch-reference-date',s('watch.signal_expiry',{date:walls.expiries.join(' / ')})):null);
+}
+
+export function researchOverview(rows,{query='',sort='market_cap',sortDirection='desc',signals,renderResearch,viewsFor,quoteReceived=null}={}){
+  const filtered=rows.filter(row=>[row.ticker,row.company,row.label_zh,row.label_en,row.industry].some(value=>String(value||'').toLowerCase().includes(query.trim().toLowerCase())));
+  sortRows(filtered,sort,sortDirection,{signals});
+  if(!filtered.length)return el('p.empty',s('watch.no_match'));
+  return el('div.watch-research-grid',...filtered.map(row=>{
+    const quote=displayQuote(row),shown=quote||row,views=viewsFor?.(row.ticker)||null;
+    return el('article.watch-research-card',{'data-reading-anchor':row.ticker},
+      el('header.watch-research-heading',el('a.stock-name',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':name'},
+        el('strong',row.ticker),el('span.small.muted',row.company||row.ticker)),
+        el('div.watch-research-price',el('a.watch-price-link',{href:'#/chart/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':chart','aria-label':s('watch.open_chart',{ticker:row.ticker})},el('strong.mono',px(shown.price))),
+          el('span.mono',{class:'watch-'+changeClass(shown.change_pct)},pct(shown.change_pct,2)),
+          quote?quoteNote(quote,{received:quoteReceived}):el('small.muted',retained(row)?savedLabel(row):row.price_session||s('watch.date_unknown')))),
+      referenceSummary(row,signals?.get(row.ticker)),
+      el('div.watch-research-reading',renderResearch(row.ticker)),
+      el('div.watch-research-lenses',...['left','right'].map(side=>el('section',el('h3',s('watch.view_'+side)),viewCell(views,side)))),
+      el('footer.watch-research-footer',stockActions(row.ticker),el('a.watch-disclosures-link',{
+        href:'#/boards?mode=archive&ticker='+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':activity'},s('watch.ux_disclosures'))));
+  }));
+}
+
 // The map and its legend use exactly the same scale. Near-flat moves stay close
 // to neutral; saturation stops at ±5%, while labels retain the actual return.
 export function heatColor(value) {
@@ -148,7 +193,7 @@ function mapInspector(frame, label, session) {
 }
 
 export function overviewView(rows, options) {
-  const {view,query='',sort='market_cap',selected,session,previous,onSelect,area='cap',onAreaChange,renderResearch,viewsFor=null,onSort,selection,signals=null,sortDirection=sort==='ticker'?'asc':'desc',quoteReceived=null}=options;
+  const {view,query='',sort='market_cap',selected,session,previous,onSelect,area='cap',onAreaChange,renderResearch,viewsFor=null,onSort,selection,signals=null,sortDirection=sort==='ticker'?'asc':'desc',quoteReceived=null,compact=false}=options;
   const root=el('div.watch-summary');
   const filtered=rows.filter(r=>[r.ticker,r.company,r.label_zh,r.label_en,r.industry].some(x=>String(x || '').toLowerCase().includes(query.trim().toLowerCase())));
   const label=r=>(LANG==='zh'?r.label_zh:r.label_en) || r.industry || (LANG==='zh'?r.sector_zh:r.sector) || s('company.unknown');
@@ -227,12 +272,13 @@ export function overviewView(rows, options) {
       const sortHeader=(key,label,full='')=>el('th',{scope:'col','aria-sort':sort===key?(sortDirection==='asc'?'ascending':'descending'):'none'},
         el('button.watch-sort',{type:'button','data-sort':key,'data-reading-key':'sort:'+key,onclick:()=>onSort?.(key),...(full&&full!==label?{'aria-label':full,title:full}:{})},
           el('span.watch-sort-label',label),el('span.watch-sort-icon',{'aria-hidden':'true'})));
-      const table=el('table.watch-compact-table',el('thead',el('tr',sortHeader('ticker',s('watch.stock')),
+      const shownSignals=compact?[]:signalKeys,shownMetrics=compact?[]:metricKeys;
+      const table=el('table.watch-compact-table',{class:compact?'watch-daily-table':'watch-comparison-table'},el('thead',el('tr',sortHeader('ticker',s('watch.stock')),
         sortHeader('change_pct',s('watch.metric_quote')),el('th',{scope:'col'},s('watch.col_overall')),
-        el('th.watch-view-col.is-left',{scope:'col'},s('watch.col_left')),el('th.watch-view-col.is-right',{scope:'col'},s('watch.col_right')),
-        Object.assign(sortHeader('market_cap',s('watch.cap')),{className:'watch-cap-col'}),...signalKeys.map((key,i)=>{const th=sortHeader(key,signalLabel(key));th.classList.add('watch-signal-col');th.dataset.signal=key;if(!i)th.classList.add('is-first');
+        el('th.watch-view-col.is-left',{scope:'col'},s('watch.view_left')),el('th.watch-view-col.is-right',{scope:'col'},s('watch.view_right')),
+        ...(compact?[]:[Object.assign(sortHeader('market_cap',s('watch.cap')),{className:'watch-cap-col'})]),...shownSignals.map((key,i)=>{const th=sortHeader(key,signalLabel(key));th.classList.add('watch-signal-col');th.dataset.signal=key;if(!i)th.classList.add('is-first');
           th.append(signalHelpButton(key,signals?.meta||{}));return th;}),
-        ...metricKeys.map(key=>{const th=sortHeader(key,metricShortLabel(key),metricLabel(key));th.classList.add('watch-help-col');th.dataset.metric=key;th.append(metricHelpButton(key));return th;}))));
+        ...shownMetrics.map(key=>{const th=sortHeader(key,metricShortLabel(key),metricLabel(key));th.classList.add('watch-help-col');th.dataset.metric=key;th.append(metricHelpButton(key));return th;}))));
       if(selection){table.classList.add('watch-selectable');table.querySelector('th').prepend(selectBox());}
       const body=el('tbody');
       for(const row of filtered){
@@ -251,17 +297,18 @@ export function overviewView(rows, options) {
           el('a.stock-open',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':open'},s('focus.open_stock')+' →'));
         body.append(el('tr',{'data-reading-anchor':row.ticker,class:selection?.checked.has(row.ticker)?'is-selected':''},
           el('th',{scope:'row'},selection?selectBox(row.ticker):null,el('a.stock-name',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':name'},el('strong',row.ticker),el('span.watch-company',row.company||row.ticker)),
-            el('a.watch-map-link',{href:'#/evidence/'+encodeURIComponent(row.ticker),'data-map-open':row.ticker,'data-tour':'stock.map','data-ticker':row.ticker,'data-reading-key':row.ticker+':map','aria-label':s('watch.open_stock_map',{ticker:row.ticker})},icon('evidence'),el('span',s('watch.open_map')))),
+            stockActions(row.ticker)),
           el('td.watch-quote-cell',el('a.watch-price-link',{href:'#/chart/'+encodeURIComponent(row.ticker),'aria-label':s('watch.open_chart',{ticker:row.ticker}),'data-reading-key':row.ticker+':chart'},el('strong.mono',px(shown.price))),
             el('span.watch-change',{class:'watch-'+changeClass(shown.change_pct)},pct(shown.change_pct,2)),
             q?quoteNote(q,{received:quoteReceived}):el('small.muted',row.price_session||session||'—')),
-          el('td.watch-overview-cell',overview),el('td.watch-view-cell.is-left',viewCell(views,'left')),el('td.watch-view-cell.is-right',viewCell(views,'right')),
-          el('td.mono.watch-cap-col',row.security_type==='ETF'?'ETF':capText(row.market_cap)),
-          ...signalKeys.map((key,i)=>el('td.watch-signal-cell',{class:i?'':'is-first','data-signal':key},signalCell(key,signals?.get(row.ticker),{ticker:row.ticker,price:Number.isFinite(shown.price)&&shown.price>0?shown.price:null,session:row.price_session||''}))),
-          ...metricKeys.map(key=>el('td',metricCell(key,row.metrics?.[key])))));
+          el('td.watch-overview-cell',overview,el('a.watch-row-disclosures',{href:'#/boards?mode=archive&ticker='+encodeURIComponent(row.ticker),
+            'data-reading-key':row.ticker+':activity'},s('watch.ux_disclosures'))),el('td.watch-view-cell.is-left',viewCell(views,'left')),el('td.watch-view-cell.is-right',viewCell(views,'right')),
+          ...(compact?[]:[el('td.mono.watch-cap-col',row.security_type==='ETF'?'ETF':capText(row.market_cap))]),
+          ...shownSignals.map((key,i)=>el('td.watch-signal-cell',{class:i?'':'is-first','data-signal':key},signalCell(key,signals?.get(row.ticker),{ticker:row.ticker,price:Number.isFinite(shown.price)&&shown.price>0?shown.price:null,session:row.price_session||''}))),
+          ...shownMetrics.map(key=>el('td',metricCell(key,row.metrics?.[key])))));
       }
-      table.append(body);root.append(el('div.watch-table-scroll',{tabindex:0,'aria-label':s('watch.display')},table),metricMethods(filtered));
-      if(signals)root.append(signalMethods(signals));
+      table.append(body);root.append(el('p.small.muted.watch-scroll-hint',s('watch.ux_scroll')),el('div.watch-table-scroll',{tabindex:0,'aria-label':s('watch.display')},table));
+      if(!compact){root.append(metricMethods(filtered));if(signals)root.append(signalMethods(signals));}
     }
     else root.append(el('div.watch-table.watch-rich-table',el('div.watch-row-entry.watch-columns-entry.watch-rich-entry',
       el('div.watch-row.watch-columns',el('span',s('watch.stock')),...metricKeys.map(key=>el('span',metricLabel(key))),

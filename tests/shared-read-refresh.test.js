@@ -139,3 +139,18 @@ test('serving clocks never count as new data: snapshot served_at and watchlist q
  const relabelled=structuredClone(list);relabelled.overview.items[0].quote.status='stale';
  assert.notEqual(material(list,'/watchlist'),material(relabelled,'/watchlist'));
 });
+
+test('permission revalidation also closes private dialogs outside the route for 401, 402 and 403',async()=>{
+ const {modal}=await import('../public/js/app/ui.js');
+ const overlay=document.createElement('div');overlay.id='modal';document.body.append(overlay);
+ for(const status of [401,402,403]){
+  store.bumpEpoch();store.set('me',{tier:'pro'});hidden=false;
+  const root=document.createElement('main');root.innerHTML='<div class="route-page">Private research</div>';document.body.append(root);
+  const watch=sharedReadRefresh(root,{reload:()=>{}});globalThis.fetch=async()=>response({id:'one'});await api.get('/stock-research/NVDA');
+  modal('Saved source',document.createTextNode('Private source text'));assert.equal(overlay.hidden,false);
+  globalThis.fetch=async()=>response({error:'access_denied'},status);await watch.check();
+  assert.equal(overlay.hidden,true);assert.doesNotMatch(overlay.textContent,/Private source text/);assert.equal(root.querySelector('.route-page').hidden,true);
+  watch.stop();root.remove();
+ }
+ overlay.remove();
+});

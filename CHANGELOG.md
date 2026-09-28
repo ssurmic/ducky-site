@@ -1,5 +1,20 @@
 # Change log
 
+## Integrated research workspace · 2026-09-28 (production candidate)
+
+Watchlist and Explore now open one stock workspace with Overview, Metrics, Evidence and History.
+Existing long-term/trend views, option walls, support references and IV/HV remain directly reachable.
+Creators lead with source-bound views and tickers; exact repeats from one author collapse with every
+original dated record retained. Evidence keeps green support and red risk cards. Radar presents
+insider, fund, political and company activity with typed values, dates and original records.
+
+The change uses existing read and account-action contracts. Reference links open editable alert
+drafts; no verified entry range is invented. Today and Calendar retain their existing data paths.
+Phone layouts use compact headings, cards and a single row of stock tabs, retaining 44px hit areas.
+Account-bound return context, revoked source dialogs, late responses and pending snapshot retry
+received explicit regression coverage. See the [English integration register](docs/ux/change-register.md)
+and [acceptance record](reports/UX-PRODUCTION-2026-09-28.md) for checks, limits and release evidence.
+
 ## Coherent research journeys · 2026-09-28 (local prototype)
 
 Explore now compares unwatched stocks with the same metrics as Watchlist, with named stock/map/metric

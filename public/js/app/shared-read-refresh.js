@@ -3,7 +3,7 @@
 // Research changes are labelled; watchlist prices can opt into an in-place update.
 import * as api from './api.js';
 import * as store from './store.js';
-import {el} from './ui.js';
+import {el,closeModal} from './ui.js';
 import {s} from './strings.js';
 
 export function refreshable(path){
@@ -94,7 +94,8 @@ export function sharedReadRefresh(root,{signal,reload,interval=60000}={}){
         if(!recoverable(api.readFailure(error))||prior.initialRetries<=1)entries.delete(path);
         else entries.set(path,{...prior,initialRetries:prior.initialRetries-1});
       }
-      if(active()&&[401,402].includes(error.status)){
+      if(active()&&[401,402,403].includes(error.status)){
+        closeModal();
         changed=true;notice.hidden=false;notice.querySelector('p').textContent=s('refresh.access_changed');
         root.dataset.freshness='access-changed';root.querySelector('.route-page')?.setAttribute('hidden','');
       }

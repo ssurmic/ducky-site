@@ -6,12 +6,13 @@ import {el,clear,toast} from '../ui.js';
 const EXAMPLES=['rsi','relative','vol','weekly'];
 const unwrap = r => api.isAccepted(r) ? r.body : r;
 
-export function mountDraft(root,{onCreated,signal,company=''}={}) {
+export function mountDraft(root,{onCreated,signal,company='',initialText=''}={}) {
   let stopped=false, revision=0, draft=null, timer=null, busy=false, confirming=false;
   const epoch=store.epoch();
   const card=el('section.card.alert-composer');
   const subject=el('input.input',{type:'text',value:company,maxlength:100,autocomplete:'off',placeholder:s('alertdraft.company_ph')});
   const text=el('textarea.input.alert-prompt',{rows:3,maxlength:500,required:true,placeholder:s('alertdraft.prompt_ph')});
+  text.value=initialText;
   const submit=el('button.btn.btn-primary',{type:'submit'},s('alertdraft.translate'));
   const result=el('div.alert-translation',{'aria-live':'polite'});
   const form=el('form.alert-draft-form',el('label',el('span',s('alertdraft.prompt')),text),

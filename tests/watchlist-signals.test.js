@@ -153,7 +153,7 @@ test('signal sorting ranks recorded values, keeps unknown stocks last and never 
  assert.ok(signals.signalSortValue(all.get('NVDA'),'walls')>8);
 });
 
-test('the watchlist table adds five sortable signal columns from three archive reads and explains their basis',async()=>{
+test('the watchlist metric comparison retains five sortable signal columns from three archive reads and explains their basis',async()=>{
  store.bumpEpoch();store.set('me',{user_id:12,tier:'pro',access:{billing_enabled:false},watch_cap:50});store.set('token','synthetic-only');store.set('watchlist',['NVDA','AAPL','TSLA']);
  const root=document.querySelector('main');root.replaceChildren();const calls=[];
  globalThis.fetch=async url=>{calls.push(url);
@@ -172,6 +172,9 @@ test('the watchlist table adds five sortable signal columns from three archive r
  assert.match(archiveCalls[1],/^\/radar\/archive\.json\?kind=insider&limit=200&content=all&fields=signals&start=\d{4}-\d{2}-\d{2}&tickers=NVDA,AAPL,TSLA$/);
  assert.match(archiveCalls[2],/^\/radar\/archive\.json\?kind=political&limit=200&content=all&fields=signals&start=\d{4}-\d{2}-\d{2}&tickers=NVDA,AAPL,TSLA$/);
  assert.equal(archiveCalls.length,3);
+ const reads=calls.length;
+ root.querySelector('[data-mode=metrics]').click();
+ assert.equal(calls.length,reads,'switching comparisons reuses the same saved responses');
  const first=root.querySelector('tbody tr');
  assert.equal(first.querySelectorAll('.watch-signal').length,5);
  assert.deepEqual([...root.querySelectorAll('thead .watch-signal-col .watch-sort-label')].map(n=>n.textContent),['Insider activity','Large fund activity','Politician trades','Option walls','Support refs']);

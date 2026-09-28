@@ -2,11 +2,11 @@ import {tourEvent,tourTarget} from '../tour-events.js';
 import {freeGuide,quotaNote} from '../experience.js';
 // views/watchlist.js — add ticker · list of 全景 mini-cards from /snapshot · remove.
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
-import { overviewView, layoutOverview, retimeQuotes } from "../watchlist-overview.js";
+import { overviewView, researchOverview, layoutOverview, retimeQuotes } from "../watchlist-overview.js";
 import { buildSignals } from "../watchlist-signals.js";
 import { digestNodes, listSummary } from "../watchlist-digest.js";
 import { companyContext } from "../company-context.js";
-import {reading,researchRow,replaceReading,syncSourceDialog} from '../stock-reading.js';
+import {reading,replaceReading,syncSourceDialog} from '../stock-reading.js';
 import { icon } from "../icons.js";
 import { symbolPicker, instrumentLabels, watchEligibility } from "../symbol-picker.js";
 import { s } from "../strings.js";
@@ -36,7 +36,7 @@ export function normalizeList(resp) {
   return arr.map((x) => (typeof x === "string" ? x : x && (x.ticker || x.symbol))).filter(Boolean).map((t) => String(t).toUpperCase());
 }
 
-export async function mount(root,{signal}={}) {
+export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}={}) {
   if(!store.canResearch()){const manager=await import('./watchlist-manager.js');return manager.mount(root,{signal});}
   const mountedEpoch=store.epoch();
   const unsubs = [];
@@ -55,7 +55,21 @@ export async function mount(root,{signal}={}) {
     const key=[view,items,readable,researchLoading,researchFailed].join('|');
     if(key!==lastPaint){lastPaint=key;api.readDiagnostic('render',{resource:'watchlist',items,readable});}
   }
-  let view = "list", query = "", sort = "market_cap", sortDirection = "desc", area = 'equal', candidate = null, adding = false;
+  const allowedModes=focused?['list','reading','metrics','heatmap']:['list','heatmap'];
+  const allowedSorts=['market_cap','change_pct','ytd','drawdown','relative','iv_hv','attention','degen','ticker','price','insider','funds','politicians','walls','support'];
+  let view = allowedModes.includes(routeQuery.get('view'))?routeQuery.get('view'):'list', query = (routeQuery.get('q')||'').slice(0,80),
+    sort = allowedSorts.includes(routeQuery.get('sort'))?routeQuery.get('sort'):'market_cap',
+    sortDirection = routeQuery.get('direction')==='asc'?'asc':'desc', area = 'equal', candidate = null, adding = false;
+  function rememberView(){
+    if(!currentSession()||!/^#\/watchlist(?:\?|$)/.test(location.hash))return;
+    const params=new URLSearchParams();
+    if(view!=='list')params.set('view',view);
+    if(query)params.set('q',query);
+    if(sort!=='market_cap')params.set('sort',sort);
+    if(sortDirection!=='desc')params.set('direction',sortDirection);
+    const next='#/watchlist'+(params.size?'?'+params:'');
+    if(location.hash!==next){history.replaceState(history.state,'',next);window.dispatchEvent(new window.CustomEvent('ducky:route-state'));}
+  }
   const checked=new Set();
   let removing=false, addCandidate=null;
   const currentSession=()=>!disposed&&!signal?.aborted&&store.epoch()===mountedEpoch;
@@ -104,13 +118,13 @@ export async function mount(root,{signal}={}) {
   const detail = el('section.watch-detail', {hidden:true, 'aria-label':s('watch.details')});
   const layout = el('div.watch-layout', list, detail);
   const modes = el('div.watch-modes', {'role':'group','aria-label':s('watch.display')});
-  for (const mode of (focused?['list','reading','heatmap']:['list','heatmap'])) modes.append(el('button.btn.btn-ghost.btn-sm', {type:'button',
+  for (const mode of allowedModes) modes.append(el('button.btn.btn-ghost.btn-sm', {type:'button',
     'data-mode':mode, 'aria-pressed':String(view===mode), onclick:()=>{
       view=mode;render();
     }},s('watch.view_'+mode)));
   const offer = el('div.watch-search-offer',{hidden:true,'aria-live':'polite'});
   let filterTimer=null;
-  const filter = el('input.input.watch-filter',{type:'search',placeholder:s('watch.filter'), 'aria-label':s('watch.filter'),autocomplete:'off',spellcheck:'false',
+  const filter = el('input.input.watch-filter',{type:'search',value:query,placeholder:s('watch.filter'), 'aria-label':s('watch.filter'),autocomplete:'off',spellcheck:'false',
     oninput:()=>{query=filter.value;candidate=null;clearTimeout(filterTimer);
       if((store.get('watchlist')||[]).length>LARGE_LIST)filterTimer=setTimeout(()=>{filterTimer=null;if(!disposed)render();},120);else render();}});
   unsubs.push(()=>clearTimeout(filterTimer));
@@ -124,6 +138,7 @@ export async function mount(root,{signal}={}) {
   const sorting = el('select.input',{'aria-label':s('watch.sort'),onchange:()=>{sort=sorting.value;render();}},
     ...['market_cap','change_pct','ytd','drawdown','relative','iv_hv','attention','degen','ticker'].map(key=>el('option',{value:key},s('watch.sort_'+key))));
   const controls = el('div.watch-controls',modes,filterPicker.wrap,...(focused?[]:[sorting]),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>load()},s('watch.refresh')));
+  const modeNote=el('p.small.muted.watch-mode-note');
   function renderOffer() {
     clear(offer);
     offer.hidden=!candidate||(store.get('watchlist')||[]).includes(candidate.ticker);
@@ -161,7 +176,7 @@ export async function mount(root,{signal}={}) {
   }
   head.append(addOptions);
   tourTarget(head,'watchlist.home');
-  root.append(head, freeGuide() || "", usage, capacity, controls, offer, bulk, removeResult, readNotice, strip, layout,
+  root.append(head, freeGuide() || "", usage, capacity, controls, modeNote, offer, bulk, removeResult, readNotice, strip, layout,
     el('div.chips',el('a.chip',{href:'#/updates'},s('updates.entry_title'))));
 
   async function onAdd(e) {
@@ -238,6 +253,7 @@ export async function mount(root,{signal}={}) {
   }
 
   function render() {
+    rememberView();root.dataset.watchView=view;
     picker.update();filterPicker.update();
     renderOffer();list.classList.toggle('is-filtered',!!query.trim());
     const items = store.get("watchlist") || [];
@@ -249,39 +265,46 @@ export async function mount(root,{signal}={}) {
     capacity.hidden=!full;capacity.textContent=full?s('watch.full_note',{cap}):'';
     addBtn.disabled=adding||removing||full||!!(addCandidate&&!watchEligibility(addCandidate).eligible);
     addBtn.textContent=s(full?'watch.full_button':adding?'watch.adding':'watch.add');
-    bulk.hidden=!focused||!items.length;
+    bulk.hidden=!focused||!items.length||!checked.size;
     selectionHint.hidden=!!checked.size;selectionReview.hidden=!checked.size;
     selectionCount.textContent=s('watch.selected_count',{count:checked.size});
     selectionNames.textContent=[...checked].join(' · ');
     removeBtn.disabled=!checked.size||removing||adding;
     removeBtn.textContent=s(removing?'watch.removing':'watch.remove_selected',{count:checked.size});
     clearSelection.hidden=!checked.size;clearSelection.disabled=removing||adding;
-    manageBtn.hidden=view==='list';manageBtn.disabled=removing||adding;
+    manageBtn.hidden=view==='list'||view==='metrics';manageBtn.disabled=removing||adding;
     clear(usage);if(!store.isPaid())usage.append(quotaNote("watches",items.length,cap)||"");
     const cnt = document.getElementById("watch-count");
     if (cnt) cnt.textContent = Number.isFinite(cap) ? s("watch.count", { n: items.length, cap }) : String(items.length);
     if (selected && !items.includes(selected)) {selected=null;renderDetail();}
     modes.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.mode===view)));
+    controls.hidden=focused&&!items.length;
+    modeNote.hidden=!focused||!items.length;
+    modeNote.replaceChildren(s('watch.ux_mode_'+view));
+    if(focused&&view==='metrics')modeNote.append(' ',el('a',{href:'#/today'},s('watch.ux_market_context')));
     sorting.hidden=view==='heatmap'||view==='reading';
     const openDisclosures=new Set([...list.querySelectorAll('details[open][data-disclosure]')].map(n=>n.dataset.disclosure));
     const focusedMap=list.contains(document.activeElement)?document.activeElement?.dataset?.mapOpen:null;
     if(loading && !overview && !research.size){clear(list).append(skeleton(items.length));return;}
-    if (!items.length) {clear(list).append(empty(s('watch.empty')));return;}
+    if (!items.length) {clear(list).append(el('section.watch-first-use',
+      el('img',{src:'/duck-head-cutout-v1.png',alt:'',width:64,height:64}),el('h2',s('watch.ux_empty_title')),
+      el('p.muted',s('watch.ux_empty_body')),el('div.watch-empty-actions',
+        el('button.btn.btn-primary',{type:'button',onclick:()=>{addOptions.open=true;input.focus();}},s('watch.ux_find_stock')),
+        el('a.btn.btn-ghost',{href:'#/explore'},s('watch.ux_explore')))));strip.hidden=true;return;}
     const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
     const digestFor=t=>focused?digestNodes(rows.get(t),signals.get(t)):[];
     const viewsFor=t=>{const v=rows.get(t)?.digest?.views;return focused&&v?.status==='ready'?v:null;};
     renderStrip(items.map(t=>rows.get(t)).filter(Boolean));
     if(view==='reading'){
-      const ordered=[...items].filter(t=>[t,rows.get(t)?.company||''].join(' ').toLowerCase().includes(query.trim().toLowerCase()))
-        .sort((a,b)=>(rows.get(b)?.market_cap||0)-(rows.get(a)?.market_cap||0)||a.localeCompare(b));
-      replaceReading(list,el('div.stock-reading-list',...ordered.map(t=>researchRow(t,rows.get(t),research.get(t)||missingResearch(),{digest:digestFor(t),views:viewsFor(t)}))));
-      if(!ordered.length)list.append(el('p.muted',s('focus.no_matching_stocks')));
+      replaceReading(list,researchOverview(items.map(t=>rows.get(t)||{ticker:t,company:t,price_status:'missing'}),{
+        query,sort,sortDirection,signals,quoteReceived:overviewReceived,viewsFor,
+        renderResearch:t=>reading({...research.get(t),ticker:t,...(!research.has(t)?missingResearch():{})},{digest:digestFor(t),views:viewsFor(t),columns:true})}));
       reportPaint();
       return;
     }
     const tableLeft=list.querySelector('.watch-table-scroll')?.scrollLeft||0;
     replaceReading(list,overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
-      {view,query,sort,sortDirection,quoteReceived:overviewReceived,selection:focused?{checked,disabled:removing||adding,toggle:(tickers,value)=>{if(removing||adding)return;for(const t of tickers)value?checked.add(t):checked.delete(t);render();}}:null,onSort:key=>{sortDirection=key===sort?(sortDirection==='desc'?'asc':'desc'):key==='ticker'?'asc':'desc';sort=key;render();},area,signals:focused?signals:null,renderResearch:focused?t=>reading({...research.get(t),ticker:t,...(!research.has(t)?missingResearch():{})},{digest:digestFor(t),views:viewsFor(t),columns:true}):null,viewsFor:focused?viewsFor:null,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
+      {view,query,sort,sortDirection,compact:focused&&view==='list',quoteReceived:overviewReceived,selection:focused?{checked,disabled:removing||adding,toggle:(tickers,value)=>{if(removing||adding)return;for(const t of tickers)value?checked.add(t):checked.delete(t);render();}}:null,onSort:key=>{sortDirection=key===sort?(sortDirection==='desc'?'asc':'desc'):key==='ticker'?'asc':'desc';sort=key;render();},area,signals:focused?signals:null,renderResearch:focused?t=>reading({...research.get(t),ticker:t,...(!research.has(t)?missingResearch():{})},{digest:digestFor(t),views:viewsFor(t),columns:true}):null,viewsFor:focused?viewsFor:null,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
     reportPaint();
     const scroll=list.querySelector('.watch-table-scroll');
     if(scroll){scroll.scrollLeft=tableLeft;const shade=()=>scroll.classList.toggle('is-scrolled',scroll.scrollLeft>2);shade();scroll.addEventListener('scroll',shade,{passive:true});}

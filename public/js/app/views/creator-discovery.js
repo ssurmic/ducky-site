@@ -12,8 +12,7 @@ export function discoveryPreview(entry,status='ready') {
     el('p.creator-discovery-stance',el('span',{class:'creator-discovery-badge '+(view.stance==='support'?'is-bull':'is-bear')},s('evidence.'+view.stance)),
       el('strong.mono',view.ticker)),
     el('p.creator-card-gist',text||s('creatordiscovery.translation_missing')));
-  const qualifications=claimQualifications(view);if(qualifications)box.append(el('details.creator-discovery-qualifications',
-    el('summary',s('creatorstart.qualifications')),qualifications));
+  const qualifications=claimQualifications(view);if(qualifications)box.append(el('div.creator-discovery-qualifications',qualifications));
   box.append(el('time.creator-discovery-date',{datetime:view.published_at||''},s('creatordiscovery.published',{date:dateTime(view.published_at)})));
   const links=el('div.creator-discovery-links');
   const target=evidenceTarget(view);

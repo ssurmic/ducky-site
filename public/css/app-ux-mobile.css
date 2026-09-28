@@ -1,0 +1,10 @@
+/* Compact phone chrome; controls retain 44px hit areas and text inputs retain 16px. */
+@media(max-width:760px){
+ .page-app .app-top{padding:calc(4px + var(--safe-top)) 12px 4px;gap:8px;min-height:52px}
+ .page-app .app-top .brand{min-height:44px;display:flex;align-items:center;font-size:14px;gap:7px}
+ .page-app .app-top .avatar-mark{width:30px;height:30px}
+ .page-app .app-nav{padding:4px 6px calc(4px + var(--safe-bottom));gap:3px}
+ .page-app .app-nav>a{min-height:44px;padding:4px 2px;gap:3px;border-radius:8px;font-size:10px;line-height:1.2}
+ .page-app .app-nav .app-icon{width:18px;height:18px}
+ .page-app .app-main{padding-top:8px}
+}
