@@ -1,5 +1,15 @@
 # Change log
 
+## Coherent research journeys · 2026-09-28 (local prototype)
+
+Explore now compares unwatched stocks with the same metrics as Watchlist, with named stock/map/metric
+entries. Stock pages retain their entry context and source identity; shared creator views can be saved
+and retrieved across pages. Today restores priority to the lead and important changes while retaining
+the liquidity comparison. Price actions distinguish above/below conditions, and local plans are named
+honestly. The [English change register](docs/ux/change-register.md) and
+[three-persona journey map](docs/ux/user-journeys.md) record content placement and production boundaries.
+See the [review and acceptance record](reports/UX-JOURNEYS-2026-09-28.md). No backend or deployment change.
+
 ## Company and money activity in the UX preview · 2026-09-28 (local prototype)
 
 Explore now has a visible activity tab for insider filings, 13F holdings, political disclosures

@@ -25,3 +25,14 @@ States: no watchlist still has readable examples; no reference price remains una
 Proposed usability measures for future sessions (not measured user results): time to identify one stock and its reason; successful first follow; successful source inspection; return from source to prior context; finding opposing evidence; correctly recognizing a reference as conditional; mobile tasks completed without horizontal page overflow. No quantitative improvement is claimed from a design review alone.
 
 Skill use: repository hygiene for safe worktree setup, humanizer-zh for concise native Chinese copy, the supplied browser tools for rendered verification. Existing frontend primitives/ownership informed the prototype; no extra plugin install was needed. Team roles were independent concept audits, then bounded page implementation.
+
+## Assembled journey correction · 2026-09-28
+
+The researcher, beginner and experienced-user reviews converged on one shared stock workspace.
+Explore discovers and compares; Watchlist maintains a chosen scope. Following never gates metrics or
+source reading. Optional research themes now expand below the immediate search/view controls.
+Overview introduces the company and debate; Metrics handles specialist comparison; the map opens
+sources; the timeline retains dated evidence. Exact creator identities and saved-view IDs survive
+cross-page research. Stock returns belong to the browser-history entry, rather than the last ticker
+opened globally. Today keeps the full macro chart behind a clear persistent entry and prioritizes
+its lead and important changes. See [the content map](user-journeys.md) for each capability's home.

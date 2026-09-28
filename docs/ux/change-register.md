@@ -1,49 +1,45 @@
-# UX 改动与接线清单
+# UX change and integration register
 
-更新：2026-09-28。此文件记录本次 UX 改版，后续每次改动继续追加。
-当前交付是本地交互原型，不是生产上线。运行入口与验收命令见 [README](README.md)。
-系统设计仍以私有后端的共享文档为准；这里仅记录界面范围与接线状态。
+Updated: 2026-09-28. This English register is the canonical handoff for continuing the UX redesign. Append each accepted change here and link its evidence. User-facing copy remains bilingual.
 
-## 已完成的原型改动
+**Delivery status: local interactive prototype.** These changes have not replaced production routes, been connected to account APIs, or been deployed. See the [preview guide](README.md) for running and reviewing it. The private backend's shared documents remain the system-design authority; this register records presentation scope and integration boundaries only.
 
-| 区域 | 改了什么 | 当前状态 / 接线边界 |
+## Implemented presentation
+
+| Area | Current UX | Integration boundary |
 |---|---|---|
-| 主导航 | 保留今日、自选股、发现、日历、作者；股票、观点、事件彼此可达 | 原型完成；未替换生产路由 |
-| 新用户 | 空自选仍可读主题、股票与事件样例；显式添加股票 | 本地模拟；真实关注须复用现有账号写入 |
-| 今日 | 市场速览、重点变化、相关自选与两周事件 | 示例；须读取同一份共享研究 |
-| 今日宏观 | 恢复美元流动性指数、QQQ/SPY 三线对照，支持美债切换与日期读数 | 示例；沿用现有宏观观察记录，独立归一化 |
-| 自选股 | 列表默认、概览第二；保留排序、搜索、地图直达与阅读位置 | 本地状态；真实列表复用 `/watchlist` 与共享股票研究 |
-| 指标 | 补回长线/趋势视角、期权墙、支撑、IV/HV20、Degen | 示例；按现有读数定义接线，Degen 不叫低估指数 |
-| 个股 | 概览、价位计划、指标、研究地图、历史 | 交互原型；来源撤回、有效期、缺项必须沿用后端状态 |
-| 作者 | 首屏跨作者观点、ticker 筛选，详情与完整历史分开 | 示例；真实筛选和分页保留服务端范围 |
-| 发现 | 研究主题；新增公司与资金动态页签 | 动态采用现有 Radar 响应形状的样例 |
-| 公司与资金动态 | 内部人、13F、政客、公司事件筛选；人物/股票/金额/日期先呈现 | 纯读取适配层已写并测试；浏览器仍未请求真实接口 |
-| 动态跨页入口 | 今日少量样例；个股相关记录；自选行/概览按 ticker 直达 | 原型完成；实际数据须共享现有记录 ID |
-| 日历 | 两周默认、事件含义、关联股票与时间状态 | 示例；复用既有日期/事件规则 |
-| 个人观察计划 | 参考价进入可编辑草稿，保存后仍明确本地状态 | 不启用通知；真实提醒有独立创建、编译和投递状态 |
-| 保存观点 | 本地书签与返回恢复 | 账号同步尚需确定已有记录归属 |
-| 手机、语言、主题 | 中英、深浅主题，320/390 窄屏；原型独立存储 | 浏览器视口验证；未做实体手机触控验收 |
+| Primary navigation | Today, Watchlist, Explore, Calendar and Creators stay visible. Stock research keeps its entry context. | Prototype routes only; no production replacement. |
+| First use | Dated examples are readable with no watchlist. Following is an explicit decision after research. | Browser-local demo state; production follows must use existing account writes. |
+| Today | Lead story and important changes precede secondary activity. The liquidity / QQQ / SPY comparison remains accessible, with retained chart choices. | Synthetic data; live surfaces must read the same shared research versions. |
+| Explore | Search and stock results come first. Summary and metric comparison work without following; themes are optional. | Same stock/metric components as Watchlist. No new per-user calculations. |
+| Watchlist | List is the default, Overview explains context, Metrics compares readings. Direct stock, map, metric and disclosure entries remain available. | Reuse `/watchlist` and shared stock research. Preserve filters, sorting and reading position. |
+| Stock research | One destination for company context, support/risk, reference plan, metrics, evidence and chronology. Related creator, disclosure and calendar links retain the ticker. | Quote time, source withdrawal, expiry, access and missing fields must retain backend meaning. |
+| Metrics | Long-term/trend perspectives, option walls, support references, IV/HV20 and Degen attention stay discoverable. Level actions distinguish upward/downward conditions. | Use existing definitions. Attention is not valuation; unknown is not zero. |
+| Creators | Views precede the directory. Linked stock views share creator/source IDs and bookmarks with the creator archive. | Server-side scope filtering precedes pagination. Production saved-view ownership still needs a contract. |
+| Company and capital activity | Insider disclosures, 13F holdings, political disclosures and company events have typed values and dates, with source details. | Pure read adapter is implemented and tested; browser still uses six synthetic archive-shaped records. |
+| Activity across pages | Today has a secondary preview; stocks show related records; Watchlist links are ticker-scoped. The metric entry no longer requires a populated watchlist. | Reuse record IDs and shared projections, not copied per-user feeds. |
+| Calendar | Two-week default; date, event meaning, related stock and timing status lead. Source and historical examples expand on demand. | Reuse existing event/date rules; no forecast or event producer changes. |
+| Personal watch plans | Reference levels open editable conditions and expiry. The destination is explicitly named My watch plans. | Local drafts only. Notification creation, compilation and delivery are separate production states. |
+| Saved material | Creator views share one saved-view identity across stock and author surfaces. Other evidence markers remain on their stock map; unused theme saving was removed. | No implied account synchronization or universal saved-research backend. |
+| Responsive and bilingual UI | Chinese/English, light/dark themes, narrow-phone layouts and isolated demo storage. | Browser viewport verification, not physical-device testing. |
 
-## 接后端时的明确清单
+## Production connection checklist
 
-1. 使用现有 `api.js`、账号 epoch、取消请求和访问控制；不把原型 localStorage 当作真实账号数据。
-2. Radar 使用 `/radar/archive.json`、`/radar/record.json`、`/radar/coverage.json`，公开路径加 `/public`。
-   公开响应实测为 `access.mode=delayed`、`delay_days=5`；登录态仍须独立验收。
-3. 类型、股票、搜索与时间筛选先交给服务端，再使用 `next_cursor` 翻页。
-   原型的六条样例计数不是全库计数；当前接口也没有金额排名、精确人物页或完整分类计数。
-4. Form 4 交易日和披露日、13F 季末和申报日、政客金额区间、公司事件生效日分别保存。
-   首次观察不补成公开日期；期权/未解析证券不生成无效股票操作。
-5. 展示 `access`、`partial`、来源 `status/last_success/gap_count/limitations`。
-   旧记录仍可读，不代表所有采集任务正在更新；未覆盖来源不能标作正常。
-6. 参考区间、个人计划和书签的完整生产契约仍按
-   [待接线项目](proposed-backend-changes.md) 跟踪。页面不会计算或虚构新的估值分数。
+1. Use existing `api.js`, account epochs, request cancellation and access control. Prototype localStorage is never an account database.
+2. Radar reads use `/radar/archive.json`, `/radar/record.json` and `/radar/coverage.json`; public routes add `/public`. The public endpoints were verified as `access.mode=delayed`, `delay_days=5`. Authenticated reads require separate acceptance.
+3. Apply kind, ticker, search and time filters on the server before following `next_cursor`. Six sample records do not establish market-wide counts. The existing API does not supply amount rankings, exact person profiles or complete category totals.
+4. Preserve Form 4 trade dates versus filing dates; 13F report periods versus filing dates; political amount ranges; and company effective dates. First observation must not become publication time. Options or unresolved securities must not generate invalid stock actions.
+5. Display `access`, `partial` and real coverage fields: `status`, `last_success`, `gap_count`, `limitations`. Readable archived records do not prove current acquisition. Uncovered sources are not healthy sources.
+6. Track production reference-range, personal-plan and bookmark contracts in [integration gaps](proposed-backend-changes.md). The UI must not invent a valuation score or imply that handmade reference bounds are calculated.
+7. Reuse stable stock, author, source and view IDs across entry points. Navigation origin and presentation preferences are UI state; following controls personal scope, not permission to research a company.
 
-## 本地变更记录
+## Local change history
 
-| 日期 / 版本 | 交付 | 验收记录 |
+| Date / commit | Delivered slice | Evidence |
 |---|---|---|
-| 09-28 `d1a9cdc` | 五主页面与个股的一体化原型 | [初版验收](../../reports/UX-REDESIGN-2026-09-28.md) |
-| 09-28 `a6d4948` | 恢复指标与美元流动性比较 | [指标修正](../../reports/UX-METRICS-RESTORATION-2026-09-28.md) |
-| 09-28 本文件同批提交 | Stocks.News 参考、动态布局、API 对照与适配测试 | [动态验收](../../reports/UX-ACTIVITY-REFERENCE-2026-09-28.md) |
+| Sep 28 · `d1a9cdc` | Integrated five-page and stock prototype | [Initial acceptance](../../reports/UX-REDESIGN-2026-09-28.md) |
+| Sep 28 · `a6d4948` | Restored metrics and USD liquidity comparison | [Metric correction](../../reports/UX-METRICS-RESTORATION-2026-09-28.md) |
+| Sep 28 · `9e174ea` | Stocks.News reference, activity layout, API mapping and adapter tests | [Activity acceptance](../../reports/UX-ACTIVITY-REFERENCE-2026-09-28.md) |
+| Sep 28 · this change | Three-persona review, Explore/Watchlist parity, source continuity and English handoff | [Journey acceptance](../../reports/UX-JOURNEYS-2026-09-28.md) |
 
-下一次开始工作先读本表与最新验收记录；新增入口必须同时更新后端映射、状态与缺口。
+Before continuing, read this register, the [persona journeys and content map](user-journeys.md), and the latest acceptance record. Each new entry point must name its shared data owner, current wiring status and remaining gaps.

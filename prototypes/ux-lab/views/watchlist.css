@@ -6,3 +6,5 @@
 
 .wl-table-region{min-width:0}.wl-scroll-hint{display:none}
 @media(max-width:760px){.wl-scroll-hint{display:flex;align-items:center;justify-content:flex-end;gap:7px;margin:0 0 9px;font-size:10px!important;line-height:1.5}.wl-scroll-hint svg{color:var(--accent);opacity:.8}}
+
+.wl-stock-links{display:flex;align-items:center;flex-wrap:wrap;gap:0 8px;margin-top:7px}.wl-stock-links .text-link{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:11px;font-weight:500;color:var(--muted)}.wl-stock-links .text-link:hover{color:var(--accent)}.wl-price-action{color:var(--accent);font-size:11px!important;line-height:1.5}.wl-card-plan>.btn{max-width:58%;white-space:normal;line-height:1.5;text-align:left}

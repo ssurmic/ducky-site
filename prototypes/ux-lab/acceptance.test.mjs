@@ -127,10 +127,77 @@ await test('Integrated preview journeys',async t=>{
   assert.equal(document.activeElement.className,'ac-title');
   await go('#/watchlist?view=list');assert.ok([...document.querySelectorAll('a')].some(a=>a.getAttribute('href')==='#/explore?view=activity&ticker=NVDA'),[...document.querySelectorAll('.ac-row-link')].map(a=>a.outerHTML).join('\n'));
  });
+ await t.test('Explore compares unwatched stocks and returns to the same research context',async()=>{
+  const scenario=document.querySelector('select[aria-label="'+text('common.experience')+'"]');scenario.value='new';scenario.dispatchEvent(new Event('change',{bubbles:true}));
+  await go('#/explore?view=metrics');
+  assert.equal(document.querySelectorAll('.mx-table tbody tr').length,9);
+  assert.deepEqual(JSON.parse(localStorage.getItem('ducky.ux-lab.20260928')).watchlist,[]);
+  const input=document.querySelector('.explore-search input');input.value='NVDA';input.dispatchEvent(new Event('input',{bubbles:true}));
+  assert.equal(document.querySelectorAll('.mx-table tbody tr').length,1);
+  document.querySelector('.mx-table tbody .mx-cell-button').click();
+  document.querySelector('dialog a[href*="focus=walls"]').click();await tick();
+  assert.ok(document.querySelector('.mx-stock-panel'));
+  assert.equal(document.querySelector('.st-breadcrumb a').getAttribute('href'),'#/explore?view=metrics');
+  assert.equal(document.querySelector('.primary-nav a.active').getAttribute('href'),'#/explore');
+  document.querySelector('.st-breadcrumb a').click();await tick();
+  assert.equal(document.querySelector('.explore-search input').value,'NVDA');
+  assert.ok(document.querySelector('.mx-table'));
+  await click(text('explore.view_summary'));
+  document.querySelector('.explore-stock-routes a').click();await tick();
+  assert.ok(document.querySelector('.st-quick-take'),'explicit overview must not restore the last metric tab');
+ });
+ await t.test('a shared creator source and bookmark retain identity across stock and creator pages',async()=>{
+  await go('#/stock/NVDA?tab=evidence');document.querySelector('[data-evidence-id=support]').click();
+  const original=document.querySelector('dialog blockquote').textContent;
+  assert.ok(document.querySelector('dialog').textContent.includes(text('creators.author.demo-lin.name')));
+  await click(text('stock.save_example'));
+  assert.ok(JSON.parse(localStorage.getItem('ducky.ux-lab.20260928')).saved.includes('view:nvda-delivery'));
+  document.querySelector('dialog a[href*="view=nvda-delivery"]').click();await tick();
+  assert.equal(document.querySelector('dialog blockquote').textContent,original);
+  assert.match(window.location.hash,/view=nvda-delivery/);
+  await click(text('creators.open_stock').replace('{ticker}','NVDA'));
+  assert.match(document.querySelector('.st-breadcrumb a').getAttribute('href'),/view=nvda-delivery/);
+  document.querySelector('.st-breadcrumb a').click();await tick();
+  assert.equal(document.querySelector('dialog blockquote').textContent,original);
+  document.querySelector('dialog').close();[...document.querySelectorAll('.creators-lab-tabs button')].find(b=>b.textContent.startsWith(text('creators.tab.saved'))).click();await tick();
+  assert.ok(document.querySelector('[data-view-id=nvda-delivery]'));
+  await go('#/creators?ticker=ORCL&tab=views');
+  [...document.querySelectorAll('.creators-lab-tabs button')].find(b=>b.textContent.startsWith(text('creators.tab.saved'))).click();await tick();
+  assert.ok(document.querySelector('[data-view-id=nvda-delivery]'),'Saved clears an unrelated ticker filter');
+ });
+ await t.test('upper and lower levels create correct conditions and plan edits retain the chosen direction',async()=>{
+  await go('#/stock/NVDA?tab=metrics');
+  await click(text('metrics.plan_above').replace('{price}','$230.00'));
+  assert.equal(document.querySelector('dialog select[aria-label="'+text('alert.when')+'"]').value,'above');
+  document.querySelector('dialog form').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));await tick();
+  await go('#/alerts');await click(text('common.edit'));
+  assert.equal(document.querySelector('dialog select[aria-label="'+text('alert.when')+'"]').value,'above');document.querySelector('dialog').close();
+  document.querySelector('.alert-row a').click();await tick();
+  assert.equal(document.querySelector('.st-breadcrumb a').getAttribute('href'),'#/alerts');
+  await go('#/stock/NVDA?tab=metrics');await click(text('metrics.plan_below').replace('{price}','$215.00'));
+  assert.equal(document.querySelector('dialog select[aria-label="'+text('alert.when')+'"]').value,'below');document.querySelector('dialog').close();
+ });
+ await t.test('ticker-scoped activity clears an unrelated old search and exposes public metric research',async()=>{
+  await go('#/explore?view=activity');const input=document.querySelector('.ac-search input');input.value='ORCL';input.dispatchEvent(new Event('input',{bubbles:true}));
+  await go('#/stock/NVDA?tab=overview');document.querySelector('.st-related-links a[href*="view=activity"]').click();await tick();
+  assert.equal(document.querySelector('.ac-search input').value,'');
+  assert.equal(document.querySelectorAll('.ac-record').length,2);
+  assert.ok(document.querySelector('.ac-related a[href="#/stock/NVDA?tab=metrics"]'));
+  await click(text('activity.clear_stock'));
+  assert.ok(document.querySelector('.ac-related a[href="#/explore?view=metrics"]'));
+ });
+ await t.test('Today retains the opened comparison, series and date across a research round trip',async()=>{
+  await go('#/today');assert.equal(document.querySelector('.today-macro-toggle').getAttribute('aria-expanded'),'false');
+  document.querySelector('.today-macro-toggle').click();document.querySelector('[data-macro-primary=yield]').click();
+  document.querySelector('.ux-macro-range').dispatchEvent(new KeyboardEvent('keydown',{key:'Home',bubbles:true,cancelable:true}));
+  await go('#/explore');await go('#/today');
+  assert.equal(document.querySelector('.today-macro-toggle').getAttribute('aria-expanded'),'true');
+  assert.match(document.querySelector('.ux-macro-range').getAttribute('aria-valuetext'),/2026-09-14.*4.22%/);
+ });
  await t.test('every core page renders in both languages with no unresolved copy or null values',async()=>{
   for(const lang of ['zh','en']){
    if(document.documentElement.lang!==lang){const langButton=document.querySelector('.lang-btn');langButton.click();await tick();}
-   for(const hash of ['#/today','#/watchlist','#/explore','#/creators','#/calendar','#/stock/NVDA','#/stock/AAPL','#/stock/TSM','#/stock/NVDA?tab=metrics','#/stock/TSM?tab=metrics','#/watchlist?view=metrics','#/explore?view=activity','#/explore?view=activity&kind=holdings','#/alerts']){
+   for(const hash of ['#/today','#/watchlist','#/explore','#/explore?view=metrics','#/creators','#/calendar','#/stock/NVDA','#/stock/AAPL','#/stock/TSM','#/stock/NVDA?tab=metrics','#/stock/TSM?tab=metrics','#/watchlist?view=metrics','#/explore?view=activity','#/explore?view=activity&kind=holdings','#/alerts']){
     await go(hash);const main=document.querySelector('main');assert.ok(main.querySelector('h1'),'page heading '+hash);
     assert.doesNotMatch(main.textContent,/\b(?:undefined|null|NaN)\b/,hash);
     assert.doesNotMatch(main.textContent,/\b(?:watch|stock|calendar|today|explore|creators|metrics|macro|activity)\.[a-z_]+/,hash);

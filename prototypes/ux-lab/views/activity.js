@@ -35,10 +35,11 @@ export function mountActivity(root,ctx,params={}){
  const prior=ctx.state.activityUI||{},queryParams=params.query||new URLSearchParams();
  let category=queryParams.has('kind')?queryParams.get('kind'):prior.category||'all';if(!Object.hasOwn(ACTIVITY_KINDS,category))category='all';
  let ticker=queryParams.has('ticker')?queryParams.get('ticker'):'',q=typeof prior.q==='string'?prior.q:'',scope=prior.scope==='watchlist'?'watchlist':'all';
+ if(ticker&&ticker!==prior.ticker){q='';scope='all';if(!queryParams.has('kind'))category='all';}
  const shell=h('div',{class:'ac-page'});root.append(shell);
  function render(){
   const active=document.activeElement?.dataset.activityFocus,selection=active==='search'?document.activeElement.selectionStart:null;
-  ctx.state.activityUI={category,q,scope};ctx.save();
+  ctx.state.activityUI={category,q,scope,ticker};ctx.save();
   const route=new URLSearchParams({view:'activity',...(category!=='all'?{kind:category}:{}),...(ticker?{ticker}:{})});window.history.replaceState(null,'','#/explore?'+route);
   const all=records(),term=q.trim().toLowerCase();
   const shown=all.filter(row=>(category==='all'||row.category===category)&&(!ticker||row.ticker===ticker)&&(scope!=='watchlist'||ctx.state.watchlist.includes(row.ticker))&&(!term||[row.ticker,row.actor,row.summary].join(' ').toLowerCase().includes(term)));
@@ -51,7 +52,7 @@ export function mountActivity(root,ctx,params={}){
     shown.length?h('div',{class:'ac-records'},...shown.map(item=>recordRow(item,ctx))):h('section',{class:'empty-state'},icon('search',24),h('h2',{},t('activity.empty')),h('p',{class:'muted'},t(scope==='watchlist'&&!ctx.state.watchlist.length?'activity.empty_watch':'activity.empty_filter')),button(t('activity.reset'),()=>{category='all';scope='all';ticker='';q='';render();},'btn btn-primary')),
     h('p',{class:'small muted ac-end'},t('activity.sample_end'))),
     h('aside',{class:'ac-sidebar'},h('section',{class:'panel'},h('div',{class:'section-head'},h('h2',{},t('activity.read_title')),badge(t('activity.sample'))),h('p',{},t('activity.read_body')),button([t('activity.coverage'),icon('arrow',15)],coverage,'text-link')),
-     h('section',{class:'ac-related'},h('h2',{},t('activity.more_research')),...[['today','macro','chart'],['watchlist?view=metrics','metrics','grid'],['creators','creators','users'],['calendar','calendar','calendar']].map(([url,key,glyph])=>link([icon(glyph,18),h('div',{},h('strong',{},t('activity.more_'+key)),h('span',{class:'small muted'},t('activity.more_'+key+'_note'))),icon('chevron',15)],'#/'+url,'ac-related-link'))))));
+     h('section',{class:'ac-related'},h('h2',{},t('activity.more_research')),...[['today','macro','chart'],[ticker?'stock/'+ticker+'?tab=metrics':'explore?view=metrics','metrics','grid'],['creators','creators','users'],['calendar','calendar','calendar']].map(([url,key,glyph])=>link([icon(glyph,18),h('div',{},h('strong',{},t('activity.more_'+key)),h('span',{class:'small muted'},t('activity.more_'+key+'_note'))),icon('chevron',15)],'#/'+url,'ac-related-link'))))));
   if(active){const control=shell.querySelector('[data-activity-focus="'+active+'"]');control?.focus({preventScroll:true});if(selection!==null)try{control.setSelectionRange(selection,selection);}catch{}}
  }
  render();

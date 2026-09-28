@@ -13,12 +13,12 @@ Open `http://127.0.0.1:8765/prototypes/ux-lab/#/today`. No build, account, exter
 Review these journeys:
 
 1. Today → Explore → a stock → inspect an opposing view → add to Watchlist.
-2. Watchlist → Overview → price reference → edit a local watch plan → My alerts.
+2. Watchlist → Overview → price reference → edit a local watch plan → My watch plans.
 3. Creators → read views from several authors → filter by ticker → source drawer → author profile → stock.
 4. Calendar → event impact → related stock → price plan.
 5. Switch to English/light theme and repeat at 390×650 and 320×600.
-6. Watchlist → Metrics → compare long-term/trend views, walls, support and IV/HV20 → select a metric for its meaning → stock metrics → save an editable local price-watch draft.
-7. Today → dollar liquidity → compare the three lines → select a date for raw readings → switch the first line to 10-year yield.
+6. Explore or Watchlist → Metrics → compare long-term/trend views, walls, support and IV/HV20 → select a metric for its meaning → stock metrics → save an editable local price-watch draft.
+7. Today → expand dollar liquidity → compare the three lines → select a date for raw readings → switch the first line to 10-year yield.
 8. Explore → Company & money activity → Insider / 13F / political / company categories → source record → the same stock. Compare transaction dates, report periods and publication dates.
 
 The follow-up review restored analytical features omitted from the initial preview. List remains
@@ -30,12 +30,13 @@ All prices, dates, opinions, and fictional creators in the prototype are illustr
 
 - [Observed UX audit](ux-audit.md)
 - [Three directions and selected design](ux-final-direction.md)
-- [User journeys](user-journeys.md)
+- [Three-persona journeys and content map](user-journeys.md)
 - [Proposed backend contracts](proposed-backend-changes.md)
 - [Acceptance record](../../reports/UX-REDESIGN-2026-09-28.md)
 - [Metrics and liquidity follow-up](../../reports/UX-METRICS-RESTORATION-2026-09-28.md)
 - [Activity reference and API audit](../../reports/UX-ACTIVITY-REFERENCE-2026-09-28.md)
-- [Persistent change and integration register](change-register.md)
+- [English change and integration register](change-register.md)
+- [Assembled journey review](../../reports/UX-JOURNEYS-2026-09-28.md)
 
 Validation:
 

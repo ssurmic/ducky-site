@@ -1,5 +1,5 @@
 import {activityHref} from './activity.js';
-import {lensPair,metricLinks,metricsTable,metricSortValue} from './metrics.js';
+import {lensPair,metricLinks,metricsTable,metricSortValue,referenceAction,referenceCondition} from './metrics.js';
 import {h,t,button,link,badge,icon,money,percent,showDialog,sectionHead} from '../ui.js';
 
 const valueText=value=>Number.isFinite(value)?money(value):t('watch.unknown');
@@ -22,8 +22,19 @@ export function mountWatchlist(root,ctx,params={}){
   const planFor=stock=>ctx.state.alerts?.find(item=>item.ticker===stock.ticker);
   const shownReference=stock=>finitePlan(planFor(stock))?money(planFor(stock).price):referenceLabel(stock);
   const finitePlan=plan=>Number.isFinite(plan?.price)&&plan.price>0;
+  function openPlan(stock,requestedPrice){
+    const existing=planFor(stock);
+    if(requestedPrice===undefined&&finitePlan(existing)){ctx.openAlert(stock.ticker,undefined,existing.condition==='above'?'above':'below');return;}
+    const proposed=requestedPrice??referenceFor(stock)?.[1]??stock.price;
+    const value=Number.isFinite(proposed)&&proposed>0?proposed:undefined,condition=referenceCondition(stock,value);
+    if(condition){ctx.openAlert(stock.ticker,value,condition);return;}
+    // With an equal or missing quote, the user chooses the direction explicitly.
+    const content=h('div',{class:'stack'},h('p',{},t('watch.choose_direction_note',{ticker:stock.ticker})),h('div',{class:'row'}));
+    const dialog=showDialog({title:t('metrics.choose_direction'),content});
+    content.lastChild.append(...['below','above'].map(side=>button(Number.isFinite(value)?t('metrics.plan_'+side,{price:money(value)}):t('watch.custom_'+side),()=>{dialog.close();ctx.openAlert(stock.ticker,value,side);},'btn btn-quiet')));
+  }
   const nearPlan=stock=>finitePlan(planFor(stock))&&Number.isFinite(stock.price)?Math.abs(stock.price/planFor(stock).price-1)<=0.06:nearReference(stock);
-  function switchView(value){view=value;window.history.replaceState(null,'','#/watchlist?view='+view);draw();}
+  function switchView(value){view=value;ctx.replaceRoute('#/watchlist?view='+view);draw();}
   const selectedStocks=()=>ctx.state.watchlist.map(ticker=>ctx.stock(ticker)).filter(Boolean);
   const shell=h('section',{class:'wl-page'});root.append(shell);
   function manage(stock){
@@ -53,16 +64,16 @@ export function mountWatchlist(root,ctx,params={}){
       h('p',{class:'small muted wl-preview-foot'},t('watch.preview_note')));
     shell.append(h('div',{class:'wl-empty-grid'},intro,preview),notice());
   }
-  function tools(stock){return h('div',{class:'wl-row-tools'},h('button',{class:'icon-btn',type:'button',title:t('watch.alert_stock',{ticker:stock.ticker}),'aria-label':t('watch.alert_stock',{ticker:stock.ticker}),onClick:()=>ctx.openAlert(stock.ticker)},icon('bell')),h('button',{class:'icon-btn',type:'button',title:t('watch.manage_stock',{ticker:stock.ticker}),'aria-label':t('watch.manage_stock',{ticker:stock.ticker}),onClick:()=>manage(stock)},icon('settings')));}
+  function tools(stock){return h('div',{class:'wl-row-tools'},h('button',{class:'icon-btn',type:'button',title:t('watch.alert_stock',{ticker:stock.ticker}),'aria-label':t('watch.alert_stock',{ticker:stock.ticker}),onClick:()=>openPlan(stock)},icon('bell')),h('button',{class:'icon-btn',type:'button',title:t('watch.manage_stock',{ticker:stock.ticker}),'aria-label':t('watch.manage_stock',{ticker:stock.ticker}),onClick:()=>manage(stock)},icon('settings')));}
   function insight(stock){return h('div',{class:'wl-insight'},h('button',{class:'wl-insight-toggle',type:'button','aria-expanded':String(expanded===stock.ticker),onClick:()=>{expanded=expanded===stock.ticker?null:stock.ticker;draw();}},h('span',{},summaryText(stock)),icon('chevron',15)),sourceBadge(stock),lensPair(stock),link(t('activity.row_link'),activityHref(stock.ticker),'text-link ac-row-link'));}
-  function evidenceStrip(stock){return h('div',{class:'wl-expanded'},h('div',{class:'wl-expanded-view'},h('span',{class:'wl-side-label positive'},t('watch.supports')),h('p',{},t(stock.bull))),h('div',{class:'wl-expanded-view'},h('span',{class:'wl-side-label negative'},t('watch.risks')),h('p',{},t(stock.bear))),h('div',{class:'row wl-expanded-links'},link(t('watch.full_research'),stockHref(stock.ticker)),link(t('watch.evidence_map'),stockHref(stock.ticker,'evidence')),button(t('watch.use_reference'),()=>ctx.openAlert(stock.ticker,referenceFor(stock)?.[1]),'btn btn-quiet')),h('p',{class:'small muted'},t('watch.expand_source')));}
+  function evidenceStrip(stock){return h('div',{class:'wl-expanded'},h('div',{class:'wl-expanded-view'},h('span',{class:'wl-side-label positive'},t('watch.supports')),h('p',{},t(stock.bull))),h('div',{class:'wl-expanded-view'},h('span',{class:'wl-side-label negative'},t('watch.risks')),h('p',{},t(stock.bear))),h('div',{class:'row wl-expanded-links'},link(t('watch.full_research'),stockHref(stock.ticker)),link(t('watch.evidence_map'),stockHref(stock.ticker,'evidence')),button(referenceAction(stock,referenceFor(stock)?.[1]),()=>openPlan(stock,referenceFor(stock)?.[1]),'btn btn-quiet')),h('p',{class:'small muted'},t('watch.expand_source')));}
   function table(stocks){
     const sortButton=(key,label)=>h('button',{class:'wl-sort',type:'button','data-watch-sort':key,onClick:()=>{direction=sort===key?(direction==='asc'?'desc':'asc'):'asc';sort=key;draw();}},label,h('span',{'aria-hidden':'true'},sort===key?(direction==='asc'?'↑':'↓'):'↕'));
     const tableNode=h('table',{class:'wl-table'},h('thead',{},h('tr',{},h('th',{scope:'col','aria-sort':sort==='ticker'?(direction==='asc'?'ascending':'descending'):'none'},sortButton('ticker',t('watch.column_stock'))),h('th',{scope:'col','aria-sort':sort==='price'?(direction==='asc'?'ascending':'descending'):'none'},sortButton('price',t('watch.column_price'))),h('th',{scope:'col'},t('watch.column_change')),h('th',{scope:'col'},t('watch.column_reference')),h('th',{scope:'col'},t('watch.column_event')),h('th',{scope:'col'},t('watch.column_actions')))));
     const body=h('tbody',{});tableNode.append(body);
     for(const stock of stocks){
       const ref=referenceFor(stock),plan=planFor(stock),gap=ref&&Number.isFinite(stock.price)?(ref[1]/stock.price-1)*100:null;
-      body.append(h('tr',{class:expanded===stock.ticker?'wl-selected':''},h('th',{scope:'row'},h('div',{class:'wl-stock-id'},h('span',{class:'wl-stock-monogram',style:'--stock-color:'+stock.color},stock.ticker.slice(0,1)),h('div',{},link(stock.ticker,stockHref(stock.ticker)),h('span',{class:'wl-company small muted'},stock.name))),link(t('watch.map_short'),stockHref(stock.ticker,'evidence'))),h('td',{},quote(stock),h('span',{class:'small muted'},t('watch.saved_close'))),h('td',{class:'wl-summary-cell'},insight(stock)),h('td',{class:'wl-reference-cell'},h('button',{class:'wl-reference-button',type:'button',onClick:()=>ctx.openAlert(stock.ticker,finitePlan(plan)?undefined:ref?.[1])},h('strong',{class:'mono'},shownReference(stock)),h('span',{class:'small muted'},finitePlan(plan)?t('watch.my_plan'):ref?t('watch.technical_reference'):t('watch.set_personal')),finitePlan(plan)?h('span',{class:'small muted'},t('watch.local_plan')):ref&&gap!==null?h('span',{class:'small'},t('watch.distance',{value:percent(gap)})):null)),h('td',{class:'wl-event-cell'},link(stock.eventDate||'—','#/calendar?ticker='+stock.ticker),h('span',{class:'small muted'},stock.event?t(stock.event):t('watch.no_event'))),h('td',{},tools(stock))));
+      body.append(h('tr',{class:expanded===stock.ticker?'wl-selected':''},h('th',{scope:'row'},h('div',{class:'wl-stock-id'},h('span',{class:'wl-stock-monogram',style:'--stock-color:'+stock.color},stock.ticker.slice(0,1)),h('div',{},link(stock.ticker,stockHref(stock.ticker)),h('span',{class:'wl-company small muted'},stock.name))),h('div',{class:'wl-stock-links'},link(t('watch.map_short'),stockHref(stock.ticker,'evidence')),link(t('watch.metrics_short'),stockHref(stock.ticker,'metrics')))),h('td',{},quote(stock),h('span',{class:'small muted'},t('watch.saved_close'))),h('td',{class:'wl-summary-cell'},insight(stock)),h('td',{class:'wl-reference-cell'},h('button',{class:'wl-reference-button',type:'button',onClick:()=>openPlan(stock,finitePlan(plan)?undefined:ref?.[1])},h('strong',{class:'mono'},shownReference(stock)),h('span',{class:'small muted'},finitePlan(plan)?t('watch.my_plan'):ref?t('watch.technical_reference'):t('watch.set_personal')),!finitePlan(plan)?h('span',{class:'wl-price-action small'},referenceAction(stock,ref?.[1])):null,finitePlan(plan)?h('span',{class:'small muted'},t('watch.local_plan')):ref&&gap!==null?h('span',{class:'small'},t('watch.distance',{value:percent(gap)})):null)),h('td',{class:'wl-event-cell'},link(stock.eventDate||'—','#/calendar?ticker='+stock.ticker),h('span',{class:'small muted'},stock.event?t(stock.event):t('watch.no_event'))),h('td',{},tools(stock))));
       if(expanded===stock.ticker)body.append(h('tr',{class:'wl-expanded-tr'},h('td',{colSpan:6},evidenceStrip(stock))));
     }
     return h('div',{class:'wl-table-region'},h('p',{class:'wl-scroll-hint small muted'},icon('arrow',14),t('watch.scroll_hint')),h('div',{class:'wl-table-scroll',tabIndex:0,'aria-label':t('watch.table_label')},tableNode));
@@ -73,7 +84,7 @@ export function mountWatchlist(root,ctx,params={}){
       const planStrip=h('div',{class:'wl-card-plan'},
         h('div',{},h('span',{class:'small muted'},t(ownPlan?'watch.my_plan':'watch.technical_reference')),
           h('strong',{class:'mono'},shownReference(stock))),
-        button(t(ownPlan?'watch.edit_plan':'watch.make_plan'),()=>ctx.openAlert(stock.ticker,ownPlan?undefined:referenceFor(stock)?.[1]),'btn btn-quiet'));
+        button(ownPlan?t('watch.edit_plan'):referenceAction(stock,referenceFor(stock)?.[1]),()=>openPlan(stock,ownPlan?undefined:referenceFor(stock)?.[1]),'btn btn-quiet'));
       return h('article',{class:'wl-overview-card'},
         h('header',{class:'wl-overview-head'},h('div',{},link(stock.ticker,stockHref(stock.ticker)),h('span',{class:'small muted'},stock.name)),quote(stock)),
         planStrip,metricLinks(stock),link(t('activity.row_link'),activityHref(stock.ticker),'text-link ac-overview-link'),
