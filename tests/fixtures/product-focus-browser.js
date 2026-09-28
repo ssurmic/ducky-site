@@ -83,6 +83,26 @@ const macroObserved=()=>{const rows=macroHistory().slice(-24).map((r,i)=>({date:
  Object.assign(rows[rows.length-2],{nominal_10y:4.96,funding_score:62.5,regime:'supportive',vix:14.21,vix_3m:17.61,vix_term_ratio:0.807});
  Object.assign(rows[rows.length-1],{nominal_10y:5.114,funding_score:57.5,regime:'mixed',vix:15.18,vix_3m:18.11,vix_term_ratio:0.838});
  return rows;};
+// Fixed-date freshness acceptance only: case=today-freshness. All values/prose are synthetic.
+// Keep dates explicit instead of stamping an old note with the browser's current date. The
+// current-date Today heading is real UI; these source records always remain September 25/28.
+const todayFreshnessMacro=()=>{
+ const dates=['2026-09-15','2026-09-16','2026-09-17','2026-09-18','2026-09-21','2026-09-22','2026-09-23','2026-09-24','2026-09-25','2026-09-28'];
+ const observed=dates.map((date,i)=>({date,funding_score:i===9?50:54+i%3,regime:'mixed',net_liquidity_bn:5800+i*4,net_liquidity_date:date,
+  nominal_10y:i===9?5.24:5.08+i*.02,nominal_10y_source:'quote',vix:i===9?16.1:15.2+i*.1,vix_source:'quote',vix_3m:18.4,vix_3m_source:'quote',vix_term_ratio:.875,
+  qqq_index:i===9?98.93:i===8?100:96+i*.5,spy_index:i===9?99.26:i===8?100:97+i*.35,scored:true,live:false}));
+ const history=observed.map(row=>({date:row.date,funding_score:row.funding_score,rates_score:48,beta_score:49.2,regime:'mixed',qqq_index:row.qqq_index,spy_index:row.spy_index,
+  metrics:{net_liquidity_bn:row.net_liquidity_bn,net_liquidity_65d_change_bn:-120,nominal_10y:row.nominal_10y,nominal_10y_20d_change_bp:18,vix:row.vix,vix_3m:row.vix_3m,vix_term_ratio:row.vix_term_ratio}}));
+ return {schema:'macro-beta/1',status:'ok',as_of:'2026-09-28',observed_at:'2026-09-28T22:00:00Z',history,observed,latest:history.at(-1),
+  latest_available:{as_of:'2026-09-25',dates:{DGS10:'2026-09-25',VIXCLS:'2026-09-25'},metrics:{nominal_10y:5.2,nominal_10y_20d_change_bp:18,vix:16,vix_3m:18.4,vix_term_ratio:.870}},
+  intraday:{quoted_at:'2026-09-28T22:00:00Z',session:'2026-09-28',phase:'closed',nominal_10y:5.24,vix:16.1,vix_3m:18.4,vix_term_ratio:.875},
+  fear_greed:{score:35,rating:'fear',previous_close:38,previous_1_week:40,previous_1_month:51,previous_1_year:62,as_of:'2026-09-28T21:55:00Z'},
+  digest:{status:'stale',version:'market-digest/1',session:'2026-09-25',next_session:'2026-09-28',generated_at:'2026-09-26T04:34:19Z',
+   close:{zh:'合成示例：9月25日，标普500收跌0.8%，纳指100跌1.2%，道指跌0.5%。',en:'Synthetic example: On September 25, the S&P 500 closed down 0.8%, the Nasdaq-100 fell 1.2% and the Dow slipped 0.5%.'},
+   sectors:{zh:'合成示例：能源领涨，半导体回落；这段总结只描述9月25日。',en:'Synthetic example: Energy led while semiconductors declined. This note describes September 25 only.'},
+   macro:{zh:'合成示例：9月25日十年期收益率5.20%，VIX为16.0；不代表上方9月28日读数。',en:'Synthetic example: The September 25 10-year yield was 5.20% and VIX was 16.0; these are separate from the September 28 readings above.'},
+   tomorrow:{zh:'合成示例：明日暂无已确认的重大日程。这是当时对9月28日的前瞻，不是现在的日历。',en:'Synthetic example: Tomorrow has no confirmed major events. This was the outlook for September 28 when written, not the current calendar.'}}};
+};
 const kolFeed=()=>({schema:'kol-feed/1',posts:[
  {id:1,kol_id:'sample-macro-author',kol_name:'Sample Macro Author',url:'https://www.youtube.com/watch?v=sample-macro-1',title:'美债利率两天上行，成长股承压：谁在推动？',published_at:new Date(Date.now()-5*3600e3).toISOString(),tickers:['NVDA','TSLA'],take:'bear',macro:true,
   summary:JSON.stringify({zh:'十年期收益率两天上行 15 个基点；作者认为久期长的成长股承压，本周盯 PCE 和美联储讲话。',en:'The 10-year rose 15 bp in two sessions; the author sees long-duration growth under pressure and watches PCE and Fed speakers this week.'})},
@@ -268,6 +288,7 @@ window.fetch=async(input,options={})=>{
   return Response.json({items:kind==='insider'?insider:kind==='13f'?funds:kind==='political'?political:[],next_cursor:null});
  }
  if(path==='/kol/feed'||path==='/kol/trial-feed')return Response.json(kolFeed());
+ if(mode==='today-freshness'&&path==='/macro/beta')return Response.json(todayFreshnessMacro());
  if(path==='/macro/beta')return Response.json({digest:{status:'ready',version:'market-digest/1',session:'2026-09-23',next_session:'2026-09-24',generated_at:'2026-09-24T05:41:00+00:00',
   close:{zh:'标普500 收跌 0.8%，纳指100 跌 1.2%，道指跌 0.5%，三大指数全线收低。',en:'The S&P 500 closed down 0.8%, the Nasdaq-100 fell 1.2% and the Dow slipped 0.5%; all three indexes finished lower.'},
   sectors:{zh:'能源涨 1.4% 领涨，半导体跌 2.3% 垫底；库里 1361 只股票里 38% 收涨。',en:'Energy led with +1.4% while semiconductors lagged at -2.3%; 38% of the 1361 stocks in the store closed up.'},
