@@ -204,6 +204,12 @@ window.fetch=async(input,options={})=>{
  if(mode==='ux-review'){const value=uxReview.reply(path,url.searchParams);if(value)return Response.json(value);}
  if(mode==='failure'&&path.includes('research'))return Response.json({error:'fixture_unavailable'},{status:503});
  if(mode==='wall-consistency'&&path==='/briefing/stocks')return Response.json(wallBriefs);
+ // Synthetic comparison coverage only; production always reads the saved API ranking.
+ if(mode==='explore-grid'&&path==='/radar/social.json')return Response.json({status:'ready',collected_at:'2026-09-28T15:01:00Z',items:
+  ['SPY','MU','NVDA','AMD','META','TSLA','GOOG','MSFT','AAPL','INTC','PLTR','AMZN','AVGO','GLW'].map((ticker,i)=>({ticker,rank:i+1,
+   mentions:i===10?0:i===11?null:1240-i*91,change_pct:i===10?0:i===11?null:i%2?-15:125,
+   name:i===0?'Synthetic long company name for responsive layout':undefined,
+   overall:i<2?title:i===13?{en:title.en+' '+counter.en,zh:title.zh+' '+counter.zh}:undefined}))});
  if(path==='/radar/social.json')return Response.json({status:'ready',collected_at:new Date(Date.now()-1800000).toISOString(),items:[
   {ticker:'NVDA',rank:1,mentions:1240,change_pct:35,overall:READINGS.NVDA.overall},{ticker:'AMD',rank:2,mentions:910,change_pct:-10,overall:READINGS.AMD.overall},
   {ticker:'GLW',rank:3,mentions:302,change_pct:120},{ticker:'AVGO',rank:4,mentions:180}]});

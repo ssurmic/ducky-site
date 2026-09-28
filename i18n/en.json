@@ -5446,7 +5446,7 @@
   "app.explore.destinations": "Explore and research destinations",
   "app.explore.stock_research": "Stock research",
   "app.explore.company_activity": "Company activity",
-  "app.explore.discussion_date": "Reddit mentions over 24 hours · Collected {date}. Counts do not indicate bullish or bearish views.",
+  "app.explore.discussion_date": "Reddit · 24h · Collected {date}",
   "app.explore.discussion_stale": "This is an older ranking. Check the collection time above.",
   "app.explore.discussion_empty": "No discussion ranking is available. Search for a company above to open its research.",
   "app.explore.discussion_unavailable": "The discussion ranking could not be read. You can still search companies or browse company activity.",
@@ -5522,5 +5522,15 @@
   "app.today.digest_read_full": "Read full note",
   "app.today.digest_saved_context": "Saved note for {date}. “Tomorrow” and the next-session outlook below refer to when this note was written.",
   "app.today.digest_tomorrow_saved": "Next session as viewed then · {date}",
-  "app.today.macro_read_error": "Market readings could not load. This does not indicate whether a new close-of-day note has been published."
+  "app.today.macro_read_error": "Market readings could not load. This does not indicate whether a new close-of-day note has been published.",
+  "app.explore.discussion_title": "Most discussed",
+  "app.explore.comparison_key": "Mentions / vs. previous day",
+  "app.explore.attention_only": "Attention, not sentiment",
+  "app.explore.research_stock": "Research {ticker}",
+  "app.explore.change_unknown": "Previous-day change unavailable",
+  "app.explore.metrics_short": "Metrics",
+  "app.explore.map_short": "Map",
+  "app.explore.ranking_views": "Views on these stocks",
+  "app.explore.show_all": "Show all {n} stocks",
+  "app.explore.show_top": "Show top 12"
 }

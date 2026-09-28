@@ -16,6 +16,19 @@ candidate adds no API endpoint, background refresh, account action or inference 
 [acceptance record](reports/TODAY-FRESHNESS-2026-09-28.md) separates focused tests from the pending
 integrated browser and release checks. It has not been deployed.
 
+## Compare discussion leaders in one grid · 2026-09-28 (local candidate)
+
+Explore now shows the first 12 source-ranked stocks in a compact six-column desktop/two-column
+phone grid, with extra rows available only when the response contains them. Mention counts and
+previous-day changes align for comparison; collection time and the attention-not-sentiment note
+appear once. Each stock has one primary research link and lighter Metrics/Map entries. Repeated
+fallback prose is removed, while full available summaries remain expandable. Existing read/access
+states and same-account query, disclosure and focus restoration remain. Today is unchanged.
+
+[Candidate design and checks](reports/UX-EXPLORE-COMPARISON-2026-09-28.md). This is not included in
+the `7fb28406` production receipt below; final combined acceptance and release belong to the
+integrating agent.
+
 ## Preserve the stock entry when returning from K-line · 2026-09-28 (deployed)
 
 Released through [PR #107](https://github.com/ssurmic/ducky-site/pull/107), merged at

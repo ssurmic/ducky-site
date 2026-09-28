@@ -2,6 +2,14 @@
 
 Updated: 2026-09-28. This English register is the canonical presentation handoff for the UX redesign. User-facing copy remains bilingual. The private backend's shared documents remain the system-design authority; this register records public UI behavior and integration boundaries only.
 
+**Local Explore comparison candidate:** the long six-row discussion list is replaced with a
+six-column desktop/two-column phone grid, initially showing 12 valid source-ranked companies.
+Additional rows and full available summaries expand on request without another ranking read.
+One primary research action and lighter Metrics/Map links replace four equal actions and repeated
+fallback prose. Source time, real zero/missing states, attention meaning, withdrawal and account
+boundaries remain. [Candidate evidence](../../reports/UX-EXPLORE-COMPARISON-2026-09-28.md) is separate
+from the current production receipt below; no deployment is claimed.
+
 **Delivery status: deployed at duckybot.app, version `7fb28406`, verified on 2026-09-28 at 20:24:20 UTC.** [PR #107](https://github.com/ssurmic/ducky-site/pull/107) merged as `7fb28406cc89ac363309392599f945f0ab931e0a`; the publisher passed 823 Node tests, 14 Python tests, build/copy checks and 2,103 internal links before publishing [Pages `809bdbf9`](https://809bdbf9.ducky-site.pages.dev). Production VERSION and CSP were verified. The exact Creator → MU History → Chart → MU History → selected-author return chain passed authenticated production verification at 20:25:30 UTC, including restored focus and no document overflow. See the [Chart correction receipt](../../reports/UX-CHART-RETURN-2026-09-28.md#production-release-receipt).
 
 **Workflow release retained:** `e22240f3` / [PR #105](https://github.com/ssurmic/ducky-site/pull/105)

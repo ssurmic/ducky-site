@@ -5446,7 +5446,7 @@
   "app.explore.destinations": "发现与研究入口",
   "app.explore.stock_research": "股票研究",
   "app.explore.company_activity": "公司与资金动态",
-  "app.explore.discussion_date": "过去 24 小时 Reddit 提及排名 · 采集于 {date}。讨论数量不代表看多或看空。",
+  "app.explore.discussion_date": "Reddit · 24 小时 · 采集于 {date}",
   "app.explore.discussion_stale": "当前显示较早采集的排名，请留意上方采集时间。",
   "app.explore.discussion_empty": "暂时没有可展示的讨论排名。仍可以在上方搜索公司，直接打开研究。",
   "app.explore.discussion_unavailable": "暂时读不到讨论排名。你仍可以搜索公司或浏览公司动态。",
@@ -5522,5 +5522,15 @@
   "app.today.digest_read_full": "展开全文",
   "app.today.digest_saved_context": "这是 {date} 的收盘总结。下文“明日”和下一交易日前瞻均指写作当时。",
   "app.today.digest_tomorrow_saved": "当时的下一交易日 · {date}",
-  "app.today.macro_read_error": "市场读数未能加载，无法据此判断是否已有新的收盘总结。"
+  "app.today.macro_read_error": "市场读数未能加载，无法据此判断是否已有新的收盘总结。",
+  "app.explore.discussion_title": "讨论最多",
+  "app.explore.comparison_key": "提及量 / 较前日",
+  "app.explore.attention_only": "热度不代表多空",
+  "app.explore.research_stock": "研究 {ticker}",
+  "app.explore.change_unknown": "较前日变化未提供",
+  "app.explore.metrics_short": "指标",
+  "app.explore.map_short": "地图",
+  "app.explore.ranking_views": "这些股票的相关观点",
+  "app.explore.show_all": "查看全部 {n} 只",
+  "app.explore.show_top": "收起为前 12 只"
 }
