@@ -9,6 +9,7 @@ import { companyContext } from "../company-context.js";
 import {reading,replaceReading,syncSourceDialog} from '../stock-reading.js';
 import { icon } from "../icons.js";
 import { symbolPicker, instrumentLabels, watchEligibility } from "../symbol-picker.js";
+import {watchlistStarters} from '../watchlist-first-use.js';
 import { s } from "../strings.js";
 import * as api from "../api.js";
 import * as store from "../store.js";
@@ -30,6 +31,7 @@ export const politicianPath=(tickers,now=Date.now())=>'/radar/archive.json?kind=
 export const insiderPath=(tickers,now=Date.now())=>'/radar/archive.json?kind=insider&limit=200&content=all&fields=signals&start='+new Date(now-INSIDER_MONTHS*30.5*864e5).toISOString().slice(0,10)+'&tickers='+tickers.map(encodeURIComponent).join(',');
 // Above this many stocks, typing in the filter rebuilds the table on a short debounce.
 const LARGE_LIST=60;
+let firstSearch=null;
 
 export function normalizeList(resp) {
   const arr = Array.isArray(resp) ? resp : (resp && (resp.items || resp.watchlist || resp.tickers)) || [];
@@ -44,6 +46,7 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
   let overview = api.peek('/watchlist')?.overview||null, overviewReceived=api.peekAt('/watchlist'), selected = null, disposed = false, loading = true;
   const focused=window.DUCKY?.PRODUCT_FOCUS_ENABLED===true;
   let research=new Map((api.peek('/me/stock-research')?.items||[]).map(item=>[item.ticker,item])),researchFailed=false,researchLoading=true,loadSeq=0,membershipAvailable=false;
+  let starters=null,firstUseActive=false;
   // Disclosure/options references beside each row: saved brief facts plus the archived 13F page.
   let signals=new Map(),briefsDoc=null,fundsDoc=null,insidersDoc=null,politiciansDoc=null;
   const rebuildSignals=()=>{signals=buildSignals(briefsDoc,fundsDoc,store.get('watchlist')||[],insidersDoc,politiciansDoc);};
@@ -75,6 +78,8 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
   const currentSession=()=>!disposed&&!signal?.aborted&&store.epoch()===mountedEpoch;
   const watchCap=()=>Number.isFinite(store.get('me')?.watch_cap)?store.get('me').watch_cap:null;
   const isFull=()=>watchCap()!==null&&(store.get('watchlist')||[]).length>=watchCap();
+  const isFirstUse=()=>membershipAvailable&&!(store.get('watchlist')||[]).length;
+  const rememberFirstSearch=()=>{if(currentSession()&&isFirstUse())firstSearch={epoch:mountedEpoch,value:input.value};};
   // Each entry starts on List, consistently on desktop and phone.
   // List combines prices, the shared overview and a direct information-map action.
   try { area = localStorage.getItem('ducky-watch-area') === 'cap' ? 'cap' : 'equal'; } catch {}
@@ -86,15 +91,18 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
     ...(isFull()?{label:s('watch.full_button'),reason:s('watch.full_note',{cap:watchCap()})}:{})});
   const picker = symbolPicker(input, () => store.get("watchlist") || [],{
     onAdd:row=>addTicker(row.ticker,true,row),actionState:pickerActionState,
-    onSelect:row=>{addCandidate=row;render();},
+    onSelect:row=>{if(!currentSession())return;addCandidate=row;
+      if(isFirstUse()){rememberFirstSearch();location.hash='#/stock/'+encodeURIComponent(row.ticker);}
+      else render();},
     onResults:rows=>{addCandidate=rows.find(row=>row.ticker===input.value.trim().toUpperCase().replace(/^\$/,''))||null;render();}
   });
-  input.addEventListener('input',()=>{addCandidate=null;render();});
+  input.addEventListener('input',()=>{addCandidate=null;rememberFirstSearch();render();});
   unsubs.push(picker.dispose);
   const form = el("form.add-row", { onsubmit: onAdd }, picker.wrap, addBtn);
   tourTarget(form,"watchlist.add");
-  const addOptions = el('details.watch-add-options', {open:!(store.get('watchlist')||[]).length},
-    el('summary',{'data-tour':'watchlist.add-toggle'},s('watch.add')),el('p.view-intro.muted',s('watch.workflow')),form);
+  const addSummary=el('summary',{'data-tour':'watchlist.add-toggle'},s('watch.add'));
+  const addIntro=el('p.view-intro.muted',s('watch.workflow'));
+  const addOptions = el('details.watch-add-options', {open:!(store.get('watchlist')||[]).length},addSummary,addIntro,form);
   const usage=el("div");
   const capacity=el('p.watch-capacity',{hidden:true,role:'status'});
   const selectionCount=el('summary',{'aria-live':'polite'});
@@ -182,6 +190,12 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
   async function onAdd(e) {
     e.preventDefault();
     const t = input.value.trim().toUpperCase().replace(/^\$/, "");
+    if(isFirstUse()){
+      if(!currentSession())return;
+      if(addCandidate?.ticker===t){rememberFirstSearch();location.hash='#/stock/'+encodeURIComponent(t);}
+      else{toast(s('watch.select_result'));input.focus();}
+      return;
+    }
     if (!TICKER_RE.test(t)) { toast(s("watch.select_result")); input.focus(); return; }
     await addTicker(t,true,addCandidate?.ticker===t?addCandidate:null);
   }
@@ -253,6 +267,7 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
   }
 
   function render() {
+    if(!currentSession())return;
     rememberView();root.dataset.watchView=view;
     picker.update();filterPicker.update();
     renderOffer();list.classList.toggle('is-filtered',!!query.trim());
@@ -262,6 +277,15 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
     const cap = me.watch_cap;
     for(const ticker of checked)if(!items.includes(ticker))checked.delete(ticker);
     const full=isFull();
+    const firstUse=isFirstUse();
+    addOptions.classList.toggle('is-first-use',firstUse);addSummary.hidden=firstUse;addBtn.hidden=firstUse;
+    addIntro.textContent=s(firstUse?'watch.first_use_intro':'watch.workflow');
+    input.placeholder=s(firstUse?'focus.find_stock':'watch.placeholder');input.setAttribute('aria-label',input.placeholder);
+    if(firstUse){
+      addOptions.open=true;
+      if(!firstUseActive&&firstSearch?.epoch===mountedEpoch)input.value=firstSearch.value;
+    }else if(starters){starters.dispose();starters=null;}
+    firstUseActive=firstUse;
     capacity.hidden=!full;capacity.textContent=full?s('watch.full_note',{cap}):'';
     addBtn.disabled=adding||removing||full||!!(addCandidate&&!watchEligibility(addCandidate).eligible);
     addBtn.textContent=s(full?'watch.full_button':adding?'watch.adding':'watch.add');
@@ -286,11 +310,13 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
     const openDisclosures=new Set([...list.querySelectorAll('details[open][data-disclosure]')].map(n=>n.dataset.disclosure));
     const focusedMap=list.contains(document.activeElement)?document.activeElement?.dataset?.mapOpen:null;
     if(loading && !overview && !research.size){clear(list).append(skeleton(items.length));return;}
-    if (!items.length) {clear(list).append(el('section.watch-first-use',
-      el('img',{src:'/duck-head-cutout-v1.png',alt:'',width:64,height:64}),el('h2',s('watch.ux_empty_title')),
-      el('p.muted',s('watch.ux_empty_body')),el('div.watch-empty-actions',
-        el('button.btn.btn-primary',{type:'button',onclick:()=>{addOptions.open=true;input.focus();}},s('watch.ux_find_stock')),
-        el('a.btn.btn-ghost',{href:'#/explore'},s('watch.ux_explore')))));strip.hidden=true;return;}
+    if (!items.length) {
+      if(firstUse){
+        if(!starters)starters=watchlistStarters({signal,current:()=>currentSession()&&isFirstUse()});
+        if(list.firstChild!==starters.node)clear(list).append(starters.node);
+      }
+      strip.hidden=true;return;
+    }
     const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
     const digestFor=t=>focused?digestNodes(rows.get(t),signals.get(t)):[];
     const viewsFor=t=>{const v=rows.get(t)?.digest?.views;return focused&&v?.status==='ready'?v:null;};
@@ -567,5 +593,5 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
   unsubs.push(()=>clearInterval(clock));
   render();
   await load({reuseRecent:true});
-  return () => {disposed=true;root.classList.remove("watchlist-view");unsubs.forEach((u) => u());};
+  return () => {rememberFirstSearch();disposed=true;starters?.dispose();root.classList.remove("watchlist-view");unsubs.forEach((u) => u());};
 }

@@ -1,5 +1,7 @@
 # UX change and integration register
 
+**First-use stock workflow candidate (2026-09-29):** Empty Watchlist is being changed to one search and four real dated discovery candidates, leading into the existing stock workspace before an explicit Add. Today gains a zero-watch research entrance; successful stock membership gets an in-place confirmation and list return. No sample membership or notification promise. [Design and acceptance](../../reports/FIRST-USE-STOCK-WORKFLOW-2026-09-29.md).
+
 Updated: 2026-09-28. This English register is the canonical presentation handoff for the UX redesign. User-facing copy remains bilingual. The private backend's shared documents remain the system-design authority; this register records public UI behavior and integration boundaries only.
 
 **Native author-page follow-up candidate:** Author links now open the same compact reviewed views under the selected author heading, filtered and validated by exact creator identity. Historical batch status is labelled separately from new-upload processing. Original-source contexts and existing transcript/research access remain unchanged. [Focused and visual acceptance](../../reports/CREATOR-NATIVE-PAGE-2026-09-29.md).

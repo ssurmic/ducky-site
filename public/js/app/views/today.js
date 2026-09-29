@@ -112,7 +112,14 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   const stats=el('div.today-stats',{hidden:true});
   const title=el('header.focus-heading.today-heading',el('div',el('p.today-date',date),el('h1',s('focus.today')),el('p.muted',s('focus.today_intro')),stats),
     el('a.btn.btn-ghost',{href:'#/calendar'},s('focus.upcoming')));
-  if(!embedded)main.append(title);
+  const researchStart=el('div.today-research-start',{hidden:true},
+    el('a.btn.btn-ghost.btn-sm',{href:'#/explore'},s('focus.research_stock')));
+  if(!embedded)main.append(title,researchStart);
+  const syncResearchStart=()=>{
+    if(signal?.aborted||epoch!==store.epoch()||(store.get('watchlist')||[]).length)researchStart.hidden=true;
+  };
+  const offResearchStart=embedded?()=>{}:store.subscribe('*',syncResearchStart);
+  signal?.addEventListener('abort',syncResearchStart,{once:true});
   // Market-level references first (liquidity, 10-year yield, VIX term structure, Fear & Greed); the
   // saved macro backdrop refreshes while visible and never delays the personal feed below.
   const macroHost=el('div.today-macro-host');
@@ -187,6 +194,7 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
     // read yet, and its digest already sits on the watchlist row.
     const accepted=items.filter(hasSummary);
     watchlistEmpty=response.watchlist_count===0;analysesCount=accepted.length;
+    researchStart.hidden=!watchlistEmpty||(store.get('watchlist')||[]).length>0;
     updates.hidden=watchlistEmpty;
     for(const node of [filters,status,feed,coverage])node.hidden=watchlistEmpty;
     more.hidden=watchlistEmpty||!cursor;
@@ -220,7 +228,7 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   const summaryTask=embedded?Promise.resolve():api.get('/me/stock-research',{signal}).then(response=>{
     if(!disposed&&!signal?.aborted&&epoch===store.epoch())renderSummaries(response);
   }).catch(error=>{if(!disposed&&!signal?.aborted&&epoch===store.epoch()){
-    if([401,402,403].includes(error.status))clear(summaries);
+    if([401,402,403].includes(error.status)){clear(summaries);researchStart.hidden=true;}
     summaries.append(el('p.small.muted',s('focus.summary_read_failed')));
   }});
   // Prices decorate the cards; a slow, missing or failed quote read never blocks or delays the feed.
@@ -263,6 +271,6 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   }
   await Promise.all([restoreReading(),summaryTask]);
   restoreDisclosures(summaries);
-  return()=>{disposed=true;seq++;macroTask?.stop();creatorTask?.dispose();opinionsTask?.dispose();if(timer)clearInterval(timer);root.removeEventListener('ducky:shared-read',update);if(epoch===store.epoch())readingStates.set(stateKey,{days,query,pages,showAll,
+  return()=>{disposed=true;seq++;researchStart.hidden=true;offResearchStart();signal?.removeEventListener('abort',syncResearchStart);macroTask?.stop();creatorTask?.dispose();opinionsTask?.dispose();if(timer)clearInterval(timer);root.removeEventListener('ducky:shared-read',update);if(epoch===store.epoch())readingStates.set(stateKey,{days,query,pages,showAll,
     opened:[...main.querySelectorAll('details[open][data-reading-key]')].map(node=>node.dataset.readingKey)});};
 }

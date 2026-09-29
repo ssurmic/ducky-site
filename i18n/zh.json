@@ -4031,7 +4031,7 @@
   "app.focus.chart_basis": "历史收盘记录；拖动下方滑块查看日期和价格。",
   "app.focus.chart_stale": "历史价格尚未更新到最近一个已完成的交易日。",
   "app.focus.following": "已关注",
-  "app.focus.follow_stock": "关注股票",
+  "app.focus.follow_stock": "加入自选",
   "app.focus.price_history": "价格走势",
   "app.focus.research_history": "研究变化与历史",
   "app.focus.history_empty": "这个时间范围内还没有保存研究变化。",
@@ -4049,7 +4049,7 @@
   "app.focus.source_record": "来源记录",
   "app.focus.no_matching_stocks": "自选股中没有匹配项。",
   "app.focus.conditional": "有条件的观点",
-  "app.focus.unfollow_stock": "取消关注",
+  "app.focus.unfollow_stock": "移出自选",
   "app.focus.counter_view": "看空观点",
   "app.focus.chart_pending": "历史价格正在准备，稍后可再查看。",
   "app.focus.chart_unavailable": "暂时无法读取历史价格。",
@@ -5615,5 +5615,11 @@
   "app.opinions.intent_historical": "历史观点",
   "app.opinions.intent_self_reported": "作者自述",
   "app.opinions.intent_factual": "事实陈述",
-  "app.opinions.intent_unclear": "意图未明确"
+  "app.opinions.intent_unclear": "意图未明确",
+  "app.focus.watch_added": "已将 {ticker} 加入自选，可在自选页持续查看。",
+  "app.focus.view_watchlist": "查看自选",
+  "app.focus.research_stock": "研究一只股票",
+  "app.watch.first_use_intro": "先研究一家公司；想继续关注时，再加入自选。",
+  "app.watch.first_use_more": "查看更多股票",
+  "app.watch.first_use_pending": "讨论排名暂未发布，仍可搜索公司。"
 }

@@ -1,5 +1,11 @@
 # Change log
 
+## 2026-09-29 — Research before the first saved stock (candidate)
+
+- Replace the repeated empty-Watchlist invitation with one search and compact, dated discovery candidates; open real stock research before adding it.
+- Confirm an explicit stock Add in place and offer a direct Watchlist return; expose a compact Today research entrance for a confirmed empty list.
+- Preserve existing access, source dates, membership ownership, metrics/maps and populated-list behavior. [Acceptance](reports/FIRST-USE-STOCK-WORKFLOW-2026-09-29.md).
+
 ## Native author links open readable views · 2026-09-29 (candidate)
 
 A selected creator now shows the same compact qualified video views as Today and Explore, with an exact creator filter, preserved source details and no follow requirement. Creator switches and account changes fence late responses; original-source routes and transcript material remain intact. Historical batch progress keeps its dated counts and no longer describes all new-upload processing as paused. [Validation and release boundaries](reports/CREATOR-NATIVE-PAGE-2026-09-29.md).

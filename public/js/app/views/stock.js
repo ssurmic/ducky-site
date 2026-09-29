@@ -14,7 +14,8 @@ import {mountCreatorOpinions} from '../creator-opinions.js';
 export async function mount(root,{ticker,signal,returnTo,query=new URLSearchParams()}={}){
   if(!/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker||'')){location.hash='#/explore';return;}
   let disposed=false,followingBusy=false,lastEvidence=null,currentMap=null;
-  const epoch=store.epoch(),current=()=>!disposed&&!signal?.aborted&&store.epoch()===epoch;
+  const account=()=>[store.get('token'),store.get('me')?.user_id??store.get('me')?.id];
+  const epoch=store.epoch(),identity=account(),current=()=>!disposed&&!signal?.aborted&&store.epoch()===epoch&&account().every((value,i)=>value===identity[i]);
   const chartHead=()=>el('div.focus-chart-head',el('h2',s('focus.price_history')),
     el('a.stock-open',{href:'#/chart/'+encodeURIComponent(ticker),'data-stock-tool':'kline'},s('focus.open_kline')+' →'));
   const shell=el('article.focus-stock'),body=el('div'),chart=el('section.focus-chart',chartHead(),spinner());
@@ -49,13 +50,22 @@ export async function mount(root,{ticker,signal,returnTo,query=new URLSearchPara
   }
   const company=el('p.small.muted',{hidden:true});
   const head=el('header.focus-heading',el('div',el('a.small.muted',{href:returnTo||'#/'+from},'← '+s('nav.'+from)),el('h1',ticker),company));
-  const follow=el('button.btn.btn-ghost',{type:'button'});
-  const sync=()=>{const watched=(store.get('watchlist')||[]).includes(ticker);follow.textContent=s(watched?'focus.unfollow_stock':'focus.follow_stock');follow.disabled=followingBusy;};
-  sync();follow.addEventListener('click',async()=>{
-    if(followingBusy||!current())return;followingBusy=true;sync();
+  const follow=el('button.btn.btn-ghost',{type:'button','data-stock-watch':ticker});
+  const membershipNotice=el('div.stock-watch-feedback',{hidden:true,role:'status','aria-live':'polite'});
+  const clearMembershipNotice=()=>{clear(membershipNotice);membershipNotice.hidden=true;};
+  const sync=()=>{
+    if(!current()){clearMembershipNotice();follow.disabled=true;return;}
     const watched=(store.get('watchlist')||[]).includes(ticker);
-    try{await (watched?api.watchlist.remove(ticker):api.watchlist.add(ticker));if(!current())return;
-      store.set('watchlist',watched?(store.get('watchlist')||[]).filter(t=>t!==ticker):[...new Set([...(store.get('watchlist')||[]),ticker])]);}
+    follow.textContent=s(watched?'focus.unfollow_stock':'focus.follow_stock');follow.disabled=followingBusy;
+    if(!watched)clearMembershipNotice();
+  };
+  sync();follow.addEventListener('click',async()=>{
+    if(followingBusy||!current())return;followingBusy=true;clearMembershipNotice();sync();
+    const watched=(store.get('watchlist')||[]).includes(ticker);
+    try{await (watched?api.watchlist.remove(ticker,{signal}):api.watchlist.add(ticker,{signal}));if(!current())return;
+      store.set('watchlist',watched?(store.get('watchlist')||[]).filter(t=>t!==ticker):[...new Set([...(store.get('watchlist')||[]),ticker])]);
+      if(!watched){membershipNotice.append(el('span',s('focus.watch_added',{ticker})),
+        el('a.btn.btn-ghost.btn-sm',{href:'#/watchlist'},s('focus.view_watchlist')));membershipNotice.hidden=false;}}
     catch(error){if(current()){toast(s('common.error',{msg:error.message}),'err');follow.disabled=false;}}
     finally{followingBusy=false;if(current())sync();}
   });
@@ -70,8 +80,9 @@ export async function mount(root,{ticker,signal,returnTo,query=new URLSearchPara
   const opinions=tab==='overview'?mountCreatorOpinions(opinionsHost,{signal,ticker,from}):null;
   const tools=el('details.stock-extra-tools',el('summary',s('focus.deeper_research')),directTools);
   head.append(el('a.btn.btn-ghost',{href:'#/chart/'+ticker,'data-stock-tool':'kline'},s('focus.chart_short')));
-  shell.append(head,tabs,stockDisclosureLinks(ticker),overviewPanel,metricsPanel,mapPanel,historyPanel,tools);root.append(shell);
-  const off=store.subscribe('watchlist',sync);
+  shell.append(head,membershipNotice,tabs,stockDisclosureLinks(ticker),overviewPanel,metricsPanel,mapPanel,historyPanel,tools);root.append(shell);
+  const off=store.subscribe('*',sync);
+  signal?.addEventListener('abort',sync,{once:true});
   const details=el('details.focus-history',el('summary',s('focus.research_history'))),historyBody=el('div');details.append(historyBody);historyPanel.append(details);
   let historyCursor=null,historyLoaded=false,historyLoading=false;
   async function loadHistory(){
@@ -178,5 +189,5 @@ export async function mount(root,{ticker,signal,returnTo,query=new URLSearchPara
   }).catch(error=>{if(current()&&!hardDenied){clear(chart);chart.append(chartHead(),el('p.muted',s('focus.chart_unavailable')));}});
   showTab();
   await Promise.all([loadEvidence(),priceTask]);
-  return()=>{disposed=true;off();opinions?.dispose();currentMap?.dispose?.();root.removeEventListener('ducky:shared-read',updates);};
+  return()=>{disposed=true;clearMembershipNotice();off();signal?.removeEventListener('abort',sync);opinions?.dispose();currentMap?.dispose?.();root.removeEventListener('ducky:shared-read',updates);};
 }

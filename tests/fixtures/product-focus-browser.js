@@ -26,13 +26,13 @@ const analysis={overview,sections:[{kind:'key_points',zh:'产能投放能否转�
  {kind:'risks',zh:'利润率可能先承压，不能把产能增加等同于收入。',en:'Margins may come under pressure first; capacity growth is not booked revenue.',citations:['second']},
  {kind:'watch',zh:'下一份财报需要核对订单和资本支出。',en:'Check orders and capital spending in the next earnings report.',citations:['first']}]};
 if(mode==='no-watch-section')analysis.sections=analysis.sections.filter(p=>p.kind!=='watch');
-let watches=mode==='no-watch'?[]:['NVDA','AVGO','AMD','GLW'];
+let watches=['no-watch','first-use'].includes(mode)?[]:['NVDA','AVGO','AMD','GLW'];
 if(mode==='watchlist-management')watches=['NVDA','AVGO','AMD','GLW',...Array.from({length:46},(_,i)=>'TEST'+String(i).padStart(2,'0'))];
 if(mode==='today-large')watches=['AAPL','AEHR','ALAB','AMD','AVGO','GLW','NVDA','TSLA'];
 // These explicit membership cases accept writes only to the fixture's in-memory array.
 if(['watchlist-add','autocomplete-watchlist'].includes(mode))watches=['NVDA','AVGO','AMD'];
 if(mode==='wall-consistency')watches=['NVDA','COIN','AVGO','TSLA','AMD'];
-const writable=['watchlist-management','watchlist-add','autocomplete-watchlist'].includes(mode);
+const writable=['watchlist-management','watchlist-add','autocomplete-watchlist','first-use'].includes(mode);
 const autocompleteSymbols=[
  {ticker:'META',name:'Meta Platforms, Inc. - Class A Common Stock',exchange:'NASDAQ',instrument_type:'stock',instrument_tags:['stock'],watch_eligible:true,watch_reason:null,
   industry:'超大规模云与平台计算需求',industry_en:'Hyperscaler / platform compute demand'},
@@ -244,9 +244,11 @@ window.fetch=async(input,options={})=>{
    mentions:i===10?0:i===11?null:1240-i*91,change_pct:i===10?0:i===11?null:i%2?-15:125,
    name:i===0?'Synthetic long company name for responsive layout':undefined,
    overall:i<2?title:i===13?{en:title.en+' '+counter.en,zh:title.zh+' '+counter.zh}:undefined}))});
+ if(mode==='first-use'&&path==='/radar/social.json'&&query.get('ranking')==='unavailable')return Response.json({error:'synthetic_unavailable'},{status:503});
+ if(mode==='first-use'&&path==='/kol/opinions')return Response.json(opinionsFixture({items:[]}));
  if(path==='/radar/social.json')return Response.json({status:'ready',collected_at:new Date(Date.now()-1800000).toISOString(),items:[
-  {ticker:'NVDA',rank:1,mentions:1240,change_pct:35,overall:READINGS.NVDA.overall},{ticker:'AMD',rank:2,mentions:910,change_pct:-10,overall:READINGS.AMD.overall},
-  {ticker:'GLW',rank:3,mentions:302,change_pct:120},{ticker:'AVGO',rank:4,mentions:180}]});
+  {ticker:'NVDA',name:'NVIDIA Corporation',rank:1,mentions:1240,change_pct:35,overall:READINGS.NVDA.overall},{ticker:'AMD',name:'Advanced Micro Devices, Inc.',rank:2,mentions:910,change_pct:-10,overall:READINGS.AMD.overall},
+  {ticker:'GLW',name:'Corning Incorporated',rank:3,mentions:302,change_pct:120},{ticker:'AVGO',name:'Broadcom Inc.',rank:4,mentions:180}]});
  if(path==='/public/calendar.json'||path==='/calendar')return Response.json(calendarDoc());
  if(path==='/watchlist')return Response.json({cap:50,items:watches.map(ticker=>({ticker})),overview:{items:watches.map(price),session:mode==='wall-consistency'?'2026-09-11':'2026-09-09'}});
  if(path==='/me/stock-research'){

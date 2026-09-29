@@ -31,11 +31,27 @@
 .watch-comparison-table.watch-compact-table tr>.watch-help-col,.watch-comparison-table.watch-compact-table tr>.watch-metric-cell{width:96px;text-align:right}
 .watch-comparison-table.watch-compact-table tr>.watch-overview-col,.watch-comparison-table.watch-compact-table tr>.watch-overview-cell{width:300px;text-align:left}
 .watch-scroll-hint{display:none;margin:0 0 6px}
-.watch-first-use{max-width:640px;margin:20px auto;padding:28px;text-align:center;border:1px solid var(--border);border-radius:14px;background:var(--surface)}
-.watch-first-use>img{object-fit:contain;margin-bottom:12px}
-.watch-first-use h2{font-size:22px;margin:0 0 12px}
-.watch-first-use p{line-height:1.7;max-width:46ch;margin:0 auto 22px}
-.watch-empty-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.watchlist-view .watch-add-options.is-first-use[open]{flex-basis:100%;max-width:100%;width:100%;margin:0;float:none}
+.watch-add-options.is-first-use .view-intro{margin:0 0 10px;font-size:14px;line-height:1.5}
+.watch-add-options.is-first-use .add-row{margin:0;max-width:850px}
+.watch-add-options.is-first-use .symbol-picker{width:100%;flex:1}
+.watch-add-options.is-first-use .input{font-family:inherit;font-size:16px;min-height:44px}
+.watch-first-use{max-width:850px;margin:16px 0;text-align:left}
+.watch-starters-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.watch-starters-heading h2{font-size:16px;margin:0;line-height:1.4}
+.watch-starters-heading>a,.watch-starter-map{display:flex;align-items:center;min-height:44px;font-size:12px;white-space:nowrap}
+.watch-starters-date,.watch-starters-basis{margin:0 0 5px;font-size:12px;line-height:1.45}
+.watch-starters-status p{margin:6px 0;font-size:12px;line-height:1.5}
+.watch-starters-list{margin-top:10px;border-top:1px solid var(--border)}
+.watch-starter{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.watch-starter-open{flex:1;min-width:0;min-height:64px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;align-content:center;text-decoration:none;padding:9px 0;color:var(--text)}
+.watch-starter-identity{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;min-width:0}
+.watch-starter-identity strong{font-size:15px}
+.watch-starter-identity>span{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.watch-starter-count{grid-column:1;font-size:12px}
+.watch-starter-action{grid-column:2;grid-row:1/3;align-self:center;font-size:12px;color:var(--accent-text,var(--accent))}
+.watch-starter-map{flex-shrink:0;padding:0 6px;color:var(--muted)}
+.watch-starter a:hover,.watch-starter a:focus-visible{color:var(--accent-text,var(--accent))}
 .watch-research-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
 .watch-research-card{min-width:0;border:1px solid var(--border);border-radius:14px;background:var(--surface);overflow:hidden}
 .watch-research-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:18px 18px 14px}
@@ -114,9 +130,19 @@
  .watch-scroll-hint{font-size:11px;line-height:1.35;margin:0 0 4px}
  .watchlist-view .watch-compact-table .watch-metric-value{font-size:13px}
  .watchlist-view .watch-compact-table .watch-metric-note,.watchlist-view .watch-compact-table .watch-metric-status{font-size:11px;line-height:1.35}
- .watch-first-use{padding:16px 12px;margin:6px 0}
- .watch-first-use h2{font-size:20px}
- .watch-first-use p{font-size:13px;line-height:1.5;margin-bottom:12px}
+ .watch-add-options.is-first-use .view-intro{font-size:13px;margin-bottom:8px}
+ .watch-first-use{margin:8px 0}
+ .watch-starters-heading{gap:6px}
+ .watch-starters-heading h2{font-size:14px}
+ .watch-starters-heading>a,.watch-starters-date,.watch-starters-basis,.watch-starter-map,.watch-starter-count,.watch-starter-action{font-size:11px}
+ .watch-starters-list{margin-top:7px}
+ .watch-starter{gap:4px}
+ .watch-starter-open{grid-template-columns:minmax(0,1fr);min-height:72px;gap:3px;padding:8px 0}
+ .watch-starter-identity{gap:2px 7px}
+ .watch-starter-identity strong{font-size:14px}
+ .watch-starter-identity>span{font-size:12px}
+ .watch-starter-action{grid-column:1;grid-row:auto}
+ .watch-starter-map{padding-inline:5px}
  .watch-research-grid{gap:8px}
  .watch-research-card{border-radius:9px}
  .watch-research-heading{padding:10px 10px 8px;gap:8px}
