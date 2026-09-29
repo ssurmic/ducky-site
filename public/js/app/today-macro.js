@@ -10,6 +10,7 @@ import {dailyPairs,summary,normalizedLines,sparkLines,cursorIndex,PRIMARY} from 
 import {digestPreview} from './today-preview.js';
 import {material} from './shared-read-refresh.js';
 import {hasCanonicalReadings,canonicalReading} from './today-market-readings.js';
+import {currentSession,sessionOverview,sessionMacro} from './today-session.js';
 
 const OK=v=>typeof v==='number'&&Number.isFinite(v);
 const num=(v,d=2)=>OK(v)?new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US',{minimumFractionDigits:d,maximumFractionDigits:d}).format(v):'—';
@@ -62,7 +63,7 @@ function canonicalStamp(r,key){
 function reading(doc,key,options){
   if(!hasCanonicalReadings(doc))return legacyReading(doc,key,options);
   const r=canonicalReading(doc,key);
-  return {value:r?.value,stamp:canonicalStamp(r,key),recorded:r?.observed_at?s('today.reading_recorded',{time:writtenAt(r.observed_at)}):null};
+  return {value:r?.value,stamp:canonicalStamp(r,key),recorded:r?.quote_at?s('today.reading_trade_time',{time:writtenAt(r.quote_at)}):r?.observed_at?s('today.reading_recorded',{time:writtenAt(r.observed_at)}):null};
 }
 // The rows a tile's chart and its readings share: the observed panel, or the score panel of an older document.
 const panelRows=doc=>doc?.observed?.length?doc.observed:(doc?.history||[]);
@@ -122,7 +123,7 @@ function linesBlock(tile){
   });
   chart.readingDate=()=>dates[selected];
   chart.restoreReadingDate=date=>{const i=dates.indexOf(date);if(i>=0)show(i);};
-  return el('div.today-macro-chart.has-cursor',tip,chart,legend,
+  return el('div.today-macro-chart.has-cursor',el('span.small.muted',s('today.chart_history_through',{date:dates.at(-1)})),tip,chart,legend,
     el('span.today-macro-caption',s('today.lines_caption',{n:dates.length,what:labels[primary],rq:r(qqq?.correlation),rs:r(spy?.correlation),pq:OK(qqq?.opposite)?qqq.opposite:'—'})));
 }
 
@@ -148,7 +149,7 @@ export function macroTiles(doc){
      note:[s('today.macro_regime_'+band),OK(netT)?s('today.macro_net_liquidity',{value:num(netT,2)}):null,OK(change)?s('today.macro_net_change',{value:signed(change)}):null].filter(Boolean).join(' · '),
      lines:linesFor(doc,'liquidity')},
     {key:'yield',label:s('today.macro_10y'),value:OK(y10.value)?num(y10.value,2)+'%':'—',unit:'',tone:'flat',stamp:y10.stamp,recorded:y10.recorded,
-     note:OK(bp)?s('today.macro_10y_change',{bp:signed(bp)}):s('today.macro_no_change'),
+     note:OK(bp)?s('today.macro_10y_change',{bp:signed(bp)})+(yRows.at(-1)?.date?' · '+yRows.at(-1).date:''):s('today.macro_no_change'),
      lines:linesFor(doc,'yield')},
     {key:'vix',label:s('today.macro_vix'),value:OK(vix.value)?num(vix.value,1):'—',unit:'',tone:OK(ratio)?(ratio>1?'down':'up'):'flat',stamp:vix.stamp,recorded:vix.recorded,ratioStamp:canonical&&OK(ratio)?s('today.reading_ratio',{reading:term.stamp}):null,ratioRecorded:term.recorded,
      note:OK(ratio)?s('today.macro_vix_ratio',{ratio:num(ratio,2)})+' · '+s(ratio>1?'today.macro_vix_stress':'today.macro_vix_calm'):s('today.macro_vix_missing')},
@@ -179,7 +180,7 @@ export function digestState(digest,{now=new Date()}={}){
   if(!validSession(digest.session))return 'undated';
   return digest.session===nySession(now)?'current':'previous';
 }
-export function digestBlock(digest,{now=new Date()}={}){
+export function digestBlock(digest,{now=new Date(),archive=false}={}){
   if(!digest||!['ready','stale'].includes(digest.status))return null;
   const text=key=>String(digest[key]?.[LANG==='zh'?'zh':'en']||'').trim();
   const current=digestState(digest,{now})==='current';
@@ -215,7 +216,7 @@ export function digestBlock(digest,{now=new Date()}={}){
   if(text('tomorrow')&&!redundantPreview)box.append(el('div.today-digest-tomorrow',el('span.today-digest-label',s(current?'today.digest_tomorrow':'today.digest_tomorrow_saved',{date:sessionLabel(digest.next_session)})),el('p',text('tomorrow'))));
   if(preview)box.append(preview);
   box.append(el('p.small.muted.today-digest-note',s('today.digest_note')));
-  if(!current)return el('details.today-digest-archive',{'data-reading-key':'macro-digest:'+String(digest.session||'undated')},
+  if(!current||archive)return el('details.today-digest-archive',{'data-reading-key':'macro-digest:'+String(digest.session||'undated')},
     el('summary',{'data-reading-key':'macro-digest:'+String(digest.session||'undated')+':toggle'},el('span',edition?title:s('today.digest_archive',{date:sessionLabel(digest.session)})),el('span.small.muted',s('today.digest_read_full'))),
     el('p.small.muted.today-digest-context',s('today.digest_saved_context',{date:sessionLabel(digest.session)})),box);
   return box;
@@ -253,11 +254,16 @@ function marketHeading(doc,state){
 
 export function macroStrip(doc,{now=new Date()}={}){
   const box=el('section.today-macro',{'aria-label':s('today.macro_title')});
-  const state=digestState(doc?.digest,{now}),digest=digestBlock(doc?.digest,{now});
+  const overview=sessionOverview(doc,{now});
+  doc=sessionMacro(doc,{now});
+  const state=digestState(doc?.digest,{now}),digest=digestBlock(doc?.digest,{now,archive:!!overview});
+  if(overview)box.append(overview);
   if(!doc||(!doc.latest&&!hasCanonicalReadings(doc))){box.append(el('p.small.muted',s('today.macro_unavailable')));if(digest)box.append(digest);return box;}
-  if(state==='current'&&digest)box.append(digest);
-  box.append(marketHeading(doc,state));
-  if(state!=='current'&&digest)box.append(digest);
+  if(!overview){
+    if(state==='current'&&digest)box.append(digest);
+    box.append(marketHeading(doc,state));
+  }
+  if((overview||state!=='current')&&digest)box.append(digest);
   const grid=el('div.today-macro-grid');
   for(const tile of macroTiles(doc)){
     const dial=tile.gauge&&Number.isFinite(tile.gauge.score)?gauge(tile.gauge):null;
@@ -283,7 +289,7 @@ export function macroStrip(doc,{now=new Date()}={}){
 // daily note. Retry only reads the existing shared document; it never requests generation.
 export function mountMacroStrip(host,{signal,interval=60000}={}){
   const epoch=store.epoch(),controller=new AbortController();
-  let alive=true,running=false,timer=null,signature=null,lastAttempt=0;
+  let alive=true,running=false,timer=null,signature=null,lastAttempt=0,currentSequence=-1,lastDocument=null;
   const active=()=>alive&&!signal?.aborted&&epoch===store.epoch();
   const status=el('p.small.muted',{role:'status'}),refresh=el('button.btn.btn-ghost.btn-sm',
     {type:'button','data-reading-key':'macro-refresh',onclick:()=>load()},s('today.macro_refresh'));
@@ -306,15 +312,23 @@ export function mountMacroStrip(host,{signal,interval=60000}={}){
   async function load(){
     if(!active()||running)return;
     running=true;lastAttempt=Date.now();refresh.disabled=true;
+    // Expiry is a presentation clock: even a failed refresh must not leave an old
+    // snapshot labelled current indefinitely. Source values/dates remain intact.
+    if(lastDocument){const next=material({doc:lastDocument,stale:currentSession(lastDocument)?.stale});if(next!==signature){replace(lastDocument);signature=next;}}
     try{
       const doc=await api.get('/macro/beta',{signal:controller.signal,silent402:true,observe:false});
       if(!active())return;
-      const next=material(doc);if(next!==signature){replace(doc);signature=next;}
+      const current=currentSession(doc);
+      if(!current&&currentSequence>=0){status.textContent=s('today.session_stale');return;}
+      if(current&&current.data.sequence<currentSequence)return;
+      if(current)currentSequence=current.data.sequence;
+      lastDocument=doc;
+      const next=material({doc,stale:current?.stale});if(next!==signature){replace(doc);signature=next;}
       host.hidden=false;status.textContent='';refresh.textContent=s('today.macro_refresh');
     }catch(error){
       if(!active())return;
       // Transient reads keep the accepted version; access denials must revoke it.
-      if(!signature||[401,402,403].includes(error.status)){signature=null;host.replaceChildren(controls);}
+      if(!signature||[401,402,403].includes(error.status)){signature=null;lastDocument=null;currentSequence=-1;host.replaceChildren(controls);}
       host.hidden=false;status.textContent=s('today.macro_read_error');refresh.textContent=s('common.retry');
     }finally{running=false;refresh.disabled=false;schedule();}
   }

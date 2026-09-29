@@ -1,5 +1,6 @@
 // SYNTHETIC UI validation. Not included by build.py or connected to production.
 import {closeMacro,sparseCloseMacro,marketReadingsMacro} from './today-close-data.js';
+import {currentMacro} from './today-current-data.js';
 import {opinionsFixture} from './qa-creator-opinions.js';
 const query=new URLSearchParams(location.search),mode=query.get('case')||'data';
 document.documentElement.dataset.theme=query.get('theme')==='dark'?'dark':'light';
@@ -45,7 +46,7 @@ const autocompleteSymbols=[
  // Older API data is deliberately missing the additive gate fields.
  {ticker:'LEGACY',name:'Synthetic Legacy Symbol',exchange:'NASDAQ'},
 ];
-let researchReads=0;
+let researchReads=0,currentReads=0;
 const wallPrices={NVDA:230,COIN:184.55,AVGO:200,TSLA:300,AMD:160};
 const wallFact=(topic,data)=>({topic,dimension:'technical',observed_at:'2026-09-11T20:00:00Z',data});
 // Deliberately different coverage: a wall does not manufacture a closing-price range.
@@ -310,6 +311,7 @@ window.fetch=async(input,options={})=>{
    summary:JSON.stringify({zh:'合成示例：重复视频摘要应由上方逐条观点替代。',en:'Synthetic duplicate native summary should yield to the attributed points above.',source:{kind:'native_video',status:'qualified'}})});
   return Response.json(feed);
  }
+ if(mode==='today-current'&&path==='/macro/beta')return Response.json(currentMacro({at:new Date().toISOString(),phase:query.get('phase')||'open',sequence:++currentReads}));
  if(mode==='today-close-preview'&&path==='/macro/beta')return Response.json(closeMacro());
  if(mode==='today-market-readings'&&path==='/macro/beta')return Response.json(marketReadingsMacro());
  if(mode==='today-close-sparse'&&path==='/macro/beta')return Response.json(sparseCloseMacro());

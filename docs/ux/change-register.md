@@ -1,5 +1,10 @@
 # UX change and integration register
 
+## Current-session Today overview · 2026-09-29
+
+Implemented a compact four-index overview before the dated close archive, bound to the same saved current-session macro metrics used by the cards. Source times, missing values, expiry, historical chart dates, permission revocation and replica ordering remain explicit. 909 Node tests, Python18pass/1skip, build/copy/links and eight phone combinations plus desktop passed. Production release pending; [acceptance](reports/TODAY-INTRADAY-2026-09-29.md).
+
+
 **Returning-browser entry candidate (2026-09-29):** remembered sessions go from an ordinary homepage visit directly to Today, retaining existing auth/renewal and locale rules. Explicit introduction anchors and signed-out entry remain. Temporary restoration failures are retryable. [Acceptance and release boundary](../../reports/RETURNING-BROWSER-ENTRY-2026-09-29.md).
 
 **First-use stock workflow candidate (2026-09-29):** Empty Watchlist is being changed to one search and four real dated discovery candidates, leading into the existing stock workspace before an explicit Add. Today gains a zero-watch research entrance; successful stock membership gets an in-place confirmation and list return. No sample membership or notification promise. [Design and acceptance](../../reports/FIRST-USE-STOCK-WORKFLOW-2026-09-29.md).
