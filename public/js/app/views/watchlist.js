@@ -461,13 +461,13 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
     // otherwise repopulate it; capture the epoch and drop the write if the session changed.
     const epoch = store.epoch();
     const mine=++loadSeq;
-    let membershipReady=false,settleMembership;
+    let membershipReady=false,settleMembership,denied=false;
     const membershipSettled=new Promise(resolve=>{settleMembership=resolve;});
     researchLoading=focused;
     clear(readNotice);
     // Quotes/membership can render while the separately validated research read
     // is in flight. Source validation must not delay the first usable list.
-    const current=()=>!disposed&&!signal?.aborted&&store.epoch()===epoch&&mine===loadSeq;
+    const current=()=>!denied&&!disposed&&!signal?.aborted&&store.epoch()===epoch&&mine===loadSeq;
     const diagnostic=(stage,error)=>{
       root.dataset.researchReadError=stage;
       console.warn('Ducky research read', {stage,...api.readFailure(error)});
@@ -531,7 +531,10 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
       if (!current()) return;
       loading = false;
       membershipAvailable=false;membershipDenied=[401,402,403].includes(err.status);
-      if(membershipDenied){overview=null;research=new Map();}
+      if(membershipDenied){
+        denied=true;overview=null;research=new Map();researchLoading=false;researchFailed=true;
+        signals=new Map();briefsDoc=fundsDoc=insidersDoc=politiciansDoc=null;
+      }
       if(keepStarters){render();clear(readNotice).append(errorBox(err,()=>load()));}
       else if((overview||research.size)&&![401,402,403].includes(err.status)){membershipReady=true;render();readNotice.append(errorBox(err,()=>load()));}
       else{clear(list);list.appendChild(errorBox(err,()=>load()));}

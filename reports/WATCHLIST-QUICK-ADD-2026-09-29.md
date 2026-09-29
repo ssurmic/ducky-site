@@ -21,11 +21,11 @@ The design critique removed the old fixed 850px content restriction and a first-
 
 ## Validation
 
-- Full build and Node suite: **938 passed**.
+- Full build and Node suite: **939 passed**.
 - Python discovery: **19 tests, 1 expected skip**.
 - Copy lint: **4,312 files**, no errors; link check: **2,109 links**, no errors.
 - Focused regression coverage includes sequential and duplicate clicks, exact acknowledgements, capacity/ineligibility rejection, read denial, slow/failed follow-up reads, account changes, route abort/disposal, search after first add, and summary-date provenance.
-- Independent UX review found search-semantics and hidden-permission-error defects; both were fixed and added to regression coverage.
+- Independent targeted tests: **36 passed**. Independent UX review found search-semantics and hidden-permission-error defects; both were fixed and added to regression coverage. A same-read-cycle late research response is fenced after membership denial.
 - Real browser, isolated in-memory fixture: desktop 1440×900, Chinese dark and English light; all six cards appear in three columns with no horizontal overflow. English columns measured about 371px each.
 - Eight phone variants: 320×600 and 390×700 × Chinese/English × light/dark. All had no horizontal overflow, 16px search and 44px action height (subpixel measurement tolerance). First Add was above bottom navigation in every variant: bottom 468px Chinese / 509px English at 320px; about 427–429px Chinese / 488px English at 390px.
 - Browser interaction: add NVDA, then AMD, observe 2/50 and both original cards marked Added, then explicitly open the populated list and confirm both research-map links. Synthetic data only.

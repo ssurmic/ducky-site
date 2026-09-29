@@ -226,3 +226,21 @@ test('post-add read denial remains visible before and after Done and blocks addi
     assert.equal(quick('AMD').disabled,true);root.querySelector('.watch-starters-done').click();assert.equal(error.isConnected,true);assert.equal(error.closest('[hidden]'),null);
   }finally{dispose();}
 });
+
+test('a late successful research response cannot restore reviewed text after the same load denied membership',async()=>{
+  setup();apiFixture();const dispose=await mount(root);await pause();const original=globalThis.fetch;let finishResearch;
+  globalThis.fetch=async(url,opts={})=>url==='/me/stock-research'?new Promise(resolve=>finishResearch=resolve):
+    url==='/watchlist'&&opts.method!=='POST'?Response.json({error:'forbidden'},{status:403}):original(url,opts);
+  try{
+    quick('NVDA').click();await pause();assert.deepEqual(store.get('watchlist'),['NVDA']);
+    const error=root.querySelector('.errbox');assert.ok(error);assert.equal(error.closest('[hidden]'),null);
+    const text='Synthetic reviewed text arriving after membership denial.';
+    finishResearch(Response.json({items:[{ticker:'NVDA',status:'ready',as_of:'2026-09-25T20:10:00Z',
+      overview:{en:text,zh:'测试迟到摘要。',citations:['synthetic-source']},sources:[{id:'synthetic-source',kind:'creator',stance:'support',
+        title:{en:'Synthetic source',zh:'测试来源'},published_at:'2026-09-24',evidence:[{author:'Synthetic author',source_url:'https://example.com/synthetic-only'}]}]}]}));
+    await pause();assert.equal(quick('AMD').disabled,true);
+    root.querySelector('.watch-starters-done').click();
+    assert.equal(root.textContent.includes(text),false);assert.equal(root.querySelector('.stock-one-sentence'),null);
+    assert.equal(error.isConnected,true);assert.equal(error.closest('[hidden]'),null);
+  }finally{dispose();}
+});
