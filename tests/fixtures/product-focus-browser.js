@@ -248,6 +248,9 @@ window.fetch=async(input,options={})=>{
    name:i===0?'Synthetic long company name for responsive layout':undefined,
    overall:i<2?title:i===13?{en:title.en+' '+counter.en,zh:title.zh+' '+counter.zh}:undefined}))});
  if(mode==='first-use'&&path==='/radar/social.json'&&query.get('ranking')==='unavailable')return Response.json({error:'synthetic_unavailable'},{status:503});
+ if(mode==='first-use'&&path==='/radar/social.json')return Response.json({status:'ready',collected_at:clock,items:
+  ['NVDA','AMD','GLW','AVGO','MU','SPY'].map((ticker,i)=>({ticker,rank:i+1,name:{NVDA:'NVIDIA Corporation',AMD:'Advanced Micro Devices, Inc.',GLW:'Corning Incorporated',AVGO:'Broadcom Inc.',MU:'Micron Technology, Inc.',SPY:'SPDR S&P 500 ETF Trust'}[ticker],mentions:i===5?0:1240-i*181,change_pct:i===4?null:i%2?-10:35,
+   ...(i<2?{overall:{en:'Sample author expects orders to grow if customer spending continues.',zh:'示例作者认为，若客户支出持续，订单有望增长。'},overall_as_of:clock}:{})}))});
  if(mode==='first-use'&&path==='/kol/opinions')return Response.json(opinionsFixture({items:[]}));
  if(path==='/radar/social.json')return Response.json({status:'ready',collected_at:new Date(Date.now()-1800000).toISOString(),items:[
   {ticker:'NVDA',name:'NVIDIA Corporation',rank:1,mentions:1240,change_pct:35,overall:READINGS.NVDA.overall},{ticker:'AMD',name:'Advanced Micro Devices, Inc.',rank:2,mentions:910,change_pct:-10,overall:READINGS.AMD.overall},

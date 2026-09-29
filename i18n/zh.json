@@ -5619,7 +5619,7 @@
   "app.focus.watch_added": "已将 {ticker} 加入自选，可在自选页持续查看。",
   "app.focus.view_watchlist": "查看自选",
   "app.focus.research_stock": "研究一只股票",
-  "app.watch.first_use_intro": "先研究一家公司；想继续关注时，再加入自选。",
+  "app.watch.first_use_intro": "加入自选，集中查看行情、观点和公司动态。",
   "app.watch.first_use_more": "查看更多股票",
   "app.watch.first_use_pending": "讨论排名暂未发布，仍可搜索公司。",
   "app.today.session_title": "市场概况",
@@ -5673,5 +5673,9 @@
   "app.today.dashboard_method": "计算方式与相关性",
   "app.today.dashboard_liquidity_chart": "美元流动性与美股",
   "app.today.dashboard_yield_chart": "美债收益率与美股",
-  "app.today.dashboard_chart_missing": "当前历史数据不足，暂时无法绘图。"
+  "app.today.dashboard_chart_missing": "当前历史数据不足，暂时无法绘图。",
+  "app.watch.starter_added": "已加入",
+  "app.watch.starter_done": "查看我的自选股（{n}）",
+  "app.watch.starter_add_failed": "暂未加入成功，请重试。",
+  "app.watch.starter_reading_date": "股票概览 · {date}"
 }
