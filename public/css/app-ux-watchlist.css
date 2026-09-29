@@ -59,7 +59,7 @@
 .watch-starter-actions .btn{min-height:44px;font-size:13px;padding:8px 12px;white-space:nowrap}
 .watch-starter-add.is-added{background:var(--surface-2);color:var(--text);border-color:var(--border);opacity:1}
 .watch-starter-feedback{font-size:13px;line-height:1.5;margin:8px 0 0;color:var(--red)}
-.watch-starters-done{min-height:44px;margin-top:14px}
+.watch-starters-done{min-height:44px;font-size:13px;padding:7px 10px;line-height:1.3;max-width:65%}
 .watch-starter a:hover,.watch-starter a:focus-visible{color:var(--accent-text,var(--accent))}
 @media(max-width:1180px){.watch-starters-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.watch-starters-list{grid-template-columns:1fr}}
@@ -143,7 +143,8 @@
  .watchlist-view .watch-compact-table .watch-metric-note,.watchlist-view .watch-compact-table .watch-metric-status{font-size:11px;line-height:1.35}
  .watch-add-options.is-first-use .view-intro{font-size:13px;margin-bottom:8px}
  .watch-first-use{margin:4px 0 12px}
- .watch-starters-heading{gap:6px}
+ .watch-starters-heading{gap:6px;position:sticky;top:0;z-index:2;background:var(--bg);min-height:56px}
+ .watch-starter a,.watch-starter button{scroll-margin-block:68px}
  .watch-starters-heading h2{font-size:16px}
  .watch-starters-heading>a,.watch-starters-date,.watch-starters-basis{font-size:12px}
  .watch-starters-list{margin-top:10px;gap:8px}

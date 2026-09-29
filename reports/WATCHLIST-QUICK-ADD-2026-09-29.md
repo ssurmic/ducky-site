@@ -2,7 +2,7 @@
 
 Status: implemented and locally validated; production publication is recorded in the shared private Handoff after release.
 
-An empty Watchlist previously showed four narrow discussion rows, each requiring a trip through a stock page before following. It now offers up to six existing ranked stocks across the available content width, with direct **Add to watchlist**, stock and research-map actions. Successful additions remain in the same selection session, marked **Added**; **View my watchlist (n)** opens the normal saved list. The next visit defaults to that normal list. Search selection and Enter remain research actions during selection; only explicit Add writes membership.
+An empty Watchlist previously showed four narrow discussion rows, each requiring a trip through a stock page before following. It now offers up to six existing ranked stocks across the available content width, with direct **Add to watchlist**, stock and research-map actions. Successful additions remain in the same selection session, marked **Added**; **View my watchlist (n)** appears beside the candidate heading (sticky on phones) and opens the normal saved list. The next visit defaults to that normal list. Search selection and Enter remain research actions during selection; only explicit Add writes membership.
 
 ## Design decision
 

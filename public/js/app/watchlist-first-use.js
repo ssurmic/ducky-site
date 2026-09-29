@@ -14,10 +14,11 @@ export function watchlistStarters({signal,current=()=>true,watched=()=>[],action
   const status=el('div.watch-starters-status',{'aria-live':'polite'});
   const list=el('div.watch-starters-list');
   const done=el('button.btn.btn-primary.watch-starters-done',{type:'button',hidden:true,onclick:()=>{if(valid()&&!pending)onDone?.();}});
+  const more=el('a',{href:'#/explore'},s('watch.first_use_more'));
   const node=el('section.watch-first-use',{'aria-label':s('explore.discussion_title')},
     el('header.watch-starters-heading',el('h2',s('explore.discussion_title')),
-      el('a',{href:'#/explore'},s('watch.first_use_more'))),date,
-    el('p.small.muted.watch-starters-basis',s('explore.attention_only')),status,list,done);
+      more,done),date,
+    el('p.small.muted.watch-starters-basis',s('explore.attention_only')),status,list);
   async function load(){
     if(!valid()||busy)return;
     busy=true;clear(status).append(spinner());
@@ -69,7 +70,7 @@ export function watchlistStarters({signal,current=()=>true,watched=()=>[],action
       button.setAttribute('aria-label',button.textContent+' · '+ticker);
       button.setAttribute('aria-busy',String(working&&!added));
     }
-    done.hidden=!membership.length;done.disabled=!!pending||!!state.pending;
+    more.hidden=!!membership.length;done.hidden=!membership.length;done.disabled=!!pending||!!state.pending;
     done.textContent=s('watch.starter_done',{n:membership.length});
   }
   async function add(row){
