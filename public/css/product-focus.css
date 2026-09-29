@@ -846,4 +846,4 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
 .today-session-details>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 .today-session-details>p{line-height:1.5;}
 .today-session-all .today-session-quote{border-bottom:1px solid var(--border);}
-@media(max-width:700px){.today-session{padding:10px 12px;}.today-session-indices,.today-session-all{grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 14px;}.today-session-quote>strong{font-size:16px;}.today-session-clock{font-size:10px;}.today-session-summary{font-size:12px;}.today-session-head .today-section-title{font-size:16px;}}
+@media(max-width:700px){.today-session{padding:10px 12px;}.today-session-indices,.today-session-all{grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 14px;}.today-session-quote{grid-template-areas:'name name' 'symbol change' 'clock clock' 'saved saved';align-items:baseline;}.today-session-quote>strong{font-size:16px;}.today-session-clock{font-size:10px;text-align:left;}.today-session-summary{font-size:12px;}.today-session-head .today-section-title{font-size:16px;}}

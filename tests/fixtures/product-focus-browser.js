@@ -106,12 +106,12 @@ const todayFreshnessMacro=()=>{
    macro:{zh:'合成示例：9月25日十年期收益率5.20%，VIX为16.0；不代表上方9月28日读数。',en:'Synthetic example: The September 25 10-year yield was 5.20% and VIX was 16.0; these are separate from the September 28 readings above.'},
    tomorrow:{zh:'合成示例：明日暂无已确认的重大日程。这是当时对9月28日的前瞻，不是现在的日历。',en:'Synthetic example: Tomorrow has no confirmed major events. This was the outlook for September 28 when written, not the current calendar.'}}};
 };
-const kolFeed=()=>({schema:'kol-feed/1',posts:[
- {id:1,kol_id:'sample-macro-author',kol_name:'Sample Macro Author',url:'https://www.youtube.com/watch?v=sample-macro-1',title:'美债利率两天上行，成长股承压：谁在推动？',published_at:new Date(Date.now()-5*3600e3).toISOString(),tickers:['NVDA','TSLA'],take:'bear',macro:true,
+const kolFeed=()=>{const sourceClock=mode==='today-current'?Date.parse(clock):Date.now();return {schema:'kol-feed/1',posts:[
+ {id:1,kol_id:'sample-macro-author',kol_name:'Sample Macro Author',url:'https://www.youtube.com/watch?v=sample-macro-1',title:'美债利率两天上行，成长股承压：谁在推动？',published_at:new Date(sourceClock-5*3600e3).toISOString(),tickers:['NVDA','TSLA'],take:'bear',macro:true,
   summary:JSON.stringify({zh:'十年期收益率两天上行 15 个基点；作者认为久期长的成长股承压，本周盯 PCE 和美联储讲话。',en:'The 10-year rose 15 bp in two sessions; the author sees long-duration growth under pressure and watches PCE and Fed speakers this week.'})},
- {id:2,kol_id:'sample-author',kol_name:'Sample Author',url:'https://www.youtube.com/watch?v=sample-macro-2',title:'The Fed, inflation and what it means for tech',published_at:new Date(Date.now()-20*3600e3).toISOString(),tickers:[],take:'neutral',macro:true,
+ {id:2,kol_id:'sample-author',kol_name:'Sample Author',url:'https://www.youtube.com/watch?v=sample-macro-2',title:'The Fed, inflation and what it means for tech',published_at:new Date(sourceClock-20*3600e3).toISOString(),tickers:[],take:'neutral',macro:true,
   summary:JSON.stringify({zh:'已发现视频，原文分析待完成。',en:'Video discovered; source analysis is pending.',source:{kind:'metadata',status:'discovered'}})},
- {id:3,kol_id:'sample-author',kol_name:'Sample Author',url:'https://www.youtube.com/watch?v=sample-3',title:'NVDA earnings preview',published_at:new Date(Date.now()-3*3600e3).toISOString(),tickers:['NVDA'],take:'bull',macro:false,summary:JSON.stringify({zh:'财报前瞻。',en:'Earnings preview.'})}]});
+ {id:3,kol_id:'sample-author',kol_name:'Sample Author',url:'https://www.youtube.com/watch?v=sample-3',title:'NVDA earnings preview',published_at:new Date(sourceClock-3*3600e3).toISOString(),tickers:['NVDA'],take:'bull',macro:false,summary:JSON.stringify({zh:'财报前瞻。',en:'Earnings preview.'})}]};};
 const calendarDoc=()=>{
  const todayIso=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
  const iso=n=>{const d=new Date(todayIso+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10);};

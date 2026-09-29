@@ -1,5 +1,9 @@
 # Change log
 
+## Visible dated event preview beside the current overview · 2026-09-29 (candidate)
+
+Keep a valid same-day closing note's structured event preview visible beside the current market overview, while its original closing paragraphs remain archived. Older previews retain their original archive and dates; a dated Calendar link remains available without inventing current events. Moving the existing preview preserves one set of source/disclosure keys and refresh state. A compact post-session note distinguishes trade snapshots from the separate daily records used by historical charts. [Candidate checks and limits](reports/TODAY-INTRADAY-2026-09-29.md#event-preview-visibility-follow-up-candidate).
+
 ## Current-session Today overview · 2026-09-29
 
 Implemented a compact four-index overview before the dated close archive, bound to the same saved current-session macro metrics used by the cards. Source times, missing values, expiry, historical chart dates, permission revocation and replica ordering remain explicit. 909 Node tests, Python18pass/1skip, build/copy/links and eight phone combinations plus desktop passed. Production release pending; [acceptance](reports/TODAY-INTRADAY-2026-09-29.md).

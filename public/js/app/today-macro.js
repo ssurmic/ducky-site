@@ -264,6 +264,14 @@ export function macroStrip(doc,{now=new Date()}={}){
     box.append(marketHeading(doc,state));
   }
   if((overview||state!=='current')&&digest)box.append(digest);
+  if(overview){
+    // Lift the existing, date-bound preview rather than cloning its disclosure keys.
+    // Quote expiry does not change an event's source date; yesterday's outlook stays archived.
+    const preview=state==='current'?digest?.querySelector('.today-preview'):null;
+    box.append(preview||el('a.today-preview-calendar',
+      {href:'#/calendar?date='+encodeURIComponent(nySession(now)),'data-reading-key':'macro-current-calendar'},
+      s('today.preview_calendar')+' · '+nySession(now)));
+  }
   const grid=el('div.today-macro-grid');
   for(const tile of macroTiles(doc)){
     const dial=tile.gauge&&Number.isFinite(tile.gauge.score)?gauge(tile.gauge):null;

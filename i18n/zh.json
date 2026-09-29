@@ -5634,6 +5634,7 @@
   "app.today.session_stale": "等待新读数",
   "app.today.session_all": "板块、资产与行情来源",
   "app.today.session_basis": "涨跌相对前一收盘；ETF 代表对应指数、板块或资产。每项保留自己的成交时间。",
+  "app.today.session_post_basis": "成交快照，非最终日线；历史图表另按日线计算。",
   "app.today.session_coverage": "本次有 {n}/{total} 个标的的当日读数。",
   "app.today.session_sources": "行情来源：{sources}",
   "app.today.session_SPY": "标普500",

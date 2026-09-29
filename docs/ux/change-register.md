@@ -1,5 +1,7 @@
 # UX change and integration register
 
+**Today event-preview visibility follow-up (candidate, 2026-09-29):** the current overview retains a visible, valid same-day structured event preview; older previews remain in their original close archive. A dated Calendar entry covers missing current previews. Post-session trade snapshots are explicitly distinguished from historical daily bars. No source data or source dates change. [Acceptance](../../reports/TODAY-INTRADAY-2026-09-29.md#event-preview-visibility-follow-up-candidate).
+
 ## Current-session Today overview · 2026-09-29
 
 Implemented a compact four-index overview before the dated close archive, bound to the same saved current-session macro metrics used by the cards. Source times, missing values, expiry, historical chart dates, permission revocation and replica ordering remain explicit. 909 Node tests, Python18pass/1skip, build/copy/links and eight phone combinations plus desktop passed. Production release pending; [acceptance](reports/TODAY-INTRADAY-2026-09-29.md).
