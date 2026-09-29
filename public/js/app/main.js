@@ -37,7 +37,7 @@ async function restoreAndStart() {
   let ok = false;
   const requested = location.hash;
   try { ok = await auth.boot(); } catch (e) {
-    if(e.body?.detail==='session_busy' && !router.isPublic(requested)) {
+    if((e.body?.detail==='session_busy' || e.status===0 || e.status===429 || e.status>=500) && !router.isPublic(requested)) {
       root?.replaceChildren(ui.el('section.card', {role:'status'},
         ui.el('h1', s('session.retry_title')),
         ui.el('p.muted', s('session.retry_body')),

@@ -123,3 +123,22 @@ test('waiting for the cross-tab lock adopts the winner without another refresh r
   assert.equal(await pending,true);assert.equal(lockName,'ducky-session-refresh');assert.equal(calls,0);assert.equal(store.get('token'),next);
  }finally{delete window.navigator.locks;}
 });
+
+test('successful browser hydration records only an entry hint, cleared on logout',async()=>{
+ saved();globalThis.fetch=async url=>url==='/auth/refresh'?Response.json({token:next}):url==='/me'?me():Response.json({items:[]});
+ assert.equal(await auth.boot(),true);assert.match(document.cookie,/(?:^|; )ducky_entry=1(?:;|$)/);
+ assert.ok(!document.cookie.includes(next));auth.logout();assert.ok(!document.cookie.includes('ducky_entry='));
+});
+test('a revoked cookie-only session clears an obsolete entry hint',async()=>{
+ reset();document.cookie='ducky_entry=1; Path=/';globalThis.fetch=async()=>denied();
+ assert.equal(await auth.boot(),false);assert.ok(!document.cookie.includes('ducky_entry='));
+});
+test('cookie-only restoration outage remains retryable rather than reporting signed out',async()=>{
+ reset();document.cookie='ducky_entry=1; Path=/';
+ globalThis.fetch=async()=>Response.json({error:'unavailable'},{status:503});
+ await assert.rejects(auth.boot(),e=>e.status===503);assert.match(document.cookie,/ducky_entry=1/);
+});
+test('profile outage preserves a renewed credential for retry',async()=>{
+ saved();globalThis.fetch=async url=>url==='/auth/refresh'?Response.json({token:next}):Response.json({error:'unavailable'},{status:503});
+ await assert.rejects(auth.boot(),e=>e.status===503);assert.equal(auth.loadToken(),next);
+});

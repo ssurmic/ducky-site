@@ -21,6 +21,14 @@ export function loadToken() { try { const st = storage(); return st ? st.getItem
 export function saveToken(token) { try { window.localStorage.removeItem(LOGGED_OUT); } catch {} try { const st = storage(); if (st) st.setItem(KEY, token); } catch (e) { /* private mode */ } }
 export function clearToken() { try { const st = storage(); if (st) st.removeItem(KEY); } catch (e) { /* ignore */ } }
 
+// Non-secret navigation hint for browsers whose session survives only in the
+// HttpOnly cookie. This never grants access; bootstrap and the API remain owners.
+function markBrowserEntry(active) {
+  if(tg.inTG)return;
+  try { document.cookie = 'ducky_entry='+(active?'1':'')+'; Path=/; Max-Age='+(active?2592000:0)+'; SameSite=Lax'+(location.protocol==='https:'?'; Secure':''); }
+  catch {} // Storage/cookie restrictions must not prevent authentication.
+}
+
 /** Retry a request on TRANSIENT failure only (network status 0, 5xx, or 429) with backoff; a definitive
  *  4xx (bad/expired/forbidden) throws immediately. Used so a tunnel/CF blip doesn't dead-end the login. */
 export async function retryTransient(fn, tries = 3) {
@@ -65,6 +73,7 @@ async function hydrate() {
   if (!me || typeof me !== 'object' || Array.isArray(me)) throw new api.ApiError(502,{error:'session_unavailable'});
   if (epoch !== store.epoch() || token !== store.get("token")) throw new api.ApiError(0,{detail:"session_changed"});
   store.set("me", me);
+  markBrowserEntry(true);
   if (wl) store.set("watchlist", normalizeWatch(wl));
   followAccountLanguage(me);
   return me;
@@ -211,6 +220,7 @@ export async function expireSession({token,epoch,retry=true} = {}) {
 
 function forgetSession(token) {
   store.bumpEpoch();   // finding watchlist.js:123 — invalidate in-flight fetches before wiping the store
+  if(!loadToken() || loadToken()===token)markBrowserEntry(false);
   if(loadToken()===token)clearToken();
   store.set("token", null);
   store.set("me", null);
@@ -265,7 +275,7 @@ export async function boot() {
       try { await renewSession(); token=store.get("token"); }
       catch(error) {
         if(error.body?.detail==='session_changed')return false;
-        if(error.body?.detail==='session_busy')renewalError=error;
+        renewalError=error;
         // Valid legacy/access tokens remain usable during a renewal outage.
       }
     }
@@ -277,12 +287,14 @@ export async function boot() {
       if (e && e.status === 401) {
         if(loadToken()===token)clearToken();
         if(store.get('token')===token)store.set('token',null);
-      } // transient (network/5xx) → keep the valid token
+        if(!loadToken())markBrowserEntry(false);
+      } else throw e; // An unavailable profile is not a signed-out browser.
     }
   }
   // A usable access token can still hydrate above. Otherwise preserve the
   // session and let boot offer recovery, including cookie-only restoration.
-  if(renewalError)throw renewalError;
+  if(renewalError && renewalError.status!==401)throw renewalError;
+  if(!token && renewalError?.status===401)markBrowserEntry(false);
   return false;
 }
 
