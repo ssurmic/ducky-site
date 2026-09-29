@@ -1,5 +1,8 @@
 # User journeys and content map
 
+
+Native author-link follow-up candidate (2026-09-29): Explore / Today / Stock view → author name → selected author → compact qualified views and original-video timestamps. The same creator-filtered read is visible above the separately labelled historical batch counts; it does not require a follow. Exact source links retain their original source-only context. [Acceptance and retained boundaries](../../reports/CREATOR-NATIVE-PAGE-2026-09-29.md).
+
 Released addition (`e19f4bbc`, verified September 28 at 23:19:45 UTC): Today →
 source-labelled close snapshot → dated preview → remaining events / details and sources →
 Calendar on the saved date. The preview distinguishes the next calendar day from the next

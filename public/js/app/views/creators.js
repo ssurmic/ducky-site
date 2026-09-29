@@ -22,6 +22,7 @@ import {renderCreatorPage} from './creator-page.js';
 import {creatorRoute,creatorTarget} from '../creator-route.js';
 import {matchesStocks,taggedTickers} from '../creator-match.js';
 import {readingPreview} from '../reading-preview.js';
+import {mountCreatorOpinions} from '../creator-opinions.js';
 
 const TAKE_CLS = { bull: "cr-bull", bear: "cr-bear", neutral: "cr-neutral" };
 const VIEWS_SHOWN = 1;   // Other authors' main views stay within reach before the archive.
@@ -163,6 +164,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   const watchRows=Array.isArray(watches)?watches:(watches?.items || watches?.tickers || watches?.watchlist || []);
   let watchedTickers=watchRows.map(t=>typeof t==='string'?t:t?.ticker || t?.symbol).filter(t=>typeof t==='string').map(t=>t.toUpperCase());
   let analysis=subs?.analysis || {},setupCleanup=()=>{},showSetup=false,disposed=false,notice='',refreshing=false;
+  let nativeOpinions=null,nativeHost=null,nativeKey='';
+  function stopNative(){nativeOpinions?.dispose();nativeOpinions=null;nativeHost=null;nativeKey='';}
   const setupState={};
   const pending=()=>Object.values(analysis).some(x=>['queued','running'].includes(x.status));
   const progress=progressPoll({active:()=>!sourceOnly&&!disposed&&epoch===store.epoch()&&root.isConnected&&pending(),read:()=>api.kol.mine(),
@@ -262,6 +265,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     }
     if(focusedPost&&(selected!==initial.selected||tab!=='feed')){focusedPost='';focusedPoint='';linkFailed=false;}
     if(selected&&!kols.some(k=>k.id===selected))selected='';
+    const nextNativeKey=!sourceOnly&&selected&&tab==='feed'?JSON.stringify([selected,stockTicker]):'';
+    if(nativeKey!==nextNativeKey)stopNative();
     syncRoute();pageProgress.schedule();
     const content = card.querySelector(".creators-content");
     clear(content);
@@ -384,6 +389,13 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         if(previous){query=previous.query;discoveryScope=previous.discoveryScope;discoveryStance=previous.discoveryStance;directoryLimit=previous.directoryLimit;filtersOpen=previous.filtersOpen;}
         render();if(!mine)loadDiscovery();}},'← '+s(mine?'creators.mine':'creators.discover')));
       content.append(el('header.creator-selected-heading',el('h1',creator.name)));
+      if(!sourceOnly){
+        if(!nativeHost){
+          nativeKey=nextNativeKey;nativeHost=el('div.creator-native-opinions');
+          content.append(nativeHost);
+          nativeOpinions=mountCreatorOpinions(nativeHost,{signal,creator:selected,ticker:stockTicker||null,from:'creators'});
+        }else content.append(nativeHost);
+      }
       if(!canRead(selected)){
         content.append(el('div.card',el('p',s(following.has(selected)?'experience.creator_outside_trial':'experience.follow_to_read')),
           following.has(selected)?el('button.btn.btn-ghost',{type:'button',onclick:event=>toggle(selected,event.currentTarget)},s('creators.following')):
@@ -692,5 +704,5 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       analysis=mineDoc.analysis||{};following.clear();for(const id of mineDoc.subs||[])following.add(id);await loadDiscovery(false);if(disposed||epoch!==store.epoch())return;render();progress.schedule();
     }catch{if(!disposed&&!automatic)toast(s('creators.load_error'),'err');}finally{refreshing=false;}
   }
-  return () => {remember();disposed=true;phoneMedia?.removeEventListener('change',resizeFilters);clearTimeout(discoveryTimer);discoveryController?.abort();progress.stop();pageProgress.stop();setupCleanup();document.querySelector('dialog.creator-confirm')?.remove();};
+  return () => {remember();stopNative();disposed=true;phoneMedia?.removeEventListener('change',resizeFilters);clearTimeout(discoveryTimer);discoveryController?.abort();progress.stop();pageProgress.stop();setupCleanup();document.querySelector('dialog.creator-confirm')?.remove();};
 }

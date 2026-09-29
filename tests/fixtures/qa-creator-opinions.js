@@ -13,7 +13,7 @@ export function opinionFixture(i=1,extra={}){
  row.records=extra.records||[{...row}];row.record_count=row.records.length;
  return row;
 }
-export function opinionsFixture({topic='all',ticker=null,before=null,revision='a'.repeat(64),items=null}={}){
+export function opinionsFixture({topic='all',ticker=null,creator=null,before=null,revision='a'.repeat(64),items=null}={}){
  const repeated=opinionFixture(1),earlier={...repeated,video_id:'sample00007',id:'sample-opinion-7',published_at:'2026-09-22T20:00:00Z',original_source_url:'https://www.youtube.com/watch?v=sample00007&t=32s'};
  repeated.records=[repeated.records[0],earlier];repeated.record_count=2;
  const all=items||[repeated,
@@ -22,8 +22,8 @@ export function opinionsFixture({topic='all',ticker=null,before=null,revision='a
   opinionFixture(4,{stance:'bear',ticker:'NVDA',topic:'company',relation:'subject',stock_navigation_eligible:true,subject:{zh:'利润率风险',en:'Margin risk'},claim:{zh:'作者认为新增产能可能在收入兑现前压低利润率。',en:'The creator says added capacity could weigh on margins before revenue materializes.'}}),
   opinionFixture(5,{navigation_seconds:null,navigation_time_basis:'unavailable',original_source_url:'https://www.youtube.com/watch?v=sample00005',speaker:{kind:'guest',name:'Sample guest'},intent:'historical',conditions:null,horizon:null}),
   opinionFixture(6,{topic:'sector',subject:{zh:'半导体行业',en:'Semiconductors'}})];
- const selected=all.filter(row=>(topic==='all'||row.topic===topic)&&(!ticker||row.ticker===ticker));
+ const selected=all.filter(row=>(topic==='all'||row.topic===topic)&&(!ticker||row.ticker===ticker)&&(!creator||row.creator_id===creator));
  return {schema:'creator-opinions/1',status:selected.length?'ready':'empty',revision,generated_at:'2026-09-29T05:02:00Z',items:before?[]:selected,next_cursor:null,
   coverage:{publications_scanned:all.length,publication_limit:2000,points_returned:all.length,truncated:false,scope:'bounded_published_native_opinions'},
-  selection:{topic,scope:'discover',ticker,creator:null,following:null},matched_points:selected.length,matched_views:selected.length,access:'reviewed_preview'};
+  selection:{topic,scope:'discover',ticker,creator,following:null},matched_points:selected.length,matched_views:selected.length,access:'reviewed_preview'};
 }

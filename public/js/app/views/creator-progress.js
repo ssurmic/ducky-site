@@ -18,6 +18,7 @@ export function renderProgress(progress) {
       s('creatorprogress.at_least', {n:num(counts.readable_lower_bound, 0)}) : '—';
   const stat = (key, value) => el('div', el('dt', s('creatorprogress.' + key)), el('dd.mono', value));
   const box = el('aside.creator-delivery-progress', {'aria-label':s('creatorprogress.title')},
+    el('p.small',el('strong',s('creatorprogress.title'))),
     el('dl', stat('discovered', count(counts.discovered_posts) ? num(counts.discovered_posts, 0) : '—'),
       stat('archived', count(counts.archived) ? num(counts.archived, 0) : '—'), stat('readable', readable)));
   const from = day(progress.window?.since_day), to = day(progress.window?.as_of);
