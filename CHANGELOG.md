@@ -1,6 +1,21 @@
 # Change log
 
-## Close snapshots and complete dated event previews · 2026-09-28 (candidate)
+## Compact close-snapshot preview · 2026-09-29 (candidate)
+
+The known `market-digest/1.3` close snapshot now presents its complete structured event
+preview once, omitting only the duplicated deterministic date/count/coverage paragraph.
+Stored prose remains unchanged; daily-close notes, legacy/unknown versions and invalid
+or mismatched previews retain their exact fallback text. One event uses singular English.
+Long missing-instrument lists move into a counted disclosure while the actual coverage
+fraction stays visible. No endpoint, acquisition, generation or account behavior changes.
+
+The focused Today tests and 24 synthetic browser combinations passed, including both
+languages/themes at 320, 390 and 1440px, full missing/event lists, source/Calendar links
+and refresh continuity. The [acceptance report](reports/TODAY-CLOSE-PREVIEW-2026-09-28.md#compact-preview-follow-up-candidate)
+records phone geometry and the separate live-content/source-selection limits. This entry
+is the candidate record; it does not claim the follow-up has already been published.
+
+## Close snapshots and complete dated event previews · 2026-09-28 (frontend deployed)
 
 Today accepts additive close-snapshot/daily-close editions from the saved macro endpoint,
 showing source time, available coverage and missing instruments. Near-close quotes are
@@ -9,9 +24,21 @@ returned events, timing uncertainty, conditional impacts and sources, with three
 rows and a counted disclosure for the rest. Older previews stay bound to the original note.
 Visible Today pages reread shared data every minute, with explicit refresh, account/route
 guards, retained disclosure/focus/chart selection and GET-only failure recovery. No request
-generates content. This candidate is not yet merged or deployed; [local acceptance and
-remaining boundaries](reports/TODAY-CLOSE-PREVIEW-2026-09-28.md) are separate from the earlier
-production receipts below.
+generates content.
+
+[PR #111](https://github.com/ssurmic/ducky-site/pull/111) merged at 23:18:28 UTC as
+`e19f4bbcbe69368124ab57c98160341fb1375980`; its hosted check passed in 2m0s. The official
+publisher passed 839 Node tests, 14 Python tests, bilingual build, copy lint (4,111 files)
+and 2,103 links before publishing [Pages `73924238`](https://73924238.ducky-site.pages.dev).
+Production VERSION `e19f4bbc` and CSP were verified at **23:19:45 UTC**. The new refresh
+control and prior Friday archive were readable after release. At 00:13–00:18 UTC on
+September 29, the authenticated 390 × 700 Chinese/dark and 1440 × 900 English/dark pages
+also displayed the September 28 snapshot published at 00:11:49 UTC, its actual 2/19
+coverage, NKE with an unconfirmed time, readable source details and the September 29
+Calendar destination, without horizontal overflow. This does not establish complete
+coverage. A separate backend yield/VIX source-selection issue remained and is not repaired
+by the compact frontend follow-up; [the report](reports/TODAY-CLOSE-PREVIEW-2026-09-28.md#production-release-receipt)
+keeps that boundary and the observation clocks explicit.
 
 ## Today distinguishes market readings from the last published note · 2026-09-28 (deployed)
 

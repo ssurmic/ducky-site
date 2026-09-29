@@ -12,11 +12,19 @@ export function closeMacro(){
   return {schema:'macro-beta/1',status:'ok',as_of:'2026-09-28',observed_at:'2026-09-28T20:02:00Z',
     latest:{date:'2026-09-28',funding_score:50,metrics:{nominal_10y:5.24,vix:16.1}},
     observed:[{date:'2026-09-25',qqq_index:100,spy_index:100},{date:'2026-09-28',qqq_index:98.93,spy_index:99.26}],
-    digest:{status:'ready',edition:'close_snapshot',session:'2026-09-28',next_session:'2026-09-29',generated_at:'2026-09-28T20:02:00Z',
+    digest:{status:'ready',version:'market-digest/1.3',edition:'close_snapshot',session:'2026-09-28',next_session:'2026-09-29',generated_at:'2026-09-28T20:02:00Z',
       publication:{phase:'initial',basis:'near_close_quotes',data_as_of:'2026-09-28T20:00:12Z',expected_close_at:'2026-09-28T20:00:00Z',coverage:{available:17,expected:19,missing:[{ticker:'DIA',reason:'unavailable'},{ticker:'XLB',reason:'unavailable'}]}},
       close:{zh:'合成示例：QQQ -1.07%，SPY -0.74%；这是收盘附近采集的读数。',en:'Synthetic: QQQ -1.07%, SPY -0.74%; these readings were captured near the close.'},
       sectors:{zh:'合成示例：板块读数尚有缺项。',en:'Synthetic: some sector readings are unavailable.'},
       macro:{zh:'合成示例：宏观数据各有来源日期。',en:'Synthetic: macro data retain their individual source dates.'},
       tomorrow:{zh:'明日9月29日，共收录8项日程；完整日期与影响见下方。',en:'September 29 is the next calendar day. Eight saved events are listed below with their dates and impacts.'},
       preview:{schema:'market-digest-preview/1',anchor_session:'2026-09-28',calendar_day:'2026-09-29',next_session:'2026-09-29',timezone:'America/New_York',observed_at:'2026-09-28T20:01:00Z',coverage:{status:'partial',sources:{calendar:{status:'unverified',as_of:'2026-09-28T19:00:00Z'}}},events}}};
+}
+
+export function sparseCloseMacro(){
+  const doc=closeMacro(),missing=['SPY','IWM','DIA','XLB','XLC','XLE','XLF','XLI','XLK','XLP','XLRE','XLU','XLV','XLY','TLT','UUP','USO'];
+  doc.digest.publication.coverage={available:2,expected:19,missing:missing.map(ticker=>({ticker,reason:'unavailable'}))};
+  doc.digest.preview.events=[{...doc.digest.preview.events[0],id:'synthetic-nke',tickers:['NKE'],title:'NKE 示例财报',title_en:'Synthetic NKE earnings',timing_status:'unconfirmed'}];
+  doc.digest.tomorrow={zh:'明日9月29日；下个交易日9月29日。已收录1项事件，部分来源覆盖未确认。',en:'Tomorrow September 29; next market session September 29. One event is recorded; some source coverage is unconfirmed.'};
+  return doc;
 }

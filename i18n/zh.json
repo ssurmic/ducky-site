@@ -5566,5 +5566,7 @@
   "app.today.preview_basis_event_type_rule": "影响说明依据事件类型，不预测结果。",
   "app.today.preview_basis_source_note": "影响说明来自原日程注释。",
   "app.today.preview_source_clock": "来源记录时间：{time}",
-  "app.today.digest_data_session": "行情日期：{date}"
+  "app.today.digest_data_session": "行情日期：{date}",
+  "app.today.preview_count_one": "1 项日程",
+  "app.today.digest_missing_count": "查看 {n} 个缺项"
 }

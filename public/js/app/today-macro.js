@@ -184,7 +184,12 @@ export function digestBlock(digest,{now=new Date()}={}){
       el('p.small.muted',s(edition==='close_snapshot'?'today.digest_snapshot_basis':'today.digest_daily_basis')));
     if(Number.isInteger(coverage.available)&&Number.isInteger(coverage.expected))meta.append(el('p.small.muted',s('today.digest_coverage',{n:coverage.available,total:coverage.expected})));
     const missing=(Array.isArray(coverage.missing)?coverage.missing:[]).map(item=>typeof item==='string'?item:item?.ticker).filter(Boolean);
-    if(missing.length)meta.append(el('p.small.muted',s('today.digest_missing',{tickers:missing.join(', ')})));
+    if(missing.length>5){
+      const key='macro-digest:'+String(digest.session||'undated')+':missing';
+      meta.append(el('details.today-digest-missing',{'data-reading-key':key},
+        el('summary',{'data-reading-key':key+':toggle'},s('today.digest_missing_count',{n:missing.length})),
+        el('p.small.muted',s('today.digest_missing',{tickers:missing.join(', ')}))));
+    }else if(missing.length)meta.append(el('p.small.muted',s('today.digest_missing',{tickers:missing.join(', ')})));
     if(publication.phase==='revised')meta.append(el('span.small.muted',s('today.digest_revised')));
     box.append(meta);
   }
@@ -192,8 +197,12 @@ export function digestBlock(digest,{now=new Date()}={}){
   for(const [key,label] of [['close','today.digest_close'],['sectors','today.digest_sectors'],['macro','today.digest_macro']])
     if(text(key))grid.append(el('div.today-digest-part',el('span.today-digest-label',s(label)),el('p',text(key))));
   box.append(grid);
-  if(text('tomorrow'))box.append(el('div.today-digest-tomorrow',el('span.today-digest-label',s(current?'today.digest_tomorrow':'today.digest_tomorrow_saved',{date:sessionLabel(digest.next_session)})),el('p',text('tomorrow'))));
-  const preview=digestPreview(digest.preview,digest.session);if(preview)box.append(preview);
+  const preview=digestPreview(digest.preview,digest.session);
+  // v1.3 snapshots carry a deterministic count/date/coverage paragraph, all repeated by
+  // the structured preview. Unknown versions can contain unique prose and keep it visible.
+  const redundantPreview=edition==='close_snapshot'&&digest.version==='market-digest/1.3'&&preview;
+  if(text('tomorrow')&&!redundantPreview)box.append(el('div.today-digest-tomorrow',el('span.today-digest-label',s(current?'today.digest_tomorrow':'today.digest_tomorrow_saved',{date:sessionLabel(digest.next_session)})),el('p',text('tomorrow'))));
+  if(preview)box.append(preview);
   box.append(el('p.small.muted.today-digest-note',s('today.digest_note')));
   if(!current)return el('details.today-digest-archive',{'data-reading-key':'macro-digest:'+String(digest.session||'undated')},
     el('summary',{'data-reading-key':'macro-digest:'+String(digest.session||'undated')+':toggle'},el('span',edition?title:s('today.digest_archive',{date:sessionLabel(digest.session)})),el('span.small.muted',s('today.digest_read_full'))),

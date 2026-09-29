@@ -1,13 +1,19 @@
 # User journeys and content map
 
-Unreleased addition: Today → source-labelled close snapshot → dated preview → remaining
-events / details and sources → Calendar on the saved date. The preview distinguishes the
-next calendar day from the next market session and preserves after-close/unconfirmed events.
-An already-open visible Today page rereads published data once a minute without triggering
-generation; accepted reading state remains. See the [candidate record](../../reports/TODAY-CLOSE-PREVIEW-2026-09-28.md).
-The production journeys and receipts below remain the last verified deployment.
+Released addition (`e19f4bbc`, verified September 28 at 23:19:45 UTC): Today →
+source-labelled close snapshot → dated preview → remaining events / details and sources →
+Calendar on the saved date. The preview distinguishes the next calendar day from the next
+market session and preserves after-close/unconfirmed events. Visible Today pages reread
+published data once a minute without generation; accepted reading state remains. Scoped
+live reads on September 29 at 00:13–00:18 UTC accepted the 2/19 edition and Calendar path,
+not complete coverage or the separate macro-source correction. See the [release record](../../reports/TODAY-CLOSE-PREVIEW-2026-09-28.md#production-release-receipt).
 
-Status: production UI deployed as `9ab95315`, verified on 2026-09-28 at 22:40:24 UTC through
+Compact candidate: the known v1.3 close snapshot shows the structured preview once instead
+of its repeated deterministic paragraph; other saved prose stays visible. Long missing
+lists expand separately while the coverage fraction stays visible. The [candidate record](../../reports/TODAY-CLOSE-PREVIEW-2026-09-28.md#compact-preview-follow-up-candidate)
+separates these local checks from the released behavior.
+
+Previous Today/Explore release: `9ab95315`, verified on 2026-09-28 at 22:40:24 UTC through
 [Pages `dc10d45f`](https://dc10d45f.ducky-site.pages.dev). [PR #109](https://github.com/ssurmic/ducky-site/pull/109)
 merged at 22:39:29 UTC as `9ab9531545fcd3294614318b3b04ff52b499a9be`; the publisher passed
 831 Node and 14 Python tests, bilingual build, copy lint and 2,103 links. Scoped production reads
