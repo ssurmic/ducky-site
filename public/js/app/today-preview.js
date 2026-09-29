@@ -51,10 +51,10 @@ function eventRow(event,index,anchor){
 
 export function digestPreview(preview,session){
   // A new calendar must never be attached to an old note, even when the dates look plausible.
-  if(!preview||preview.anchor_session!==session||!sourceDay(session)||!Array.isArray(preview.events))return null;
+  if(!preview||preview.anchor_session!==session||!sourceDay(session)||!sourceDay(preview.calendar_day)||!sourceDay(preview.next_session)||!Array.isArray(preview.events))return null;
   const events=preview.events,coverage=preview.coverage?.status,complete=['ready','empty','complete'].includes(coverage);
   const box=el('section.today-preview',{'aria-label':s('today.preview_title')},
-    el('div.today-preview-heading',el('h3',s('today.preview_title')),el('span.small.muted',s('today.preview_count',{n:events.length}))),
+    el('div.today-preview-heading',el('h3',s('today.preview_title')),el('span.small.muted',s(events.length===1?'today.preview_count_one':'today.preview_count',{n:events.length}))),
     el('p.small.muted.today-preview-window',s('today.preview_window',{day:sourceDay(preview.calendar_day)||'—',session:sourceDay(preview.next_session)||'—'})));
   if(!complete)box.append(el('p.small.muted.today-preview-coverage',s(coverage==='partial'?'today.preview_partial':'today.preview_unavailable')));
   if(!events.length)box.append(el('p.small.muted',s(complete?'today.preview_empty':'today.preview_no_records')));

@@ -11,11 +11,11 @@ strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filte
 const macro=await import('../public/js/app/today-macro.js'),preview=await import('../public/js/app/today-preview.js'),store=await import('../public/js/app/store.js');
 const now={now:new Date('2026-09-28T20:04:00Z')},flush=()=>new Promise(resolve=>setImmediate(resolve));
 
-test('a source-labelled close snapshot keeps four sections, real coverage and near-close basis',()=>{
+test('a source-labelled close snapshot keeps its close, sector, macro and preview topics with real coverage',()=>{
   const root=macro.macroStrip(closeMacro(),now);
   assert.match(root.querySelector('.today-digest-head').textContent,/Close snapshot.*9\/28\/2026/);
   assert.match(root.querySelector('.today-digest-publication').textContent,/16:00 ET.*not final settlement.*17\/19.*DIA, XLB/);
-  assert.equal(root.querySelectorAll('.today-digest-part').length,3);assert.ok(root.querySelector('.today-digest-tomorrow'));
+  assert.equal(root.querySelectorAll('.today-digest-part').length,3);assert.ok(root.querySelector('.today-preview'));
   assert.doesNotMatch(root.textContent,/\[object Object\]|undefined|null|NaN/);
   const daily=closeMacro();daily.digest.edition='daily_close';daily.digest.publication.phase='revised';
   assert.match(macro.digestBlock(daily.digest,now).textContent,/Daily close note.*Updated edition/);
@@ -42,6 +42,44 @@ test('the complete dated event list preserves timing, conditional impacts, origi
   assert.match(root.textContent,/sources are incomplete/);
   const unsafe=closeMacro().digest.preview;unsafe.events=[{...unsafe.events[0],url:'javascript:alert(1)',source_url:'http://example.com',impacts:[]}];
   assert.equal(preview.digestPreview(unsafe,'2026-09-28').querySelector('.today-preview-source'),null);
+});
+
+test('only a v1.3 close snapshot with its own dated structured preview omits the redundant paragraph',()=>{
+  const doc=closeMacro(),original=JSON.stringify(doc),root=macro.digestBlock(doc.digest,now);
+  assert.equal(root.querySelector('.today-digest-tomorrow'),null);assert.ok(root.querySelector('.today-preview'));
+  assert.equal(JSON.stringify(doc),original,'rendering must not change source prose');
+  for(const edition of ['daily_close',undefined]){
+    const keep=macro.digestBlock({...doc.digest,edition},now);
+    assert.equal(keep.querySelector('.today-digest-tomorrow').tagName,'DIV');
+    assert.equal(keep.querySelector('.today-digest-tomorrow p').textContent,doc.digest.tomorrow.en);
+  }
+  for(const value of [null,{...doc.digest.preview,anchor_session:'2026-09-25'},{...doc.digest.preview,calendar_day:null},{...doc.digest.preview,next_session:'invalid'}]){
+    const fallback=macro.digestBlock({...doc.digest,preview:value},now);
+    assert.equal(fallback.querySelector('.today-preview'),null);assert.equal(fallback.querySelector('.today-digest-tomorrow').tagName,'DIV');
+  }
+  for(const version of [undefined,'market-digest/1.2','market-digest/1.4']){
+    const future=macro.digestBlock({...doc.digest,version},now);
+    assert.equal(future.querySelector('.today-digest-tomorrow p').textContent,doc.digest.tomorrow.en);
+  }
+});
+
+test('long unavailable lists keep coverage visible and every missing instrument inspectable',()=>{
+  const doc=closeMacro(),missing=['SPY','IWM','DIA','XLB','XLC','XLE','XLF','XLI','XLK','XLP','XLRE','XLU','XLV','XLY','TLT','UUP','USO'];
+  doc.digest.publication.coverage={available:2,expected:19,missing:missing.map(ticker=>({ticker,reason:'unavailable'}))};
+  const root=macro.digestBlock(doc.digest,now),details=root.querySelector('.today-digest-missing');
+  assert.match(root.querySelector('.today-digest-publication').textContent,/2\/19 instruments available/);
+  assert.equal(details.open,false);assert.equal(details.querySelector('summary').textContent,'View 17 unavailable instruments');
+  details.open=true;assert.equal(details.querySelector('p').textContent,'Unavailable: '+missing.join(', '));
+  assert.equal(details.dataset.readingKey,'macro-digest:2026-09-28:missing');
+  assert.equal(macro.digestBlock(closeMacro().digest,now).querySelector('.today-digest-missing'),null);
+});
+
+test('event counts use singular only for exactly one saved event',()=>{
+  const saved=closeMacro().digest.preview;
+  for(const [n,expected] of [[0,'0 scheduled events'],[1,'1 scheduled event'],[2,'2 scheduled events']]){
+    const rendered=preview.digestPreview({...saved,events:saved.events.slice(0,n)},saved.anchor_session);
+    assert.equal(rendered.querySelector('.today-preview-heading span').textContent,expected);
+  }
 });
 
 test('archive preview stays bound to its original session and calendar day differs from next market session',()=>{

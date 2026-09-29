@@ -718,6 +718,11 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
 .today-digest-context{margin:0 0 8px;line-height:1.45;}
 .today-digest-publication{display:flex;flex-wrap:wrap;gap:3px 12px;align-items:baseline;}
 .today-digest-publication p{margin:0;line-height:1.4;}
+.today-digest-missing{max-width:100%;font-size:12px;}
+.today-digest-missing>summary{min-height:44px;display:flex;align-items:center;gap:6px;cursor:pointer;}
+.today-digest-missing>summary::before{content:'▸';}
+.today-digest-missing[open]>summary::before{content:'▾';}
+.today-digest-missing p{max-width:80ch;overflow-wrap:anywhere;}
 .today-preview{border-top:1px solid var(--border);padding-top:8px;min-width:0;}
 .today-preview-heading{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
 .today-preview-heading h3{font-size:14px;line-height:1.4;margin:0;}

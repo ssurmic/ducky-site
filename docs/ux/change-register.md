@@ -2,13 +2,21 @@
 
 Updated: 2026-09-28. This English register is the canonical presentation handoff for the UX redesign. User-facing copy remains bilingual. The private backend's shared documents remain the system-design authority; this register records public UI behavior and integration boundaries only.
 
-**Unreleased candidate:** Today renders source-labelled close snapshots and complete saved
-event previews, plus visible-only minute refresh of the existing shared endpoint. It preserves
-the original historical note/calendar association, conditional impacts and source clocks.
-This does not change the deployed receipt below or certify settled prices. See the
-[candidate acceptance](../../reports/TODAY-CLOSE-PREVIEW-2026-09-28.md).
+**Current released Today addition:** PR #111 / `e19f4bbc` / Pages `73924238` was verified
+on September 28 at 23:19:45 UTC after 839 Node tests, 14 Python tests and build/copy/link
+checks. Today renders source-labelled close snapshots, complete saved event previews and
+visible-only minute reads of the existing endpoint. At September 29 00:13–00:18 UTC, scoped
+phone/desktop reads accepted the September 28 edition with actual 2/19 coverage, an
+unconfirmed NKE time and the September 29 Calendar destination. This does not certify
+complete coverage or the separate macro-source correction. See the [dated receipt](../../reports/TODAY-CLOSE-PREVIEW-2026-09-28.md#production-release-receipt).
 
-**Delivery status: deployed at duckybot.app, version `9ab95315`, verified on 2026-09-28 at 22:40:24 UTC.**
+**Unreleased compact follow-up:** only the known v1.3 close snapshot's redundant preview
+paragraph is omitted when a valid same-session event list replaces it. Other versions,
+daily-close prose and invalid-preview fallbacks remain exact. One event uses singular English;
+long missing lists expand while actual coverage stays visible. Source data is unchanged.
+[Candidate checks and limits](../../reports/TODAY-CLOSE-PREVIEW-2026-09-28.md#compact-preview-follow-up-candidate).
+
+**Previous Today/Explore release: version `9ab95315`, verified on 2026-09-28 at 22:40:24 UTC.**
 [PR #109](https://github.com/ssurmic/ducky-site/pull/109) merged at 22:39:29 UTC as
 `9ab9531545fcd3294614318b3b04ff52b499a9be`. The publisher passed 831 Node tests, 14 Python tests,
 bilingual build, copy lint (4,104 files) and 2,103 links, then published

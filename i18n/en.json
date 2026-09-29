@@ -5566,5 +5566,7 @@
   "app.today.preview_basis_event_type_rule": "The impact explanation describes this event type, not its outcome.",
   "app.today.preview_basis_source_note": "The explanation comes from the source’s schedule note.",
   "app.today.preview_source_clock": "Source recorded: {time}",
-  "app.today.digest_data_session": "Readings for {date}"
+  "app.today.digest_data_session": "Readings for {date}",
+  "app.today.preview_count_one": "1 scheduled event",
+  "app.today.digest_missing_count": "View {n} unavailable instruments"
 }
