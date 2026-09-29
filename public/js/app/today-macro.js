@@ -9,6 +9,7 @@ import {gauge,bandFor} from './today-gauge.js';
 import {dailyPairs,summary,normalizedLines,sparkLines,cursorIndex,PRIMARY} from './today-spark.js';
 import {digestPreview} from './today-preview.js';
 import {material} from './shared-read-refresh.js';
+import {hasCanonicalReadings,canonicalReading} from './today-market-readings.js';
 
 const OK=v=>typeof v==='number'&&Number.isFinite(v);
 const num=(v,d=2)=>OK(v)?new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US',{minimumFractionDigits:d,maximumFractionDigits:d}).format(v):'—';
@@ -40,12 +41,9 @@ export function fngHistory(fng){
     .filter(([key])=>OK(fng?.[key])).map(([key,label])=>{const band=bandFor(bands,fng[key]);return {label:s(label),word:band.label,tone:band.tone,value:Math.round(fng[key])};});
 }
 
-// A reading and where it comes from. The observed panel is the truth the charts and the close-of-day note
-// share: each session's own close (the quote feed's, or FRED's print for that day). A quote taken while the
-// session is open is the moving print; one taken before the open or after the close is the last close, so it
-// is shown as that close with its date. Without an observed panel (an older document) the quote, then the
-// newest FRED print, then the session-aligned score panel.
-function reading(doc,key,{series}={}){
+// Legacy documents retain their original source selection. A recognized canonical projection
+// is authoritative even when one metric is missing: never fill it from a conflicting old field.
+function legacyReading(doc,key,{series}={}){
   const q=doc?.intraday||null,la=doc?.latest_available||null,m=doc?.latest?.metrics||{};
   const rows=(doc?.observed||[]).filter(r=>OK(r?.[key])),last=rows[rows.length-1]||null;
   if(OK(q?.[key])&&q.phase==='open')return {value:q[key],stamp:s('today.macro_intraday',{time:clock(q.quoted_at)})};
@@ -53,6 +51,18 @@ function reading(doc,key,{series}={}){
   if(OK(q?.[key]))return {value:q[key],stamp:s('today.macro_intraday',{time:clock(q.quoted_at)})};
   if(OK(la?.metrics?.[key]))return {value:la.metrics[key],stamp:s('today.macro_fred_close',{date:(series&&la.dates?.[series])||la.as_of||'—'})};
   return {value:m[key],stamp:OK(m[key])?s('today.macro_tile_as_of',{date:doc?.as_of||'—'}):''};
+}
+function canonicalStamp(r,key){
+  if(!r)return '';
+  const basis=r.basis==='session_aligned_score'?'score':r.live===true?'intraday':r.basis==='latest_available_print'?'published':'saved';
+  const sources=key==='vix_term_ratio'?r.components:[r];
+  const attribution=sources.map(item=>s('today.reading_source_'+item.source)+(item.source==='macro_beta'?'':' '+item.series)).join(' / ');
+  return s('today.reading_'+basis,{date:r.date})+' · '+attribution;
+}
+function reading(doc,key,options){
+  if(!hasCanonicalReadings(doc))return legacyReading(doc,key,options);
+  const r=canonicalReading(doc,key);
+  return {value:r?.value,stamp:canonicalStamp(r,key),recorded:r?.observed_at?s('today.reading_recorded',{time:writtenAt(r.observed_at)}):null};
 }
 // The rows a tile's chart and its readings share: the observed panel, or the score panel of an older document.
 const panelRows=doc=>doc?.observed?.length?doc.observed:(doc?.history||[]);
@@ -118,7 +128,8 @@ function linesBlock(tile){
 
 export function macroTiles(doc){
   const latest=doc?.latest||{},m=latest.metrics||{},fng=doc?.fear_greed||null,la=doc?.latest_available?.metrics||{};
-  const band=fundingBand(latest.funding_score);
+  const canonical=hasCanonicalReadings(doc),funding=canonical?reading(doc,'funding_score'):{value:latest.funding_score,stamp:OK(latest.funding_score)?s('today.macro_tile_as_of',{date:latest.date||doc?.as_of||'—'}):null};
+  const band=fundingBand(funding.value);
   // Net liquidity as of the newest prints (the observed panel), the 65-session change from the score panel.
   const netRows=(doc?.observed||[]).filter(r=>OK(r?.net_liquidity_bn)),netLast=netRows[netRows.length-1];
   const netT=OK(netLast?.net_liquidity_bn)?netLast.net_liquidity_bn/1000:OK(m.net_liquidity_bn)?m.net_liquidity_bn/1000:null,change=m.net_liquidity_65d_change_bn;
@@ -130,16 +141,16 @@ export function macroTiles(doc){
   const rating=RATINGS[String(fng?.rating||'').toLowerCase()];
   const fngWord=rating?s('today.fng_'+rating):OK(fng?.score)?bandFor(FNG_BANDS(),fng.score).label:null;
   return [
-    {key:'liquidity',label:s('today.macro_liquidity'),value:OK(latest.funding_score)?num(latest.funding_score,0):'—',unit:s('today.macro_score_unit'),
+    {key:'liquidity',label:s('today.macro_liquidity'),value:OK(funding.value)?num(funding.value,0):'—',unit:s('today.macro_score_unit'),
      tone:band==='supportive'?'up':band==='adverse'?'down':band==='mixed'?'mid':'flat',help:liquidityHelp(latest),
-     gauge:{name:s('today.macro_liquidity'),score:OK(latest.funding_score)?latest.funding_score:null,bands:LIQUIDITY_BANDS(),word:s('today.macro_regime_'+band)},
-     stamp:OK(latest.funding_score)?s('today.macro_tile_as_of',{date:latest.date||doc?.as_of||'—'}):null,
+     gauge:{name:s('today.macro_liquidity'),score:OK(funding.value)?funding.value:null,bands:LIQUIDITY_BANDS(),word:s('today.macro_regime_'+band)},
+     stamp:funding.stamp,recorded:funding.recorded,
      note:[s('today.macro_regime_'+band),OK(netT)?s('today.macro_net_liquidity',{value:num(netT,2)}):null,OK(change)?s('today.macro_net_change',{value:signed(change)}):null].filter(Boolean).join(' · '),
      lines:linesFor(doc,'liquidity')},
-    {key:'yield',label:s('today.macro_10y'),value:OK(y10.value)?num(y10.value,2)+'%':'—',unit:'',tone:'flat',stamp:y10.stamp,
+    {key:'yield',label:s('today.macro_10y'),value:OK(y10.value)?num(y10.value,2)+'%':'—',unit:'',tone:'flat',stamp:y10.stamp,recorded:y10.recorded,
      note:OK(bp)?s('today.macro_10y_change',{bp:signed(bp)}):s('today.macro_no_change'),
      lines:linesFor(doc,'yield')},
-    {key:'vix',label:s('today.macro_vix'),value:OK(vix.value)?num(vix.value,1):'—',unit:'',tone:OK(ratio)?(ratio>1?'down':'up'):'flat',stamp:vix.stamp,
+    {key:'vix',label:s('today.macro_vix'),value:OK(vix.value)?num(vix.value,1):'—',unit:'',tone:OK(ratio)?(ratio>1?'down':'up'):'flat',stamp:vix.stamp,recorded:vix.recorded,ratioStamp:canonical&&OK(ratio)?s('today.reading_ratio',{reading:term.stamp}):null,ratioRecorded:term.recorded,
      note:OK(ratio)?s('today.macro_vix_ratio',{ratio:num(ratio,2)})+' · '+s(ratio>1?'today.macro_vix_stress':'today.macro_vix_calm'):s('today.macro_vix_missing')},
     {key:'fng',label:s('today.macro_fng'),value:OK(fng?.score)?num(fng.score,0):'—',unit:'',tone:OK(fng?.score)?(fng.score<45?'down':fng.score>55?'up':'mid'):'flat',
      gauge:{name:s('today.macro_fng'),score:OK(fng?.score)?fng.score:null,bands:FNG_BANDS(),word:fngWord||''},history:fngHistory(fng),
@@ -243,7 +254,7 @@ function marketHeading(doc,state){
 export function macroStrip(doc,{now=new Date()}={}){
   const box=el('section.today-macro',{'aria-label':s('today.macro_title')});
   const state=digestState(doc?.digest,{now}),digest=digestBlock(doc?.digest,{now});
-  if(!doc||!doc.latest){box.append(el('p.small.muted',s('today.macro_unavailable')));if(digest)box.append(digest);return box;}
+  if(!doc||(!doc.latest&&!hasCanonicalReadings(doc))){box.append(el('p.small.muted',s('today.macro_unavailable')));if(digest)box.append(digest);return box;}
   if(state==='current'&&digest)box.append(digest);
   box.append(marketHeading(doc,state));
   if(state!=='current'&&digest)box.append(digest);
@@ -253,14 +264,17 @@ export function macroStrip(doc,{now=new Date()}={}){
     grid.append(el('div.today-macro-tile',{'data-tile':tile.key,'data-reading-anchor':'macro-tile:'+tile.key,class:'is-'+tile.tone+(dial?' has-gauge':'')},
       el('span.today-macro-label',tile.label,tile.help||null),
       dial?el('div.today-gauge-wrap',dial,el('span.today-gauge-word',tile.gauge.word)):el('strong.today-macro-value.mono',tile.value,tile.unit?el('span.today-macro-unit',tile.unit):null),
-      el('span.today-macro-note',tile.note),tile.stamp?el('span.today-macro-stamp.small.muted',tile.stamp):null,historyList(tile.history),
+      el('span.today-macro-note',tile.note),tile.stamp?el('span.today-macro-stamp.small.muted',tile.stamp):null,
+      tile.recorded?el('span.today-macro-recorded.small.muted',tile.recorded):null,
+      tile.ratioStamp?el('span.today-macro-ratio-stamp.small.muted',tile.ratioStamp):null,
+      tile.ratioRecorded?el('span.today-macro-recorded.small.muted',s('today.reading_ratio',{reading:tile.ratioRecorded})):null,historyList(tile.history),
       tile.lines?linesBlock(tile):null));
   }
   // Each source carries its own clock: the FRED / New York Fed panel ends at the last session it
   // covers, the CNN index at the minute it was read, so the footer names both.
   const fngAt=Date.parse(doc.fear_greed?.as_of||'');
   const fng=Number.isFinite(fngAt)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).format(fngAt):'—';
-  box.append(grid,el('p.small.muted.today-macro-source',s('today.macro_source',{date:doc.latest_available?.as_of||doc.as_of||'—',fng})+(doc.status==='stale'?' · '+s('macro.stale'):''),
+  box.append(grid,el('p.small.muted.today-macro-source',s(hasCanonicalReadings(doc)?'today.macro_canonical_source':'today.macro_source',{date:doc.latest_available?.as_of||doc.as_of||'—',fng})+(doc.status==='stale'?' · '+s('macro.stale'):''),
     ' ',el('a.today-macro-more',{href:'#/macro'},s('today.macro_more')+' →')));
   return box;
 }

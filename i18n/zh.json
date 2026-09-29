@@ -5568,5 +5568,16 @@
   "app.today.preview_source_clock": "来源记录时间：{time}",
   "app.today.digest_data_session": "行情日期：{date}",
   "app.today.preview_count_one": "1 项日程",
-  "app.today.digest_missing_count": "查看 {n} 个缺项"
+  "app.today.digest_missing_count": "查看 {n} 个缺项",
+  "app.today.reading_intraday": "盘中读数 {date}",
+  "app.today.reading_saved": "数据日期 {date}",
+  "app.today.reading_published": "数据日期 {date}",
+  "app.today.reading_score": "指标日期 {date}",
+  "app.today.reading_source_quote": "报价",
+  "app.today.reading_source_fred": "FRED",
+  "app.today.reading_source_macro_beta": "资金指标",
+  "app.today.reading_source_mixed": "混合来源",
+  "app.today.reading_recorded": "记录于 {time} 美东",
+  "app.today.reading_ratio": "比值：{reading}",
+  "app.today.macro_canonical_source": "各项读数保留自己的日期与来源；恐惧与贪婪指数 {fng}（CNN）。仅为描述性参考，不是预测。"
 }

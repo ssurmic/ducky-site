@@ -8,10 +8,17 @@ published data once a minute without generation; accepted reading state remains.
 live reads on September 29 at 00:13–00:18 UTC accepted the 2/19 edition and Calendar path,
 not complete coverage or the separate macro-source correction. See the [release record](../../reports/TODAY-CLOSE-PREVIEW-2026-09-28.md#production-release-receipt).
 
-Compact candidate: the known v1.3 close snapshot shows the structured preview once instead
+Compact presentation (released as PR #112 / `4583e4c1`): the known v1.3 close snapshot shows the structured preview once instead
 of its repeated deterministic paragraph; other saved prose stays visible. Long missing
 lists expand separately while the coverage fraction stays visible. The [candidate record](../../reports/TODAY-CLOSE-PREVIEW-2026-09-28.md#compact-preview-follow-up-candidate)
-separates these local checks from the released behavior.
+retains its original candidate and prior-release evidence. The subsequent PR #112 receipt
+was verified September 29 at 00:28:39 UTC; its scoped 00:29–00:30 UTC phone/desktop read
+accepted disclosure/source/refresh continuity.
+
+Pending coherence follow-up: Today metric → its date/source and separate recording clock.
+The backend's recognized per-metric projection owns the number; missing metrics never
+refill from another field. Historical charts and saved prose retain their original scope.
+[Candidate contract](../../reports/TODAY-MARKET-READINGS-2026-09-29.md).
 
 Previous Today/Explore release: `9ab95315`, verified on 2026-09-28 at 22:40:24 UTC through
 [Pages `dc10d45f`](https://dc10d45f.ducky-site.pages.dev). [PR #109](https://github.com/ssurmic/ducky-site/pull/109)

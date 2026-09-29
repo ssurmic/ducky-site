@@ -3,7 +3,7 @@ import {chromium} from '@playwright/test';
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 const base=process.env.QA_BASE||'http://127.0.0.1:8931',output=process.env.QA_OUTPUT||'/tmp/ducky-close-preview-browser';
-const sparse=process.env.QA_CASE==='today-close-sparse',fixture=sparse?'today-close-sparse':'today-close-preview';
+const sparse=process.env.QA_CASE==='today-close-sparse',canonical=process.env.QA_CASE==='today-market-readings',fixture=canonical?'today-market-readings':sparse?'today-close-sparse':'today-close-preview';
 assert.ok(['127.0.0.1','localhost'].includes(new URL(base).hostname));await mkdir(output,{recursive:true});
 const browser=await chromium.launch(),results=[];
 try{for(const width of [320,390,1440])for(const lang of ['zh','en'])for(const theme of ['light','dark']){
@@ -18,6 +18,14 @@ try{for(const width of [320,390,1440])for(const lang of ['zh','en'])for(const th
   assert.equal(await page.locator('.today-preview-event').count(),sparse?1:8);
   assert.equal(await page.locator('.today-digest-tomorrow').count(),0);
   assert.equal(await page.locator('.today-digest-archive').count(),0);
+  if(canonical){
+    assert.equal(await page.locator('[data-tile=yield] .today-macro-value').textContent(),'5.24%');
+    assert.equal(await page.locator('[data-tile=vix] .today-macro-value').textContent(),'16.1');
+    assert.equal(await page.locator('[data-tile=liquidity] .today-gauge-value').textContent(),'0');
+    assert.match(await page.locator('[data-tile=yield] .today-macro-stamp').textContent(),/2026-09-28.*\^TNX/);
+    assert.doesNotMatch(await page.locator('[data-tile=yield] .today-macro-stamp').textContent(),/close|收盘|settled/);
+    assert.match(await page.locator('[data-tile=vix] .today-macro-ratio-stamp').textContent(),/2026-09-25.*VIXCLS.*VXVCLS/);
+  }
   const initial=await page.evaluate(()=>{
     const box=selector=>{const r=document.querySelector(selector).getBoundingClientRect();return {y:r.y,bottom:r.bottom,height:r.height};};
     const ancestorOpacity=[];let node=document.querySelector('.today-digest');while(node){ancestorOpacity.push(Number(getComputedStyle(node).opacity));node=node.parentElement;}
@@ -34,6 +42,7 @@ try{for(const width of [320,390,1440])for(const lang of ['zh','en'])for(const th
   const targets=await page.locator('.today-preview summary,.today-preview a,.today-digest-missing summary').evaluateAll(nodes=>nodes.filter(n=>n.getBoundingClientRect().height>0).map(n=>({height:n.getBoundingClientRect().height,text:n.textContent})));
   assert.ok(targets.every(t=>t.height>=44),JSON.stringify(targets));
   await page.screenshot({path:`${output}/${lang}-${theme}-${width}-expanded.png`,animations:'disabled'});
+  if(canonical){await page.locator('[data-tile=yield]').scrollIntoViewIfNeeded();await page.screenshot({path:`${output}/${lang}-${theme}-${width}-readings.png`,animations:'disabled'});}
   await page.locator('.today-macro-refresh button').click();assert.equal(await more.getAttribute('open'),'');
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);assert.deepEqual(errors,[]);assert.deepEqual(external,[]);
   results.push({width,height,lang,theme,fixture,initial,events:sparse?1:8,tapTargets:targets.length,errors,external});await context.close();

@@ -5568,5 +5568,16 @@
   "app.today.preview_source_clock": "Source recorded: {time}",
   "app.today.digest_data_session": "Readings for {date}",
   "app.today.preview_count_one": "1 scheduled event",
-  "app.today.digest_missing_count": "View {n} unavailable instruments"
+  "app.today.digest_missing_count": "View {n} unavailable instruments",
+  "app.today.reading_intraday": "Intraday reading {date}",
+  "app.today.reading_saved": "Data dated {date}",
+  "app.today.reading_published": "Data dated {date}",
+  "app.today.reading_score": "Score dated {date}",
+  "app.today.reading_source_quote": "Quotes",
+  "app.today.reading_source_fred": "FRED",
+  "app.today.reading_source_macro_beta": "Funding series",
+  "app.today.reading_source_mixed": "Mixed sources",
+  "app.today.reading_recorded": "Recorded {time} ET",
+  "app.today.reading_ratio": "Ratio: {reading}",
+  "app.today.macro_canonical_source": "Each reading carries its own date and source; Fear & Greed {fng} (CNN). Descriptive references, not a forecast."
 }

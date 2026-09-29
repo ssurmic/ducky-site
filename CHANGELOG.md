@@ -1,5 +1,15 @@
 # Change log
 
+## One saved source choice per Today metric · 2026-09-29 (candidate)
+
+Today consumes the additive per-metric reading projection from the existing macro response.
+Recognized missing or malformed readings remain unavailable; they do not refill from a
+conflicting legacy field. Zero, metric-specific dates/sources, dated funding scores and
+intraday meaning remain explicit. Acquisition time is labelled separately, and the ratio
+keeps both same-date source components. Absent/unknown schemas retain the legacy path.
+No new request or source acquisition is added. The [candidate evidence](reports/TODAY-MARKET-READINGS-2026-09-29.md)
+records focused/full tests and separates implementation from publication.
+
 ## Compact close-snapshot preview · 2026-09-29 (candidate)
 
 The known `market-digest/1.3` close snapshot now presents its complete structured event
