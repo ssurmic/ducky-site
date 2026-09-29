@@ -2,6 +2,17 @@
 
 Updated: 2026-09-28. This English register is the canonical presentation handoff for the UX redesign. User-facing copy remains bilingual. The private backend's shared documents remain the system-design authority; this register records public UI behavior and integration boundaries only.
 
+**Unreleased coherence follow-up:** Today consumes the backend's saved per-metric source
+choice for yield, VIX, term ratio and funding score. Known-schema missing values do not
+fall back to conflicting older fields; dates, acquisition clocks, intraday status and actual
+zero remain distinct. Existing charts and digest prose are retained, without browser-side
+source selection or revision. [Contract and candidate evidence](../../reports/TODAY-MARKET-READINGS-2026-09-29.md).
+The preceding compact preview has since shipped as PR #112 / `4583e4c1` / Pages `7b1c95a0`,
+verified September 29 at 00:28:39 UTC after 842 Node, 14 Python and build/copy/link checks.
+Scoped authenticated phone/desktop reads at 00:29–00:30 UTC accepted its singular event,
+17-missing disclosure, source details and refresh continuity. This does not claim the separate
+canonical backend projection is already available.
+
 **Current released Today addition:** PR #111 / `e19f4bbc` / Pages `73924238` was verified
 on September 28 at 23:19:45 UTC after 839 Node tests, 14 Python tests and build/copy/link
 checks. Today renders source-labelled close snapshots, complete saved event previews and
@@ -10,7 +21,7 @@ phone/desktop reads accepted the September 28 edition with actual 2/19 coverage,
 unconfirmed NKE time and the September 29 Calendar destination. This does not certify
 complete coverage or the separate macro-source correction. See the [dated receipt](../../reports/TODAY-CLOSE-PREVIEW-2026-09-28.md#production-release-receipt).
 
-**Unreleased compact follow-up:** only the known v1.3 close snapshot's redundant preview
+**Compact follow-up (released as PR #112; original candidate scope retained):** only the known v1.3 close snapshot's redundant preview
 paragraph is omitted when a valid same-session event list replaces it. Other versions,
 daily-close prose and invalid-preview fallbacks remain exact. One event uses singular English;
 long missing lists expand while actual coverage stays visible. Source data is unchanged.

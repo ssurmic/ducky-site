@@ -28,3 +28,17 @@ export function sparseCloseMacro(){
   doc.digest.tomorrow={zh:'明日9月29日；下个交易日9月29日。已收录1项事件，部分来源覆盖未确认。',en:'Tomorrow September 29; next market session September 29. One event is recorded; some source coverage is unconfirmed.'};
   return doc;
 }
+
+export function marketReadingsMacro(){
+  const doc=closeMacro(),at='2026-09-28T20:02:00Z';
+  const reading=(value,extra={})=>({value,date:'2026-09-28',source:'quote',series:'^TNX',basis:'stored_observed_reading',live:false,observed_at:at,...extra});
+  doc.latest.metrics.nominal_10y=5.17;doc.latest.metrics.vix=14.21;doc.latest.funding_score=70;
+  doc.intraday={phase:'open',nominal_10y:5.36,vix:16.5,quoted_at:at};
+  doc.market_readings={schema:'market-readings/1',session:'2026-09-28',metrics:{
+    nominal_10y:reading(5.24),vix:reading(16.07,{series:'^VIX'}),
+    funding_score:reading(0,{date:'2026-09-25',source:'macro_beta',series:'funding_score',basis:'session_aligned_score',live:true}),
+    vix_term_ratio:reading(.85,{date:'2026-09-25',source:'fred',series:'VIXCLS/VXVCLS',basis:'latest_available_print',observed_at:null,
+      components:[{series:'VIXCLS',source:'fred',date:'2026-09-25'},{series:'VXVCLS',source:'fred',date:'2026-09-25'}]})}};
+  doc.digest.macro={zh:'合成示例：10年期收益率5.24%，VIX16.1。',en:'Synthetic: 10-year yield 5.24%; VIX 16.1.'};
+  return doc;
+}
