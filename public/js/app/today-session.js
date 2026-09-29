@@ -31,7 +31,7 @@ function quoteItem(row,{stale=false,compact=false,session=null,phase=null}={}){
  const clock=compact&&sameDay?new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(row.quote_at))+' ET':time(row.quote_at);
  const item=el('div.today-session-quote',{'data-ticker':ticker,title:s('today.session_'+ticker)+' · '+ticker+(available?' · '+time(row.quote_at):'')},
    el('span.today-session-name',s('today.session_'+ticker)),
-   el('span.today-session-symbol',ticker),
+   el('span.today-session-symbol.ticker-symbol',ticker),
    el('strong.mono',{class:available&&finite(row.change_pct)?row.change_pct>0?'pos':row.change_pct<0?'neg':'':''},available?percent(row.change_pct):'—'),
    el('span.today-session-clock',available?clock:s('today.session_missing')));
  if(available&&(stale||row.status!=='current')&&!(compact&&!stale&&row.status==='session_quote'&&phase==='post'))item.append(el('span.today-session-saved',s(!stale&&row.status==='session_quote'?'today.session_quote':'today.session_saved_quote')));
@@ -56,7 +56,7 @@ export function sessionOverview(doc,options={}){
   typeof text==='string'&&text.trim()?el('p.today-session-summary',text.trim()):null,
   el('p.small.muted',s('today.session_basis')),
   el('ul.today-session-source-clocks',...INDEXES.filter(ticker=>instant(rows.get(ticker)?.quote_at)).map(ticker=>{
-   const row=rows.get(ticker);return el('li',ticker+' · '+time(row.quote_at)+' · '+s('today.reading_recorded',{time:time(row.recorded_at,false)})+
+   const row=rows.get(ticker);return el('li',el('span.ticker-symbol',ticker),' · '+time(row.quote_at)+' · '+s('today.reading_recorded',{time:time(row.recorded_at,false)})+
     (row.status==='session_quote'?' · '+s('today.session_quote'):''));
   })),
   el('div.today-session-all',...[...TICKERS].filter(t=>!INDEXES.includes(t)).map(ticker=>quoteItem(rows.get(ticker)||{ticker,status:'missing'},state))));

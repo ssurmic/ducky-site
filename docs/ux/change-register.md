@@ -201,3 +201,8 @@ touch areas remained 44px.
 The final local suite reached 809 passing tests. A 52-route locale/theme/viewport sweep found no
 horizontal document overflow. See the production acceptance report for measurements and limitations.
 Published with the production release recorded above.
+
+
+## Phone workflows and ticker identity — 2026-09-29
+
+Implemented candidate: structured fluorescent ticker leaves in light/dark; compact empty-Watchlist rows and two-column Today candidates; macro reading disclosures and phone chart choice; phone evidence cards with visible stance counts, opposing views and original sources; early Overview tools; contextual creator empty-state compression. Existing data, access and membership ownership retained. [Design, browser evidence and release limits](../../reports/TICKER-MOBILE-UX-2026-09-29.md). Shared private Handoff §52 is the release record.

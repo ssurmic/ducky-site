@@ -119,7 +119,7 @@ export async function mountResearch(root, selection) {
       const wrapper=el('details.study-group',{open:openGroups.has(group.key),'data-group-key':group.key});
       const stance=normalizedStance(latestCall.stance);
       const summary=el('summary.study-group-summary',{class:'study-'+stance},
-        el('span.study-group-heading',el('strong.mono','$'+latestCall.sym),
+        el('span.study-group-heading',el('strong.mono.ticker-symbol','$'+latestCall.sym),
           el('span.cr-take',{class:'cr-'+stance},s('creators.take_'+stance)),
           el('span.small.muted.study-group-author',latestPost.kol_name||latestPost.kol_id)));
       const position=sourceClock(latestCall.start_seconds);
@@ -142,7 +142,7 @@ export async function mountResearch(root, selection) {
       const row=el('article.study-row',{class:'study-'+stance,'data-point-id':call.point_id||call.claim_id||post.study_key||''});
       if(selection?.point&&[call.point_id,call.claim_id,post.study_key].includes(selection.point))row.classList.add('is-focused-study');
       const note=opinionNote(post,call);
-      row.append(el('div.study-heading',el('a.mono',{href:'#/evidence/'+encodeURIComponent(call.sym)+(call.point_id?'?source='+encodeURIComponent(call.point_id):'')},'$'+call.sym),
+      row.append(el('div.study-heading',el('a.mono',{href:'#/evidence/'+encodeURIComponent(call.sym)+(call.point_id?'?source='+encodeURIComponent(call.point_id):'')},el('span.ticker-symbol','$'+call.sym)),
         el('span.cr-take',{class:'cr-'+stance},s('creators.take_'+stance)),el('span.evidence-badge','BACKTEST')),
         el('h3',readingPreview(note||post.title||post.kol_name,LANG!=='en')),el('p.muted.small',post.kol_name+' · '+s('creators.published')+' '+dateTime(post.published_at)));
       row.append(eventPriceSnapshot(call.price_context));

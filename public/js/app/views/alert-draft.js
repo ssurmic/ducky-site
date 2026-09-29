@@ -60,7 +60,7 @@ export function mountDraft(root,{onCreated,signal,company='',initialText=''}={})
     }
     if(data.status!=='ready')return;
     const stock=proposal.candidates?.[0];
-    result.append(el('div.translation-heading',el('div',el('p.eyebrow',s('alertdraft.review')),el('h3',stock?.name || ''),el('span.muted.mono',stock?.ticker || '')),el('span.chip',s('alertdraft.not_active_short'))));
+    result.append(el('div.translation-heading',el('div',el('p.eyebrow',s('alertdraft.review')),el('h3',stock?.name || ''),el('span.ticker-symbol',stock?.ticker || '')),el('span.chip',s('alertdraft.not_active_short'))));
     result.append(el('p.small',s(proposal.predicate?.op==='or'?'alertdraft.any':'alertdraft.all')));
     const metrics=el('div.translated-metrics');
     for(const metric of proposal.metrics || []){

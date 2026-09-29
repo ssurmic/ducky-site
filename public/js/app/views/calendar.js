@@ -287,7 +287,7 @@ export async function mount(root, route={}) {
           const pill = el("span.pill.pill-earn.cal-kind-earnings" + (hasContextAccess && evHasMine(e) ? ".mine" : ""), { title: (sym + " " + (isZh ? (e.title || "") : (e.title_en || e.title || ""))).trim() });
           pill.appendChild(el("span.pill-kind", categoryLabel(e)));
           if (e.logo) pill.appendChild(el("img.pill-logo", { src: e.logo, alt: sym, loading: "lazy" }));
-          pill.appendChild(el("span.pill-tk", sym || "ER"));
+          pill.appendChild(el("span.pill-tk"+(sym?".ticker-symbol":""), sym || "ER"));
           const when = whenBadge(e, isZh); if (when) pill.appendChild(el("span.pill-when", when));
           box.appendChild(pill);
         } else {
@@ -295,7 +295,8 @@ export async function mount(root, route={}) {
           const pill = el("span.pill.pill-" + visualType(e) + ".cal-kind-" + category(e) + (isMajor(e) ? ".pill-major" : ""), { title: full });
           pill.appendChild(el("span.pill-kind", categoryLabel(e)));
           pill.appendChild(el("span.pill-ic", { "aria-hidden": "true" }, icon(ICON[visualType(e)] || "calendar")));
-          pill.appendChild(el("span.pill-txt", shortLabel(e, isZh, scopeTicker)));
+          const short=shortLabel(e,isZh,scopeTicker),symbol=e.type==="index_change"?calendarEventTicker(e,scopeTicker):"";
+          pill.appendChild(el("span.pill-txt"+(symbol&&short===symbol?".ticker-symbol":""),short));
           const when = whenBadge(e, isZh); if (when) pill.appendChild(el("span.pill-when", when));
           box.appendChild(pill);
         }
@@ -311,9 +312,10 @@ export async function mount(root, route={}) {
       for (const e of visible) {
         const b = el("div.mbar");
         const dot = el("i.bardot"); dot.style.background = DOTC[visualType(e)] || "var(--muted)"; b.appendChild(dot);
-        const label = e.type === "earnings" ? (calendarEventTicker(e,scopeTicker) || categoryLabel(e)) : shortLabel(e, isZh, scopeTicker);
+        const symbol=["earnings","index_change"].includes(e.type)?calendarEventTicker(e,scopeTicker):"";
+        const label = e.type === "earnings" ? (symbol || categoryLabel(e)) : shortLabel(e, isZh, scopeTicker);
         b.setAttribute("title", isZh ? (e.title || "") : (e.title_en || e.title || ""));
-        b.appendChild(el("span.pill-txt" + (e.type === "earnings" && hasContextAccess && evHasMine(e) ? ".mine" : ""), label));
+        b.appendChild(el("span.pill-txt"+(symbol&&label===symbol?".ticker-symbol":"") + (e.type === "earnings" && hasContextAccess && evHasMine(e) ? ".mine" : ""), label));
         box.appendChild(b);
       }
       if (hidden.length) box.appendChild(el("div.pill-more", "+" + hidden.length));
@@ -391,7 +393,7 @@ export async function mount(root, route={}) {
         const earnings=preview(evs).visible.filter(e=>e.type==='earnings' && (evHasMine(e) || (scopeTicker && calendarEventTicker(e,scopeTicker)===scopeTicker)));
         if(earnings.length) {
           const labels=el('span.cal-month-earnings',{'aria-label':s('calendar.kind_earnings')});
-          for(const e of earnings) labels.append(el('span',calendarEventTicker(e,scopeTicker) || categoryLabel(e)));
+          for(const e of earnings){const symbol=calendarEventTicker(e,scopeTicker);labels.append(el('span'+(symbol?'.ticker-symbol':''),symbol||categoryLabel(e)));}
           cell.append(labels);
         }
         const session=evs.find(e=>["holiday","early_close"].includes(e.type));
@@ -480,7 +482,7 @@ export async function mount(root, route={}) {
         const main = el("div.cal-main");
         main.appendChild(el("span.cal-kind-label", categoryLabel(e)));
         const title = el("div.cal-title", isZh ? (e.title || "") : (e.title_en || e.title || ""));
-        for (const t of (e.tickers || [])) title.append(evidenceLink(t),el("a.cal-tk.mono" + (watchSet.has(String(t).toUpperCase()) ? ".on" : ""), { href: "#/chart/" + encodeURIComponent(t) }, "$" + t));
+        for (const t of (e.tickers || [])) title.append(evidenceLink(t),el("a.cal-tk.mono" + (watchSet.has(String(t).toUpperCase()) ? ".on" : ""), { href: "#/chart/" + encodeURIComponent(t) }, el("span"+(calendarTicker(t)?".ticker-symbol":""),"$"+t)));
         if (isMine) title.appendChild(el("span.cal-mine-badge", s("calendar.mine_badge")));
         main.appendChild(title);
         if(e.type==='index_change')main.append(el('p.cal-note',s('event.effective_date')+' · '+effectiveTiming(e)));

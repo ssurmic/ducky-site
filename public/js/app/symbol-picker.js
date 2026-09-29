@@ -127,12 +127,12 @@ export function symbolPicker(input, watched = () => [], options = {}) {
     rows.forEach((r,i)=>{
       const item=el('div.symbol-option',{id:id+'-'+i,role:actions?'row':'option','aria-selected':'false'});
       if(actions){
-        const selectButton=el('button.symbol-select',{type:'button',tabindex:-1,onclick:()=>select(i)},el('span.symbol-identity',el('strong.mono',r.ticker),tags(r)),details(r));
+        const selectButton=el('button.symbol-select',{type:'button',tabindex:-1,onclick:()=>select(i)},el('span.symbol-identity',el('strong.mono.ticker-symbol',r.ticker),tags(r)),details(r));
         item.append(el('div.symbol-select-cell',{id:id+'-'+i+'-select',role:'gridcell'},selectButton),
           el('div.symbol-action-cell',{role:'gridcell'}));
         item.addEventListener('focusin',()=>highlight(i,false));
       }else{
-        item.append(el('strong.mono',r.ticker),details(r),el('span.symbol-exchange.muted.small'));
+        item.append(el('strong.mono.ticker-symbol',r.ticker),details(r),el('span.symbol-exchange.muted.small'));
         item.addEventListener('pointerdown',e=>e.preventDefault());
         item.addEventListener('click',()=>select(i));
       }

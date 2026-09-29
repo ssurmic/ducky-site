@@ -29,7 +29,7 @@ export async function mount(root,route={}){
       el('a.btn.btn-primary',{href:'#/watchlist'},s('briefing.edit_watchlist')));
     else if(!next.length)content.push(el('p.muted',s('focus.analysis_waiting')));
     else for(const item of next)content.push(el('article.card',{'data-reading-anchor':item.ticker},
-      el('h2',el('a',{href:stockHref(item.ticker),'data-reading-key':item.ticker+':name'},item.ticker)),reading(item),
+      el('h2',el('a',{href:stockHref(item.ticker),'data-reading-key':item.ticker+':name'},el('span.ticker-symbol',item.ticker))),reading(item),
       el('a.stock-open',{href:stockHref(item.ticker),'data-reading-key':item.ticker+':open'},s('focus.open_stock')+' →')));
     replaceReading(host,...content);
   }

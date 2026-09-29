@@ -1,5 +1,9 @@
 # Change log
 
+## Phone reading workflows and consistent ticker identity · 2026-09-29 (candidate)
+
+Use fluorescent ticker symbols consistently in both themes. Phone Watchlist choices become compact rows with direct Add; Today uses compact macro readings and a selectable comparison chart; phone research maps offer attributed swipe cards with visible risk/category controls. Keep full sources, conditions and saved reading state. [Design and acceptance](reports/TICKER-MOBILE-UX-2026-09-29.md).
+
 ## Integrated Today market dashboard · 2026-09-29 (candidate)
 
 Keep current index quotes, four compact macro readings and both historical three-line comparisons in one market section. Phone emphasis comes from stronger reading text and less repeated metadata. Upcoming events follow the charts with a plain date, time, event and complete impact; provenance stays in expandable details. Canonical values, source clocks, archived closing notes and automatic-read state are retained. [Design and acceptance](reports/TODAY-DASHBOARD-2026-09-29.md).

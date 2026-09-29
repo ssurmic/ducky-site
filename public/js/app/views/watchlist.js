@@ -155,7 +155,7 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
     if(offer.hidden)return;
     const row=candidate;
     const eligibility=watchEligibility(row);
-    offer.append(el('div',el('strong',row.ticker),el('span.muted',row.name||row.company||''),
+    offer.append(el('div',el('strong.ticker-symbol',row.ticker),el('span.muted',row.name||row.company||''),
       el('div.symbol-tags',...instrumentLabels(row).map(label=>el('span.symbol-tag',label))),
       el('p',eligibility.eligible?s('watch.not_followed'):eligibility.reason)));
     if(eligibility.eligible)offer.append(el('button.btn.btn-primary.btn-sm',{type:'button',disabled:adding||removing||isFull()||membershipDenied,onclick:()=>addTicker(row.ticker,false,row)},s(isFull()?'watch.full_button':adding?'watch.adding':'watch.add_to_watchlist')));
@@ -385,7 +385,7 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
   function card(t, snap) {
     const c = el("article.card.snap", { "data-ticker": t });
     const head = el("div.snap-head",
-      el("a.ticker.mono", { href: "#/chart/" + t }, "$" + t),
+      el("a.ticker.mono", { href: "#/chart/" + t }, el("span.ticker-symbol", "$" + t)),
       el("span.spot.mono", snap && snap.ok ? px(snap.spot) : ""),
       snap && snap.ok && typeof snap.tech?.oversold === "boolean" ? el("span.chip", { class: snap.tech && snap.tech.oversold ? "chip-red" : "chip-dim" }, snap.tech && snap.tech.oversold ? s("watch.oversold") : s("watch.not_oversold")) : null,
       el("span.spacer"),

@@ -65,7 +65,7 @@ export function opinionRow(row,{from='explore'}={}){
   const byline=el('div.opinion-byline',el('a.opinion-author',{href:'#/creators?creator='+encodeURIComponent(row.creator_id),'data-reading-key':key+':author'},row.author),
     el('time',{datetime:row.published_at},opinionTime(row.published_at)),el('span.opinion-stance',{class:'is-'+row.stance},s('opinions.stance_'+row.stance)));
   const body=el('article.creator-opinion',{class:'is-'+row.stance,'data-reading-anchor':key,'data-opinion-id':row.id},byline,
-    el('p.opinion-subject',row.stock_navigation_eligible?el('a',{href:stockHref(row.ticker,from),'data-reading-key':key+':stock'},row.ticker):null,
+    el('p.opinion-subject',row.stock_navigation_eligible?el('a',{href:stockHref(row.ticker,from),'data-reading-key':key+':stock'},el('span.ticker-symbol',row.ticker)):null,
       el('span',text(row.subject)),row.intent!=='opinion'?el('span.opinion-intent',s('opinions.intent_'+row.intent)):null),
     row.speaker.kind!=='creator'?el('p.opinion-speaker',s('opinions.speaker_'+row.speaker.kind,{name:row.speaker.name||s('opinions.unnamed')})):null,
     el('p.opinion-claim',text(row.claim)));
@@ -79,12 +79,12 @@ export function opinionRow(row,{from='explore'}={}){
   return body;
 }
 
-export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creator=null,from='explore',initial=3}={}){
+export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creator=null,from='explore',initial=3,compactEmpty=false}={}){
   const epoch=store.epoch(),scope=account(),stateKey=JSON.stringify([topic,ticker,creator]);
   if(controlScope!==scope){controls.clear();controlScope=scope;}
   if(newest.scope!==scope)newest={scope,revision:null,at:-Infinity};
   const saved=controls.get(stateKey),ctl=new AbortController();
-  let disposed=false,loading=false,seq=0,rows=[],doc=null,pages=0,showAll=!!saved?.showAll,restoreSaved=true;
+  let disposed=false,loading=false,readFailed=false,seq=0,rows=[],doc=null,pages=0,showAll=!!saved?.showAll,restoreSaved=true;
   const current=()=>!disposed&&!signal?.aborted&&epoch===store.epoch()&&account()===scope;
   const visible=()=>document.visibilityState!=='hidden'&&window.navigator?.onLine!==false&&!host.closest('[hidden]');
   const title=s(ticker?'opinions.stock_title':topic==='macro'?'opinions.macro_title':'opinions.latest_title',{ticker});
@@ -94,9 +94,19 @@ export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creato
     if(!showAll&&rows.length>initial){showAll=true;render();remember();}else {showAll=true;load(true);}
   }},s('opinions.more'));
   const fewer=el('button.btn.btn-ghost.opinions-more',{type:'button',hidden:true,'data-reading-key':'opinions:fewer',onclick:()=>{showAll=false;render();remember();}},s('opinions.fewer'));
-  const section=el('section.creator-opinions',{'aria-label':title},el('header.creator-opinions-heading',heading,refresh),
-    el('p.opinions-note',s('opinions.note')),notice,list,el('div.opinions-pagination',more,fewer));
+  const compactNote=el('p.opinions-empty-alongside',{hidden:true},s('opinions.empty_alongside'));
+  const note=el('p.opinions-note',s('opinions.note')),pagination=el('div.opinions-pagination',more,fewer);
+  const section=el('section.creator-opinions',{'aria-label':title},el('header.creator-opinions-heading',heading,compactNote,refresh),
+    note,notice,list,pagination);
   host.append(section);list.append(spinner());
+  function compactState(){
+    // This opt-in is only for another readable source on the same author page.
+    // A loading, failed, partial or paginated read never establishes an empty result.
+    const compact=compactEmpty===true&&!loading&&!readFailed&&doc?.status==='empty'&&!rows.length&&doc.next_cursor===null&&doc.coverage?.truncated===false;
+    section.classList.toggle('is-empty-alongside',compact);
+    heading.hidden=compact;compactNote.hidden=!compact;note.hidden=compact;list.hidden=compact;pagination.hidden=compact;
+    if(compact&&document.activeElement===heading)refresh.focus({preventScroll:true});
+  }
   function remember(){if(current())controls.set(stateKey,{showAll,opened:[...list.querySelectorAll('details[open][data-reading-key]')].map(n=>n.dataset.readingKey)});}
   function render(){
     const focus=list.contains(document.activeElement);
@@ -111,7 +121,7 @@ export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creato
   }
   async function load(append=false){
     if(!current()||loading)return;
-    loading=true;const mine=++seq;refresh.disabled=true;more.disabled=true;refresh.setAttribute('aria-busy','true');
+    loading=true;const mine=++seq;refresh.disabled=true;more.disabled=true;refresh.setAttribute('aria-busy','true');compactState();
     if(!append)clear(notice);
     try{
       if(creator!==null&&!creatorId(creator))throw new api.ApiError(422,{error:'invalid_opinion_creator'});
@@ -122,7 +132,7 @@ export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creato
       const at=Date.parse(next.generated_at);
       if(at<newest.at||at===newest.at&&newest.revision&&newest.revision!==next.revision)throw new api.ApiError(409,{error:'opinion_revision_changed'});
       if(append&&doc&&doc.revision!==next.revision)throw new api.ApiError(409,{error:'opinion_revision_changed'});
-      newest={scope,revision:next.revision,at};clear(notice);
+      newest={scope,revision:next.revision,at};readFailed=false;clear(notice);
       if(next.coverage?.truncated)notice.append(el('p',s('opinions.partial')));
       if(!append&&doc?.revision===next.revision&&pages>1){doc={...doc,generated_at:next.generated_at};return;}
       rows=append?[...new Map([...rows,...next.items].map(row=>[row.display_group_id,row])).values()]:next.items;
@@ -130,12 +140,12 @@ export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creato
     }catch(error){
       if(!current()||mine!==seq)return;
       if(append&&[400,409].includes(error.status)){loading=false;return load();}
-      const denied=[401,402,403,404,410].includes(error.status);
+      readFailed=true;const denied=[401,402,403,404,410].includes(error.status);
       if(denied){rows=[];doc=null;pages=0;clear(list);more.hidden=true;fewer.hidden=true;delete section.dataset.revision;}
       else if(!doc)clear(list);
       clear(notice).append(el('p',s(doc?'opinions.refresh_failed':'opinions.unavailable')),
         el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>load()},s('common.retry')));
-    }finally{if(current()&&mine===seq){loading=false;refresh.disabled=false;more.disabled=false;refresh.removeAttribute('aria-busy');}}
+    }finally{if(current()&&mine===seq){loading=false;refresh.disabled=false;more.disabled=false;refresh.removeAttribute('aria-busy');compactState();}}
   }
   const timer=setInterval(()=>{if(current()&&visible())load();},REFRESH_MS);timer?.unref?.();
   const wake=()=>{if(current()&&visible())load();};
@@ -145,5 +155,5 @@ export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creato
     document.removeEventListener('visibilitychange',wake);window.removeEventListener('online',wake);signal?.removeEventListener('abort',dispose);}
   signal?.addEventListener('abort',dispose,{once:true});
   const ready=signal?.aborted?(dispose(),Promise.resolve()):visible()?load():Promise.resolve();
-  return {ready,dispose,refresh:()=>load()};
+  return {ready,dispose,refresh:()=>load(),setCompactEmpty:value=>{if(current()){compactEmpty=value===true;compactState();}}};
 }

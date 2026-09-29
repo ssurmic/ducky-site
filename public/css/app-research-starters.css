@@ -1,0 +1,37 @@
+/* Today research starters: source-ranked comparison, separate from directional views. */
+.research-examples{margin:18px 0 22px}
+.research-examples>h2{margin:0 0 4px;font-size:18px;line-height:1.4}
+.research-examples>p{margin:0 0 5px;max-width:none;font-size:12px;line-height:1.45}
+.research-examples .research-example-key{display:flex;justify-content:space-between;gap:6px 12px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin-bottom:8px}
+.research-examples .research-example-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;border:1px solid var(--border);border-radius:8px;background:var(--border);overflow:hidden;align-items:stretch}
+.research-examples .research-example{display:flex;flex-direction:column;gap:0;min-width:0;padding:0;border:0;border-radius:0;background:var(--surface);color:var(--text)}
+.research-examples .research-example:hover{background:var(--surface)}
+.research-example .research-example-open{display:flex;flex-direction:column;gap:3px;min-width:0;min-height:72px;flex:1;padding:9px 10px 6px;color:var(--text);text-decoration:none}
+.research-example .research-example-open:hover{background:var(--surface-2)}
+.research-example .research-example-identity{display:flex;align-items:center;gap:7px;min-width:0;line-height:1.3}
+.research-example .research-example-rank{font-size:11px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.research-example .research-example-identity strong{padding-right:.22em;font-size:16px;line-height:1.3}
+.research-example .research-example-company{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;line-height:1.3;color:var(--muted)}
+.research-example .research-example-attention{display:flex;align-items:baseline;justify-content:space-between;gap:6px;font-variant-numeric:tabular-nums;line-height:1.35}
+.research-example .research-example-count{font-size:21px;font-weight:650;overflow-wrap:anywhere}
+.research-example .research-example-change{font-size:12px;color:var(--muted);white-space:nowrap}
+.research-example .research-example-description{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.research-example .research-example-routes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--border);margin-top:auto;font-size:12px}
+.research-example .research-example-routes>a,.research-example .research-example-view>summary{display:flex;align-items:center;justify-content:center;gap:4px;min-height:44px;min-width:44px;padding:4px 6px;box-sizing:border-box;color:var(--muted);line-height:1.3;text-align:center;text-decoration:none;cursor:pointer}
+.research-example .research-example-routes>a:only-child{grid-column:1/-1}
+.research-example .research-example-view{min-width:0}
+.research-example .research-example-view>summary{list-style:none}
+.research-example .research-example-view>summary::-webkit-details-marker{display:none}
+.research-example .research-example-view>summary::after{content:'+';font-size:14px}
+.research-example .research-example-view[open]{grid-column:1/-1}
+.research-example .research-example-view[open]>summary::after{content:'−'}
+.research-example .research-example-overall{margin:0;padding:0 10px 12px;font-size:13px;line-height:1.6;color:var(--text);overflow-wrap:anywhere}
+.research-example .research-example-routes>a:hover,.research-example .research-example-view>summary:hover{background:var(--surface-2);color:var(--text)}
+.research-example a:focus-visible,.research-example summary:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+@media(min-width:761px) and (max-width:1100px){.research-examples .research-example-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){
+ .research-examples .research-example-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .research-example .research-example-identity strong{font-size:15px}
+ .research-example .research-example-open{padding:8px 10px 5px;min-height:68px}
+ .research-example .research-example-count{font-size:20px}
+}

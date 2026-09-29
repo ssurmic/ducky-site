@@ -126,7 +126,7 @@ export async function mountChanges(root,signal) {
     const doc=await api.get('/research/changes',{signal,silent402:true});
     if(signal?.aborted)return;
     if(!doc.items?.length){host.append(el('p.muted',tr('no_changes')));return;}
-    for(const row of doc.items)host.append(el('p.research-change',link('#/research/'+encodeURIComponent(row.ticker),'$'+row.ticker),
+    for(const row of doc.items)host.append(el('p.research-change',link('#/research/'+encodeURIComponent(row.ticker),el('span.ticker-symbol','$'+row.ticker)),
       el('span',tr(row.stream)),el('time.small.muted',dateTime(row.recorded_at))));
   }catch(e){if(!signal?.aborted)host.append(errorBox(e));}
 }

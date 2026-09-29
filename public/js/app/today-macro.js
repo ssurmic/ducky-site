@@ -306,7 +306,12 @@ function currentDashboard(box,overview,doc,digest,state,now){
       el('h3',s('today.dashboard_'+key+'_chart')),
       tile.lines?linesBlock(tile,{currentSnapshot:true,dashboard:true}):el('p.today-dashboard-chart-missing',s('today.dashboard_chart_missing'))));
   }
-  charts.append(chartGrid);sources.append(sourceMetrics,macroSource(doc));overview.append(metrics,charts,sources);
+  const switcher=el('div.today-chart-switch',{'aria-label':s('today.dashboard_charts')});
+  const select=key=>{for(const chart of chartGrid.children)chart.classList.toggle('is-selected',chart.dataset.chart===key);for(const button of switcher.children)button.setAttribute('aria-pressed',String(button.dataset.chartChoice===key));};
+  for(const key of ['liquidity','yield'])switcher.append(el('button',{type:'button','data-chart-choice':key,'data-reading-key':'macro-chart-choice:'+key,onclick:()=>select(key)},s('today.chart_choice_'+key)));
+  charts.readingChart=()=>switcher.querySelector('[aria-pressed=true]')?.dataset.chartChoice;
+  charts.restoreReadingChart=select;select('liquidity');
+  charts.append(switcher,chartGrid);sources.append(sourceMetrics,macroSource(doc));overview.append(metrics,charts,sources);
   box.append(overview);
   const preview=state==='current'?digest?.querySelector('.today-preview'):null;
   box.append(preview||el('div.today-dashboard-calendar',el('h3',s('today.preview_title')),el('a.today-preview-calendar',
@@ -330,14 +335,24 @@ export function macroStrip(doc,{now=new Date()}={}){
   const grid=el('div.today-macro-grid');
   for(const tile of macroTiles(doc,{currentSnapshot:!!overview})){
     const dial=tile.gauge&&Number.isFinite(tile.gauge.score)?gauge(tile.gauge):null;
-    grid.append(el('div.today-macro-tile',{'data-tile':tile.key,'data-reading-anchor':'macro-tile:'+tile.key,class:'is-'+tile.tone+(dial?' has-gauge':'')},
-      el('span.today-macro-label',tile.label,tile.help||null),
-      dial?el('div.today-gauge-wrap',dial,el('span.today-gauge-word',tile.gauge.word)):el('strong.today-macro-value.mono',tile.value,tile.unit?el('span.today-macro-unit',tile.unit):null),
-      el('span.today-macro-note',tile.note),tile.stamp?el('span.today-macro-stamp.small.muted',tile.stamp):null,
-      tile.recorded?el('span.today-macro-recorded.small.muted',tile.recorded):null,
-      tile.ratioStamp?el('span.today-macro-ratio-stamp.small.muted',tile.ratioStamp):null,
-      tile.ratioRecorded?el('span.today-macro-recorded.small.muted',s('today.reading_ratio',{reading:tile.ratioRecorded})):null,historyList(tile.history),
-      tile.lines?linesBlock(tile,{currentSnapshot:!!overview}):null));
+    // One compact, source-dated reading is the entry point on every viewport.
+    // The original gauge, complete notes and comparison remain available on demand.
+    const key='macro-reading:'+tile.key;
+    grid.append(el('details.today-macro-tile.today-macro-fold',{'data-tile':tile.key,'data-reading-anchor':'macro-tile:'+tile.key,'data-reading-key':key,class:'is-'+tile.tone+(dial?' has-gauge':'')},
+      el('summary',{'data-reading-key':key+':toggle'},el('span.today-macro-label',tile.label),
+        el('strong.today-macro-value.mono',tile.value,tile.unit?el('span.today-macro-unit',tile.unit):null),
+        tile.gauge?.word?el('span.today-macro-band',tile.gauge.word):null,
+        tile.stamp?el('span.today-macro-stamp.small.muted',tile.stamp):null,
+        el('span.today-macro-expand',s('today.reading_details'))),
+      el('div.today-macro-fold-content',
+        tile.help||null,
+        dial?el('div.today-gauge-wrap',dial,el('span.today-gauge-word',tile.gauge.word)):null,
+        el('p.today-macro-note',tile.note),
+        tile.recorded?el('p.today-macro-recorded.small.muted',tile.recorded):null,
+        tile.ratioStamp?el('p.today-macro-ratio-stamp.small.muted',tile.ratioStamp):null,
+        tile.ratioRecorded?el('p.today-macro-recorded.small.muted',s('today.reading_ratio',{reading:tile.ratioRecorded})):null,historyList(tile.history),
+        tile.lines?linesBlock(tile,{currentSnapshot:!!overview}):null)));
+
   }
   // Each source carries its own clock: the FRED / New York Fed panel ends at the last session it
   // covers, the CNN index at the minute it was read, so the footer names both.
@@ -356,12 +371,14 @@ export function mountMacroStrip(host,{signal,interval=60000}={}){
   const controls=el('div.today-macro-refresh',refresh,status);
   function replace(doc){
     const focused=host.contains(document.activeElement)?document.activeElement?.dataset.readingKey:null;
+    const chartChoice=host.querySelector('.today-dashboard-trends')?.readingChart?.();
     const chartDates=new Map([...host.querySelectorAll('[data-reading-key]')].filter(n=>typeof n.readingDate==='function').map(n=>[n.dataset.readingKey,n.readingDate()]));
     const opened=new Set([...host.querySelectorAll('details[open][data-reading-key]')].map(n=>n.dataset.readingKey));
     const scroller=host.closest('.app-main'),top=scroller?.getBoundingClientRect().top;
     const anchor=scroller?.scrollTop>0?[...host.querySelectorAll('[data-reading-anchor]')].find(n=>n.getBoundingClientRect().bottom>top):null;
     const anchorKey=anchor?.dataset.readingAnchor,before=anchor?.getBoundingClientRect().top;
     host.replaceChildren(macroStrip(doc),controls);
+    if(chartChoice)host.querySelector('.today-dashboard-trends')?.restoreReadingChart?.(chartChoice);
     for(const node of host.querySelectorAll('details[data-reading-key]'))if(opened.has(node.dataset.readingKey))node.open=true;
     for(const node of host.querySelectorAll('[data-reading-key]'))if(chartDates.has(node.dataset.readingKey))node.restoreReadingDate?.(chartDates.get(node.dataset.readingKey),{reveal:false});
     if(focused){const target=[...host.querySelectorAll('[data-reading-key]')].find(n=>n.dataset.readingKey===focused);target?.focus({preventScroll:true});}

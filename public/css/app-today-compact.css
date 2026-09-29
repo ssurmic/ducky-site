@@ -1,0 +1,37 @@
+/* Dated legacy readings remain useful without a screen-sized gauge per value. */
+.today-macro-grid{align-items:start}
+.today-macro-tile.today-macro-fold{display:block;padding:0}
+.today-macro-fold>summary{display:flex;flex-direction:column;gap:4px;min-height:130px;padding:12px 14px;cursor:pointer;list-style:none}
+.today-macro-fold>summary::-webkit-details-marker{display:none}
+.today-macro-fold>summary:focus-visible{outline:2px solid var(--accent);outline-offset:-3px;border-radius:10px}
+.today-macro-fold .today-macro-label{font-weight:600;color:var(--text);font-size:13px;line-height:1.4}
+.today-macro-fold .today-macro-value{font-size:26px;line-height:1.15;letter-spacing:0}
+.today-macro-fold .today-macro-band{font-size:12px;line-height:1.3}
+.today-macro-fold .today-macro-stamp{font-size:11px;line-height:1.4}
+.today-macro-expand{font-size:11px;color:var(--muted);margin-top:auto}
+.today-macro-expand::after{content:' +';font-weight:700}
+.today-macro-fold[open] .today-macro-expand::after{content:' −'}
+.today-macro-fold-content{padding:0 14px 14px;border-top:1px solid var(--border)}
+.today-macro-fold-content .today-macro-note{font-size:13px;line-height:1.5}
+.today-macro-fold-content .today-gauge-wrap{max-width:180px;margin:8px auto}
+.today-chart-switch{display:none}
+@media(max-width:760px){
+ .today-macro-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .today-macro-tile.today-macro-fold:has(.today-lines){grid-column:auto}
+ .today-macro-tile.today-macro-fold[open]{grid-column:1/-1}
+ .today-macro-fold>summary{min-height:124px;padding:10px 12px}
+ .today-macro-fold .today-macro-stamp{overflow-wrap:anywhere}
+ .today-market-heading{margin-bottom:8px}
+ .today-market-heading .today-market-cadence{display:none}
+ .today-market-heading .today-market-status{font-size:11px;line-height:1.4}
+ .today-chart-switch{display:flex;gap:4px;margin:4px 0 8px;border-bottom:1px solid var(--border)}
+ .today-chart-switch button{flex:1;min-width:44px;min-height:44px;border:0;border-bottom:2px solid transparent;background:none;color:var(--muted);font:600 13px/1.3 var(--font);padding:6px}
+ .today-chart-switch button[aria-pressed=true]{color:var(--text);border-bottom-color:var(--accent)}
+ .today-chart-switch button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+ .today-dashboard-chart:not(.is-selected){display:none}
+ .today-dashboard-chart+.today-dashboard-chart{border:0;padding:0}
+ .today-dashboard-chart>h3{display:none}
+ .today-dashboard-chart .today-lines{max-height:150px}
+ .today-dashboard-metric{padding:8px 10px}
+ .today-dashboard-metric .today-macro-value{font-size:24px}
+}

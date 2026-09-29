@@ -31,6 +31,20 @@ test('public shape retains source clocks, no-ticker macro, exact qualifications 
  assert.equal(JSON.stringify(doc),before);
 });
 
+test('ticker identity styles only the structured symbol, leaving stance and complete prose independent',()=>{
+ const source=opinionsFixture().items[2];
+ for(const stance of ['bull','bear','neutral']){
+  const row=opinionRow({...source,stance}),symbol=row.querySelector('.ticker-symbol');
+  assert.equal(symbol.textContent,'NVDA');assert.equal(symbol.children.length,0);
+  assert.equal(row.querySelectorAll('.ticker-symbol').length,1);assert.match(symbol.closest('a').href,/#\/stock\/NVDA/);
+  assert.equal(row.querySelector('.opinion-stance').closest('.ticker-symbol'),null);
+  assert.equal(row.querySelector('.opinion-claim').closest('.ticker-symbol'),null);
+  assert.equal(row.querySelector('.opinion-claim').textContent,source.claim.en);assert.ok(row.classList.contains('is-'+stance));
+  assert.ok(row.querySelector('.opinion-stance').classList.contains('is-'+stance));
+ }
+ assert.equal(opinionRow(opinionsFixture().items[0]).querySelector('.ticker-symbol'),null);
+});
+
 test('unknown timing has no invented timestamp; zero seconds remains a valid approximate entry',()=>{
  const none=opinionFixture(1,{navigation_seconds:null,original_source_url:'https://www.youtube.com/watch?v=sample00001'});
  assert.equal(sourceURL(none),'https://www.youtube.com/watch?v=sample00001');assert.equal(opinionRow(none).querySelector('.opinion-original').textContent,'Open original video');

@@ -92,15 +92,15 @@ export function researchOverview(rows,{query='',sort='market_cap',sortDirection=
     const quote=displayQuote(row),shown=quote||row,views=viewsFor?.(row.ticker)||null;
     return el('article.watch-research-card',{'data-reading-anchor':row.ticker},
       el('header.watch-research-heading',el('a.stock-name',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':name'},
-        el('strong',row.ticker),el('span.small.muted',row.company||row.ticker)),
+        el('strong.ticker-symbol',row.ticker),el('span.small.muted',row.company||row.ticker)),
         el('div.watch-research-price',el('a.watch-price-link',{href:'#/chart/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':chart','aria-label':s('watch.open_chart',{ticker:row.ticker})},el('strong.mono',px(shown.price))),
           el('span.mono',{class:'watch-'+changeClass(shown.change_pct)},pct(shown.change_pct,2)),
           quote?quoteNote(quote,{received:quoteReceived}):el('small.muted',retained(row)?savedLabel(row):row.price_session||s('watch.date_unknown')))),
+      el('div.watch-research-footer',stockActions(row.ticker),el('a.watch-disclosures-link',{
+        href:'#/boards?mode=archive&ticker='+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':activity'},s('watch.ux_disclosures'))),
       referenceSummary(row,signals?.get(row.ticker)),
       el('div.watch-research-reading',renderResearch(row.ticker)),
-      el('div.watch-research-lenses',...['left','right'].map(side=>el('section',el('h3',s('watch.view_'+side)),viewCell(views,side)))),
-      el('footer.watch-research-footer',stockActions(row.ticker),el('a.watch-disclosures-link',{
-        href:'#/boards?mode=archive&ticker='+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':activity'},s('watch.ux_disclosures'))));
+      el('div.watch-research-lenses',...['left','right'].map(side=>el('section',el('h3',s('watch.view_'+side)),viewCell(views,side)))));
   }));
 }
 
@@ -172,7 +172,7 @@ function mapInspector(frame, label, session) {
     hide();active=node;activeRow=row;
     const shown=display(row),quote=shown!==row?shown:null;
     tip.replaceChildren(
-      el('div.watch-tip-heading',el('strong',row.ticker),el('span.mono',{class:'watch-'+changeClass(shown.change_pct)},pct(shown.change_pct,2))),
+      el('div.watch-tip-heading',el('strong.ticker-symbol',row.ticker),el('span.mono',{class:'watch-'+changeClass(shown.change_pct)},pct(shown.change_pct,2))),
       el('div.watch-tip-company',row.company || row.ticker),
       el('div.muted.small',label(row)),
       el('dl.watch-tip-facts',el('dt',quote?quoteLabel(quote):s('watch.close')),el('dd.mono',px(shown.price)),el('dt',s('watch.cap')),el('dd.mono',capText(row.market_cap)+' '+(row.market_cap_currency || ''))),
@@ -203,7 +203,7 @@ export function overviewView(rows, options) {
     const quote=displayQuote(r);
     const shown=quote||r;
     const cells=compact?[]:metricKeys.map(key=>metricCell(key,r.metrics?.[key]));
-    const identity=el('span.watch-identity',el('span.watch-identity-title',el('strong',r.ticker),
+    const identity=el('span.watch-identity',el('span.watch-identity-title',el('strong.ticker-symbol',r.ticker),
       compact?null:el('span.watch-industry',label(r))),el('span.watch-company',r.company || r.ticker),
       compact?null:el('span.watch-stock-cap',s('watch.cap')+' '+(r.security_type==='ETF'?'ETF':capText(r.market_cap))));
     const price=el('span.mono.watch-row-price',px(shown.price),!quote&&retained(r)?el('small.watch-saved-note',s('watch.saved_value')):null);
@@ -238,7 +238,7 @@ export function overviewView(rows, options) {
         // Touch also focuses a button. Opening a hover layer at that point can
         // consume the first tap; keyboard focus still gets its full inspector.
         onfocus:()=>inspector.focus(r,tile),onblur:inspector.blur},
-        el('span.watch-tile-sector',label(r)),el('strong',r.ticker),
+        el('span.watch-tile-sector',label(r)),el('strong.ticker-symbol',r.ticker),
         el('span.mono.watch-tile-change',pct(d.change_pct,2)),el('span.mono.watch-tile-price',px(d.price),d===r&&retained(r)?el('small.watch-saved-note',s('watch.saved_value')):null),el('span.watch-tile-company',r.company || ''),
         el('span.watch-tile-cap',s('watch.cap')+' '+capText(r.market_cap)));
       tile.style.setProperty('--tile-color',heatColor(d.change_pct));
@@ -253,7 +253,7 @@ export function overviewView(rows, options) {
       el('div.watch-small-list',...tiles.map(r=>el('button.watch-small-stock',{type:'button','data-open':r.ticker,
         'aria-pressed':String(selected===r.ticker),'aria-label':title(r),onclick:()=>onSelect(r.ticker)},
         el('span.watch-small-dot',{'aria-hidden':'true',style:{background:heatColor(display(r).change_pct)}}),
-        el('strong',r.ticker),el('span.mono',{class:'watch-'+changeClass(display(r).change_pct)},pct(display(r).change_pct,2)))))));
+        el('strong.ticker-symbol',r.ticker),el('span.mono',{class:'watch-'+changeClass(display(r).change_pct)},pct(display(r).change_pct,2)))))));
     root.append(panel);
     const omitted=area==='equal'?[]:filtered.filter(r=>!weighted(r));
     if(omitted.length) root.append(el('section.watch-unweighted',el('h2',s('watch.unweighted')),
@@ -298,7 +298,7 @@ export function overviewView(rows, options) {
             previewNode,analysisDate?el('small.watch-reading-date',analysisDate):null)),reading,
           el('a.stock-open',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':open'},s('focus.open_stock')+' →'));
         body.append(el('tr',{'data-reading-anchor':row.ticker,class:selection?.checked.has(row.ticker)?'is-selected':''},
-          el('th',{scope:'row'},selection?selectBox(row.ticker):null,el('a.stock-name',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':name'},el('strong',row.ticker),el('span.watch-company',row.company||row.ticker)),
+          el('th',{scope:'row'},selection?selectBox(row.ticker):null,el('a.stock-name',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':name'},el('strong.ticker-symbol',row.ticker),el('span.watch-company',row.company||row.ticker)),
             stockActions(row.ticker)),
           el('td.watch-quote-cell',el('a.watch-price-link',{href:'#/chart/'+encodeURIComponent(row.ticker),'aria-label':s('watch.open_chart',{ticker:row.ticker}),'data-reading-key':row.ticker+':chart'},el('strong.mono',px(shown.price))),
             el('span.watch-change',{class:'watch-'+changeClass(shown.change_pct)},pct(shown.change_pct,2)),
@@ -318,8 +318,8 @@ export function overviewView(rows, options) {
   }
   const methods=el('details.watch-method',{'data-disclosure':'prices'},el('summary',s('watch.method')),
     el('p.muted.small',s('watch.method_body',{start:previous || '—',end:session || '—'})));
-  for(const r of filtered) methods.append(el('p.small',`${r.ticker} · ${s('watch.cap')}: ${capText(r.market_cap)} ${r.market_cap_currency || ''} · ${s('watch.cap_as_of')}: ${r.market_cap_as_of?.slice(0,10) || '—'}`));
-  for(const r of filtered.filter(retained))methods.append(el('p.small',`${r.ticker} · ${savedLabel(r)} · ${s('watch.saved_at')}: ${r.price_recorded_at || '—'}`));
+  for(const r of filtered) methods.append(el('p.small',el('span.ticker-symbol',r.ticker),` · ${s('watch.cap')}: ${capText(r.market_cap)} ${r.market_cap_currency || ''} · ${s('watch.cap_as_of')}: ${r.market_cap_as_of?.slice(0,10) || '—'}`));
+  for(const r of filtered.filter(retained))methods.append(el('p.small',el('span.ticker-symbol',r.ticker),` · ${savedLabel(r)} · ${s('watch.saved_at')}: ${r.price_recorded_at || '—'}`));
   root.append(methods);
   return root;
 }

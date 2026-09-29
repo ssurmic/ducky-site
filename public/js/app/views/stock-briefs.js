@@ -35,7 +35,7 @@ export function factText(fact){
 export function reportCard(row,{onHistory,archive=false}={}){
   const ticker=safeTicker(row.ticker)?row.ticker:'';
   const card=el('article.card.stock-brief',{'data-ticker':ticker},
-    el('div.stock-brief-head',el('h2',ticker?'$'+ticker:s('stockbrief.title')),
+    el('div.stock-brief-head',el('h2',ticker?el('span.ticker-symbol','$'+ticker):s('stockbrief.title')),
       el('span.chip',s('stockbrief.status_'+(row.status||'unavailable')))));
   if(!['ready','stale'].includes(row.status)||!row.report){
     card.append(el('p.muted',s('stockbrief.unready_'+(row.reason==='claim_check_required'?'claim_check_required':row.status==='source_changed'?'source_changed':row.refresh?.status==='failed'?'failed':'pending'))));

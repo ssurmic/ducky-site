@@ -91,3 +91,56 @@ test('refresh after focusing event and refresh controls preserves both chart dat
   assert.equal(restored.readingDate(),dates.yield);assert.equal(host.querySelector('[data-chart=yield] .today-lines-tip').hidden,false);
  }finally{task?.stop();host.remove();globalThis.fetch=original;t.mock.timers.reset();}
 });
+
+test('phone chart choice survives a failed read and a new revision with its date and selector focus intact',async t=>{
+ const original=globalThis.fetch,host=document.createElement('div');document.querySelector('main').append(host);
+ t.mock.timers.enable({apis:['Date','setTimeout'],now});let task;
+ const choice=key=>host.querySelector('[data-chart-choice='+key+']');
+ try{
+  globalThis.fetch=async()=>Response.json(dashboardMacro());task=mountMacroStrip(host);await task;
+  assert.equal(choice('liquidity').getAttribute('aria-pressed'),'true');
+  choice('yield').focus();choice('yield').click();
+  assert.equal(choice('liquidity').getAttribute('aria-pressed'),'false');assert.equal(choice('yield').getAttribute('aria-pressed'),'true');
+  const chart=host.querySelector('[data-chart=yield] [role=slider]');chart.focus();
+  chart.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Home',bubbles:true}));const date=chart.readingDate();
+  choice('yield').focus();
+  globalThis.fetch=async()=>Response.json({error:'temporarily_unavailable'},{status:503});
+  host.querySelector('.today-macro-refresh button').click();await flush();
+  assert.equal(host.querySelector('[data-chart=yield] [role=slider]'),chart);
+  assert.equal(choice('yield').getAttribute('aria-pressed'),'true');assert.match(host.querySelector('.today-macro-refresh').textContent,/could not load/);
+  globalThis.fetch=async()=>Response.json(dashboardMacro({sequence:2}));
+  host.querySelector('.today-macro-refresh button').click();await flush();
+  const updated=host.querySelector('[data-chart=yield] [role=slider]');assert.notEqual(updated,chart);
+  assert.equal(updated.readingDate(),date);assert.equal(choice('yield').getAttribute('aria-pressed'),'true');
+  assert.equal(host.querySelectorAll('.today-dashboard-chart.is-selected').length,1);
+  assert.equal(host.querySelector('.today-dashboard-chart.is-selected').dataset.chart,'yield');
+  assert.equal(document.activeElement,choice('yield'));assert.equal(host.querySelector('[data-chart=yield] .today-lines-tip').hidden,true);
+  globalThis.fetch=async()=>Response.json({error:'forbidden'},{status:403});
+  host.querySelector('.today-macro-refresh button').click();await flush();
+  assert.equal(host.querySelector('.today-dashboard-trends'),null);assert.equal(host.querySelectorAll('[role=slider]').length,0);
+ }finally{task?.stop();host.remove();globalThis.fetch=original;t.mock.timers.reset();}
+});
+
+test('legacy compact readings retain native details, full gauges/history and independent expanded state on refresh',async t=>{
+ const original=globalThis.fetch,host=document.createElement('div');document.querySelector('main').append(host);
+ t.mock.timers.enable({apis:['Date','setTimeout'],now});let task;
+ const legacy=()=>{const doc=dashboardMacro();delete doc.current_session;doc.fear_greed={score:34,rating:'fear',previous_close:37,previous_1_week:31};return doc;};
+ try{
+  globalThis.fetch=async()=>Response.json(legacy());task=mountMacroStrip(host);await task;
+  const folds=[...host.querySelectorAll('.today-macro-grid > details.today-macro-fold')];assert.equal(folds.length,4);
+  for(const fold of folds){
+   assert.equal(fold.open,false);const summary=fold.querySelector(':scope > summary');
+   assert.ok(summary.querySelector('.today-macro-value'));assert.equal(summary.querySelector('button,a,[role=slider]'),null);
+  }
+  const yieldFold=host.querySelector('[data-tile=yield]'),fngFold=host.querySelector('[data-tile=fng]');yieldFold.open=true;fngFold.open=true;
+  assert.equal(yieldFold.querySelectorAll('.today-lines-line').length,3);assert.ok(fngFold.querySelector('.today-gauge'));
+  assert.equal(fngFold.querySelectorAll('.today-macro-history li').length,2);
+  const summary=yieldFold.querySelector('summary');summary.focus();
+  globalThis.fetch=async()=>Response.json({...legacy(),observed_at:'2026-09-29T15:42:00Z'});
+  host.querySelector('.today-macro-refresh button').click();await flush();
+  assert.equal(host.querySelector('[data-tile=yield]').open,true);assert.equal(host.querySelector('[data-tile=fng]').open,true);
+  assert.equal(host.querySelector('[data-tile=liquidity]').open,false);assert.equal(host.querySelector('[data-tile=vix]').open,false);
+  assert.equal(document.activeElement,host.querySelector('[data-tile=yield] > summary'));
+  assert.equal(host.querySelector('[data-tile=yield] .today-lines-tip').hidden,true);
+ }finally{task?.stop();host.remove();globalThis.fetch=original;t.mock.timers.reset();}
+});

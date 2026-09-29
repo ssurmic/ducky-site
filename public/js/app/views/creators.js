@@ -87,6 +87,11 @@ export function videoDate(value, lang) {
     new Intl.DateTimeFormat(lang, {dateStyle:"medium", timeStyle:"short", timeZone:"UTC"}).format(d) + " UTC";
 }
 
+// Keep the translated action text intact while styling only its structured symbol.
+function researchLabel(ticker) {
+  return s('creatorsux.research_stock').split('{ticker}').flatMap((part,i)=>i?[el('span.ticker-symbol',ticker),part]:[part]);
+}
+
 function callChips(calls, isZh, url,kolId) {
   // per-ticker gist Ducky dug out of the video: $SYM ▲/▼ + the target the CREATOR stated (attributed,
   // never our own) + their one-line point. Compact chips so a promo/title-only video still yields signal.
@@ -95,7 +100,7 @@ function callChips(calls, isZh, url,kolId) {
     const st = (c.stance === "bull" || c.stance === "bear") ? c.stance : "neutral";
     if (!groundedClaim(c)) continue;
     const chip = el("div.cr-call.cr-call-" + st);
-    chip.appendChild(el("b.cr-call-sym.mono", "$" + String(c.sym || "").toUpperCase()));
+    chip.appendChild(el("b.cr-call-sym.mono.ticker-symbol", "$" + String(c.sym || "").toUpperCase()));
     chip.appendChild(el("span.cr-call-arrow", s("creators.take_" + st)));
     const note = pickSummary(c.note, isZh);
     if (note) chip.appendChild(el("span.cr-call-note", note));
@@ -104,7 +109,7 @@ function callChips(calls, isZh, url,kolId) {
     const sourceSeconds=c.action_start_seconds??c.start_seconds;
     if (safeSource(url) && Number.isFinite(sourceSeconds)) chip.appendChild(el("a", {href:atTime(url,sourceSeconds),target:"_blank",rel:"noopener noreferrer"}, `${Math.floor(sourceSeconds/60)}:${String(Math.floor(sourceSeconds)%60).padStart(2,"0")} ↗`));
     chip.append(evidenceLink(c.sym,c.point_id||c.claim_id),el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+encodeURIComponent(c.sym)},s('creators.chart')));
-    chip.append(el('a.btn.btn-ghost.btn-sm',{href:'#/stock/'+encodeURIComponent(c.sym)+'?from=creators'},s('creatorsux.research_stock',{ticker:c.sym})));
+    chip.append(el('a.btn.btn-ghost.btn-sm',{href:'#/stock/'+encodeURIComponent(c.sym)+'?from=creators'},researchLabel(c.sym)));
     chip.append(el('a.btn.btn-ghost.btn-sm',{href:creatorTarget({tab:'research',selected:kolId,ticker:c.sym,point:c.point_id||c.claim_id,mine:false})},s('creatorclaim.price_title')));
     wrap.appendChild(chip);
   }
@@ -307,7 +312,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     content.append(tabs);
     if(stockFilter){
       content.append(el('p.muted.small',s('creatorstocks.coverage')));
-      if(stockTicker)content.append(el('p.creator-stock-context',el('b','$'+stockTicker+' '),el('a',{href:'#/chart/'+stockTicker},s('creators.chart')), ' · ', el('a',{href:'#/boards?ticker='+stockTicker},s('creatorstocks.radar'))));
+      if(stockTicker)content.append(el('p.creator-stock-context',el('b.ticker-symbol','$'+stockTicker),' ',el('a',{href:'#/chart/'+stockTicker},s('creators.chart')), ' · ', el('a',{href:'#/boards?ticker='+stockTicker},s('creatorstocks.radar'))));
     }
     if(tab!=='feed'){
       const selector=el('select.input',{'aria-label':s('creatorflow.creator')},el('option',{value:'',selected:!selected},s('creatorflow.all_creators')),...available.map(k=>el('option',{value:k.id,selected:selected===k.id},k.name)));
@@ -384,6 +389,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
 
     if(selected){
       const creator=kols.find(k=>k.id===selected);
+      const readable=!sourceOnly&&canRead(selected)?filterPosts(histories[selected]?.items||posts,{following,mine:false,archive:false,tickers:stockFilter}).filter(p=>p.kol_id===selected):[];
+      const group=creatorViews(readable).find(row=>row.kolId===selected);
       content.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{
         selected='';const previous=readingStates.get(creatorTarget({tab,mine,ticker:stockTicker}));
         if(previous){query=previous.query;discoveryScope=previous.discoveryScope;discoveryStance=previous.discoveryStance;directoryLimit=previous.directoryLimit;filtersOpen=previous.filtersOpen;}
@@ -393,8 +400,8 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         if(!nativeHost){
           nativeKey=nextNativeKey;nativeHost=el('div.creator-native-opinions');
           content.append(nativeHost);
-          nativeOpinions=mountCreatorOpinions(nativeHost,{signal,creator:selected,ticker:stockTicker||null,from:'creators'});
-        }else content.append(nativeHost);
+          nativeOpinions=mountCreatorOpinions(nativeHost,{signal,creator:selected,ticker:stockTicker||null,from:'creators',compactEmpty:!!group?.views.length});
+        }else {nativeOpinions?.setCompactEmpty(!!group?.views.length);content.append(nativeHost);}
       }
       if(!canRead(selected)){
         content.append(el('div.card',el('p',s(following.has(selected)?'experience.creator_outside_trial':'experience.follow_to_read')),
@@ -403,8 +410,6 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         return;
       }
       if(!sourceOnly){
-        const readable=filterPosts(histories[selected]?.items||posts,{following,mine:false,archive:false,tickers:stockFilter}).filter(p=>p.kol_id===selected);
-        const group=creatorViews(readable).find(row=>row.kolId===selected);
         if(group?.views.length){
           const mainViews=el('section.creators-ux-author-views',el('h2',s('creatorsux.author_views')),
             el('p.small.muted',s('creatorsux.author_views_hint')));
@@ -451,17 +456,18 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       for(const ticker of reviewed?taggedTickers(p):[])if(!shownTickers.has(ticker))identities.push({ticker,stance:'neutral'});
       const badges=el('div.creator-ticker-views');
       for(const row of identities){
-        const label='$'+row.ticker+(['bull','bear'].includes(row.stance)?' '+s('creators.take_'+row.stance):row.stance==='mixed'?' '+s('creators.mixed_views'):'');
-        const link=evidenceLink(row.ticker,row.pointId||'');link.textContent=label;
+        const stance=['bull','bear'].includes(row.stance)?s('creators.take_'+row.stance):row.stance==='mixed'?s('creators.mixed_views'):'';
+        const link=evidenceLink(row.ticker,row.pointId||'');
+        link.replaceChildren(el('span.ticker-symbol','$'+row.ticker),...(stance?[' ',el('span',stance)]:[]));
         link.classList.add('cr-take',TAKE_CLS[row.stance]||'cr-neutral');badges.append(link);
         badges.append(el('a.btn.btn-ghost.btn-sm',{href:'#/stock/'+encodeURIComponent(row.ticker)+'?from=creators',
-          'data-reading-key':'creator-source:'+p.platform_post_id+':'+row.ticker+':stock'},s('creatorsux.research_stock',{ticker:row.ticker})));
+          'data-reading-key':'creator-source:'+p.platform_post_id+':'+row.ticker+':stock'},researchLabel(row.ticker)));
       }
       if(identities.length)head.append(badges);
       else head.append(el('span.cr-take.cr-neutral',s(reviewed?'creators.summary_ready':'creators.unverified')));
       art.appendChild(head);
       const matched=identities.map(row=>row.ticker).filter(t=>watchedTickers.includes(t));
-      if(matched.length)art.append(el('p.creator-watch-match.small',s('creatorstocks.matched')+' ',...matched.flatMap((t,i)=>[i?' · ':'',el('a.mono',{href:'#/chart/'+t},'$'+t)])));
+      if(matched.length)art.append(el('p.creator-watch-match.small',s('creatorstocks.matched')+' ',...matched.flatMap((t,i)=>[i?' · ':'',el('a.mono',{href:'#/chart/'+t},el('span.ticker-symbol','$'+t))])));
       art.appendChild(el("time.muted.small", { datetime: p.published_at || "" }, s("creators.published") + " " + videoDate(p.published_at,isZh ? "zh-CN" : "en-US")));
       const source=meta.source || {};
       const sourceFacts=el('div.creator-source-facts');
@@ -568,12 +574,12 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   function viewRow(view,creator){
     const p=view.post,tickers=(view.tickers||[]).filter(Boolean).slice(0,3);
     const chips=tickers.length?tickers.map(t=>el('a.cr-take',{href:'#/stock/'+encodeURIComponent(t)+'?from=creators','aria-label':s('creatorsux.research_stock',{ticker:t}),'data-reading-key':'creator-view:'+p.platform_post_id+':'+view.pointId+':'+t+':stock',class:t===view.ticker?(TAKE_CLS[view.stance]||'cr-neutral'):'cr-neutral'},
-      '$'+t+(t===view.ticker&&['bull','bear'].includes(view.stance)?' '+s('creators.take_'+view.stance):''))):[el('span.cr-take.cr-neutral',s('creators.summary_ready'))];
+      el('span.ticker-symbol','$'+t),t===view.ticker&&['bull','bear'].includes(view.stance)?[' ',el('span',s('creators.take_'+view.stance))]:null)):[el('span.cr-take.cr-neutral',s('creators.summary_ready'))];
     const matched=tickers.filter(t=>watchedTickers.includes(t));
     const button=el('button.creator-view-open',{type:'button','data-post':p.platform_post_id||p.id||'','data-point':view.pointId,onclick:()=>openView(view,creator)},
       el('span.creator-view-text',view.text),
       el('span.creator-view-meta.small.muted',[String(p.published_at||'').slice(0,10),previewTitle(p.title)].filter(Boolean).join(' · '),
-        matched.length?el('span.creator-watch-match',' · '+s('creatorstocks.matched')+' '+matched.map(t=>'$'+t).join(' ')):null));
+        matched.length?el('span.creator-watch-match',' · '+s('creatorstocks.matched')+' ',...matched.flatMap((t,i)=>[i?' ':'',el('span.ticker-symbol','$'+t)])):null));
     const row=el('li.creator-view-row',{class:'is-'+view.stance},el('div.creator-view-takes',...chips),button);
     const qualifications=view.record?claimQualifications(view.record):null;if(qualifications)row.append(qualifications);
     if(view.records?.length>1){
@@ -610,7 +616,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     actions.append(el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>{closeModal();selected=p.kol_id;tab='research';renderContent();}},s('creators.research')));
     if(p.platform_post_id&&p.kol_id)actions.append(el('a.btn.btn-ghost.btn-sm',{
       href:creatorTarget({tab:'feed',mine:false,selected:p.kol_id,post:p.platform_post_id,point:view.pointId}),onclick:closeModal},s('creatorsux.open_record')));
-    if(view.ticker)actions.append(el('a.btn.btn-ghost.btn-sm',{href:'#/stock/'+encodeURIComponent(view.ticker)+'?from=creators'},s('creatorsux.research_stock',{ticker:view.ticker})),evidenceLink(view.ticker,view.pointId));
+    if(view.ticker)actions.append(el('a.btn.btn-ghost.btn-sm',{href:'#/stock/'+encodeURIComponent(view.ticker)+'?from=creators'},researchLabel(view.ticker)),evidenceLink(view.ticker,view.pointId));
     body.append(actions);
     modal((creator.name||p.kol_name||'')+' · '+String(p.published_at||'').slice(0,10),body);
   }
