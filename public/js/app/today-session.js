@@ -1,13 +1,14 @@
 // Current market overview: one saved snapshot, with independent source clocks.
 import {el} from './ui.js';
 import {s,LANG} from './strings.js';
+import {summaryFixed} from './today-fixed.js';
 
 const finite=value=>typeof value==='number'&&Number.isFinite(value);
 const day=value=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)&&Number.isFinite(Date.parse(value+'T12:00:00Z'))&&new Date(value+'T12:00:00Z').toISOString().slice(0,10)===value;
 const instant=value=>typeof value==='string'&&/T.*(?:Z|[+-]\d{2}:\d{2})$/.test(value)&&Number.isFinite(Date.parse(value));
 const nyDay=now=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(now);
 const time=value=>instant(value)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{timeZone:'America/New_York',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(value))+' ET':'—';
-const percent=value=>finite(value)?(value>0?'+':'')+value.toFixed(2)+'%':'—';
+const percent=value=>finite(value)?(value>0?'+':'')+summaryFixed(value===0?0:value,2)+'%':'—';
 const INDEXES=['SPY','QQQ','DIA','IWM'];
 const TICKERS=new Set([...INDEXES,'XLK','SMH','XLC','XLY','XLP','XLF','XLV','XLE','XLI','XLB','XLU','GLD','SLV','USO','TLT']);
 
