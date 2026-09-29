@@ -823,3 +823,27 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
 .today-macro-more{display:inline-block;margin-top:10px;font-size:13px;color:var(--accent-text,var(--accent));text-decoration:none;}
 .today-macro-more:hover{text-decoration:underline;}
 .chart-back{display:inline-block;margin-bottom:6px;}
+
+/* Current-session reading, above dated macro charts and the closing archive. */
+.today-session{margin:0 0 12px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--surface);}
+.today-session-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.today-session-head .today-section-title{margin:0;font-size:17px;line-height:1.35;}
+.today-session-phase{font-size:11px;padding:2px 6px;border-radius:4px;background:var(--surface-2,var(--bg));color:var(--muted);}
+.today-session-head>span:last-child{margin-left:auto;}
+.today-session-indices,.today-session-all{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 18px;}
+.today-session-quote{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:'name change' 'symbol clock' 'saved saved';gap:3px 6px;padding:8px 0;}
+.today-session-name{grid-area:name;font-size:12px;line-height:1.3;}
+.today-session-symbol{grid-area:symbol;color:var(--muted);font-size:11px;}
+.today-session-quote>strong{grid-area:change;font-size:18px;line-height:1.2;}
+.today-session-clock{grid-area:clock;font-size:10px;color:var(--muted);text-align:right;}
+.today-session-saved{grid-area:saved;color:var(--muted);font-size:10px;}
+.today-session-summary{font-size:13px;line-height:1.55;margin:8px 0;max-width:100ch;}
+.today-session-meta{margin:4px 0 0;line-height:1.4;}
+.today-session-details{border-top:1px solid var(--border);margin-top:8px;}
+.today-session-details>summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-size:12px;gap:6px;}
+.today-session-details>summary::before{content:'▸';color:var(--muted);}
+.today-session-details[open]>summary::before{content:'▾';}
+.today-session-details>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.today-session-details>p{line-height:1.5;}
+.today-session-all .today-session-quote{border-bottom:1px solid var(--border);}
+@media(max-width:700px){.today-session{padding:10px 12px;}.today-session-indices,.today-session-all{grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 14px;}.today-session-quote>strong{font-size:16px;}.today-session-clock{font-size:10px;}.today-session-summary{font-size:12px;}.today-session-head .today-section-title{font-size:16px;}}

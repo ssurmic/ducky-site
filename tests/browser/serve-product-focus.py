@@ -1,7 +1,7 @@
 # Synthetic fixture server; never forwards authentication or API traffic.
 from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
 from pathlib import Path
-from urllib.parse import urlparse,parse_qs
+from urllib.parse import urlparse,parse_qs,urlencode
 import argparse,os,re
 parser=argparse.ArgumentParser(description='Loopback-only synthetic product UI; no API proxy.')
 parser.add_argument('--port',type=int,default=8947)
@@ -10,6 +10,12 @@ root=Path(os.environ.get('DUCKY_QA_REPO',Path(__file__).resolve().parents[2])).r
 class Handler(SimpleHTTPRequestHandler):
  def do_GET(self):
   u=urlparse(self.path)
+  if u.path=='/qa-device':
+   q=parse_qs(u.query);width=int(q.get('width',['390'])[0]);height=int(q.get('height',['700'])[0])
+   if width not in (320,390,1440) or height not in (600,700,900):self.send_error(400);return
+   target='/qa-frame?'+urlencode({k:v[0] for k,v in q.items() if k not in ('width','height')})
+   raw=('<!doctype html><title>Synthetic device QA</title><style>body{margin:0;background:#777}iframe{border:0;display:block}</style><iframe title="Synthetic Ducky viewport" width="'+str(width)+'" height="'+str(height)+'" src="'+target.replace('&','&amp;')+'"></iframe>').encode()
+   self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(raw)));self.end_headers();self.wfile.write(raw);return
   if u.path=='/qa-frame':
    lang='en' if parse_qs(u.query).get('lang')==['en'] else 'zh'
    value=(root/'dist'/lang/'app/index.html').read_text()

@@ -1,5 +1,10 @@
 # Change log
 
+## Current-session Today overview · 2026-09-29
+
+Implemented a compact four-index overview before the dated close archive, bound to the same saved current-session macro metrics used by the cards. Source times, missing values, expiry, historical chart dates, permission revocation and replica ordering remain explicit. 909 Node tests, Python18pass/1skip, build/copy/links and eight phone combinations plus desktop passed. Production release pending; [acceptance](reports/TODAY-INTRADAY-2026-09-29.md).
+
+
 ## Returning-browser homepage entry · 2026-09-29
 
 Remembered browser sessions now enter Today directly from the homepage, through the existing validated app bootstrap. Signed-out visitors and explicit introduction anchors keep the public page. Temporary session/profile outages show retry instead of an unnecessary sign-in. No extra landing auth request or new authentication authority. [Behavior and acceptance](reports/RETURNING-BROWSER-ENTRY-2026-09-29.md).
