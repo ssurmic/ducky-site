@@ -13,7 +13,7 @@ const now={now:new Date('2026-09-28T20:04:00Z')},flush=()=>new Promise(resolve=>
 
 test('a source-labelled close snapshot keeps its close, sector, macro and preview topics with real coverage',()=>{
   const root=macro.macroStrip(closeMacro(),now);
-  assert.match(root.querySelector('.today-digest-head').textContent,/Close snapshot.*9\/28\/2026/);
+  assert.match(root.querySelector('.today-digest-head').textContent,/Market close.*9\/28\/2026/);
   assert.match(root.querySelector('.today-digest-publication').textContent,/16:00 ET.*not final settlement.*17\/19.*DIA, XLB/);
   assert.equal(root.querySelectorAll('.today-digest-part').length,3);assert.ok(root.querySelector('.today-preview'));
   assert.doesNotMatch(root.textContent,/\[object Object\]|undefined|null|NaN/);
@@ -31,7 +31,7 @@ test('the complete dated event list preserves timing, conditional impacts, origi
   const root=preview.digestPreview(closeMacro().digest.preview,'2026-09-28');
   assert.equal(root.querySelectorAll('.today-preview-event').length,8);
   assert.equal(root.querySelectorAll(':scope > .today-preview-event').length,3);
-  const more=root.querySelector('.today-preview-more');assert.equal(more.open,false);assert.match(more.querySelector('summary').textContent,/5 more events \(8 total\)/);
+  const more=root.querySelector('.today-preview-more');assert.equal(more.open,false);assert.match(more.querySelector('summary').textContent,/5 more events/);
   more.open=true;assert.equal(more.querySelectorAll('.today-preview-event').length,5);
   const rows=root.querySelectorAll('.today-preview-event');
   assert.match(rows[0].textContent,/After market close.*MU/);assert.match(rows[1].textContent,/Time unconfirmed.*AMD/);
@@ -76,9 +76,9 @@ test('long unavailable lists keep coverage visible and every missing instrument 
 
 test('event counts use singular only for exactly one saved event',()=>{
   const saved=closeMacro().digest.preview;
-  for(const [n,expected] of [[0,'0 scheduled events'],[1,'1 scheduled event'],[2,'2 scheduled events']]){
+  for(const [n,expected] of [[0,'0 listed events'],[1,'1 listed event'],[2,'2 listed events']]){
     const rendered=preview.digestPreview({...saved,events:saved.events.slice(0,n)},saved.anchor_session);
-    assert.equal(rendered.querySelector('.today-preview-heading span').textContent,expected);
+    assert.equal(rendered.querySelector('.today-preview-sources p').textContent,expected);
   }
 });
 
@@ -86,7 +86,7 @@ test('archive preview stays bound to its original session and calendar day diffe
   const doc=closeMacro();doc.digest.preview.calendar_day='2026-09-26';doc.digest.preview.next_session='2026-09-28';
   doc.digest.preview.anchor_session=doc.digest.session='2026-09-25';
   const root=macro.macroStrip(doc,now),archive=root.querySelector('.today-digest-archive');
-  assert.equal(archive.open,false);assert.match(archive.textContent,/Next calendar day 2026-09-26.*Next market session 2026-09-28/);
+  assert.equal(archive.open,false);assert.match(archive.textContent,/Day after this note: 2026-09-26.*Following trading day: 2026-09-28/);
   assert.match(archive.textContent,/when this note was written/);
   doc.digest.preview.anchor_session='2026-09-28';
   assert.equal(macro.macroStrip(doc,now).querySelector('.today-preview'),null);
@@ -107,9 +107,9 @@ test('unknown coverage and missing impact remain readable without asserting an e
   const saved=closeMacro().digest.preview;
   for(const status of ['partial','unavailable','unexpected']){
     const root=preview.digestPreview({...saved,events:[],coverage:{status}},saved.anchor_session);
-    assert.match(root.textContent,/does not establish an empty schedule/);assert.doesNotMatch(root.textContent,/No events appear/);
+    assert.match(root.textContent,/No schedule is available from these sources/);assert.doesNotMatch(root.textContent,/No events are listed/);
   }
-  assert.match(preview.digestPreview({...saved,events:[],coverage:{status:'empty'}},saved.anchor_session).textContent,/No events appear in the covered calendar/);
+  assert.match(preview.digestPreview({...saved,events:[],coverage:{status:'empty'}},saved.anchor_session).textContent,/No events are listed for these dates/);
   const noImpact={...saved,events:[{date:'2026-09-29',title_en:'Saved event',type:'macro',timing_status:'unconfirmed'}]};
   assert.match(preview.digestPreview(noImpact,saved.anchor_session).textContent,/Saved event.*No impact explanation/);
   noImpact.events[0].source_observed_at='2026-09-28';
@@ -130,9 +130,11 @@ test('visible saved reads adopt new editions within a minute and preserve disclo
   try{
     task=macro.mountMacroStrip(host);await task;assert.equal(reads,1);
     const more=host.querySelector('.today-preview-more');more.open=true;more.querySelector('summary').focus();
+    host.querySelector('.today-preview-basis').open=true;host.querySelector('.today-preview-sources').open=true;
     current=structuredClone(current);current.digest.publication.phase='revised';current.digest.generated_at='2026-09-28T20:03:00Z';
     t.mock.timers.tick(60000);await flush();assert.equal(reads,2);assert.match(host.textContent,/Updated edition/);
-    assert.equal(host.querySelector('.today-preview-more').open,true);assert.equal(document.activeElement.dataset.readingKey,'digest-preview:2026-09-28:all:toggle');
+    assert.equal(host.querySelector('.today-preview-more').open,true);
+    assert.equal(host.querySelector('.today-preview-basis').open,true);assert.equal(host.querySelector('.today-preview-sources').open,true);assert.equal(document.activeElement.dataset.readingKey,'digest-preview:2026-09-28:all:toggle');
     const accepted=host.querySelector('.today-digest');t.mock.timers.tick(60000);await flush();assert.equal(reads,3);assert.equal(host.querySelector('.today-digest'),accepted);
     visible=false;t.mock.timers.tick(60000);await flush();assert.equal(reads,3);
     visible=true;online=false;t.mock.timers.tick(60000);await flush();assert.equal(reads,3);
@@ -169,4 +171,55 @@ test('refresh preserves the focused historical chart date when the saved note ch
     assert.equal(document.activeElement.dataset.readingKey,'macro-chart:liquidity');
     assert.equal(document.activeElement.readingDate(),date);assert.equal(document.activeElement.getAttribute('aria-valuenow'),'0');
   }finally{task?.stop();host.remove();globalThis.fetch=originalFetch;}
+});
+
+test('preview names tomorrow only for the actual next day and keeps same-day, weekend and archived dates honest',()=>{
+  const saved=closeMacro().digest.preview,at={now:new Date('2026-09-28T20:04:00Z')};
+  const ordinary={...saved,events:saved.events.filter(event=>event.date==='2026-09-29')};
+  let root=preview.digestPreview(ordinary,saved.anchor_session,at);
+  assert.equal(root.querySelector('h3').textContent,'Tomorrow');
+  assert.match(root.querySelector('.today-preview-heading').textContent,/Sep 29/);
+  root=preview.digestPreview(saved,saved.anchor_session,at);
+  assert.equal(root.querySelector('h3').textContent,'Today and tomorrow');
+  assert.match(root.querySelector('.today-preview-day').textContent,/Today.*Sep 28/);
+  assert.match(root.querySelectorAll('.today-preview-day')[1].textContent,/Tomorrow.*Sep 29/);
+  const today={...saved,events:saved.events.slice(0,2)};
+  root=preview.digestPreview(today,saved.anchor_session,at);
+  assert.equal(root.querySelector('h3').textContent,"Today's events");
+  assert.match(root.textContent,/After market close.*MU.*Time unconfirmed.*AMD/);
+  const weekend={...saved,anchor_session:'2026-10-02',calendar_day:'2026-10-03',next_session:'2026-10-05',
+    events:[{...saved.events[0],date:'2026-10-05',timing_status:'before_open'}]};
+  root=preview.digestPreview(weekend,weekend.anchor_session,{now:new Date('2026-10-02T20:04:00Z')});
+  assert.equal(root.querySelector('h3').textContent,'Upcoming events');
+  assert.match(root.querySelector('.today-preview-heading').textContent,/Mon, Oct 5/);
+  assert.equal(root.querySelector('.today-preview-calendar').getAttribute('href'),'#/calendar?date=2026-10-03');
+  root=preview.digestPreview(ordinary,saved.anchor_session,{now:new Date('2026-09-30T12:00:00Z')});
+  assert.equal(root.querySelector('h3').textContent,'Scheduled events');
+  assert.match(root.querySelector('.today-preview-heading').textContent,/2026/);
+  const holiday={...weekend,anchor_session:'2026-11-25',calendar_day:'2026-11-26',next_session:'2026-11-27',
+    events:[{...saved.events[0],date:'2026-11-26',type:'holiday',title_en:'Thanksgiving'}]};
+  root=preview.digestPreview(holiday,holiday.anchor_session,{now:new Date('2026-11-25T21:00:00Z')});
+  assert.equal(root.querySelector('h3').textContent,'Tomorrow');
+  assert.match(root.querySelector('.today-preview-event-head').textContent,/Market closed.*Thanksgiving/);
+});
+
+test('one event disclosure retains the complete impact and original details without default technical paragraphs',()=>{
+  const saved=closeMacro().digest.preview,root=preview.digestPreview(saved,saved.anchor_session,now);
+  const row=root.querySelector('.today-preview-event'),details=row.querySelector('details'),head=details.querySelector('summary');
+  assert.equal(row.querySelectorAll('summary').length,1);
+  assert.equal(head.querySelector('strong').textContent,saved.events[0].title_en);
+  assert.equal(head.querySelector('.today-preview-impact').textContent,saved.events[0].impact.en);
+  assert.doesNotMatch(head.textContent,/Why it matters|Details and sources/);
+  assert.equal(details.dataset.readingKey,'digest-preview:2026-09-28:synthetic-event-0:basis');
+  assert.equal(head.dataset.readingKey,'digest-preview:2026-09-28:synthetic-event-0:toggle');
+  assert.equal(row.dataset.eventDate,saved.events[0].date);
+  assert.equal(root.querySelector(':scope > .today-preview-window'),null);
+  assert.equal(root.querySelector(':scope > .today-preview-coverage'),null);
+  assert.equal(root.querySelector(':scope > .today-preview-clock'),null);
+  const sources=root.querySelector('.today-preview-sources');assert.equal(sources.open,false);
+  assert.equal(sources.querySelector('summary').textContent,'Schedule sources');
+  assert.match(sources.textContent,/sources are incomplete.*Schedule recorded/s);
+  details.open=true;
+  assert.match(details.textContent,/Synthetic acceptance schedule.*Review revisions/);
+  assert.ok(details.querySelector('a[href="https://example.com/scheduled-event/0"]'));
 });
