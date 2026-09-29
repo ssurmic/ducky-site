@@ -101,8 +101,10 @@ test('an empty watchlist offers real search or Explore without inventing members
  const {dispose}=await setup({tickers:[]});
  try{
   assert.equal(root.querySelector('.watch-controls').hidden,true);assert.equal(root.querySelector('.watch-mode-note').hidden,true);
-  assert.ok(root.querySelector('.watch-first-use a[href="#/explore"]'));root.querySelector('.watch-first-use button').click();
-  assert.equal(root.querySelector('.watch-add-options').open,true);assert.equal(document.activeElement,root.querySelector('.add-row input'));assert.deepEqual(store.get('watchlist'),[]);
+  assert.ok(root.querySelector('.watch-first-use a[href="#/explore"]'));
+  assert.equal(root.querySelector('.watch-add-options').open,true);assert.equal(root.querySelector('.watch-add-options>summary').hidden,true);
+  assert.equal(root.querySelector('.watch-add-options .add-row>button').hidden,true);assert.equal(root.querySelector('.watch-first-use img'),null);
+  assert.deepEqual(store.get('watchlist'),[]);
   const refs=referenceSummary({ticker:'EMPTY'},null);assert.deepEqual([...refs.querySelectorAll('strong')].map(n=>n.textContent),['—','—','—']);
  }finally{dispose();}
 });

@@ -4031,7 +4031,7 @@
   "app.focus.chart_basis": "Historical closes. Move the slider to inspect a date and price.",
   "app.focus.chart_stale": "Price history hasn't caught up to the latest completed trading day.",
   "app.focus.following": "Following",
-  "app.focus.follow_stock": "Follow stock",
+  "app.focus.follow_stock": "Add to watchlist",
   "app.focus.price_history": "Price history",
   "app.focus.research_history": "Research history",
   "app.focus.history_empty": "No research changes have been recorded in this period.",
@@ -4049,7 +4049,7 @@
   "app.focus.source_record": "Source record",
   "app.focus.no_matching_stocks": "No matching stocks in your watchlist.",
   "app.focus.conditional": "Conditional view",
-  "app.focus.unfollow_stock": "Unfollow stock",
+  "app.focus.unfollow_stock": "Remove from watchlist",
   "app.focus.counter_view": "Bearish view",
   "app.focus.chart_pending": "Historical prices are being prepared. Check again shortly.",
   "app.focus.chart_unavailable": "Historical prices could not be loaded.",
@@ -5615,5 +5615,11 @@
   "app.opinions.intent_historical": "Historical view",
   "app.opinions.intent_self_reported": "Self-reported",
   "app.opinions.intent_factual": "Factual statement",
-  "app.opinions.intent_unclear": "Intent unclear"
+  "app.opinions.intent_unclear": "Intent unclear",
+  "app.focus.watch_added": "{ticker} is in your watchlist. View it there anytime.",
+  "app.focus.view_watchlist": "View watchlist",
+  "app.focus.research_stock": "Research a stock",
+  "app.watch.first_use_intro": "Research a company first. Add it when you want to keep following it.",
+  "app.watch.first_use_more": "More stocks to research",
+  "app.watch.first_use_pending": "The discussion ranking is not available yet. You can still search companies."
 }
