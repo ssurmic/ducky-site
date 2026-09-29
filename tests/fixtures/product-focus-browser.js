@@ -209,6 +209,14 @@ window.fetch=async(input,options={})=>{
   ...(mode==='autocomplete-watchlist'&&options.body?{body:JSON.parse(options.body)}:{})});
  if(url.origin!==location.origin)throw Error('External traffic forbidden in synthetic fixture');
  const path=url.pathname.replace('/qa-api',''),method=options.method||'GET';
+ if(mode==='native-creator'){
+  const creator={id:'sample-creator',name:'Sample Research',platform:'youtube',profile:{}};
+  if(path==='/kol/opinions')return Response.json(opinionsFixture({topic:url.searchParams.get('topic')||'all',ticker:url.searchParams.get('ticker'),creator:url.searchParams.get('creator'),before:url.searchParams.get('before')}));
+  if(path==='/kol/feed'||path==='/kol/trial-feed')return Response.json({kols:[creator],posts:[{id:1,kol_id:creator.id,kol_name:creator.name,platform_post_id:'legacy00001',title:'Synthetic legacy transcript',published_at:'2026-09-27T20:00:00Z',url:'https://www.youtube.com/watch?v=legacy00001',tickers:[],calls:[],summary:{quality:'no_call',zh:'合成旧字幕摘要：作者提醒核对客户预算与订单。',en:'Synthetic legacy transcript: The creator watches customer budgets and orders.',source:{kind:'transcript',status:'ready',summary_reviewed:true}}}],pages:{}});
+  if(path==='/me/kols')return Response.json({subs:[],cap:2,analysis:{'sample-creator':{status:'paused',progress:{schema:'creator-progress/1',status:'ready',shared:true,counts:{discovered_posts:19,archived:13,readable_summaries:5},window:{since_day:'2026-09-23',as_of:'2026-09-29T08:00:00Z'},provider:{allowed:false}}}}});
+  if(path==='/kol/discover')return Response.json({status:'ready',items:[{creator,latest_view:null}]});
+  if(path==='/kol/sample-creator/page')return Response.json({kol_id:creator.id,status:'ready',content_hash:'synthetic-page'});
+ }
  if(mode==='native-opinions'&&path==='/kol/opinions'){
   if(query.get('opinions')==='unavailable')return Response.json({error:'synthetic_unavailable'},{status:503});
   return Response.json(opinionsFixture({topic:url.searchParams.get('topic')||'all',ticker:url.searchParams.get('ticker'),before:url.searchParams.get('before'),...(query.get('opinions')==='empty'?{items:[]}: {})}));

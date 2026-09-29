@@ -1,5 +1,9 @@
 # Change log
 
+## Native author links open readable views · 2026-09-29 (candidate)
+
+A selected creator now shows the same compact qualified video views as Today and Explore, with an exact creator filter, preserved source details and no follow requirement. Creator switches and account changes fence late responses; original-source routes and transcript material remain intact. Historical batch progress keeps its dated counts and no longer describes all new-upload processing as paused. [Validation and release boundaries](reports/CREATOR-NATIVE-PAGE-2026-09-29.md).
+
 ## Attributed video views across research pages · 2026-09-29 (candidate)
 
 Today, Explore and stock Overview read the same compact qualified-view contract without requiring author follows. Full conditions, opposing views, original dates and approximate source-video navigation remain visible. Existing transcript summaries remain; separate stale native aggregates cannot restore withdrawn points. Visible read-only refresh preserves valid disclosure/focus state and rejects late account or revision responses. The [candidate acceptance](reports/CREATOR-NATIVE-VIEWS-2026-09-29.md) records tests, synthetic visual checks and the unshipped API boundary.

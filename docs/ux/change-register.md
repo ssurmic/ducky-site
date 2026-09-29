@@ -2,6 +2,8 @@
 
 Updated: 2026-09-28. This English register is the canonical presentation handoff for the UX redesign. User-facing copy remains bilingual. The private backend's shared documents remain the system-design authority; this register records public UI behavior and integration boundaries only.
 
+**Native author-page follow-up candidate:** Author links now open the same compact reviewed views under the selected author heading, filtered and validated by exact creator identity. Historical batch status is labelled separately from new-upload processing. Original-source contexts and existing transcript/research access remain unchanged. [Focused and visual acceptance](../../reports/CREATOR-NATIVE-PAGE-2026-09-29.md).
+
 **Unreleased native-view integration:** Today adds qualified macro views, Explore keeps stocks first and adds latest views, and stock Overview receives only validated company-subject associations. Original transcript/metadata feeds remain; native rows retain exact conditions, opposed views, source dates and approximate original-video navigation. The shared read revision controls refresh and withdrawals without an implicit follow. [Candidate checks and deployment limits](../../reports/CREATOR-NATIVE-VIEWS-2026-09-29.md).
 
 **Unreleased coherence follow-up:** Today consumes the backend's saved per-metric source

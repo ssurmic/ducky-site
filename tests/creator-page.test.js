@@ -27,14 +27,16 @@ test('a historical loss is visible with its basis and inspectable date; missing 
   assert.ok(noPrice.textContent.includes('No complete price study'));
 });
 
-test('opening a creator renders its preloaded shared page without another fetch or analysis POST',async()=>{
+test('opening a creator reuses its shared page and only adds a filtered native preview GET',async(t)=>{
   store.set('me',{tier:'pro'});const requests=[];
   globalThis.fetch=async(url,opts)=>{requests.push([url,opts?.method]);return Response.json(url==='/kol/feed'?{
     kols:[{id:'creator',name:'Creator',profile:{}}],posts:[],pages:{creator:{kol_id:'creator',chart,coverage:{indexed:3,reviewed:1}}}
   }:url==='/me/kols'?{subs:['creator'],analysis:{}}:{items:[]});};
-  const root=document.querySelector('main'),dispose=await mount(root);
+  const root=document.querySelector('main'),dispose=await mount(root);t.after(dispose);
   const count=requests.length;root.querySelector('.creator-name').click();
-  assert.equal(requests.length,count);
+  assert.equal(requests.length,count+1);
+  const added=new URL(requests.at(-1)[0],'https://ducky.test');assert.equal(added.pathname,'/kol/opinions');assert.equal(added.searchParams.get('creator'),'creator');
+  assert.equal(requests.filter(([url])=>url==='/kol/creator/page').length,0);
   assert.ok(root.querySelector('.creator-price-chart'));
   assert.equal(root.querySelector('.creator-video-archive').open,true);
   assert.equal(root.querySelector('.evidence-page-head').hidden,true);

@@ -8,6 +8,7 @@ import {replaceReading,stockHref} from './stock-reading.js';
 const SCHEMA='creator-opinions/1',PAGE_SIZE=30,REFRESH_MS=30000;
 const topics=['macro','sector','company','other'],stances=['bull','bear','neutral','unclear'];
 const intents=['opinion','conditional','historical','self_reported','factual','unclear'];
+const creatorId=value=>typeof value==='string'&&/^[a-z0-9][a-z0-9_.-]{0,127}$/.test(value);
 const clock=value=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}T.*(?:Z|[+-]\d{2}:\d{2})$/.test(value)&&Number.isFinite(Date.parse(value));
 const bilingual=value=>value&&typeof value==='object'&&!Array.isArray(value)&&typeof value.zh==='string'&&typeof value.en==='string';
 const text=value=>value?.[LANG==='en'?'en':'zh']||'';
@@ -29,12 +30,13 @@ function validRecord(row){
   return row&&typeof row==='object'&&typeof row.id==='string'&&typeof row.title==='string'&&sourceURL(row)
     &&['published_at','observed_at','qualified_at','published_to_product_at'].every(key=>row[key]===null||clock(row[key]));
 }
-export function validOpinions(doc,{topic='all',ticker=null}={}){
+export function validOpinions(doc,{topic='all',ticker=null,creator=null}={}){
   return doc?.schema===SCHEMA&&['ready','empty'].includes(doc.status)&&/^[a-f0-9]{64}$/.test(doc.revision||'')
     &&clock(doc.generated_at)&&Array.isArray(doc.items)&&doc.items.length<=PAGE_SIZE
     &&(doc.next_cursor===null||typeof doc.next_cursor==='string')&&doc.access==='reviewed_preview'
+    &&(creator===null||creatorId(creator)&&doc.selection?.creator===creator)
     &&doc.items.every(row=>validRecord(row)&&typeof row.display_group_id==='string'&&typeof row.author==='string'
-      &&/^[a-z0-9][a-z0-9_.-]{0,127}$/.test(row.creator_id||'')&&topics.includes(row.topic)&&stances.includes(row.stance)
+      &&creatorId(row.creator_id)&&(creator===null||row.creator_id===creator)&&topics.includes(row.topic)&&stances.includes(row.stance)
       &&intents.includes(row.intent)&&bilingual(row.subject)&&bilingual(row.claim)
       &&(row.conditions===null||bilingual(row.conditions))&&(row.horizon===null||bilingual(row.horizon))
       &&['creator','guest','quoted_person','unclear'].includes(row.speaker?.kind)
@@ -44,7 +46,8 @@ export function validOpinions(doc,{topic='all',ticker=null}={}){
       &&typeof row.stock_navigation_eligible==='boolean'
       &&(row.stock_navigation_eligible?row.topic==='company'&&row.relation==='subject'&&/^[A-Z][A-Z0-9.-]{0,9}$/.test(row.ticker||''):row.ticker===null)
       &&(topic==='all'||row.topic===topic)&&(!ticker||row.ticker===ticker&&row.stock_navigation_eligible)
-      &&Array.isArray(row.records)&&row.records.length===row.record_count&&row.records.length>0&&row.records.every(validRecord));
+      &&Array.isArray(row.records)&&row.records.length===row.record_count&&row.records.length>0
+      &&row.records.every(record=>validRecord(record)&&record.creator_id===row.creator_id));
 }
 function original(record,key){
   const seconds=record.navigation_seconds,time=seconds===null?null:Math.floor(seconds/60)+':'+String(Math.floor(seconds)%60).padStart(2,'0');
@@ -76,8 +79,8 @@ export function opinionRow(row,{from='explore'}={}){
   return body;
 }
 
-export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,from='explore',initial=3}={}){
-  const epoch=store.epoch(),scope=account(),stateKey=topic+'|'+(ticker||'');
+export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creator=null,from='explore',initial=3}={}){
+  const epoch=store.epoch(),scope=account(),stateKey=JSON.stringify([topic,ticker,creator]);
   if(controlScope!==scope){controls.clear();controlScope=scope;}
   if(newest.scope!==scope)newest={scope,revision:null,at:-Infinity};
   const saved=controls.get(stateKey),ctl=new AbortController();
@@ -111,10 +114,11 @@ export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,from='
     loading=true;const mine=++seq;refresh.disabled=true;more.disabled=true;refresh.setAttribute('aria-busy','true');
     if(!append)clear(notice);
     try{
-      const next=await api.kol.opinions({topic,scope:'discover',limit:PAGE_SIZE,...(ticker?{ticker}:{}),...(append&&doc?.next_cursor?{before:doc.next_cursor}:{})},
+      if(creator!==null&&!creatorId(creator))throw new api.ApiError(422,{error:'invalid_opinion_creator'});
+      const next=await api.kol.opinions({topic,scope:'discover',limit:PAGE_SIZE,...(ticker?{ticker}:{}),...(creator?{creator}:{}),...(append&&doc?.next_cursor?{before:doc.next_cursor}:{})},
         {signal:ctl.signal,observe:false,silent402:true});
       if(!current()||mine!==seq)return;
-      if(!validOpinions(next,{topic,ticker}))throw new api.ApiError(502,{error:'invalid_opinions_response'});
+      if(!validOpinions(next,{topic,ticker,creator}))throw new api.ApiError(502,{error:'invalid_opinions_response'});
       const at=Date.parse(next.generated_at);
       if(at<newest.at||at===newest.at&&newest.revision&&newest.revision!==next.revision)throw new api.ApiError(409,{error:'opinion_revision_changed'});
       if(append&&doc&&doc.revision!==next.revision)throw new api.ApiError(409,{error:'opinion_revision_changed'});
