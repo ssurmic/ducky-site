@@ -5634,6 +5634,7 @@
   "app.today.session_stale": "Awaiting newer readings",
   "app.today.session_all": "Sectors, assets and quote sources",
   "app.today.session_basis": "Changes versus the previous close. ETFs represent indexes, sectors or assets. Each quote keeps its own trade time.",
+  "app.today.session_post_basis": "Trade snapshot, not final daily bars. Historical charts use separate daily records.",
   "app.today.session_coverage": "This snapshot has current-session readings for {n} of {total} symbols.",
   "app.today.session_sources": "Quote sources: {sources}",
   "app.today.session_SPY": "S&P 500",

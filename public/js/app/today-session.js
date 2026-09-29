@@ -49,6 +49,7 @@ export function sessionOverview(doc,options={}){
  const coverage=data.coverage||{};
  box.append(el('p.small.muted.today-session-meta',
   s('today.session_updated',{time:time(data.published_at)})+(stale?' · '+s('today.session_stale'):'')));
+ if(data.phase==='post')box.append(el('p.small.muted.today-session-meta.today-session-post-basis',s('today.session_post_basis')));
  const details=el('details.today-session-details',{'data-reading-key':'macro-current:details'},
   el('summary',{'data-reading-key':'macro-current:details:toggle'},s('today.session_all')),
   el('p.small.muted',s('today.session_basis')),
