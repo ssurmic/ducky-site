@@ -5619,7 +5619,7 @@
   "app.focus.watch_added": "{ticker} is in your watchlist. View it there anytime.",
   "app.focus.view_watchlist": "View watchlist",
   "app.focus.research_stock": "Research a stock",
-  "app.watch.first_use_intro": "Research a company first. Add it when you want to keep following it.",
+  "app.watch.first_use_intro": "Add stocks to follow their prices, views and company updates.",
   "app.watch.first_use_more": "More stocks to research",
   "app.watch.first_use_pending": "The discussion ranking is not available yet. You can still search companies.",
   "app.today.session_title": "Market overview",
@@ -5673,5 +5673,9 @@
   "app.today.dashboard_method": "Method and correlations",
   "app.today.dashboard_liquidity_chart": "USD liquidity and US stocks",
   "app.today.dashboard_yield_chart": "Treasury yield and US stocks",
-  "app.today.dashboard_chart_missing": "Not enough historical readings to draw this chart."
+  "app.today.dashboard_chart_missing": "Not enough historical readings to draw this chart.",
+  "app.watch.starter_added": "Added",
+  "app.watch.starter_done": "View my watchlist ({n})",
+  "app.watch.starter_add_failed": "Couldn’t add this stock. Try again.",
+  "app.watch.starter_reading_date": "Stock overview · {date}"
 }
