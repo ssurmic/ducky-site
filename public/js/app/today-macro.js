@@ -11,6 +11,7 @@ import {digestPreview} from './today-preview.js';
 import {material} from './shared-read-refresh.js';
 import {hasCanonicalReadings,canonicalReading} from './today-market-readings.js';
 import {currentSession,sessionOverview,sessionMacro} from './today-session.js';
+import {summaryFixed} from './today-fixed.js';
 
 const OK=v=>typeof v==='number'&&Number.isFinite(v);
 const num=(v,d=2)=>OK(v)?new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US',{minimumFractionDigits:d,maximumFractionDigits:d}).format(v):'—';
@@ -83,23 +84,25 @@ function linesFor(doc,primary){
 }
 // One series' reading on one day: the liquidity index with its day change (and that day's net liquidity), the
 // yield with its bp change, an index's day change.
-function lineReading(x,i,rows){
+function lineReading(x,i,rows,format=num){
+  const change=(value,digits)=>(value>0?'+':'')+format(value,digits);
   if(x.key==='liquidity'){
     if(!OK(x.raw[i]))return '—';
     const net=rows?.[i]?.net_liquidity_bn;
-    return s('today.lines_liquidity_value',{value:num(x.raw[i],1),change:OK(x.change[i])?signed(x.change[i],1):'—'})+(OK(net)?' · '+s('today.lines_net_value',{value:num(net/1000,2)}):'');
+    return s('today.lines_liquidity_value',{value:format(x.raw[i],1),change:OK(x.change[i])?change(x.change[i],1):'—'})+(OK(net)?' · '+s('today.lines_net_value',{value:format(net/1000,2)}):'');
   }
-  if(x.key==='yield')return OK(x.raw[i])?s('today.lines_yield_value',{value:num(x.raw[i],2),change:OK(x.change[i])?signed(x.change[i],0):'—'}):'—';
-  return OK(x.change[i])?signed(x.change[i],2)+'%':'—';
+  if(x.key==='yield')return OK(x.raw[i])?s('today.lines_yield_value',{value:format(x.raw[i],2),change:OK(x.change[i])?change(x.change[i],0):'—'}):'—';
+  return OK(x.change[i])?change(x.change[i],2)+'%':'—';
 }
-function linesBlock(tile){
+function linesBlock(tile,{currentSnapshot=false}={}){
   const {dates,series,qqq,spy,primary,rows,live=[]}=tile.lines;
+  const read=(line,index)=>lineReading(line,index,rows,currentSnapshot?summaryFixed:num);
   const labels={liquidity:s('today.lines_liquidity'),yield:s('today.lines_yield'),qqq:s('today.lines_qqq'),spy:s('today.lines_spy')};
   const fmtDate=d=>{const t=Date.parse(d+'T12:00:00Z');return Number.isFinite(t)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'2-digit',day:'2-digit'}).format(t):d;};
   const r=v=>OK(v)?(v>0?'+':'')+v.toFixed(2):'—';
   const last=dates.length-1;
   // The legend carries each line's latest day-over-day change, so the last session reads without hovering.
-  const legend=el('span.today-macro-legend',...series.map(x=>el('span.today-lines-key.is-'+x.key,el('i'),labels[x.key]+' ',el('b',lineReading(x,last,rows)))));
+  const legend=el('span.today-macro-legend',...series.map(x=>el('span.today-lines-key.is-'+x.key,el('i'),labels[x.key]+' ',el('b',read(x,last)))));
   const chart=sparkLines({dates,series,live},{labels,fmtDate});
   const tip=el('div.today-lines-tip',{hidden:true,role:'status'});
   let selected=last;
@@ -107,10 +110,10 @@ function linesBlock(tile){
   chart.dataset.readingKey='macro-chart:'+primary;
   chart.setAttribute('aria-label',labels[primary]+' / '+labels.qqq+' / '+labels.spy+'. '+s('today.lines_keyboard'));
   chart.setAttribute('aria-valuemin','0');chart.setAttribute('aria-valuemax',String(last));
-  const describe=i=>fmtDate(dates[i])+(live[i]?' · '+s('today.lines_live'):'')+'; '+series.map(x=>labels[x.key]+': '+lineReading(x,i,rows)).join('; ');
+  const describe=i=>fmtDate(dates[i])+(live[i]?' · '+s('today.lines_live'):'')+'; '+series.map(x=>labels[x.key]+': '+read(x,i)).join('; ');
   chart.setAttribute('aria-valuenow',String(last));chart.setAttribute('aria-valuetext',describe(last));
   const show=i=>{selected=i;tip.hidden=false;tip.replaceChildren(el('span.today-lines-tip-date',fmtDate(dates[i])+(live[i]?' · '+s('today.lines_live'):'')),
-    ...series.map(x=>el('span.today-lines-tip-row.is-'+x.key,el('i'),labels[x.key],el('b',lineReading(x,i,rows)))));chart.moveCursor?.(i);
+    ...series.map(x=>el('span.today-lines-tip-row.is-'+x.key,el('i'),labels[x.key],el('b',read(x,i)))));chart.moveCursor?.(i);
     chart.setAttribute('aria-valuenow',String(i));chart.setAttribute('aria-valuetext',describe(i));};
   const hide=()=>{tip.hidden=true;chart.moveCursor?.(null);};
   chart.addEventListener('pointermove',e=>{const rect=chart.getBoundingClientRect();show(cursorIndex(e.clientX-rect.left,rect.width,dates.length));});
@@ -127,7 +130,8 @@ function linesBlock(tile){
     el('span.today-macro-caption',s('today.lines_caption',{n:dates.length,what:labels[primary],rq:r(qqq?.correlation),rs:r(spy?.correlation),pq:OK(qqq?.opposite)?qqq.opposite:'—'})));
 }
 
-export function macroTiles(doc){
+export function macroTiles(doc,{currentSnapshot=false}={}){
+  const metricNumber=currentSnapshot?summaryFixed:num;
   const latest=doc?.latest||{},m=latest.metrics||{},fng=doc?.fear_greed||null,la=doc?.latest_available?.metrics||{};
   const canonical=hasCanonicalReadings(doc),funding=canonical?reading(doc,'funding_score'):{value:latest.funding_score,stamp:OK(latest.funding_score)?s('today.macro_tile_as_of',{date:latest.date||doc?.as_of||'—'}):null};
   const band=fundingBand(funding.value);
@@ -142,16 +146,16 @@ export function macroTiles(doc){
   const rating=RATINGS[String(fng?.rating||'').toLowerCase()];
   const fngWord=rating?s('today.fng_'+rating):OK(fng?.score)?bandFor(FNG_BANDS(),fng.score).label:null;
   return [
-    {key:'liquidity',label:s('today.macro_liquidity'),value:OK(funding.value)?num(funding.value,0):'—',unit:s('today.macro_score_unit'),
+    {key:'liquidity',label:s('today.macro_liquidity'),value:OK(funding.value)?metricNumber(funding.value,0):'—',unit:s('today.macro_score_unit'),
      tone:band==='supportive'?'up':band==='adverse'?'down':band==='mixed'?'mid':'flat',help:liquidityHelp(latest),
-     gauge:{name:s('today.macro_liquidity'),score:OK(funding.value)?funding.value:null,bands:LIQUIDITY_BANDS(),word:s('today.macro_regime_'+band)},
+     gauge:{name:s('today.macro_liquidity'),score:OK(funding.value)?funding.value:null,bands:LIQUIDITY_BANDS(),word:s('today.macro_regime_'+band),displayScore:currentSnapshot?summaryFixed(funding.value,0):undefined},
      stamp:funding.stamp,recorded:funding.recorded,
      note:[s('today.macro_regime_'+band),OK(netT)?s('today.macro_net_liquidity',{value:num(netT,2)}):null,OK(change)?s('today.macro_net_change',{value:signed(change)}):null].filter(Boolean).join(' · '),
      lines:linesFor(doc,'liquidity')},
-    {key:'yield',label:s('today.macro_10y'),value:OK(y10.value)?num(y10.value,2)+'%':'—',unit:'',tone:'flat',stamp:y10.stamp,recorded:y10.recorded,
+    {key:'yield',label:s('today.macro_10y'),value:OK(y10.value)?metricNumber(y10.value,2)+'%':'—',unit:'',tone:'flat',stamp:y10.stamp,recorded:y10.recorded,
      note:OK(bp)?s('today.macro_10y_change',{bp:signed(bp)})+(yRows.at(-1)?.date?' · '+yRows.at(-1).date:''):s('today.macro_no_change'),
      lines:linesFor(doc,'yield')},
-    {key:'vix',label:s('today.macro_vix'),value:OK(vix.value)?num(vix.value,1):'—',unit:'',tone:OK(ratio)?(ratio>1?'down':'up'):'flat',stamp:vix.stamp,recorded:vix.recorded,ratioStamp:canonical&&OK(ratio)?s('today.reading_ratio',{reading:term.stamp}):null,ratioRecorded:term.recorded,
+    {key:'vix',label:s('today.macro_vix'),value:OK(vix.value)?metricNumber(vix.value,1):'—',unit:'',tone:OK(ratio)?(ratio>1?'down':'up'):'flat',stamp:vix.stamp,recorded:vix.recorded,ratioStamp:canonical&&OK(ratio)?s('today.reading_ratio',{reading:term.stamp}):null,ratioRecorded:term.recorded,
      note:OK(ratio)?s('today.macro_vix_ratio',{ratio:num(ratio,2)})+' · '+s(ratio>1?'today.macro_vix_stress':'today.macro_vix_calm'):s('today.macro_vix_missing')},
     {key:'fng',label:s('today.macro_fng'),value:OK(fng?.score)?num(fng.score,0):'—',unit:'',tone:OK(fng?.score)?(fng.score<45?'down':fng.score>55?'up':'mid'):'flat',
      gauge:{name:s('today.macro_fng'),score:OK(fng?.score)?fng.score:null,bands:FNG_BANDS(),word:fngWord||''},history:fngHistory(fng),
@@ -273,7 +277,7 @@ export function macroStrip(doc,{now=new Date()}={}){
       s('today.preview_calendar')+' · '+nySession(now)));
   }
   const grid=el('div.today-macro-grid');
-  for(const tile of macroTiles(doc)){
+  for(const tile of macroTiles(doc,{currentSnapshot:!!overview})){
     const dial=tile.gauge&&Number.isFinite(tile.gauge.score)?gauge(tile.gauge):null;
     grid.append(el('div.today-macro-tile',{'data-tile':tile.key,'data-reading-anchor':'macro-tile:'+tile.key,class:'is-'+tile.tone+(dial?' has-gauge':'')},
       el('span.today-macro-label',tile.label,tile.help||null),
@@ -282,7 +286,7 @@ export function macroStrip(doc,{now=new Date()}={}){
       tile.recorded?el('span.today-macro-recorded.small.muted',tile.recorded):null,
       tile.ratioStamp?el('span.today-macro-ratio-stamp.small.muted',tile.ratioStamp):null,
       tile.ratioRecorded?el('span.today-macro-recorded.small.muted',s('today.reading_ratio',{reading:tile.ratioRecorded})):null,historyList(tile.history),
-      tile.lines?linesBlock(tile):null));
+      tile.lines?linesBlock(tile,{currentSnapshot:!!overview}):null));
   }
   // Each source carries its own clock: the FRED / New York Fed panel ends at the last session it
   // covers, the CNN index at the minute it was read, so the footer names both.

@@ -24,9 +24,10 @@ export function bandFor(bands,score){
   return bands.find(b=>score<b.to)||bands[bands.length-1];
 }
 
-export function gauge({name,score,bands,word=''}){
+export function gauge({name,score,bands,word='',displayScore}){
   const ok=Number.isFinite(score),active=ok?bandFor(bands,score):null;
-  const root=svg('svg',{class:'today-gauge',viewBox:'0 0 200 118',role:'img','aria-label':s('today.gauge_label',{name,score:ok?Math.round(score):'—',band:active?.label||word||'—'})});
+  const shown=ok?(typeof displayScore==='string'?displayScore:String(Math.round(score))):'—';
+  const root=svg('svg',{class:'today-gauge',viewBox:'0 0 200 118',role:'img','aria-label':s('today.gauge_label',{name,score:shown,band:active?.label||word||'—'})});
   let from=0;
   for(const band of bands){
     root.append(svg('path',{class:'today-gauge-band is-'+band.tone+(band===active?' is-active':''),d:bandPath(from,band.to),'data-band':band.label}));
@@ -44,6 +45,6 @@ export function gauge({name,score,bands,word=''}){
     const [nx,ny]=polar(R_IN+8,angle(score));
     root.append(svg('line',{class:'today-gauge-needle',x1:CX,y1:CY,x2:fix(nx),y2:fix(ny)}),svg('circle',{class:'today-gauge-hub',cx:CX,cy:CY,r:5}));
   }
-  root.append(svg('text',{class:'today-gauge-value',x:CX,y:CY-14,'text-anchor':'middle'},ok?String(Math.round(score)):'—'));
+  root.append(svg('text',{class:'today-gauge-value',x:CX,y:CY-14,'text-anchor':'middle'},shown));
   return root;
 }

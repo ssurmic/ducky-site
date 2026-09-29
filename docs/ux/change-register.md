@@ -1,5 +1,7 @@
 # UX change and integration register
 
+**Current Today rounding consistency (candidate, 2026-09-29):** accepted current snapshots use the summary producer's fixed-point rounding for metric cards, percentages, chart legends, tooltips and accessible values. Raw source values and dates remain intact; legacy formatting and independently dated daily-versus-trade records retain their meaning. [Acceptance](../../reports/TODAY-ROUNDING-2026-09-29.md).
+
 **Today event-preview visibility follow-up (candidate, 2026-09-29):** the current overview retains a visible, valid same-day structured event preview; older previews remain in their original close archive. A dated Calendar entry covers missing current previews. Post-session trade snapshots are explicitly distinguished from historical daily bars. No source data or source dates change. [Acceptance](../../reports/TODAY-INTRADAY-2026-09-29.md#event-preview-visibility-follow-up-candidate).
 
 ## Current-session Today overview · 2026-09-29

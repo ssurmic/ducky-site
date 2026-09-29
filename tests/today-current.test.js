@@ -23,6 +23,44 @@ test('current overview precedes the preserved close archive and uses its own can
  assert.match(box.querySelector('[data-tile=yield] .today-macro-recorded').textContent,/Quote time/);
  assert.deepEqual(doc,before);
 });
+test('current snapshot cards and quote changes agree with producer rounding without changing prose or raw values',()=>{
+ for(const yieldValue of [5.255,5.125]){
+  const doc=currentMacro(),metrics=doc.current_session.macro.metrics;
+  metrics.nominal_10y.value=yieldValue;metrics.vix.value=16.25;metrics.funding_score.value=50.5;
+  doc.observed.unshift({date:'2026-09-24',nominal_10y:4.9,qqq_index:99,spy_index:99});
+  doc.observed[1].nominal_10y=5;doc.observed.at(-1).nominal_10y=yieldValue;
+  const yieldText=yieldValue===5.255?'5.25':'5.12';
+  doc.current_session.summary.en=`10Y yield ${yieldText}%; VIX 16.2; USD liquidity 50/100. Sector ETF +0.12%.`;
+  doc.current_session.quotes[1].change_pct=0.125;doc.current_session.quotes[2].change_pct=-0.125;
+  doc.current_session.quotes[3].change_pct=-0;
+  const before=structuredClone(doc),box=macroStrip(doc,options);
+  assert.equal(box.querySelector('[data-tile=yield] .today-macro-value').textContent,yieldText+'%');
+  assert.equal(box.querySelector('[data-tile=vix] .today-macro-value').textContent,'16.2');
+  const chart=box.querySelector('[data-tile=yield] .today-macro-chart');
+  assert.ok(chart.querySelector('.today-lines-key.is-yield b').textContent.startsWith(yieldText+'%'));
+  assert.ok(chart.querySelector('[role=slider]').getAttribute('aria-valuetext').includes(yieldText+'%'));
+  chart.querySelector('[role=slider]').dispatchEvent(new window.Event('focus'));
+  assert.ok(chart.querySelector('.today-lines-tip-row.is-yield b').textContent.startsWith(yieldText+'%'));
+  const gauge=box.querySelector('[data-tile=liquidity] .today-gauge');
+  assert.equal(gauge.querySelector('.today-gauge-value').textContent,'50');assert.match(gauge.getAttribute('aria-label'),/50/);
+  assert.equal(box.querySelector('.today-session-summary').textContent,doc.current_session.summary.en);
+  assert.equal(box.querySelector('[data-ticker=QQQ] strong').textContent,'+0.12%');
+  assert.equal(box.querySelector('[data-ticker=DIA] strong').textContent,'-0.12%');
+  assert.equal(box.querySelector('[data-ticker=IWM] strong').textContent,'0.00%');
+  assert.deepEqual(doc,before);
+ }
+});
+test('invalid current snapshots and non-current cards retain their existing formatting',()=>{
+ const doc=currentMacro();doc.market_readings.metrics.nominal_10y.value=5.255;doc.market_readings.metrics.vix.value=16.25;
+ doc.observed.unshift({date:'2026-09-24',nominal_10y:4.9,qqq_index:99,spy_index:99});
+ doc.observed[1].nominal_10y=5;doc.observed.at(-1).nominal_10y=5.255;
+ doc.current_session.schema='unknown';
+ const box=macroStrip(doc,options);
+ assert.equal(box.querySelector('.today-session'),null);
+ assert.equal(box.querySelector('[data-tile=yield] .today-macro-value').textContent,'5.26%');
+ assert.equal(box.querySelector('[data-tile=vix] .today-macro-value').textContent,'16.3');
+ assert.match(box.querySelector('[data-tile=yield] .today-lines-key.is-yield b').textContent,/5.26%/);
+});
 test('same-day close stays in a dated expandable archive beside the current overview',()=>{
  const doc=currentMacro();doc.digest.session='2026-09-29';
  const box=macroStrip(doc,options);assert.equal(box.firstElementChild.className,'today-session');
