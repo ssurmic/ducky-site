@@ -1,12 +1,16 @@
 # UX change and integration register
 
-**Current Today rounding consistency (candidate, 2026-09-29):** accepted current snapshots use the summary producer's fixed-point rounding for metric cards, percentages, chart legends, tooltips and accessible values. Raw source values and dates remain intact; legacy formatting and independently dated daily-versus-trade records retain their meaning. [Acceptance](../../reports/TODAY-ROUNDING-2026-09-29.md).
+## Integrated Today market dashboard · 2026-09-29 (candidate)
 
-**Today event-preview visibility follow-up (candidate, 2026-09-29):** the current overview retains a visible, valid same-day structured event preview; older previews remain in their original close archive. A dated Calendar entry covers missing current previews. Post-session trade snapshots are explicitly distinguished from historical daily bars. No source data or source dates change. [Acceptance](../../reports/TODAY-INTRADAY-2026-09-29.md#event-preview-visibility-follow-up-candidate).
+Keep current index quotes, four compact macro readings and both historical three-line comparisons in one market section. Phone emphasis comes from stronger reading text and less repeated metadata. Upcoming events follow the charts with a plain date, time, event and complete impact; provenance stays in expandable details. Canonical values, source clocks, archived closing notes and automatic-read state are retained. [Design and acceptance](../../reports/TODAY-DASHBOARD-2026-09-29.md).
+
+**Current Today rounding consistency (released PR #120, 2026-09-29):** accepted current snapshots use the summary producer's fixed-point rounding for metric cards, percentages, chart legends, tooltips and accessible values. Raw source values and dates remain intact; legacy formatting and independently dated daily-versus-trade records retain their meaning. [Acceptance](../../reports/TODAY-ROUNDING-2026-09-29.md).
+
+**Today event-preview visibility follow-up (released PR #119, 2026-09-29):** the current overview retains a visible, valid same-day structured event preview; older previews remain in their original close archive. A dated Calendar entry covers missing current previews. Post-session trade snapshots are explicitly distinguished from historical daily bars. No source data or source dates change. [Acceptance](../../reports/TODAY-INTRADAY-2026-09-29.md#event-preview-visibility-follow-up-candidate).
 
 ## Current-session Today overview · 2026-09-29
 
-Implemented a compact four-index overview before the dated close archive, bound to the same saved current-session macro metrics used by the cards. Source times, missing values, expiry, historical chart dates, permission revocation and replica ordering remain explicit. 909 Node tests, Python18pass/1skip, build/copy/links and eight phone combinations plus desktop passed. Production release pending; [acceptance](reports/TODAY-INTRADAY-2026-09-29.md).
+Implemented a compact four-index overview before the dated close archive, bound to the same saved current-session macro metrics used by the cards. Source times, missing values, expiry, historical chart dates, permission revocation and replica ordering remain explicit. 909 Node tests, Python18pass/1skip, build/copy/links and eight phone combinations plus desktop passed. Released in PR #118, followed by preview PR #119 and rounding PR #120; [acceptance](reports/TODAY-INTRADAY-2026-09-29.md).
 
 
 **Returning-browser entry candidate (2026-09-29):** remembered sessions go from an ordinary homepage visit directly to Today, retaining existing auth/renewal and locale rules. Explicit introduction anchors and signed-out entry remain. Temporary restoration failures are retryable. [Acceptance and release boundary](../../reports/RETURNING-BROWSER-ENTRY-2026-09-29.md).

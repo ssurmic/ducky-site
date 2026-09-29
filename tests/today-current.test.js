@@ -20,7 +20,7 @@ test('current overview precedes the preserved close archive and uses its own can
  assert.equal(box.querySelector('[data-tile=vix] .today-macro-value').textContent,'16.7');
  assert.equal(box.querySelector('.today-digest-archive').open,false);
  assert.match(box.querySelector('.today-session-summary').textContent,/5.29%/);
- assert.match(box.querySelector('[data-tile=yield] .today-macro-recorded').textContent,/Quote time/);
+ assert.match(box.querySelector('[data-source-metric=yield] .today-macro-recorded').textContent,/Quote time/);
  assert.deepEqual(doc,before);
 });
 test('current snapshot cards and quote changes agree with producer rounding without changing prose or raw values',()=>{
@@ -36,12 +36,12 @@ test('current snapshot cards and quote changes agree with producer rounding with
   const before=structuredClone(doc),box=macroStrip(doc,options);
   assert.equal(box.querySelector('[data-tile=yield] .today-macro-value').textContent,yieldText+'%');
   assert.equal(box.querySelector('[data-tile=vix] .today-macro-value').textContent,'16.2');
-  const chart=box.querySelector('[data-tile=yield] .today-macro-chart');
+  const chart=box.querySelector('[data-chart=yield] .today-macro-chart');
   assert.ok(chart.querySelector('.today-lines-key.is-yield b').textContent.startsWith(yieldText+'%'));
   assert.ok(chart.querySelector('[role=slider]').getAttribute('aria-valuetext').includes(yieldText+'%'));
   chart.querySelector('[role=slider]').dispatchEvent(new window.Event('focus'));
   assert.ok(chart.querySelector('.today-lines-tip-row.is-yield b').textContent.startsWith(yieldText+'%'));
-  const gauge=box.querySelector('[data-tile=liquidity] .today-gauge');
+  const gauge=box.querySelector('[data-source-metric=liquidity] .today-gauge');
   assert.equal(gauge.querySelector('.today-gauge-value').textContent,'50');assert.match(gauge.getAttribute('aria-label'),/50/);
   assert.equal(box.querySelector('.today-session-summary').textContent,doc.current_session.summary.en);
   assert.equal(box.querySelector('[data-ticker=QQQ] strong').textContent,'+0.12%');
@@ -79,7 +79,7 @@ test('same-day structured preview stays visible once while complete close prose 
  const before=structuredClone(doc),box=macroStrip(doc,options),archive=box.querySelector('.today-digest-archive'),preview=box.querySelector('.today-preview');
  assert.equal(archive.open,false);assert.equal(preview.parentElement,box);assert.equal(archive.querySelector('.today-preview'),null);
  assert.equal(box.querySelectorAll('.today-preview').length,1);assert.equal(preview.querySelectorAll('.today-preview-event').length,doc.digest.preview.events.length);
- assert.equal(preview.nextElementSibling.className,'today-macro-grid');
+ assert.equal(preview.nextElementSibling,archive);
  assert.equal(archive.querySelector('.today-digest-tomorrow p').textContent,doc.digest.tomorrow.en);
  for(const key of ['close','sectors','macro'])assert.ok(archive.textContent.includes(doc.digest[key].en));
  const keys=[...box.querySelectorAll('[data-reading-key]')].map(node=>node.dataset.readingKey);assert.equal(new Set(keys).size,keys.length);
@@ -91,7 +91,7 @@ test('a prior-session preview stays in its original archive with a separate date
  const doc=currentMacro(),box=macroStrip(doc,options),archive=box.querySelector('.today-digest-archive');
  assert.ok(archive.querySelector('.today-preview'));assert.equal(box.querySelectorAll('.today-preview').length,1);
  assert.equal(box.querySelector(':scope > .today-preview'),null);
- const link=box.querySelector(':scope > .today-preview-calendar');assert.equal(link.getAttribute('href'),'#/calendar?date=2026-09-29');assert.match(link.textContent,/2026-09-29/);
+ const link=box.querySelector('.today-dashboard-calendar .today-preview-calendar');assert.equal(link.getAttribute('href'),'#/calendar?date=2026-09-29');assert.match(link.textContent,/2026-09-29/);
  assert.equal(archive.querySelector('.today-preview-window').textContent.includes('2026-09-29'),true);
 });
 test('quote expiry keeps a same-day dated preview visible; New York date rollover archives it',()=>{
@@ -99,12 +99,12 @@ test('quote expiry keeps a same-day dated preview visible; New York date rollove
  assert.match(expired.querySelector('.today-session-phase').textContent,/Saved readings/);assert.ok(expired.querySelector(':scope > .today-preview'));
  const tomorrow=macroStrip(doc,{now:new Date('2026-09-30T04:01:00Z')});
  assert.equal(tomorrow.querySelector(':scope > .today-preview'),null);assert.ok(tomorrow.querySelector('.today-digest-archive .today-preview'));
- assert.equal(tomorrow.querySelector(':scope > .today-preview-calendar').getAttribute('href'),'#/calendar?date=2026-09-30');
+ assert.equal(tomorrow.querySelector('.today-dashboard-calendar .today-preview-calendar').getAttribute('href'),'#/calendar?date=2026-09-30');
 });
 test('mismatched or incomplete preview never creates a current event list and retains original prose',()=>{
  for(const preview of [null,{anchor_session:'2026-09-28'},{anchor_session:'2026-09-29',calendar_day:'2026-09-30',next_session:'2026-09-30',events:null}]){
   const doc=sameDayPreview();doc.digest.preview=preview;const box=macroStrip(doc,options);
-  assert.equal(box.querySelector('.today-preview'),null);assert.ok(box.querySelector(':scope > .today-preview-calendar'));
+  assert.equal(box.querySelector('.today-preview'),null);assert.ok(box.querySelector('.today-dashboard-calendar .today-preview-calendar'));
   assert.equal(box.querySelector('.today-digest-tomorrow p').textContent,doc.digest.tomorrow.en);
  }
 });
@@ -132,9 +132,9 @@ test('expired and prior-day snapshots retain source times but never say market o
 });
 test('post-session overview visibly distinguishes trade snapshots from separate daily chart records',()=>{
  for(const phase of ['pre','open','post','closed']){
-  const box=sessionOverview(currentMacro({phase,at:'2026-09-29T20:40:00Z'}),{now:new Date('2026-09-29T20:41:00Z')}),note=box.querySelector('.today-session-post-basis');
+  const box=macroStrip(currentMacro({phase,at:'2026-09-29T20:40:00Z'}),{now:new Date('2026-09-29T20:41:00Z')}),note=box.querySelector('.today-session-post-basis');
   if(phase==='post'){
-   assert.match(note.textContent,/Trade snapshot, not final daily bars/);assert.match(note.textContent,/Historical charts use separate daily records/);
+   assert.match(note.textContent,/Quotes use their shown times/);assert.match(note.textContent,/charts show historical daily readings/);
    assert.equal(note.closest('details'),null);
   }else assert.equal(note,null);
  }
@@ -145,9 +145,23 @@ test('post-session fixture retains regular-session quote times and counts them s
   assert.equal(coverage.current,0);assert.equal(coverage.session_quote,19);
   assert.ok(quotes.every(row=>row.status==='session_quote'&&Date.parse(row.quote_at)<=Date.parse(row.recorded_at)));
   assert.match(quotes[0].quote_at,at.startsWith('2026-09')?/T19:59:00/:/T20:59:00/);
-  const box=sessionOverview(doc,{now:new Date(at)});assert.equal(box.querySelectorAll('.today-session-saved').length,19);
+  const box=sessionOverview(doc,{now:new Date(at)});assert.equal(box.querySelectorAll('.today-session-all .today-session-saved').length,15);
+  assert.equal(box.querySelectorAll('.today-session-indices .today-session-saved').length,0);
+  const clocks=[...box.querySelectorAll('.today-session-source-clocks li')];assert.equal(clocks.length,4);
+  assert.ok(clocks.every(node=>node.textContent.includes('Session trade')));
   assert.match(box.querySelector('.today-session-clock').textContent,/15:59 ET/);
  }
+});
+test('compact index clocks retain older dates while same-session clocks keep full dates and acquisition in sources',()=>{
+ const doc=currentMacro();doc.current_session.quotes[1].quote_at='2026-09-28T19:59:00Z';doc.current_session.quotes[1].status='saved';
+ const box=sessionOverview(doc,options),spy=box.querySelector('.today-session-indices [data-ticker=SPY]'),qqq=box.querySelector('.today-session-indices [data-ticker=QQQ]');
+ assert.match(spy.querySelector('.today-session-clock').textContent,/^11:39 ET$/);
+ assert.match(qqq.querySelector('.today-session-clock').textContent,/9\/28.*15:59 ET/);
+ assert.ok(qqq.querySelector('.today-session-saved'));
+ assert.match(spy.title,/SPY.*9\/29.*11:39 ET/);
+ const clocks=box.querySelector('.today-session-source-clocks').textContent;
+ assert.match(clocks,/SPY.*9\/29.*11:39 ET/);assert.match(clocks,/Recorded/);
+ assert.match(clocks,/QQQ.*9\/28.*15:59 ET/);
 });
 test('partial quotes keep missing distinct from zero with all sources progressively disclosed',()=>{
  const doc=currentMacro();doc.current_session.quotes[1]={ticker:'QQQ',status:'missing'};doc.current_session.status='partial';

@@ -1,10 +1,14 @@
 # Change log
 
-## Consistent rounding within the current Today snapshot · 2026-09-29 (candidate)
+## Integrated Today market dashboard · 2026-09-29 (candidate)
+
+Keep current index quotes, four compact macro readings and both historical three-line comparisons in one market section. Phone emphasis comes from stronger reading text and less repeated metadata. Upcoming events follow the charts with a plain date, time, event and complete impact; provenance stays in expandable details. Canonical values, source clocks, archived closing notes and automatic-read state are retained. [Design and acceptance](reports/TODAY-DASHBOARD-2026-09-29.md).
+
+## Consistent rounding within the current Today snapshot · 2026-09-29 (released PR #120)
 
 Current snapshot metric cards, quote percentages and chart reading labels now use the same exact fixed-point rounding as the saved summary. A raw yield of 5.255 displays as 5.25 throughout that view, while binary ties use round-to-even. Original prose, numeric values, dates, gauge positions and non-current formatting remain unchanged. [Checks and release boundary](reports/TODAY-ROUNDING-2026-09-29.md).
 
-## Visible dated event preview beside the current overview · 2026-09-29 (candidate)
+## Visible dated event preview beside the current overview · 2026-09-29 (released PR #119)
 
 Keep a valid same-day closing note's structured event preview visible beside the current market overview, while its original closing paragraphs remain archived. Older previews retain their original archive and dates; a dated Calendar link remains available without inventing current events. Moving the existing preview preserves one set of source/disclosure keys and refresh state. A compact post-session note distinguishes trade snapshots from the separate daily records used by historical charts. [Candidate checks and limits](reports/TODAY-INTRADAY-2026-09-29.md#event-preview-visibility-follow-up-candidate).
 

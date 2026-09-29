@@ -110,8 +110,8 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   let olderCount=0;
   const now=new Date(),date=new Intl.DateTimeFormat(LANG==='en'?'en-US':'zh-CN',{month:'long',day:'numeric',weekday:'long'}).format(now);
   const stats=el('div.today-stats',{hidden:true});
-  const title=el('header.focus-heading.today-heading',el('div',el('p.today-date',date),el('h1',s('focus.today')),el('p.muted',s('focus.today_intro')),stats),
-    el('a.btn.btn-ghost',{href:'#/calendar'},s('focus.upcoming')));
+  const title=el('header.focus-heading.today-heading',el('div.today-heading-main',el('p.today-date',date),el('h1',s('focus.today'))),
+    el('a.btn.btn-ghost',{href:'#/calendar'},s('focus.upcoming')),stats);
   const researchStart=el('div.today-research-start',{hidden:true},
     el('a.btn.btn-ghost.btn-sm',{href:'#/explore'},s('focus.research_stock')));
   if(!embedded)main.append(title,researchStart);

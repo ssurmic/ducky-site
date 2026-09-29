@@ -1,6 +1,7 @@
 // SYNTHETIC UI validation. Not included by build.py or connected to production.
 import {closeMacro,sparseCloseMacro,marketReadingsMacro} from './today-close-data.js';
 import {currentMacro} from './today-current-data.js';
+import {dashboardMacro} from './today-dashboard-data.js';
 import {opinionsFixture} from './qa-creator-opinions.js';
 const query=new URLSearchParams(location.search),mode=query.get('case')||'data';
 document.documentElement.dataset.theme=query.get('theme')==='dark'?'dark':'light';
@@ -28,6 +29,7 @@ const analysis={overview,sections:[{kind:'key_points',zh:'产能投放能否转�
  {kind:'watch',zh:'下一份财报需要核对订单和资本支出。',en:'Check orders and capital spending in the next earnings report.',citations:['first']}]};
 if(mode==='no-watch-section')analysis.sections=analysis.sections.filter(p=>p.kind!=='watch');
 let watches=['no-watch','first-use'].includes(mode)?[]:['NVDA','AVGO','AMD','GLW'];
+if(mode==='today-dashboard'&&query.get('empty')==='1')watches=[];
 if(mode==='watchlist-management')watches=['NVDA','AVGO','AMD','GLW',...Array.from({length:46},(_,i)=>'TEST'+String(i).padStart(2,'0'))];
 if(mode==='today-large')watches=['AAPL','AEHR','ALAB','AMD','AVGO','GLW','NVDA','TSLA'];
 // These explicit membership cases accept writes only to the fixture's in-memory array.
@@ -311,6 +313,7 @@ window.fetch=async(input,options={})=>{
    summary:JSON.stringify({zh:'合成示例：重复视频摘要应由上方逐条观点替代。',en:'Synthetic duplicate native summary should yield to the attributed points above.',source:{kind:'native_video',status:'qualified'}})});
   return Response.json(feed);
  }
+ if(mode==='today-dashboard'&&path==='/macro/beta')return Response.json(dashboardMacro({at:new Date().toISOString(),phase:query.get('phase')||'open',sequence:++currentReads}));
  if(mode==='today-current'&&path==='/macro/beta')return Response.json(currentMacro({at:new Date().toISOString(),phase:query.get('phase')||'open',sequence:++currentReads}));
  if(mode==='today-close-preview'&&path==='/macro/beta')return Response.json(closeMacro());
  if(mode==='today-market-readings'&&path==='/macro/beta')return Response.json(marketReadingsMacro());

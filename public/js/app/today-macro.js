@@ -54,9 +54,10 @@ function legacyReading(doc,key,{series}={}){
   if(OK(la?.metrics?.[key]))return {value:la.metrics[key],stamp:s('today.macro_fred_close',{date:(series&&la.dates?.[series])||la.as_of||'—'})};
   return {value:m[key],stamp:OK(m[key])?s('today.macro_tile_as_of',{date:doc?.as_of||'—'}):''};
 }
+const readingBasis=r=>r.basis==='session_aligned_score'?'score':r.live===true?'intraday':r.basis==='latest_available_print'?'published':'saved';
 function canonicalStamp(r,key){
   if(!r)return '';
-  const basis=r.basis==='session_aligned_score'?'score':r.live===true?'intraday':r.basis==='latest_available_print'?'published':'saved';
+  const basis=readingBasis(r);
   const sources=key==='vix_term_ratio'?r.components:[r];
   const attribution=sources.map(item=>s('today.reading_source_'+item.source)+(item.source==='macro_beta'?'':' '+item.series)).join(' / ');
   return s('today.reading_'+basis,{date:r.date})+' · '+attribution;
@@ -94,7 +95,7 @@ function lineReading(x,i,rows,format=num){
   if(x.key==='yield')return OK(x.raw[i])?s('today.lines_yield_value',{value:format(x.raw[i],2),change:OK(x.change[i])?change(x.change[i],0):'—'}):'—';
   return OK(x.change[i])?change(x.change[i],2)+'%':'—';
 }
-function linesBlock(tile,{currentSnapshot=false}={}){
+function linesBlock(tile,{currentSnapshot=false,dashboard=false}={}){
   const {dates,series,qqq,spy,primary,rows,live=[]}=tile.lines;
   const read=(line,index)=>lineReading(line,index,rows,currentSnapshot?summaryFixed:num);
   const labels={liquidity:s('today.lines_liquidity'),yield:s('today.lines_yield'),qqq:s('today.lines_qqq'),spy:s('today.lines_spy')};
@@ -125,9 +126,11 @@ function linesBlock(tile,{currentSnapshot=false}={}){
     if(next===undefined)return;event.preventDefault();show(Math.max(0,Math.min(last,next)));
   });
   chart.readingDate=()=>dates[selected];
-  chart.restoreReadingDate=date=>{const i=dates.indexOf(date);if(i>=0)show(i);};
-  return el('div.today-macro-chart.has-cursor',el('span.small.muted',s('today.chart_history_through',{date:dates.at(-1)})),tip,chart,legend,
-    el('span.today-macro-caption',s('today.lines_caption',{n:dates.length,what:labels[primary],rq:r(qqq?.correlation),rs:r(spy?.correlation),pq:OK(qqq?.opposite)?qqq.opposite:'—'})));
+  chart.restoreReadingDate=(date,{reveal=true}={})=>{const i=dates.indexOf(date);if(i>=0){show(i);if(!reveal)hide();}};
+  const caption=el('span.today-macro-caption',s('today.lines_caption',{n:dates.length,what:labels[primary],rq:r(qqq?.correlation),rs:r(spy?.correlation),pq:OK(qqq?.opposite)?qqq.opposite:'—'}));
+  const methodKey='macro-chart:'+primary+':method';
+  return el('div.today-macro-chart.has-cursor',el('span.small.muted.today-chart-date',s('today.chart_history_through',{date:dates.at(-1)})),tip,chart,legend,
+    dashboard?el('details.today-chart-method',{'data-reading-key':methodKey},el('summary',{'data-reading-key':methodKey+':toggle'},s('today.dashboard_method')),caption):caption);
 }
 
 export function macroTiles(doc,{currentSnapshot=false}={}){
@@ -213,7 +216,7 @@ export function digestBlock(digest,{now=new Date(),archive=false}={}){
   for(const [key,label] of [['close','today.digest_close'],['sectors','today.digest_sectors'],['macro','today.digest_macro']])
     if(text(key))grid.append(el('div.today-digest-part',el('span.today-digest-label',s(label)),el('p',text(key))));
   box.append(grid);
-  const preview=digestPreview(digest.preview,digest.session);
+  const preview=digestPreview(digest.preview,digest.session,{now});
   // v1.3 snapshots carry a deterministic count/date/coverage paragraph, all repeated by
   // the structured preview. Unknown versions can contain unique prose and keep it visible.
   const redundantPreview=edition==='close_snapshot'&&digest.version==='market-digest/1.3'&&preview;
@@ -256,26 +259,74 @@ function marketHeading(doc,state){
   return head;
 }
 
+function macroSource(doc){
+  const fngAt=Date.parse(doc.fear_greed?.as_of||'');
+  const fng=Number.isFinite(fngAt)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).format(fngAt):'—';
+  return el('p.small.muted.today-macro-source',s(hasCanonicalReadings(doc)?'today.macro_canonical_source':'today.macro_source',{date:doc.latest_available?.as_of||doc.as_of||'—',fng})+(doc.status==='stale'?' · '+s('macro.stale'):''),
+    ' ',el('a.today-macro-more',{href:'#/macro'},s('today.macro_more')+' →'));
+}
+
+function currentDashboard(box,overview,doc,digest,state,now){
+  box.classList.add('has-current-dashboard');
+  const sources=overview.querySelector('.today-session-details');sources.remove();
+  const tiles=macroTiles(doc,{currentSnapshot:true}),metrics=el('div.today-dashboard-metrics');
+  const sourceMetrics=el('div.today-dashboard-source-metrics');
+  const keys={liquidity:'funding_score',yield:'nominal_10y',vix:'vix'};
+  for(const tile of tiles){
+    const reading=keys[tile.key]?canonicalReading(doc,keys[tile.key]):null;
+    const fngAt=tile.key==='fng'?Date.parse(doc.fear_greed?.as_of||''):NaN;
+    const stamp=reading?s('today.reading_'+readingBasis(reading),{date:reading.date}):Number.isFinite(fngAt)?s('today.macro_tile_as_of',{date:writtenAt(doc.fear_greed.as_of)+' ET'}):null;
+    const term=tile.key==='vix'?canonicalReading(doc,'vix_term_ratio'):null;
+    const note=tile.key==='liquidity'||tile.key==='fng'?tile.gauge?.word||tile.note:
+      term?s('today.macro_vix_ratio',{ratio:num(term.value,2)})+' · '+term.date:tile.note;
+    metrics.append(el('div.today-dashboard-metric',{'data-tile':tile.key,'data-reading-anchor':'macro-tile:'+tile.key,class:'is-'+tile.tone},
+      el('span.today-macro-label',tile.label),
+      el('strong.today-macro-value.mono',tile.value,tile.unit?el('span.today-macro-unit',tile.unit):null),
+      note?el('span.today-dashboard-metric-note',note):null,
+      stamp?el('span.today-dashboard-metric-date',stamp):null));
+    const detail=el('section.today-dashboard-source-metric',{'data-source-metric':tile.key},
+      el('h3',tile.label,tile.help||null),el('p.small',tile.note),
+      tile.stamp?el('p.small.muted',tile.stamp):stamp?el('p.small.muted',stamp):null,
+      tile.recorded?el('p.today-macro-recorded.small.muted',tile.recorded):null,
+      tile.ratioStamp?el('p.small.muted',tile.ratioStamp):null,
+      tile.ratioRecorded?el('p.today-macro-recorded.small.muted',s('today.reading_ratio',{reading:tile.ratioRecorded})):null);
+    if(tile.gauge&&Number.isFinite(tile.gauge.score))detail.append(el('div.today-gauge-wrap',gauge(tile.gauge),el('span.today-gauge-word',tile.gauge.word)));
+    const history=historyList(tile.history);if(history)detail.append(history);
+    if(tile.key==='fng'&&doc.fear_greed?.retrieved_at)detail.append(el('p.small.muted',s('today.reading_recorded',{time:writtenAt(doc.fear_greed.retrieved_at)})));
+    sourceMetrics.append(detail);
+  }
+  const charts=el('section.today-dashboard-trends',{'aria-label':s('today.dashboard_charts')},
+    el('div.today-dashboard-charts-head',el('h2',s('today.dashboard_charts')),el('a.today-macro-more',{href:'#/macro'},s('today.macro_more')+' →')),
+    doc.current_session.phase==='post'?el('p.today-session-meta.today-session-post-basis',s('today.session_post_basis')):null,
+    el('p.today-dashboard-scale',s('today.dashboard_chart_scale')));
+  const chartGrid=el('div.today-dashboard-charts');
+  for(const key of ['liquidity','yield']){
+    const tile=tiles.find(t=>t.key===key);
+    chartGrid.append(el('section.today-dashboard-chart',{'data-chart':key,'data-reading-anchor':'macro-chart:'+key+':section'},
+      el('h3',s('today.dashboard_'+key+'_chart')),
+      tile.lines?linesBlock(tile,{currentSnapshot:true,dashboard:true}):el('p.today-dashboard-chart-missing',s('today.dashboard_chart_missing'))));
+  }
+  charts.append(chartGrid);sources.append(sourceMetrics,macroSource(doc));overview.append(metrics,charts,sources);
+  box.append(overview);
+  const preview=state==='current'?digest?.querySelector('.today-preview'):null;
+  box.append(preview||el('div.today-dashboard-calendar',el('h3',s('today.preview_title')),el('a.today-preview-calendar',
+    {href:'#/calendar?date='+encodeURIComponent(nySession(now)),'data-reading-key':'macro-current-calendar'},s('today.preview_calendar')+' · '+nySession(now))));
+  if(digest)box.append(digest);
+  return box;
+}
+
 export function macroStrip(doc,{now=new Date()}={}){
   const box=el('section.today-macro',{'aria-label':s('today.macro_title')});
   const overview=sessionOverview(doc,{now});
   doc=sessionMacro(doc,{now});
   const state=digestState(doc?.digest,{now}),digest=digestBlock(doc?.digest,{now,archive:!!overview});
-  if(overview)box.append(overview);
+  if(overview)return currentDashboard(box,overview,doc,digest,state,now);
   if(!doc||(!doc.latest&&!hasCanonicalReadings(doc))){box.append(el('p.small.muted',s('today.macro_unavailable')));if(digest)box.append(digest);return box;}
   if(!overview){
     if(state==='current'&&digest)box.append(digest);
     box.append(marketHeading(doc,state));
   }
   if((overview||state!=='current')&&digest)box.append(digest);
-  if(overview){
-    // Lift the existing, date-bound preview rather than cloning its disclosure keys.
-    // Quote expiry does not change an event's source date; yesterday's outlook stays archived.
-    const preview=state==='current'?digest?.querySelector('.today-preview'):null;
-    box.append(preview||el('a.today-preview-calendar',
-      {href:'#/calendar?date='+encodeURIComponent(nySession(now)),'data-reading-key':'macro-current-calendar'},
-      s('today.preview_calendar')+' · '+nySession(now)));
-  }
   const grid=el('div.today-macro-grid');
   for(const tile of macroTiles(doc,{currentSnapshot:!!overview})){
     const dial=tile.gauge&&Number.isFinite(tile.gauge.score)?gauge(tile.gauge):null;
@@ -290,10 +341,7 @@ export function macroStrip(doc,{now=new Date()}={}){
   }
   // Each source carries its own clock: the FRED / New York Fed panel ends at the last session it
   // covers, the CNN index at the minute it was read, so the footer names both.
-  const fngAt=Date.parse(doc.fear_greed?.as_of||'');
-  const fng=Number.isFinite(fngAt)?new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).format(fngAt):'—';
-  box.append(grid,el('p.small.muted.today-macro-source',s(hasCanonicalReadings(doc)?'today.macro_canonical_source':'today.macro_source',{date:doc.latest_available?.as_of||doc.as_of||'—',fng})+(doc.status==='stale'?' · '+s('macro.stale'):''),
-    ' ',el('a.today-macro-more',{href:'#/macro'},s('today.macro_more')+' →')));
+  box.append(grid,macroSource(doc));
   return box;
 }
 
@@ -308,14 +356,15 @@ export function mountMacroStrip(host,{signal,interval=60000}={}){
   const controls=el('div.today-macro-refresh',refresh,status);
   function replace(doc){
     const focused=host.contains(document.activeElement)?document.activeElement?.dataset.readingKey:null;
-    const selectedDate=focused?document.activeElement?.readingDate?.():null;
+    const chartDates=new Map([...host.querySelectorAll('[data-reading-key]')].filter(n=>typeof n.readingDate==='function').map(n=>[n.dataset.readingKey,n.readingDate()]));
     const opened=new Set([...host.querySelectorAll('details[open][data-reading-key]')].map(n=>n.dataset.readingKey));
     const scroller=host.closest('.app-main'),top=scroller?.getBoundingClientRect().top;
     const anchor=scroller?.scrollTop>0?[...host.querySelectorAll('[data-reading-anchor]')].find(n=>n.getBoundingClientRect().bottom>top):null;
     const anchorKey=anchor?.dataset.readingAnchor,before=anchor?.getBoundingClientRect().top;
     host.replaceChildren(macroStrip(doc),controls);
     for(const node of host.querySelectorAll('details[data-reading-key]'))if(opened.has(node.dataset.readingKey))node.open=true;
-    if(focused){const target=[...host.querySelectorAll('[data-reading-key]')].find(n=>n.dataset.readingKey===focused);target?.focus({preventScroll:true});if(selectedDate)target?.restoreReadingDate?.(selectedDate);}
+    for(const node of host.querySelectorAll('[data-reading-key]'))if(chartDates.has(node.dataset.readingKey))node.restoreReadingDate?.(chartDates.get(node.dataset.readingKey),{reveal:false});
+    if(focused){const target=[...host.querySelectorAll('[data-reading-key]')].find(n=>n.dataset.readingKey===focused);target?.focus({preventScroll:true});}
     const after=anchorKey?[...host.querySelectorAll('[data-reading-anchor]')].find(n=>n.dataset.readingAnchor===anchorKey):null;
     if(after&&scroller)scroller.scrollTop+=after.getBoundingClientRect().top-before;
   }
