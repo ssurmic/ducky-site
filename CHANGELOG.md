@@ -1,5 +1,9 @@
 # Change log
 
+## Returning-browser homepage entry · 2026-09-29
+
+Remembered browser sessions now enter Today directly from the homepage, through the existing validated app bootstrap. Signed-out visitors and explicit introduction anchors keep the public page. Temporary session/profile outages show retry instead of an unnecessary sign-in. No extra landing auth request or new authentication authority. [Behavior and acceptance](reports/RETURNING-BROWSER-ENTRY-2026-09-29.md).
+
 ## 2026-09-29 — Research before the first saved stock (candidate)
 
 - Replace the repeated empty-Watchlist invitation with one search and compact, dated discovery candidates; open real stock research before adding it.

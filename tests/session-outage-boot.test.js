@@ -1,0 +1,23 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {setImmediate as flush} from 'node:timers/promises';
+import {JSDOM} from 'jsdom';
+test('returning user sees retry instead of sign-in on outage and resumes the requested page',async()=>{
+ const dom=new JSDOM('<main class="app-main"><div id="view"></div></main>',{url:'https://ducky.test/en/app/#/watchlist'});
+ for(const key of ['window','document','Node','MutationObserver','location','history'])globalThis[key]=dom.window[key];
+ globalThis.requestAnimationFrame=fn=>setTimeout(fn,0);
+ window.localStorage.setItem('ducky.token','saved-fixture');
+ const copy=JSON.parse(readFileSync('i18n/en.json')),strings=document.createElement('script');strings.id='ducky-strings';
+ strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([k])=>k.startsWith('app.')).map(([k,v])=>[k.slice(4),v])));document.body.append(strings);
+ globalThis.fetch=async()=>Response.json({error:'unavailable'},{status:503});
+ await import('../public/js/app/main.js');await flush();
+ assert.equal(location.hash,'#/watchlist');
+ assert.equal(document.querySelector('h1').textContent,copy['app.session.retry_title']);
+ assert.equal(window.localStorage.getItem('ducky.token'),'saved-fixture');
+ globalThis.fetch=async url=>Response.json(url==='/auth/refresh'?{token:'renewed-fixture'}:url==='/me'?{user_id:1,tier:'free',profile_complete:true,email_verified:true}:{items:[]});
+ document.querySelector('#view button').click();
+ for(let i=0;i<100&&!document.body.classList.contains('ready');i++)await new Promise(r=>setTimeout(r,5));
+ assert.equal(document.body.dataset.route,'watchlist');assert.equal(location.hash,'#/watchlist');
+ assert.equal(document.body.classList.contains('ready'),true);dom.window.close();
+});

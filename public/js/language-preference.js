@@ -52,12 +52,30 @@
     } catch (_) { /* the cookie already holds the choice for this browser */ }
   }
 
-  if (/^\/(?:en|zh)(?:\/|$)/.test(location.pathname)) return;
+  var explicit = /^\/(en|zh)(?:\/|$)/.exec(location.pathname);
+  var language = explicit ? explicit[1] : savedLanguage() || browserLanguage();
+
+  // A navigation hint only: the app's existing bootstrap validates/renews the
+  // session. No credentials, private data or extra auth request on the landing.
+  // Explicit marketing anchors and ?intro=1 remain reachable after signing in.
+  function returningBrowser() {
+    try {
+      if (window.localStorage.getItem("ducky.logged-out") === "1") return false;
+      if (window.localStorage.getItem("ducky.token")) return true;
+    } catch (_) { /* Cookie-only sessions can still enter the app below. */ }
+    try { return /(?:^|;\s*)ducky_entry=1(?:;|$)/.test(document.cookie); }
+    catch (_) { return false; }
+  }
+  if (/^\/(?:(?:en|zh)(?:\/(?:index\.html)?)?|index\.html)?$/.test(location.pathname) &&
+      !location.hash && new URL(location.href).searchParams.get("intro") !== "1" && returningBrowser()) {
+    location.replace("/" + language + "/app/#/today");
+    return;
+  }
+  if (explicit) return;
   // Previously issued Chinese recovery/OAuth URLs have their own routing owner.
   if (/^\/app(?:\/|\/index\.html)?$/.test(location.pathname) &&
       /^#\/(?:oauth|reset)(?:\?|$)/.test(location.hash)) return;
 
-  var language = savedLanguage() || browserLanguage();
   // Neutral pages already contain English, preserving the static/SEO fallback.
   if (language === "en") return;
   location.replace("/" + language + location.pathname + location.search + location.hash);

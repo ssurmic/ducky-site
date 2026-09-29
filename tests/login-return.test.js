@@ -47,6 +47,8 @@ test('homepage creator link survives boot, password login and destination render
   const calls=[];
   globalThis.fetch=async(url,options)=>{
     calls.push([String(url),options?.method||'GET']);
+    // This is a genuinely signed-out visit, not a malformed successful renewal.
+    if(url.endsWith('/auth/refresh'))return Response.json({error:'unauthorized'},{status:401});
     if(url.endsWith('/auth/providers'))return reply({google:true});
     if(url.endsWith('/auth/password'))return reply({token:'test-token'});
     if(url.endsWith('/me'))return reply({user_id:12,tier:'free'});

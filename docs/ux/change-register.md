@@ -1,5 +1,7 @@
 # UX change and integration register
 
+**Returning-browser entry candidate (2026-09-29):** remembered sessions go from an ordinary homepage visit directly to Today, retaining existing auth/renewal and locale rules. Explicit introduction anchors and signed-out entry remain. Temporary restoration failures are retryable. [Acceptance and release boundary](../../reports/RETURNING-BROWSER-ENTRY-2026-09-29.md).
+
 **First-use stock workflow candidate (2026-09-29):** Empty Watchlist is being changed to one search and four real dated discovery candidates, leading into the existing stock workspace before an explicit Add. Today gains a zero-watch research entrance; successful stock membership gets an in-place confirmation and list return. No sample membership or notification promise. [Design and acceptance](../../reports/FIRST-USE-STOCK-WORKFLOW-2026-09-29.md).
 
 Updated: 2026-09-28. This English register is the canonical presentation handoff for the UX redesign. User-facing copy remains bilingual. The private backend's shared documents remain the system-design authority; this register records public UI behavior and integration boundaries only.
