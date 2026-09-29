@@ -27,7 +27,7 @@ export function socialCard(row,{stale=false,onHistory}={}) {
   const state=['normal','elevated','overheated','insufficient'].includes(row.state)?row.state:'insufficient';
   const score=Number.isFinite(row.index)?row.index:null;
   const card=el('article.social-card',{'data-state':stale?'stale':'unavailable','data-record-id':row.id},
-    el('div.social-card-heading',el('div',el('a.social-ticker',{href:'#/chart/'+encodeURIComponent(row.ticker)},'$'+row.ticker),
+    el('div.social-card-heading',el('div',el('a.social-ticker',{href:'#/chart/'+encodeURIComponent(row.ticker)},el('span.ticker-symbol','$'+row.ticker)),
       el('span.social-company',row.company)),stale?el('span.social-state',s('social.saved_state')):null));
   if(state==='overheated')card.querySelector('.social-card-heading').append(el('span.social-risk',s('social.overheated_risk')));
   card.append(directionReading(),eventPriceSnapshot(row.price_snapshot,{basis:'detection',showWindow:true}),

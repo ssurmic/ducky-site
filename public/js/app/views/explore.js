@@ -71,7 +71,7 @@ export async function mount(root,{signal}={}){
     more.hidden=rows.length<=12;more.textContent=s(showAll?'explore.show_top':'explore.show_all',{n:rows.length});more.setAttribute('aria-expanded',String(showAll));
     clear(notesList);const withViews=rows.filter(row=>row.summary);notes.hidden=!withViews.length;
     notesList.append(...withViews.map(row=>el('article.explore-ranking-note',
-      el('a',{href:stockHref(row.ticker,'explore'),'data-explore-link':row.ticker+':summary'},row.ticker),el('p',row.summary))));
+      el('a',{href:stockHref(row.ticker,'explore'),'data-explore-link':row.ticker+':summary'},el('span.ticker-symbol',row.ticker)),el('p',row.summary))));
     if(focus)Array.from(candidates.querySelectorAll('[data-explore-link]')).find(node=>node.dataset.exploreLink===focus)?.focus({preventScroll:true});
   }
   async function load(){

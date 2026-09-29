@@ -29,7 +29,7 @@ export function discoveryStockRow(row){
   const description=[Number.isFinite(row.mentions)?s('focus.discover_mentions',{n:count}):s('explore.mentions_unknown'),
     Number.isFinite(row.attentionChange)?s('focus.discover_change',{n:change}):s('explore.change_unknown')].join('; ');
   const primary=anchor([
-    el('span.explore-stock-identity',el('span.explore-rank',String(row.rank)),el('strong.explore-stock-symbol',row.ticker)),
+    el('span.explore-stock-identity',el('span.explore-rank',String(row.rank)),el('strong.explore-stock-symbol.ticker-symbol',row.ticker)),
     row.company&&row.company!==row.ticker?el('span.explore-company',{title:row.company},row.company):null,
     el('span.explore-attention',{'aria-hidden':'true'},el('span.explore-mention-count',count),el('span.explore-mention-change',change)),
     el('span.explore-measure-description',{id:'explore-attention-'+row.ticker},description)

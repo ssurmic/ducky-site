@@ -221,7 +221,7 @@ export function candidateCard(row, watches=[]) {
     Array.isArray(watches) ? watches.some(x => (x.ticker || x) === row.ticker) : null;
   const tk = encodeURIComponent(row.ticker);
   const compact = ['snapshot_observation','original_ivhv'].includes(row.qualification?.lane);
-  const identity = el('div.opportunity-identity', el('a.ticker', {href:'#/research/' + tk}, '$' + row.ticker),
+  const identity = el('div.opportunity-identity', el('a.ticker', {href:'#/research/' + tk}, el('span.ticker-symbol', '$' + row.ticker)),
     el('p', row.company || ''), el('p.small.muted',
       (row.sector ? sectorName(row.sector) : label('sector_unknown')) + ' · ' + money(row.market_cap)));
   const badges = el('div.opportunity-badges');

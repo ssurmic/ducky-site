@@ -36,6 +36,11 @@
 .opinions-pagination .btn{min-height:44px;font-size:12px;}
 .opinions-empty{font-size:13px;color:var(--muted);margin:5px 0;}
 .creator-opinions :is(a,button,summary):focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px;}
+/* A confirmed empty supplementary stream must not precede saved views with a full panel. */
+.creator-opinions.is-empty-alongside{margin:6px 0 8px;}
+.opinions-empty-alongside{margin:0;font-size:12px;line-height:1.5;color:var(--muted);}
+.creator-opinions.is-empty-alongside .creator-opinions-heading{align-items:center;}
+.creator-opinions.is-empty-alongside .creator-opinions-heading .btn{min-height:44px;font-size:12px;padding:6px 9px;}
 @media(max-width:650px){
  .creator-opinions{margin:10px 0 15px;}
  .creator-opinions-heading h2{font-size:18px;}

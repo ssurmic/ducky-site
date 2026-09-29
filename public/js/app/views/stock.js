@@ -49,7 +49,7 @@ export async function mount(root,{ticker,signal,returnTo,query=new URLSearchPara
     finally{if(current()&&request===snapshotRequest){snapshotBusy=false;if(!hardDenied)paintMetrics();}}
   }
   const company=el('p.small.muted',{hidden:true});
-  const head=el('header.focus-heading',el('div',el('a.small.muted',{href:returnTo||'#/'+from},'← '+s('nav.'+from)),el('h1',ticker),company));
+  const head=el('header.focus-heading',el('div',el('a.small.muted',{href:returnTo||'#/'+from},'← '+s('nav.'+from)),el('h1',el('span.ticker-symbol',ticker)),company));
   const follow=el('button.btn.btn-ghost',{type:'button','data-stock-watch':ticker});
   const membershipNotice=el('div.stock-watch-feedback',{hidden:true,role:'status','aria-live':'polite'});
   const clearMembershipNotice=()=>{clear(membershipNotice);membershipNotice.hidden=true;};

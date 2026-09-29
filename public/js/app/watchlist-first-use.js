@@ -33,7 +33,8 @@ export function watchlistStarters({signal,current=()=>true,watched=()=>[],action
       if(doc.status==='stale')status.append(el('p.small.muted',s('explore.discussion_stale')));
       for(const row of rows){
         const href='#/stock/'+encodeURIComponent(row.ticker);
-        const count=Number.isFinite(row.mentions)?s('focus.discover_mentions',{n:new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US').format(row.mentions)}):s('explore.mentions_unknown');
+        const number=Number.isFinite(row.mentions)?new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US').format(row.mentions):null;
+        const count=number!==null?s('focus.discover_mentions',{n:number}):s('explore.mentions_unknown');
         const source=doc.items.find(item=>item?.ticker===row.ticker&&item.rank===row.rank),summaryDate=source?.overall_as_of;
         const summary=row.summary&&typeof summaryDate==='string'&&Number.isFinite(Date.parse(summaryDate))?row.summary:'';
         const feedback=el('p.watch-starter-feedback',{hidden:true,role:'status'});
@@ -43,12 +44,12 @@ export function watchlistStarters({signal,current=()=>true,watched=()=>[],action
         list.append(el('article.watch-starter',{'data-ticker':row.ticker},
           el('a.watch-starter-open',{href,'data-reading-key':'watch-starter:'+row.ticker,
             'aria-label':s('explore.research_stock',{ticker:row.ticker})},
-            el('span.watch-starter-identity',el('strong',row.ticker),row.company&&row.company!==row.ticker?el('span',row.company):null)),
-          el('p.watch-starter-count',count,Number.isFinite(row.attentionChange)?el('span.muted',s('focus.discover_change',{n:pct(row.attentionChange,0)})):null),
-          summary?el('div.watch-starter-reading',el('p',summary),el('small.muted',s('watch.starter_reading_date',{date:discoveryDate(summaryDate)}))):null,
+            el('span.watch-starter-identity',el('strong.ticker-symbol',row.ticker),row.company&&row.company!==row.ticker?el('span',row.company):null)),
+          el('p.watch-starter-count',{title:count+(Number.isFinite(row.attentionChange)?' · '+s('focus.discover_change',{n:pct(row.attentionChange,0)}):'')},el('span.watch-starter-count-full',count,Number.isFinite(row.attentionChange)?el('span.muted',s('focus.discover_change',{n:pct(row.attentionChange,0)})):null),el('span.watch-starter-count-compact',number!==null?s('watch.starter_count_short',{n:number}):s('explore.mentions_unknown'))),
+          summary?el('details.watch-starter-reading',el('summary',s('watch.starter_view')),el('p',summary),el('small.muted',s('watch.starter_reading_date',{date:discoveryDate(summaryDate)}))):null,
           el('div.watch-starter-actions',button,
             el('a.watch-starter-research',{href},s('focus.open_stock')),
-            el('a.watch-starter-map',{href:href+'?tab=evidence','aria-label':s('watch.open_stock_map',{ticker:row.ticker})},s('watch.open_map'))),feedback));
+            el('a.watch-starter-map',{href:href+'?tab=evidence','aria-label':s('watch.open_stock_map',{ticker:row.ticker})},s('watch.starter_map'))),feedback));
       }
       update();
       if(!rows.length)status.append(el('p.small.muted',s(doc.status==='pending'?'watch.first_use_pending':doc.status==='unavailable'?'explore.discussion_unavailable':'explore.discussion_empty')));
@@ -66,8 +67,8 @@ export function watchlistStarters({signal,current=()=>true,watched=()=>[],action
       const added=membership.includes(ticker),working=pending===ticker;
       button.disabled=added||!!pending||!!state.disabled;
       button.classList.toggle('is-added',added);
-      button.textContent=added?s('watch.starter_added'):working?s('watch.adding'):state.label||s('watch.add_to_watchlist');
-      button.setAttribute('aria-label',button.textContent+' · '+ticker);
+      button.textContent=added?s('watch.starter_added'):working?s('watch.adding'):state.label||s('watch.starter_add');
+      button.setAttribute('aria-label',(added?s('watch.starter_added'):working?s('watch.adding'):state.label||s('watch.add_to_watchlist'))+' · '+ticker);
       button.setAttribute('aria-busy',String(working&&!added));
     }
     more.hidden=!!membership.length;done.hidden=!membership.length;done.disabled=!!pending||!!state.pending;

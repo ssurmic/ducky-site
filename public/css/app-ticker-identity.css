@@ -1,0 +1,40 @@
+/* Stock identity, independent of price direction and evidence stance.
+   Only structured symbol leaves opt in; never infer symbols from prose. */
+.page-app {
+  --ticker-ink: #b7ff3c;
+  --ticker-paper: #14251a;
+  --ticker-font: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.page-app .ticker-symbol {
+  color: var(--ticker-ink);
+  background: var(--ticker-paper);
+  font-family: var(--ticker-font);
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .025em;
+  padding: .06em .22em;
+  border-radius: 3px;
+  width: fit-content;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  text-shadow: none;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+/* Hover still signals the clickable identity without changing its meaning. */
+.page-app a:hover .ticker-symbol,
+.page-app a.ticker-symbol:hover {
+  color: var(--ticker-ink);
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+/* Flex identities must not stretch a short symbol's backing across the row. */
+.page-app .stock-name > .ticker-symbol,
+.page-app .watch-starter-identity > .ticker-symbol {
+  align-self: flex-start;
+}
+/* Forced colors supplies its own readable identity treatment. */
+@media (forced-colors: active) {
+  .page-app .ticker-symbol { color: CanvasText; background: Canvas; }
+}

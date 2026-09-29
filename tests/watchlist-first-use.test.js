@@ -211,6 +211,33 @@ test('saved overviews retain their own date and missing summary dates do not bor
   }finally{dispose();}
 });
 
+test('compact saved-view disclosure retains its complete qualification and date through failed and successful quick adds',async()=>{
+  const text='NVDA could benefit if orders remain firm; slower customer spending remains a material risk.';
+  setup();const calls=apiFixture({social:{...ranking,items:[{ticker:'NVDA',rank:1,company:'Synthetic company',mentions:0,change_pct:200,
+    overall:{en:text},overall_as_of:'2026-09-25T12:00:00Z'}]}}),dispose=await mount(root);await pause();
+  const original=globalThis.fetch;
+  try{
+    const card=root.querySelector('[data-ticker=NVDA]'),reading=card.querySelector('details.watch-starter-reading'),button=quick('NVDA');
+    assert.ok(reading);assert.equal(reading.open,false);assert.equal(reading.querySelector('p').textContent,text);
+    assert.match(reading.querySelector('small').textContent,/Sep 25/);assert.doesNotMatch(reading.querySelector('small').textContent,/Sep 28/);
+    assert.equal(card.querySelectorAll('.ticker-symbol').length,1);assert.equal(card.querySelector('.ticker-symbol').textContent,'NVDA');
+    assert.equal(reading.closest('.ticker-symbol'),null);assert.equal(reading.querySelector('.ticker-symbol'),null);
+    assert.match(button.getAttribute('aria-label'),/Add to watchlist.*NVDA/);assert.match(card.querySelector('.watch-starter-map').getAttribute('aria-label'),/NVDA/);
+    assert.match(card.querySelector('.watch-starter-count').title,/0 mentions.*200/);
+    reading.querySelector('summary').click();assert.equal(reading.open,true);
+    let finish;globalThis.fetch=async(url,opts={})=>opts.method==='POST'?new Promise(resolve=>finish=resolve):original(url,opts);
+    button.focus();button.click();button.click();assert.equal(button.disabled,true);assert.equal(button.getAttribute('aria-busy'),'true');
+    assert.equal(card.querySelector('details'),reading);assert.equal(reading.open,true);
+    finish(Response.json({error:'watch_ineligible',reason:'leveraged_instrument'},{status:400}));await pause();
+    assert.deepEqual(store.get('watchlist'),[]);assert.equal(button.disabled,false);assert.equal(reading.open,true);
+    assert.equal(card.querySelector('.watch-starter-feedback').hidden,false);assert.equal(document.activeElement,button);
+    globalThis.fetch=original;button.click();await pause();
+    assert.deepEqual(store.get('watchlist'),['NVDA']);assert.equal(button.textContent,'Added');assert.equal(reading.open,true);
+    assert.equal(root.querySelector('[data-ticker=NVDA]'),card);assert.equal(reading.querySelector('p').textContent,text);
+    assert.equal(calls.filter(c=>c.method==='POST').length,1);assert.equal(calls.filter(c=>c.url==='/radar/social.json').length,1);
+  }finally{dispose();}
+});
+
 test('after quick Add, search selection and Enter remain research actions without an implicit second write',async()=>{
   setup();const calls=apiFixture({symbols:[{ticker:'AMD',name:'Synthetic AMD',watch_eligible:true}]}),dispose=await mount(root);await pause();
   try{quick('NVDA').click();await pause();await search('AMD');root.querySelector('.add-row form');

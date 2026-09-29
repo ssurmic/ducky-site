@@ -57,7 +57,7 @@ export async function mount(root,route={}){
       if(flight)shell.append(spinner());
       if(status||loadError)shell.append(el('p.updates-status',{role:'status'},status||loadError));
       if(topics.length){const manage=el('section.card.updates-gate',el('h2',s('updates.manage_existing')),el('p.muted',s('updates.manage_hint')));
-        for(const topic of topics)manage.append(el('div.updates-topic',el('strong',topicLabel(topic)),el('p.small.muted',s(topic.enabled?'updates.saved_inactive':'updates.paused')),
+        for(const topic of topics)manage.append(el('div.updates-topic',el('strong',{class:topic.topic_type==='ticker'?'ticker-symbol':''},topicLabel(topic)),el('p.small.muted',s(topic.enabled?'updates.saved_inactive':'updates.paused')),
           topic.enabled?el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:mutation||!!flight,'data-topic-pause':topicId(topic),onclick:()=>changeTopic({...topic,enabled:false,web_push:false})},s('updates.pause')):null,
           el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:mutation||!!flight,'data-topic-remove':topicId(topic),onclick:()=>removeTopic(topic)},s('updates.remove'))));
         shell.append(manage);
@@ -99,7 +99,7 @@ export async function mount(root,route={}){
     for(const row of available){const current=topics.find(t=>t.topic_type==='ticker'&&t.topic_key===row.ticker);
       const check=el('input',{type:'checkbox',checked:!!current?.enabled,disabled:mutation||!!flight,'data-topic-choice':row.ticker});
       check.addEventListener('change',()=>changeTopic({topic_type:'ticker',topic_key:row.ticker,enabled:check.checked,web_push:current?.web_push===true}));
-      choices.append(el('label.updates-choice',check,el('span',el('strong.mono',row.ticker),text(row.name)&&row.name!==row.ticker?el('small.muted',text(row.name)):null)));
+      choices.append(el('label.updates-choice',check,el('span',el('strong.mono.ticker-symbol',row.ticker),text(row.name)&&row.name!==row.ticker?el('small.muted',text(row.name)):null)));
     }
     box.append(el('details.updates-watchlist',{open:watchlistOpen},el('summary',s('updates.from_watchlist'),' ',el('span.count.mono',available.length)),choices));
     if(options.sectors.length){const sectors=el('fieldset.updates-choices',el('legend',s('updates.sectors')));
@@ -115,7 +115,7 @@ export async function mount(root,route={}){
     const box=el('section.card.updates-saved',el('h2',s('updates.saved_topics')));
     for(const topic of [...topics].sort((a,b)=>topicId(a).localeCompare(topicId(b)))){const push=el('input',{type:'checkbox','aria-label':s('updates.push_topic_for',{topic:topicLabel(topic)}),checked:topic.web_push===true,disabled:mutation||!!flight||(!topic.web_push&&(!deviceReady||!options.push_enabled||!topic.enabled))});
         push.addEventListener('change',()=>changeTopic({...topic,web_push:push.checked}));
-        box.append(el('div.updates-topic',el('div.updates-topic-head',el('strong',topicLabel(topic)),el('span.small.muted',s(topic.enabled?'updates.inapp_on':'updates.paused'))),
+        box.append(el('div.updates-topic',el('div.updates-topic-head',el('strong',{class:topic.topic_type==='ticker'?'ticker-symbol':''},topicLabel(topic)),el('span.small.muted',s(topic.enabled?'updates.inapp_on':'updates.paused'))),
           el('p.small.muted',s('updates.notify_from',{date:updateDate(topic.notify_from)})),
           el('div.updates-topic-actions',el('label.updates-check',push,s('updates.push_topic')),
             topic.watched_stock?el('button.btn.btn-ghost.btn-sm',{type:'button',disabled:mutation||!!flight,onclick:()=>changeTopic({...topic,enabled:!topic.enabled,web_push:false})},s(topic.enabled?'updates.pause':'updates.resume')):

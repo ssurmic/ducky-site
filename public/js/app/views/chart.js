@@ -86,7 +86,7 @@ export async function mount(root, params) {
   }},s('chart.change'));
   // The router binds a stock return to this chart entry, ticker and account epoch.
   const returnTo=typeof params?.returnTo==='string'&&/^#\/stock\/[A-Z][A-Z0-9.-]{0,9}(?:\?|$)/.test(params.returnTo)&&params.returnTo.split('?')[0]==='#/stock/'+ticker?params.returnTo:'#/stock/'+encodeURIComponent(ticker);
-  const head = el("div.view-head.chart-heading", el('div.chart-identity',ticker?el('a.small.muted.chart-back',{href:returnTo},'← '+s('chart.back_to_stock')):null,el("h1", ticker || s("chart.title"))), el("span.spot", { id: "chart-spot" }),ticker?changeSymbol:null,companyName);
+  const head = el("div.view-head.chart-heading", el('div.chart-identity',ticker?el('a.small.muted.chart-back',{href:returnTo},'← '+s('chart.back_to_stock')):null,el("h1", ticker ? el("span.ticker-symbol", ticker) : s("chart.title"))), el("span.spot", { id: "chart-spot" }),ticker?changeSymbol:null,companyName);
   const legendRow = el("div.legend", { id: "chart-legend" });
   const host = el("div.chart-host", { id: "chart-host" });
   const status = el("div", { id: "chart-status" });

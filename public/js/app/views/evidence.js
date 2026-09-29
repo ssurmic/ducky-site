@@ -224,7 +224,9 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
   else if(example)view.append(el('p',s('experience.sample_overview')));
   if(!nodes.length){view.append(el('p.empty',s('evidence.empty')),el('a.btn.btn-ghost',{href:'#/research/'+doc.ticker},s('evidence.records')));return view;}
   let scope=['support','counter','context'].includes(state?.scope)?state.scope:'all',limit=state?.expanded?nodes.length:6;
-  view.readingState=()=>({scope,expanded:limit>6});
+  const phone=window.matchMedia?.('(max-width: 600px)');
+  let mobile=!!phone?.matches,mobileGroup=typeof state?.mobileGroup==='string'?state.mobileGroup:null,slides=[],slideIndex=0,restoreTimer=null,disposed=false;
+  view.readingState=()=>({scope,expanded:limit>6,...(mobileGroup?{mobileGroup}:{})});
   const occurrences=sourceOccurrences(nodes);
   const filters=el('div.evidence-filters',{'aria-label':s('evidence.filter')});
   const controls=[];
@@ -239,20 +241,79 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
   const reset=el('button.evidence-reset-filter',{type:'button',onclick:()=>{scope='all';limit=6;paint();}},s('evidence.clear_filter'));view.append(reset);
   const branches=el('div.evidence-branches');
   const level=waterLevel(doc),pending=Object.entries(doc.ticker_coverage?.jobs||{}).filter(([k])=>['pending','retry','waiting','building'].includes(k)).reduce((n,[,v])=>n+v,0);
-  const center=el('div.evidence-center',{class:level===null?'is-unmetered':'has-water',style:level===null?{}:{'--water-height':String(Math.round(level*100))+'%','--water-color':`hsl(${Math.round(35+level*125)} 40% 48%)`}},el('span.evidence-water',{'aria-hidden':'true'}),el('span.mono',doc.ticker),
-    onPickTicker?el('button.evidence-stock-trigger',{type:'button',onclick:onPickTicker,'aria-label':s('evidence.change_ticker',{ticker:doc.ticker})},doc.ticker,el('span',{'aria-hidden':'true'},'⌄')):null,
+  const center=el('div.evidence-center',{class:level===null?'is-unmetered':'has-water',style:level===null?{}:{'--water-height':String(Math.round(level*100))+'%','--water-color':`hsl(${Math.round(35+level*125)} 40% 48%)`}},el('span.evidence-water',{'aria-hidden':'true'}),el('span.mono.ticker-symbol',doc.ticker),
+    onPickTicker?el('button.evidence-stock-trigger',{type:'button',onclick:onPickTicker,'aria-label':s('evidence.change_ticker',{ticker:doc.ticker})},el('span.ticker-symbol',doc.ticker),el('span',{'aria-hidden':'true'},'⌄')):null,
     example?el('span.small',s('experience.historical')):priceBadge(doc),example?null:el('button.evidence-water-caption',{type:'button',onclick:()=>marketDetail(doc)},s('evidence.water_short')),
     el('div.evidence-center-info',el('span.small.muted',s(nodes.length===1?'evidence.recorded_single':'evidence.recorded_count',{n:nodes.length})),
       balanceBar(nodes),
       pending?el('span.evidence-mobile-state',s('evidence.queue_short',{n:pending})):null));
   if(level!==null){center.style.setProperty('--water-height',Math.round(level*100)+'%');center.style.setProperty('--water-color',`hsl(${Math.round(35+level*125)} 40% 48%)`);}
   const map=el('div.evidence-map.evidence-lanes',center,branches);view.append(map);
-  const connections=connectMap(map,center,branches);view.dispose=()=>connections.dispose();view.refresh=()=>connections.refresh();
+  const connections=connectMap(map,center,branches);
+  const mobilePosition=el('span.evidence-mobile-position',{'aria-live':'polite','aria-atomic':'true'});
+  const previous=el('button.btn.btn-ghost',{type:'button','aria-label':s('evidence.mobile_previous'),onclick:()=>goToSlide(slideIndex-1)},'←');
+  const next=el('button.btn.btn-ghost',{type:'button','aria-label':s('evidence.mobile_next'),onclick:()=>goToSlide(slideIndex+1)},'→');
+  const mobileNav=el('div.evidence-mobile-navigation',el('span.evidence-mobile-hint',s('evidence.mobile_swipe')),previous,mobilePosition,next);
+  map.insertBefore(mobileNav,branches);
+  function markSlide(index){
+    if(!slides.length)return;
+    slideIndex=Math.max(0,Math.min(index,slides.length-1));mobileGroup=slides[slideIndex].dataset.mobileGroup;
+    previous.disabled=slideIndex===0;next.disabled=slideIndex===slides.length-1;
+    mobilePosition.textContent=s('evidence.mobile_position',{n:slideIndex+1,total:slides.length});
+  }
+  function goToSlide(index){
+    if(!mobile||!slides.length)return;
+    markSlide(index);
+    // Scroll only this strip. The clicked control/source keeps keyboard focus.
+    const left=branches.scrollLeft+slides[slideIndex].getBoundingClientRect().left-branches.getBoundingClientRect().left;
+    branches.scrollLeft=left;
+  }
+  branches.addEventListener('scroll',()=>{
+    if(!mobile||!slides.length||!branches.clientWidth)return;
+    const left=branches.getBoundingClientRect().left;
+    const nearest=slides.reduce((best,slide,i)=>Math.abs(slide.getBoundingClientRect().left-left)<Math.abs(slides[best].getBoundingClientRect().left-left)?i:best,0);
+    markSlide(nearest);
+  },{passive:true});
+  branches.addEventListener('focusin',event=>{
+    const slide=event.target.closest('.evidence-mobile-slide');if(slide)goToSlide(slides.indexOf(slide));
+  });
+  function mobileLayout(groups){
+    view.classList.toggle('has-mobile-evidence',mobile);mobileNav.hidden=!mobile;
+    for(const name of ['role','aria-roledescription','aria-label'])branches.removeAttribute(name);
+    slides=[];
+    if(!mobile)return;
+    branches.setAttribute('role','region');branches.setAttribute('aria-label',s('evidence.mobile_carousel'));
+    const queues=['support','counter','context'].map(stance=>({stance,items:[...(groups.get(stance)?.list.children||[])].filter(child=>!child.matches('p'))}));
+    // Move existing author/topic groups, never duplicate cards or separate repeat receipts.
+    // Round-robin All gives opposition the second slot, before further bullish groups.
+    for(let i=0;queues.some(queue=>queue.items[i]);i++)for(const {stance,items}of queues){
+      const item=items[i];if(!item)continue;
+      const first=item.matches('.evidence-node')?item:item.querySelector('.evidence-node');
+      const key=stance+':'+(first?.dataset.readingAnchor||item.dataset.readingKey||i);
+      const slide=el('section.evidence-mobile-slide',{class:'is-'+stance,role:'group','aria-roledescription':s('evidence.mobile_slide'),'data-mobile-group':key},
+        el('h2.evidence-mobile-stance',s('evidence.'+stance)),item);
+      slides.push(slide);
+    }
+    if(!slides.length){mobileNav.hidden=true;return;}
+    clear(branches);slides.forEach((slide,i)=>{slide.setAttribute('aria-label',s('evidence.mobile_position',{n:i+1,total:slides.length})+' · '+s('evidence.'+slide.className.match(/is-(support|counter|context)/)[1]));branches.append(slide);});
+    markSlide(Math.max(0,slides.findIndex(slide=>slide.dataset.mobileGroup===mobileGroup)));
+    clearTimeout(restoreTimer);restoreTimer=setTimeout(()=>{if(!disposed)goToSlide(slideIndex);},0);
+  }
+  const changeLayout=()=>{
+    if(mobile===!!phone?.matches)return;
+    const focused=view.contains(document.activeElement)?document.activeElement?.dataset.readingKey:null;
+    mobile=!!phone?.matches;paint();
+    if(focused)[...view.querySelectorAll('[data-reading-key]')].find(node=>node.dataset.readingKey===focused)?.focus({preventScroll:true});
+  };
+  phone?.addEventListener?.('change',changeLayout);
+  view.dispose=()=>{disposed=true;clearTimeout(restoreTimer);phone?.removeEventListener?.('change',changeLayout);connections.dispose();};
+  view.refresh=()=>{connections.refresh();if(mobile)goToSlide(slideIndex);};
   const total=el('p.small.muted',{'aria-live':'polite'}),STEP=12;
   // Expansion is gradual: a step of records first, everything on request. Both keep every viewpoint.
   const step=el('button.btn.btn-ghost',{type:'button','data-reading-key':doc.ticker+':show-more',onclick:()=>{limit=Math.min(nodes.length,limit+STEP);paint();}},s('evidence.show_more',{n:STEP}));
   const more=el('button.btn.btn-ghost',{type:'button','data-reading-key':doc.ticker+':show-all',onclick:()=>{limit=nodes.length;paint();}},s('evidence.show_all'));
   view.append(el('div.evidence-map-footer',total,el('div.evidence-map-actions',step,more)));
+  if(!showAnalysis&&showShare)view.append(el('a.evidence-mobile-full-map',{href:'#/evidence/'+doc.ticker},s('focus.open_full_map')+' →'));
   let cards=new Map();
   // Hovering or focusing a card lights up records from the same original source or author.
   function relate(id){
@@ -267,6 +328,7 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
     connections.relate(related.length?origin:null,related);
   }
   function paint(){
+    const opened=new Set([...branches.querySelectorAll('details[open][data-reading-key]')].map(node=>node.dataset.readingKey));
     controls.forEach(([key,b])=>b.setAttribute('aria-pressed',String(key===scope)));filterSelect.value=scope;
     const filtered=readingOrder(nodes.filter(n=>scope==='all'||n.stance===scope));
     const repeatGroups=exactAuthorRepeats(filtered,{ticker:doc.ticker});
@@ -374,6 +436,8 @@ export function mapView(doc,{archive=false,onPickTicker,example=false,showAnalys
       if(!list.childElementCount)list.append(el('p.small.muted',s('evidence.no_stance_records')));
       branches.append(group);
     }
+    mobileLayout(groups);
+    for(const detail of branches.querySelectorAll('details[data-reading-key]'))if(opened.has(detail.dataset.readingKey))detail.open=true;
     reset.hidden=scope==='all';
     if(!filtered.length)branches.append(el('p.empty',s('evidence.no_match')));
     total.textContent=s('evidence.showing',{shown:visible.length,total:filtered.length});
@@ -413,18 +477,18 @@ export async function mount(root,route={}){
     const form=el('form.add-row.evidence-picker-form',{onsubmit:e=>{e.preventDefault();const t=field.value.trim().toUpperCase().replace(/^\$/,'');if(tickerOK(t)){closeModal();if(t===ticker&&!example)load();else location.hash='#/evidence/'+t;}}},field,el('button.btn.btn-primary',{type:'submit'},s('evidence.load')));
     const stocks=[...new Set((store.get('watchlist')||[]).filter(tickerOK))].sort();
     const list=el('div.evidence-picker-list',{'aria-label':s('watch.title')});
-    for(const t of stocks)list.append(el('a.chip',{href:'#/evidence/'+t,'aria-current':t===ticker?'page':null,onclick:e=>{closeModal();if(t===ticker&&!example){e.preventDefault();load();}}},t));
+    for(const t of stocks)list.append(el('a.chip',{href:'#/evidence/'+t,'aria-current':t===ticker?'page':null,onclick:e=>{closeModal();if(t===ticker&&!example){e.preventDefault();load();}}},el('span.ticker-symbol',t)));
     modal(s('evidence.select_stock'),el('div.evidence-stock-picker',
       el('p.evidence-picker-caption',s('evidence.all_watchlist',{n:stocks.length})),list,
       el('p.evidence-picker-caption',s('evidence.other_stock')),form));
   }
   const heading=el('header.evidence-heading',el('div.view-head',el('h1',s('evidence.title'))),
     el('button.evidence-switch-stock',{type:'button',onclick:picker,'aria-haspopup':'dialog'},
-      el('strong.mono',ticker),el('span',s('evidence.switch_stock')),el('span',{'aria-hidden':'true'},'⌄')));root.append(heading);
+      el('strong.mono.ticker-symbol',ticker),el('span',s('evidence.switch_stock')),el('span',{'aria-hidden':'true'},'⌄')));root.append(heading);
   const favorites=el('div.evidence-watchlist');
   const stocks=[...new Set((store.get('watchlist')||[]).filter(tickerOK))].sort();
   const preview=[...(stocks.includes(ticker)?[ticker]:[]),...stocks.filter(t=>t!==ticker)].slice(0,7);
-  for(const t of preview)favorites.append(el('a.chip',{href:'#/evidence/'+t,'aria-current':t===ticker?'page':null},t));
+  for(const t of preview)favorites.append(el('a.chip',{href:'#/evidence/'+t,'aria-current':t===ticker?'page':null},el('span.ticker-symbol',t)));
   if(stocks.length)favorites.append(el('button.evidence-all-stocks',{type:'button',onclick:picker,'aria-haspopup':'dialog'},s('evidence.all_watchlist',{n:stocks.length}),' ⌄'));
   root.append(favorites);
   const trial=el('div.evidence-trial');root.append(trial);
@@ -441,11 +505,11 @@ export async function mount(root,route={}){
     clear(trial);
     if(store.isPro()&&!example)return;
     trial.append(el('details.evidence-examples',el('summary',s('experience.examples')),
-      ...exampleTickers.map(t=>el('a.chip',{href:'#/evidence?example='+t,'aria-current':example===t?'page':null},t))));
+      ...exampleTickers.map(t=>el('a.chip',{href:'#/evidence?example='+t,'aria-current':example===t?'page':null},el('span.ticker-symbol',t)))));
     if(!store.isPro()){
       trial.append(quotaNote('evidence',chosen.length,store.get('me')?.experience?.evidence?.cap??3));
       const personal=el('div.evidence-selections');
-      for(const t of chosen)personal.append(el('div.evidence-selection',el('a',{href:'#/evidence/'+t},t),
+      for(const t of chosen)personal.append(el('div.evidence-selection',el('a',{href:'#/evidence/'+t},el('span.ticker-symbol',t)),
         el('button',{type:'button','aria-label':s('experience.remove_map',{ticker:t}),onclick:async e=>{
           e.currentTarget.disabled=true;
           try{const r=await api.del('/me/evidence/'+t,{signal:ctl.signal});if(!valid())return;chosen=r.selected;syncSelection();trialControls();load();}

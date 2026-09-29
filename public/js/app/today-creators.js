@@ -28,7 +28,7 @@ export function creatorMacroBlock(feed,opts={}){
     const title=/^https:/.test(p.url||'')?el('a',{href:p.url,target:'_blank',rel:'noopener noreferrer'},p.title||p.url):el('span',p.title||'');
     list.append(el('li',{'data-post':String(p.id??'')},el('div.today-creators-head',el('b',p.kol_name||''),el('span.small.muted',when(p.published_at)+' ET'),take),
       el('p.today-creators-title',title),pending(o)?el('p.small.muted',s('today.creators_pending')):el('p',text(o)),
-      p.tickers?.length?el('div.today-creators-tickers',...p.tickers.slice(0,6).map(t=>el('span.pill.mono',String(t)))):null));
+      p.tickers?.length?el('div.today-creators-tickers',...p.tickers.slice(0,6).map(t=>el('span.pill.mono',el('span.ticker-symbol',String(t))))):null));
   }
   box.append(list,el('p.small.muted',s('today.creators_note')));
   return box;

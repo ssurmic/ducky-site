@@ -5677,5 +5677,19 @@
   "app.watch.starter_added": "已加入",
   "app.watch.starter_done": "查看我的自选股（{n}）",
   "app.watch.starter_add_failed": "暂未加入成功，请重试。",
-  "app.watch.starter_reading_date": "股票概览 · {date}"
+  "app.watch.starter_add": "加入自选",
+  "app.watch.starter_map": "研究地图",
+  "app.watch.starter_view": "观点",
+  "app.watch.starter_count_short": "24 小时提及 {n}",
+  "app.watch.starter_reading_date": "股票概览 · {date}",
+  "app.today.reading_details": "详情与历史",
+  "app.today.chart_choice_liquidity": "美元流动性",
+  "app.today.chart_choice_yield": "10 年美债",
+  "app.evidence.mobile_carousel": "观点与事实分组",
+  "app.evidence.mobile_slide": "卡片组",
+  "app.evidence.mobile_position": "{n} / {total}",
+  "app.evidence.mobile_previous": "上一组观点与事实",
+  "app.evidence.mobile_next": "下一组观点与事实",
+  "app.evidence.mobile_swipe": "左右滑动，对照观点",
+  "app.opinions.empty_alongside": "此范围暂无补充视频观点，其他已收录观点见下方。"
 }

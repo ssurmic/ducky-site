@@ -376,7 +376,7 @@ export function activityRow(it,{language=LANG}={}){
   if(isIndexChange(it.extra || {}))dates.push(s('event.effective_date')+' '+effectiveTiming(it.extra));
   const actionClass=item.action==='buy'?' is-purchase':item.action==='sell'?' is-sale':'';
   const title=el('a.radar-record-toggle.radar-activity-toggle',{href:recordHref(it),'data-tour':['insider','cluster'].includes(it.kind)&&doc.hasBody?'insider.open':null},
-    el('span.radar-record-meta',el('strong.radar-ticker',item.ticker||doc.title),el('span.radar-kind',boardLabel(category)),
+    el('span.radar-record-meta',el('strong.radar-ticker',item.ticker?el('span.ticker-symbol',item.ticker):doc.title),el('span.radar-kind',boardLabel(category)),
       el('span.radar-action',{class:actionClass},s('radar.ux.action_'+item.action)),
       item.instrument==='option'&&item.action!=='option_holding'?el('span.radar-kind',s('radar.ux.instrument_option')):null),
     el('span.radar-activity-content',el('span.radar-activity-main',el('strong.radar-actor',item.actor||it.issuer_name||it.company||s('radar.ux.actor_unknown')),
@@ -407,7 +407,7 @@ export function itemRow(it, {standalone=false, language=LANG}={}){
     const detail=el('div.radar-detail');
     const disclosure=el('span.radar-disclosure',s('reader.open')+' ↗');
     const title=el(standalone?'header.record-heading':'a.radar-record-toggle',standalone?{}:{href:recordHref(it),'data-tour':['insider','cluster'].includes(it.kind)&&doc.hasBody?'insider.open':null},
-      el(standalone?'div.radar-record-meta':'span.radar-record-meta',el(standalone?'h1.radar-ticker':'strong.radar-ticker',doc.title),
+      el(standalone?'div.radar-record-meta':'span.radar-record-meta',el(standalone?'h1.radar-ticker':'strong.radar-ticker',tk&&doc.title===tk?el('span.ticker-symbol',tk):doc.title),
         kind===doc.title?null:el('span.radar-kind',kind),el('time.muted',{datetime:it.ts},it.extra?.date_precision==='day'?String(it.ts || '').slice(0,10):standalone?dateTime(it.ts):String(it.ts || '').slice(11,16)+' UTC')),
       (it.issuer_name || it.company)?el('span.radar-company-name',it.issuer_name || it.company):null,
       it.reporter_name?el('span.radar-reporter',s('radar.reporter')+' · '+it.reporter_name):null,

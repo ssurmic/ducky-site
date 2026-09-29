@@ -43,7 +43,7 @@ export function spanSection(rows,tickers=null,focus='',{inline=false,preferredTi
   for(const [i,records] of items.entries()){
     const row=records[0];
     const title=row.title?.[lang]||row.title?.zh||'',reason=row.reason?.[lang];
-    const card=el('article',{'data-point-id':row.point_id||'',class:row.point_id===focus?'is-focused':'','tabindex':row.point_id===focus?-1:null},el('span.small.muted',String(row.published_at||'').slice(0,10)+' · $'+row.ticker+(row.intent==='mention'?' · '+s('creators.mention_only'):'')),
+    const card=el('article',{'data-point-id':row.point_id||'',class:row.point_id===focus?'is-focused':'','tabindex':row.point_id===focus?-1:null},el('span.small.muted',String(row.published_at||'').slice(0,10)+' · ',el('span.ticker-symbol','$'+row.ticker),row.intent==='mention'?' · '+s('creators.mention_only'):null),
       el('p',title));
     if(['support','counter'].includes(row.stance)){
       card.classList.add('is-'+row.stance);

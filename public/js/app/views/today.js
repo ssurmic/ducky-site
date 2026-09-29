@@ -59,7 +59,7 @@ function analysisCard(item,quotes){
   preview?.querySelectorAll('button').forEach(button=>button.remove());
   const key='analysis:'+item.ticker,analysisDate=body.querySelector('.stock-analysis-date');
   return el('details.today-analysis.stock-list-row',{'data-reading-anchor':key,'data-reading-key':key},
-    el('summary',{'data-reading-key':key+':toggle'},el('span.today-analysis-top',el('strong.ticker',item.ticker),
+    el('summary',{'data-reading-key':key+':toggle'},el('span.today-analysis-top',el('strong.ticker.ticker-symbol',item.ticker),
       Number.isInteger(item.records)&&item.records>0?el('span.today-records',s('focus.records_count',{n:item.records})):null,
       analysisDate?el('span.small.muted',analysisDate.textContent):null,quoteSlot(item.ticker,quotes)),
       el('span.today-analysis-preview',preview?.textContent||body.textContent),disclosureHint()),
@@ -77,7 +77,7 @@ export function changeCard(item,{from='today',quotes=null}={}){
   // Stance and source identity come from the record itself; the card only colors what it was given.
   const stance=available&&['support','counter','context'].includes(node.stance)?node.stance:'';
   const article=el('details.change-card',{class:stance?'is-'+stance:'','data-reading-anchor':key,'data-reading-key':key},
-    el('summary',{'data-reading-key':key+':toggle'},el('span.change-meta',el('strong.ticker',item.ticker),
+    el('summary',{'data-reading-key':key+':toggle'},el('span.change-meta',el('strong.ticker.ticker-symbol',item.ticker),
       available?sourceBadge(nodeSourceIdentity(node)):null,
       el('span.change-kind',s(label)),available&&node.conditional?el('span.change-kind',s('focus.conditional')):null,quoteSlot(item.ticker,quotes)),
       el('span.change-title',available?pick(node.title):s('focus.unavailable_detail')),
