@@ -9,6 +9,7 @@ import {stockMetrics,priceReferencePlan} from '../stock-metrics.js';
 import {stockDisclosureLinks} from '../stock-disclosures.js';
 import {unpackSnapshot} from '../snapshot-model.js';
 import {changeCard} from './today.js';
+import {mountCreatorOpinions} from '../creator-opinions.js';
 
 export async function mount(root,{ticker,signal,returnTo,query=new URLSearchParams()}={}){
   if(!/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker||'')){location.hash='#/explore';return;}
@@ -64,7 +65,9 @@ export async function mount(root,{ticker,signal,returnTo,query=new URLSearchPara
     ...[['evidence/','evidence'],['chart/','chart_short'],['research/','history_short'],['creators?scope=discover&ticker=','creators_short'],['calendar?ticker=','calendar_short'],['alerts?ticker=','alert_short']].map(([route,key])=>
       el('a.btn.btn-ghost',{href:'#/'+route+encodeURIComponent(ticker),'data-stock-tool':key},s('focus.'+key))));
   head.append(follow);
-  overviewPanel.append(body,priceReferencePlan(ticker,from),chart);
+  const opinionsHost=el('div.stock-opinions-host');
+  overviewPanel.append(body,opinionsHost,priceReferencePlan(ticker,from),chart);
+  const opinions=tab==='overview'?mountCreatorOpinions(opinionsHost,{signal,ticker,from}):null;
   const tools=el('details.stock-extra-tools',el('summary',s('focus.deeper_research')),directTools);
   head.append(el('a.btn.btn-ghost',{href:'#/chart/'+ticker,'data-stock-tool':'kline'},s('focus.chart_short')));
   shell.append(head,tabs,stockDisclosureLinks(ticker),overviewPanel,metricsPanel,mapPanel,historyPanel,tools);root.append(shell);
@@ -175,5 +178,5 @@ export async function mount(root,{ticker,signal,returnTo,query=new URLSearchPara
   }).catch(error=>{if(current()&&!hardDenied){clear(chart);chart.append(chartHead(),el('p.muted',s('focus.chart_unavailable')));}});
   showTab();
   await Promise.all([loadEvidence(),priceTask]);
-  return()=>{disposed=true;off();currentMap?.dispose?.();root.removeEventListener('ducky:shared-read',updates);};
+  return()=>{disposed=true;off();opinions?.dispose();currentMap?.dispose?.();root.removeEventListener('ducky:shared-read',updates);};
 }

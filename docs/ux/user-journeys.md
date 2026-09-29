@@ -107,6 +107,10 @@ entry, with supported internal routes and matching ticker/record identity requir
 | New entry range | Stock Overview references | Open stock | Open stock | Explicitly unavailable. Existing metrics remain accessible; no handmade buy range. |
 | Personal price condition | Existing Alerts draft/list | Stock metric action | Metric action / alert entry | Editable direction-specific prefill, then existing submission/review/confirmation. No new local-only plan store. |
 
+## Additive creator-view candidate (not deployed)
+
+Today → latest macro view → original video does not require a ticker or author follow. Explore → latest company view → the same stock workspace preserves the verified ticker association. Stock Overview shows bullish/bearish text, full conditions and dated sources without counting video paraphrases as supporting evidence. Exact repeats expand to every original date/link; changed conditions and opposed views stay separate. Existing transcript summaries and source pages remain accessible. Successful withdrawal refresh removes native points without reviving older native aggregate text. [Acceptance and remaining API boundary](../../reports/CREATOR-NATIVE-VIEWS-2026-09-29.md).
+
 ## Continuity and source rules
 
 - Keep the five primary destinations and direct map/metric/chart access. Readable results precede optional explanations and archives.

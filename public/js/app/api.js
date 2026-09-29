@@ -257,8 +257,9 @@ export const billing = {
   qr: (rail) => getDataUri("/billing/qr/" + encodeURIComponent(rail)),
 };
 export const kol = {
+  opinions: (params={},opts={}) => get('/kol/opinions?'+new URLSearchParams(params),{...opts,silent402:true}),
   // No public fallback for a denied/expired Pro session.
-  feed: () => store.isPro() ? get('/kol/feed') : get('/kol/trial-feed'),
+  feed: (opts) => store.isPro() ? get('/kol/feed',opts) : get('/kol/trial-feed',opts),
   mine: () => get("/me/kols"),
   sub: (id) => post("/kol/" + encodeURIComponent(id) + "/sub", {}),
   unsub: (id) => del("/kol/" + encodeURIComponent(id) + "/sub"),

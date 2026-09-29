@@ -7,6 +7,7 @@ import {discoveryRows,discoveryStockRow,discoveryDate} from '../explore-discover
 import * as api from '../api.js';
 import * as store from '../store.js';
 import {icon} from '../icons.js';
+import {mountCreatorOpinions} from '../creator-opinions.js';
 
 let readingState=null;
 
@@ -36,6 +37,8 @@ export async function mount(root,{signal}={}){
     el('header.explore-section-heading',el('h2',s('explore.discussion_title')),refresh),date,
     el('p.explore-ranking-key',el('span',s('explore.comparison_key')),el('span',s('explore.attention_only'))),notice,list,more,notes);
   list.append(spinner());root.append(candidates);
+  const opinionsHost=el('div.explore-opinions-host');root.append(opinionsHost);
+  const opinions=mountCreatorOpinions(opinionsHost,{signal:controller.signal,from:'explore',initial:4});
 
   const feed=el('div.explore-week-feed');
   const weekly=el('details.explore-weekly',{'data-reading-key':'explore:weekly',open:saved?.expanded===true},
@@ -87,7 +90,7 @@ export async function mount(root,{signal}={}){
         el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>load()},s('common.retry')));
     }finally{if(current()&&mine===sequence){refresh.disabled=false;refresh.removeAttribute('aria-busy');}}
   }
-  function dispose(){if(disposed)return;remember();disposed=true;controller.abort();picker.dispose();feedDispose?.();signal?.removeEventListener('abort',dispose);}
+  function dispose(){if(disposed)return;remember();disposed=true;controller.abort();picker.dispose();feedDispose?.();opinions.dispose();signal?.removeEventListener('abort',dispose);}
   signal?.addEventListener('abort',dispose,{once:true});
   if(signal?.aborted){dispose();return dispose;}
   if(weekly.open)loadFeed();

@@ -270,7 +270,7 @@ test('the creators block lists macro takes from the last day and a half, newest 
   const feed={posts:[post(1,20),post(2,5,{take:'bear',tickers:['NVDA','TSLA']}),post(3,40),post(4,2,{macro:false}),post(5,8,{summary:JSON.stringify({zh:'',en:'',source:{status:'discovered'}})})]};
   assert.deepEqual(creators.macroPosts(feed,{now}).map(p=>p.id),[2,5,1]);
   const block=creators.creatorMacroBlock(feed,{now});
-  assert.match(block.querySelector('h2').textContent,/Creators on the macro backdrop/);
+  assert.equal(block.querySelector('h2').textContent,'More creator updates');
   const items=[...block.querySelectorAll('li')];assert.equal(items.length,3);
   assert.match(items[0].textContent,/Creator 2.*03:00 ET.*Bearish/);assert.equal(items[0].querySelector('a').href,'https://www.youtube.com/watch?v=v2');
   assert.equal(items[0].querySelectorAll('.pill').length,2);assert.match(items[1].textContent,/Analysis pending/);

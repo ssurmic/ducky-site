@@ -30,7 +30,8 @@ test('unfollowed companies have a primary research tile with lighter metrics/map
  const root=setup(),calls=[];
  globalThis.fetch=async(url,options)=>{calls.push({url,method:options.method});return Response.json(url.startsWith('/radar/social.json')?ranking:{items:[]});};
  const dispose=await mount(root);
- assert.equal(calls.length,1);assert.ok(calls[0].url.startsWith('/radar/social.json'));
+ assert.equal(calls.length,2);assert.equal(calls.filter(call=>call.url.startsWith('/radar/social.json')).length,1);
+ assert.equal(calls.filter(call=>call.url.startsWith('/kol/opinions?')).length,1);
  assert.equal(root.querySelector('.explore-stock-open').getAttribute('href'),'#/stock/NVDA?from=explore');
  assert.deepEqual([...root.querySelectorAll('.explore-stock-routes a')].map(a=>a.getAttribute('href')),['#/stock/NVDA?from=explore&tab=metrics','#/stock/NVDA?from=explore&tab=evidence']);
  assert.ok(root.querySelector('.explore-primary-tools a[href="#/boards"]'));
@@ -39,8 +40,8 @@ test('unfollowed companies have a primary research tile with lighter metrics/map
  assert.equal(root.querySelector('.explore-show-all').hidden,true);
  assert.deepEqual(store.get('watchlist'),[]);
  const weekly=root.querySelector('.explore-weekly');weekly.open=true;await tick();
- assert.equal(calls.length,2);assert.match(calls[1].url,/scope=all/);assert.ok(calls.every(call=>call.method==='GET'));
- weekly.open=false;await tick();weekly.open=true;await tick();assert.equal(calls.length,2);
+ assert.equal(calls.length,3);assert.ok(calls.some(call=>/scope=all/.test(call.url)));assert.ok(calls.every(call=>call.method==='GET'));
+ weekly.open=false;await tick();weekly.open=true;await tick();assert.equal(calls.length,3);
  dispose();
 });
 
@@ -64,7 +65,7 @@ test('twelve real rows lead the comparison, additional rows and complete views e
  const root=setup(),tickers=['SPY','MU','NVDA','AMD','META','TSLA','GOOG','MSFT','AAPL','INTC','PLTR','AMZN','AVGO','GLW'];
  const full='A complete qualified view. '+('The condition and original limitation remain visible. '.repeat(12));
  const doc={status:'ready',collected_at:ranking.collected_at,items:tickers.map((ticker,i)=>({ticker,rank:i+1,mentions:i===0?0:i===1?null:1000-i*37,change_pct:i===0?0:i===1?null:i%2?-5:40,overall:{en:i===13?full:''}}))};
- let calls=0;globalThis.fetch=async()=>{calls++;return Response.json(doc);};
+ let calls=0,opinionReads=0;globalThis.fetch=async url=>{if(url.startsWith('/kol/opinions?'))opinionReads++;else calls++;return Response.json(doc);};
  let dispose=await mount(root);
  assert.deepEqual([...root.querySelectorAll('.explore-stock-row')].map(row=>row.dataset.ticker),tickers.slice(0,12));
  assert.equal(root.querySelector('[data-ticker="SPY"] .explore-mention-count').textContent,'0');
@@ -76,7 +77,7 @@ test('twelve real rows lead the comparison, additional rows and complete views e
  assert.match(root.querySelector('.explore-show-all').textContent,/14/);
  root.querySelector('.explore-show-all').click();
  assert.deepEqual([...root.querySelectorAll('.explore-stock-row')].map(row=>row.dataset.ticker),tickers);
- assert.equal(calls,1);
+ assert.equal(calls,1);assert.equal(opinionReads,1);
  const notes=root.querySelector('.explore-notes');notes.open=true;await tick();
  const noteLink=notes.querySelector('a');noteLink.focus();
  root.querySelector('.explore-section-heading button').click();await tick();
@@ -97,7 +98,7 @@ test('local expansion preserves failed-refresh status until a successful ranking
  const root=setup(),tickers=['SPY','MU','NVDA','AMD','META','TSLA','GOOG','MSFT','AAPL','INTC','PLTR','AMZN','AVGO'];
  const doc={...ranking,status:'stale',items:tickers.map((ticker,i)=>({...ranking.items[0],ticker,rank:i+1}))};
  let mode='stale',calls=0;
- globalThis.fetch=async()=>{calls++;return mode==='offline'?Response.json({error:'offline'},{status:503}):Response.json({...doc,status:mode});};
+ globalThis.fetch=async url=>{if(!url.startsWith('/kol/opinions?'))calls++;return mode==='offline'?Response.json({error:'offline'},{status:503}):Response.json({...doc,status:mode});};
  const dispose=await mount(root),notice=root.querySelector('.explore-read-notice');
  assert.match(notice.textContent,/older ranking/);
  mode='offline';root.querySelector('.explore-section-heading button').click();await tick();
@@ -139,5 +140,6 @@ test('returning keeps the typed research query without replaying a search automa
  const input=root.querySelector('.symbol-picker input');input.value='semiconductor';input.dispatchEvent(new window.Event('input',{bubbles:true}));
  controller.abort();dispose();root.replaceChildren();dispose=await mount(root);
  assert.equal(root.querySelector('.symbol-picker input').value,'semiconductor');
- assert.ok(calls.every(url=>url.startsWith('/radar/social.json')));dispose();
+ assert.ok(calls.every(url=>url.startsWith('/radar/social.json')||url.startsWith('/kol/opinions?')));
+ assert.equal(calls.filter(url=>url.startsWith('/kol/opinions?')).length,2);dispose();
 });
