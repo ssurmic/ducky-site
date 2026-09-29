@@ -1,5 +1,6 @@
 // SYNTHETIC UI validation. Not included by build.py or connected to production.
-import {closeMacro,sparseCloseMacro,marketReadingsMacro} from './qa-close-data.js';
+import {closeMacro,sparseCloseMacro,marketReadingsMacro} from './today-close-data.js';
+import {opinionsFixture} from './qa-creator-opinions.js';
 const query=new URLSearchParams(location.search),mode=query.get('case')||'data';
 document.documentElement.dataset.theme=query.get('theme')==='dark'?'dark':'light';
 document.documentElement.dataset.tg='web';
@@ -208,6 +209,10 @@ window.fetch=async(input,options={})=>{
   ...(mode==='autocomplete-watchlist'&&options.body?{body:JSON.parse(options.body)}:{})});
  if(url.origin!==location.origin)throw Error('External traffic forbidden in synthetic fixture');
  const path=url.pathname.replace('/qa-api',''),method=options.method||'GET';
+ if(mode==='native-opinions'&&path==='/kol/opinions'){
+  if(query.get('opinions')==='unavailable')return Response.json({error:'synthetic_unavailable'},{status:503});
+  return Response.json(opinionsFixture({topic:url.searchParams.get('topic')||'all',ticker:url.searchParams.get('ticker'),before:url.searchParams.get('before'),...(query.get('opinions')==='empty'?{items:[]}: {})}));
+ }
  // The published historical asset is local to this build; all business reads remain stubbed.
  if(method==='GET'&&url.pathname==='/seasonality.json')return fixtureAssetFetch('/seasonality.json',options);
  if(method!=='GET'){
@@ -288,7 +293,13 @@ window.fetch=async(input,options={})=>{
     extra:{facts:{politician:'Josh Gottheimer',owner:'JT',transaction_code:'S',transaction_date:'2026-06-12',amount_range:'$15,001 - $50,000',asset_type:'OP',description:'Call options; Strike price $340; Expires 12/18/2026',filing_date:'2026-07-10',transaction_close:{close:19.8,date:'2026-06-12'}}}}]:[])]);
   return Response.json({items:kind==='insider'?insider:kind==='13f'?funds:kind==='political'?political:[],next_cursor:null});
  }
- if(path==='/kol/feed'||path==='/kol/trial-feed')return Response.json(kolFeed());
+ if(path==='/kol/feed'||path==='/kol/trial-feed'){
+  const feed=kolFeed();
+  if(mode==='native-opinions')feed.posts.unshift({id:90,kol_id:'sample-creator',kol_name:'Sample Research',platform_post_id:'sample00001',
+   url:'https://www.youtube.com/watch?v=sample00001',title:'Synthetic duplicate native summary',published_at:new Date(Date.now()-3600e3).toISOString(),tickers:[],macro:true,take:'neutral',
+   summary:JSON.stringify({zh:'合成示例：重复视频摘要应由上方逐条观点替代。',en:'Synthetic duplicate native summary should yield to the attributed points above.',source:{kind:'native_video',status:'qualified'}})});
+  return Response.json(feed);
+ }
  if(mode==='today-close-preview'&&path==='/macro/beta')return Response.json(closeMacro());
  if(mode==='today-market-readings'&&path==='/macro/beta')return Response.json(marketReadingsMacro());
  if(mode==='today-close-sparse'&&path==='/macro/beta')return Response.json(sparseCloseMacro());

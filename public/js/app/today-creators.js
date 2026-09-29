@@ -5,6 +5,7 @@
 import {el} from './ui.js';
 import {s,LANG} from './strings.js';
 import * as api from './api.js';
+import * as store from './store.js';
 
 const HOURS=36,LIMIT=4;
 const parse=v=>{if(!v)return null;if(typeof v==='object')return v;try{return JSON.parse(v);}catch{return {zh:String(v),en:String(v)};}};
@@ -33,8 +34,25 @@ export function creatorMacroBlock(feed,opts={}){
   return box;
 }
 
-// Never blocks the page: an unavailable feed hides the block.
-export function mountCreatorMacro(host,{signal}={}){
-  return api.kol.feed().then(feed=>{if(signal?.aborted)return;const block=creatorMacroBlock(feed);if(block)host.replaceChildren(block);else host.hidden=true;})
-    .catch(()=>{host.hidden=true;});
+// Preserve the transcript feed while the additive video-point stream is unavailable.
+export function mountCreatorMacro(host,{signal,nativePoints=false}={}){
+  const epoch=store.epoch(),token=store.get('token'),ctl=new AbortController();
+  let disposed=false,feed=null;
+  const current=()=>!disposed&&!signal?.aborted&&epoch===store.epoch()&&token===store.get('token');
+  function render(){
+    if(!current()||!feed)return;
+    const posts=(feed.posts||[]).filter(post=>{
+      const meta=parse(post.summary);
+      // Native points have their own revision and withdrawal boundary. An older
+      // aggregate feed must not restore them after that stream removes a view.
+      return !nativePoints||meta?.source?.kind!=='native_video';
+    });
+    const block=creatorMacroBlock({...feed,posts});host.hidden=!block;host.replaceChildren(...(block?[block]:[]));
+  }
+  const off=store.subscribe('*',()=>{if(epoch!==store.epoch()||token!==store.get('token')){dispose();host.replaceChildren();}});
+  function dispose(){if(disposed)return;disposed=true;ctl.abort();off();signal?.removeEventListener('abort',dispose);}
+  signal?.addEventListener('abort',dispose,{once:true});
+  const ready=signal?.aborted?(dispose(),Promise.resolve()):api.kol.feed({signal:ctl.signal}).then(value=>{if(!current())return;feed=value;render();})
+    .catch(()=>{if(current())host.hidden=true;});
+  return {ready,dispose};
 }

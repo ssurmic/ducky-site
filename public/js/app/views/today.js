@@ -4,6 +4,7 @@ import {displayQuote} from '../watchlist-overview.js';
 import {discoverStarters} from '../research-examples.js';
 import {mountMacroStrip} from '../today-macro.js';
 import {mountCreatorMacro} from '../today-creators.js';
+import {mountCreatorOpinions} from '../creator-opinions.js';
 import {s,LANG} from '../strings.js';
 import * as api from '../api.js';
 import * as store from '../store.js';
@@ -116,10 +117,12 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   // saved macro backdrop refreshes while visible and never delays the personal feed below.
   const macroHost=el('div.today-macro-host');
   const creatorHost=el('div.today-creators-host');
-  let macroTask=null;
-  if(!embedded){main.append(macroHost,creatorHost);macroTask=mountMacroStrip(macroHost,{signal});macroTask.then(()=>{
+  const opinionsHost=el('div.today-opinions-host');
+  let macroTask=null,creatorTask=null,opinionsTask=null;
+  if(!embedded){main.append(macroHost,opinionsHost,creatorHost);macroTask=mountMacroStrip(macroHost,{signal});macroTask.then(()=>{
     if(!disposed&&!signal?.aborted&&epoch===store.epoch())restoreDisclosures(macroHost);
-  });mountCreatorMacro(creatorHost,{signal});}
+  });creatorTask=mountCreatorMacro(creatorHost,{signal,nativePoints:true});
+  opinionsTask=mountCreatorOpinions(opinionsHost,{signal,topic:'macro',from:'today'});}
   const stat=(value,label,target,disabled=false)=>el('button.today-stat',{type:'button',disabled,
     onclick:()=>{const heading=target();if(heading){heading.scrollIntoView?.({block:'start'});heading.focus({preventScroll:true});}}},
     el('strong',String(value)),el('span',label));
@@ -260,6 +263,6 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   }
   await Promise.all([restoreReading(),summaryTask]);
   restoreDisclosures(summaries);
-  return()=>{disposed=true;seq++;macroTask?.stop();if(timer)clearInterval(timer);root.removeEventListener('ducky:shared-read',update);if(epoch===store.epoch())readingStates.set(stateKey,{days,query,pages,showAll,
+  return()=>{disposed=true;seq++;macroTask?.stop();creatorTask?.dispose();opinionsTask?.dispose();if(timer)clearInterval(timer);root.removeEventListener('ducky:shared-read',update);if(epoch===store.epoch())readingStates.set(stateKey,{days,query,pages,showAll,
     opened:[...main.querySelectorAll('details[open][data-reading-key]')].map(node=>node.dataset.readingKey)});};
 }

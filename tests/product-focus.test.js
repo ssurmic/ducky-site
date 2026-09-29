@@ -234,16 +234,18 @@ test('old and unavailable content cannot appear as current quoted statements',()
 });
 
 test('Today search reaches the backend, preserves pagination and performs no per-card requests',async()=>{
- const root=setup(),calls=[];
+ const root=setup(),calls=[],opinionReads=[];
  globalThis.fetch=async(input,options)=>{const url=new URL(input,'https://ducky.test');
+  if(url.pathname==='/kol/opinions')opinionReads.push([url,options.method]);
   // The saved-quote decoration read, the market-backdrop strip read and the creators block read are not per-card requests.
-  if(!['/watchlist','/macro/beta','/kol/feed','/kol/trial-feed'].includes(url.pathname))calls.push([url,options.method]);
+  if(!['/watchlist','/macro/beta','/kol/feed','/kol/trial-feed','/kol/opinions'].includes(url.pathname))calls.push([url,options.method]);
   if(url.pathname.startsWith('/kol/'))return Response.json({posts:[]});
   if(url.pathname==='/macro/beta')return Response.json({status:'unavailable',history:[]});
   if(url.pathname==='/me/stock-research')return Response.json({items:[item()]});
   return Response.json({items:[change(url.searchParams.has('q')?99:1)],next_cursor:url.searchParams.has('before')?null:'next'});
  };
  const dispose=await today.mount(root);
+ assert.equal(opinionReads.length,1);assert.equal(opinionReads[0][0].searchParams.get('topic'),'macro');assert.equal(opinionReads[0][1],'GET');
  assert.equal(calls.length,2);assert.equal(calls.find(c=>c[0].pathname==='/me/research-changes')[0].searchParams.get('earlier'),'false');
  root.querySelector('.change-card button').click();assert.equal(calls.length,2);closeModal();
  root.querySelector('input[type=search]').value='unloaded author';root.querySelector('form').dispatchEvent(new window.Event('submit',{cancelable:true}));await pause();
@@ -323,7 +325,7 @@ test('stock overview preserves both important stances even when its three inline
    return Response.json({ticker:'NVDA',price:{price:95,price_session:'2026-09-09'},evidence:{ticker:'NVDA',nodes:[...cited,other],analysis_status:'ready',analysis_generated_at:item().as_of,
      analysis:{overview:{...item().overview,citations:['source','b','c']},sections:[]}}});
   };
-  const dispose=await stock.mount(root,{ticker:'NVDA'});assert.equal(calls.length,2);
+  const dispose=await stock.mount(root,{ticker:'NVDA'});assert.equal(calls.filter(path=>path!='/kol/opinions').length,2);assert.equal(calls.filter(path=>path==='/kol/opinions').length,1);
   assert.equal(root.querySelectorAll('.stock-source-card').length,3);
   assert.ok(root.querySelector('.stock-source-card.is-counter'));assert.ok(root.querySelector('.stock-source-card.is-support'));
   assert.equal(root.querySelectorAll('.evidence-analysis-overview .evidence-analysis-citations button').length,3,'every original inline citation remains accessible');
@@ -471,10 +473,11 @@ test('Explore opens stock research without following and reads the seven-day fee
  assert.match(root.querySelector('.explore-candidates h2').textContent,/Most discussed/);
  assert.equal(root.querySelector('.focus-filters'),null);
   assert.ok(root.querySelector('a[href="#/creators?scope=discover"]'));
- assert.equal(calls.length,1);assert.equal(calls[0].url.pathname,'/radar/social.json');
+ assert.equal(calls.length,2);assert.equal(calls.filter(call=>call.url.pathname==='/radar/social.json').length,1);
+ assert.equal(calls.filter(call=>call.url.pathname==='/kol/opinions').length,1);
  root.querySelector('.explore-weekly').open=true;await pause();
  assert.equal(root.querySelector('.focus-filters select').value,'7');
-  assert.equal(calls.length,2);assert.ok(calls.every(c=>c.method==='GET'));
+  assert.equal(calls.length,3);assert.ok(calls.every(c=>c.method==='GET'));
  assert.ok(calls.some(c=>c.url.searchParams.get('scope')==='all'));assert.ok(calls.some(c=>c.url.pathname==='/radar/social.json'));dispose();
 });
 
@@ -497,7 +500,8 @@ test('pending stock analysis still shows the saved information map without an ex
  assert.ok(root.querySelector('.focus-chart-head a[href="#/chart/NEW"]'));assert.equal(root.querySelector('.focus-tool-links a[href^="#/chart/"]'),null);
  assert.ok([...root.querySelectorAll('.focus-tool-links a')].some(a=>a.getAttribute('href').startsWith('#/briefing?archive=1')));
  assert.ok(root.querySelector('.stock-information-map .evidence-node'));
- assert.equal(root.querySelectorAll('.evidence-analysis').length,1);assert.equal(calls.length,2);dispose();
+ assert.equal(root.querySelectorAll('.evidence-analysis').length,1);assert.equal(calls.filter(path=>!path.startsWith('/kol/opinions?')).length,2);
+ const opinionRead=calls.filter(path=>path.startsWith('/kol/opinions?'));assert.equal(opinionRead.length,1);assert.equal(new URL(opinionRead[0],'https://ducky.test').searchParams.get('ticker'),'NEW');dispose();
 });
 
 test('a quote-only map refresh preserves open author groups; source changes still require review',async()=>{
