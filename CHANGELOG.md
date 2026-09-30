@@ -1,5 +1,11 @@
 # Change log
 
+## Daily investment case and trend commentary · 2026-09-30
+
+Rename the two perspectives, show valuation, directional bias and signed momentum explicitly, and allow
+valuation/trend header sorting with unknown or stale values last. Keep the research snapshot's price basis
+separate from the writing time. [Acceptance](reports/STOCK-VIEWS-2026-09-30.md). Publication pending.
+
 ## 2026-09-30 — Market reading help buttons
 
 Add visible question-mark buttons to all six Today market readings. Chinese and English explanations cover meaning, calculation, interpretation, source dates and missing readings; the small glyphs retain 44px tap targets, keyboard focus and theme contrast. Correct the liquidity help’s publication-clock and 60-point boundary wording. [Acceptance](reports/MARKET-HELP-2026-09-30.md).

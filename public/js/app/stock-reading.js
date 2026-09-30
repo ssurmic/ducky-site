@@ -61,13 +61,27 @@ export function overallLine(views){
 }
 // One side of the reading as a table cell: the plain-language sentence with its side's colour,
 // a date caption when the facts moved since it was written, and a pending note before the first one.
+export function viewSortValue(views,key){
+  if(!views?.states||views.stale)return null;
+  const values=key==='valuation'?{peer_discount:1,near_peers:0,peer_premium:-1}:{bullish:1,mixed:0,bearish:-1};
+  return values[views.states[key]]??null;
+}
+export function viewState(views,side){
+  if(!views?.states)return null;
+  const state=views.states;
+  return el('p.small.watch-view-state',side==='left'?{title:s('watch.valuation_help')}:{},
+    side==='left'?s('watch.valuation_'+(state.valuation||'insufficient')):
+      s('watch.trend_'+(state.trend||'unknown'))+' · '+s('watch.bias_'+(state.bias||'unknown'))+' · '+s('watch.momentum_'+(state.momentum||'unknown')));
+}
 export function viewCell(views,side){
   const text=pick(views?.[side]);
   if(!text)return el('p.small.muted.watch-view-pending',s('watch.view_pending'));
-  return el('div.watch-view',{class:'is-'+side},el('p.watch-view-text',text),
+  return el('div.watch-view',{class:'is-'+side},viewState(views,side),el('p.watch-view-text',text),
+    views.price_basis?el('p.small.muted.watch-view-basis',views.price_basis.basis==='intraday_quote'?
+      s('watch.view_intraday_quote',{time:localTime(views.price_basis.quote_at)}):s('watch.view_daily_close',{date:views.price_basis.session||'—'})):null,
     el('p.small.muted.watch-view-date',s(views.stale?'watch.view_as_of':'watch.view_written',views.stale?{date:asOf(views)}:{time:writtenAt(views)})));
 }
-// The day's note: two readings written after the close from the row's facts, or nothing at all.
+// The daily note retains the edition and price snapshot clocks.
 export function noteCard(views){
   if(!views||!pick(views.right)||!pick(views.left))return null;
   return el('div.stock-views.stock-card',

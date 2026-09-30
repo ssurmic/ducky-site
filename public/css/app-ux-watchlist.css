@@ -211,3 +211,7 @@
  .watch-research-footer .watch-stock-actions>a{padding-inline:5px;font-size:11px}
  .watch-disclosures-link{font-size:11px}
 }
+
+/* Distinct, readable states; wording carries meaning without relying on color. */
+.watch-view-state{font-weight:650;line-height:1.5;margin:0 0 .4rem}
+.watch-view-basis{margin:.5rem 0 0;overflow-wrap:anywhere}
