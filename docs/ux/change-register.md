@@ -1,5 +1,9 @@
 # UX change and integration register
 
+## Video views in current research maps · 2026-09-29 (candidate)
+
+Both the stock Map tab and standalone map expose the same exact-ticker reviewed video views as Overview, with visible author attribution and complete source details. The shelf stays outside transcript evidence, graph counts and archived versions. Existing access and shared-read withdrawal rules remain. [Implementation and validation](../../reports/NATIVE-MAP-VIEWS-2026-09-29.md).
+
 ## Four-view creator shelves and signed changes · 2026-09-29
 
 Compare four creator views per page with horizontal navigation: four columns on desktop, two by two on phones. Full sources retain conditions, speaker attribution, repeat records and timestamps. Structured increases/decreases use green/red across ranking, market and research surfaces; zero and missing stay neutral. No extra author-history fetch or processing activation. [Implementation and acceptance](../../reports/CREATOR-RAILS-2026-09-29.md).

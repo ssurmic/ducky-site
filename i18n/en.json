@@ -5580,6 +5580,8 @@
   "app.today.reading_recorded": "Recorded {time} ET",
   "app.today.reading_ratio": "Ratio: {reading}",
   "app.today.macro_canonical_source": "Each reading carries its own date and source; Fear & Greed {fng} (CNN). Descriptive references, not a forecast.",
+  "app.opinions.map_title": "Video views on {ticker}",
+  "app.opinions.map_entry": "Video views",
   "app.opinions.stock_title": "Creator views on {ticker}",
   "app.opinions.macro_title": "Latest macro views",
   "app.opinions.latest_title": "Latest creator views",

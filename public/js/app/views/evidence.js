@@ -18,6 +18,7 @@ import {claimQualifications,sourceAt} from './creator-claim.js';
 import {ownershipEvent,eventLabel,eventDate} from '../evidence-event.js';
 import {material} from '../shared-read-refresh.js';
 import {readingOrder} from '../reading-order.js';
+import {mountMapOpinions} from '../evidence-opinions.js';
 
 const pick=v=>v?.[LANG==='en'?'en':'zh']||'';
 const original=v=>pick(v)||v?.en||v?.zh||'';
@@ -519,7 +520,7 @@ export async function mount(root,route={}){
     }
   }
   trialControls();
-  const host=el('div');root.append(host);let displayed=null,archived=false;
+  const host=el('div'),opinionsHost=el('div');root.append(host,opinionsHost);let displayed=null,archived=false,mapOpinions=null;
   const updatePrice=event=>{
     const update=event.detail;
     if(!valid()||archived||example||!displayed||update?.path!=='/evidence/'+ticker)return;
@@ -532,6 +533,9 @@ export async function mount(root,route={}){
   root.addEventListener('ducky:shared-read',updatePrice);
   async function load(version=tourSnapshot){
     displayed=null;archived=!!version;
+    // Current summaries are independently source-gated previews, never an old map's historical evidence.
+    if(example||version||!ticker||!store.get('me')){mapOpinions?.dispose();mapOpinions=null;}
+    else if(!mapOpinions){mapOpinions=mountMapOpinions(opinionsHost,{ticker,signal:ctl.signal});heading.append(mapOpinions.entry);}
     const id=++request;closeModal();currentMap?.dispose?.();currentMap=null;clear(host);
     if(!store.get('me')){host.append(el('a.btn.btn-primary',{href:'#/login'},s('login.pw_btn')));return;}
     if(example){
@@ -593,7 +597,7 @@ export async function mount(root,route={}){
     }}
   }
   const unsubs=[store.subscribe('me',()=>{if(syncing)return;chosen=store.get('me')?.experience?.evidence?.selected||[];trialControls();load();})];
-  const cleanup=()=>{root.removeEventListener('ducky:shared-read',updatePrice);alive=false;request++;currentMap?.dispose?.();currentMap=null;ctl.abort();unsubs.forEach(fn=>fn());closeModal();};
+  const cleanup=()=>{root.removeEventListener('ducky:shared-read',updatePrice);alive=false;request++;currentMap?.dispose?.();currentMap=null;mapOpinions?.dispose();mapOpinions=null;ctl.abort();unsubs.forEach(fn=>fn());closeModal();};
   route.signal?.addEventListener('abort',cleanup,{once:true});
   if(route.signal?.aborted)cleanup();else {
     if(store.get('me')&&!store.isPro())try{const r=await api.get('/me/evidence',{signal:ctl.signal});if(valid()){chosen=r.selected||[];if(JSON.stringify(chosen)!==JSON.stringify(store.get('me')?.experience?.evidence?.selected||[]))syncSelection();if(!example&&!route.ticker&&chosen.length){ticker=chosen[0];const name=heading.querySelector('strong.mono');if(name)name.textContent=ticker;}trialControls();}}catch(error){if(valid())trial.append(errorBox(error));}

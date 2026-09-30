@@ -10,6 +10,7 @@ import {stockDisclosureLinks} from '../stock-disclosures.js';
 import {unpackSnapshot} from '../snapshot-model.js';
 import {changeCard} from './today.js';
 import {mountCreatorOpinions} from '../creator-opinions.js';
+import {mountMapOpinions} from '../evidence-opinions.js';
 
 export async function mount(root,{ticker,signal,returnTo,query=new URLSearchParams()}={}){
   if(!/^[A-Z][A-Z0-9.-]{0,9}$/.test(ticker||'')){location.hash='#/explore';return;}
@@ -78,6 +79,8 @@ export async function mount(root,{ticker,signal,returnTo,query=new URLSearchPara
   const opinionsHost=el('div.stock-opinions-host');
   overviewPanel.append(body,opinionsHost,priceReferencePlan(ticker,from),chart);
   const opinions=tab==='overview'?mountCreatorOpinions(opinionsHost,{signal,ticker,from}):null;
+  const mapBody=el('div'),mapOpinionsHost=el('div');mapPanel.append(mapBody,mapOpinionsHost);
+  const mapOpinions=tab==='evidence'?mountMapOpinions(mapOpinionsHost,{signal,ticker,from}):null;
   const tools=el('details.stock-extra-tools',el('summary',s('focus.deeper_research')),directTools);
   head.append(el('a.btn.btn-ghost',{href:'#/chart/'+ticker,'data-stock-tool':'kline'},s('focus.chart_short')));
   shell.append(head,membershipNotice,tabs,stockDisclosureLinks(ticker),overviewPanel,metricsPanel,mapPanel,historyPanel,tools);root.append(shell);
@@ -140,7 +143,7 @@ export async function mount(root,{ticker,signal,returnTo,query=new URLSearchPara
     const mapSection=el('section.stock-information-map',el('header.focus-heading',el('div',el('h2',s('focus.evidence')),el('p.small.muted',s('focus.map_intro'))),
       el('a.stock-open',{href:'#/evidence/'+ticker},s('focus.open_full_map')+' →')),currentMap);
     replaceReading(body,compactPrice(result.price),analysisPanel(doc,{formatTime:localTime}),...(noteCard(result.price?.digest?.views)?[noteCard(result.price.digest.views)]:[]),sources);
-    replaceReading(mapPanel,mapSection);paintMetrics();
+    replaceReading(mapBody,...(mapOpinions?[mapOpinions.entry]:[]),mapSection);paintMetrics();
     api.readDiagnostic('render',{resource:'stock_research',items:doc.nodes.length,readable:doc.analysis?1:0});
     currentMap.refresh?.();
     if(recoveredAccess&&tab==='metrics')loadSnapshot();
@@ -155,9 +158,9 @@ export async function mount(root,{ticker,signal,returnTo,query=new URLSearchPara
       if(node)detail(node,{readingTicker:ticker});
     }catch(error){if(current()){
       if([401,402,403,404,410].includes(error.status))syncSourceDialog(ticker,[]);
-      if(!lastEvidence||[401,402,403,404,410].includes(error.status)){lastEvidence=null;currentMap?.dispose?.();currentMap=null;clear(body);clear(mapPanel);paintMetrics();}
-      if([401,402,403].includes(error.status)){hardDenied=true;snapshotRequest++;snapshot=null;snapshotBusy=false;snapshotRead=false;snapshotPending=false;snapshotError=false;clear(chart);clear(metricsPanel);clear(mapPanel);clear(historyBody);
-        for(const panel of [metricsPanel,mapPanel,historyBody])panel.append(researchError(error,loadEvidence));}
+      if(!lastEvidence||[401,402,403,404,410].includes(error.status)){lastEvidence=null;currentMap?.dispose?.();currentMap=null;clear(body);clear(mapBody);paintMetrics();}
+      if([401,402,403].includes(error.status)){hardDenied=true;snapshotRequest++;snapshot=null;snapshotBusy=false;snapshotRead=false;snapshotPending=false;snapshotError=false;clear(chart);clear(metricsPanel);clear(mapBody);clear(historyBody);
+        for(const panel of [metricsPanel,mapBody,historyBody])panel.append(researchError(error,loadEvidence));}
       body.prepend(researchError(error,loadEvidence));
     }}
   }
@@ -189,5 +192,5 @@ export async function mount(root,{ticker,signal,returnTo,query=new URLSearchPara
   }).catch(error=>{if(current()&&!hardDenied){clear(chart);chart.append(chartHead(),el('p.muted',s('focus.chart_unavailable')));}});
   showTab();
   await Promise.all([loadEvidence(),priceTask]);
-  return()=>{disposed=true;clearMembershipNotice();off();signal?.removeEventListener('abort',sync);opinions?.dispose();currentMap?.dispose?.();root.removeEventListener('ducky:shared-read',updates);};
+  return()=>{disposed=true;clearMembershipNotice();off();signal?.removeEventListener('abort',sync);opinions?.dispose();mapOpinions?.dispose();currentMap?.dispose?.();root.removeEventListener('ducky:shared-read',updates);};
 }

@@ -2,6 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
+import {opinionsFixture} from './fixtures/qa-creator-opinions.js';
 const dom=new JSDOM('<html data-lang="en"><body></body></html>',{url:'https://ducky.test/app/#/evidence/AVGO'});
 for(const key of ['window','document','Node','location','history'])globalThis[key]=dom.window[key];
 const copy=JSON.parse(readFileSync('i18n/en.json'));
@@ -11,6 +12,7 @@ const {mount,mapView,connectMap,analysisPanel}=await import('../public/js/app/vi
 const {safeTarget}=await import('../public/js/app/login-target.js');
 const {closeModal}=await import('../public/js/app/ui.js');
 const response=(d,status=200)=>new Response(JSON.stringify(d),{status,headers:{'content-type':'application/json'}});
+const emptyOpinions=url=>response(opinionsFixture({ticker:new URL(url,'https://ducky.test').searchParams.get('ticker'),items:[]}));
 function fixture(){return {ticker:'AVGO',status:'ready',checked_at:'2026-09-07T12:00:00Z',summary:{en:'Orders remain unconfirmed.',zh:'订单尚待确认。',citations:['n9']},
  nodes:Array.from({length:10},(_,i)=>({id:'n'+i,title:{en:'Point '+i,zh:'观点 '+i},kind:'creator',stance:i===9?'counter':i<5?'support':'context',conditional:i===9,
  published_at:'2026-09-04',evidence:[{id:'e'+i,kind:'creator',author:i===9?'Counter Author':'Source Author',source_url:'https://example.com/source',title:{en:'Source '+i,zh:'来源 '+i},
@@ -69,6 +71,7 @@ test('direct source links retain stock context when returning to the creator, in
    doc.nodes=[node];
    const sourceId=identity==='node'?node.id:node.evidence[0][identity];
    globalThis.fetch=async(url,options)=>{
+    if(url.startsWith('/kol/opinions?'))return emptyOpinions(url);
     assert.equal(options.method,'GET');assert.equal(url,'/evidence/AVGO');calls.push(url);return response(doc);
    };
    const root=document.createElement('main');document.body.append(root);
@@ -218,7 +221,8 @@ test('unready snapshots never show an old analysis or invent an update time',()=
 });
 test('reopening the selected ticker reads its latest snapshot instead of doing nothing',async()=>{
  store.set('me',{tier:'pro'});let calls=0;
- globalThis.fetch=async()=>{
+ globalThis.fetch=async url=>{
+  if(url.startsWith('/kol/opinions?'))return emptyOpinions(url);
   const d=fixture();calls++;
   if(calls===2){d.analysis_status='ready';d.analysis={overview:{en:'New saved analysis.',citations:['n1']},sections:[]};}
   return response(d);
@@ -234,6 +238,7 @@ test('reopening the selected ticker reads its latest snapshot instead of doing n
 test('mobile picker reopens the current ticker with a fresh read and closes the dialog',async()=>{
  store.set('me',{tier:'pro'});store.set('watchlist',['AVGO']);location.hash='#/evidence/AVGO';
  let calls=0;globalThis.fetch=async(url,options)=>{
+  if(url.startsWith('/kol/opinions?'))return emptyOpinions(url);
   assert.equal(url,'/evidence/AVGO');assert.equal(options.method,'GET');calls++;
   const d=fixture();if(calls===2)d.nodes[0].title.en='A newly saved observation.';return response(d);
  };
@@ -274,9 +279,9 @@ test('untrusted captions stay text and unsafe source links are rejected',()=>{
  assert.match(document.querySelector('.modal-box').textContent,/<img/);closeModal();root.remove();
 });
 test('free users read their selections without fetching an unselected map',async()=>{
- store.set('me',{tier:'free'});let calls=[];globalThis.fetch=async url=>{calls.push(String(url));return response(fixture());};
+ store.set('me',{tier:'free'});let calls=[];globalThis.fetch=async url=>{calls.push(String(url));return url.startsWith('/kol/opinions?')?emptyOpinions(url):response(fixture());};
  const root=document.createElement('div');const cleanup=await mount(root,{ticker:'AVGO'});
- assert.deepEqual(calls,['/me/evidence']);assert.equal(root.querySelector('a[href="#/billing"]'),null);assert.equal(root.querySelectorAll('.evidence-node').length,0);cleanup();
+ assert.deepEqual(calls,['/me/evidence','/kol/opinions?topic=all&scope=discover&limit=30&ticker=AVGO']);assert.equal(root.querySelector('a[href="#/billing"]'),null);assert.equal(root.querySelectorAll('.evidence-node').length,0);cleanup();
 });
 test('direct route uses shared API, logout removes data and old responses cannot return',async()=>{
  store.set('me',{tier:'pro'});let resolve;globalThis.fetch=()=>new Promise(r=>resolve=r);
@@ -308,6 +313,26 @@ test('measured connectors follow the displayed cards and release their resize ob
  map.style.setProperty('--evidence-layout','tree');callback();assert.equal(map.querySelectorAll('.evidence-trunk').length,1);
  connections.dispose();assert.equal(observed.length,0);assert.ok(disconnected>=2);assert.equal(map.querySelectorAll('svg path').length,0);
  map.remove();globalThis.ResizeObserver=previous;
+});
+test('desktop connector viewport clips paths without clipping map cards or adjacent video views',()=>{
+ const layout=new JSDOM('<html><head></head><body><div class="evidence-map evidence-lanes"><svg class="evidence-connections" viewBox="0 0 900 400"><path d="M 100 50 V 1200"/></svg><button class="evidence-node">Source</button></div><section class="creator-opinions">Video views</section></body></html>');
+ try{
+  const css=layout.window.document.createElement('style');
+  css.textContent=readFileSync('public/css/app.css','utf8')+'\n'+readFileSync('public/css/product-focus.css','utf8');
+  layout.window.document.head.append(css);
+  const map=layout.window.document.querySelector('.evidence-map'),svg=map.querySelector('svg');
+  for(const focused of [false,true]){
+   map.classList.toggle('has-focus',focused);
+   const mapStyle=layout.window.getComputedStyle(map),wires=layout.window.getComputedStyle(svg);
+   assert.equal(mapStyle.position,'relative','SVG containing block is the graph, not the entire research workspace');
+   assert.equal(wires.position,'absolute');assert.equal(wires.inset,'0px');
+   assert.equal(wires.width,'100%');assert.equal(wires.height,'100%');
+   assert.equal(wires.overflow,'hidden','out-of-bounds paths cannot paint over adjacent opinions, even when raised for focus');
+   assert.equal(wires.pointerEvents,'none');
+   assert.notEqual(mapStyle.overflow,'hidden','cards and their focus outlines are not clipped to solve an SVG-only problem');
+  }
+  assert.equal(map.contains(layout.window.document.querySelector('.creator-opinions')),false);
+ }finally{layout.window.close();}
 });
 test('point numbers keep matching summary citations after filtering',()=>{
  const root=mapView(fixture());document.body.append(root);
@@ -397,7 +422,7 @@ test('source branding preserves viewpoint, exact links, counts and source-dialog
 test('all fifty watched stocks remain reachable through the visible selector without searching',async()=>{
  const stocks=Array.from({length:50},(_,i)=>'T'+String(i).padStart(2,'0'));
  store.set('me',{tier:'pro'});store.set('watchlist',stocks);let requests=0;
- globalThis.fetch=async()=>{requests++;return response({...fixture(),ticker:'T49'});};
+ globalThis.fetch=async url=>{if(url.startsWith('/kol/opinions?'))return emptyOpinions(url);requests++;return response({...fixture(),ticker:'T49'});};
  const root=document.createElement('div');document.body.append(root);const cleanup=await mount(root,{ticker:'T49'});
  assert.ok(root.querySelector('.evidence-watchlist a[href="#/evidence/T49"]'));
  assert.ok(root.querySelector('.evidence-all-stocks').textContent.includes('50'));
@@ -412,9 +437,9 @@ test('all fifty watched stocks remain reachable through the visible selector wit
 
 test('syncing the account selection on mount does not fetch the same map twice',async()=>{
  store.set('me',{tier:'free',experience:{evidence:{selected:[],cap:3}}});const calls=[];
- globalThis.fetch=async url=>{calls.push(String(url));return response(String(url)==='/me/evidence'?{selected:['AVGO']}:fixture());};
+ globalThis.fetch=async url=>{calls.push(String(url));return url.startsWith('/kol/opinions?')?emptyOpinions(url):response(String(url)==='/me/evidence'?{selected:['AVGO']}:fixture());};
  const root=document.createElement('div');document.body.append(root);const cleanup=await mount(root,{ticker:'AVGO'});
- assert.deepEqual(calls,['/me/evidence','/evidence/AVGO']);
+ assert.deepEqual(calls,['/me/evidence','/kol/opinions?topic=all&scope=discover&limit=30&ticker=AVGO','/evidence/AVGO']);
  assert.deepEqual(store.get('me').experience.evidence.selected,['AVGO']);
  cleanup();root.remove();
 });

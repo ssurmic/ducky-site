@@ -1,5 +1,9 @@
 # Change log
 
+## Reviewed video views beside stock maps · 2026-09-29 (candidate)
+
+Stock Map and standalone research maps now expose exact-ticker video views through a compact attributed shelf and a direct reading button. Full conditions and sources remain accessible; historical maps and graph support counts stay separate. The existing shared read requires no creator follow and adds no write or processing action. [Checks and release boundary](reports/NATIVE-MAP-VIEWS-2026-09-29.md).
+
 ## Four-view creator shelves and signed changes · 2026-09-29
 
 Compare four creator views per page with horizontal navigation: four columns on desktop, two by two on phones. Full sources retain conditions, speaker attribution, repeat records and timestamps. Structured increases/decreases use green/red across ranking, market and research surfaces; zero and missing stay neutral. No extra author-history fetch or processing activation. [Implementation and acceptance](reports/CREATOR-RAILS-2026-09-29.md).
