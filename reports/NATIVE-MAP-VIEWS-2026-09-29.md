@@ -1,6 +1,6 @@
 # Attributed video views beside stock research maps
 
-Status: implemented candidate; not committed, deployed or accepted with live new-video content.
+Status: UI deployed in PR #125; actual new-video publication acceptance remains pending. This report records the September 29 Pacific release, verified on September 30 UTC.
 
 The stock workspace's Map tab and the standalone research map previously showed only the existing evidence graph. Reviewed video views were already readable in stock Overview, but a reader entering directly through Map could miss them. Both current-map routes now offer a **Video views** button and an attributed four-card shelf below the retained graph. The button scrolls to and focuses the shelf heading. Each preview names its author and stance; opening it retains the full claim, conditions, horizon, original video link and separate source clocks.
 
@@ -21,7 +21,7 @@ The backend companion tests exercise synthetic accepted receipts through the rea
 
 Node 24: 69/69 focused tests and 975/975 complete frontend tests passed. The prescribed Python suites passed 18 tests with one explicit skip (including 14 export/home-source tests). Bilingual build, copy lint and 2,145 internal links passed. Root browser viewport acceptance is recorded below; production-content acceptance remains pending. An attempted isolated headless check exited on a temporary fixture-server read while `dist` was rebuilding; it establishes no visual acceptance and was not resumed.
 
-Root's CUA check found the 390px phone video shelf readable, but desktop dark-mode connector paths painted beyond the graph and through the adjacent video shelf/footer. The existing SVG allowed visible overflow. Only the connector SVG viewport now clips overflowing paths; the graph cards and their focus outlines remain unclipped. A stylesheet/layout regression covers the graph-relative viewport and focused connector state. After this correction, the two map test files passed 36/36, the bilingual build passed and `git diff --check` was clean. This records the observed failure and bounded correction; the corrected desktop visual check remains with root.
+Root's CUA check found the 390px phone video shelf readable, but desktop dark-mode connector paths painted beyond the graph and through the adjacent video shelf/footer. The existing SVG allowed visible overflow. Only the connector SVG viewport now clips overflowing paths; the graph cards and their focus outlines remain unclipped. A stylesheet/layout regression covers the graph-relative viewport and focused connector state. After this correction, the two map test files passed 36/36, the bilingual build passed and `git diff --check` was clean. The corrected desktop visual check passed after loading fresh fixture CSS, as recorded below.
 
 ## Browser QA entry points
 
@@ -29,6 +29,14 @@ Loopback fixture server: `http://127.0.0.1:8976/qa-frame?lang=zh&theme=dark&case
 
 Check 320×700, 390×700 and 1440×900: `[data-map-video-views]`, `.creator-opinions`, `.opinion-preview-author`, `.opinion-preview-open`, `[data-opinion-dialog]` and `.opinion-original`. Confirm the button and source controls remain reachable, no document overflow, complete modal qualifications, approximate original source link and focus return. No physical-device or new-video live-content acceptance is claimed here.
 
-Root browser acceptance used the actual Chrome UI at 390×844, 390×640 and 320×640, plus the desktop viewport. Both routes, languages and themes were inspected. The 320px English light layout had no document overflow; complete conditions and time horizon remained readable in the modal, the original video link retained its approximate 0:32 anchor, and closing restored the invoking card focus. In the 390px English dark layout, the shelf heading began at 98.6px and both preview controls fit with a 147.3px height. These are viewport simulations, not physical-device tests. SVG clipping recheck is recorded below when complete.
+Root browser acceptance used the actual Chrome UI at 390×844, 390×640 and 320×640, plus the desktop viewport. Both routes, languages and themes were inspected. The 320px English light layout had no document overflow; complete conditions and time horizon remained readable in the modal, the original video link retained its approximate 0:32 anchor, and closing restored the invoking card focus. In the 390px English dark layout, the shelf heading began at 98.6px and both preview controls fit with a 147.3px height. These are viewport simulations, not physical-device tests. The completed SVG clipping recheck follows.
 
 The final desktop English dark recheck loaded fresh CSS (computed SVG overflow: hidden) and visually confirmed map connectors stop at the graph boundary, leaving the opinion cards and footer clear. The fixture server cache was corrected locally for this recheck; no cache behavior change was added to the product.
+
+## Production release receipt
+
+[PR #125](https://github.com/ssurmic/ducky-site/pull/125) merged as `e2f3659516df103878a814a1751b7e58e23fe05c`. The official publisher reran the complete frontend gate successfully, including 975 Node tests, before publishing [Pages deployment 75f859f1](https://75f859f1.ducky-site.pages.dev). Production `config.js` served `VERSION=e2f36595` with the expected Content Security Policy at **2026-09-30 03:34:19 UTC** (**September 29, 20:34:19 Pacific**).
+
+This receipt establishes that the reviewed UI artifact was deployed. The viewport and source-dialog checks above used synthetic fixtures; they do not establish that a newly processed video has become readable in production. Actual new-video publication and end-to-end delivery remain pending and require their own evidence.
+
+The follow-up documentation PR publishes this receipt to the repository only. It does not run the site publisher or change the deployed UI version, which remains `e2f36595` until another UI release.
