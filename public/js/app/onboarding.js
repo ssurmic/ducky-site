@@ -32,7 +32,7 @@ export function stepRoute(progress){
   }
   if(step==='calendar')return '#/calendar'+(progress.examples?.calendar?.date?'?date='+encodeURIComponent(progress.examples.calendar.date):'');
   if(step==='insider'&&progress.examples?.insider?.record_id)return '#/record/'+encodeURIComponent(progress.examples.insider.record_id);
-  return '#/boards?board=insider&mode=archive&purchases=open_market';
+  return '#/boards?board=insider&mode=archive&purchases=all';
 }
 
 export function matchesProgress(progress, event){

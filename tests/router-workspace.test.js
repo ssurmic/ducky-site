@@ -170,7 +170,8 @@ test('stock filings open with compact filters and exact record breadcrumbs retai
   await router.render();assert.equal(root.querySelector('.record-breadcrumb a').getAttribute('href'),filtered,'canonical alias reread preserves the entry return');
   await visit(root.querySelector('.record-breadcrumb a').getAttribute('href'));
   assert.equal(root.querySelector('[name=q]').value,'Synthetic officer');assert.equal(root.querySelector('[name=ticker]').value,'NVDA');assert.equal(root.querySelector('[name=direction]').value,'1');assert.equal(main.scrollTop,365);
-  assert.equal(root.querySelector('.radar-filter-toggle').getAttribute('aria-expanded'),'true','a real directional constraint stays visible');
+  assert.equal(root.querySelector('.radar-filter-toggle').getAttribute('aria-expanded'),'false','direction no longer needs the advanced controls');
+  assert.equal(root.querySelector('[data-insider-direction="1"]').getAttribute('aria-pressed'),'true','the direct Buy button preserves the exact constraint');
   for(const change of [{href:'https://example.com'}, {href:'#/boards/unexpected'}, {at:'#/record/other'}, {id:'other'}, {epoch:store.epoch()-1}]){
    await visit('#/watchlist');await visit(canonical,{duckyRecordReturn:{...state.duckyRecordReturn,...change}});
    assert.equal(root.querySelector('.record-breadcrumb a').getAttribute('href'),'#/boards','unsafe or unrelated history cannot supply a breadcrumb');

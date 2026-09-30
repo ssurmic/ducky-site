@@ -32,14 +32,14 @@ test('full archive filters and pagination are sent to the server, not applied on
 });
 test('event categories, canonical links and explicit excerpt mode stay usable',async t=>{
  t.mock.method(Date,'now',()=>now);
- globalThis.fetch=async url=>response(String(url).includes('radar-history')?{items:[{board:'insider',ticker:'TTMI',ts:'2026-08-26T12:00:00Z',summary:{en:'Historical receipt'},body:{en:'Identity unverified'}}]}:{items:sample});
+ globalThis.fetch=async url=>response(String(url).includes('radar-history')?{items:[{board:'insider',ticker:'TTMI',ts:'2026-08-26T12:00:00Z',summary:{en:'Historical receipt'},body:{en:'Identity unverified'}}]}:{items:sample,filter_version:3});
  const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams()});
  assert.equal(root.querySelector('.signal-screen'),null);
  assert.equal(root.querySelector('.radar-market-panel'),null);
  assert.equal(document.activeElement,document.body);
  assert.equal(root.querySelectorAll('.radar-category').length,5);
  root.querySelector('[name="ticker"]').value='TTMI';root.querySelector('[name="ticker"]').dispatchEvent(new window.Event('input'));
- root.querySelector('[data-board="insider"]').click();assert.equal(root.querySelectorAll('.radar-record').length,1);
+ root.querySelector('[data-board="insider"]').click();await flush();assert.equal(root.querySelectorAll('.radar-record').length,1);
  const link=root.querySelector('.radar-record-toggle');assert.equal(link.getAttribute('href'),'#/record/1');
  assert.equal(root.querySelector('.radar-detail'),null);
  const detail=itemRow(sample[0],{standalone:true});
