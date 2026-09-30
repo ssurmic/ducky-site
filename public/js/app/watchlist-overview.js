@@ -1,5 +1,5 @@
 import { el, pct, px } from './ui.js';
-import {viewCell} from './stock-reading.js';
+import {viewCell,viewSortValue} from './stock-reading.js';
 import { s, LANG } from './strings.js';
 import { icon } from './icons.js';
 import {metricKeys,metricCell,metricLabel,metricShortLabel,metricMethods,metricSortValue,metricHelpButton} from './watchlist-metrics.js';
@@ -86,7 +86,7 @@ export function referenceSummary(row,signals){
 
 export function researchOverview(rows,{query='',sort='market_cap',sortDirection='desc',signals,renderResearch,viewsFor,quoteReceived=null}={}){
   const filtered=rows.filter(row=>[row.ticker,row.company,row.label_zh,row.label_en,row.industry].some(value=>String(value||'').toLowerCase().includes(query.trim().toLowerCase())));
-  sortRows(filtered,sort,sortDirection,{signals});
+  sortRows(filtered,sort,sortDirection,{signals,viewsFor});
   if(!filtered.length)return el('p.empty',s('watch.no_match'));
   return el('div.watch-research-grid',...filtered.map(row=>{
     const quote=displayQuote(row),shown=quote||row,views=viewsFor?.(row.ticker)||null;
@@ -259,7 +259,7 @@ export function overviewView(rows, options) {
     if(omitted.length) root.append(el('section.watch-unweighted',el('h2',s('watch.unweighted')),
       el('p.muted.small',s('watch.unweighted_note')),...omitted.map(r=>button(r,true))));
   } else {
-    sortRows(filtered,sort,sortDirection,{signals});
+    sortRows(filtered,sort,sortDirection,{signals,viewsFor});
     if(renderResearch){
       const selectBox=(ticker=null)=>{
         const all=filtered.every(row=>selection.checked.has(row.ticker));
@@ -275,7 +275,7 @@ export function overviewView(rows, options) {
       const shownSignals=compact?[]:signalKeys,shownMetrics=compact?[]:metricKeys;
       const showNarrative=view!=='metrics';
       const narrativeHeaders=showNarrative?[el('th.watch-overview-col',{scope:'col'},s('watch.col_overall')),
-        el('th.watch-view-col.is-left',{scope:'col'},s('watch.view_left')),el('th.watch-view-col.is-right',{scope:'col'},s('watch.view_right'))]:[];
+        Object.assign(sortHeader('valuation',s('watch.view_left'),s('watch.sort_valuation')),{className:'watch-view-col is-left'}),Object.assign(sortHeader('trend',s('watch.view_right'),s('watch.sort_trend')),{className:'watch-view-col is-right'})]:[];
       const comparisonHeaders=[...shownMetrics.map(key=>{const th=sortHeader(key,metricShortLabel(key),metricLabel(key));th.classList.add('watch-help-col');th.dataset.metric=key;th.append(metricHelpButton(key));return th;}),
         ...shownSignals.map((key,i)=>{const th=sortHeader(key,signalLabel(key));th.classList.add('watch-signal-col');th.dataset.signal=key;if(!i)th.classList.add('is-first');
           th.append(signalHelpButton(key,signals?.meta||{}));return th;}),
@@ -329,8 +329,8 @@ export function overviewView(rows, options) {
   return root;
 }
 
-export function sortRows(rows,key,direction='desc',{signals=null}={}){
-  const value=row=>signalKeys.includes(key)?signalSortValue(signals?.get(row.ticker),key):metricKeys.includes(key)?metricSortValue(row,key):['price','change_pct'].includes(key)?(displayQuote(row)||row)[key]:row[key];
+export function sortRows(rows,key,direction='desc',{signals=null,viewsFor=null}={}){
+  const value=row=>['valuation','trend'].includes(key)?viewSortValue(viewsFor?.(row.ticker),key):signalKeys.includes(key)?signalSortValue(signals?.get(row.ticker),key):metricKeys.includes(key)?metricSortValue(row,key):['price','change_pct'].includes(key)?(displayQuote(row)||row)[key]:row[key];
   return rows.sort((a,b)=>{
     if(key==='ticker')return a.ticker.localeCompare(b.ticker)*(direction==='asc'?1:-1);
     const x=value(a),y=value(b);

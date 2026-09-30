@@ -59,7 +59,7 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
     if(key!==lastPaint){lastPaint=key;api.readDiagnostic('render',{resource:'watchlist',items,readable});}
   }
   const allowedModes=focused?['list','reading','metrics','heatmap']:['list','heatmap'];
-  const allowedSorts=['market_cap','change_pct','ytd','drawdown','relative','iv_hv','attention','degen','ticker','price','insider','funds','politicians','walls','support'];
+  const allowedSorts=['market_cap','change_pct','ytd','drawdown','relative','iv_hv','attention','degen','ticker','price','valuation','trend','insider','funds','politicians','walls','support'];
   let view = allowedModes.includes(routeQuery.get('view'))?routeQuery.get('view'):'list', query = (routeQuery.get('q')||'').slice(0,80),
     sort = allowedSorts.includes(routeQuery.get('sort'))?routeQuery.get('sort'):'market_cap',
     sortDirection = routeQuery.get('direction')==='asc'?'asc':'desc', area = 'equal', candidate = null, adding = false;
@@ -156,7 +156,7 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
   });
   filterPicker.wrap.classList.add('watch-search');unsubs.push(filterPicker.dispose);
   const sorting = el('select.input',{'aria-label':s('watch.sort'),onchange:()=>{sort=sorting.value;render();}},
-    ...['market_cap','change_pct','ytd','drawdown','relative','iv_hv','attention','degen','ticker'].map(key=>el('option',{value:key},s('watch.sort_'+key))));
+    ...['market_cap','change_pct','ytd','drawdown','relative','iv_hv','attention','degen','valuation','trend','ticker'].map(key=>el('option',{value:key},s('watch.sort_'+key))));
   const controls = el('div.watch-controls',filterPicker.wrap,...(focused?[]:[sorting]),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>load()},s('watch.refresh')));
   const modeNote=el('p.small.muted.watch-mode-note');
   function renderOffer() {

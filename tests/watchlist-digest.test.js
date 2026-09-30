@@ -181,7 +181,7 @@ test('left-side and right-side readings render under the digest only when both a
  const views={status:'ready',session:'2026-09-19',right:{en:'Trend followers watch the close hold above the 20-day low.',zh:'趋势派关注收盘能否守住 20 日低点。'},left:{en:'Long-term holders watch the pullback depth.',zh:'长线持有者关注回调深度。'}};
  const cell=reading({ticker:'NVDA',status:'pending',records:3},{digest:digest.digestNodes(row,sig),views});
  const lines=[...cell.querySelectorAll('.stock-view')].map(n=>n.textContent);
- assert.deepEqual(lines,['Trend viewTrend followers watch the close hold above the 20-day low.','Long-term viewLong-term holders watch the pullback depth.']);
+ assert.deepEqual(lines,['Trend & momentumTrend followers watch the close hold above the 20-day low.','Investment caseLong-term holders watch the pullback depth.']);
  // Flashcards: the day's note first (coloured by side), the digest card second; arrows, dots and keys move between them.
  assert.deepEqual([...cell.querySelectorAll('.stock-view')].map(n=>n.className),['stock-view is-right','stock-view is-left']);
  const deck=cell.querySelector('.card-deck');assert.equal(deck.dataset.cards,'2');assert.equal(deck.dataset.index,'0');
@@ -221,7 +221,7 @@ test('List leads with the verdict and both perspectives while Metrics leads with
  assert.equal(listed.firstChild.className,'stock-overall');assert.equal(listed.querySelector('.card-deck').dataset.cards,'2');
  // Stale: the sentence stays, its own date goes under it; the pending note appears before the first reading.
  const stale={...views,stale:true};
- assert.match(overallLine(stale).querySelector('.stock-overall-date').textContent,/Analysis from 2026-09-2[12]; the underlying data has since changed/);
+ assert.match(overallLine(stale).querySelector('.stock-overall-date').textContent,/Research snapshot: 2026-09-2[12]/);
  // The day is the reader's local day of the stored instant, never the UTC date of an evening reading.
  const evening={...stale,generated_at:'2026-09-22T23:40:00-07:00'};
  assert.equal(overallLine(evening).querySelector('.stock-overall-date').textContent.includes(new Intl.DateTimeFormat('en-CA',{year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(evening.generated_at))),true);
@@ -244,7 +244,7 @@ test('List leads with the verdict and both perspectives while Metrics leads with
  const heads=[...root.querySelectorAll('thead th')].map(th=>th.textContent.trim());
  assert.deepEqual(heads.slice(0,2),['Stock / company','Price / daily change']);
  assert.deepEqual([...root.querySelectorAll('thead th')].slice(2,8).map(th=>th.dataset.metric),['ytd','drawdown','relative','iv_hv','attention','degen']);
- assert.deepEqual(heads.slice(-4),['Market cap','Overall','Long-term view','Trend view']);
+ assert.deepEqual(heads.slice(-4),['Market cap','Overall','Investment case','Trend & momentum']);
  assert.equal(heads.length,17,'all metrics, signals, market cap and narrative columns remain');
  assert.ok(root.querySelector('thead th.watch-view-col.is-left')&&root.querySelector('thead th.watch-cap-col'));
  const first=root.querySelector('tbody tr');
@@ -255,11 +255,28 @@ test('List leads with the verdict and both perspectives while Metrics leads with
  const second=root.querySelectorAll('tbody tr')[1];
  assert.equal(second.querySelectorAll('.watch-view-pending').length,2);assert.ok(second.querySelector('.watch-reading-preview .stock-digest-value'));
  const compactList=overviewView(rows,{...options,compact:true});
- assert.deepEqual([...compactList.querySelectorAll('thead th')].map(th=>th.textContent.trim()),['Stock / company','Price / daily change','Overall','Long-term view','Trend view']);
+ assert.deepEqual([...compactList.querySelectorAll('thead th')].map(th=>th.textContent.trim()),['Stock / company','Price / daily change','Overall','Investment case','Trend & momentum']);
  assert.equal(compactList.querySelector('.watch-metric-cell'),null);
  const listedFirst=compactList.querySelector('tbody tr');
  assert.match(listedFirst.querySelector('.watch-reading-preview').textContent,/^Overall:/);
  for(const side of ['left','right'])assert.equal(listedFirst.querySelector('.watch-view-cell.is-'+side+' .watch-view-text').textContent,first.querySelector('.watch-view-cell.is-'+side+' .watch-view-text').textContent);
  for(const key of ['app.watch.col_left','app.watch.col_right','app.watch.col_overall','app.watch.view_pending','app.watch.view_as_of','app.watch.view_written'])assert.ok(zh[key]&&!/[㐀-鿿]/.test(copy[key]),key);
  assert.equal(zh['app.watch.col_overall'],'总评');assert.equal(zh['app.watch.view_reading'],'概览');
+});
+
+test('daily view states distinguish valuation, trend and signed momentum; unknown sorts last',async()=>{
+ const {viewCell,viewSortValue}=await import('../public/js/app/stock-reading.js');
+ const {sortRows}=await import('../public/js/app/watchlist-overview.js');
+ const views={status:'ready',session:'2026-09-30',generated_at:'2026-09-30T19:02:00Z',
+  states:{valuation:'insufficient',trend:'bullish',momentum:'up_fading'},
+  left:{en:'Valuation is unproven.',zh:'估值依据不足。'},right:{en:'The uptrend remains intact, with fading upward momentum.',zh:'上行趋势延续，上行动能减弱。'},
+  price_basis:{basis:'last_completed_daily_close',session:'2026-09-29'}};
+ assert.match(viewCell(views,'right').querySelector('.watch-view-state').textContent,/Uptrend intact.*Upward momentum fading/);
+ assert.match(viewCell(views,'left').textContent,/Insufficient valuation data/);
+ assert.match(viewCell(views,'right').querySelector('.watch-view-basis').textContent,/2026-09-29 close/);
+ assert.equal(viewSortValue(views,'valuation'),null);
+ const pool={CHEAP:{states:{valuation:'peer_discount'}},RICH:{states:{valuation:'peer_premium'}},MISSING:views,OLD:{states:{valuation:'peer_discount'},stale:true}};
+ const rows=Object.keys(pool).map(ticker=>({ticker}));
+ assert.deepEqual(sortRows([...rows],'valuation','desc',{viewsFor:t=>pool[t]}).map(r=>r.ticker),['CHEAP','RICH','MISSING','OLD']);
+ assert.deepEqual(sortRows([...rows],'valuation','asc',{viewsFor:t=>pool[t]}).map(r=>r.ticker),['RICH','CHEAP','MISSING','OLD']);
 });

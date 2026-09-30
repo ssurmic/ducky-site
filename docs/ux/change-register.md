@@ -253,3 +253,8 @@ Published with the production release recorded above.
 ## Phone workflows and ticker identity — 2026-09-29
 
 Implemented candidate: structured fluorescent ticker leaves in light/dark; compact empty-Watchlist rows and two-column Today candidates; macro reading disclosures and phone chart choice; phone evidence cards with visible stance counts, opposing views and original sources; early Overview tools; contextual creator empty-state compression. Existing data, access and membership ownership retained. [Design, browser evidence and release limits](../../reports/TICKER-MOBILE-UX-2026-09-29.md). Shared private Handoff §52 is the release record.
+
+
+## Daily research perspectives — 2026-09-30
+
+Implemented candidate: Investment case / 布局逻辑 and Trend & momentum / 趋势与动能, separate valuation/price-bias/trend/momentum states, sortable headers with unknown and stale values last, and original price-basis dates. The backend supplies shared reviewed editions; no browser inference. The 12-case fixture viewport sweep covered both languages and themes at 320/390/1440 px with working sort clicks, no page overflow or JavaScript errors. Physical-device and live publication acceptance remain separate. [Evidence](../../reports/STOCK-VIEWS-2026-09-30.md).
