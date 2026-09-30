@@ -22,10 +22,11 @@ import {renderCreatorPage} from './creator-page.js';
 import {creatorRoute,creatorTarget} from '../creator-route.js';
 import {matchesStocks,taggedTickers} from '../creator-match.js';
 import {readingPreview} from '../reading-preview.js';
+import {creatorRail} from '../creator-rail.js';
 import {mountCreatorOpinions} from '../creator-opinions.js';
 
 const TAKE_CLS = { bull: "cr-bull", bear: "cr-bear", neutral: "cr-neutral" };
-const VIEWS_SHOWN = 1;   // Other authors' main views stay within reach before the archive.
+const VIEWS_SHOWN = 12;  // Three four-preview pages; the complete archive stays directly accessible.
 const CALL_ARROW = { bull: "▲", bear: "▼", neutral: "•" };
 // Private search text stays in this account's memory, never in a shareable URL.
 const readingStates=new Map();
@@ -206,6 +207,19 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   mergeDiscovery();
   let selected=kols.some(k=>k.id===initial.selected)?initial.selected:'', tab=initial.tab, shown=30;
   const histories={}, archiveOpen=new Set(saved?.archiveOpen||[]);
+  const railStates={...(saved?.railStates||{})};let rails=[];
+  const stopRails=()=>{for(const rail of rails)rail.dispose();rails=[];};
+  function preserveFocus(){
+    const key=card.contains(document.activeElement)?document.activeElement?.dataset?.readingKey:null;
+    if(key)queueMicrotask(()=>{if(!disposed&&epoch===store.epoch()&&!document.body.classList.contains('modal-open'))
+      [...card.querySelectorAll('[data-reading-key]')].find(n=>n.dataset.readingKey===key)?.focus({preventScroll:true});});
+  }
+  function viewRail(views,creator){
+    const key='creator:'+creator.id+':'+(stockTicker||'all');
+    const rail=creatorRail(views.map(view=>({id:view.pointId||(view.post.platform_post_id||view.post.id)+':summary',node:viewRow(view,creator,{preview:true})})),
+      {key,label:s('creatorrail.label',{name:creator.name||creator.id}),state:railStates[key]||(railStates[key]={})});
+    rails.push(rail);return rail.node;
+  }
   const pageProgress=progressPoll({interval:30000,active:()=>!sourceOnly&&!disposed&&canRead(selected)&&epoch===store.epoch()&&root.isConnected&&!!selected&&tab==='feed',
     read:()=>api.get('/kol/'+encodeURIComponent(selected)+'/page'),
     onValue:page=>{if(page.kol_id!==selected)return;const old=doc.pages?.[selected];if(page.content_hash===old?.content_hash&&page.status===old?.status)return;
@@ -217,7 +231,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     [...card.querySelectorAll('[data-reading-key]')].find(node=>node.dataset.readingKey===saved.focusKey)?.focus({preventScroll:true});});
 
   function render() {
-    setupCleanup();clear(card);
+    preserveFocus();stopRails();setupCleanup();clear(card);
     card.append(el('div.evidence-page-head',el('div',el("h1", s("creators.h1")), el("p.muted", s("creators.sub"))),
       el('span')));
 
@@ -274,7 +288,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     if(nativeKey!==nextNativeKey)stopNative();
     syncRoute();pageProgress.schedule();
     const content = card.querySelector(".creators-content");
-    clear(content);
+    preserveFocus();stopRails();clear(content);
     const startersHost=card.querySelector('.creator-starters-host');clear(startersHost);
     if(!sourceOnly&&tab==='feed'&&!selected&&!query&&!stockTicker&&!showSetup&&(!mine||!following.size)){
       const starters=creatorStarters(mine?starterDiscovery:discovery,{following,state:starterState,onFollow:async(creator,button,view)=>{
@@ -339,7 +353,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         el('label',el('span',s('creatordiscovery.filter')),filter)),el('p.creator-discovery-basis',s('creatordiscovery.basis')));
       if(discovery.coverage?.truncated||discovery.coverage?.scan_limited)content.append(el('p.small.muted',s('creatordiscovery.result_limit')));
     }
-    // Default entry for followed creators: their latest views, one per line, no creator picker. A creator's
+    // Default entry for followed creators: four view previews per horizontal page. A creator's
     // name opens that creator; a view opens the original source with its summary.
     const directView=mine&&!selected&&!stockTicker&&!query&&!focusedPost&&!showSetup&&following.size>0;
     if(directView){content.append(latestViews(available,stockFilter));return;}
@@ -359,7 +373,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       const creatorPosts=posts.filter(p=>p.kol_id===k.id);
       const page=doc.pages?.[k.id];
       const ready=page?.coverage?.reviewed ?? (creatorPosts.length?creatorPosts.filter(hasReviewedSummary).length:null);
-      if(!mine)tile.append(discoveryPreview(entry,discovery.status));
+      if(!mine)tile.append(discoveryPreview(entry,discovery.status,{compact:true}));
       const coverageText=!canRead(k.id)?s(on?'experience.creator_outside_trial':'experience.not_followed_data'):
         ready!==null?s('creatorpage.card_ready',{n:ready}):entry?.latest_view?s('creatorstart.eyebrow'):'';
       const metadata=el('div.creator-profile-meta',coverageText?el('p.creator-card-coverage',coverageText):null);
@@ -400,7 +414,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         if(!nativeHost){
           nativeKey=nextNativeKey;nativeHost=el('div.creator-native-opinions');
           content.append(nativeHost);
-          nativeOpinions=mountCreatorOpinions(nativeHost,{signal,creator:selected,ticker:stockTicker||null,from:'creators',compactEmpty:!!group?.views.length});
+          nativeOpinions=mountCreatorOpinions(nativeHost,{signal,creator:selected,ticker:stockTicker||null,from:'creators',compactEmpty:!!group?.views.length,rail:true});
         }else {nativeOpinions?.setCompactEmpty(!!group?.views.length);content.append(nativeHost);}
       }
       if(!canRead(selected)){
@@ -413,11 +427,9 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         if(group?.views.length){
           const mainViews=el('section.creators-ux-author-views',el('h2',s('creatorsux.author_views')),
             el('p.small.muted',s('creatorsux.author_views_hint')));
-          const rows=el('ol.creator-view-list');
-          for(const view of group.views.slice(0,4))rows.append(viewRow(view,creator));
-          mainViews.append(rows);
-          if(group.views.length>4){const rest=el('ol.creator-view-list');for(const view of group.views.slice(4))rest.append(viewRow(view,creator));
-            mainViews.append(el('details.creator-views-more',el('summary',s('creators.more_views',{n:group.views.length-4})),rest));}
+          mainViews.append(viewRail(group.views.slice(0,VIEWS_SHOWN),creator));
+          if(group.views.length>VIEWS_SHOWN){const rest=el('ol.creator-view-list');for(const view of group.views.slice(VIEWS_SHOWN))rest.append(viewRow(view,creator));
+            mainViews.append(el('details.creator-views-more',el('summary',s('creators.more_views',{n:group.views.length-VIEWS_SHOWN})),rest));}
           content.append(mainViews);
         }
         const delivery=renderProgress(analysis[selected]?.progress);if(delivery)content.append(delivery);
@@ -529,7 +541,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       const views=rows.map(row=>({post:p,ticker:row.ticker,tickers:[row.ticker],stance:{support:'bull',counter:'bear'}[row.stance]||'neutral',pointId:row.point_id||'',
         text:row.title?.[isZh?'zh':'en']||row.title?.zh||row.title?.en||'',seconds:row.start_seconds,record:row}));
       for(const call of legacyCalls(p))views.push({post:p,ticker:call.sym,tickers:[call.sym],stance:['bull','bear'].includes(call.stance)?call.stance:'neutral',pointId:call.point_id||call.claim_id||'',
-        text:pickSummary(call.note,isZh)||conciseSummary(p.summary,isZh),seconds:call.action_start_seconds??call.start_seconds});
+        text:pickSummary(call.note,isZh)||conciseSummary(p.summary,isZh),seconds:call.action_start_seconds??call.start_seconds,record:call});
       // A reviewed video without an attributed view keeps its summary line; the stocks it tagged stay
       // neutral labels, never a direction.
       if(!views.length&&hasReviewedSummary(p))views.push({post:p,ticker:'',tickers:taggedTickers(p),stance:'neutral',pointId:'',text:conciseSummary(p.summary,isZh)||s('creators.summary_view'),seconds:null,summaryOnly:true});
@@ -559,30 +571,29 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
         el('button.creator-name',{type:'button','aria-label':s('creators.open_creator')+' · '+(creator.name||creator.id),onclick:open},creator.name||creator.id),
         el('p.small.muted',group.views.length?s('creators.views_count',{n:group.views.length})+' · '+s('creators.latest_at',{date:String(group.latest||'').slice(0,10)}):''))));
       if(!group.views.length){article.append(el('p.small.muted.creator-views-none',s('creators.no_views_creator')));grid.append(article);continue;}
-      const list=el('ol.creator-view-list');
-      const rows=group.views.map(view=>viewRow(view,creator));
-      for(const row of rows.slice(0,VIEWS_SHOWN))list.append(row);
-      article.append(list);
-      if(rows.length>VIEWS_SHOWN){
-        const rest=el('ol.creator-view-list');for(const row of rows.slice(VIEWS_SHOWN))rest.append(row);
-        article.append(el('details.creator-views-more',el('summary',s('creators.more_views',{n:rows.length-VIEWS_SHOWN})),rest));
-      }
+      article.append(viewRail(group.views.slice(0,VIEWS_SHOWN),creator));
+      if(group.views.length>VIEWS_SHOWN)article.append(el('button.creator-all-views',{type:'button',onclick:open},s('creatorrail.all',{n:group.views.length})));
       grid.append(article);
     }
     return section;
   }
-  function viewRow(view,creator){
+  function viewRow(view,creator,{preview=false}={}){
     const p=view.post,tickers=(view.tickers||[]).filter(Boolean).slice(0,3);
-    const chips=tickers.length?tickers.map(t=>el('a.cr-take',{href:'#/stock/'+encodeURIComponent(t)+'?from=creators','aria-label':s('creatorsux.research_stock',{ticker:t}),'data-reading-key':'creator-view:'+p.platform_post_id+':'+view.pointId+':'+t+':stock',class:t===view.ticker?(TAKE_CLS[view.stance]||'cr-neutral'):'cr-neutral'},
+    const chips=tickers.length?(preview?tickers.slice(0,1):tickers).map(t=>el('a.cr-take',{href:'#/stock/'+encodeURIComponent(t)+'?from=creators','aria-label':s('creatorsux.research_stock',{ticker:t}),'data-reading-key':'creator-view:'+p.platform_post_id+':'+view.pointId+':'+t+':stock',class:t===view.ticker?(TAKE_CLS[view.stance]||'cr-neutral'):'cr-neutral'},
       el('span.ticker-symbol','$'+t),t===view.ticker&&['bull','bear'].includes(view.stance)?[' ',el('span',s('creators.take_'+view.stance))]:null)):[el('span.cr-take.cr-neutral',s('creators.summary_ready'))];
     const matched=tickers.filter(t=>watchedTickers.includes(t));
-    const button=el('button.creator-view-open',{type:'button','data-post':p.platform_post_id||p.id||'','data-point':view.pointId,onclick:()=>openView(view,creator)},
+    const button=el('button.creator-view-open',{type:'button','data-post':p.platform_post_id||p.id||'','data-point':view.pointId,'data-reading-key':'creator-view:'+creator.id+':'+(view.pointId||p.platform_post_id||p.id)+':open',onclick:()=>openView(view,creator)},
       el('span.creator-view-text',view.text),
-      el('span.creator-view-meta.small.muted',[String(p.published_at||'').slice(0,10),previewTitle(p.title)].filter(Boolean).join(' · '),
-        matched.length?el('span.creator-watch-match',' · '+s('creatorstocks.matched')+' ',...matched.flatMap((t,i)=>[i?' ':'',el('span.ticker-symbol','$'+t)])):null));
-    const row=el('li.creator-view-row',{class:'is-'+view.stance},el('div.creator-view-takes',...chips),button);
-    const qualifications=view.record?claimQualifications(view.record):null;if(qualifications)row.append(qualifications);
-    if(view.records?.length>1){
+      el('span.creator-view-meta.small.muted',[String(p.published_at||'').slice(0,10),preview?null:previewTitle(p.title)].filter(Boolean).join(' · '),
+        !preview&&matched.length?el('span.creator-watch-match',' · '+s('creatorstocks.matched')+' ',...matched.flatMap((t,i)=>[i?' ':'',el('span.ticker-symbol','$'+t)])):null));
+    const row=el('li.creator-view-row',{class:'is-'+view.stance},el('div.creator-view-takes',...chips,preview&&tickers.length>1?el('span.creator-preview-extra','+'+(tickers.length-1)):null),button);
+    const qualifications=view.record?claimQualifications(view.record):null;
+    if(preview){
+      row.classList.add('creator-preview-card');
+      button.append(el('span.creator-preview-foot',el('span.creator-preview-read',s('creatorrail.read')),qualifications?el('span.creator-preview-caveat',s('creatorrail.qualified')):null));
+      if(view.records?.length>1)row.querySelector('.creator-view-takes').append(el('span.creator-preview-repeat',{'aria-label':s('creatorsux.repeated',{n:view.records.length}),title:s('creatorsux.repeated',{n:view.records.length})},'×'+view.records.length));
+    }else if(qualifications)row.append(qualifications);
+    if(!preview&&view.records?.length>1){
       const receipts=el('details.creators-ux-repeated',el('summary',s('creatorsux.repeated',{n:view.records.length})),el('p.small.muted',s('creatorsux.repeat_note')));
       const list=el('ol.creators-ux-receipts');
       for(const record of view.records){
@@ -600,6 +611,14 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     const p=view.post,meta=evidenceMeta(p),source=meta.source||{},points=verifiedSpans(p),body=el('div.creator-view-detail');
     body.append(el('h3.cr-video-title',previewTitle(p.title)||s('creators.orig')),
       el('p.small.muted',s('creators.published')+' '+videoDate(p.published_at,isZh?'zh-CN':'en-US')));
+    body.append(el('p.creator-selected-claim',view.text));
+    const qualification=view.record?claimQualifications(view.record):null;if(qualification)body.append(qualification);
+    if(view.records?.length>1){
+      const repeats=el('details.creators-ux-repeated',el('summary',s('creatorsux.repeated',{n:view.records.length})),el('p.small.muted',s('creatorsux.repeat_note')));
+      repeats.append(el('ol.creators-ux-receipts',...view.records.map(record=>el('li',el('button',{type:'button',onclick:()=>openView({...record,records:[]},creator)},
+        el('time',{datetime:record.post.published_at},videoDate(record.post.published_at,isZh?'zh-CN':'en-US')),el('span',previewTitle(record.post.title)))))));
+      body.append(repeats);
+    }
     const spans=spanSection(points,null,view.pointId,{inline:true});if(spans)body.append(spans);
     if(!points.length&&legacyCalls(p).length)body.append(callChips(legacyCalls(p),isZh,p.url,p.kol_id));
     const fullSummary=hasReviewedSummary(p)?(pickSummary(p.summary,isZh)||pickSummary((source.sections||[])[0],isZh)):'';
@@ -617,6 +636,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     if(p.platform_post_id&&p.kol_id)actions.append(el('a.btn.btn-ghost.btn-sm',{
       href:creatorTarget({tab:'feed',mine:false,selected:p.kol_id,post:p.platform_post_id,point:view.pointId}),onclick:closeModal},s('creatorsux.open_record')));
     if(view.ticker)actions.append(el('a.btn.btn-ghost.btn-sm',{href:'#/stock/'+encodeURIComponent(view.ticker)+'?from=creators'},researchLabel(view.ticker)),evidenceLink(view.ticker,view.pointId));
+    if(!view.ticker)for(const ticker of view.tickers||[])actions.append(el('a.btn.btn-ghost.btn-sm',{href:'#/stock/'+encodeURIComponent(ticker)+'?from=creators'},researchLabel(ticker)));
     body.append(actions);
     modal((creator.name||p.kol_name||'')+' · '+String(p.published_at||'').slice(0,10),body);
   }
@@ -637,7 +657,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
     const target=creatorTarget({tab,mine,watched,ticker:stockTicker,selected,post:focusedPost,point:tab==='research'&&initial.tab==='research'?initial.point:focusedPoint});
     const old=readingStates.get(target);
     const focused=document.activeElement,focusKey=card.contains(focused)?focused?.dataset?.readingKey:old?.focusKey;
-    readingStates.set(target,{query,discoveryScope,discoveryStance,directoryLimit,filtersOpen,archiveOpen:[...archiveOpen],focusKey});
+    readingStates.set(target,{query,discoveryScope,discoveryStance,directoryLimit,filtersOpen,archiveOpen:[...archiveOpen],railStates,focusKey});
     if(readingStates.size>20)readingStates.delete(readingStates.keys().next().value);
   }
   function syncRoute() {
@@ -710,5 +730,5 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       analysis=mineDoc.analysis||{};following.clear();for(const id of mineDoc.subs||[])following.add(id);await loadDiscovery(false);if(disposed||epoch!==store.epoch())return;render();progress.schedule();
     }catch{if(!disposed&&!automatic)toast(s('creators.load_error'),'err');}finally{refreshing=false;}
   }
-  return () => {remember();stopNative();disposed=true;phoneMedia?.removeEventListener('change',resizeFilters);clearTimeout(discoveryTimer);discoveryController?.abort();progress.stop();pageProgress.stop();setupCleanup();document.querySelector('dialog.creator-confirm')?.remove();};
+  return () => {remember();stopRails();stopNative();disposed=true;phoneMedia?.removeEventListener('change',resizeFilters);clearTimeout(discoveryTimer);discoveryController?.abort();progress.stop();pageProgress.stop();setupCleanup();document.querySelector('dialog.creator-confirm')?.remove();};
 }

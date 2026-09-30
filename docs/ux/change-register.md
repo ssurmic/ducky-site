@@ -1,5 +1,10 @@
 # UX change and integration register
 
+## Four-view creator shelves and signed changes · 2026-09-29
+
+Compare four creator views per page with horizontal navigation: four columns on desktop, two by two on phones. Full sources retain conditions, speaker attribution, repeat records and timestamps. Structured increases/decreases use green/red across ranking, market and research surfaces; zero and missing stay neutral. No extra author-history fetch or processing activation. [Implementation and acceptance](../../reports/CREATOR-RAILS-2026-09-29.md).
+
+
 ## Integrated Today market dashboard · 2026-09-29 (candidate)
 
 Keep current index quotes, four compact macro readings and both historical three-line comparisons in one market section. Phone emphasis comes from stronger reading text and less repeated metadata. Upcoming events follow the charts with a plain date, time, event and complete impact; provenance stays in expandable details. Canonical values, source clocks, archived closing notes and automatic-read state are retained. [Design and acceptance](../../reports/TODAY-DASHBOARD-2026-09-29.md).

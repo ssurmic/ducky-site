@@ -5414,7 +5414,7 @@
   "app.creatorsux.choose_author": "从近期观点选择作者",
   "app.creatorsux.author_views": "主要观点与股票",
   "app.creatorsux.author_views_hint": "不同条件和相反观点分别保留，点开观点可读完整来源。",
-  "app.creatorsux.main_views_hint": "先看每位作者的一条近期观点，展开可比较其他观点和历次来源。",
+  "app.creatorsux.main_views_hint": "并排比较近期观点；点开卡片，查看完整观点和来源。",
   "app.creatorsux.research_stock": "研究 {ticker}",
   "app.creatorsux.open_record": "完整来源记录",
   "app.creatorsux.repeated": "相同表述 · {n} 条来源记录",
@@ -5691,5 +5691,14 @@
   "app.evidence.mobile_previous": "上一组观点与事实",
   "app.evidence.mobile_next": "下一组观点与事实",
   "app.evidence.mobile_swipe": "左右滑动，对照观点",
-  "app.opinions.empty_alongside": "此范围暂无补充视频观点，其他已收录观点见下方。"
+  "app.opinions.empty_alongside": "此范围暂无补充视频观点，其他已收录观点见下方。",
+  "app.creatorrail.label": "{name}的观点",
+  "app.creatorrail.page": "{page} / {total}",
+  "app.creatorrail.previous": "上一组观点",
+  "app.creatorrail.next": "下一组观点",
+  "app.creatorrail.read": "阅读全文",
+  "app.creatorrail.qualified": "含条件或期限",
+  "app.creatorrail.all": "查看全部 {n} 条观点",
+  "app.creatorrail.preview": "观点速览",
+  "app.creatorrail.source": "完整观点与来源"
 }

@@ -1,3 +1,4 @@
+import {numericChangeClass} from './numeric-change.js';
 import {el, pct, modal} from './ui.js';
 import {s, LANG} from './strings.js';
 
@@ -48,7 +49,7 @@ export function metricCell(key,m={}) {
   const dated=valid&&!ready;
   return el('span.watch-metric',{'data-metric':key,'data-status':state,...(title&&!retained?{title}:{})},
     el('span.watch-metric-label',metricLabel(key)),
-    el('strong.watch-metric-value',{class:tone,...(title&&!retained?{'aria-label':value+' · '+title}:{})},value),
+    el('strong.watch-metric-value',{class:tone+(['ytd','drawdown','relative'].includes(key)?' '+numericChangeClass(m.value):''),...(title&&!retained?{'aria-label':value+' · '+title}:{})},value),
     note?el('span.watch-metric-note',note):null,
     dated?el('span.watch-metric-status',status,m.as_of?el('time.watch-metric-date',{datetime:m.as_of},date(m.as_of)):null):null);
 }

@@ -1,5 +1,10 @@
 # Change log
 
+## Four-view creator shelves and signed changes · 2026-09-29
+
+Compare four creator views per page with horizontal navigation: four columns on desktop, two by two on phones. Full sources retain conditions, speaker attribution, repeat records and timestamps. Structured increases/decreases use green/red across ranking, market and research surfaces; zero and missing stay neutral. No extra author-history fetch or processing activation. [Implementation and acceptance](reports/CREATOR-RAILS-2026-09-29.md).
+
+
 ## Phone reading workflows and consistent ticker identity · 2026-09-29 (candidate)
 
 Use fluorescent ticker symbols consistently in both themes. Phone Watchlist choices become compact rows with direct Add; Today uses compact macro readings and a selectable comparison chart; phone research maps offer attributed swipe cards with visible risk/category controls. Keep full sources, conditions and saved reading state. [Design and acceptance](reports/TICKER-MOBILE-UX-2026-09-29.md).

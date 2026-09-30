@@ -1,3 +1,4 @@
+import {numericChange,changeParts} from '../numeric-change.js';
 import {canReadStock,stockResearchEntry} from '../experience.js';
 import {el,clear,spinner,errorBox,num,pct} from '../ui.js';
 import {s,LANG} from '../strings.js';
@@ -32,6 +33,19 @@ export function factText(fact){
   return [d.publisher||d.author||'',LANG==='en'?(d.summary_en||d.title||''):(d.summary||d.title||'')].filter(Boolean).join(' · ')||s('stockbrief.recorded_source');
 }
 
+// Structured fact changes receive a leaf color; reviewed prose stays exactly as recorded.
+function factContent(fact){
+  const d=fact.data||{};
+  if(fact.topic==='technicals')return changeParts('stockbrief.fact_technical',
+    {daily:n(d.rsi_d),weekly:n(d.rsi_w),monthly:n(d.rsi_m)},{drawdown:{value:d.dd_pct,unit:''}});
+  if(fact.topic==='business_peer_comparison')return [
+    (LANG==='en'?(d.benchmark_en||(/[^\x00-\x7F]/.test(d.benchmark||'')?comparisonLabel(fact):d.benchmark)):d.benchmark||comparisonLabel(fact))+' · ',
+    numericChange(d.excess20,{unit:' pp'})];
+  if(d.left&&d.right)return [d.left+' ',numericChange(d.left_return_pct),' / '+d.right+' ',numericChange(d.right_return_pct),
+    ' · ',numericChange(d.excess_pp,{digits:2,unit:' pp'}),' · '+d.start+' → '+d.end];
+  return factText(fact);
+}
+
 export function reportCard(row,{onHistory,archive=false}={}){
   const ticker=safeTicker(row.ticker)?row.ticker:'';
   const card=el('article.card.stock-brief',{'data-ticker':ticker},
@@ -47,7 +61,7 @@ export function reportCard(row,{onHistory,archive=false}={}){
   const nodes=new Map();
   for(const fact of facts){
     const node=el('article.stock-brief-fact',{'tabindex':'-1'},el('h4',comparisonLabel(fact)?s('comparison.heading'):s('stockbrief.topic_'+fact.topic)),
-      el('p',factText(fact)),comparisonDetails(fact),el('p.small.muted',s('stockbrief.observed',{date:time(fact.observed_at)})),
+      el('p',factContent(fact)),comparisonDetails(fact),el('p.small.muted',s('stockbrief.observed',{date:time(fact.observed_at)})),
       fact.source_at?el('p.small.muted',s('stockbrief.source_date',{date:fact.source_at})):null,
       fact.freshness==='stale'?el('p.data-notice',s('stockbrief.fact_stale')):null);
     if(fact.topic==='reported_insider_purchase')node.append(el('p.small.muted',s('stockbrief.insider_basis')));

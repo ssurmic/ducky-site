@@ -1,3 +1,4 @@
+import {numericChangeClass} from './numeric-change.js';
 import {el,pct} from './ui.js';
 import {s,LANG} from './strings.js';
 import {stockHref} from './stock-reading.js';
@@ -31,7 +32,7 @@ export function discoveryStockRow(row){
   const primary=anchor([
     el('span.explore-stock-identity',el('span.explore-rank',String(row.rank)),el('strong.explore-stock-symbol.ticker-symbol',row.ticker)),
     row.company&&row.company!==row.ticker?el('span.explore-company',{title:row.company},row.company):null,
-    el('span.explore-attention',{'aria-hidden':'true'},el('span.explore-mention-count',count),el('span.explore-mention-change',change)),
+    el('span.explore-attention',{'aria-hidden':'true'},el('span.explore-mention-count',count),el('span.explore-mention-change',{class:numericChangeClass(row.attentionChange)},change)),
     el('span.explore-measure-description',{id:'explore-attention-'+row.ticker},description)
   ],target,'stock','explore-stock-open');
   primary.setAttribute('aria-label',s('explore.research_stock',{ticker:row.ticker})+(row.company&&row.company!==row.ticker?' · '+row.company:''));

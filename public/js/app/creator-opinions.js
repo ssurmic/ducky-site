@@ -1,5 +1,6 @@
 // One attributed, reviewed video view on every surface. Reads never follow an author or generate content.
-import {el,clear,spinner} from './ui.js';
+import {el,clear,spinner,modal,closeModal} from './ui.js';
+import {creatorRail} from './creator-rail.js';
 import {s,LANG} from './strings.js';
 import * as api from './api.js';
 import * as store from './store.js';
@@ -79,11 +80,31 @@ export function opinionRow(row,{from='explore'}={}){
   return body;
 }
 
-export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creator=null,from='explore',initial=3,compactEmpty=false}={}){
+function opinionPreview(row,{from,onOpen}={}){
+  const key='opinion:'+row.display_group_id;
+  const button=el('button.opinion-preview-open',{type:'button','data-reading-key':key+':preview',onclick:()=>onOpen(row)},
+    el('span.opinion-subject',text(row.subject)),
+    row.speaker.kind!=='creator'?el('span.opinion-speaker',s('opinions.speaker_'+row.speaker.kind,{name:row.speaker.name||s('opinions.unnamed')})):null,
+    el('span.opinion-claim',text(row.claim)),
+    el('time',{datetime:row.published_at},row.published_at?.slice(0,10)||'—'),
+    el('span.creator-preview-foot',el('span.creator-preview-read',s('creatorrail.read')),
+      row.conditions||row.horizon?el('span.creator-preview-caveat',s('creatorrail.qualified')):null));
+  return el('li.opinion-preview-card',{class:'is-'+row.stance,'data-reading-anchor':key,'data-opinion-id':row.id},
+    el('div.opinion-byline',row.stock_navigation_eligible?el('a',{href:stockHref(row.ticker,from),'data-reading-key':key+':stock'},el('span.ticker-symbol',row.ticker)):null,
+      el('span.opinion-stance',{class:'is-'+row.stance},s('opinions.stance_'+row.stance)),
+      row.intent!=='opinion'?el('span.opinion-intent',s('opinions.intent_'+row.intent)):null,
+      row.records.length>1?el('span.creator-preview-repeat',{'aria-label':s('opinions.records',{n:row.records.length}),title:s('opinions.records',{n:row.records.length})},'×'+row.records.length):null),
+    button);
+}
+
+export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creator=null,from='explore',rail=false,initial=rail?12:3,compactEmpty=false}={}){
   const epoch=store.epoch(),scope=account(),stateKey=JSON.stringify([topic,ticker,creator]);
   if(controlScope!==scope){controls.clear();controlScope=scope;}
   if(newest.scope!==scope)newest={scope,revision:null,at:-Infinity};
-  const saved=controls.get(stateKey),ctl=new AbortController();
+  const saved=controls.get(stateKey),ctl=new AbortController(),railState={...(controls.get(stateKey)?.railState||{})};
+  let railUI=null,openRow=null,ownedDialog=null;
+  function closeOwnedDialog(){if(ownedDialog?.isConnected)closeModal();openRow=null;ownedDialog=null;}
+  function openPreview(row){openRow=row;const host=modal(row.author+' · '+s('creatorrail.source'),opinionRow(row,{from}));ownedDialog=host.querySelector('.creator-opinion');ownedDialog.dataset.opinionDialog='true';}
   let disposed=false,loading=false,readFailed=false,seq=0,rows=[],doc=null,pages=0,showAll=!!saved?.showAll,restoreSaved=true;
   const current=()=>!disposed&&!signal?.aborted&&epoch===store.epoch()&&account()===scope;
   const visible=()=>document.visibilityState!=='hidden'&&window.navigator?.onLine!==false&&!host.closest('[hidden]');
@@ -98,7 +119,7 @@ export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creato
   const note=el('p.opinions-note',s('opinions.note')),pagination=el('div.opinions-pagination',more,fewer);
   const section=el('section.creator-opinions',{'aria-label':title},el('header.creator-opinions-heading',heading,compactNote,refresh),
     note,notice,list,pagination);
-  host.append(section);list.append(spinner());
+  section.classList.toggle('is-rail',rail);host.append(section);list.append(spinner());
   function compactState(){
     // This opt-in is only for another readable source on the same author page.
     // A loading, failed, partial or paginated read never establishes an empty result.
@@ -107,10 +128,17 @@ export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creato
     heading.hidden=compact;compactNote.hidden=!compact;note.hidden=compact;list.hidden=compact;pagination.hidden=compact;
     if(compact&&document.activeElement===heading)refresh.focus({preventScroll:true});
   }
-  function remember(){if(current())controls.set(stateKey,{showAll,opened:[...list.querySelectorAll('details[open][data-reading-key]')].map(n=>n.dataset.readingKey)});}
+  function remember(){if(current())controls.set(stateKey,{showAll,railState,opened:[...list.querySelectorAll('details[open][data-reading-key]')].map(n=>n.dataset.readingKey)});}
   function render(){
+    if(openRow&&!ownedDialog?.isConnected){openRow=null;ownedDialog=null;}
+    if(openRow&&JSON.stringify(rows.find(row=>row.display_group_id===openRow.display_group_id))!==JSON.stringify(openRow))closeOwnedDialog();
     const focus=list.contains(document.activeElement);
-    replaceReading(list,...(showAll?rows:rows.slice(0,initial)).map(row=>opinionRow(row,{from})));
+    railUI?.dispose();railUI=null;
+    const selected=showAll?rows:rows.slice(0,initial);
+    if(rail&&selected.length){
+      railUI=creatorRail(selected.map(row=>({id:row.display_group_id,node:opinionPreview(row,{from,onOpen:openPreview})})),{key:'native:'+stateKey,label:title,state:railState});
+      replaceReading(list,railUI.node);
+    }else replaceReading(list,...selected.map(row=>opinionRow(row,{from})));
     if(restoreSaved){for(const node of list.querySelectorAll('details[data-reading-key]'))if(saved?.opened?.includes(node.dataset.readingKey))node.open=true;restoreSaved=false;}
     if(focus&&!list.contains(document.activeElement))heading.focus({preventScroll:true});
     if(!rows.length)list.append(el('p.opinions-empty',s('opinions.empty')));
@@ -121,6 +149,7 @@ export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creato
   }
   async function load(append=false){
     if(!current()||loading)return;
+    let restoreDeniedFocus=false;
     loading=true;const mine=++seq;refresh.disabled=true;more.disabled=true;refresh.setAttribute('aria-busy','true');compactState();
     if(!append)clear(notice);
     try{
@@ -141,17 +170,20 @@ export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creato
       if(!current()||mine!==seq)return;
       if(append&&[400,409].includes(error.status)){loading=false;return load();}
       readFailed=true;const denied=[401,402,403,404,410].includes(error.status);
-      if(denied){rows=[];doc=null;pages=0;clear(list);more.hidden=true;fewer.hidden=true;delete section.dataset.revision;}
+      if(denied){
+        restoreDeniedFocus=list.contains(document.activeElement)||!!(ownedDialog?.isConnected&&ownedDialog.closest('[role="dialog"]')?.contains(document.activeElement));
+        closeOwnedDialog();railUI?.dispose();railUI=null;rows=[];doc=null;pages=0;clear(list);more.hidden=true;fewer.hidden=true;delete section.dataset.revision;
+      }
       else if(!doc)clear(list);
       clear(notice).append(el('p',s(doc?'opinions.refresh_failed':'opinions.unavailable')),
         el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>load()},s('common.retry')));
-    }finally{if(current()&&mine===seq){loading=false;refresh.disabled=false;more.disabled=false;refresh.removeAttribute('aria-busy');compactState();}}
+    }finally{if(current()&&mine===seq){loading=false;refresh.disabled=false;more.disabled=false;refresh.removeAttribute('aria-busy');compactState();if(restoreDeniedFocus)refresh.focus({preventScroll:true});}}
   }
   const timer=setInterval(()=>{if(current()&&visible())load();},REFRESH_MS);timer?.unref?.();
   const wake=()=>{if(current()&&visible())load();};
   document.addEventListener('visibilitychange',wake);window.addEventListener('online',wake);
   const off=store.subscribe('*',()=>{if(account()!==scope){dispose();clear(host);}});
-  function dispose(){if(disposed)return;remember();disposed=true;seq++;ctl.abort();clearInterval(timer);off();
+  function dispose(){if(disposed)return;remember();railUI?.dispose();closeOwnedDialog();disposed=true;seq++;ctl.abort();clearInterval(timer);off();
     document.removeEventListener('visibilitychange',wake);window.removeEventListener('online',wake);signal?.removeEventListener('abort',dispose);}
   signal?.addEventListener('abort',dispose,{once:true});
   const ready=signal?.aborted?(dispose(),Promise.resolve()):visible()?load():Promise.resolve();

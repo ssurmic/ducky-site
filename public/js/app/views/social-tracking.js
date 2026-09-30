@@ -1,3 +1,4 @@
+import {numericChange} from '../numeric-change.js';
 import {evidenceLink} from '../evidence-link.js';
 import { el, clear, num, pct } from '../ui.js';
 import { s } from '../strings.js';
@@ -34,7 +35,7 @@ export function socialCard(row,{stale=false,onHistory}={}) {
     el('a.btn.btn-ghost.btn-sm',{href:'#/briefing?ticker='+encodeURIComponent(row.ticker)},s('stockbrief.open')));
   const details=el('details.social-evidence',el('summary',s('social.details')),
     el('p.social-meaning',s('social.state_'+state)),
-    el('dl.social-metrics',fact('mentions',num(row.mentions,0)),fact('change',row.change_pct==null?s('social.no_base'):pct(row.change_pct,0))),
+    el('dl.social-metrics',fact('mentions',num(row.mentions,0)),fact('change',numericChange(row.change_pct,{digits:0,missing:s('social.no_base')}))),
     el('div.social-index',el('strong',score===null?'—':String(score)),el('span',s('social.index_scale')),
       score===null?null:el('meter',{min:0,max:100,value:score,'aria-label':s('social.index')})),
     el('p.social-meaning',s('social.meaning_'+state)),
@@ -183,7 +184,7 @@ export async function mountSocial(root,route={}) {
       host.querySelector('.social-history-plot')?.remove();host.prepend(socialHistoryChart(host._historyRows));
       for(const row of data.items)host.append(el('div.social-history-row',el('time',{datetime:row.collected_at},dateTime(row.collected_at)),
         el('strong',(row.index??'—')+' / 100'),el('span',{class:row.state==='overheated'?'social-risk':''},s(row.state==='overheated'?'social.overheated_risk':'social.state_'+row.state)),
-        el('span',num(row.mentions,0)+' · '+pct(row.change_pct,0)),el('code.social-record-id',row.id),
+        el('span',num(row.mentions,0)+' · ',numericChange(row.change_pct,{digits:0})),el('code.social-record-id',row.id),
         el('small.muted',row.version||''),eventPriceSnapshot(row.price_snapshot,{basis:'detection',showWindow:true})));
       host.dataset.cursor=data.next_cursor||'';button.hidden=!data.next_cursor;button.textContent=s('creators.load_more');
     } catch {

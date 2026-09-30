@@ -1,3 +1,4 @@
+import {numericChange} from '../numeric-change.js';
 import {s, LANG} from '../strings.js';
 import {el, clear, num, px, errorBox} from '../ui.js';
 import * as api from '../api.js';
@@ -33,7 +34,7 @@ export function recordCard(item) {
   }
   let fields=[];
   if(item.stream==='price')fields=[['spot',px(p.spot)]];
-  if(item.stream==='technical')fields=[['rsi',num(p.rsi_d,1)],['drawdown',p.dd_pct==null?'—':num(p.dd_pct,1)+'%']];
+  if(item.stream==='technical')fields=[['rsi',num(p.rsi_d,1)],['drawdown',numericChange(p.dd_pct)]];
   if(item.stream==='options')fields=[['iv',p.iv==null?'—':num(p.iv,1)+'%'],['hv',p.hv==null?'—':num(p.hv,1)+'%'],['call_wall',px(p.call_wall)],['put_wall',px(p.put_wall)]];
   if(item.stream==='vibe') {
     card.append(directionReading({historical:true}),el('details.vibe-attention-history',

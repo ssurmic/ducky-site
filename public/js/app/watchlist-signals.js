@@ -1,3 +1,4 @@
+import {changeParts} from './numeric-change.js';
 // watchlist-signals.js — dated disclosure and options references beside each watched stock.
 // Presentation only: reads saved stock-brief facts (GET /briefing/stocks) and archived Form 4
 // and 13F records (GET /radar/archive.json). Nothing here forecasts, sets a target price or
@@ -327,7 +328,7 @@ const externalLink=(url,label)=>url?el('a.small',{href:url,target:'_blank',rel:'
 export function sinceLine(ref,price,key,vars={}){
   if(!finite(ref)||!finite(price)||ref<=0||price<=0)return null;
   const move=(price/ref-1)*100;
-  return el('p.small.watch-since',{class:move>0.05?'is-up':move<-0.05?'is-down':''},s(key,{...vars,n:pct(move,1)}));
+  return el('p.small.watch-since',{class:move>0?'is-up':move<0?'is-down':''},changeParts(key,vars,{n:move}));
 }
 const filingAverage=filing=>{const shares=filing.transactions.reduce((a,x)=>a+x.shares,0);return shares>0?filing.transactions.reduce((a,x)=>a+x.price*x.shares,0)/shares:null;};
 export function signalCard(key,sig,ticker,{price=null,session=''}={}){

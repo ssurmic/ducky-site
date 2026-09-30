@@ -1,3 +1,4 @@
+import {numericChange} from '../numeric-change.js';
 import {canReadStock,stockResearchEntry} from '../experience.js';
 import {evidenceLink} from '../evidence-link.js';
 // Shared event comparisons; current research is gated by the API, not CSS.
@@ -34,7 +35,7 @@ export async function mount(root, params = {}) {
         const point=p[key];grid.appendChild(el('div',el('small.muted',s(label)),el('strong.mono',point?px(point.close):'—'),el('time.mono.muted.small',point?.date||s('research.missing'))));
       }
       card.appendChild(grid);
-      card.append(el('p',s('research.raw_change')+' '+pct(report.raw_price_change_pct)),el('p.data-notice',s('research.basis')),
+      card.append(el('p',s('research.raw_change')+' ',numericChange(report.raw_price_change_pct)),el('p.data-notice',s('research.basis')),
         el('p',pick(report.explanation)),el('p.muted.small',s('research.updated')+' '+String(result.built_at||'').replace('T',' ').slice(0,16)+' UTC'));
       const actions=el('div.snap-actions',evidenceLink(e.ticker,e.id),el('a.btn.btn-ghost.btn-sm',{href:'#/chart/'+e.ticker},s('watch.chart')),el('a.btn.btn-ghost.btn-sm',{href:'#/alerts?ticker='+e.ticker},s('watch.set_alert')));
       // The catalog contains reviewed issuer URLs. Preserve the original-source link.

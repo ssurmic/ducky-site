@@ -1,3 +1,4 @@
+import {numericChange} from '../numeric-change.js';
 import {s} from '../strings.js';
 import {el,pct} from '../ui.js';
 import {avatar} from './creator-setup.js';
@@ -32,7 +33,7 @@ export function priceChart(row) {
   const readout=el('p.creator-chart-readout.small',{'aria-live':'polite'});
   const cursor=document.createElementNS(svg.namespaceURI,'line');for(const[k,v]of Object.entries({y1:18,y2:187,stroke:'var(--muted)','stroke-dasharray':'2 3'}))cursor.setAttribute(k,v);svg.append(cursor);
   const range=el('input.creator-chart-range',{type:'range',min:0,max:points.length-1,value:points.length-1,'aria-label':s('creatorpage.inspect_date')});
-  function inspect(i){const p=points[i];cursor.setAttribute('x1',x(i));cursor.setAttribute('x2',x(i));readout.textContent=p.d+' · '+row.ticker+' '+pct(p.stock)+' · SPY '+pct(p.spy);}
+  function inspect(i){const p=points[i];cursor.setAttribute('x1',x(i));cursor.setAttribute('x2',x(i));readout.replaceChildren(p.d+' · '+row.ticker+' ',numericChange(p.stock),' · SPY ',numericChange(p.spy));}
   range.addEventListener('input',()=>inspect(Number(range.value)));inspect(points.length-1);
   return el('figure.creator-chart',svg,range,readout);
 }

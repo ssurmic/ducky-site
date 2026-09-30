@@ -1,3 +1,4 @@
+import {changeParts} from './numeric-change.js';
 // Current business identity and the evidence behind a comparison; no classification in the browser.
 import { el, pct, num } from './ui.js';
 import { s, LANG } from './strings.js';
@@ -28,7 +29,7 @@ export function companyContext(p, rs = {}) {
     box.append(el('div.company-links',el('span.muted.small',s(p.comparison_enabled===false?'company.business_refs':'company.peers')),
       ...peers.map(t=>el('a.chip',{href:'#/stock/'+encodeURIComponent(t)},'$'+t))));
     if (matching && Number.isFinite(rs.excess20)) {
-      box.append(el('p.small',s('company.comparison',{n:20,value:(rs.excess20>0?'+':'')+num(rs.excess20,1)})));
+      box.append(el('p.small',changeParts('company.comparison',{n:20},{value:{value:rs.excess20,unit:''}})));
     }
   } else box.append(el('p.muted.small',s('company.no_peers')));
   if (p.related?.length) box.append(el('div.company-links',el('span.muted.small',s('company.related')),
@@ -41,7 +42,7 @@ export function companyContext(p, rs = {}) {
   if (when) details.append(el('p.muted.small',s('company.as_of',{date:String(when).slice(0,10)})));
   const w=matching?rs.windows?.['20']:null;
   if(w?.start && w?.end) details.append(el('p.muted.small',s('company.window',{start:w.start,end:w.end})));
-  for(const peer of w?.peers || []) details.append(el('p.small.mono',s('company.peer_return',{ticker:peer.ticker,value:pct(peer.return_pct)})));
+  for(const peer of w?.peers || []) details.append(el('p.small.mono',changeParts('company.peer_return',{ticker:peer.ticker},{value:peer.return_pct})));
   for (const source of [...(p.sources || []),...(p.peer_sources || [])]) {
     let url; try { url=new URL(source.url); } catch { continue; }
     if (url.protocol !== 'https:') continue;

@@ -1,3 +1,4 @@
+import {numericChangeClass} from '../numeric-change.js';
 import { s, LANG } from '../strings.js';
 import { el, clear, pct, px } from '../ui.js';
 import * as api from '../api.js';
@@ -131,7 +132,7 @@ export async function mountResearch(root, selection) {
       // A settled 20-session result reads on the closed card too, in the same color grammar as the rows.
       const latestWindow=latestCall.price_context?.publication_20;
       if(latestWindow?.status==='ready'&&Number.isFinite(latestWindow.ret))summary.append(el('span.study-group-result',{class:latestWindow.ret<0?'neg':latestWindow.ret>0?'pos':''},
-        el('span.small.muted',s('creators.twenty_day_result')),el('strong.mono',pct(latestWindow.ret))));
+        el('span.small.muted',s('creators.twenty_day_result')),el('strong.mono',{class:numericChangeClass(latestWindow.ret)},pct(latestWindow.ret))));
       summary.append(eventPriceSnapshot(latestCall.price_context),el('span.study-group-expand',
         el('span',s('creators.group_views',{n:group.rows.length})),el('span',{'aria-hidden':'true'},'⌄')));
       const body=el('div.study-group-views');wrapper.append(summary,body);
@@ -159,7 +160,7 @@ export async function mountResearch(root, selection) {
       details.append(timeline);
       if(post.provenance==='legacy_import') row.append(el('p.muted.small',s('creators.legacy_import')));
       if(out.status==='ready') {
-        row.append(el('p.study-window',s('creators.twenty_day_result')+' ',el('strong.mono',{class:out.ret<0?'neg':out.ret>0?'pos':''},pct(out.ret))));
+        row.append(el('p.study-window',s('creators.twenty_day_result')+' ',el('strong.mono',{class:numericChangeClass(out.ret)},pct(out.ret))));
       }
       if(status!=='ready')row.append(el('p.study-status',s(status==='pending'?'creators.twenty_day_pending':'creators.status_'+status)));
       const evidence=el('div.cr-evidence',
@@ -194,5 +195,5 @@ export function safeSource(value) {
   try {const u=new URL(value);return u.protocol==='https:' && ['youtube.com','www.youtube.com','youtu.be','x.com','www.x.com','twitter.com'].includes(u.hostname)?u.href:null;} catch{return null;}
 }
 export function metric(label,value,number) {
-  return el('div.evidence-metric',el('span.muted.small',label),el('strong.mono',{class:typeof number==='number'?(number<0?'neg':number>0?'pos':''):''},String(value)));
+  return el('div.evidence-metric',el('span.muted.small',label),el('strong.mono',{class:numericChangeClass(number)},String(value)));
 }
