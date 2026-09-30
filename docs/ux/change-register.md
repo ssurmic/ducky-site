@@ -1,5 +1,9 @@
 # UX change and integration register
 
+## Complete compact indicator values · 2026-09-30
+
+After #129 publication, screenshot review caught inherited one-line clipping of net amounts and fund counts. Wrap these primary facts and option-wall distances within their comparison columns. [Follow-up acceptance](../../reports/INDICATOR-VALUES-2026-09-30.md) records the regression checks and separate release boundary.
+
 ## Professional reading system and persistent navigation · 2026-09-30
 
 The owner requires phone/desktop and dark/light parity. A common type/color system, neutral stock identities and persistent workspace choices accompany dense tables, aligned figures and reduced decoration. [Rationale](professional-reading-system.md) and [acceptance](../../reports/PROFESSIONAL-UI-2026-09-30.md) retain the validation and release boundary.

@@ -44,6 +44,7 @@ for(const width of [320,390,820,1440,1920])for(const lang of ['zh','en'])for(con
     assert.ok(Math.max(...indicatorRows)<=150,'comparison rows stay compact without repeated analysis');
     if(width>=1920)assert.ok(await page.locator('.watch-table-scroll').evaluate(e=>e.scrollWidth<=e.clientWidth+1),'wide desktop fits all indicator columns');
     assert.deepEqual(await page.locator('.watch-indicators-table .watch-sort-label').evaluateAll(nodes=>nodes.filter(e=>e.scrollWidth>e.getBoundingClientRect().width+1).map(e=>e.textContent)),[],'indicator column headings remain readable');
+    assert.deepEqual(await page.locator('.watch-indicators-table .watch-signal-net').evaluateAll(nodes=>nodes.filter(e=>e.scrollWidth>e.clientWidth+1||e.scrollHeight>e.clientHeight+1).map(e=>e.textContent)),[],'primary amounts and counts must not be clipped');
     await page.screenshot({path:`${output}/indicators-${label}.png`});
    }
   }
@@ -51,6 +52,14 @@ for(const width of [320,390,820,1440,1920])for(const lang of ['zh','en'])for(con
   // Tab out of the pinned nav and down into the content: focus must stay uncovered.
   await page.locator('[data-mode=heatmap]').focus();
   for(let i=0;i<10;i++){await page.keyboard.press('Tab');const focus=await page.evaluate(()=>{const el=document.activeElement,b=el.getBoundingClientRect(),n=document.querySelector('.watch-modes').getBoundingClientRect(),m=document.querySelector('.app-main').getBoundingClientRect();return {tag:el.tagName,top:b.top,bottom:b.bottom,nav:n.bottom,main:m.bottom,inContent:document.querySelector('.watchlist-view').contains(el)&&!el.closest('.watch-modes')};});if(focus.inContent)assert.ok(focus.bottom>focus.nav&&focus.top<focus.main,`focus covered: ${JSON.stringify(focus)}`);}
+  // Ready wall facts exercise prices and distances; the long-list fixture has missing walls.
+  await page.goto(`${base}/qa-frame?lang=${lang}&theme=${theme}&route=watchlist&case=wall-consistency`);
+  await page.locator('[data-mode=metrics]').click();
+  await page.locator('.watch-indicators-table .watch-wall').first().waitFor();
+  assert.deepEqual(await page.locator('.watch-indicators-table .watch-wall-kind,.watch-indicators-table .watch-wall .watch-metric-value,.watch-indicators-table .watch-wall-gap').evaluateAll(nodes=>nodes.filter(e=>e.scrollWidth>e.clientWidth+1||e.scrollHeight>e.clientHeight+1).map(e=>e.textContent)),[],'wall labels, prices and distances stay complete');
+  assert.ok(await page.locator('.watch-indicators-table tbody tr').evaluateAll(rows=>rows.every(row=>row.getBoundingClientRect().height<=150)),'ready wall facts retain compact rows');
+  await page.evaluate(()=>document.querySelector('.watch-table-scroll').scrollLeft=2000);
+  await page.screenshot({path:`${output}/indicator-walls-${label}.png`});
   await page.goto(`${base}/qa-frame?lang=${lang}&theme=${theme}&route=boards&case=ux-review`);await page.locator('.radar-activity-record').first().waitFor();
   assert.ok(await page.locator('h1').evaluate(e=>{const b=e.getBoundingClientRect();return e.contains(document.elementFromPoint(b.left+b.width/2,b.top+b.height/2));}),'activity title is unobscured before scrolling');
   await page.evaluate(()=>document.querySelector('.app-main').scrollTop=450);await page.waitForTimeout(100);

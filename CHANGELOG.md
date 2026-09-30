@@ -1,5 +1,9 @@
 # Change log
 
+## Complete values in compact Indicators columns · 2026-09-30
+
+Allow net transaction amounts, fund add/trim counts and option-wall distances to wrap inside the compact comparison columns. This fixes clipping found during the final screenshot review of released PR #129 while retaining compact rows and complete source dialogs. [Checks and release boundary](reports/INDICATOR-VALUES-2026-09-30.md).
+
 ## Professional reading system and persistent navigation · 2026-09-30
 
 Unify dark/light palettes and typography across the app, public pages and previews. Keep Watchlist views, company activity categories, stock tabs and Explore destinations visible while scrolling; retain per-view Watchlist positions. Reduce oversized controls, nested decoration and chart whitespace while preserving source dates, units and full evidence. Loading or failed activity reads no longer appear as zero matching records. [Design system](docs/ux/professional-reading-system.md) and [acceptance](reports/PROFESSIONAL-UI-2026-09-30.md).
