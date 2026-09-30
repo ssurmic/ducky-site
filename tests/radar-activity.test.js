@@ -17,9 +17,9 @@ test('projection retains declared filing totals, unknowns, actual zero and disti
  assert.ok([...card.querySelectorAll('a')].some(link=>{const [path,query='']=link.getAttribute('href').split('?');const params=new URLSearchParams(query);return path==='#/stock/EX'&&params.get('from')==='boards'&&params.get('tab')==='evidence';}));
  const missing={...row,extra:{source_published_at:null,facts:{side:'buy'}}};
  assert.equal(activityRecord(missing).publishedDate,null);assert.equal(activityRecord(missing).metric,null);
- assert.equal(activityRow(missing).querySelector('.radar-reported-value>strong').textContent,'—');
+ assert.equal(activityRow(missing).querySelector('.insider-amount').textContent,'—');
  assert.ok(activityRow(missing).textContent.includes(copy['app.radar.publication_unknown']));
- const zero={...row,extra:{facts:{total_value:0}}};assert.equal(activityRecord(zero).metric,0);assert.match(activityRow(zero).querySelector('.radar-reported-value').textContent,/\$0\.00/);
+ const zero={...row,extra:{facts:{total_value:0}}};assert.equal(activityRecord(zero).metric,0);assert.match(activityRow(zero).querySelector('.insider-amount').textContent,/\$0\.00/);
  assert.equal(activityRecord({...row,extra:{facts:{total_value:'250000'}}}).metric,null);
  assert.equal(activityRecord({...row,id:'s:123',provenance:null}).publishedDate,null);
 });
@@ -65,7 +65,7 @@ test('historical industry deep links stay reachable and active filters remain ex
  assert.equal(all.querySelector('.radar-filter-toggle').getAttribute('aria-expanded'),'false');assert.equal(all.querySelector('[name=ticker]').value,'EX');assert.equal(all.querySelector('.radar-active-rule').hidden,true);
  cleanup();all.remove();
  const insider=document.createElement('section');document.body.append(insider);const stop=await mount(insider,{query:new URLSearchParams('board=insider')});
- assert.equal(insider.querySelector('.radar-active-rule').hidden,false);assert.match(insider.querySelector('.radar-active-rule').textContent,/purchases or sales/);stop();insider.remove();
+ assert.equal(insider.querySelector('.radar-active-rule').hidden,true);assert.equal(insider.querySelector('[name=purchases]').value,'all');assert.equal(insider.querySelector('[data-insider-direction=""]').getAttribute('aria-pressed'),'true');stop();insider.remove();
 });
 
 test('an empty ticker archive exposes its exact clearable scope outside collapsed advanced filters',async()=>{

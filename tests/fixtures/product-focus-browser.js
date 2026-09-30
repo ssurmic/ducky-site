@@ -3,6 +3,7 @@ import {closeMacro,sparseCloseMacro,marketReadingsMacro} from './today-close-dat
 import {currentMacro} from './today-current-data.js';
 import {dashboardMacro} from './today-dashboard-data.js';
 import {opinionsFixture} from './qa-creator-opinions.js';
+import {insiderFixture} from './insider-ux-data.js';
 const query=new URLSearchParams(location.search),mode=query.get('case')||'data';
 document.documentElement.dataset.theme=query.get('theme')==='dark'?'dark':'light';
 document.documentElement.dataset.tg='web';
@@ -207,12 +208,20 @@ const uxReview=(()=>{
  };
  return {reply};
 })();
+const insiderQA=mode==='insider-ux'?insiderFixture():null;
 const fixtureAssetFetch=window.fetch.bind(window);
 window.fetch=async(input,options={})=>{
  const url=new URL(String(input),location.origin);requests.push({path:url.pathname+url.search,method:options.method||'GET',
   ...(mode==='autocomplete-watchlist'&&options.body?{body:JSON.parse(options.body)}:{})});
  if(url.origin!==location.origin)throw Error('External traffic forbidden in synthetic fixture');
  const path=url.pathname.replace('/qa-api',''),method=options.method||'GET';
+ if(insiderQA){
+  if(requests.length>30)requests.splice(0,requests.length-30);
+  if(method==='GET'){const value=insiderQA.reply(path,url.searchParams);if(value){
+   if(path.includes('/radar/archive')&&query.get('slow')==='1')await new Promise(resolve=>setTimeout(resolve,url.searchParams.get('direction')==='1'?900:150));
+   return Response.json(value);
+  }}
+ }
  if(mode==='native-creator'){
   const creator={id:'sample-creator',name:'Sample Research',platform:'youtube',profile:{}};
   if(path==='/kol/opinions')return Response.json(opinionsFixture({topic:url.searchParams.get('topic')||'all',ticker:url.searchParams.get('ticker'),creator:url.searchParams.get('creator'),before:url.searchParams.get('before')}));
@@ -338,6 +347,8 @@ store.set('me',{user_id:8888,tier:'pro',access:{billing_enabled:false},watch_cap
 const {renderBrandNavigation}=await import('/js/app/navigation.js');renderBrandNavigation(store.get('me'));
 if(!location.hash)history.replaceState(null,'',location.pathname+location.search+'#/'+(query.get('route')||'today'));
 const language=document.querySelector('[data-lang-toggle]');if(language){const next=new URLSearchParams(query);next.set('lang',query.get('lang')==='en'?'zh':'en');language.href='/qa-frame?'+next+location.hash;}
+// Use the real locale-link synchronizer after installing the synthetic local destination.
+await import('/js/lang.js');
 await router.start();
 document.querySelector('.app-foot')?.prepend(Object.assign(document.createElement('p'),{textContent:'LOCAL UI TEST · SYNTHETIC RECORDS · No production connection'}));
 const report=document.createElement('details'),label=document.createElement('summary'),output=document.createElement('pre');

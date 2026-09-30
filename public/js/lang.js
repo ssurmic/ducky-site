@@ -20,5 +20,6 @@
   }
   sync();
   window.addEventListener("hashchange", sync);
+  window.addEventListener("ducky:route-state", sync);
   toggles.forEach(function (a) { a.addEventListener("click", sync); });
 })();

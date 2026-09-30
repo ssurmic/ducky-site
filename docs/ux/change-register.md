@@ -1,5 +1,10 @@
 # UX change and integration register
 
+## Insider transaction controls and compact source facts · 2026-09-30 (candidate)
+
+Insider filings use immediate All / Buy / Sell controls, exact market-cap chips and visible advanced-filter constraints. New visits no longer silently apply the verified-open-market threshold. Compact records preserve source dates, security units, strict optional price/holding metrics and full filing access; source-reader labels follow the actual reported side. Existing bookmarks, language changes and asynchronous query/account fences remain. [Contract, checks and release boundary](../../reports/INSIDER-FILTER-UX-2026-09-30.md).
+
+
 ## Video views in current research maps · 2026-09-29 (released PR #125)
 
 Both the stock Map tab and standalone map expose the same exact-ticker reviewed video views as Overview, with visible author attribution and complete source details. The shelf stays outside transcript evidence, graph counts and archived versions. Existing access and shared-read withdrawal rules remain. [Implementation and validation](../../reports/NATIVE-MAP-VIEWS-2026-09-29.md).

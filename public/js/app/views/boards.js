@@ -12,6 +12,7 @@ import { mountSocial } from './social-tracking.js';
 import { selectNavigation } from '../navigation.js';
 import {isIndexChange, sourceEventHint, effectiveDate, effectiveTiming} from '../source-event.js';
 import {activityRecord} from '../radar-activity.js';
+import {insiderCard} from '../insider-card.js';
 
 export const BOARDS = [
   {key:'liquidity', kinds:'liquidity,kindex,macro'},
@@ -67,7 +68,12 @@ export function filterRecords(rows, state, now=Date.now()) {
     if(CAP_BANDS[state.cap] && !(row.market_cap!=null && row.market_cap>=CAP_BANDS[state.cap][0] && row.market_cap<CAP_BANDS[state.cap][1]))return false;
     if(['insider','cluster'].includes(row.kind) && state.mode!=='excerpts') {
       if(state.purchases==='open_market' && !(row.open_market_value>=200000))return false;
-      if(['unverified','private_or_offering'].includes(state.purchases) && !(row.extra?.facts?.purchase_values?.[state.purchases]>0 || state.purchases==='unverified' && !row.extra?.facts?.venue_rule))return false;
+      if(['unverified','private_or_offering'].includes(state.purchases)){
+        const facts=row.extra?.facts||{},side=facts.side,dir=row.direction;
+        const compatible=side==null || dir===1&&side==='buy' || dir===-1&&side==='sell';
+        const values=dir===-1?facts.sale_values:facts.purchase_values;
+        if(!compatible || !([1,-1].includes(dir)&&values?.[state.purchases]>0 || state.purchases==='unverified'&&facts.venue_rule==null))return false;
+      }
     }
     if(state.direction && String(row.direction)!==state.direction)return false;
     if(state.content==='readable' && !readable(row))return false;
@@ -133,19 +139,22 @@ export async function mount(root, route={}) {
   const availableBoards=reports?REPORT_BOARDS:[...EVENT_BOARDS,...(params.get('board')&& !EVENT_BOARDS.some(board=>board.key===params.get('board'))?BOARDS.filter(board=>board.key===params.get('board')):[])];
   const currentAccess=!!store.get('me');
   const readingNow=()=>Date.now()-(currentAccess?0:5*86400000);
-  let accessInfo=null;
+  let accessInfo=null, purchasesExplicit=params.has('purchases');
+  const insiderEntry=params.get('board')==='insider';
   const state={reports,mode:['archive','excerpts'].includes(params.get('mode'))?params.get('mode'):'recent',
     board:BOARDS.some(b=>b.key===params.get('board'))?params.get('board'):'all',
     q:params.get('q') || '',ticker:params.get('ticker') || '',
-    content:['all','missing'].includes(params.get('content'))?params.get('content'):'readable',
+    content:['all','missing','readable'].includes(params.get('content'))?params.get('content'):(insiderEntry?'all':'readable'),
     direction:['-1','0','1'].includes(params.get('direction'))?params.get('direction'):'',
     days:['1','3','7'].includes(params.get('days'))?params.get('days'):'7',
-    sector:params.get('sector') || '',cap:params.get('cap') || '',purchases:params.get('purchases') || 'open_market',
+    sector:params.get('sector') || '',cap:params.get('cap') || '',purchases:params.get('purchases') || (insiderEntry?'all':'open_market'),
     start:params.get('start') || '',end:params.get('end') || ''};
   let coverageDoc=null;
   let recent=[], excerpts=[], archived=[], cursor=null, pending=false, failed=false, recentFailed=false, historyFailed=false;
   let recentDebounce=null;
-  let alive=true, requestId=0, archiveCtl=null, recentReady=false;
+  let alive=true, requestId=0, archiveCtl=null, recentReady=false, recentIdentity=null;
+  const active=()=>alive && epoch===store.epoch() && !route.signal?.aborted;
+  const queryIdentity=()=>JSON.stringify(state);
   const staticCtl=new AbortController(), timer=setTimeout(()=>staticCtl.abort(),15000);
   const card=el('section.boards-view.radar-workspace',{class:reports?'':'radar-activity-workspace'});root.append(card);
   const header=el('header.radar-heading',el('div',el('h1',s(reports?'nav.reports':'radar.ux.title')),el('p.muted',s(reports?'reader.library_hint':'radar.ux.intro'))),
@@ -193,11 +202,24 @@ export async function mount(root, route={}) {
   const filterToggle=el('button.radar-filter-toggle',{type:'button','aria-expanded':'false',onclick:()=>{
     const open=filter.classList.toggle('filters-expanded');filterToggle.setAttribute('aria-expanded',String(open));
   }},s('radar.more_filters'));
-  const filter=el('form.radar-filters',field('q',query),field('ticker',ticker),filterToggle,el('div.radar-extra',field('sector',sector),field('cap',cap),field('purchases',purchases),field('direction',direction),dayField,field('content',content),dateFields),
+  const directionField=field('direction',direction),capField=field('cap',cap),purchaseField=field('purchases',purchases);
+  const quick=el('div.insider-quick');
+  const directionGroup=el('div.insider-directions',{role:'group','aria-label':s('insider.direction')},
+    ...['','1','-1','0'].map(value=>el('button',{type:'button','data-insider-direction':value,
+      onclick:()=>{direction.value=value;apply();}},s('insider.direction_'+(value===''?'all':value==='1'?'buy':value==='-1'?'sell':'other')))));
+  const capGroup=el('div.insider-caps',{role:'group','aria-label':s('radar.cap')},
+    ...['','mega','large','mid','small','micro','unknown'].map(value=>el('button',{type:'button','data-insider-cap':value,
+      title:s('radar.cap_'+(value||'all')),'aria-label':s('radar.cap_'+(value||'all')),
+      onclick:()=>{cap.value=value;apply();}},s('insider.cap_'+(value||'all')))));
+  const capRange=el('span.insider-cap-range.small.muted');
+  quick.append(directionGroup,capGroup,capRange);
+  const activeFilters=el('div.insider-active-filters',{'aria-label':s('insider.active_filters')});
+  const tickerField=field('ticker',ticker);
+  const filter=el('form.radar-filters',field('q',query),tickerField,filterToggle,el('div.radar-extra',field('sector',sector),capField,purchaseField,directionField,dayField,field('content',content),dateFields),
     el('div.radar-filter-actions',el('button.btn.btn-primary',{type:'submit'},s('radar.apply')),
     el('button.btn.btn-ghost',{type:'button',onclick:reset},s('radar.reset'))));
   const guide=el(reports?'div.radar-guide':'details.radar-guide');
-  const advancedActive=['sector','cap','direction','start','end'].some(key=>state[key]) || !['open_market','all'].includes(state.purchases) || state.content==='missing' || (state.mode==='recent'&&state.days!=='7');
+  const advancedActive=(insiderEntry?['sector','start','end']:['sector','cap','direction','start','end']).some(key=>state[key]) || !['open_market','all'].includes(state.purchases) || state.content==='missing' || (state.mode==='recent'&&state.days!=='7');
   filter.classList.toggle('filters-expanded',advancedActive);
   filterToggle.setAttribute('aria-expanded',String(advancedActive));
   const summary=el('div.radar-result-summary',{role:'status','aria-live':'polite'});
@@ -205,7 +227,7 @@ export async function mount(root, route={}) {
   const note=el('p.radar-scope-note.muted');
   const rows=el('div.radar-records');
   const more=el('button.btn.btn-ghost.radar-more',{type:'button',onclick:()=>loadArchive(false)},s('creators.load_more'));
-  const main=el('section.radar-main',tabs,guide,filter,summary,activeRule,rows,more,note);
+  const main=el('section.radar-main',tabs,guide,quick,filter,activeFilters,summary,activeRule,rows,more,note);
   // Explicit screening links lead with their destination. Market data arriving later
   // stays below it, so it cannot push the focused form out of the viewport.
   card.append(header,...(currentAccess?[]:[accessNote]),...(screenEntry?[screenPanel]:[]),el('div.radar-layout',sidebar,main),
@@ -217,50 +239,80 @@ export async function mount(root, route={}) {
   }
   filter.addEventListener('submit',e=>{e.preventDefault();apply();});
   for(const node of [content,direction,days,start,end,sector,cap,purchases])node.addEventListener('change',apply);
-  for(const node of [query,ticker])node.addEventListener('input',()=>{if(state.mode!=='archive')apply();});
+  purchases.addEventListener('change',()=>{purchasesExplicit=true;});
+  for(const node of [query,ticker])node.addEventListener('input',()=>{
+    if(state.board==='insider'){
+      clearTimeout(recentDebounce);
+      if(node===query&&query.value.trim().length===1)return;
+      // Commit search only once typing has paused; a one-character draft does not scan the archive.
+      recentDebounce=setTimeout(apply,500);
+    }else if(state.mode!=='archive')apply();
+  });
   route.signal?.addEventListener('abort',cleanup,{once:true});
   render();rows.append(spinner());
   const recentStart=new Date(readingNow()-7*86400000).toISOString().slice(0,10);
+  const initialIdentity=queryIdentity(),initialToken=requestId;
   const recentTask=api.get(archivePath({...state,start:recentStart,end:''},null,currentAccess).replace('limit=40','limit=200'),{auth:currentAccess,signal:staticCtl.signal}).then(doc=>{
-    if(!Array.isArray(doc?.items))throw new Error('invalid_response');recent=doc.items;accessInfo=doc.access;
-  }).catch(()=>{recentFailed=true;});
+    if(!active() || initialToken!==requestId)return;
+    if(!Array.isArray(doc?.items))throw new Error('invalid_response');recent=doc.items;recentIdentity=initialIdentity;accessInfo=doc.access;
+  }).catch(()=>{if(active() && initialToken===requestId)recentFailed=true;});
   const historyTask=fetch('/radar-history.json',{signal:staticCtl.signal}).then(r=>{if(!r.ok)throw new Error('unavailable');return r.json();}).then(doc=>{
+    if(!active())return;
     if(!Array.isArray(doc?.items))throw new Error('invalid_response');
     excerpts=doc.items.map(r=>({...r,id:'example:'+r.id,archived:true,summary:r.summary?.[LANG] || '',extra:{message_text:r.body?.[LANG] || ''}}));
-  }).catch(()=>{historyFailed=true;});
-  const coverageTask=api.get((currentAccess?'':'/public')+'/radar/coverage.json',{auth:currentAccess,signal:staticCtl.signal}).then(doc=>{coverageDoc=doc;}).catch(()=>{});
+  }).catch(()=>{if(active())historyFailed=true;});
+  const coverageTask=api.get((currentAccess?'':'/public')+'/radar/coverage.json',{auth:currentAccess,signal:staticCtl.signal}).then(doc=>{if(active())coverageDoc=doc;}).catch(()=>{});
   const facetsTask=api.get((currentAccess?'':'/public')+'/radar/facets.json',{auth:currentAccess,signal:staticCtl.signal}).then(doc=>{
+    if(!active())return;
     for(const v of [...new Set([state.sector,...(doc.sectors||[])])].filter(Boolean))sector.append(el('option',{value:v},s('radar.sector_'+v)===('radar.sector_'+v)?v:s('radar.sector_'+v)));
     sector.value=state.sector;
-  }).catch(()=>{if(state.sector){sector.append(el('option',{value:state.sector},state.sector));sector.value=state.sector;}});
+  }).catch(()=>{if(active() && state.sector){sector.append(el('option',{value:state.sector},state.sector));sector.value=state.sector;}});
   await Promise.all([recentTask,historyTask,coverageTask,facetsTask]);clearTimeout(timer);
-  if(!alive || epoch!==store.epoch())return cleanup;
+  if(!active())return cleanup;
   recentReady=true;
-  if(state.mode==='archive')await loadArchive(true);else render();
+  if(state.mode==='archive' && initialToken===requestId)await loadArchive(true);else render();
   return cleanup;
 
   function cleanup(){disposeScreen();clearTimeout(recentDebounce);alive=false;requestId++;archiveCtl?.abort();staticCtl.abort();clearTimeout(timer);}
   function persist(){const p=new URLSearchParams();for(const [k,v] of Object.entries(state))if(v && k!=='reports')p.set(k,v);history.replaceState(history.state,'','#/'+(reports?'reports':'boards')+'?'+p);selectNavigation(reports?'reports':'boards',p);window.dispatchEvent(new window.CustomEvent('ducky:route-state'));}
   function readFilters(){state.q=query.value.trim();state.ticker=ticker.value.trim().toUpperCase().replace(/^\$/,'');state.content=content.value;state.direction=direction.value;state.sector=sector.value;state.cap=cap.value;state.purchases=purchases.value;state.days=days.value;state.start=start.value;state.end=end.value;}
   function apply(){
+    if(!active())return;
     readFilters();end.setCustomValidity(state.start && state.end && state.start>state.end?s('radar.date_error'):'');
-    if(!filter.reportValidity())return;persist();
-    if(state.mode==='archive')loadArchive(true);else{requestId++;archiveCtl?.abort();pending=false;failed=false;render();
-      clearTimeout(recentDebounce);if(state.mode==='recent' && recentReady)recentDebounce=setTimeout(loadRecent,180);}
+    if(!filter.reportValidity())return;persist();clearTimeout(recentDebounce);
+    if(state.board==='insider'){
+      requestId++;archiveCtl?.abort();pending=state.mode!=='excerpts';failed=false;recentFailed=false;
+      if(state.mode==='archive'){archived=[];cursor=null;}
+      render();
+      const load=()=>state.mode==='archive'?loadArchive(true):state.mode==='recent'?loadRecent():render();
+      load();
+    }else if(state.mode==='archive')loadArchive(true);else{
+      requestId++;archiveCtl?.abort();pending=state.mode==='recent';failed=false;render();
+      if(state.mode==='recent')recentDebounce=setTimeout(loadRecent,180);
+    }
   }
   function selectBoard(key){
-    if(!availableBoards.some(b=>b.key===key) && key!=='all'){location.hash='#/'+(['liquidity','digest','hiring','volscan'].includes(key)?'reports':'boards')+'?board='+key;return;}if(key==='social'){location.hash='#/boards?board=social';return;}state.board=key;apply();}
-  function reset(){state.board='all';query.value='';ticker.value='';content.value='readable';direction.value='';sector.value='';cap.value='';purchases.value='open_market';days.value='7';start.value='';end.value='';apply();}
+    if(!availableBoards.some(b=>b.key===key) && key!=='all'){location.hash='#/'+(['liquidity','digest','hiring','volscan'].includes(key)?'reports':'boards')+'?board='+key;return;}
+    if(key==='social'){location.hash='#/boards?board=social';return;}
+    if(key==='insider' && !purchasesExplicit)purchases.value='all';
+    state.board=key;apply();
+  }
+  function reset(){
+    const insider=state.board==='insider';if(!insider)state.board='all';
+    query.value='';ticker.value='';content.value=insider?'all':'readable';direction.value='';sector.value='';cap.value='';
+    purchases.value=insider?'all':'open_market';purchasesExplicit=false;days.value='7';start.value='';end.value='';apply();
+  }
   async function loadRecent(){
     const token=++requestId;archiveCtl?.abort();archiveCtl=new AbortController();
+    const identity=queryIdentity();
     const options={...state,start:new Date(readingNow()-Number(state.days)*86400000).toISOString().slice(0,10),end:''};
     const url=archivePath(options,null,currentAccess).replace('limit=40','limit=200');pending=true;render();
     try{const doc=await api.get(url,{auth:currentAccess,signal:archiveCtl.signal});
       if(!alive || token!==requestId || epoch!==store.epoch())return;
       if(!Array.isArray(doc.items)||doc.filter_version!==3)throw new Error('unsupported_filters');
-      recent=doc.items;recentFailed=false;accessInfo=doc.access;
-    }catch{if(token===requestId)recentFailed=true;}
-    finally{if(alive&&token===requestId){pending=false;render();}}
+      recent=doc.items;recentIdentity=identity;recentFailed=false;accessInfo=doc.access;
+    }catch{if(active() && token===requestId)recentFailed=true;}
+    finally{if(active()&&token===requestId){pending=false;render();}}
   }
   async function loadArchive(resetPage){
     if(!resetPage && pending)return;
@@ -274,14 +326,32 @@ export async function mount(root, route={}) {
       const seen=new Set(archived.map(r=>r.id));archived.push(...doc.items.filter(r=>!seen.has(r.id)));
       cursor=doc.next_cursor || null;
       accessInfo=doc.access;
-    }catch{if(token===requestId)failed=true;}
+    }catch{if(active() && token===requestId)failed=true;}
     finally{if(alive && token===requestId && epoch===store.epoch()){pending=false;render();}}
   }
   function render(){
-    if(!alive)return;
+    if(!active())return;
+    const insider=state.board==='insider';card.classList.toggle('radar-insider-workspace',insider);
+    quick.hidden=!insider;activeFilters.hidden=!insider;directionField.hidden=insider;capField.hidden=insider;
+    if(insider)filter.querySelector('.radar-extra').prepend(tickerField);else filter.insertBefore(tickerField,filterToggle);
+    purchaseField.querySelector('span').textContent=s(insider?'insider.venue':'radar.purchases');
+    purchases.setAttribute('aria-label',s(insider?'insider.venue':'radar.purchases'));
+    for(const option of purchases.options)option.textContent=s((insider?'insider.venue_':'radar.purchases_')+option.value);
+    for(const button of directionGroup.children){button.setAttribute('aria-pressed',String(button.dataset.insiderDirection===state.direction));button.hidden=button.dataset.insiderDirection==='0' && state.direction!=='0';}
+    for(const button of capGroup.children)button.setAttribute('aria-pressed',String(button.dataset.insiderCap===state.cap));
+    capRange.textContent=state.cap?s('radar.cap_'+state.cap):'';capRange.hidden=!state.cap;
+    clear(activeFilters);
+    const chip=(key,label,node,value='')=>activeFilters.append(el('button',{type:'button','data-active-filter':key,'aria-label':s('insider.clear_filter',{filter:label}),onclick:()=>{node.value=value;apply();query.focus({preventScroll:true});}},label+' ×'));
+    if(state.sector)chip('sector',sectorLabel(state.sector),sector);
+    if(state.purchases!=='all')chip('purchases',s('insider.venue_'+state.purchases),purchases,'all');
+    if(state.content!=='all')chip('content',s('radar.content_'+state.content),content,'all');
+    if(state.start)chip('start',s('radar.start')+' '+state.start,start);
+    if(state.end)chip('end',s('radar.end')+' '+state.end,end);
+    if(state.mode==='recent' && state.days!=='7')chip('days',s('radar.days',{n:state.days}),days,'7');
+    rows.setAttribute('aria-busy',String(pending));
     filter.dataset.mode=state.mode;
     categoryLabel.textContent=s('radar.categories')+' · '+boardLabel(state.board);
-    const source=state.mode==='recent'?recent:state.mode==='excerpts'?excerpts:archived;
+    const source=state.mode==='recent'?(insider && recentIdentity!==queryIdentity()?[]:recent):state.mode==='excerpts'?excerpts:archived;
     const shown=filterRecords(source,state,readingNow()), available=filterRecords(source,{...state,board:'all'},readingNow());
     const missingCount=filterRecords(source,{...state,content:'missing'},readingNow()).length;
     const hasError=state.mode==='recent'?recentFailed:state.mode==='excerpts'?historyFailed:failed;
@@ -301,10 +371,10 @@ export async function mount(root, route={}) {
     guide.hidden=state.board==='all';
     pelosiJump.hidden=state.board!=='political';
     guide.dataset.board=state.board;
-    if(state.board==='all')main.append(guide);else filter.before(guide);
+    if(state.board==='all'||insider)main.append(guide);else filter.before(guide);
     clear(guide);guide.append(el(reports?'strong':'summary',reports?s(state.board==='all'?'radar.guide_title':'boards.t_'+state.board):s('radar.ux.about_category',{category:boardLabel(state.board)})),
-      el('p',s(['funds','company'].includes(state.board)?'radar.ux.guide_'+state.board:'radar.guide_'+state.board)));
-    if(['all','insider'].includes(state.board))guide.append(el('details.radar-purchase-rule',el('summary',s('market.details')),el('p',s('radar.purchase_rule'))));
+      el('p',s(insider?'insider.about':['funds','company'].includes(state.board)?'radar.ux.guide_'+state.board:'radar.guide_'+state.board)));
+    if(state.board==='all')guide.append(el('details.radar-purchase-rule',el('summary',s('market.details')),el('p',s('radar.purchase_rule'))));
     guide.hidden=state.board==='all' && state.purchases==='all';
     const stocks=new Set(shown.filter(r=>r.kind!=='nvdev').map(r=>r.ticker).filter(Boolean)).size;
     clear(summary);
@@ -315,6 +385,7 @@ export async function mount(root, route={}) {
     summary.append(el('span',pending?s('common.loading'):s(reports?'reader.report_count':'radar.result_count',{n:shown.length,stocks})));
     activeRule.hidden=reports||state.mode==='excerpts'||state.board!=='insider'||state.purchases!=='open_market';
     activeRule.textContent=s('radar.ux.active_purchase_rule');
+    if(insider)activeRule.hidden=true;
     accessNote.querySelector('p').textContent=s(currentAccess?'radar.access_current':'radar.access_delayed')+
       (!currentAccess && accessInfo?.available_before?' '+s('radar.access_cutoff',{date:dateTime(accessInfo.available_before)}):'');
     note.textContent=s(state.mode==='recent'?(recent.length>=200?'radar.recent_capped':'radar.recent_scope'):
@@ -322,7 +393,7 @@ export async function mount(root, route={}) {
     renderCoverage();
     clear(rows);
     if(hasError)rows.append(el('div.radar-empty',el('strong',s('boards.load_error')),
-      el('button.btn.btn-ghost',{type:'button',onclick:()=>state.mode==='archive'?loadArchive(!archived.length):location.reload()},s('common.retry'))));
+      el('button.btn.btn-ghost',{type:'button',onclick:()=>state.mode==='archive'?loadArchive(!archived.length):state.mode==='recent'?loadRecent():location.reload()},s('common.retry'))));
     if(!shown.length && !pending && recentReady && !hasError)rows.append(el('div.radar-empty',icon(BOARDS.find(b=>b.key===state.board)?.icon || (state.board==='all'?'boards':state.board)),
       el('h3',s('radar.no_match')),el('p.muted',s(missingCount && state.content==='readable'?'radar.missing_count':'radar.no_match_hint',{n:missingCount})),
       missingCount && state.content==='readable'?el('button.btn.btn-ghost',{type:'button',onclick:()=>{content.value='all';apply();}},s('radar.show_missing')):null,
@@ -366,7 +437,10 @@ export async function mount(root, route={}) {
 export function activityRow(it,{language=LANG}={}){
   const item=activityRecord(it,language);
   if(!item.category)return null;
-  const doc=recordDocument(it,language),category=item.category==='holdings'?'funds':item.category;
+  const doc=recordDocument(it,language);
+  // Historical prose-only records retain their readable lead; numerical cards require saved facts.
+  if(item.category==='insider' && it.extra?.facts && typeof it.extra.facts==='object' && !Array.isArray(it.extra.facts))return insiderCard(it,item,doc,{language});
+  const category=item.category==='holdings'?'funds':item.category;
   const numeric=value=>new Intl.NumberFormat(language==='en'?'en-US':'zh-CN',{maximumFractionDigits:2}).format(value);
   const amount=item.metricType==='transaction_value'?px(item.metric):item.metricType==='shares'?numeric(item.metric):item.metricType==='amount_range'?item.metric:null;
   const dates=[];
@@ -400,7 +474,8 @@ export function itemRow(it, {standalone=false, language=LANG}={}){
     const provenance=String(it.provenance || '').toLowerCase();
     const timeNote=provenance==='live'?'radar.observation_note':provenance==='source_revision'?'radar.revision_note':
       provenance==='source_corroboration'?'radar.corroboration_note':provenance?'radar.backfill_note':'boards.timestamp_note';
-    const kind=it.archived?boardLabel(board):s('radar.kind_'+it.kind);
+    const insider=['insider','cluster'].includes(it.kind),side=it.extra?.facts?.side;
+    const kind=insider?s('insider.record_'+(['buy','sell'].includes(side)?side:'other')):it.archived?boardLabel(board):s('radar.kind_'+it.kind);
     const doc=recordDocument(it,language), body=doc.hasBody?doc.raw:'';
     const label=doc.lead || s('radar.body_missing');
     const wrap=el('article.radar-record',{'data-record-id':it.id || '',class:!readable(it)?'radar-record-missing':''});
@@ -430,13 +505,16 @@ export function itemRow(it, {standalone=false, language=LANG}={}){
       if(it.company_as_of)detail.append(el('p.muted.small',s('radar.company_as_of',{date:dateTime(it.company_as_of)})));
     }
     if(['insider','cluster'].includes(it.kind)){
-      const values=it.extra?.facts?.purchase_values||{};
-      detail.append(el('p.radar-purchase-rule',s('radar.purchase_rule')));
-      for(const [venue,value] of Object.entries(values))if(value>0)detail.append(el('p.small',s('radar.purchases_'+venue)+' · '+px(value)));
+      const values=(side==='sell'?it.extra?.facts?.sale_values:it.extra?.facts?.purchase_values)||{};
+      detail.append(el('p.radar-purchase-rule',s('insider.detail_rule')));
+      for(const [venue,value] of Object.entries(values))if(value>0&&['open_market','unverified','private_or_offering'].includes(venue))detail.append(el('p.small',s('insider.venue_fact_'+venue)+' · '+px(value)));
       const evidence=el('details.radar-venue-evidence',el('summary',s('radar.venue_evidence')));
       const notes=new Map();for(const txn of it.extra?.facts?.transactions||[])for(const note of txn.venue_evidence||[])notes.set(note.id,note.text);
       for(const [id,text] of notes)evidence.append(el('p.small',id+' · '+text));
       if(notes.size)detail.append(evidence);
+      const footnotes=new Map();for(const txn of it.extra?.facts?.transactions||[])for(const note of [...(Array.isArray(txn.source_evidence)?txn.source_evidence:[]),...(Array.isArray(txn.purpose_evidence)?txn.purpose_evidence:[])])if(typeof note?.id==='string'&&typeof note?.text==='string'&&note.text.trim())footnotes.set(note.id+'|'+note.text,note);
+      for(const note of Array.isArray(it.extra?.facts?.trade_metrics?.currency_evidence)?it.extra.facts.trade_metrics.currency_evidence:[])if(typeof note?.id==='string'&&typeof note?.text==='string'&&note.text.trim())footnotes.set(note.id+'|'+note.text,note);
+      if(footnotes.size)detail.append(el('details.insider-source-notes',el('summary',s('insider.filing_notes')),...[...footnotes.values()].map(note=>el('p.small',note.id+' · '+note.text))));
     }
     if(doc.truncated)detail.append(el('p.muted',s('boards.truncated')));
     if(!body && !it.archived)detail.append(el('p.muted',s('radar.body_note')));

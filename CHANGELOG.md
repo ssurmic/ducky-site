@@ -1,5 +1,10 @@
 # Change log
 
+## Insider transaction controls and compact source facts · 2026-09-30 (candidate)
+
+Insider filings use immediate All / Buy / Sell controls, exact market-cap chips and visible advanced-filter constraints. New visits no longer silently apply the verified-open-market threshold. Compact records preserve source dates, security units, strict optional price/holding metrics and full filing access; source-reader labels follow the actual reported side. Existing bookmarks, language changes and asynchronous query/account fences remain. [Contract, checks and release boundary](reports/INSIDER-FILTER-UX-2026-09-30.md).
+
+
 ## Reviewed video views beside stock maps · 2026-09-29 (released PR #125)
 
 Stock Map and standalone research maps now expose exact-ticker video views through a compact attributed shelf and a direct reading button. Full conditions and sources remain accessible; historical maps and graph support counts stay separate. The existing shared read requires no creator follow and adds no write or processing action. [Checks and release boundary](reports/NATIVE-MAP-VIEWS-2026-09-29.md).
