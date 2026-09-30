@@ -12,10 +12,10 @@ const now=new Date('2026-09-29T15:41:00Z');
 const before=(a,b)=>!!(a.compareDocumentPosition(b)&Node.DOCUMENT_POSITION_FOLLOWING);
 const flush=async()=>{for(let i=0;i<16;i++)await Promise.resolve();};
 
-test('dashboard leads with eight readings and two actual three-line charts outside disclosures',()=>{
+test('dashboard leads with ten readings and two actual three-line charts outside disclosures',()=>{
  const doc=dashboardMacro(),saved=structuredClone(doc),box=macroStrip(doc,{now});
  const indices=box.querySelector('.today-session-indices'),metrics=box.querySelector('.today-dashboard-metrics'),charts=box.querySelector('.today-dashboard-charts');
- assert.equal(indices.querySelectorAll('strong').length,4);assert.equal(metrics.querySelectorAll('.today-macro-value').length,4);
+ assert.equal(indices.querySelectorAll('strong').length,4);assert.equal(metrics.querySelectorAll('.today-macro-value').length,6);
  assert.equal(metrics.querySelector('[data-tile=yield] strong').textContent,'5.25%');
  assert.equal(metrics.querySelector('[data-tile=liquidity] strong').textContent,'0/100');
  assert.equal(metrics.querySelector('.today-gauge'),null);
@@ -36,8 +36,8 @@ test('full original text, exact source clocks, gauges and history remain in one 
  assert.equal(box.querySelectorAll('.today-session-summary').length,1);assert.equal(sources.querySelectorAll('.today-session-quote').length,15);
  assert.equal(sources.querySelectorAll('.today-gauge').length,2);assert.equal(sources.querySelectorAll('.today-macro-history li').length,4);
  assert.match(sources.querySelector('[data-source-metric=yield]').textContent,/Quote time 9\/29\/2026, 11:39 ET/);
- assert.match(box.querySelector('[data-tile=liquidity] .today-dashboard-metric-date').textContent,/Score dated 2026-09-25/);
- assert.match(box.querySelector('[data-tile=fng] .today-dashboard-metric-date').textContent,/9\/29\/2026, 11:40 ET/);
+ assert.match(box.querySelector('[data-tile=liquidity] .today-dashboard-metric-date').getAttribute('aria-label'),/Score dated 2026-09-25/);
+ assert.match(box.querySelector('[data-tile=fng] .today-dashboard-metric-date').getAttribute('aria-label'),/9\/29\/2026, 11:40 ET/);
  assert.match(box.querySelector('.today-preview-impact').textContent,/could change.*depends on the result/);
  const keys=[...box.querySelectorAll('[data-reading-key]')].map(node=>node.dataset.readingKey);assert.equal(new Set(keys).size,keys.length);
 });
@@ -127,7 +127,7 @@ test('legacy compact readings retain native details, full gauges/history and ind
  const legacy=()=>{const doc=dashboardMacro();delete doc.current_session;doc.fear_greed={score:34,rating:'fear',previous_close:37,previous_1_week:31};return doc;};
  try{
   globalThis.fetch=async()=>Response.json(legacy());task=mountMacroStrip(host);await task;
-  const folds=[...host.querySelectorAll('.today-macro-grid > details.today-macro-fold')];assert.equal(folds.length,4);
+  const folds=[...host.querySelectorAll('.today-macro-grid > details.today-macro-fold')];assert.equal(folds.length,6);
   for(const fold of folds){
    assert.equal(fold.open,false);const summary=fold.querySelector(':scope > summary');
    assert.ok(summary.querySelector('.today-macro-value'));assert.equal(summary.querySelector('button,a,[role=slider]'),null);
@@ -143,4 +143,23 @@ test('legacy compact readings retain native details, full gauges/history and ind
   assert.equal(document.activeElement,host.querySelector('[data-tile=yield] > summary'));
   assert.equal(host.querySelector('[data-tile=yield] .today-lines-tip').hidden,true);
  }finally{task?.stop();host.remove();globalThis.fetch=original;t.mock.timers.reset();}
+});
+
+test('K reads the saved ratio with its formula and component clocks, never substitutes IV/HV',()=>{
+ const doc=dashboardMacro(),box=macroStrip(doc,{now});
+ assert.equal(box.querySelector('[data-tile=kindex] strong').textContent,'2.04');
+ assert.match(box.querySelector('[data-tile=kindex]').textContent,/Fear & Greed ÷ VIX/);
+ assert.match(box.querySelector('[data-source-metric=kindex]').textContent,/CNN 34.00.*VIX 16.70/);
+ assert.match(box.querySelector('[data-source-metric=kindex]').textContent,/not IV\/HV/);
+ const old=structuredClone(doc);delete old.current_session.k_index;
+ old.k_index=doc.current_session.k_index;
+ assert.equal(macroStrip(old,{now}).querySelector('[data-tile=kindex] strong').textContent,'—','old outer ratio cannot fill a new snapshot');
+ for(const edit of [d=>d.current_session.k_index.components[0].value=99,d=>d.current_session.k_index.components[1].date='2026-09-28',d=>d.current_session.fear_greed=null]){
+  const invalid=structuredClone(doc);edit(invalid);
+  assert.equal(macroStrip(invalid,{now}).querySelector('[data-tile=kindex] strong').textContent,'—');
+ }
+ const mismatched=structuredClone(doc);Object.assign(mismatched.current_session.k_index,{status:'unavailable',reason:'session_mismatch',value:null});
+ assert.match(macroStrip(mismatched,{now}).querySelector('[data-tile=kindex]').textContent,/Source dates differ/);
+ const zero=structuredClone(doc);zero.current_session.fear_greed.score=0;zero.current_session.k_index.value=0;zero.current_session.k_index.components[0].value=0;
+ assert.equal(macroStrip(zero,{now}).querySelector('[data-tile=kindex] strong').textContent,'0.00');
 });

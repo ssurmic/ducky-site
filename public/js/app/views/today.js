@@ -113,7 +113,7 @@ export async function mount(root,{signal,scope:initialScope='watchlist',embedded
   const title=el('header.focus-heading.today-heading',el('div.today-heading-main',el('p.today-date',date),el('h1',s('focus.today'))),
     el('a.btn.btn-ghost',{href:'#/calendar'},s('focus.upcoming')),stats);
   const researchStart=el('div.today-research-start',{hidden:true},
-    el('a.btn.btn-ghost.btn-sm',{href:'#/explore'},s('focus.research_stock')));
+    el('a.btn.btn-ghost.btn-sm',{href:'#/explore?tab=research'},s('focus.research_stock')));
   if(!embedded)main.append(title,researchStart);
   const syncResearchStart=()=>{
     if(signal?.aborted||epoch!==store.epoch()||(store.get('watchlist')||[]).length)researchStart.hidden=true;

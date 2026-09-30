@@ -463,7 +463,7 @@ test('Explore opens stock research without following and reads the seven-day fee
  const root=setup();store.set('watchlist',[]);const calls=[];
  const social={status:'ready',collected_at:'2026-09-21T12:00:00Z',items:[{ticker:'GLW',rank:2,mentions:120,change_pct:35},{ticker:'NVDA',rank:1,mentions:900,change_pct:-4},{ticker:'bad ticker',rank:3}]};
  globalThis.fetch=async(input,options)=>{calls.push({url:new URL(input,'https://ducky.test'),method:options.method});return Response.json(String(input).startsWith('/radar/social.json')?social:{items:[]});};
- const dispose=await mount(root);for(let i=0;i<6;i++)await new Promise(r=>setTimeout(r,0));
+ const dispose=await mount(root,{query:new URLSearchParams('tab=research')});for(let i=0;i<6;i++)await new Promise(r=>setTimeout(r,0));
  const rows=[...root.querySelectorAll('.explore-stock-row')];
  assert.deepEqual(rows.map(row=>row.dataset.ticker),['NVDA','GLW']);
  assert.match(rows[0].textContent,/900 mentions · 24h/);assert.match(rows[1].textContent,/\+35%/);

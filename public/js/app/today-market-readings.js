@@ -18,3 +18,18 @@ export function canonicalReading(doc,key){
   }
   return r;
 }
+
+export function kIndexReading(doc){
+  const r=doc?.k_index,vix=canonicalReading(doc,'vix'),fng=doc?.fear_greed;
+  if(r?.schema!=='k-index/1'||r.formula!=='cnn_fear_greed/vix'||r.status!=='ready'||
+    typeof r.value!=='number'||!Number.isFinite(r.value)||r.value<0||!day(r.date)||
+    !vix||vix.value<=0||r.date!==vix.date||!clock(fng?.as_of)||
+    typeof fng.score!=='number'||!Number.isFinite(fng.score)||fng.score<0||fng.score>100)return null;
+  const [fear,vol]=r.components||[];
+  if(r.components?.length!==2||fear?.source!=='cnn'||fear.series!=='fear_greed'||fear.value!==fng.score||
+    fear.as_of!==fng.as_of||fear.observed_at!==fng.retrieved_at||!clock(fear.observed_at)||
+    new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(fng.as_of))!==r.date||
+    fear.date!==r.date||vol?.date!==r.date||vol.source!==vix.source||vol.series!==vix.series||vol.value!==vix.value||
+    vol.observed_at!==vix.observed_at||vol.quote_at!==(vix.quote_at??null))return null;
+  return r;
+}

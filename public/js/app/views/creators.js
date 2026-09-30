@@ -3,6 +3,7 @@ import {discoveryPreview} from './creator-discovery.js';
 import {creatorStarters} from './creator-starters.js';
 import {quotaNote} from '../experience.js';
 import {evidenceLink} from '../evidence-link.js';
+import {exploreNavigation} from '../explore-navigation.js';
 // views/creators.js — 财经博主: follow finance creators; Ducky summarises each new video. The creator grid
 // has Follow toggles (POST/DELETE /kol/{id}/sub); below it, the recent summary feed. The feed is a RECORD of
 // the creator's view (attributed, tickers, bull/bear), never our advice.
@@ -123,7 +124,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   const isZh = (document.documentElement.lang || "zh").slice(0, 2) !== "en";
   const card = el("section.card.creators-view");
   root.appendChild(card);
-  card.append(el("h1", s("creators.h1")), el("p.muted", s("creators.sub")));
+  card.append(el("h1", s("creators.h1")), el("p.muted", s("creators.sub")),exploreNavigation('creators'));
   card.appendChild(spinner());
 
   const initial=creatorRoute(routeQuery);
@@ -147,7 +148,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   } catch (e) {
     if (epoch !== store.epoch() || signal?.aborted) return () => {};
     if(sourceOnly&&e.status===402){
-      clear(card);card.append(el('h1',s('creators.h1')),el('div.cr-pro-banner',
+      clear(card);card.append(el('h1',s('creators.h1')),exploreNavigation('creators'),el('div.cr-pro-banner',
         el('span.cr-pro-badge',s('creators.pro_badge')),el('span',s('experience.creator_hint')),
         el('a.btn.btn-primary.btn-sm',{href:'#/profile'},s('common.account'))));
       return () => {};
@@ -156,7 +157,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
       if(retry.disabled || !root.isConnected || epoch!==store.epoch() || signal?.aborted)return;
       retry.disabled=true;router.go(location.hash);
     }},s('common.retry'));
-    clear(card); card.append(el("h1", s("creators.h1")), el("p.err", {role:'alert'},s("creators.load_error")),retry);
+    clear(card); card.append(el("h1", s("creators.h1")),exploreNavigation('creators'), el("p.err", {role:'alert'},s("creators.load_error")),retry);
     return () => {};
   }
   const following = new Set((subs && subs.subs) || []);
@@ -233,7 +234,7 @@ export async function mount(root, {query:routeQuery=new URLSearchParams(),signal
   function render() {
     preserveFocus();stopRails();setupCleanup();clear(card);
     card.append(el('div.evidence-page-head',el('div',el("h1", s("creators.h1")), el("p.muted", s("creators.sub"))),
-      el('span')));
+      el('span')),exploreNavigation('creators'));
 
     const actions=el('div.evidence-controls.creator-page-actions',el('button.btn.btn-primary.btn-sm',{type:'button',onclick:()=>{mine=false;selected='';tab='feed';showSetup=!showSetup;render();loadDiscovery();if(showSetup)card.querySelector('[role=combobox]')?.focus();}},s('creatorflow.add')),
       el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:refresh},s('creatorflow.refresh')));

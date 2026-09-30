@@ -15,5 +15,10 @@ export function currentMacro({at='2026-09-29T15:40:00Z',phase='open',sequence=1}
   en:`Among covered sector ETFs: SMH +1.20%; XLK -0.45%. Recorded readings: 10Y yield 5.29% (${date}); VIX 16.7 (${date}); USD liquidity ${funding.value}/100 (${funding.date}).`
  };
  doc.current_session={schema:'market-current/1',revision_id:'a'.repeat(64),sequence,session:date,phase,status:'ready',published_at:at,expires_at:new Date(Date.parse(at)+240000).toISOString(),coverage:{expected:19,current:phase==='post'?0:19,session_quote:phase==='post'?19:0,stale:0,missing:[]},quotes,macro,fear_greed:{score:34,rating:'fear',as_of:at,retrieved_at:at},summary};
+ const fg=doc.current_session.fear_greed,vix=macro.metrics.vix;
+ doc.current_session.k_index={schema:'k-index/1',formula:'cnn_fear_greed/vix',status:'ready',reason:null,value:2.0359,date,components:[
+  {source:'cnn',series:'fear_greed',value:34,date,as_of:fg.as_of,observed_at:fg.retrieved_at},
+  {...vix},
+ ]};
  return doc;
 }

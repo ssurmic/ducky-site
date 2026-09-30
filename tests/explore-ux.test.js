@@ -10,7 +10,8 @@ globalThis.requestAnimationFrame=fn=>setTimeout(fn,0);globalThis.cancelAnimation
 const copy=JSON.parse(readFileSync('i18n/en.json','utf8'));
 const strings=document.createElement('script');strings.id='ducky-strings';strings.textContent=JSON.stringify(Object.fromEntries(Object.entries(copy).filter(([key])=>key.startsWith('app.')).map(([key,value])=>[key.slice(4),value])));document.body.append(strings);
 const store=await import('../public/js/app/store.js');
-const {mount}=await import('../public/js/app/views/explore.js');
+const {mount:mountExplore}=await import('../public/js/app/views/explore.js');
+const mount=(root,options={})=>mountExplore(root,{...options,query:new URLSearchParams('tab=research')});
 const {discoveryRows,discoveryStockRow}=await import('../public/js/app/explore-discovery.js');
 const tick=async()=>{for(let i=0;i<6;i++)await new Promise(resolve=>setTimeout(resolve,0));};
 const ranking={status:'ready',collected_at:'2026-09-25T20:00:00Z',items:[{ticker:'NVDA',rank:1,mentions:12,change_pct:-4,overall:{en:'Orders depend on customer spending.',zh:'订单取决于客户支出。'}}]};
@@ -142,4 +143,17 @@ test('returning keeps the typed research query without replaying a search automa
  assert.equal(root.querySelector('.symbol-picker input').value,'semiconductor');
  assert.ok(calls.every(url=>url.startsWith('/radar/social.json')||url.startsWith('/kol/opinions?')));
  assert.equal(calls.filter(url=>url.startsWith('/kol/opinions?')).length,2);dispose();
+});
+
+test('plain Explore opens real activity categories; selection matches content and research remains a separate destination',async()=>{
+ const root=setup(),calls=[];
+ globalThis.fetch=async url=>{calls.push(url);return Response.json({items:[],records:[]});};
+ const dispose=await mountExplore(root);
+ assert.ok(root.querySelector('.radar-categories'));
+ assert.equal(root.querySelector('.explore-stock-list'),null);
+ assert.equal(root.querySelector('.explore-primary-tools [aria-current=page]').dataset.exploreDestination,'activity');
+ assert.equal(root.querySelector('[data-explore-destination=research]').getAttribute('href'),'#/explore?tab=research');
+ assert.equal(root.querySelectorAll('.radar-categories [data-board]').length,4);
+ assert.ok(!calls.some(url=>url.startsWith('/radar/social.json')));
+ dispose?.();
 });

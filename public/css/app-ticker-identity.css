@@ -1,8 +1,8 @@
 /* Stock identity, independent of price direction and evidence stance.
    Only structured symbol leaves opt in; never infer symbols from prose. */
 .page-app {
-  --ticker-ink: var(--text);
-  --ticker-paper: var(--surface-2);
+  --ticker-ink: var(--accent-text);
+  --ticker-paper: color-mix(in srgb, var(--accent) 9%, var(--surface));
   --ticker-font: var(--font);
 }
 .page-app .ticker-symbol {

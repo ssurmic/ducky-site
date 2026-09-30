@@ -3,7 +3,7 @@
 Status: implementation candidate; acceptance and release receipts belong in the dated report.
 
 The owner's goal covers phone and desktop, dark and light, English and Chinese. Keep dense
-financial information readable: fixed navigation, neutral identities, aligned numbers,
+financial information readable: fixed navigation, orange stock identities, aligned numbers,
 explicit dates/units and access to complete evidence. Information density never permits
 removing loss records, uncertainty, source attribution or disclosed security/currency.
 
@@ -20,7 +20,7 @@ migration, font CDN, animation library or trading computation is part of this wo
 
 Use the existing self-hosted Manrope with platform Chinese fallbacks for headings, reading,
 controls and stock identities. Preserve the approved duck and orange brand; reserve green/red
-for gains/losses or explicit stance. Stock symbols are neutral and never indicate direction.
+for gains/losses or explicit stance. Stock symbols use the orange brand accent, distinct from opinion prose; this identifies the company and never indicates direction.
 
 ## Palette and hierarchy
 
@@ -54,7 +54,7 @@ Nav | page title                 Page title
                                  5 primary destinations
 ```
 
-Watchlist switches, activity categories, Explore destinations and stock section tabs stay
+Watchlist switches, activity categories, stock-research/creator destinations and stock section tabs stay
 in the existing app scrollport. Search and status move with content. Opaque backgrounds,
 focus clearance and explicit selected states keep these controls usable after scrolling.
 Each Watchlist view remembers its own scroll position during this visit; query/sort state
@@ -69,3 +69,7 @@ one horizontal table scroll area. Desktop Insider controls share a toolbar where
 The public introduction shares the typeface and palette, with an editorial heading scale,
 smaller content gaps and plain surfaces. Marketing copy, historical sample labels and
 access/billing states remain truthful to the existing product.
+
+## Explore and Today refinement · 2026-09-30
+
+Explore defaults to Company activity. Three native destination links share one active-state rule and remain present in activity, stock research and creator views, including loading/errors. Activity pins its four source categories; its destination row scrolls to avoid competing sticky bars. Research and creator navigation stays pinned. Today places six source-dated macro readings in one desktop row and two phone rows; the four ETF references remain above. Full basis, clocks and methods stay in disclosures. K is the backend’s saved CNN Fear & Greed / VIX ratio, not a browser calculation or IV/HV.

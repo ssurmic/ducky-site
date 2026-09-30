@@ -106,7 +106,7 @@ test('Today offers research before the unchanged macro only after explicit zero-
  assert.equal(start.hidden,true);assert.ok(macro);const macroContent=macro.firstElementChild;
  finish(Response.json({items:[],watchlist_count:0}));const dispose=await pending;
  try{
-  assert.equal(start.hidden,false);assert.equal(start.querySelector('a').getAttribute('href'),'#/explore');
+  assert.equal(start.hidden,false);assert.equal(start.querySelector('a').getAttribute('href'),'#/explore?tab=research');
   assert.ok(start.compareDocumentPosition(macro)&window.Node.DOCUMENT_POSITION_FOLLOWING);
   assert.equal(macro.firstElementChild,macroContent);assert.ok(root.querySelector('.today-heading a[href="#/calendar"]'));
   shared(root,{items:[],watchlist_count:2});assert.equal(start.hidden,true);

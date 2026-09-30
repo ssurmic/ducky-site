@@ -97,7 +97,7 @@ export async function render() {
     const origin=route.params.query?.get('from')||'watchlist';
     const inherited=sameAccount&&current?.name==='stock'&&current.params.ticker===route.params.ticker?current.params.returnTo:
       sameAccount&&['alerts','chart'].includes(current?.name)&&location.hash===current.params.returnTo&&safeStock(current.params.returnTo,route.params.ticker)?current.params.stockReturn:null;
-    const returnTo=old?.epoch===store.epoch()&&old?.ticker===route.params.ticker?old.href:inherited||(previous?.name===origin?previousHash:'#/'+origin);
+    const returnTo=old?.epoch===store.epoch()&&old?.ticker===route.params.ticker?old.href:inherited||(previous?.name===origin?previousHash:origin==='explore'?'#/explore?tab=research':'#/'+origin);
     route.params.returnTo=safeOrigin(returnTo)?returnTo:'#/watchlist';
     history.replaceState({...history.state,duckyStockReturn:{epoch:store.epoch(),ticker:route.params.ticker,href:route.params.returnTo}},'',location.hash);
   }

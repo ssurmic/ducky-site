@@ -10,6 +10,7 @@ export function disclosureHref(ticker,kind){
 }
 export function stockDisclosureLinks(ticker){
   return el('nav.stock-disclosure-links',{'aria-label':s('stockux.disclosures',{ticker})},
+    el('span.stock-disclosure-label',s('explore.company_activity')),
     ...['insider','funds'].map(kind=>el('a',{href:disclosureHref(ticker,kind),'data-stock-disclosure':kind},
       el('span',s('stockux.disclosure_'+kind)),el('span',{'aria-hidden':'true'},'↗'))));
 }

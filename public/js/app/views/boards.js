@@ -13,6 +13,7 @@ import { selectNavigation } from '../navigation.js';
 import {isIndexChange, sourceEventHint, effectiveDate, effectiveTiming} from '../source-event.js';
 import {activityRecord} from '../radar-activity.js';
 import {insiderCard} from '../insider-card.js';
+import {exploreNavigation} from '../explore-navigation.js';
 
 export const BOARDS = [
   {key:'liquidity', kinds:'liquidity,kindex,macro'},
@@ -234,7 +235,7 @@ export async function mount(root, route={}) {
   const main=el('section.radar-main',scopeBar,guide,...(toolbar?[toolbar]:[quick,filter]),activeFilters,summary,activeRule,rows,more,note);
   // Explicit screening links lead with their destination. Market data arriving later
   // stays below it, so it cannot push the focused form out of the viewport.
-  card.append(header,...(currentAccess?[]:[accessNote]),...(screenEntry?[screenPanel]:[]),el('div.radar-layout',sidebar,main),
+  card.append(header,...(reports?[]:[exploreNavigation('activity')]),...(currentAccess?[]:[accessNote]),...(screenEntry?[screenPanel]:[]),el('div.radar-layout',sidebar,main),
     ...(screenEntry?[]:[screenPanel]),el('details.radar-browse',el('summary',s('radar.browse_questions')),starters),coverage,pelosiJump);
   if(screenEntry && !route.signal?.aborted && root.isConnected && epoch===store.epoch()){
     const target=screenPanel.querySelector('summary');

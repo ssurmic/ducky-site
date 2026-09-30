@@ -69,5 +69,5 @@ export function sessionOverview(doc,options={}){
 // Historical chart rows remain untouched. Current cards take only this snapshot's metrics.
 export function sessionMacro(doc,options={}){
  const state=currentSession(doc,options);if(!state)return doc;
- return {...doc,market_readings:state.data.macro,fear_greed:state.data.fear_greed??null};
+ return {...doc,market_readings:state.data.macro,fear_greed:state.data.fear_greed??null,k_index:state.data.k_index??null};
 }
