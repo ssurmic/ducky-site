@@ -4,6 +4,8 @@
 
 Unify dark/light palettes and typography across the app, public pages and previews. Keep Watchlist views, company activity categories, stock tabs and Explore destinations visible while scrolling; retain per-view Watchlist positions. Reduce oversized controls, nested decoration and chart whitespace while preserving source dates, units and full evidence. Loading or failed activity reads no longer appear as zero matching records. [Design system](docs/ux/professional-reading-system.md) and [acceptance](reports/PROFESSIONAL-UI-2026-09-30.md).
 
+Indicators removes three duplicate prose columns while List and Overview retain complete readings. English labels use consistent, natural terminology; numeric headers stay readable. Compact desktop Insider controls bring disclosure records higher into the first screen.
+
 ## Consistent desktop and phone workspace density · 2026-09-30
 
 Unify page titles, subtitles, spacing and desktop content edges; replace oversized historical-return cards with a compact SPY/QQQ table while retaining full history and methods. Align stock actions and profile fields. Preserve the four prominent research/source choices and Insider filters/metrics. Broad bilingual layout and first-use workflow checks are recorded in [the acceptance report](reports/WORKSPACE-DENSITY-2026-09-30.md). Publication is authorized through PR #128; its deployment receipt is recorded separately.

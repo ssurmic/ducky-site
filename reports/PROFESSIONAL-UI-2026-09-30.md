@@ -24,6 +24,16 @@ dark/light acceptance and frontend publication. This follows the earlier density
 - First-load/route-refresh counts now say Loading until a response arrives; failures show
   a read error rather than zero. An actual empty response still reports zero. Existing query,
   account and disposal fences remain intact. Wide data workspaces can use 1640px.
+- Indicators now has 14 comparison columns, with no repeated overall/long-term/trend prose.
+  Those complete readings remain in List and Overview. Prices, six indicators, five disclosure/
+  level columns, market cap, individual clocks, sorting and stock actions remain. Compact rows
+  do not crop financial amounts or replace missing values with zero. Column labels wrap fully.
+- English navigation uses Indicators consistently across Watchlist, Stock and Explore. Clarify
+  Stock / company, daily change, Support levels, Long-term view and Trend view. Pending/stale
+  explanations are plain English without promising that replacement analysis is forthcoming.
+- Desktop Insider direction, market-cap chips and search share a compact toolbar; narrower
+  desktop layouts put search on the next row. At 1728×903 the first synthetic record begins
+  around y=405, with all seven cap choices visible. Mobile keeps its compact arrangement.
 
 [Design rationale and palette](../docs/ux/professional-reading-system.md) records the
 UI/UX Pro Max searches, rejected sales-template guidance, adaptations to this stack and
@@ -48,17 +58,23 @@ font service, framework, backend or data calculation was introduced.
   controls, empty creator Following/Discover, invalid profile field and empty Today guidance.
   **444 workflow assertions passed** in 12 width/language/theme combinations. Writes only
   affect in-memory synthetic membership; no production account was created.
-- Dedicated long-list tests in 16 viewport/language/theme combinations cover visible initial
+- Dedicated long-list tests in 20 viewport/language/theme combinations cover visible initial
   titles, fixed navigation hit targets, view return positions, horizontal scrolling, keyboard
   focus clearance, activity categories and paired semantic-color contrast. Lowest measured
   normal-text contrast across page/surface/raised backgrounds: **4.74:1**. Control boundary
   contrast is checked separately at 3:1.
+  The comparison checks also require 14 columns without narrative cells, compact fixture rows,
+  readable column headings and all columns fitting the 1920px desktop without horizontal scroll.
 - **48 discoverability cases passed**. In the Insider fixture, first-screen record space is
   198.6px at 320×600 and 298.6px at 390×700, after header and primary navigation. The latter
   shows two records. All four choices are visible together and retain 44px phone targets.
 - Direct browser inspection covers mobile light company records before/after scrolling,
   desktop dark market overview and phone public navigation. Screenshot artifacts are local,
   with fixture data explicitly labelled synthetic. No physical-device claim.
+- Eight browser cases cover clearing an existing search, submitting a ticker before the search
+  debounce, and applying direction/cap with pending text. A separate direct keyboard check
+  confirmed clearing a keyword removes its URL parameter while retaining the ticker. No
+  application workaround was added for an automation tool's ineffective empty-string fill.
 
 ## Issues found and resolved during review
 

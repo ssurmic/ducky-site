@@ -53,11 +53,13 @@ test('List starts compact with both perspectives and direct research, map, metri
   assert.equal(requests.length,reads);assert.equal(root.querySelectorAll('thead .watch-signal-col').length,5);assert.equal(root.querySelectorAll('thead .watch-help-col').length,6);
   const headers=[...root.querySelectorAll('thead th')];
   assert.deepEqual(headers.slice(0,8).map(th=>th.querySelector('[data-sort]')?.dataset.sort),['ticker','change_pct','ytd','drawdown','relative','iv_hv','attention','degen']);
-  assert.ok(headers.at(-3).classList.contains('watch-overview-col'));assert.equal(headers.length,17);
+  assert.ok(headers.at(-1).classList.contains('watch-cap-col'));assert.equal(headers.length,14);
+  assert.equal(root.querySelector('.watch-overview-col,.watch-overview-cell,.watch-view-col,.watch-view-cell'),null);
   const cells=[...root.querySelector('[data-reading-anchor=NVDA]').children];
   assert.equal(cells[2].querySelector('.watch-metric').dataset.metric,'ytd');assert.match(cells[2].textContent,/0.0%/);
-  assert.match(cells.at(-3).textContent,/Synthetic main view/);assert.match(cells.at(-2).textContent,/Synthetic long-term condition/);assert.match(cells.at(-1).textContent,/Synthetic trend condition/);
-  assert.match(root.querySelector('.watch-mode-note').textContent,/attention, not valuation/);
+  assert.ok(cells.at(-1).classList.contains('watch-cap-col'));
+  assert.doesNotMatch(root.querySelector('.watch-comparison-table').textContent,/Synthetic main view|Synthetic long-term condition|Synthetic trend condition/);
+  assert.match(root.querySelector('.watch-mode-note').textContent,/Attention indicators do not measure valuation/);
   root.querySelector('[data-mode=list]').click();assert.equal(root.querySelectorAll('thead th').length,5);assert.ok(root.querySelector('thead th:nth-child(3)').classList.contains('watch-overview-col'));
  }finally{dispose();}
 });

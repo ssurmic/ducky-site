@@ -37,6 +37,16 @@ body.page-app .watch-compact-table :is(th,td){border-color:var(--border)}
 body.page-app .watch-compact-table .watch-company{font-size:12px}
 body.page-app .watch-compact-table .watch-stock-actions>a{font-size:11px}
 body.page-app .watch-compact-table .watch-stock-actions{flex-wrap:nowrap;gap:0;margin-left:-36px}
+body.page-app .watch-indicators-table{min-width:1580px}
+body.page-app .watch-indicators-table.watch-selectable tr>:first-child{width:184px}
+body.page-app .watch-indicators-table tr>:nth-child(2){width:108px}
+body.page-app .watch-indicators-table tr>:is(.watch-help-col,.watch-metric-cell){width:86px}
+body.page-app .watch-indicators-table th[data-metric=iv_hv]{width:100px}
+body.page-app .watch-indicators-table tr>:is(.watch-signal-col,.watch-signal-cell){width:142px}
+body.page-app .watch-indicators-table tr>.watch-cap-col{width:80px}
+body.page-app .watch-indicators-table th .watch-sort-label{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.25}
+body.page-app .watch-indicators-table tbody>:is(tr)>:is(th,td){padding-block:8px}
+body.page-app .watch-indicators-table .watch-metric{gap:3px}
 /* Direct children of long workspaces stay in the one existing app scrollport.
    No nested vertical scroll region; opaque paint and focus clearance protect the content below. */
 body.page-app .watchlist-view>.watch-modes,
@@ -106,6 +116,10 @@ body.page-app .season-extreme{justify-content:flex-end}
  body.page-app .app-nav>a{font-size:14px;padding:8px 12px;gap:10px}
  body.page-app .app-main{--workspace-inset:20px;padding:var(--workspace-inset) 24px 28px}
  body.page-app .cal-grid .cal-cell{min-height:104px}
+ body.page-app .radar-insider-workspace .radar-toolbar{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(320px,1fr);gap:10px;align-items:start;margin-bottom:8px}
+ body.page-app .radar-insider-workspace .insider-quick{grid-template-columns:auto minmax(0,1fr);align-items:start;gap:6px 10px;margin:0}
+ body.page-app .radar-insider-workspace .insider-cap-range{grid-column:1/-1}
+ body.page-app .radar-insider-workspace .radar-filters{padding:0;margin:0;border:0;background:none}
 }
 @media(max-width:760px){
  body.page-app .app-top{min-height:52px;padding-block:calc(4px + var(--safe-top)) 4px}
@@ -122,6 +136,9 @@ body.page-app .season-extreme{justify-content:flex-end}
  body.page-app .radar-activity-workspace .radar-day{margin:8px 0 4px}
  body.page-app .watchlist-view .watch-strip,body.page-app .watchlist-view .watch-session{font-size:11px;margin-block:4px}
  body.page-app .watch-compact-table .watch-company{font-size:11px}
+ body.page-app .watch-indicators-table{min-width:1460px}
+ body.page-app .watch-indicators-table.watch-selectable tr>:first-child{width:150px}
+ body.page-app .watch-indicators-table tbody>:is(tr)>:is(th,td){padding-block:5px}
  body.page-app .watch-research-reading .stock-overall-text{font-size:13px}
  body.page-app .watch-research-heading{padding:8px 10px}
  body.page-app .watch-research-lenses{padding:8px 10px}
@@ -131,6 +148,9 @@ body.page-app .season-extreme{justify-content:flex-end}
  body.page-app .explore-destination-copy>span,body.page-app .explore-primary-tools .app-icon{display:none}
  body.page-app:is([data-route=watchlist],[data-route=boards],[data-route=stock],[data-route=explore]) .app-main{scroll-padding-top:60px}
  body.page-app .creators-view .creator-views-group{padding:8px 0}
+}
+@media(min-width:1000px) and (max-width:1279px){
+ body.page-app .radar-insider-workspace .radar-toolbar{grid-template-columns:minmax(0,1fr)}
 }
 /* The public introduction shares the same typography and palette, with an editorial scale. */
 body:not(.page-app) :is(.mono,.tag){font-family:var(--font);letter-spacing:0}

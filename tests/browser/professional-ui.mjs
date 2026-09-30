@@ -5,7 +5,7 @@ import {mkdir,writeFile} from 'node:fs/promises';
 const base=process.env.QA_BASE||'http://127.0.0.1:8953',output=process.env.QA_OUTPUT||'/tmp/ducky-professional-acceptance';
 await mkdir(output,{recursive:true});
 const browser=await chromium.launch(),results=[];
-for(const width of [320,390,820,1440])for(const lang of ['zh','en'])for(const theme of ['dark','light']){
+for(const width of [320,390,820,1440,1920])for(const lang of ['zh','en'])for(const theme of ['dark','light']){
  const context=await browser.newContext({viewport:{width,height:width===320?600:width===390?700:900},hasTouch:width<500,isMobile:width<500,colorScheme:theme,reducedMotion:'reduce'});
  const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
  const label=`${width}-${lang}-${theme}`;
@@ -34,7 +34,19 @@ for(const width of [320,390,820,1440])for(const lang of ['zh','en'])for(const th
   await page.screenshot({path:`${output}/watch-scroll-${label}.png`});
   // Use the visible pointer target: Locator.click scrolls sticky descendants toward their original flow position.
   const clickMode=async mode=>{const b=await page.locator(`[data-mode=${mode}]`).boundingBox();await page.mouse.click(b.x+b.width/2,b.y+b.height/2);};
-  for(const mode of ['reading','metrics','heatmap']){await clickMode(mode);assert.equal(await page.locator(`[data-mode=${mode}]`).getAttribute('aria-pressed'),'true');}
+  let indicatorRows;
+  for(const mode of ['reading','metrics','heatmap']){
+   await clickMode(mode);assert.equal(await page.locator(`[data-mode=${mode}]`).getAttribute('aria-pressed'),'true');
+   if(mode==='metrics'){
+    assert.equal(await page.locator('.watch-indicators-table thead th').count(),14);
+    assert.equal(await page.locator('.watch-indicators-table .watch-overview-cell,.watch-indicators-table .watch-view-cell').count(),0);
+    indicatorRows=await page.locator('.watch-indicators-table tbody tr').evaluateAll(rows=>rows.slice(0,10).map(row=>row.getBoundingClientRect().height));
+    assert.ok(Math.max(...indicatorRows)<=150,'comparison rows stay compact without repeated analysis');
+    if(width>=1920)assert.ok(await page.locator('.watch-table-scroll').evaluate(e=>e.scrollWidth<=e.clientWidth+1),'wide desktop fits all indicator columns');
+    assert.deepEqual(await page.locator('.watch-indicators-table .watch-sort-label').evaluateAll(nodes=>nodes.filter(e=>e.scrollWidth>e.getBoundingClientRect().width+1).map(e=>e.textContent)),[],'indicator column headings remain readable');
+    await page.screenshot({path:`${output}/indicators-${label}.png`});
+   }
+  }
   await clickMode('list');assert.ok(Math.abs((await scroll())-top)<2,'list reading position restored');assert.equal(await page.locator('.watch-table-scroll').evaluate(e=>e.scrollLeft),left,'horizontal reading position restored');
   // Tab out of the pinned nav and down into the content: focus must stay uncovered.
   await page.locator('[data-mode=heatmap]').focus();
@@ -45,7 +57,7 @@ for(const width of [320,390,820,1440])for(const lang of ['zh','en'])for(const th
   const category=await page.locator('.radar-sidebar').evaluate(e=>{const b=e.getBoundingClientRect(),m=e.closest('.app-main').getBoundingClientRect();return {top:b.top,main:m.top,bottom:b.bottom,hit:e.contains(document.elementFromPoint(b.left+b.width/2,b.top+b.height/2))};});
   assert.ok(category.top>=category.main&&category.top<=category.main+24&&category.hit,'four source categories stay usable');
   await page.screenshot({path:`${output}/activity-scroll-${label}.png`});
-  assert.deepEqual(errors,[]);results.push({label,pinned,category,minContrast:Math.min(...contrasts.map(v=>v.ratio)),palette:palette.values});
+  assert.deepEqual(errors,[]);results.push({label,pinned,category,indicatorRows,minContrast:Math.min(...contrasts.map(v=>v.ratio)),palette:palette.values});
  }catch(error){results.push({label,error:String(error),errors});await page.screenshot({path:`${output}/failure-${label}.png`});}
  await context.close();
 }

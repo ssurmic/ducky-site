@@ -181,7 +181,7 @@ test('left-side and right-side readings render under the digest only when both a
  const views={status:'ready',session:'2026-09-19',right:{en:'Trend followers watch the close hold above the 20-day low.',zh:'趋势派关注收盘能否守住 20 日低点。'},left:{en:'Long-term holders watch the pullback depth.',zh:'长线持有者关注回调深度。'}};
  const cell=reading({ticker:'NVDA',status:'pending',records:3},{digest:digest.digestNodes(row,sig),views});
  const lines=[...cell.querySelectorAll('.stock-view')].map(n=>n.textContent);
- assert.deepEqual(lines,['Right side · trend viewTrend followers watch the close hold above the 20-day low.','Left side · long-term viewLong-term holders watch the pullback depth.']);
+ assert.deepEqual(lines,['Trend viewTrend followers watch the close hold above the 20-day low.','Long-term viewLong-term holders watch the pullback depth.']);
  // Flashcards: the day's note first (coloured by side), the digest card second; arrows, dots and keys move between them.
  assert.deepEqual([...cell.querySelectorAll('.stock-view')].map(n=>n.className),['stock-view is-right','stock-view is-left']);
  const deck=cell.querySelector('.card-deck');assert.equal(deck.dataset.cards,'2');assert.equal(deck.dataset.index,'0');
@@ -221,7 +221,7 @@ test('List leads with the verdict and both perspectives while Metrics leads with
  assert.equal(listed.firstChild.className,'stock-overall');assert.equal(listed.querySelector('.card-deck').dataset.cards,'2');
  // Stale: the sentence stays, its own date goes under it; the pending note appears before the first reading.
  const stale={...views,stale:true};
- assert.match(overallLine(stale).querySelector('.stock-overall-date').textContent,/Reading of 2026-09-2[12]; the facts have moved/);
+ assert.match(overallLine(stale).querySelector('.stock-overall-date').textContent,/Analysis from 2026-09-2[12]; the underlying data has since changed/);
  // The day is the reader's local day of the stored instant, never the UTC date of an evening reading.
  const evening={...stale,generated_at:'2026-09-22T23:40:00-07:00'};
  assert.equal(overallLine(evening).querySelector('.stock-overall-date').textContent.includes(new Intl.DateTimeFormat('en-CA',{year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(evening.generated_at))),true);
@@ -231,7 +231,7 @@ test('List leads with the verdict and both perspectives while Metrics leads with
  // Same day: clock time only; another day: month and day too (the runner's time zone decides which day).
  const at=new Date(views.generated_at);assert.match(writtenAt(views,at),/^\d{1,2}:\d\d(?: [AP]M)?$/);assert.match(writtenAt(views,new Date(at.getTime()+4*864e5)),/^Sep \d{1,2}, \d{1,2}:\d\d(?: [AP]M)?$/);
  assert.equal(writtenAt({session:'2026-09-21'}),'2026-09-21');
- assert.equal(viewCell(null,'left').className,'small muted watch-view-pending');assert.match(viewCell(null,'left').textContent,/coming up/);
+ assert.equal(viewCell(null,'left').className,'small muted watch-view-pending');assert.match(viewCell(null,'left').textContent,/not available yet/);
  // A reviewed summary without a verdict shows no overall line and no empty placeholder.
  const ready={ticker:'COIN',status:'ready',as_of:'2026-09-19T22:00:00Z',overview:{en:'A reviewed line.',zh:'一句。',citations:['s1']},sources:[{id:'s1',title:{en:'T',zh:'T'}}]};
  assert.equal(reading(ready,{views:{...views,overall:null},columns:true}).querySelector('.stock-overall'),null);
@@ -242,9 +242,9 @@ test('List leads with the verdict and both perspectives while Metrics leads with
    signals:new Map([['NVDA',sig]]),session:'2026-09-21'};
  const root=overviewView(rows,options);
  const heads=[...root.querySelectorAll('thead th')].map(th=>th.textContent.trim());
- assert.deepEqual(heads.slice(0,2),['Stock / business','Price / day change']);
+ assert.deepEqual(heads.slice(0,2),['Stock / company','Price / daily change']);
  assert.deepEqual([...root.querySelectorAll('thead th')].slice(2,8).map(th=>th.dataset.metric),['ytd','drawdown','relative','iv_hv','attention','degen']);
- assert.deepEqual(heads.slice(-4),['Market cap','Overall','Left side · long-term view','Right side · trend view']);
+ assert.deepEqual(heads.slice(-4),['Market cap','Overall','Long-term view','Trend view']);
  assert.equal(heads.length,17,'all metrics, signals, market cap and narrative columns remain');
  assert.ok(root.querySelector('thead th.watch-view-col.is-left')&&root.querySelector('thead th.watch-cap-col'));
  const first=root.querySelector('tbody tr');
@@ -255,7 +255,7 @@ test('List leads with the verdict and both perspectives while Metrics leads with
  const second=root.querySelectorAll('tbody tr')[1];
  assert.equal(second.querySelectorAll('.watch-view-pending').length,2);assert.ok(second.querySelector('.watch-reading-preview .stock-digest-value'));
  const compactList=overviewView(rows,{...options,compact:true});
- assert.deepEqual([...compactList.querySelectorAll('thead th')].map(th=>th.textContent.trim()),['Stock / business','Price / day change','Overall','Left side · long-term view','Right side · trend view']);
+ assert.deepEqual([...compactList.querySelectorAll('thead th')].map(th=>th.textContent.trim()),['Stock / company','Price / daily change','Overall','Long-term view','Trend view']);
  assert.equal(compactList.querySelector('.watch-metric-cell'),null);
  const listedFirst=compactList.querySelector('tbody tr');
  assert.match(listedFirst.querySelector('.watch-reading-preview').textContent,/^Overall:/);

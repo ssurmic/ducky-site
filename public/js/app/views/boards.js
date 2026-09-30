@@ -230,7 +230,8 @@ export async function mount(root, route={}) {
   const rows=el('div.radar-records');
   const more=el('button.btn.btn-ghost.radar-more',{type:'button',onclick:()=>loadArchive(false)},s('creators.load_more'));
   const scopeBar=reports?tabs:el('div.radar-scope-bar',tabs,otherCategories);
-  const main=el('section.radar-main',scopeBar,guide,quick,filter,activeFilters,summary,activeRule,rows,more,note);
+  const toolbar=reports?null:el('div.radar-toolbar',quick,filter);
+  const main=el('section.radar-main',scopeBar,guide,...(toolbar?[toolbar]:[quick,filter]),activeFilters,summary,activeRule,rows,more,note);
   // Explicit screening links lead with their destination. Market data arriving later
   // stays below it, so it cannot push the focused form out of the viewport.
   card.append(header,...(currentAccess?[]:[accessNote]),...(screenEntry?[screenPanel]:[]),el('div.radar-layout',sidebar,main),

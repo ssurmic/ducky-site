@@ -60,6 +60,12 @@ focus clearance and explicit selected states keep these controls usable after sc
 Each Watchlist view remembers its own scroll position during this visit; query/sort state
 and existing data reuse remain intact. No competing vertical scrolling window is introduced.
 
+Indicators is a 14-column comparison table. Full overall, long-term and trend readings belong
+to List and Overview; repeating them in numeric comparisons wastes height. Keep indicator dates,
+units, unavailable values, sorting, help and source drilldowns. Header labels wrap instead of
+being clipped. Large tables use up to 1640px; smaller screens retain a fixed stock column and
+one horizontal table scroll area. Desktop Insider controls share a toolbar where space permits.
+
 The public introduction shares the typeface and palette, with an editorial heading scale,
 smaller content gaps and plain surfaces. Marketing copy, historical sample labels and
 access/billing states remain truthful to the existing product.
