@@ -27,7 +27,10 @@ dark/light acceptance and frontend publication. This follows the earlier density
 - Indicators now has 14 comparison columns, with no repeated overall/long-term/trend prose.
   Those complete readings remain in List and Overview. Prices, six indicators, five disclosure/
   level columns, market cap, individual clocks, sorting and stock actions remain. Compact rows
-  do not crop financial amounts or replace missing values with zero. Column labels wrap fully.
+  retain financial values and do not replace missing values with zero. Column labels wrap fully.
+  Post-release screenshot review found that the inherited one-line badge style still cropped
+  net amounts and add/trim counts; the [bounded follow-up](INDICATOR-VALUES-2026-09-30.md)
+  repairs that remaining presentation defect.
 - English navigation uses Indicators consistently across Watchlist, Stock and Explore. Clarify
   Stock / company, daily change, Support levels, Long-term view and Trend view. Pending/stale
   explanations are plain English without promising that replacement analysis is forthcoming.
@@ -92,8 +95,11 @@ route refresh, genuine empty responses and failed filters; stale-response tests 
 
 ## Release and rollback
 
-The production receipt will be attached to this change's pull request after the official Pages
-publisher verifies the exact merged version and canonical site. Rollback baseline:
+PR [#129](https://github.com/ssurmic/ducky-site/pull/129) merged as
+`d4935d8ba92cc5bb6e05abecb9bc48ba87cce6e6`. The official publisher completed deployment
+`e6140f5d` and verified canonical `VERSION=d4935d8b` and the expected CSP at
+**2026-09-30T07:28:20Z**. It reran all 995 Node tests and checked 2196 links. The
+badge-wrapping follow-up has its own candidate and release receipt. Rollback baseline:
 `5cb2900841786e9cea0001ab9b5ae76a774e5865`. This is frontend presentation/navigation only;
 no backend deployment, migrations, provider calls, notifications or account permissions.
 Shared engineering status will be integrated through the already coordinated documentation

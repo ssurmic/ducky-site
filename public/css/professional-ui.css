@@ -47,6 +47,10 @@ body.page-app .watch-indicators-table tr>.watch-cap-col{width:80px}
 body.page-app .watch-indicators-table th .watch-sort-label{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.25}
 body.page-app .watch-indicators-table tbody>:is(tr)>:is(th,td){padding-block:8px}
 body.page-app .watch-indicators-table .watch-metric{gap:3px}
+/* Primary amounts/counts must stay complete at compact column widths. */
+body.page-app .watch-indicators-table .watch-signal-net{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}
+body.page-app .watch-indicators-table .watch-wall{flex-wrap:wrap;white-space:normal}
+body.page-app .watch-indicators-table .watch-wall-gap{flex-basis:100%;white-space:normal;overflow:visible;text-overflow:clip}
 /* Direct children of long workspaces stay in the one existing app scrollport.
    No nested vertical scroll region; opaque paint and focus clearance protect the content below. */
 body.page-app .watchlist-view>.watch-modes,
