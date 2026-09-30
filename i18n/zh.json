@@ -5817,5 +5817,8 @@
   "app.watch.bias_bullish": "价格结构偏强",
   "app.watch.bias_bearish": "价格结构偏弱",
   "app.watch.bias_mixed": "价格结构分歧",
-  "app.watch.bias_unknown": "方向依据不足"
+  "app.watch.bias_unknown": "方向依据不足",
+  "app.watch.read_full": "阅读全文",
+  "app.watch.read_full_view": "阅读 {ticker} 的完整{view}",
+  "app.watch.phone_indicators": "指标"
 }

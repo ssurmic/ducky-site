@@ -81,6 +81,39 @@ test('Overview keeps independent quote and reference clocks, both views and revi
  }finally{dispose();}
 });
 
+test('full table reading retains ticker, exact text and dates, then restores its opener and horizontal position',async()=>{
+ const {requests,dispose}=await setup();
+ try{
+  const scroll=root.querySelector('.watch-table-scroll');scroll.scrollLeft=430;
+  const button=root.querySelector('[data-reading-key="NVDA:view:left"]'),reads=requests.length;
+  button.focus();button.click();
+  const dialog=document.querySelector('[role=dialog]');
+  assert.match(dialog.querySelector('h2').textContent,/NVDA.*Investment case/);
+  assert.equal(dialog.querySelector('.watch-view-text').textContent,view.left.en);
+  assert.equal(dialog.querySelector('.watch-view-date').textContent,button.parentElement.querySelector('.watch-view-date').textContent);
+  assert.equal(requests.length,reads,'opening full text reuses the saved reading');
+  // Independent prices can update without replacing the reader's paragraph.
+  root.dispatchEvent(new window.CustomEvent('ducky:shared-read',{detail:{path:'/watchlist',value:{items:['NVDA','TSM'],cap:50,overview:{items:[{...row,price:221},unknown]}}}}));
+  assert.equal(document.querySelector('[role=dialog]'),dialog);
+  document.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+  assert.equal(document.querySelector('#modal').hidden,true);
+  assert.equal(document.activeElement.dataset.readingKey,'NVDA:view:left');
+  assert.equal(root.querySelector('.watch-table-scroll').scrollLeft,430);
+ }finally{dispose();}
+});
+
+test('a revised or withdrawn saved view closes an obsolete full-text reading',async()=>{
+ for(const next of [{...view,left:{en:'Revised condition.',zh:'已修订条件。'}},null]){
+  const {dispose}=await setup();
+  try{
+   const button=root.querySelector('[data-reading-key="NVDA:view:left"]');button.focus();button.click();
+   root.dispatchEvent(new window.CustomEvent('ducky:shared-read',{detail:{path:'/watchlist',value:{items:['NVDA','TSM'],cap:50,overview:{items:[{...row,digest:{views:next}},unknown]}}}}));
+   assert.equal(document.querySelector('#modal').hidden,true);
+   assert.equal(document.querySelector('.watch-view-dialog'),null);
+  }finally{dispose();}
+ }
+});
+
 test('filters and sorted metric mode round-trip through the route without another request or losing keyboard focus',async()=>{
  const {requests,dispose}=await setup();let restore;
  try{

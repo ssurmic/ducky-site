@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-09-30 — Phone table scrolling and full readings
+
+Keep one reading column visible beside the fixed stock identity, bound long phone table paragraphs to four-line previews, and open complete text in a ticker-labelled reader. Preserve native scrolling, 44px actions, source dates and the original reading position on close. Short touch-screen landscape layouts use the same compact treatment; desktop retains full inline text. [Acceptance](reports/MOBILE-TABLE-SCROLL-2026-09-30.md).
+
 ## 2026-09-30 — K index display precision
 
 Explain in both help dialogs that K uses unrounded source readings, while its input cards may show rounded values. Restore standalone UI acceptance by serving its allowlisted test-data modules from the loopback fixture server. [Acceptance](reports/K-HELP-PRECISION-2026-09-30.md).

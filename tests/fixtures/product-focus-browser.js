@@ -32,6 +32,7 @@ if(mode==='no-watch-section')analysis.sections=analysis.sections.filter(p=>p.kin
 let watches=['no-watch','first-use'].includes(mode)?[]:['NVDA','AVGO','AMD','GLW'];
 if(mode==='today-dashboard'&&query.get('empty')==='1')watches=[];
 if(mode==='watchlist-management')watches=['NVDA','AVGO','AMD','GLW',...Array.from({length:46},(_,i)=>'TEST'+String(i).padStart(2,'0'))];
+if(mode==='watchlist-scroll')watches=['ORCL','NVDA','AMD','AVGO'];
 if(mode==='today-large')watches=['AAPL','AEHR','ALAB','AMD','AVGO','GLW','NVDA','TSLA'];
 // These explicit membership cases accept writes only to the fixture's in-memory array.
 if(['watchlist-add','autocomplete-watchlist'].includes(mode))watches=['NVDA','AVGO','AMD'];
@@ -69,7 +70,13 @@ const READINGS={NVDA:{status:'ready',session:'2026-09-09',generated_at:'2026-09-
   overall:{zh:'总的来说，AMD 在财报后回落到 20 日区间中部，机构上季度净增持。',en:'Overall, AMD has drifted back to the middle of its 20-day range after earnings, with funds net adding last quarter.'},
   right:{zh:'趋势派会看 20 日区间上沿能否收复。',en:'Trend followers watch whether the top of the 20-day range is recovered.'},
   left:{zh:'长线加仓派会看回落是否停在区间下沿附近。',en:'Long-term accumulators watch whether the slide stops near the bottom of the range.'}}};
-const price=(ticker,i=0)=>({ticker,...(READINGS[ticker]?{digest:{views:READINGS[ticker]}}:{}),company:{NVDA:'NVIDIA Corporation',AVGO:'Broadcom Inc.',AMD:'Advanced Micro Devices, Inc.',GLW:'Corning Incorporated'}[ticker]||ticker,
+if(mode==='watchlist-scroll'){
+ const long={zh:'合成阅读样本：估值资料不足，不能仅凭股价回落判断便宜。机构季报描述报告期末持股，并不证明今天仍然持有。作者观点保留发布日期与条件，宏观读数也保留各自的来源日期。'.repeat(5)+'全文末尾：这些条件与限制必须完整保留。',en:'Synthetic reading: Valuation evidence is incomplete; a price decline alone does not establish a discount. Fund reports describe quarter-end shares, not current holdings. Creator claims retain publication dates and conditions; macro readings keep their own dates. '.repeat(5)+'End of full reading: Keep every condition and limitation.'};
+ READINGS.ORCL={...READINGS.NVDA,overall:{zh:'ORCL 合成样本：估值资料不足，趋势信号存在分歧。',en:'Synthetic ORCL sample: Valuation evidence is incomplete and trend signals are mixed.'},states:{valuation:'insufficient',trend:'mixed',bias:'neutral',momentum:'unknown'},left:long,right:long,
+  price_basis:{basis:'daily_close',session:'2026-09-29'}};
+ READINGS.NVDA={...READINGS.NVDA,left:long,right:long,stale:true};
+}
+const price=(ticker,i=0)=>({ticker,...(READINGS[ticker]?{digest:{views:READINGS[ticker]}}:{}),company:{ORCL:'Oracle Corporation',NVDA:'NVIDIA Corporation',AVGO:'Broadcom Inc.',AMD:'Advanced Micro Devices, Inc.',GLW:'Corning Incorporated'}[ticker]||ticker,
  ...(['minute-quotes','saved-quotes'].includes(mode)?{quote:{price:218.25+i*23,change_pct:-2.42,status:mode==='saved-quotes'?'stale':'current',quote_at:new Date(Date.now()-(mode==='saved-quotes'?600000:1000)).toISOString(),provider:'yahoo',feed:'yahoo_regular_session'}}:{}),
  price:223.67+i*23,price_status:'ready',price_session:'2026-09-09',change_pct:i%2?3.2:-.91,market_cap:(5-i)*1e12,metrics:{ytd:{status:'ready',value:[20.1,-2,0,-12][i]},drawdown:{status:'ready',value:-5-i*5},relative:{status:'ready',value:-7+i*2,symbols:['SPY']},iv_hv:{status:i===2?'missing':'ready',value:i===2?null:.71+i*.25},attention:{status:'ready',value:75+i*5},degen:{status:'ready',value:48+i*4}},
  ...(mode==='wall-consistency'?{price:wallPrices[ticker],price_session:'2026-09-11',company:{NVDA:'NVIDIA Corporation',COIN:'Coinbase Global, Inc.',AVGO:'Broadcom Inc.',TSLA:'Tesla, Inc.',AMD:'Advanced Micro Devices, Inc.'}[ticker]}:{})});

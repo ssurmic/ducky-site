@@ -2,7 +2,7 @@ import {tourEvent,tourTarget} from '../tour-events.js';
 import {freeGuide,quotaNote} from '../experience.js';
 // views/watchlist.js — add ticker · list of 全景 mini-cards from /snapshot · remove.
 // gamma + expected rows are blurred behind a lock for free/paid (Pro only).
-import { overviewView, researchOverview, layoutOverview, retimeQuotes } from "../watchlist-overview.js";
+import { overviewView, researchOverview, layoutOverview, retimeQuotes, syncWatchViewDialog } from "../watchlist-overview.js";
 import { buildSignals } from "../watchlist-signals.js";
 import { digestNodes, listSummary } from "../watchlist-digest.js";
 import { companyContext } from "../company-context.js";
@@ -340,7 +340,7 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
     if(loading && !overview && !research.size){clear(list).append(skeleton(items.length));return;}
     if (!items.length) {
       clear(list);
-      strip.hidden=true;return;
+      strip.hidden=true;syncWatchViewDialog(list);return;
     }
     const rows=new Map((overview?.items || []).map(row=>[row.ticker,row]));
     const digestFor=t=>focused?digestNodes(rows.get(t),signals.get(t)):[];
@@ -350,13 +350,13 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
       replaceReading(list,researchOverview(items.map(t=>rows.get(t)||{ticker:t,company:t,price_status:'missing'}),{
         query,sort,sortDirection,signals,quoteReceived:overviewReceived,viewsFor,
         renderResearch:t=>reading({...research.get(t),ticker:t,...(!research.has(t)?missingResearch():{})},{digest:digestFor(t),views:viewsFor(t),columns:true})}));
-      reportPaint();
+      syncWatchViewDialog(list);reportPaint();
       return;
     }
     const tableLeft=list.querySelector('.watch-table-scroll')?.scrollLeft||0;
     replaceReading(list,overviewView(items.map(t=>rows.get(t) || {ticker:t,company:t,market_cap_status:'missing',price_status:'missing'}),
       {view,query,sort,sortDirection,compact:focused&&view==='list',quoteReceived:overviewReceived,selection:focused?{checked,disabled:removing||adding,toggle:(tickers,value)=>{if(removing||adding)return;for(const t of tickers)value?checked.add(t):checked.delete(t);render();}}:null,onSort:key=>{sortDirection=key===sort?(sortDirection==='desc'?'asc':'desc'):key==='ticker'?'asc':'desc';sort=key;render();},area,signals:focused?signals:null,renderResearch:focused?t=>reading({...research.get(t),ticker:t,...(!research.has(t)?missingResearch():{})},{digest:digestFor(t),views:viewsFor(t),columns:true}):null,viewsFor:focused?viewsFor:null,onAreaChange:value=>{area=value;try{localStorage.setItem('ducky-watch-area',area);}catch{}render();list.querySelector(`[data-area="${area}"]`)?.focus();},selected,session:overview?.session,previous:overview?.previous_session,onSelect:selectTicker}));
-    reportPaint();
+    syncWatchViewDialog(list);reportPaint();
     const scroll=list.querySelector('.watch-table-scroll');
     if(scroll){scroll.scrollLeft=tableLeft;const shade=()=>scroll.classList.toggle('is-scrolled',scroll.scrollLeft>2);shade();scroll.addEventListener('scroll',shade,{passive:true});}
     for(const disclosure of list.querySelectorAll('details[data-disclosure]'))disclosure.open=openDisclosures.has(disclosure.dataset.disclosure);
@@ -624,5 +624,5 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
   unsubs.push(()=>clearInterval(clock));
   render();
   await load({reuseRecent:true});
-  return () => {rememberFirstSearch();disposed=true;starters?.dispose();root.classList.remove("watchlist-view");unsubs.forEach((u) => u());};
+  return () => {rememberFirstSearch();disposed=true;syncWatchViewDialog(null);starters?.dispose();root.classList.remove("watchlist-view");unsubs.forEach((u) => u());};
 }

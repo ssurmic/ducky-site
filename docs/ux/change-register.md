@@ -1,5 +1,9 @@
 # UX change and integration register
 
+## 2026-09-30 — Phone Watchlist table scrolling
+
+Narrow List columns fit beside the pinned stock identity. Long commentary opens from a four-line preview into a full-width reader with a persistent ticker heading and exact return position. Complete source text/dates, short readings, quote/source refresh behavior and desktop inline readings are retained. Bilingual dark/light portrait and short-landscape acceptance is recorded in [the report](../../reports/MOBILE-TABLE-SCROLL-2026-09-30.md); production publication is recorded separately in the release PR.
+
 ## 2026-09-30 — K calculation and displayed precision
 
 Clarify why dividing the rounded Fear & Greed and VIX card values can differ slightly from K. The Chinese and English explanations use the same existing help dialogs. [Acceptance](../../reports/K-HELP-PRECISION-2026-09-30.md).

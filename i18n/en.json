@@ -5817,5 +5817,8 @@
   "app.watch.bias_bullish": "Bullish price structure",
   "app.watch.bias_bearish": "Bearish price structure",
   "app.watch.bias_mixed": "Mixed price structure",
-  "app.watch.bias_unknown": "Direction unconfirmed"
+  "app.watch.bias_unknown": "Direction unconfirmed",
+  "app.watch.read_full": "Read full",
+  "app.watch.read_full_view": "Read {ticker} · {view} in full",
+  "app.watch.phone_indicators": "Stats"
 }
