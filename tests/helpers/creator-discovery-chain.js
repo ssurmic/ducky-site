@@ -17,6 +17,7 @@ export async function registerDiscoveryChain(lang) {
   document.body.append(strings);
   const store=await import('../../public/js/app/store.js');
   const {mount}=await import('../../public/js/app/views/creators.js');
+  const {closeModal}=await import('../../public/js/app/ui.js');
   const tick=()=>new Promise(resolve=>setImmediate(resolve));
   const settle=async()=>{for(let i=0;i<3;i++)await tick();};
   const documentOf=items=>({status:'ready',items});
@@ -52,7 +53,7 @@ export async function registerDiscoveryChain(lang) {
     history.replaceState(null,'','#/creators'+(query?'?'+query:''));
     const root=document.createElement('main');document.body.append(root);
     const dispose=await mount(root,{query:new URLSearchParams(query)});await settle();
-    const close=()=>{dispose();root.remove();};t.after(close);
+    const close=()=>{closeModal();dispose();root.remove();};t.after(close);
     return {root,close};
   }
   const cards=root=>[...root.querySelectorAll('.creator-discovery-directory .creator-name')].map(n=>n.textContent);
@@ -73,9 +74,12 @@ export async function registerDiscoveryChain(lang) {
       assert.ok(root.querySelector('.creator-discovery-preview').textContent.includes(row.latest_view.text[lang]));
       assert.ok(root.querySelector('.creator-discovery-badge.is-bull'));
       assert.equal(root.querySelector('[role=combobox]'),null);
-      const link=root.querySelector('.creator-discovery-links a[href^="#/creators"]');
+      const preview=root.querySelector('.creator-discovery-open');preview.focus();preview.click();
+      const dialog=document.querySelector('[role="dialog"]');assert.ok(dialog);assert.ok(dialog.textContent.includes(row.latest_view.text[lang]));
+      const link=dialog.querySelector('.creator-discovery-links a[href^="#/creators"]');
       assert.equal(link.getAttribute('href'),'#/creators?scope=discover&creator=archive&post=archive0001&point=claim%3Aarchive');
-      assert.equal(root.querySelector('.creator-discovery-links a[target=_blank]').href,row.latest_view.source_url);
+      assert.equal(dialog.querySelector('.creator-discovery-links a[target=_blank]').href,row.latest_view.source_url);
+      closeModal();assert.equal(document.activeElement,preview);
       assert.ok(state.requests.some(req=>req.user===user&&req.path==='/kol/discover'&&req.params.get('tickers')==='NVDA'));
       close();
     }
@@ -84,7 +88,8 @@ export async function registerDiscoveryChain(lang) {
 
   test(`${lang}: discovery source link opens exactly its historical post and highlighted point`,async t=>{
     const row=entry('archive','ORCL');const state=backend([row],['ORCL']);
-    const first=await view(t);const href=first.root.querySelector('.creator-discovery-links a').getAttribute('href');first.close();
+    const first=await view(t);first.root.querySelector('.creator-discovery-open').click();
+    const href=document.querySelector('[role="dialog"] .creator-discovery-links a').getAttribute('href');first.close();
     state.sources['/kol/archive/posts/archive0001']={creator:row.creator,post:{id:40,kol_id:'archive',kol_name:row.creator.name,
       platform_post_id:'archive0001',title:'Exact historical source',published_at:row.latest_view.published_at,tickers:['ORCL'],calls:[],
       url:'https://www.youtube.com/watch?v=archive0001',summary:{quality:'no_call',zh:'作者讨论公司现金流。',en:'The creator discusses company cash flow.',

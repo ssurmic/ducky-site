@@ -1,3 +1,4 @@
+import {numericChange,changeParts} from './numeric-change.js';
 import {el,clear} from './ui.js';
 import {s} from './strings.js';
 import * as api from './api.js';
@@ -68,7 +69,7 @@ export function renderMacroBeta(doc){
   render();
   const evidence=el('details.macro-evidence',el('summary',s('macro.evidence')),el('p.small.muted',s('macro.cutoffs')));
   const metrics=el('div.macro-metrics');
-  for(const[key,label,unit]of [['spread_bp','spread','bp'],['tail_bp','tail','bp'],['reserves_bn','reserves','bn'],['tga_bn','tga','bn'],['broad_usd_20d_change_pct','usd_change','%'],['rrp_bn','rrp','bn'],['srf_bn','srf','bn'],['net_liquidity_65d_change_bn','net_change','bn'],['nominal_10y','nominal','%'],['real_10y','real','%'],['nfci_credit','credit',''],['nfci_risk','risk','']])metrics.append(el('div',el('span.small.muted',s('macro.'+label)),el('strong.mono',fmt(latest.metrics?.[key],2)+' '+unit)));
+  for(const[key,label,unit]of [['spread_bp','spread','bp'],['tail_bp','tail','bp'],['reserves_bn','reserves','bn'],['tga_bn','tga','bn'],['broad_usd_20d_change_pct','usd_change','%'],['rrp_bn','rrp','bn'],['srf_bn','srf','bn'],['net_liquidity_65d_change_bn','net_change','bn'],['nominal_10y','nominal','%'],['real_10y','real','%'],['nfci_credit','credit',''],['nfci_risk','risk','']])metrics.append(el('div',el('span.small.muted',s('macro.'+label)),el('strong.mono',['broad_usd_20d_change_pct','net_liquidity_65d_change_bn'].includes(key)?numericChange(latest.metrics?.[key],{digits:2,unit:' '+unit}):fmt(latest.metrics?.[key],2)+' '+unit)));
   evidence.append(metrics,el('p.small.muted',s('macro.coverage',{complete:doc.coverage?.complete_scores||0,total:doc.coverage?.sessions||0})),el('h3',s('macro.contributions')));
   const contributionList=el('dl.macro-contributions');
   for(const[key,value]of Object.entries(latest.contributions||{}))contributionList.append(el('dt',s('macro.factor_'+key)),el('dd.mono',fmt(value)));
@@ -79,14 +80,14 @@ export function renderMacroBeta(doc){
   box.append(evidence);
   const validation=doc.validation;
   const supportive=(validation?.nonoverlapping_forward_20d||[]).filter(r=>r.regime==='supportive'&&OK(r.qqq_return_pct));
-  if(supportive.length)box.append(el('p.small.muted',el('strong',s('macro.forward')+' · '),s('macro.forward_sample',{n:supportive.length,losses:supportive.filter(r=>r.qqq_return_pct<0).length,worst:fmt(Math.min(...supportive.map(r=>r.qqq_return_pct)))})));
+  if(supportive.length)box.append(el('p.small.muted',el('strong',s('macro.forward')+' · '),changeParts('macro.forward_sample',{n:supportive.length,losses:supportive.filter(r=>r.qqq_return_pct<0).length},{worst:{value:Math.min(...supportive.map(r=>r.qqq_return_pct)),unit:''}})));
 
   if(validation?.baseline_reproduced){const details=el('details.macro-validation',el('summary',s('macro.validation')));details.append(el('p.data-notice',s('macro.validation_result')));
     const table=el('table.macro-validation-table',el('thead',el('tr',...['period','cost','baseline','candidate','drawdown','sample'].map(k=>el('th',s('macro.col_'+k))))));const body=el('tbody');
-    for(const[cost,result]of Object.entries(validation.results||{}))for(const period of ['selection','validation','evaluation']){const b=result.baseline?.[period],c=result.macro_gate?.[period];if(!b||!c)continue;body.append(el('tr',el('td',b.start+' → '+b.end),el('td',cost+' bp'),el('td.mono',fmt(b.metrics?.nav?.return_pct)+'%'),el('td.mono',fmt(c.metrics?.nav?.return_pct)+'%'),el('td.mono',fmt(c.metrics?.nav?.max_drawdown_pct)+'%'),el('td',s('macro.n_open',{n:c.completed_positions,open:c.open_positions}))));}
+    for(const[cost,result]of Object.entries(validation.results||{}))for(const period of ['selection','validation','evaluation']){const b=result.baseline?.[period],c=result.macro_gate?.[period];if(!b||!c)continue;body.append(el('tr',el('td',b.start+' → '+b.end),el('td',cost+' bp'),el('td.mono',numericChange(b.metrics?.nav?.return_pct)),el('td.mono',numericChange(c.metrics?.nav?.return_pct)),el('td.mono',numericChange(c.metrics?.nav?.max_drawdown_pct)),el('td',s('macro.n_open',{n:c.completed_positions,open:c.open_positions}))));}
     table.append(body);
     const losses=el('div.macro-losses',el('h3',s('macro.losses')));
-    for(const[cost,result]of Object.entries(validation.results||{}))for(const variant of ['baseline','macro_gate'])for(const run of Object.values(result[variant]||{}))for(const year of run.losing_years||[])losses.append(el('p.small',cost+' bp · '+s('macro.loss_row',{year,variant:s('macro.variant_'+variant),value:fmt(run.years?.[year]?.return_pct)})));
+    for(const[cost,result]of Object.entries(validation.results||{}))for(const variant of ['baseline','macro_gate'])for(const run of Object.values(result[variant]||{}))for(const year of run.losing_years||[])losses.append(el('p.small',cost+' bp · ',changeParts('macro.loss_row',{year,variant:s('macro.variant_'+variant)},{value:{value:run.years?.[year]?.return_pct,unit:''}})));
     details.append(losses);
     details.append(el('div.macro-table-scroll',{tabindex:0},table),el('p.small.muted',s('macro.validation_caveat')));box.append(details);
   }else box.append(el('p.small.muted',s('macro.validation_pending')));

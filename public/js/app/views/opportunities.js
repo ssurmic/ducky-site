@@ -1,3 +1,4 @@
+import {numericChange,numericChangeClass,changeParts} from '../numeric-change.js';
 import {evidenceLink} from '../evidence-link.js';
 import {el, clear, spinner, num, pct, px, dateTime} from '../ui.js';
 import {s, has, LANG} from '../strings.js';
@@ -105,7 +106,7 @@ function evidenceDetails(row) {
     const value = ready ? fund[key] : null;
     const text = key === 'net_debt' ? money(value) : ['forward_pe','trailing_pe','price_to_sales'].includes(key) ?
       (finite(value) ? number(value) + '×' : '—') : percent(value);
-    table.append(el('div', el('dt', label(key)), el('dd.mono', text)));
+    table.append(el('div', el('dt', label(key)), el('dd.mono', ['revenue_growth','earnings_growth'].includes(key)?numericChange(value):text)));
   }
   const fundamentals = el('section', el('h3', label('valuation')), table,
     el('p.small.muted', ready ? s('opportunities.fundamentals_at', {date:dateTime(fund.as_of)}) : label('fundamentals_missing')),
@@ -201,9 +202,9 @@ function observationHistory(ticker) {
       if (!Array.isArray(doc?.items)) throw Error('invalid_history');
       for (const item of doc.items) {
         const state=['matched','not_matched','stale','unknown'].includes(item.state)?item.state:'unknown';
-        list.append(el('p.small', s('opportunities.history_row', {
+        list.append(el('p.small', changeParts('opportunities.history_row', {
           recorded:dateTime(item.recorded_at), source:dateTime(item.source_at),
-          state:label('history_'+state), drawdown:percent(item.document?.technical?.dd_pct)})));
+          state:label('history_'+state)}, {drawdown:item.document?.technical?.dd_pct})));
       }
       before=typeof doc.next_cursor==='string'?doc.next_cursor:null;
       button.hidden=!before; button.textContent=label('load_more');
@@ -240,12 +241,12 @@ export function candidateCard(row, watches=[]) {
   if (!compact || row.price_series?.length > 1) card.append(priceTrend(row.price_series, {reference:{value:row.ma252, date:row.as_of, label:label('ma252_reference')}}));
   const gap = comparisonReady(row) && finite(rel.excess20) ? rel.excess20 : null;
   const metric = (key, value) => el('div', el('dt', label(key)), el('dd.mono', value));
-  const metrics = el('dl.opportunity-metrics', metric(compact ? 'recorded_drawdown' : 'drawdown', percent(tech.dd_pct)), metric('rsi', number(tech.rsi_d)));
+  const metrics = el('dl.opportunity-metrics', metric(compact ? 'recorded_drawdown' : 'drawdown', numericChange(tech.dd_pct)), metric('rsi', number(tech.rsi_d)));
   if (compact) metrics.append(metric(referenceRatio(row) !== null ? 'reference_iv_hv' : 'iv_hv', number(referenceRatio(row) ?? optionRatio(row), 2)));
   else metrics.append(
-    metric('ma252', percent(tech.ma252_pct)), metric(referenceRatio(row) !== null ? 'reference_iv_hv' : 'iv_hv', number(referenceRatio(row) ?? optionRatio(row), 2)),
+    metric('ma252', numericChange(tech.ma252_pct)), metric(referenceRatio(row) !== null ? 'reference_iv_hv' : 'iv_hv', number(referenceRatio(row) ?? optionRatio(row), 2)),
     metric(rel.kind === 'business_peers' ? 'relative' : 'reference_gap', gap === null ? '—' :
-      s(gap < 0 ? 'opportunities.behind' : 'opportunities.ahead', {n:Math.abs(gap).toFixed(1)})),
+      el('span',{class:numericChangeClass(gap)},s(gap < 0 ? 'opportunities.behind' : 'opportunities.ahead', {n:Math.abs(gap).toFixed(1)}))),
     metric('forward_pe', financialReady(fund) && finite(fund.forward_pe) ? number(fund.forward_pe) + '×' : '—'));
   card.append(metrics);
   if (row.screen_summary) {

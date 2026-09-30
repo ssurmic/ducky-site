@@ -1,3 +1,4 @@
+import {numericChange} from './numeric-change.js';
 import { el, pct } from './ui.js';
 import { s, LANG } from './strings.js';
 import { readableDate } from './date-format.js';
@@ -92,7 +93,7 @@ export function earningsPanel(doc) {
     const rows=el('tbody');for(const r of comparisons)rows.append(el('tr',el('td',copy(r.metric)),
       el('td.mono',earningsValue(r.actual,r.metric==='eps'?'USD/shares':'USD')),
       el('td.mono',earningsValue(r.estimate,r.metric==='eps'?'USD/shares':'USD')),
-      el('td.mono',{class:r.surprise_pct<0?'neg':''},finite(r.surprise_pct)?pct(r.surprise_pct):'—')));
+      el('td.mono',numericChange(r.surprise_pct))));
     table.append(rows);compare.append(el('div.event-table-scroll',{tabindex:0,'aria-label':copy('past_compare')},table));box.append(compare);
   }
   const reaction=doc.reaction||{},windows=reaction.sample?.windows||{};
@@ -100,8 +101,8 @@ export function earningsPanel(doc) {
   if(reaction.price_as_of)move.append(el('p.small.muted',copy('price_asof')+' '+reaction.price_as_of+' · '+(reaction.source||'Yahoo Finance')));
   const chips=el('div.earnings-reaction-chips');
   for(const h of ['1','5','20']){const w=windows[h]||{};chips.append(el('div',el('strong',h+' '+copy(h==='1'?'session':'sessions')),
-    el('span.mono',{class:w.return_pct<0?'neg':w.return_pct>0?'pos':''},w.status==='ok'?pct(w.return_pct):'—'),
-    el('span.small.muted',w.status==='ok'?'SPY '+pct(w.benchmark_pct):copy('reaction_missing')),
+    el('span.mono',numericChange(w.status==='ok'?w.return_pct:null)),
+    el('span.small.muted',w.status==='ok'?['SPY ',numericChange(w.benchmark_pct)]:copy('reaction_missing')),
     ...(w.status==='ok'&&w.start&&w.end?[el('span.small.muted',w.start+' → '+w.end)]:[])));}
   move.append(chips);box.append(move);
   const method=el('details.earnings-method',el('summary',copy('coverage')),

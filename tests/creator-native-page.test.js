@@ -55,16 +55,19 @@ test('creator filtering validates request, envelope, every row and grouped sourc
 test('selected author exposes native views before historical progress and retains legacy material across rerenders',async()=>{
  const calls=setup();const dispose=await mount(root,{query:new URLSearchParams('creator=alpha')});await flush();
  const native=root.querySelector('.creator-native-opinions');assert.ok(native);assert.equal(native.closest('details'),null);
- assert.match(native.textContent,/alpha native view/);assert.match(native.querySelector('.opinion-original').textContent,/about 0:32/);
+ assert.match(native.textContent,/alpha native view/);assert.equal(native.querySelectorAll('.opinion-preview-card').length,3);
+ const preview=native.querySelector('.opinion-preview-open');preview.focus();preview.click();
+ const nativeSource=document.querySelector('[data-opinion-dialog]');assert.ok(nativeSource);assert.match(nativeSource.querySelector('.opinion-original').textContent,/about 0:32/);
+ assert.equal(nativeSource.querySelector('.opinion-original').href,'https://www.youtube.com/watch?v=sample00001&t=32s');
  const batch=root.querySelector('.creator-delivery-progress');assert.ok(native.compareDocumentPosition(batch)&Node.DOCUMENT_POSITION_FOLLOWING);
  assert.match(batch.textContent,/Historical summary batch/);assert.match(batch.textContent,/2026-09-23 to 2026-09-29/);assert.match(batch.textContent,/does not describe new-upload processing/);
  assert.match(root.textContent,/Retained transcript summary/);
- native.querySelector('.opinion-records').open=true;const before=calls.filter(c=>c.url.pathname==='/kol/opinions').length;
+ nativeSource.querySelector('.opinion-records').open=true;const before=calls.filter(c=>c.url.pathname==='/kol/opinions').length;
  root.querySelector('.creator-workspace-tabs button').click();await flush();
- assert.equal(root.querySelector('.creator-native-opinions'),native);assert.equal(native.querySelector('.opinion-records').open,true);
+ assert.equal(root.querySelector('.creator-native-opinions'),native);assert.equal(document.querySelector('[data-opinion-dialog]'),nativeSource);assert.equal(nativeSource.querySelector('.opinion-records').open,true);
  assert.equal(calls.filter(c=>c.url.pathname==='/kol/opinions').length,before,'legacy repaint does not restart native polling');
  root.querySelectorAll('.creator-workspace-tabs button')[1].click();await flush();
- assert.equal(root.querySelector('.creator-native-opinions'),null);native.querySelector('.creator-opinions-heading button').click();await flush();
+ assert.equal(root.querySelector('.creator-native-opinions'),null);assert.equal(document.querySelector('[data-opinion-dialog]'),null);native.querySelector('.creator-opinions-heading button').click();await flush();
  assert.equal(calls.filter(c=>c.url.pathname==='/kol/opinions').length,before,'disposed reader cannot request again');
  dispose();
 });

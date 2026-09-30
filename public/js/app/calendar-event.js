@@ -1,3 +1,4 @@
+import {numericChange,changeParts} from './numeric-change.js';
 import { eventKind } from './calendar-model.js';
 export { eventKind } from './calendar-model.js';
 import { el, clear, pct, num } from './ui.js';
@@ -67,9 +68,9 @@ export function eventResearchSession(scopeTicker='') {
       if(!st.n) content.append(el('p.data-notice',s('event.no_complete')));
       else {
         const stats=el('div.event-stats',
-          el('div',el('span.muted.small',s('event.median')),el('strong.mono',{class:st.median_pct<0?'neg':'pos'},pct(st.median_pct))),
-          el('div',el('span.muted.small',s('event.excess')),el('strong.mono',num(st.median_excess_pp,1)+' '+s('event.pp'))),
-          el('div',el('span.muted.small',s('event.range')),el('strong.mono',pct(st.min_pct)+' / '+pct(st.max_pct))));
+          el('div',el('span.muted.small',s('event.median')),el('strong.mono',numericChange(st.median_pct))),
+          el('div',el('span.muted.small',s('event.excess')),el('strong.mono',numericChange(st.median_excess_pp,{unit:' '+s('event.pp')}))),
+          el('div',el('span.muted.small',s('event.range')),el('strong.mono',numericChange(st.min_pct),' / ',numericChange(st.max_pct))));
         content.append(stats);
         const dist=el('div.event-distribution',{'aria-hidden':'true'},
           el('span.event-up',{style:{width:(100*st.up/st.n)+'%'}}),
@@ -86,7 +87,7 @@ export function eventResearchSession(scopeTicker='') {
           el('div',el('strong',sample.date+' · '+weekday(sample.date)),el('span.small.muted',s('event.kind_'+kind))),
           el('p.small',s('event.reaction_session',{date:sample.reaction_session || '—'})+(sample.release_time_et?' · '+sample.release_time_et+' ET':'')),
           sample.reference_period?el('p.small.muted',s('event.reference_period',{period:sample.reference_period})):null,
-          el('p.small',w.status==='ok'?s('event.past_returns',{ticker:doc.selected,n:horizon,value:pct(w.return_pct),benchmark:pct(w.benchmark_pct)}):s('event.status_'+w.status)),
+          el('p.small',w.status==='ok'?changeParts('event.past_returns',{ticker:doc.selected,n:horizon},{value:w.return_pct,benchmark:w.benchmark_pct}):s('event.status_'+w.status)),
           w.status==='ok'?el('p.mono.small.muted',w.start+' → '+w.end):null,
           url?el('a.small',{href:url,target:'_blank',rel:'noopener noreferrer'},s('event.source')+' ↗'):null));
       }
@@ -101,8 +102,8 @@ export function eventResearchSession(scopeTicker='') {
       for(const sample of history.samples.filter(r=>historyYear==='all'||r.date.startsWith(historyYear)).slice().reverse()) {
         const w=sample.windows?.[horizon]||{};const url=safeSource(sample.source);
         tbody.append(el('tr',el('td.mono',sample.date+' · '+weekday(sample.date),el('div.small.muted',s('event.reaction_session',{date:sample.reaction_session||'—'}))),el('td.small',w.status==='ok'?w.start+' → '+w.end:s('event.status_'+w.status)),
-          el('td.mono',{class:w.return_pct<0?'neg':w.return_pct>0?'pos':''},w.status==='ok'?pct(w.return_pct):'—'),
-          el('td.mono',w.status==='ok'?pct(w.benchmark_pct):'—'),
+          el('td.mono',numericChange(w.status==='ok'?w.return_pct:null)),
+          el('td.mono',numericChange(w.status==='ok'?w.benchmark_pct:null)),
           el('td',url?el('a',{href:url,target:'_blank',rel:'noopener noreferrer'},s('event.source')):'—')));
       }
       table.append(tbody);all.append(el('div.event-table-scroll',{tabindex:0,'aria-label':s('event.history')},table));content.append(all);

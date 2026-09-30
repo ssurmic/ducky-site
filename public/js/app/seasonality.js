@@ -1,3 +1,4 @@
+import {numericChangeClass,changeParts} from './numeric-change.js';
 // A shared historical snapshot; the browser only filters completed months.
 import { s } from './strings.js';
 import { el, clear } from './ui.js';
@@ -67,9 +68,9 @@ export function renderSeasonality(root, data, initialMonth = Number(new Intl.Dat
         el('i.season-up',{style:{width:(100*st.positive/st.n)+'%'}}),el('i.season-down',{style:{width:(100*down/st.n)+'%'}}),
         el('i.season-flat',{style:{width:(100*flat/st.n)+'%'}}));
       metrics.append(el('article',el('b',s('season.name_'+ticker.toLowerCase())),el('span.muted.small',s('season.average_for',{period:windowName})),
-        el('strong',{class:st.mean<0?'neg':'pos'},move(st.mean)),distribution,
+        el('strong',{class:numericChangeClass(st.mean)},move(st.mean)),distribution,
         el('p.small',s('season.counts',{n:st.n,up:st.positive,down})+(flat?' · '+s('season.flat_count',{n:flat}):'')),
-        el('p.muted.small',s('season.extremes',{worstYear:worst.year,worst:move(st.worst),bestYear:best.year,best:move(st.best)}))));
+        el('p.muted.small',changeParts('season.extremes',{worstYear:worst.year,bestYear:best.year},{worst:{value:st.worst,format:move},best:{value:st.best,format:move}}))));
     }
     results.append(metrics,el('p.season-limit.small.muted',s('season.limit_short')));
     const detail=el('details.season-details',el('summary',s('season.table_count',{n:rows.length})));
@@ -84,11 +85,11 @@ export function renderSeasonality(root, data, initialMonth = Number(new Intl.Dat
     function drawYears(){
       clear(body);
       const visible=rows.filter(r=>yearSelect.value==='all'||Math.floor(r.year/10)*10===Number(yearSelect.value)).slice().sort((a,b)=>order.value==='new'?b.year-a.year:a.year-b.year);
-      for(const row of visible)body.append(el('tr.season-year',el('th',{scope:'row'},row.year),...['SPY','QQQ'].map(t=>el('td',{class:row[t]<0?'neg':'pos'},move(row[t])))));
+      for(const row of visible)body.append(el('tr.season-year',el('th',{scope:'row'},row.year),...['SPY','QQQ'].map(t=>el('td',{class:numericChangeClass(row[t])},move(row[t])))));
     }
     yearSelect.addEventListener('change',drawYears);order.addEventListener('change',drawYears);drawYears();
     const method=el('details.season-details',el('summary',s('season.method')),el('p.small.muted',s('season.method_body')));
-    for(const ticker of ['SPY','QQQ'])method.append(el('p.small.muted',s('season.median_plain',{ticker,period:windowName,value:move(stats(rows.map(r=>r[ticker])).median)})));
+    for(const ticker of ['SPY','QQQ'])method.append(el('p.small.muted',changeParts('season.median_plain',{ticker,period:windowName},{value:{value:stats(rows.map(r=>r[ticker])).median,format:move}})));
     method.append(el('p.small.muted',s('season.limit')),el('a',{href:'/seasonality.json',target:'_blank',rel:'noopener'},s('season.download')),
       el('span',' · '),el('a',{href:'https://finance.yahoo.com/quote/SPY/history/',target:'_blank',rel:'noopener'},'SPY · Yahoo Finance ↗'),
       el('span',' · '),el('a',{href:'https://finance.yahoo.com/quote/QQQ/history/',target:'_blank',rel:'noopener'},'QQQ · Yahoo Finance ↗'));

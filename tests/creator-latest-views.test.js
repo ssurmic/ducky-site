@@ -33,7 +33,7 @@ test('pending sources are never listed; exact links still reach them',()=>{
  assert.deepEqual(filterPosts(posts,{...selection,archive:true}).map(p=>p.id),[3,1,2]);
 });
 
-test('my creators open on their latest views, one line each, and a line opens the source with its summary',async()=>{
+test('my creators open on compact latest-view shelves and each preview opens the complete source and summary',async()=>{
  store.bumpEpoch();store.set('me',{tier:'pro',user_id:7});store.set('token','synthetic-only');
  const calls=[];
  globalThis.fetch=async(url,opts)=>{calls.push([String(url),opts?.method||'GET']);
@@ -54,18 +54,20 @@ test('my creators open on their latest views, one line each, and a line opens th
  const rows=[...groups[0].querySelectorAll('.creator-view-row')];
  assert.equal(rows.length,2);                                          // the AMD mention is not a view
  assert.match(rows[0].textContent,/\$NVDA Bearish|\$NVDA/);assert.match(rows[0].textContent,/Valuation already prices in/);
- assert.match(rows[0].textContent,/2026-09-10 · Memory demand$/);       // promotion tag trimmed from the title
+ assert.equal(rows[0].querySelector('.creator-view-meta').textContent,'2026-09-10');
+ assert.equal(rows[0].querySelector('.creator-preview-read').textContent,copy['app.creatorrail.read']);
  assert.match(rows[1].textContent,/\$MU/);assert.match(rows[1].textContent,/Memory pricing supports margins/);
  assert.match(groups[1].textContent,/The creator expects orders to rise/);   // a reviewed video without a stock view gets its summary line
- assert.ok(rows.every(r=>r.querySelector('button').getBoundingClientRect||true));
- rows[1].querySelector('button').click();
+ assert.equal(groups[0].querySelector('.creator-rail-page').children.length,2);
+ const trigger=rows[1].querySelector('.creator-view-open');trigger.focus();trigger.click();
  const detail=document.querySelector('#modal .creator-view-detail');assert.ok(detail);
  assert.match(document.querySelector('#modal').textContent,/Alpha Creator · 2026-09-10/);
+ assert.equal(detail.querySelector('.cr-video-title').textContent,'Memory demand'); // full source title remains, with promotion removed
  assert.ok(detail.querySelector('.creator-reviewed-spans article.is-focused'));
  assert.match(detail.textContent,/The creator expects orders to rise/);assert.match(detail.textContent,/First section/);
  const source=detail.querySelector('a.cr-orig');assert.equal(source.getAttribute('href'),'https://www.youtube.com/watch?v=abcdefghijk&t=70');
  assert.ok(detail.querySelector('a[href="#/evidence/MU"], a[href^="#/evidence/MU"]'));
- closeModal();
+ closeModal();assert.equal(document.activeElement,trigger);
  groups[0].querySelector('.creator-name').click();await tick();
  assert.ok(root.querySelector('.creator-selected-heading'));assert.match(root.querySelector('.creator-selected-heading').textContent,/Alpha Creator/);
  assert.equal(root.querySelectorAll('.cr-post').length,1,'the creator page lists only reviewed videos');

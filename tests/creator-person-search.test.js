@@ -53,16 +53,19 @@ test('explicit Add creator lookup finds a Chinese channel with no summaries inde
   dispose();root.remove();
 });
 
-test('Following retains unrelated posts and marks watched stocks only on reviewed content',async()=>{
+test('Following shelves retain unrelated reviewed posts and the author archive keeps watched-stock context',async()=>{
   store.set('me',{tier:'pro',user_id:1});
   globalThis.fetch=async url=>Response.json(url==='/kol/feed'?{kols:[{id:'known',name:'Other Creator',profile:{}}],posts:[post(1,'NVDA'),post(2,'TSLA')]}:
     url==='/me/kols'?{subs:['known'],analysis:{}}:url==='/watchlist'?{items:[{ticker:'NVDA'}]}:{items:[]});
   const root=document.createElement('main');document.body.append(root);
   const dispose=await mount(root,{query:new URLSearchParams('scope=following')});await tick();
-  assert.equal(root.querySelectorAll('.creator-view-row').length,2);   // one line per reviewed video, no creator picker
-  assert.equal(root.querySelectorAll('.creator-watch-match').length,1);
-  assert.ok(root.querySelector('.creator-watch-match').textContent.includes('NVDA'));
+  assert.equal(root.querySelectorAll('.creator-preview-card').length,2);
+  assert.deepEqual([...root.querySelectorAll('.creator-view-takes .ticker-symbol')].map(n=>n.textContent),['$NVDA','$TSLA']);
   assert.ok(root.querySelector('.creator-latest-views').textContent.includes('Other Creator'));   // the creator heads its own group; no separate picker
+  root.querySelector('.creator-views-head .creator-name').click();await tick();
+  const archive=root.querySelector('.creator-video-archive');assert.equal(archive.querySelectorAll('.cr-post').length,2);
+  assert.equal(archive.querySelectorAll('.creator-watch-match').length,1);
+  assert.ok(archive.querySelector('.creator-watch-match').textContent.includes('NVDA'));
   dispose();root.remove();
 });
 

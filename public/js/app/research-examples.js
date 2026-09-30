@@ -1,3 +1,4 @@
+import {numericChangeClass} from './numeric-change.js';
 import {el,pct} from './ui.js';
 import {s,LANG} from './strings.js';
 import * as api from './api.js';
@@ -28,7 +29,7 @@ export function starterCards(doc){
         'aria-describedby':'starter-attention-'+r.ticker},
         el('span.research-example-identity',el('span.research-example-rank','#'+r.rank),el('strong.ticker-symbol',r.ticker)),
         company&&company!==r.ticker?el('span.research-example-company',{title:company},company):null,
-        el('span.research-example-attention',{'aria-hidden':'true'},el('span.research-example-count',count??'—'),el('span.research-example-change',change??'—')),
+        el('span.research-example-attention',{'aria-hidden':'true'},el('span.research-example-count',count??'—'),el('span.research-example-change',{class:numericChangeClass(r.change_pct)},change??'—')),
         el('span.research-example-description',{id:'starter-attention-'+r.ticker},description)),
       el('nav.research-example-routes',{'aria-label':s('explore.stock_routes',{ticker:r.ticker})},
         el('a',{href:target+'&tab=evidence','data-reading-key':'discover:'+r.ticker+':map'},s('watch.open_map')),overview));

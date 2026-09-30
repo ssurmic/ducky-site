@@ -1,3 +1,4 @@
+import {changeParts,numericChange} from './numeric-change.js';
 // Saved Explore candidates. Membership changes only through the parent’s existing
 // explicit Add action; rank never grants eligibility or implies a bullish view.
 import {el,clear,spinner,pct} from './ui.js';
@@ -45,7 +46,7 @@ export function watchlistStarters({signal,current=()=>true,watched=()=>[],action
           el('a.watch-starter-open',{href,'data-reading-key':'watch-starter:'+row.ticker,
             'aria-label':s('explore.research_stock',{ticker:row.ticker})},
             el('span.watch-starter-identity',el('strong.ticker-symbol',row.ticker),row.company&&row.company!==row.ticker?el('span',row.company):null)),
-          el('p.watch-starter-count',{title:count+(Number.isFinite(row.attentionChange)?' · '+s('focus.discover_change',{n:pct(row.attentionChange,0)}):'')},el('span.watch-starter-count-full',count,Number.isFinite(row.attentionChange)?el('span.muted',s('focus.discover_change',{n:pct(row.attentionChange,0)})):null),el('span.watch-starter-count-compact',number!==null?s('watch.starter_count_short',{n:number}):s('explore.mentions_unknown'))),
+          el('p.watch-starter-count',{title:count+(Number.isFinite(row.attentionChange)?' · '+s('focus.discover_change',{n:pct(row.attentionChange,0)}):'')},el('span.watch-starter-count-full',count,Number.isFinite(row.attentionChange)?el('span',changeParts('focus.discover_change',{}, {n:{value:row.attentionChange,digits:0}})):null),el('span.watch-starter-count-compact',number!==null?s('watch.starter_count_short',{n:number}):s('explore.mentions_unknown'),Number.isFinite(row.attentionChange)?[' · ',numericChange(row.attentionChange,{digits:0})]:null)),
           summary?el('details.watch-starter-reading',el('summary',s('watch.starter_view')),el('p',summary),el('small.muted',s('watch.starter_reading_date',{date:discoveryDate(summaryDate)}))):null,
           el('div.watch-starter-actions',button,
             el('a.watch-starter-research',{href},s('focus.open_stock')),

@@ -164,6 +164,7 @@ const uxReview=(()=>{
   post('uxalpha0004','sample-alpha','NVDA',3,margin,'support','Contract pricing must rise.'),
   post('uxbeta00001','sample-beta','AMD',1,risk,'counter','Customer orders must cover the added capacity.'),
   post('uxgamma0001','sample-gamma','AVGO',2,demand)];
+ if(mode==='creator-rails')for(let i=5;i<=15;i++)posts.push(post('uxrail'+String(i).padStart(5,'0'),'sample-alpha',['NVDA','AMD','AVGO','MU'][i%4],i-4,{zh:'合成观点 '+i+'：客户预算维持增长可能带动订单改善，但要等下一季度披露才能核实交付和回款；收入不能仅凭扩产计划确定。',en:'Synthetic view '+i+': Continued customer budgets could support orders, subject to next-quarter disclosures confirming deliveries and cash collection; capacity plans alone do not establish revenue.'},i%2?'support':'counter','Only if verified customer contracts remain in place '+i+'.'));
  const pages=Object.fromEntries(creators.map(c=>[c.id,{kol_id:c.id,status:'ready',content_hash:'synthetic:'+c.id,coverage:{reviewed:posts.filter(p=>p.kol_id===c.id).length}}]));
  const discovery=creators.map(creator=>{const p=posts.find(p=>p.kol_id===creator.id),view=p.reviewed_spans[0];return {creator,status:'available',latest_view:{...view,text:view.title},coverage:{scan_limited:false}};});
  const source='https://www.sec.gov/Archives/edgar/data/0/synthetic-acceptance.html';
@@ -238,7 +239,7 @@ window.fetch=async(input,options={})=>{
   }
   throw Error('Writes forbidden in synthetic fixture');
  }
- if(mode==='ux-review'){const value=uxReview.reply(path,url.searchParams);if(value)return Response.json(value);}
+ if(['ux-review','creator-rails'].includes(mode)){const value=uxReview.reply(path,url.searchParams);if(value)return Response.json(value);}
  if(mode==='failure'&&path.includes('research'))return Response.json({error:'fixture_unavailable'},{status:503});
  if(mode==='wall-consistency'&&path==='/briefing/stocks')return Response.json(wallBriefs);
  // Synthetic comparison coverage only; production always reads the saved API ranking.

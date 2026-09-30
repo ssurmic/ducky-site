@@ -5414,7 +5414,7 @@
   "app.creatorsux.choose_author": "Choose an author by a recent view",
   "app.creatorsux.author_views": "Main views and stocks",
   "app.creatorsux.author_views_hint": "Different conditions and opposing views stay separate. Open a view for its full source.",
-  "app.creatorsux.main_views_hint": "One recent view per author. Expand to compare their other views and dated sources.",
+  "app.creatorsux.main_views_hint": "Compare recent views. Open a card for the full point and its dated source.",
   "app.creatorsux.research_stock": "Research {ticker}",
   "app.creatorsux.open_record": "Full source record",
   "app.creatorsux.repeated": "Same wording · {n} source records",
@@ -5691,5 +5691,14 @@
   "app.evidence.mobile_previous": "Previous evidence group",
   "app.evidence.mobile_next": "Next evidence group",
   "app.evidence.mobile_swipe": "Swipe to compare views",
-  "app.opinions.empty_alongside": "No additional video views in this scope. Other saved views are below."
+  "app.opinions.empty_alongside": "No additional video views in this scope. Other saved views are below.",
+  "app.creatorrail.label": "Views from {name}",
+  "app.creatorrail.page": "{page} / {total}",
+  "app.creatorrail.previous": "Previous views",
+  "app.creatorrail.next": "Next views",
+  "app.creatorrail.read": "Read full view",
+  "app.creatorrail.qualified": "Conditions or horizon apply",
+  "app.creatorrail.all": "All {n} views",
+  "app.creatorrail.preview": "View previews",
+  "app.creatorrail.source": "Full view and source"
 }

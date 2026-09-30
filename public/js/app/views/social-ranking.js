@@ -1,3 +1,4 @@
+import {numericChange,numericChangeClass} from '../numeric-change.js';
 import {el,num,pct} from '../ui.js';
 import {s} from '../strings.js';
 import {evidenceLink} from '../evidence-link.js';
@@ -26,11 +27,11 @@ export function attentionTrend(samples=[]) {
 export function rankingRow(row,{samples=[],details}={}) {
   const delta=Number.isFinite(row.rank_previous)?row.rank_previous-row.rank:null;
   const rank=el('span.social-rank-number',el('strong',String(row.rank??'—')),
-    el('small.muted',delta===null?'—':delta===0?'·':(delta>0?'↑':'↓')+Math.abs(delta)));
+    el('small',{class:numericChangeClass(delta)},delta===null?'—':delta===0?'·':(delta>0?'↑':'↓')+Math.abs(delta)));
   const summary=el('div.social-rank-summary',rank,
     el('div.social-rank-stock',el('a',{href:'#/stock/'+encodeURIComponent(row.ticker)},row.ticker),el('span.muted',row.company)),
     el('div.social-rank-value',el('small',s('social.mentions_short')),el('strong',num(row.mentions,0))),
-    el('div.social-rank-value',el('small',s('social.change_short')),el('span',row.change_pct==null?'—':pct(row.change_pct,0))),
+    el('div.social-rank-value',el('small',s('social.change_short')),numericChange(row.change_pct,{digits:0})),
     el('div.social-rank-value.social-rank-votes',el('small',s('social.votes_short')),el('span',num(row.upvotes,0))),attentionTrend(samples));
   // Disclosure owns the larger existing evidence/history UI. Numbers stay visible.
   return el('article.social-rank-row',{'data-record-id':row.id},summary,

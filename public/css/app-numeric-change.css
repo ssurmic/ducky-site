@@ -1,0 +1,4 @@
+/* Signed changes are directional; prices, ticker identities and sentiment keep their own grammar. */
+.page-app .numeric-change{color:var(--muted);font-variant-numeric:tabular-nums}
+.page-app .numeric-change.pos{color:var(--green)}
+.page-app .numeric-change.neg{color:var(--red)}
