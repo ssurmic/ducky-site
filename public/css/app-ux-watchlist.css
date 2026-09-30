@@ -41,6 +41,10 @@
 .watch-comparison-table.watch-compact-table tr>.watch-help-col,.watch-comparison-table.watch-compact-table tr>.watch-metric-cell{width:96px;text-align:right}
 .watch-comparison-table.watch-compact-table tr>.watch-overview-col,.watch-comparison-table.watch-compact-table tr>.watch-overview-cell{width:300px;text-align:left}
 .watch-scroll-hint{display:none;margin:0 0 6px}
+.watch-view-open{display:none}
+.watch-action-short{display:none}
+.watch-view-dialog .watch-view-text{font-size:14px;line-height:1.65;overflow-wrap:anywhere}
+.watch-view-dialog .watch-view{padding:10px 12px}
 .watchlist-view .watch-add-options.is-first-use[open]{flex-basis:100%;max-width:100%;width:100%;margin:0;float:none}
 .watch-add-options.is-first-use .view-intro{margin:0 0 10px;font-size:14px;line-height:1.5}
 .watch-add-options.is-first-use .add-row{margin:0;max-width:100%}
@@ -210,6 +214,27 @@
  .watch-research-footer{padding:3px 6px;gap:0}
  .watch-research-footer .watch-stock-actions>a{padding-inline:5px;font-size:11px}
  .watch-disclosures-link{font-size:11px}
+}
+/* A phone can read one complete column beside the frozen stock identity.
+   Native two-axis gestures remain available; only the table pans horizontally. */
+@media(max-width:580px){
+ body.page-app .watchlist-view .watch-table-scroll{overscroll-behavior-x:contain;scrollbar-width:thin}
+ body.page-app .watchlist-view .watch-table-scroll:has(.watch-daily-table){scroll-padding-left:138px}
+ body.page-app .watchlist-view .watch-daily-table{--watch-reading-width:clamp(144px,calc(100vw - 164px),224px);min-width:calc(224px + 3 * var(--watch-reading-width))}
+ body.page-app .watchlist-view .watch-daily-table.watch-selectable tr>:first-child{width:138px}
+ body.page-app .watchlist-view .watch-daily-table tr>:nth-child(3),body.page-app .watchlist-view .watch-daily-table tr>.watch-view-col,body.page-app .watchlist-view .watch-daily-table tr>.watch-view-cell{width:var(--watch-reading-width)}
+ body.page-app .watchlist-view .watch-daily-table .watch-company{max-width:89px}
+ body.page-app .watchlist-view .watch-daily-table .watch-stock-actions{margin-left:-43px}
+ body.page-app .watchlist-view .watch-daily-table .watch-stock-actions>a{width:44px;min-width:44px;padding-inline:0;font-size:11px}
+ body.page-app .watchlist-view .watch-daily-table .watch-action-full{display:none}
+ body.page-app .watchlist-view .watch-daily-table .watch-action-short{display:inline}
+}
+/* Short phone landscape viewports also need a bounded row and full-width reader. */
+@media(max-width:580px),(max-width:1000px) and (max-height:500px) and (pointer:coarse){
+ body.page-app .watchlist-view .watch-daily-table .watch-view-text{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
+ body.page-app .watchlist-view .watch-daily-table .watch-view-state,body.page-app .watchlist-view .watch-daily-table .watch-view-basis{font-size:11px;line-height:1.35;margin:0 0 4px}
+ body.page-app .watchlist-view .watch-daily-table .watch-view-basis{margin:4px 0 0}
+ body.page-app .watchlist-view .watch-daily-table .watch-view-open{display:flex;align-items:center;min-height:44px;min-width:44px;max-width:100%;padding:4px 0;border:0;background:none;color:var(--accent-text,var(--accent));font:inherit;font-size:12px;font-weight:600;text-align:left;cursor:pointer}
 }
 
 /* Distinct, readable states; wording carries meaning without relying on color. */

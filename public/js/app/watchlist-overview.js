@@ -1,4 +1,4 @@
-import { el, pct, px } from './ui.js';
+import { el, pct, px, modal, closeModal, toast } from './ui.js';
 import {viewCell,viewSortValue} from './stock-reading.js';
 import { s, LANG } from './strings.js';
 import { icon } from './icons.js';
@@ -6,6 +6,34 @@ import {metricKeys,metricCell,metricLabel,metricShortLabel,metricMethods,metricS
 import {signalKeys,signalCell,signalLabel,signalHelpButton,signalSortValue,signalMethods} from './watchlist-signals.js';
 
 const finite = n => typeof n === 'number' && Number.isFinite(n);
+// Long mobile readings use the full-width reader instead of making a table row
+// taller than the screen. Keep the original text, state and both source clocks.
+function tableView(views,side,ticker){
+  const cell=viewCell(views,side);
+  if(!cell.querySelector('.watch-view-text'))return cell;
+  const key=ticker+':view:'+side;
+  const open=el('button.watch-view-open',{type:'button','data-reading-key':key,
+    'aria-label':s('watch.read_full_view',{ticker,view:s('watch.view_'+side)}),
+    onclick:event=>{
+      // Safari does not focus a button on touch/click by default. Bind the
+      // reader's return target explicitly without shifting either scroll axis.
+      event.currentTarget.focus({preventScroll:true});
+      const full=viewCell(views,side);
+      const body=el('div.watch-view-dialog',{'data-watch-view-key':key},full);
+      modal(ticker+' · '+s('watch.view_'+side),body,[{label:s('focus.open_stock'),href:'#/stock/'+encodeURIComponent(ticker)}]);
+    }},s('watch.read_full'));
+  cell.append(open);return cell;
+}
+export function syncWatchViewDialog(root){
+  const dialog=document.querySelector('.watch-view-dialog');
+  if(!dialog)return;
+  const opener=[...(root?.querySelectorAll('.watch-view-open')||[])].find(n=>n.dataset.readingKey===dialog.dataset.watchViewKey);
+  // Ignore the button's own label, but include states and original source dates.
+  const readingText=node=>[...(node?.children||[])].filter(n=>!n.matches('.watch-view-open')).map(n=>n.textContent).join('\n');
+  if(!opener||readingText(opener.parentElement)!==readingText(dialog.firstElementChild)){
+    closeModal();if(root)toast(s('focus.source_updated'));
+  }
+}
 // Keep the newest dated value during provider outages/after the close. Never
 // replace a completed day's close with an earlier intraday trade on that day.
 export function displayQuote(row, now=Date.now()) {
@@ -64,9 +92,9 @@ export function stockActions(ticker){
   const symbol=encodeURIComponent(ticker);
   return el('nav.watch-stock-actions',{'aria-label':s('watch.ux_stock_actions',{ticker})},
     el('a.watch-map-link',{href:'#/stock/'+symbol+'?tab=evidence','data-map-open':ticker,'data-tour':'stock.map','data-ticker':ticker,
-      'data-reading-key':ticker+':map','aria-label':s('watch.open_stock_map',{ticker})},icon('evidence'),el('span',s('watch.open_map'))),
+      'data-reading-key':ticker+':map','aria-label':s('watch.open_stock_map',{ticker})},icon('evidence'),el('span.watch-action-full',s('watch.open_map')),el('span.watch-action-short',s('explore.map_short'))),
     el('a.watch-metrics-link',{href:'#/stock/'+symbol+'?tab=metrics','data-reading-key':ticker+':metrics',
-      'aria-label':s('watch.ux_open_metrics',{ticker})},icon('chart'),el('span',s('watch.ux_metrics_short'))),
+      'aria-label':s('watch.ux_open_metrics',{ticker})},icon('chart'),el('span.watch-action-full',s('watch.ux_metrics_short')),el('span.watch-action-short',s('watch.phone_indicators'))),
     el('a.watch-plan-link',{href:'#/alerts?ticker='+symbol,'data-reading-key':ticker+':plan',
       'aria-label':s('watch.ux_open_plan',{ticker})},icon('bell'),el('span',s('watch.ux_plan_short'))));
 }
@@ -147,6 +175,11 @@ export function treemap(rows, width=1000, height=600) {
 
 const mapRows=new WeakMap(),mapSizes=new WeakMap(),mapInspectors=new WeakMap();
 export function layoutOverview(root, force=false) {
+  const previews=[...root.querySelectorAll('.watch-view-open')].map(button=>{
+    const text=button.parentElement.querySelector('.watch-view-text');
+    return [button,text.clientHeight>0?text.scrollHeight>text.clientHeight+1:null];
+  });
+  for(const [button,clipped] of previews)if(clipped!==null)button.hidden=!clipped;
   const map=root.querySelector('.watch-treemap');if(!map)return;
   if(map.classList.contains('is-equal')){mapInspectors.get(map)?.resize();return;}
   const {width,height}=map.getBoundingClientRect();if(!width||!height)return;
@@ -299,7 +332,7 @@ export function overviewView(rows, options) {
             previewNode,analysisDate?el('small.watch-reading-date',analysisDate):null)),reading,
           el('a.stock-open',{href:'#/stock/'+encodeURIComponent(row.ticker),'data-reading-key':row.ticker+':open'},s('focus.open_stock')+' →'));
         return [el('td.watch-overview-cell',overview,el('a.watch-row-disclosures',{href:'#/boards?mode=archive&ticker='+encodeURIComponent(row.ticker),
-          'data-reading-key':row.ticker+':activity'},s('watch.ux_disclosures'))),el('td.watch-view-cell.is-left',viewCell(views,'left')),el('td.watch-view-cell.is-right',viewCell(views,'right'))];
+          'data-reading-key':row.ticker+':activity'},s('watch.ux_disclosures'))),el('td.watch-view-cell.is-left',tableView(views,'left',row.ticker)),el('td.watch-view-cell.is-right',tableView(views,'right',row.ticker))];
       };
       for(const row of filtered){
         const q=displayQuote(row),shown=q||row;
