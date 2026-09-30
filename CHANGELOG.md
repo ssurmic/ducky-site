@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-09-30 — K index display precision
+
+Explain in both help dialogs that K uses unrounded source readings, while its input cards may show rounded values. Restore standalone UI acceptance by serving its allowlisted test-data modules from the loopback fixture server. [Acceptance](reports/K-HELP-PRECISION-2026-09-30.md).
+
 ## Daily investment case and trend commentary · 2026-09-30
 
 Rename the two perspectives, show valuation, directional bias and signed momentum explicitly, and allow

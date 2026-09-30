@@ -5786,7 +5786,7 @@
   "app.today.help_fng_meaning": "CNN 恐惧与贪婪指数将七项市场行为指标等权合成，分数范围为 0–100。",
   "app.today.help_fng_reading": "分数越低，市场情绪越偏恐惧；越高则越偏贪婪。数字下方的文字说明这次读数属于哪个情绪区间。",
   "app.today.help_fng_limits": "它描述市场情绪，不预测下一次涨跌，也不直接告诉你何时交易。",
-  "app.today.help_kindex_meaning": "Ducky 的 K 指数 = CNN 恐惧与贪婪分数 ÷ VIX。例如情绪分数为 40、VIX 为 20，K 就是 2。",
+  "app.today.help_kindex_meaning": "Ducky 的 K 指数 = CNN 恐惧与贪婪分数 ÷ VIX。例如情绪分数为 40、VIX 为 20，K 就是 2。计算使用未四舍五入的原始读数，因此用卡片上的显示值相除，结果可能略有不同。",
   "app.today.help_kindex_reading": "情绪分数下降或 VIX 上升都会使 K 降低，反之则升高。看比值时，也要一起看它的两个组成读数。",
   "app.today.help_kindex_limits": "K 不是 IV/HV，也不是独立的交易信号。只有两项有效数据属于同一美东日期时才展示；各自的观测时间可能不同。",
   "app.today.help_term_meaning": "VIX / VIX3M 用标普 500 的 30 天隐含波动率除以三个月隐含波动率，比较两个期限的预期波动。",
