@@ -27,3 +27,7 @@ All phone checks are browser viewport/touch emulation, not physical-device tests
 ## Release and rollback
 
 Pending PR/main and canonical Pages receipt. Revert this frontend commit to restore the earlier presentation. Older backend snapshots safely show K unavailable. Backend release retains its normal signed gate; no manual restart, migration, paid work or producer activation belongs to this slice.
+
+## Published receipt
+
+Frontend PR #131 merged as `935900a191d12220a5ff4c74ca0d9a515a76e37b`; Pages `aedb9e2b`; canonical VERSION/CSP verified 2026-09-30T08:27:19Z. Production pointer checks confirmed capital records, research, creator content, META fund navigation and orange ticker styling. The additive K producer is tracked in backend PR #290; frontend availability follows the source-owned published snapshot.

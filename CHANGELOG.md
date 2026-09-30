@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-09-30 — Market reading help buttons
+
+Add visible question-mark buttons to all six Today market readings. Chinese and English explanations cover meaning, calculation, interpretation, source dates and missing readings; the small glyphs retain 44px tap targets, keyboard focus and theme contrast. Correct the liquidity help’s publication-clock and 60-point boundary wording. [Acceptance](reports/MARKET-HELP-2026-09-30.md).
+
 ## 2026-09-30 — Explore destinations and Today density
 
 - Default Explore to company/capital records with one consistent selected destination, working research/creator switches and preserved stock return context.

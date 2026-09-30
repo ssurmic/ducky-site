@@ -163,3 +163,22 @@ test('K reads the saved ratio with its formula and component clocks, never subst
  const zero=structuredClone(doc);zero.current_session.fear_greed.score=0;zero.current_session.k_index.value=0;zero.current_session.k_index.components[0].value=0;
  assert.equal(macroStrip(zero,{now}).querySelector('[data-tile=kindex] strong').textContent,'0.00');
 });
+
+test('all six visible market labels open named help dialogs and return keyboard focus, including missing K',()=>{
+ const doc=dashboardMacro();delete doc.current_session.k_index;
+ const box=macroStrip(doc,{now});document.querySelector('main').append(box);
+ const phrases={liquidity:'SOFR minus IORB',yield:'100 bp',vix:'annualized',fng:'seven equally weighted',kindex:'not IV/HV',term:'18 ÷ 20'};
+ try{
+  assert.equal(box.querySelectorAll('.today-metric-heading button').length,6);
+  assert.equal(box.querySelector('[data-tile=kindex] strong').textContent,'—');
+  for(const [key,phrase] of Object.entries(phrases)){
+   const button=box.querySelector('[data-tile='+key+'] .today-macro-help');
+   assert.equal(button.getAttribute('aria-haspopup'),'dialog');assert.ok(button.getAttribute('aria-label').length>5);
+   button.focus();button.click();const dialog=document.querySelector('[role=dialog]');
+   assert.ok(dialog.textContent.includes(phrase),key);assert.equal(dialog.getAttribute('aria-modal'),'true');
+   assert.equal(document.activeElement,dialog.querySelector('.modal-close'));
+   document.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+   assert.equal(document.querySelector('[role=dialog]'),null);assert.equal(document.activeElement,button);
+  }
+ }finally{box.remove();}
+});
