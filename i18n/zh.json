@@ -5791,5 +5791,6 @@
   "app.today.help_kindex_limits": "K 不是 IV/HV，也不是独立的交易信号。只有两项有效数据属于同一美东日期时才展示；各自的观测时间可能不同。",
   "app.today.help_term_meaning": "VIX / VIX3M 用标普 500 的 30 天隐含波动率除以三个月隐含波动率，比较两个期限的预期波动。",
   "app.today.help_term_reading": "低于 1 表示 30 天读数较低；高于 1 表示较高；等于 1 表示两者相同。例如 18 ÷ 20 = 0.90。",
-  "app.today.help_term_limits": "这是波动期限的比较，不是股票收益率，也不是 VIX 期货价格之比。单看这个比值无法预测市场方向。"
+  "app.today.help_term_limits": "这是波动期限的比较，不是股票收益率，也不是 VIX 期货价格之比。单看这个比值无法预测市场方向。",
+  "app.today.macro_help_meaning": "Ducky 用 0–100 分概括美元短期资金面的松紧。分数越高，资金条件相对越宽松；这是综合分数，不是美元金额或市场涨跌幅。"
 }

@@ -31,7 +31,7 @@ export function liquidityHelp(latest){
   const beta=OK(latest?.beta_score)?num(latest.beta_score,0):'—';
   const regime=['supportive','mixed','adverse'].includes(latest?.regime)?latest.regime:'unknown';
   return el('button.watch-signal-help.today-macro-help',{type:'button','aria-haspopup':'dialog','aria-label':s('today.macro_help_label'),'data-reading-key':'macro-help:liquidity',
-    onclick:()=>modal(s('today.macro_help_label'),el('div.watch-signal-help-body',el('p',s('today.macro_help_intro')),
+    onclick:()=>modal(s('today.macro_help_label'),el('div.watch-signal-help-body',el('p',s('today.macro_help_meaning')),el('p',s('today.macro_help_intro')),
       el('ul',...['spread','tail','srf','net'].map(k=>el('li',s('today.macro_help_'+k)))),el('p',s('today.macro_help_bands')),
       el('p.small.muted',s('today.macro_help_backdrop',{beta,regime:s('today.macro_regime_'+regime)})),el('p.small.muted',s('today.macro_help_sources')),el('p.small.muted',s('today.metric_help_dates'))))},el('span',{'aria-hidden':'true'},'?'));
 }

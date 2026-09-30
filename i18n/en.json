@@ -5791,5 +5791,6 @@
   "app.today.help_kindex_limits": "K is not IV/HV or a standalone trading signal. We show it only when both validated inputs cover the same New York date; their observation times can differ.",
   "app.today.help_term_meaning": "VIX / VIX3M compares the S&P 500’s 30-day implied volatility with its three-month implied volatility.",
   "app.today.help_term_reading": "Below 1 means the 30-day reading is lower; above 1 means it is higher. At 1 the readings are equal. For example, 18 ÷ 20 = 0.90.",
-  "app.today.help_term_limits": "This compares volatility horizons, not stock returns or VIX futures prices. The ratio alone does not predict market direction."
+  "app.today.help_term_limits": "This compares volatility horizons, not stock returns or VIX futures prices. The ratio alone does not predict market direction.",
+  "app.today.macro_help_meaning": "Ducky summarizes short-term U.S. dollar funding conditions on a 0–100 scale. A higher score means relatively looser funding conditions. It is a composite score, not a dollar amount or a market return."
 }
