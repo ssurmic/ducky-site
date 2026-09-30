@@ -1,18 +1,18 @@
 /* Production watchlist workspace. Existing quote, research and source components keep their states. */
 /* Four reading choices have their own row; search is a separate task below. */
 .watchlist-view .watch-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;margin:12px 0;gap:10px}
-.watchlist-view .watch-controls .watch-modes{grid-column:1/-1;grid-row:1;justify-self:stretch;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:0;background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.watchlist-view .watch-controls .watch-modes .btn{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;min-height:78px;min-width:0;padding:12px 16px;border:0;border-radius:0;border-bottom:3px solid transparent;background:transparent;white-space:normal;text-align:left;color:var(--text);box-shadow:none}
-.watchlist-view .watch-controls .watch-modes .btn+.btn{border-left:1px solid var(--border)}
-.watchlist-view .watch-controls .watch-modes .btn:hover{background:var(--surface-2)}
-.watchlist-view .watch-controls .watch-modes [aria-pressed=true]{background:var(--surface-2);border-bottom-color:var(--accent)}
+.watchlist-view .watch-modes{grid-column:1/-1;grid-row:1;justify-self:stretch;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:0;background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.watchlist-view .watch-modes .btn{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;min-height:78px;min-width:0;padding:12px 16px;border:0;border-radius:0;border-bottom:3px solid transparent;background:transparent;white-space:normal;text-align:left;color:var(--text);box-shadow:none}
+.watchlist-view .watch-modes .btn+.btn{border-left:1px solid var(--border)}
+.watchlist-view .watch-modes .btn:hover{background:var(--surface-2)}
+.watchlist-view .watch-modes [aria-pressed=true]{background:var(--surface-2);border-bottom-color:var(--accent)}
 .watchlist-view .watch-mode-title{font-size:17px;font-weight:700;line-height:1.3}
 .watchlist-view [aria-pressed=true] .watch-mode-title{color:var(--accent-text,var(--accent))}
 .watchlist-view .watch-mode-purpose{font-size:13px;font-weight:400;line-height:1.4;color:var(--muted)}
-.watchlist-view .watch-controls .watch-modes .btn:focus-visible{outline:2px solid var(--accent);outline-offset:-4px}
-.watchlist-view .watch-controls .watch-search{grid-column:1;grid-row:2;width:100%;min-width:0}
-.watchlist-view .watch-controls>button{grid-column:2;grid-row:2;min-height:44px}
-.watchlist-view .watch-controls>select{grid-column:1/-1;grid-row:3}
+.watchlist-view .watch-modes .btn:focus-visible{outline:2px solid var(--accent);outline-offset:-4px}
+.watchlist-view .watch-controls .watch-search{grid-column:1;grid-row:1;width:100%;min-width:0}
+.watchlist-view .watch-controls>button{grid-column:2;grid-row:1;min-height:44px}
+.watchlist-view .watch-controls>select{grid-column:1/-1;grid-row:2}
 .watch-mode-note{margin:0 0 12px;line-height:1.6;max-width:100ch}
 .watch-mode-note a{white-space:nowrap}
 .watch-stock-actions{display:flex;gap:3px;align-items:center;flex-wrap:wrap;margin-top:5px}
@@ -117,12 +117,12 @@
  .watchlist-view>.view-head .count{font-size:11px}
  .watchlist-view .watch-add-options>summary{font-size:12px;min-height:44px;display:flex;align-items:center}
  .watchlist-view .watch-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px;margin:4px 0 6px}
- .watchlist-view .watch-controls .watch-modes{grid-template-columns:repeat(4,minmax(0,1fr));width:100%}
- .watchlist-view .watch-controls .watch-modes .btn{min-height:44px;padding:6px 3px;align-items:center;text-align:center}
+ .watchlist-view .watch-modes{grid-template-columns:repeat(4,minmax(0,1fr));width:100%}
+ .watchlist-view .watch-modes .btn{min-height:44px;padding:6px 3px;align-items:center;text-align:center}
  .watchlist-view .watch-mode-title{font-size:12px}
  .watchlist-view .watch-mode-purpose{display:none}
- .watchlist-view .watch-controls .watch-search{grid-column:1;grid-row:2;min-width:0;width:100%}
- .watchlist-view .watch-controls>button{grid-column:2;grid-row:2;min-width:44px;padding-inline:9px}
+ .watchlist-view .watch-controls .watch-search{grid-column:1;grid-row:1;min-width:0;width:100%}
+ .watchlist-view .watch-controls>button{grid-column:2;grid-row:1;min-width:44px;padding-inline:9px}
  .watchlist-view .watch-controls .watch-filter{font-size:16px;min-height:44px}
  .watch-mode-note{font-size:11px;line-height:1.4;margin:0 0 5px}
  .watchlist-view .watch-strip{font-size:11px;line-height:1.4;gap:2px 8px;margin:2px 0 5px}

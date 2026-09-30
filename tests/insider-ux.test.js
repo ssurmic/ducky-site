@@ -42,10 +42,12 @@ test('rapid archive side flips fence old responses and keep failure distinct fro
  try{
   defer=true;root.querySelector('[data-insider-direction="1"]').click();root.querySelector('[data-insider-direction="-1"]').click();
   assert.equal(root.querySelector('.radar-records').getAttribute('aria-busy'),'true');assert.equal(root.querySelector('.radar-empty'),null);
+  assert.equal(root.querySelector('.radar-result-summary').textContent,copy['app.common.loading']);
   pending[1].resolve(response(envelope([row('sale','sell')])));await flush();pending[0].resolve(response(envelope([row('stale-buy')])));await flush();
   assert.ok(root.querySelector('[data-record-id=sale]'));assert.equal(root.querySelector('[data-record-id=stale-buy]'),null);
   root.querySelector('[data-insider-direction=""]').click();pending[2].resolve(new Response('{}',{status:503,headers:{'content-type':'application/json'}}));await flush();
   assert.match(root.querySelector('.radar-empty').textContent,/load|unavailable|retry/i);assert.doesNotMatch(root.querySelector('.radar-empty').textContent,/No records match/);
+  assert.equal(root.querySelector('.radar-result-summary').textContent,copy['app.boards.load_error']);
  }finally{cleanup();}
 });
 test('search auto-applies in archive without a second Apply click',async()=>{
@@ -146,6 +148,26 @@ test('changing to Funds during the first pending All read starts and renders its
  root.querySelector('[data-board=funds]').click();assert.equal(root.querySelector('.radar-records').getAttribute('aria-busy'),'true');
  first(response(envelope([row('old-all')])));const cleanup=await mounted;
  try{await new Promise(r=>setTimeout(r,230));await flush();assert.ok(calls.some(url=>url.includes('kind=13f')));assert.ok(root.querySelector('[data-record-id=initial-fund]'));assert.equal(root.querySelector('[data-record-id=old-all]'),null);}finally{cleanup();root.remove();}
+});
+
+test('first load and route refresh announce unknown counts until success, including actual zero',async()=>{
+ store.set('me',{tier:'free'});store.set('route',{name:'boards'});
+ for(const items of [[row('loaded')],[]]){
+  let resolveRead;
+  globalThis.fetch=async url=>String(url).includes('/radar/archive')?new Promise(resolve=>resolveRead=resolve):response(envelope([]));
+  const root=document.createElement('section');document.body.append(root);
+  const mounted=mount(root,{query:new URLSearchParams('board=insider')});
+  assert.equal(root.querySelector('.radar-result-summary').textContent,copy['app.common.loading']);
+  assert.equal(root.querySelector('.radar-records').getAttribute('aria-busy'),'true');
+  assert.equal(root.querySelector('.radar-empty'),null);
+  resolveRead(response(envelope(items)));const cleanup=await mounted;
+  try{
+   assert.equal(root.querySelector('.radar-records').getAttribute('aria-busy'),'false');
+   assert.equal(root.querySelector('.radar-result-summary').textContent,copy['app.radar.result_count'].replace('{n}',items.length).replace('{stocks}',items.length));
+   assert.equal(root.querySelectorAll('.radar-record').length,items.length);
+   assert.equal(Boolean(root.querySelector('.radar-empty')),!items.length);
+  }finally{cleanup();root.remove();}
+ }
 });
 
 test('the desktop activity categories override the legacy hidden sidebar without changing reports',()=>{

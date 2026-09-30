@@ -1,5 +1,9 @@
 # UX change and integration register
 
+## Professional reading system and persistent navigation · 2026-09-30
+
+The owner requires phone/desktop and dark/light parity. A common type/color system, neutral stock identities and persistent workspace choices accompany dense tables, aligned figures and reduced decoration. [Rationale](professional-reading-system.md) and [acceptance](../../reports/PROFESSIONAL-UI-2026-09-30.md) retain the validation and release boundary.
+
 ## Workspace density and discoverable research · 2026-09-30 (PR #128)
 
 Four visible Watchlist/source choices, compact phone navigation and prominent Company activity are combined with a shared title/subtitle/spacing scale across desktop and phone. Calendar monthly history is a compact comparison table with full interpretation and annual records on expansion. Stock actions/profile alignment and the English record count are repaired. [Discoverability evidence](../../reports/DISCOVERABLE-VIEWS-2026-09-29.md) and [full workspace/first-use acceptance](../../reports/WORKSPACE-DENSITY-2026-09-30.md) distinguish local checks from the authorized production release.

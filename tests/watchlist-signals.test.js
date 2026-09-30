@@ -177,7 +177,7 @@ test('the watchlist metric comparison retains five sortable signal columns from 
  assert.equal(calls.length,reads,'switching comparisons reuses the same saved responses');
  const first=root.querySelector('tbody tr');
  assert.equal(first.querySelectorAll('.watch-signal').length,5);
- assert.deepEqual([...root.querySelectorAll('thead .watch-signal-col .watch-sort-label')].map(n=>n.textContent),['Insider activity','Large fund activity','Politician trades','Option walls','Support refs']);
+ assert.deepEqual([...root.querySelectorAll('thead .watch-signal-col .watch-sort-label')].map(n=>n.textContent),['Insider activity','Large fund activity','Politician trades','Option walls','Support levels']);
  assert.equal(root.querySelectorAll('thead .watch-signal-col .watch-signal-help').length,5);
  root.querySelector('thead [data-signal=funds] .watch-signal-help').click();
  assert.match(document.querySelector('.modal-body').textContent,/quarter-end snapshot/);assert.match(document.querySelector('.modal-body').textContent,/since 2026-08-13/);closeModal();

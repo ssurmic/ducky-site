@@ -6,8 +6,9 @@ const base=process.env.QA_BASE||'http://127.0.0.1:8953';
 await mkdir(output,{recursive:true});
 const routes=process.env.QA_ROUTES?.split(',')||['today','watchlist','explore','calendar','creators','boards','stock/NVDA','evidence/NVDA','chart/NVDA','briefing','research','reports','alerts','profile','billing','login','register','forgot','opportunities','vibe','macro','screens','updates','record/sec%3Aux%3Abuy'];
 const browser=await chromium.launch(),results=[];
-for(const width of [320,390,820,1440])for(const lang of ['zh','en'])for(const theme of ['dark','light']){
- const context=await browser.newContext({viewport:{width,height:width===320?600:width===390?700:900},hasTouch:width<500,isMobile:width<500,reducedMotion:'reduce'});
+const widths=process.env.QA_WIDTHS?.split(',').map(Number)||[320,390,820,1440];
+for(const width of widths)for(const lang of ['zh','en'])for(const theme of ['dark','light']){
+ const context=await browser.newContext({viewport:{width,height:Number(process.env.QA_HEIGHT)||(width===320?600:width===390?700:900)},hasTouch:width<500||process.env.QA_TOUCH==='1',isMobile:width<500||process.env.QA_TOUCH==='1',reducedMotion:'reduce'});
  const page=await context.newPage();
  for(const route of routes){
   const errors=[];const onError=error=>errors.push(error.message);page.on('pageerror',onError);
@@ -23,6 +24,7 @@ for(const width of [320,390,820,1440])for(const lang of ['zh','en'])for(const th
      headings:[...document.querySelectorAll('.route-page h1,.route-page h2')].filter(visible).slice(0,12).map(e=>({text:e.textContent,tag:e.tagName,font:getComputedStyle(e).fontSize,line:getComputedStyle(e).lineHeight,...box(e)})),
      subtitles:[...document.querySelectorAll('h1+p,.focus-heading p,.calendar-intro,.view-intro')].filter(visible).map(e=>({text:e.textContent,font:getComputedStyle(e).fontSize,...box(e)})),
      buttons:[...document.querySelectorAll('.route-page button,.route-page summary')].filter(visible).slice(0,35).map(e=>({text:e.textContent.slice(0,70),...box(e)})),
+     fontFamilies:[...new Set([...document.querySelectorAll('.route-page *')].filter(e=>visible(e)&&!e.children.length&&e.textContent.trim()&&!e.closest('pre,code,kbd')).map(e=>getComputedStyle(e).fontFamily))],
      charts:[...document.querySelectorAll('.tv-lightweight-charts canvas')].filter(visible).length,
      body:document.querySelector('.route-page').innerText.slice(0,2500)};
    });
