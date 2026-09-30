@@ -5756,5 +5756,9 @@
   "app.radar.ux.all_activity": "All activity",
   "app.radar.ux.scope_recent": "7 days",
   "app.radar.ux.scope_archive": "Archive",
-  "app.radar.ux.scope_excerpts": "Excerpts"
+  "app.radar.ux.scope_excerpts": "Excerpts",
+  "app.radar.ux.short_insider": "Insiders",
+  "app.radar.ux.short_funds": "Funds",
+  "app.radar.ux.short_political": "Political",
+  "app.radar.ux.short_company": "Company"
 }

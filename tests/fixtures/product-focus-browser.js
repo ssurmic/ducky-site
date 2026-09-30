@@ -182,6 +182,7 @@ const uxReview=(()=>{
   record('company:ux:index','index','AVGO',2,{publisher:'Sample index notice',effective_at:ago(-5),facts:{},message_zh:'合成指数公告：生效日与公告日期分别展示。',message_en:'Synthetic index notice: The effective date is separate from publication.'}),
   record('sec:ux:missing','insider','GLW',3,{source_published_at:null,facts:{form:'4',side:'buy',owners:[{name:'Sample Director C'}]}}),
  ];
+ if(query.get('density')==='1')rows.push(...Array.from({length:7},(_,i)=>{const ticker=['AMD','AVGO','GLW','NVDA'][i%4];return {...rows[0],id:'sec:density:'+i,ticker,issuer_name:'Synthetic '+ticker+' Company'};}));
  const reply=(path,params)=>{
   if(path==='/alerts')return {items:[]};
   if(path==='/screens')return {items:[],cap:10,active_ids:[],evaluation_enabled:true};

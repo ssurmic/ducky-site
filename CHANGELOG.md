@@ -6,7 +6,7 @@ Insider filings use immediate All / Buy / Sell controls, exact market-cap chips 
 
 ## Prominent research and company activity entrances · 2026-09-29 (candidate)
 
-Show all four Watchlist views and all four company activity categories without sideways navigation. Separate search from view choice, lead Explore with Companies & capital, and retain All activity as a secondary route. Plain company activity visits start on Insiders; existing scoped links keep their meaning. Repair the inherited desktop category hiding rule. [Design, validation and release boundary](reports/DISCOVERABLE-VIEWS-2026-09-29.md).
+Show all four Watchlist views and all four company activity categories without sideways navigation. Separate search from view choice, lead Explore with Companies & capital, and retain All activity as a secondary route. Plain company activity visits start on Insiders; existing scoped links keep their meaning. Repair the inherited desktop category hiding rule. Phone choices fit one compact row with 12px labels, 18px headings and 44px targets; tighter record spacing brings more facts into the first screen. [Design, validation and release boundary](reports/DISCOVERABLE-VIEWS-2026-09-29.md).
 
 ## Reviewed video views beside stock maps · 2026-09-29 (released PR #125)
 

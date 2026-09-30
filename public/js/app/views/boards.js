@@ -365,9 +365,9 @@ export async function mount(root, route={}) {
       const count=board.key==='all'?available.length:available.filter(r=>matchesBoard(r,board.key)).length;
       const primary=!reports&&EVENT_BOARDS.some(item=>item.key===board.key);
       const destination=reports||primary?nav:otherCategories;
-      destination.append(el('button.radar-category',{type:'button','aria-pressed':String(board.key===state.board),'data-board':board.key,onclick:()=>chooseCategory(board.key)},
+      destination.append(el('button.radar-category',{type:'button','aria-pressed':String(board.key===state.board),'data-board':board.key,...(primary?{'aria-label':boardLabel(board.key)}:{}),onclick:()=>chooseCategory(board.key)},
         icon(board.icon || (board.key==='all'?'boards':board.key)),
-        primary?el('span.radar-category-copy',el('strong',boardLabel(board.key)),el('span',s('radar.ux.purpose_'+board.key))):el('span',s(!reports&&board.key==='all'?'radar.ux.all_activity':board.key==='all'?'radar.all':'boards.t_'+board.key)),
+        primary?el('span.radar-category-copy',el('strong.radar-category-full',boardLabel(board.key)),el('strong.radar-category-short',{'aria-hidden':'true'},s('radar.ux.short_'+board.key)),el('span',s('radar.ux.purpose_'+board.key))):el('span',s(!reports&&board.key==='all'?'radar.ux.all_activity':board.key==='all'?'radar.all':'boards.t_'+board.key)),
         // Archive counts cover the current server query only; don't imply other categories are empty.
         state.mode!=='excerpts'?null:el('span.radar-count',hasError?'—':String(count))));
     }

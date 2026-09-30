@@ -113,16 +113,14 @@
 @media(max-width:580px){
  .watchlist-view{font-size:13px;line-height:1.5}
  .watchlist-view>.view-head{gap:6px;margin-bottom:2px}
- .watchlist-view>.view-head h1{font-size:20px;line-height:1.25;margin:0}
+ .watchlist-view>.view-head h1{font-size:18px;line-height:1.25;margin:0}
  .watchlist-view>.view-head .count{font-size:11px}
  .watchlist-view .watch-add-options>summary{font-size:12px;min-height:44px;display:flex;align-items:center}
  .watchlist-view .watch-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px;margin:4px 0 6px}
- .watchlist-view .watch-controls .watch-modes{grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
- .watchlist-view .watch-controls .watch-modes .btn{min-height:62px;padding:8px 11px;gap:2px}
- .watchlist-view .watch-controls .watch-modes .btn:nth-child(odd){border-left:0}
- .watchlist-view .watch-controls .watch-modes .btn:nth-child(n+3){border-top:1px solid var(--border)}
- .watchlist-view .watch-mode-title{font-size:15px}
- .watchlist-view .watch-mode-purpose{font-size:12px;line-height:1.35}
+ .watchlist-view .watch-controls .watch-modes{grid-template-columns:repeat(4,minmax(0,1fr));width:100%}
+ .watchlist-view .watch-controls .watch-modes .btn{min-height:44px;padding:6px 3px;align-items:center;text-align:center}
+ .watchlist-view .watch-mode-title{font-size:12px}
+ .watchlist-view .watch-mode-purpose{display:none}
  .watchlist-view .watch-controls .watch-search{grid-column:1;grid-row:2;min-width:0;width:100%}
  .watchlist-view .watch-controls>button{grid-column:2;grid-row:2;min-width:44px;padding-inline:9px}
  .watchlist-view .watch-controls .watch-filter{font-size:16px;min-height:44px}

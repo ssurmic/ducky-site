@@ -16,7 +16,7 @@ for(const [width,height] of [[320,600],[390,700],[820,900],[1440,900]]){
    const onError=error=>errors.push(error.message);page.on('pageerror',onError);
    try{
     const fixture=route==='watchlist'?'watchlist-management':route==='explore'?'explore-grid':'ux-review';
-    await page.goto(`${base}/qa-frame?lang=${lang}&theme=${theme}&route=${route}&case=${fixture}`);
+    await page.goto(`${base}/qa-frame?lang=${lang}&theme=${theme}&route=${route}&case=${fixture}&density=1`);
     const selector=route==='watchlist'?'.watch-modes button':route==='explore'?'.explore-primary-tools>a':'.radar-categories button';
     await page.locator(selector).last().waitFor();
     await page.evaluate(()=>document.fonts.ready);await page.waitForTimeout(350);
@@ -38,9 +38,13 @@ for(const [width,height] of [[320,600],[390,700],[820,900],[1440,900]]){
      assert.ok(control.height>=44&&control.width>=44,label+' touch target');
      assert.ok(control.x>=0&&control.x+control.width<=width+1,label+' hidden entry');
      assert.ok(control.bottom<height-50,label+' entry below fold');
-     assert.ok(control.titleSize>=15,label+' small title');
+     assert.ok(control.titleSize>=(width<=760?12:15),label+' small title');
     }
     assert.ok(measurement.visibleRows>=1&&measurement.visibleContentHeight>=48,label+' no readable record in first screen');
+    if(width<500){
+     assert.ok(measurement.controls.every(control=>Math.abs(control.y-measurement.controls[0].y)<1),label+' primary choices must share one row');
+     if(route==='boards')assert.ok(measurement.visibleContentHeight>=(width===320?180:280),label+' insufficient phone reading space');
+    }
     await page.screenshot({path:`${output}/${label}.png`});
     if(route==='watchlist'){
      const reads=await page.evaluate(()=>JSON.parse(document.querySelector('#qa-status').textContent).requests.length);
