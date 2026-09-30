@@ -1,5 +1,12 @@
 # Change log
 
+## 2026-09-30 — Explore destinations and Today density
+
+- Default Explore to company/capital records with one consistent selected destination, working research/creator switches and preserved stock return context.
+- Put company disclosure links above stock research tabs; use orange stock identities in both themes.
+- Add source-dated K (CNN Fear & Greed / VIX) and term-ratio readings; compact Today cards and preserve full source details.
+- [Acceptance and release status](reports/EXPLORE-TODAY-2026-09-30.md).
+
 ## Complete values in compact Indicators columns · 2026-09-30
 
 Allow net transaction amounts, fund add/trim counts and option-wall distances to wrap inside the compact comparison columns. This fixes clipping found during the final screenshot review of released PR #129 while retaining compact rows and complete source dialogs. [Checks and release boundary](reports/INDICATOR-VALUES-2026-09-30.md).

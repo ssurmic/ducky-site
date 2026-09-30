@@ -93,12 +93,16 @@ body.page-app .radar-activity-workspace .radar-record-title{line-height:1.5}
 body.page-app .radar-activity-workspace .radar-filters{border-radius:6px;padding:8px;margin-bottom:8px}
 body.page-app .radar-activity-workspace .radar-day{margin:14px 0 6px}
 body.page-app .explore-primary-tools{gap:0;margin:8px 0 12px;border:1px solid var(--border);border-radius:6px}
-body.page-app .explore-primary-tools>a{border:0;border-radius:0;min-height:64px;padding:8px 12px;border-bottom:2px solid transparent}
+body.page-app .explore-primary-tools>a{border:0;border-radius:0;min-height:44px;padding:8px 12px;border-bottom:2px solid transparent}
 body.page-app .explore-primary-tools>a+a{border-left:1px solid var(--border)}
-body.page-app .explore-primary-tools .explore-activity-entry{border-bottom:2px solid var(--accent)}
+body.page-app .explore-primary-tools>a[aria-current=page]{border-bottom-color:var(--accent);background:var(--surface-2);color:var(--accent-text)}
+/* Categories remain pinned on activity pages; the destination row scrolls away
+   so two independently sticky rows cannot overlap or consume the phone viewport. */
+body.page-app .radar-activity-workspace>.explore-primary-tools{position:static}
+body.page-app .stock-disclosure-label{font-size:12px;color:var(--muted)}
 body.page-app .explore-destination-copy{gap:3px}
 body.page-app .explore-destination-copy>strong{font-size:15px;font-weight:650}
-body.page-app .explore-destination-copy>span{font-size:12px}
+body.page-app .explore-destination-copy>span{display:none}
 body.page-app .explore-entry-arrow{display:none}
 body.page-app .explore-primary-tools .app-icon{width:18px;height:18px}
 body.page-app .explore-mention-count{font-size:20px}
@@ -191,11 +195,18 @@ body.page-index .home-logo-orbit{display:none}
 @media(max-width:760px){body.page-index .section{padding-block:28px}body.page-index .home-composition{padding-top:12px;gap:24px}}
 /* Market overview: charts and exact legends fit alongside their source clocks. */
 body.page-app .today-macro.has-current-dashboard{padding:12px 16px 6px;border-radius:8px}
-body.page-app .today-dashboard-metrics{margin:10px 0 12px}
+body.page-app .today-dashboard-metrics{margin:10px 0 12px;grid-template-columns:repeat(6,minmax(0,1fr))}
 body.page-app .today-dashboard-metric{padding:10px 12px;gap:4px}
 body.page-app .today-dashboard-metric .today-macro-value{font-size:24px}
 body.page-app .today-dashboard-chart .today-lines{max-height:180px}
 body.page-app .today-dashboard-charts{gap:16px}
+body.page-app .change-card>summary,body.page-app .today-analysis>summary{padding:10px 12px;gap:6px 12px}
+body.page-app .today-updates .change-list{gap:6px}
+body.page-app .change-card{border-radius:6px}
+@media(min-width:1200px){
+ body.page-app .today-updates .change-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.page-app .today-updates .change-list>:not(.change-card),body.page-app .today-updates .change-list>.change-card[open]{grid-column:1/-1}
+}
 body.page-app .today-lines-line:is(.is-liquidity,.is-yield){stroke:var(--accent-text)}
 body.page-app .today-lines-dot:is(.is-liquidity,.is-yield){fill:var(--accent-text)}
 body.page-app :is(.today-lines-key,.today-lines-tip-row):is(.is-liquidity,.is-yield) i{background:var(--accent-text)}
@@ -205,6 +216,12 @@ body:not(.page-app) .page-track{padding-top:24px}
 body:not(.page-app) #ledger :is(th,td){padding:10px 12px}
 @media(max-width:760px){
  body.page-app .today-macro.has-current-dashboard{padding:10px}
+ body.page-app .has-current-dashboard .today-session-head{gap:4px}
+ body.page-app .has-current-dashboard .today-session-head>span:last-child{font-size:11px}
+ body.page-app .today-dashboard-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+ body.page-app .today-dashboard-metric{border-right:1px solid var(--border);border-top:0}
+ body.page-app .today-dashboard-metric:nth-child(3n){border-right:0}
+ body.page-app .today-dashboard-metric:nth-child(n+4){border-top:1px solid var(--border)}
  body.page-app .today-dashboard-metric{padding:8px;gap:3px}
  body.page-app .today-dashboard-metric .today-macro-value{font-size:22px}
  body.page-app .today-dashboard-chart .today-lines{max-height:150px}

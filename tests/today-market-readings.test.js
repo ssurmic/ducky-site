@@ -77,7 +77,7 @@ test('ratio dates and components must be usable; missing ratio leaves its color 
 
 test('missing canonical metrics do not hide a separately readable metric or reuse an old score',()=>{
  const doc=documentFixture();doc.market_readings.metrics={nominal_10y:saved(0,{observed_at:null,live:null})};delete doc.latest;
- const strip=macroStrip(doc);assert.equal(strip.querySelectorAll('.today-macro-tile').length,4);
+ const strip=macroStrip(doc);assert.equal(strip.querySelectorAll('.today-macro-tile').length,6);
  assert.equal(strip.querySelector('[data-tile=yield] .today-macro-value').textContent,'0.00%');
  assert.equal(strip.querySelector('[data-tile=liquidity] .today-macro-value').textContent,'—/100');
  assert.equal(strip.querySelector('[data-tile=yield] .today-macro-recorded'),null);

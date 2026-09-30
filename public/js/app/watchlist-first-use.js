@@ -15,7 +15,7 @@ export function watchlistStarters({signal,current=()=>true,watched=()=>[],action
   const status=el('div.watch-starters-status',{'aria-live':'polite'});
   const list=el('div.watch-starters-list');
   const done=el('button.btn.btn-primary.watch-starters-done',{type:'button',hidden:true,onclick:()=>{if(valid()&&!pending)onDone?.();}});
-  const more=el('a',{href:'#/explore'},s('watch.first_use_more'));
+  const more=el('a',{href:'#/explore?tab=research'},s('watch.first_use_more'));
   const node=el('section.watch-first-use',{'aria-label':s('explore.discussion_title')},
     el('header.watch-starters-heading',el('h2',s('explore.discussion_title')),
       more,done),date,

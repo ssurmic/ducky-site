@@ -19,6 +19,7 @@ for(const [width,height] of [[320,600],[390,700],[820,900],[1440,900]]){
     await page.goto(`${base}/qa-frame?lang=${lang}&theme=${theme}&route=${route}&case=${fixture}&density=1`);
     const selector=route==='watchlist'?'.watch-modes button':route==='explore'?'.explore-primary-tools>a':'.radar-categories button';
     await page.locator(selector).last().waitFor();
+    if(route==='explore')await page.locator('[data-explore-destination=research]').click();
     await page.evaluate(()=>document.fonts.ready);await page.waitForTimeout(350);
     const measurement=await page.evaluate(({selector,route})=>{
      const box=node=>{const r=node.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height,bottom:r.bottom};};
@@ -69,7 +70,7 @@ for(const [width,height] of [[320,600],[390,700],[820,900],[1440,900]]){
       assert.equal(new URLSearchParams(new URL(page.url()).hash.split('?')[1]).get('board'),key);
      }
     }else{
-     await page.locator('.explore-activity-entry').click();await page.locator('.radar-categories').waitFor();
+     await page.locator('[data-explore-destination=activity]').click();await page.locator('.radar-categories').waitFor();
      assert.equal(await page.locator('button[data-board=insider]').getAttribute('aria-pressed'),'true');
     }
     assert.deepEqual(errors,[]);results.push({label,status:'passed',...measurement});

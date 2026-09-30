@@ -1,4 +1,4 @@
-// today-macro.js — four market-level references at the top of Today, read from the saved macro
+// today-macro.js — compact market references at the top of Today, read from the saved macro
 // backdrop (GET /macro/beta, produced once a day off the request path). Descriptive numbers with
 // their own dates: no forecast, no threshold advice.
 import {el,modal} from './ui.js';
@@ -9,7 +9,7 @@ import {gauge,bandFor} from './today-gauge.js';
 import {dailyPairs,summary,normalizedLines,sparkLines,cursorIndex,PRIMARY} from './today-spark.js';
 import {digestPreview} from './today-preview.js';
 import {material} from './shared-read-refresh.js';
-import {hasCanonicalReadings,canonicalReading} from './today-market-readings.js';
+import {hasCanonicalReadings,canonicalReading,kIndexReading} from './today-market-readings.js';
 import {currentSession,sessionOverview,sessionMacro} from './today-session.js';
 import {summaryFixed} from './today-fixed.js';
 
@@ -148,6 +148,7 @@ export function macroTiles(doc,{currentSnapshot=false}={}){
   const ratio=term.value;
   const rating=RATINGS[String(fng?.rating||'').toLowerCase()];
   const fngWord=rating?s('today.fng_'+rating):OK(fng?.score)?bandFor(FNG_BANDS(),fng.score).label:null;
+  const k=kIndexReading(doc);
   return [
     {key:'liquidity',label:s('today.macro_liquidity'),value:OK(funding.value)?metricNumber(funding.value,0):'—',unit:s('today.macro_score_unit'),
      tone:band==='supportive'?'up':band==='adverse'?'down':band==='mixed'?'mid':'flat',help:liquidityHelp(latest),
@@ -158,11 +159,17 @@ export function macroTiles(doc,{currentSnapshot=false}={}){
     {key:'yield',label:s('today.macro_10y'),value:OK(y10.value)?metricNumber(y10.value,2)+'%':'—',unit:'',tone:'flat',stamp:y10.stamp,recorded:y10.recorded,
      note:OK(bp)?s('today.macro_10y_change',{bp:signed(bp)})+(yRows.at(-1)?.date?' · '+yRows.at(-1).date:''):s('today.macro_no_change'),
      lines:linesFor(doc,'yield')},
-    {key:'vix',label:s('today.macro_vix'),value:OK(vix.value)?metricNumber(vix.value,1):'—',unit:'',tone:OK(ratio)?(ratio>1?'down':'up'):'flat',stamp:vix.stamp,recorded:vix.recorded,ratioStamp:canonical&&OK(ratio)?s('today.reading_ratio',{reading:term.stamp}):null,ratioRecorded:term.recorded,
-     note:OK(ratio)?s('today.macro_vix_ratio',{ratio:num(ratio,2)})+' · '+s(ratio>1?'today.macro_vix_stress':'today.macro_vix_calm'):s('today.macro_vix_missing')},
+    {key:'vix',label:s('today.macro_vix'),value:OK(vix.value)?metricNumber(vix.value,1):'—',unit:'',tone:OK(ratio)?(ratio>1?'down':ratio<1?'up':'flat'):'flat',stamp:vix.stamp,recorded:vix.recorded,ratioStamp:canonical&&OK(ratio)?s('today.reading_ratio',{reading:term.stamp}):null,ratioRecorded:term.recorded,
+     note:OK(ratio)?s('today.macro_vix_ratio',{ratio:num(ratio,2)})+' · '+s(ratio>1?'today.macro_vix_stress':ratio<1?'today.macro_vix_calm':'today.macro_vix_equal'):s('today.macro_vix_missing')},
     {key:'fng',label:s('today.macro_fng'),value:OK(fng?.score)?num(fng.score,0):'—',unit:'',tone:OK(fng?.score)?(fng.score<45?'down':fng.score>55?'up':'mid'):'flat',
      gauge:{name:s('today.macro_fng'),score:OK(fng?.score)?fng.score:null,bands:FNG_BANDS(),word:fngWord||''},history:fngHistory(fng),
-     note:fng&&OK(fng.score)?[fngWord,OK(fng.previous_close)?s('today.macro_fng_prev',{value:num(fng.previous_close,0)}):null].filter(Boolean).join(' · '):s('today.macro_fng_missing')}];
+     note:fng&&OK(fng.score)?[fngWord,OK(fng.previous_close)?s('today.macro_fng_prev',{value:num(fng.previous_close,0)}):null].filter(Boolean).join(' · '):s('today.macro_fng_missing')},
+    {key:'kindex',label:s('today.k_index'),value:k?metricNumber(k.value,2):'—',unit:'',tone:'flat',
+     note:s('today.k_formula'),stamp:k?s('today.macro_tile_as_of',{date:k.date}):s(doc?.k_index?.reason==='session_mismatch'?'today.k_misaligned':'today.k_missing'),
+     recorded:k?s('today.k_components',{score:num(k.components[0].value,2),vix:num(k.components[1].value,2),fearAt:writtenAt(k.components[0].as_of),vixDate:k.components[1].date}):null,
+     explanation:s('today.k_explanation')},
+    {key:'term',label:s('today.term_ratio'),value:OK(ratio)?metricNumber(ratio,2):'—',unit:'',tone:OK(ratio)?(ratio>1?'down':ratio<1?'up':'flat'):'flat',
+     stamp:term.stamp,recorded:term.recorded,note:OK(ratio)?s(ratio>1?'today.macro_vix_stress':ratio<1?'today.macro_vix_calm':'today.macro_vix_equal'):s('today.macro_vix_missing')}];
 }
 
 function historyList(rows){
@@ -271,23 +278,24 @@ function currentDashboard(box,overview,doc,digest,state,now){
   const sources=overview.querySelector('.today-session-details');sources.remove();
   const tiles=macroTiles(doc,{currentSnapshot:true}),metrics=el('div.today-dashboard-metrics');
   const sourceMetrics=el('div.today-dashboard-source-metrics');
-  const keys={liquidity:'funding_score',yield:'nominal_10y',vix:'vix'};
+  const keys={liquidity:'funding_score',yield:'nominal_10y',vix:'vix',term:'vix_term_ratio'};
   for(const tile of tiles){
     const reading=keys[tile.key]?canonicalReading(doc,keys[tile.key]):null;
     const fngAt=tile.key==='fng'?Date.parse(doc.fear_greed?.as_of||''):NaN;
-    const stamp=reading?s('today.reading_'+readingBasis(reading),{date:reading.date}):Number.isFinite(fngAt)?s('today.macro_tile_as_of',{date:writtenAt(doc.fear_greed.as_of)+' ET'}):null;
-    const term=tile.key==='vix'?canonicalReading(doc,'vix_term_ratio'):null;
+    const stamp=reading?s('today.reading_'+readingBasis(reading),{date:reading.date}):Number.isFinite(fngAt)?s('today.macro_tile_as_of',{date:writtenAt(doc.fear_greed.as_of)+' ET'}):tile.stamp;
     const note=tile.key==='liquidity'||tile.key==='fng'?tile.gauge?.word||tile.note:
-      term?s('today.macro_vix_ratio',{ratio:num(term.value,2)})+' · '+term.date:tile.note;
+      tile.key==='vix'?s('today.vix_explanation'):tile.note;
+    const date=reading?.date||(Number.isFinite(fngAt)?nySession(new Date(fngAt)):tile.key==='kindex'?kIndexReading(doc)?.date:null);
     metrics.append(el('div.today-dashboard-metric',{'data-tile':tile.key,'data-reading-anchor':'macro-tile:'+tile.key,class:'is-'+tile.tone},
       el('span.today-macro-label',tile.label),
       el('strong.today-macro-value.mono',tile.value,tile.unit?el('span.today-macro-unit',tile.unit):null),
       note?el('span.today-dashboard-metric-note',note):null,
-      stamp?el('span.today-dashboard-metric-date',stamp):null));
+      stamp?el('span.today-dashboard-metric-date',{title:stamp,'aria-label':stamp},date||stamp):null));
     const detail=el('section.today-dashboard-source-metric',{'data-source-metric':tile.key},
       el('h3',tile.label,tile.help||null),el('p.small',tile.note),
       tile.stamp?el('p.small.muted',tile.stamp):stamp?el('p.small.muted',stamp):null,
       tile.recorded?el('p.today-macro-recorded.small.muted',tile.recorded):null,
+      tile.explanation?el('p.small',tile.explanation):null,
       tile.ratioStamp?el('p.small.muted',tile.ratioStamp):null,
       tile.ratioRecorded?el('p.today-macro-recorded.small.muted',s('today.reading_ratio',{reading:tile.ratioRecorded})):null);
     if(tile.gauge&&Number.isFinite(tile.gauge.score))detail.append(el('div.today-gauge-wrap',gauge(tile.gauge),el('span.today-gauge-word',tile.gauge.word)));
@@ -348,6 +356,7 @@ export function macroStrip(doc,{now=new Date()}={}){
         tile.help||null,
         dial?el('div.today-gauge-wrap',dial,el('span.today-gauge-word',tile.gauge.word)):null,
         el('p.today-macro-note',tile.note),
+        tile.explanation?el('p.small',tile.explanation):null,
         tile.recorded?el('p.today-macro-recorded.small.muted',tile.recorded):null,
         tile.ratioStamp?el('p.today-macro-ratio-stamp.small.muted',tile.ratioStamp):null,
         tile.ratioRecorded?el('p.today-macro-recorded.small.muted',s('today.reading_ratio',{reading:tile.ratioRecorded})):null,historyList(tile.history),

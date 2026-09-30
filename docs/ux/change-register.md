@@ -1,5 +1,19 @@
 # UX change and integration register
 
+## 2026-09-30 — Explore destinations and Today readings
+
+Implemented in the current candidate: company activity is the default Explore content;
+three shared native links highlight only the actual destination. Research and creator
+entries work in both directions, including empty-membership visits. Stock disclosure
+links are explicitly labelled above research tabs. Structured stock symbols use orange
+in both themes; opinions retain their normal text color. Today adds source-owned K and
+VIX/VIX3M tiles, compact dated readings and denser expandable update cards.
+
+[Acceptance](../../reports/EXPLORE-TODAY-2026-09-30.md) records local checks and release
+status. K requires the additive backend `current_session.k_index` contract; older
+snapshots display unavailable instead of a browser-derived number.
+
+
 ## Complete compact indicator values · 2026-09-30
 
 After #129 publication, screenshot review caught inherited one-line clipping of net amounts and fund counts. Wrap these primary facts and option-wall distances within their comparison columns. [Follow-up acceptance](../../reports/INDICATOR-VALUES-2026-09-30.md) records the regression checks and separate release boundary.

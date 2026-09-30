@@ -83,7 +83,7 @@ export async function mount(root,{ticker,signal,returnTo,query=new URLSearchPara
   const mapOpinions=tab==='evidence'?mountMapOpinions(mapOpinionsHost,{signal,ticker,from}):null;
   const tools=el('details.stock-extra-tools',el('summary',s('focus.deeper_research')),directTools);
   head.append(el('a.btn.btn-ghost',{href:'#/chart/'+ticker,'data-stock-tool':'kline'},s('focus.chart_short')));
-  shell.append(head,membershipNotice,tabs,stockDisclosureLinks(ticker),overviewPanel,metricsPanel,mapPanel,historyPanel,tools);root.append(shell);
+  shell.append(head,membershipNotice,stockDisclosureLinks(ticker),tabs,overviewPanel,metricsPanel,mapPanel,historyPanel,tools);root.append(shell);
   const off=store.subscribe('*',sync);
   signal?.addEventListener('abort',sync,{once:true});
   const details=el('details.focus-history',el('summary',s('focus.research_history'))),historyBody=el('div');details.append(historyBody);historyPanel.append(details);

@@ -15,15 +15,15 @@ const doc={schema:'macro-beta/1',status:'ok',as_of:'2026-09-18',observed_at:'202
  latest:{date:'2026-09-18',regime:'mixed',funding_score:54.4,metrics:{net_liquidity_bn:5850,net_liquidity_65d_change_bn:-120,nominal_10y:4.12,nominal_10y_20d_change_bp:9.2,vix:17.6,vix_3m:19.1,vix_term_ratio:0.9215}},
  fear_greed:{score:27,rating:'fear',previous_close:31}};
 
-test('the four macro tiles read the saved backdrop with their own dates and tones',()=>{
+test('the six macro tiles read the saved backdrop with their own dates and tones',()=>{
  const tiles=macro.macroTiles(doc);
- assert.deepEqual(tiles.map(t=>[t.key,t.value,t.tone]),[['liquidity','54','mid'],['yield','4.12%','flat'],['vix','17.6','up'],['fng','27','down']]);
+ assert.deepEqual(tiles.map(t=>[t.key,t.value,t.tone]),[['liquidity','54','mid'],['yield','4.12%','flat'],['vix','17.6','up'],['fng','27','down'],['kindex','—','flat'],['term','0.92','up']]);
  assert.equal(tiles[0].note,'mixed · net liquidity $5.85T · -120B vs 65 sessions ago');
  assert.equal(tiles[1].note,'+9 bp over 20 sessions');
- assert.equal(tiles[2].note,'VIX / VIX3M 0.92 · below 1, front month cheaper');
+ assert.equal(tiles[2].note,'VIX / VIX3M 0.92 · Below 1 · 30-day volatility lower');
  assert.equal(tiles[3].note,'Fear · prev 31');
  const strip=macro.macroStrip(doc);
- assert.equal(strip.querySelectorAll('.today-macro-tile').length,4);
+ assert.equal(strip.querySelectorAll('.today-macro-tile').length,6);
  assert.match(strip.querySelector('.today-macro-source').textContent,/through 2026-09-18/);
  assert.doesNotMatch(strip.textContent,/target|guarantee|floor|buy now/i);
 });
@@ -31,12 +31,12 @@ test('the four macro tiles read the saved backdrop with their own dates and tone
 test('stress, stale and missing readings are stated, never invented',()=>{
  const stressed={...doc,status:'stale',latest:{...doc.latest,regime:'adverse',funding_score:31,metrics:{...doc.latest.metrics,vix:32,vix_3m:28,vix_term_ratio:1.1429}},fear_greed:null};
  const tiles=macro.macroTiles(stressed);
- assert.equal(tiles[0].tone,'down');assert.match(tiles[0].note,/^tight/);assert.equal(tiles[2].tone,'down');assert.match(tiles[2].note,/above 1, front month dearer/);
+ assert.equal(tiles[0].tone,'down');assert.match(tiles[0].note,/^tight/);assert.equal(tiles[2].tone,'down');assert.match(tiles[2].note,/Above 1 · 30-day volatility higher/);
  assert.equal(tiles[3].value,'—');assert.equal(tiles[3].note,'index unavailable');
  assert.match(macro.macroStrip(stressed).querySelector('.today-macro-source').textContent,/Over 36 hours old/);
  assert.match(macro.macroStrip({status:'unavailable',history:[]}).textContent,/Market backdrop unavailable/);
  const empty=macro.macroTiles({latest:{metrics:{}}});
- assert.deepEqual(empty.map(t=>t.value),['—','—','—','—']);assert.equal(empty[0].note,'no reading');
+ assert.deepEqual(empty.map(t=>t.value),['—','—','—','—','—','—']);assert.equal(empty[0].note,'no reading');
 });
 
 test('the liquidity tile is coloured by its own score band and explains the formula behind a "?"',()=>{
@@ -162,7 +162,7 @@ test('missing/unavailable note is separate from unavailable macro data and never
     const strip=macro.macroStrip({...doc,digest},monday);
     assert.equal(strip.querySelector('.today-digest'),null);
     assert.match(strip.querySelector('.today-market-status').textContent,/No published close-of-day note is available/);
-    assert.equal(strip.querySelectorAll('.today-macro-tile').length,4);
+    assert.equal(strip.querySelectorAll('.today-macro-tile').length,6);
   }
   const noMacro=macro.macroStrip({status:'unavailable',digest:savedDigest},monday);
   assert.ok(noMacro.querySelector('.today-digest'));
@@ -183,7 +183,7 @@ test('failed market read has an explicit GET-only retry; route abort and account
     assert.equal(host.hidden,false);
     failure=false;host.querySelector('button').click();
     await new Promise(resolve=>setTimeout(resolve,0));
-    assert.equal(host.querySelectorAll('.today-macro-tile').length,4);
+    assert.equal(host.querySelectorAll('.today-macro-tile').length,6);
     assert.deepEqual(requests,[['/macro/beta','GET'],['/macro/beta','GET']]);
     for(const boundary of ['abort','epoch']){
       let resolve;globalThis.fetch=()=>new Promise(r=>{resolve=r;});
@@ -275,4 +275,11 @@ test('the creators block lists macro takes from the last day and a half, newest 
   assert.match(items[0].textContent,/Creator 2.*03:00 ET.*Bearish/);assert.equal(items[0].querySelector('a').href,'https://www.youtube.com/watch?v=v2');
   assert.equal(items[0].querySelectorAll('.pill').length,2);assert.match(items[1].textContent,/Analysis pending/);
   assert.equal(creators.creatorMacroBlock({posts:[post(6,2,{macro:false})]},{now}),null);
+});
+
+
+test('a term ratio of exactly one is equal, not above or below',()=>{
+ const equal={...doc,latest:{...doc.latest,metrics:{...doc.latest.metrics,vix_term_ratio:1}}};
+ const tile=macro.macroTiles(equal).find(t=>t.key==='term');
+ assert.equal(tile.tone,'flat');assert.equal(tile.value,'1.00');assert.match(tile.note,/^Equal/);
 });

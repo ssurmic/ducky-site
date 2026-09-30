@@ -7,7 +7,6 @@
 .explore-primary-tools>a:hover{background:var(--surface-2);border-color:var(--accent)}
 .explore-primary-tools>a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .explore-primary-tools>a[aria-current=page]{border-bottom:3px solid var(--accent)}
-.explore-primary-tools .explore-activity-entry{border-left:4px solid var(--accent);background:var(--surface-2)}
 .explore-primary-tools .app-icon{width:24px;height:24px;flex-shrink:0;color:var(--accent-text,var(--accent))}
 .explore-destination-copy{display:flex;flex-direction:column;gap:5px;min-width:0}
 .explore-destination-copy>strong{font-size:18px;line-height:1.35;font-weight:700}
@@ -64,9 +63,7 @@
  .explore-research .focus-heading h1{font-size:18px;line-height:1.25;margin:0}
  .explore-primary-tools{grid-template-columns:1.3fr 1fr 1fr;gap:4px;margin:6px 0 8px}
  .explore-primary-tools>a{min-height:44px;padding:6px 3px;justify-content:center;align-items:center;text-align:center;border-radius:6px}
- .explore-primary-tools .explore-activity-entry{min-height:44px;border-left-width:2px}
  .explore-primary-tools .app-icon,.explore-primary-tools .explore-entry-arrow{display:none}
- .explore-primary-tools>a:not(.explore-activity-entry)>.app-icon{display:none}
  .explore-destination-copy{gap:3px}
  .explore-destination-copy>strong{font-size:12px}
  .explore-destination-copy>span{display:none}

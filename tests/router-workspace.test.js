@@ -96,7 +96,7 @@ test('untrusted old history return paths cannot open external or unsupported rou
 
 test('Explore to a stock metric price draft returns to its exact tab and original Explore context without any write',async()=>{
  const start=requests.length;
- await visit('#/explore');main.scrollTop=281;
+ await visit('#/explore?tab=research');main.scrollTop=281;
  await visit(root.querySelector('[data-explore-link="NVDA:metrics"]').getAttribute('href'));
  const stockHash=location.hash;main.scrollTop=642;
  const priceAction=root.querySelector('.stock-level-alert a');assert.ok(priceAction);
@@ -107,7 +107,7 @@ test('Explore to a stock metric price draft returns to its exact tab and origina
  await router.render();assert.equal(root.querySelector('.alert-stock-return').getAttribute('href'),stockHash,'refresh keeps this history entry context');
  await visit(root.querySelector('.alert-stock-return').getAttribute('href'));
  assert.equal(root.querySelector('[data-stock-tab=metrics]').getAttribute('aria-current'),'page');
- assert.equal(backLink().getAttribute('href'),'#/explore');assert.equal(main.scrollTop,642);
+ assert.equal(backLink().getAttribute('href'),'#/explore?tab=research');assert.equal(main.scrollTop,642);
  await visit(backLink().getAttribute('href'));assert.equal(main.scrollTop,281);
  assert.ok(requests.slice(start).every(({url})=>!url.includes('/alerts/translate')),'opening the draft does not submit or translate');
  for(const change of [{href:'https://example.com'}, {href:'#/stock/OTHER?tab=metrics'}, {at:'#/alerts?ticker=OTHER'}, {epoch:store.epoch()-1}]){
