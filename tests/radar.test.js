@@ -179,6 +179,9 @@ test('four primary categories default to insiders, retain keyboard focus and exp
  assert.deepEqual([...root.querySelectorAll('.radar-categories .radar-category')].map(node=>node.dataset.board),['insider','funds','political','company']);
  assert.equal(root.querySelector('[data-board=insider]').getAttribute('aria-pressed'),'true');
  assert.ok(calls.some(url=>new URL(url,'https://ducky.test').searchParams.get('kind')==='insider,cluster'));
+ assert.equal(root.querySelector('select[aria-label="Transaction venue"]').value,'all');
+ assert.ok(calls.some(url=>{const params=new URL(url,'https://ducky.test').searchParams;return params.get('kind')==='insider,cluster'&&params.get('content')==='all';}));
+ assert.equal(root.querySelector('.insider-active-filters').children.length,0);
  assert.ok(root.querySelector('.radar-other-categories [data-board=all]'));
  const political=root.querySelector('.radar-categories [data-board=political]');political.focus();political.click();await flush();
  const selected=root.querySelector('.radar-categories [data-board=political]');

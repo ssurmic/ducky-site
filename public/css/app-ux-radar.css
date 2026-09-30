@@ -159,9 +159,15 @@
  .radar-insider-workspace .radar-filters{grid-template-columns:minmax(0,1fr) auto auto;padding:0;border:0;background:none;gap:4px}
  .radar-insider-workspace .radar-filter-actions .btn{padding:6px;font-size:12px}
  .radar-insider-workspace .radar-filter-toggle{padding:6px 8px}
- .insider-directions{max-width:none}
+ .insider-quick{grid-template-columns:auto minmax(0,1fr);align-items:start;gap:4px 6px;margin-bottom:6px}
+ .insider-directions{max-width:none;grid-template-columns:repeat(3,44px);gap:0;padding:0;border:0;border-radius:6px}
+ .insider-directions:has([data-insider-direction="0"]:not([hidden])){grid-template-columns:repeat(4,44px)}
+ .insider-directions button{padding:6px 3px;font-size:12px}
+ .insider-caps{min-width:0;padding-bottom:0}
+ .insider-cap-range{grid-column:1/-1}
  .insider-caps button{padding-inline:9px}
  .insider-card-heading{gap:4px 8px}
+ .radar-activity-workspace .insider-card-main{padding:8px 10px;gap:4px!important}
  .insider-issuer{order:4;flex-basis:100%;font-size:12px}
  .insider-card-heading .radar-action{margin-left:auto}
  .insider-amount{font-size:16px}
