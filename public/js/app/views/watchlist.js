@@ -127,17 +127,25 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
   else{window.addEventListener('resize',resize);unsubs.push(()=>window.removeEventListener('resize',resize));}
   const detail = el('section.watch-detail', {hidden:true, 'aria-label':s('watch.details')});
   const layout = el('div.watch-layout', list, detail);
-  const modes = el('div.watch-modes', {'role':'group','aria-label':s('watch.display')});
+  const modes = el('div.watch-modes.workspace-navigation', {'role':'group','aria-label':s('watch.display')});
+  const viewPositions = new Map();
   for (const mode of allowedModes) modes.append(el('button.btn.btn-ghost.btn-sm', {type:'button',
     'data-mode':mode, 'aria-pressed':String(view===mode), 'aria-label':s('watch.view_'+mode),
     'aria-describedby':'watch-mode-'+mode, onclick:()=>{
+      const scroller=root.closest('.app-main');
+      viewPositions.set(view,{top:scroller?.scrollTop||0,left:list.querySelector('.watch-table-scroll')?.scrollLeft||0});
       view=mode;render();
+      const saved=viewPositions.get(mode);
+      // Keep the switcher visible on first entry; returning restores this view's own position.
+      if(scroller)scroller.scrollTop=saved?.top||0;
+      const table=list.querySelector('.watch-table-scroll');
+      if(table)table.scrollLeft=saved?.left||0;
     }},el('span.watch-mode-title',s('watch.view_'+mode)),
       el('span.watch-mode-purpose',{id:'watch-mode-'+mode},s('watch.purpose_'+mode))));
   const offer = el('div.watch-search-offer',{hidden:true,'aria-live':'polite'});
   let filterTimer=null;
   const filter = el('input.input.watch-filter',{type:'search',value:query,placeholder:s('watch.filter'), 'aria-label':s('watch.filter'),autocomplete:'off',spellcheck:'false',
-    oninput:()=>{query=filter.value;candidate=null;clearTimeout(filterTimer);
+    oninput:()=>{query=filter.value;candidate=null;viewPositions.clear();clearTimeout(filterTimer);
       if((store.get('watchlist')||[]).length>LARGE_LIST)filterTimer=setTimeout(()=>{filterTimer=null;if(!disposed)render();},120);else render();}});
   unsubs.push(()=>clearTimeout(filterTimer));
   const filterPicker = symbolPicker(filter,()=>store.get('watchlist')||[],{
@@ -149,7 +157,7 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
   filterPicker.wrap.classList.add('watch-search');unsubs.push(filterPicker.dispose);
   const sorting = el('select.input',{'aria-label':s('watch.sort'),onchange:()=>{sort=sorting.value;render();}},
     ...['market_cap','change_pct','ytd','drawdown','relative','iv_hv','attention','degen','ticker'].map(key=>el('option',{value:key},s('watch.sort_'+key))));
-  const controls = el('div.watch-controls',modes,filterPicker.wrap,...(focused?[]:[sorting]),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>load()},s('watch.refresh')));
+  const controls = el('div.watch-controls',filterPicker.wrap,...(focused?[]:[sorting]),el('button.btn.btn-ghost.btn-sm',{type:'button',onclick:()=>load()},s('watch.refresh')));
   const modeNote=el('p.small.muted.watch-mode-note');
   function renderOffer() {
     clear(offer);
@@ -188,7 +196,7 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
   }
   head.append(addOptions);
   tourTarget(head,'watchlist.home');
-  root.append(head, freeGuide() || "", usage, starterHost, controls, modeNote, capacity, offer, bulk, removeResult, readNotice, strip, layout,
+  root.append(head, freeGuide() || "", usage, starterHost, modes, controls, modeNote, capacity, offer, bulk, removeResult, readNotice, strip, layout,
     el('div.chips',el('a.chip',{href:'#/updates'},s('updates.entry_title'))));
 
   async function onAdd(e) {
@@ -321,6 +329,7 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
     if (selected && !items.includes(selected)) {selected=null;renderDetail();}
     modes.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.mode===view)));
     controls.hidden=focused&&(!items.length||keepStarters);
+    modes.hidden=controls.hidden;
     modeNote.hidden=!focused||!items.length||keepStarters||view!=='metrics';
     layout.hidden=keepStarters;
     modeNote.replaceChildren(s('watch.ux_mode_'+view));

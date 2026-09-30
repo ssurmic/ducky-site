@@ -1,17 +1,17 @@
 /* Stock identity, independent of price direction and evidence stance.
    Only structured symbol leaves opt in; never infer symbols from prose. */
 .page-app {
-  --ticker-ink: #b7ff3c;
-  --ticker-paper: #14251a;
-  --ticker-font: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --ticker-ink: var(--text);
+  --ticker-paper: var(--surface-2);
+  --ticker-font: var(--font);
 }
 .page-app .ticker-symbol {
   color: var(--ticker-ink);
   background: var(--ticker-paper);
   font-family: var(--ticker-font);
-  font-weight: 750;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
-  letter-spacing: .025em;
+  letter-spacing: .01em;
   padding: .06em .22em;
   border-radius: 3px;
   width: fit-content;

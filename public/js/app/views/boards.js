@@ -351,7 +351,8 @@ export async function mount(root, route={}) {
     if(state.start)chip('start',s('radar.start')+' '+state.start,start);
     if(state.end)chip('end',s('radar.end')+' '+state.end,end);
     if(state.mode==='recent' && state.days!=='7')chip('days',s('radar.days',{n:state.days}),days,'7');
-    rows.setAttribute('aria-busy',String(pending));
+    const loading=pending || !recentReady;
+    rows.setAttribute('aria-busy',String(loading));
     filter.dataset.mode=state.mode;
     categoryLabel.textContent=s('radar.categories')+' · '+boardLabel(state.board);
     const source=state.mode==='recent'?(insider && recentIdentity!==queryIdentity()?[]:recent):state.mode==='excerpts'?excerpts:archived;
@@ -388,7 +389,9 @@ export async function mount(root, route={}) {
       style:{minHeight:'44px',fontSize:'12px',padding:'4px 8px',marginInlineEnd:'8px'},
       'aria-label':s('radar.reset')+' · '+s('radar.ticker')+' '+state.ticker,
       onclick:()=>{ticker.value='';apply();query.focus({preventScroll:true});}},s('radar.ticker')+' · '+state.ticker+' ×'));
-    summary.append(el('span',pending?s('common.loading'):s(reports?'reader.report_count':'radar.result_count',{n:shown.length,stocks})));
+    // A route refresh starts before its first request settles. Unknown or failed
+    // results must never be announced as an observed count of zero.
+    summary.append(el('span',loading?s('common.loading'):hasError?s('boards.load_error'):s(reports?'reader.report_count':'radar.result_count',{n:shown.length,stocks})));
     activeRule.hidden=reports||state.mode==='excerpts'||state.board!=='insider'||state.purchases!=='open_market';
     activeRule.textContent=s('radar.ux.active_purchase_rule');
     if(insider)activeRule.hidden=true;

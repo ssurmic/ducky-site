@@ -1,0 +1,201 @@
+/* Ducky's shared reading system: neutral identity, semantic market colors, compact navigation.
+   Keep this final layer limited to presentation; dates, source states and amounts are unchanged. */
+@font-face{font-family:Manrope;src:url('/fonts/Manrope-variable-d0639be4.woff2') format('woff2');font-style:normal;font-weight:200 800;font-display:swap}
+:root{--desk-bg:#f3f6fa;--desk-surface:#fff;--desk-raised:#eaf0f6;--desk-border:#cfd9e5;--desk-ink:#172b42;--desk-muted:#50647a;--desk-positive:#08754f;--desk-negative:#bc293c;--desk-link:#205da8;--desk-accent-text:#a65300;--desk-control:#73879e}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--desk-bg:#0c141f;--desk-surface:#121e2c;--desk-raised:#1a293a;--desk-border:#2b3d51;--desk-ink:#e7edf5;--desk-muted:#a2b2c6;--desk-positive:#60d3a5;--desk-negative:#ff858d;--desk-link:#8fbcff;--desk-accent-text:#ffb45c;--desk-control:#6e86a0}}
+:root[data-theme=dark]{--desk-bg:#0c141f;--desk-surface:#121e2c;--desk-raised:#1a293a;--desk-border:#2b3d51;--desk-ink:#e7edf5;--desk-muted:#a2b2c6;--desk-positive:#60d3a5;--desk-negative:#ff858d;--desk-link:#8fbcff;--desk-accent-text:#ffb45c;--desk-control:#6e86a0}
+:root:is(:not([data-tg]),[data-tg=web]) body:is(.page-app,.page-index,body){
+ --bg:var(--desk-bg);--bg-2:var(--desk-raised);--surface:var(--desk-surface);--surface-2:var(--desk-raised);--border:var(--desk-border);
+ --text:var(--desk-ink);--fg:var(--desk-ink);--muted:var(--desk-muted);--faint:var(--desk-muted);--green:var(--desk-positive);--red:var(--desk-negative);--blue:var(--desk-link);
+ --control-border:var(--desk-control);--accent-text:var(--desk-accent-text);--accent-text-hover:var(--desk-accent-text);--focus-ring:var(--desk-accent-text);
+ --font:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+ --mono:var(--font);--r-sm:4px;--r-md:6px;--r-lg:8px;--radius:8px;
+ background:var(--bg);font-family:var(--font);font-variant-numeric:tabular-nums lining-nums;
+}
+body.page-app .app-view{max-width:1440px}
+body.page-app:is([data-route=watchlist],[data-route=calendar],[data-route=today]) .app-view{max-width:1640px}
+body.page-app .app-main{--workspace-inset:22px;padding-top:var(--workspace-inset)}
+body.page-app .app-top{min-height:56px;padding-block:calc(6px + var(--safe-top)) 6px}
+body.page-app .app-top .avatar-mark{width:32px;height:32px}
+body.page-app .app-nav>a{border-radius:6px}
+body.page-app .app-nav>a.on{color:var(--accent-text);background:var(--surface-2);box-shadow:none}
+body.page-app .app-foot{margin-top:20px;padding-top:12px;border-top:1px solid var(--border)}
+body.page-app .app-view .card{border-radius:8px;box-shadow:none}
+body.page-app :is(.btn,.input){border-radius:6px}
+body.page-app .btn{font-weight:600}
+body.page-app .btn-ghost{background:transparent;border-color:var(--control-border,var(--border))}
+body.page-app .btn-ghost:hover{background:var(--surface-2)}
+body.page-app :is(a,button,summary){-webkit-tap-highlight-color:transparent}
+body.page-app :is(a,button,summary):active{opacity:.82}
+body.page-app .input{background:var(--surface);border-color:var(--control-border,var(--border))}
+body.page-app :is(.watch-compact-table,.season-comparison,.stock-metrics-table) {font-variant-numeric:tabular-nums lining-nums}
+body.page-app .watch-compact-table tbody tr{background:var(--surface)}
+body.page-app .watch-compact-table tbody tr:nth-child(even){background:color-mix(in srgb,var(--surface-2) 38%,var(--surface))}
+body.page-app .watch-compact-table tbody tr:hover{background:var(--surface-2)}
+body.page-app .watch-compact-table :is(.watch-view-text,.watch-view-pending){line-height:1.5}
+body.page-app .watch-compact-table :is(th,td){border-color:var(--border)}
+body.page-app .watch-compact-table .watch-company{font-size:12px}
+body.page-app .watch-compact-table .watch-stock-actions>a{font-size:11px}
+body.page-app .watch-compact-table .watch-stock-actions{flex-wrap:nowrap;gap:0;margin-left:-36px}
+/* Direct children of long workspaces stay in the one existing app scrollport.
+   No nested vertical scroll region; opaque paint and focus clearance protect the content below. */
+body.page-app .watchlist-view>.watch-modes,
+body.page-app .radar-activity-workspace .radar-sidebar,
+body.page-app .stock-workspace-tabs,
+body.page-app .explore-primary-tools{
+ position:sticky;top:calc(-1 * var(--workspace-inset, 0px));z-index:12;background:var(--bg);isolation:isolate;
+ box-shadow:0 6px 0 var(--bg);
+}
+body.page-app:is([data-route=watchlist],[data-route=boards],[data-route=stock],[data-route=explore]) .app-main{scroll-padding-top:88px}
+body.page-app .watchlist-view>.watch-modes{margin:0 0 8px;border-radius:6px}
+body.page-app .watchlist-view .watch-modes .btn{min-height:64px;padding:8px 14px;gap:3px;border-bottom-width:2px}
+body.page-app .watchlist-view .watch-mode-title{font-size:15px;font-weight:650}
+body.page-app .watchlist-view .watch-mode-purpose{font-size:12px}
+body.page-app .watchlist-view .watch-controls{margin:8px 0;gap:8px}
+body.page-app .watchlist-view .watch-controls .watch-search{grid-row:1}
+body.page-app .watchlist-view .watch-controls>button{grid-row:1}
+body.page-app .watchlist-view .watch-capacity{padding:8px 12px;margin:8px 0;border-left-width:2px;font-size:12px}
+body.page-app .watchlist-view .watch-strip{margin:8px 0;font-size:12px;line-height:1.5}
+body.page-app .watchlist-view .watch-session{margin:8px 0;font-size:12px}
+body.page-app .watch-research-card{border-radius:6px}
+body.page-app .watch-research-heading{padding:12px 14px 10px}
+body.page-app .watch-research-reading{padding:12px 14px 0}
+body.page-app .watch-research-lenses{padding:10px 14px 12px;gap:12px}
+body.page-app .watch-reference-strip{padding:8px 14px}
+body.page-app .watch-research-price .watch-price-link{font-size:18px}
+body.page-app .watch-research-reading .stock-overall-text{font-size:14px;line-height:1.55}
+body.page-app .radar-activity-workspace .radar-sidebar{margin-bottom:8px}
+body.page-app .radar-activity-workspace .radar-categories{gap:0;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+body.page-app .radar-activity-workspace .radar-categories .radar-category{min-height:64px;padding:8px 12px;border:0;border-bottom:2px solid transparent;border-radius:0;gap:8px}
+body.page-app .radar-activity-workspace .radar-category+.radar-category{border-left:1px solid var(--border)}
+body.page-app .radar-activity-workspace .radar-categories [aria-pressed=true]{border-bottom-color:var(--accent);background:var(--surface-2)}
+body.page-app .radar-category-copy{gap:3px}
+body.page-app .radar-category-copy>strong{font-size:15px;font-weight:650}
+body.page-app .radar-category-copy>span{font-size:12px}
+body.page-app .radar-activity-workspace .radar-activity-record{border-radius:6px;box-shadow:none;margin-bottom:6px}
+body.page-app .radar-activity-workspace .radar-activity-toggle{padding:10px 12px 6px;gap:6px}
+body.page-app .radar-activity-workspace .radar-activity-links{padding-inline:12px;gap:20px}
+body.page-app .radar-activity-workspace .radar-record-title{line-height:1.5}
+body.page-app .radar-activity-workspace .radar-filters{border-radius:6px;padding:8px;margin-bottom:8px}
+body.page-app .radar-activity-workspace .radar-day{margin:14px 0 6px}
+body.page-app .explore-primary-tools{gap:0;margin:8px 0 12px;border:1px solid var(--border);border-radius:6px}
+body.page-app .explore-primary-tools>a{border:0;border-radius:0;min-height:64px;padding:8px 12px;border-bottom:2px solid transparent}
+body.page-app .explore-primary-tools>a+a{border-left:1px solid var(--border)}
+body.page-app .explore-primary-tools .explore-activity-entry{border-bottom:2px solid var(--accent)}
+body.page-app .explore-destination-copy{gap:3px}
+body.page-app .explore-destination-copy>strong{font-size:15px;font-weight:650}
+body.page-app .explore-destination-copy>span{font-size:12px}
+body.page-app .explore-entry-arrow{display:none}
+body.page-app .explore-primary-tools .app-icon{width:18px;height:18px}
+body.page-app .explore-mention-count{font-size:20px}
+body.page-app .creators-view .creator-view-row{border-radius:6px;padding:10px;background:var(--surface);border-color:var(--border)}
+body.page-app .creators-view .creator-view-row.is-bull{border-left-color:var(--green)}
+body.page-app .creators-view .creator-view-row.is-bear{border-left-color:var(--red)}
+body.page-app .creators-view .creator-view-text{line-height:1.55}
+body.page-app .creators-view .creator-views-group{padding:12px;border-radius:6px}
+body.page-app .stock-metric-section{padding:12px;border-radius:6px}
+body.page-app .stock-workspace-tabs{border-radius:0;padding-top:4px;margin-top:8px}
+body.page-app .cal-grid .cal-cell{border-radius:6px}
+body.page-app .season-comparison th:first-child{color:var(--text)}
+body.page-app .season-comparison td{text-align:right}
+body.page-app .season-comparison thead th:not(:first-child){text-align:right}
+body.page-app .season-extreme{justify-content:flex-end}
+@media(min-width:1000px){
+ body.page-app .app-shell{grid-template-columns:184px minmax(0,1fr)}
+ body.page-app .app-nav{padding:16px 10px;gap:2px}
+ body.page-app .app-nav>a{font-size:14px;padding:8px 12px;gap:10px}
+ body.page-app .app-main{--workspace-inset:20px;padding:var(--workspace-inset) 24px 28px}
+ body.page-app .cal-grid .cal-cell{min-height:104px}
+}
+@media(max-width:760px){
+ body.page-app .app-top{min-height:52px;padding-block:calc(4px + var(--safe-top)) 4px}
+ body.page-app .app-main{--workspace-inset:8px;padding-top:var(--workspace-inset);padding-inline:12px}
+ body.page-app .app-view .route-page{--app-caption:12px}
+ body.page-app .watchlist-view .watch-modes .btn,
+ body.page-app .radar-activity-workspace .radar-categories .radar-category{min-height:44px;padding:6px 3px;gap:0;text-align:center;justify-content:center}
+ body.page-app .watchlist-view .watch-mode-title,
+ body.page-app .radar-category-copy>strong{font-size:12px}
+ body.page-app .watchlist-view .watch-mode-purpose,.radar-category-copy>span{display:none}
+ body.page-app .radar-category-copy .radar-category-short{display:block}
+ body.page-app .radar-activity-workspace .radar-category>.app-icon{display:none}
+ body.page-app .radar-activity-workspace .radar-filters{padding:0;margin-bottom:6px;gap:6px}
+ body.page-app .radar-activity-workspace .radar-day{margin:8px 0 4px}
+ body.page-app .watchlist-view .watch-strip,body.page-app .watchlist-view .watch-session{font-size:11px;margin-block:4px}
+ body.page-app .watch-compact-table .watch-company{font-size:11px}
+ body.page-app .watch-research-reading .stock-overall-text{font-size:13px}
+ body.page-app .watch-research-heading{padding:8px 10px}
+ body.page-app .watch-research-lenses{padding:8px 10px}
+ body.page-app .explore-primary-tools{margin:4px 0 8px}
+ body.page-app .explore-primary-tools>a{min-height:44px;padding:6px 3px}
+ body.page-app .explore-destination-copy>strong{font-size:12px}
+ body.page-app .explore-destination-copy>span,body.page-app .explore-primary-tools .app-icon{display:none}
+ body.page-app:is([data-route=watchlist],[data-route=boards],[data-route=stock],[data-route=explore]) .app-main{scroll-padding-top:60px}
+ body.page-app .creators-view .creator-views-group{padding:8px 0}
+}
+/* The public introduction shares the same typography and palette, with an editorial scale. */
+body:not(.page-app) :is(.mono,.tag){font-family:var(--font);letter-spacing:0}
+body.page-index .home-hero{padding-top:32px}
+body.page-index .home-hero h1{font-size:clamp(32px,3.6vw,50px);line-height:1.2}
+body.page-index .home-intro{font-size:16px;line-height:1.65;margin:16px 0 20px}
+body.page-index .signal-card{border-radius:8px;backdrop-filter:none;box-shadow:none;background:var(--surface)}
+body.page-index :is(.catch-card,.creator-card,.desk-tour){border-radius:8px;box-shadow:none}
+body.page-index .desk-section-head h2{font-size:clamp(24px,2.7vw,34px)}
+body.page-index .desk-section-head{margin-bottom:20px}
+body.page-index .product-desk{padding-block:40px}
+body.page-index .desk-preview{padding:24px}
+body.page-index .desk-preview:after{display:none}
+body.page-index .desk-feature h3{font-size:clamp(24px,3vw,36px);margin-bottom:12px}
+body.page-index .desk-feature-copy{font-size:15px;line-height:1.65}
+body.page-index .desk-feature .eyebrow{margin-bottom:16px}
+body.page-index .desk-feature-tags{margin-block:16px}
+body.page-index .desk-preview-footer{margin-top:24px;padding-top:12px}
+@media(max-width:760px){
+ body.page-index .home-hero{padding-top:20px}
+ body.page-index .home-hero h1{font-size:32px}
+ body.page-index .home-intro{font-size:14px;margin:12px 0 16px}
+ body.page-index .product-desk{padding-block:28px}
+ body.page-index .desk-preview{padding:16px}
+ body.page-index .desk-feature h3{font-size:24px}
+ body.page-index .desk-feature-copy{font-size:14px}
+}
+@media(forced-colors:active){body.page-app .ticker-symbol{color:CanvasText;background:Canvas}}
+
+body.page-index .section{padding-block:44px}
+body.page-index .home-composition{padding-top:24px;padding-bottom:28px;gap:32px}
+body.page-index .home-atmosphere{background:none}
+body.page-index .home-logo-orbit{display:none}
+@media(max-width:760px){body.page-index .section{padding-block:28px}body.page-index .home-composition{padding-top:12px;gap:24px}}
+/* Market overview: charts and exact legends fit alongside their source clocks. */
+body.page-app .today-macro.has-current-dashboard{padding:12px 16px 6px;border-radius:8px}
+body.page-app .today-dashboard-metrics{margin:10px 0 12px}
+body.page-app .today-dashboard-metric{padding:10px 12px;gap:4px}
+body.page-app .today-dashboard-metric .today-macro-value{font-size:24px}
+body.page-app .today-dashboard-chart .today-lines{max-height:180px}
+body.page-app .today-dashboard-charts{gap:16px}
+body.page-app .today-lines-line:is(.is-liquidity,.is-yield){stroke:var(--accent-text)}
+body.page-app .today-lines-dot:is(.is-liquidity,.is-yield){fill:var(--accent-text)}
+body.page-app :is(.today-lines-key,.today-lines-tip-row):is(.is-liquidity,.is-yield) i{background:var(--accent-text)}
+body:not(.page-app) :is(button,input,select,textarea){font-family:var(--font)}
+body:not(.page-app) :is(.btn,.chip-btn){border-radius:6px}
+body:not(.page-app) .page-track{padding-top:24px}
+body:not(.page-app) #ledger :is(th,td){padding:10px 12px}
+@media(max-width:760px){
+ body.page-app .today-macro.has-current-dashboard{padding:10px}
+ body.page-app .today-dashboard-metric{padding:8px;gap:3px}
+ body.page-app .today-dashboard-metric .today-macro-value{font-size:22px}
+ body.page-app .today-dashboard-chart .today-lines{max-height:150px}
+ body:not(.page-app) :is(.btn,.chip-btn,.track-record-details>summary,.outcome-review>summary){min-height:44px}
+ body:not(.page-app) :is(input,select,textarea){font-size:16px}
+}
+
+body.page-app .today-lines-line.is-qqq{stroke:var(--blue)}
+body.page-app .today-lines-dot.is-qqq{fill:var(--blue)}
+body.page-app :is(.today-lines-key,.today-lines-tip-row).is-qqq i{background:var(--blue)}
+@media(max-width:760px){
+ body.page-index .home-proof{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:18px;padding-top:14px}
+ body.page-index .home-proof dt{font-size:18px}
+ body.page-index .home-proof dd{font-size:11px;line-height:1.4}
+ body.page-index .home-eyebrow{margin-bottom:16px;letter-spacing:.04em}
+}
+
+body :is(button,input,select,textarea,svg text){font-family:var(--font)}

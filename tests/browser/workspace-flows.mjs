@@ -5,12 +5,12 @@ import {readFileSync} from 'node:fs';
 import {mkdir,writeFile} from 'node:fs/promises';
 const base=process.env.QA_BASE||'http://127.0.0.1:8953',output=process.env.QA_OUTPUT||'/tmp/ducky-workspace-flows';
 await mkdir(output,{recursive:true});const browser=await chromium.launch(),results=[];
-for(const width of [320,390,1440])for(const lang of ['zh','en']){
+for(const width of [320,390,1440])for(const lang of ['zh','en'])for(const theme of ['dark','light']){
  const context=await browser.newContext({viewport:{width,height:width===320?600:width===390?700:900},hasTouch:width<500,isMobile:width<500,reducedMotion:'reduce'});
- const page=await context.newPage(),errors=[],checks=[],label=width+'-'+lang;
+ const page=await context.newPage(),errors=[],checks=[],label=width+'-'+lang+'-'+theme;
  const copy=JSON.parse(readFileSync('i18n/'+lang+'.json')),s=key=>copy['app.'+key];
  page.on('pageerror',error=>errors.push(error.message));page.setDefaultTimeout(6000);
- const visit=async(route,fixture='first-use',auth='in')=>{await page.goto(`${base}/qa-frame?lang=${lang}&theme=dark&route=${route}&case=${fixture}&auth=${auth}`);await page.locator('.route-page h1').first().waitFor();};
+ const visit=async(route,fixture='first-use',auth='in')=>{await page.goto(`${base}/qa-frame?lang=${lang}&theme=${theme}&route=${route}&case=${fixture}&auth=${auth}`);await page.locator('.route-page h1').first().waitFor();};
  const check=(name,value)=>{assert.ok(value,name);checks.push(name);};
  try{
   await visit('watchlist');check('empty membership',/0\/50/.test(await page.locator('#watch-count').innerText()));
