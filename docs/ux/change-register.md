@@ -1,5 +1,9 @@
 # UX change and integration register
 
+## 2026-09-30 — Questions beside each market reading
+
+Every visible Today macro label now has a localized question-mark button. Reuse the existing accessible modal, keeping all definitions available when values are missing. An 18px glyph sits inside a 44px target; no extra default explanation rows are added. [Acceptance](../../reports/MARKET-HELP-2026-09-30.md).
+
 ## 2026-09-30 — Explore destinations and Today readings
 
 Implemented in the current candidate: company activity is the default Explore content;

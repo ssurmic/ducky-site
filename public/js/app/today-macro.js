@@ -30,10 +30,24 @@ export function fundingBand(score){return !OK(score)?'unknown':score>=60?'suppor
 export function liquidityHelp(latest){
   const beta=OK(latest?.beta_score)?num(latest.beta_score,0):'—';
   const regime=['supportive','mixed','adverse'].includes(latest?.regime)?latest.regime:'unknown';
-  return el('button.watch-signal-help.today-macro-help',{type:'button','aria-label':s('today.macro_help_label'),'data-reading-key':'macro-help:liquidity',
-    onclick:()=>modal(s('today.macro_help_label'),el('div.watch-signal-help-body',el('p',s('today.macro_help_intro')),
+  return el('button.watch-signal-help.today-macro-help',{type:'button','aria-haspopup':'dialog','aria-label':s('today.macro_help_label'),'data-reading-key':'macro-help:liquidity',
+    onclick:()=>modal(s('today.macro_help_label'),el('div.watch-signal-help-body',el('p',s('today.macro_help_meaning')),el('p',s('today.macro_help_intro')),
       el('ul',...['spread','tail','srf','net'].map(k=>el('li',s('today.macro_help_'+k)))),el('p',s('today.macro_help_bands')),
-      el('p.small.muted',s('today.macro_help_backdrop',{beta,regime:s('today.macro_regime_'+regime)})),el('p.small.muted',s('today.macro_help_sources'))))},'?');
+      el('p.small.muted',s('today.macro_help_backdrop',{beta,regime:s('today.macro_regime_'+regime)})),el('p.small.muted',s('today.macro_help_sources')),el('p.small.muted',s('today.metric_help_dates'))))},el('span',{'aria-hidden':'true'},'?'));
+}
+
+// Definitions stay available even when a saved reading is missing. No API request is needed.
+function metricHelp(tile){
+  const title=s('today.metric_help_title',{name:tile.label});
+  const references={yield:['FRED · DGS10','https://fred.stlouisfed.org/series/DGS10'],
+    vix:['Cboe · VIX','https://www.cboe.com/tradable-products/vix'],
+    fng:['CNN · Fear & Greed','https://www.cnn.com/markets/fear-and-greed'],
+    term:['Cboe · VIX / VIX3M','https://www.cboe.com/tradable_products/vix/term_structure']};
+  return el('button.watch-signal-help.today-macro-help',{type:'button','aria-haspopup':'dialog','aria-label':title,'data-reading-key':'macro-help:'+tile.key,
+    onclick:()=>{const body=el('div.watch-signal-help-body',...['meaning','reading','limits'].map(part=>el('p',s('today.help_'+tile.key+'_'+part))),
+      el('p.small.muted',s('today.metric_help_dates')));
+      const ref=references[tile.key];if(ref)body.append(el('a',{href:ref[1],target:'_blank',rel:'noopener noreferrer'},s('today.metric_help_source',{name:ref[0]})));
+      modal(title,body);}},el('span',{'aria-hidden':'true'},'?'));
 }
 
 // Earlier readings of the index, each with the band it sat in, as CNN lists them.
@@ -169,7 +183,7 @@ export function macroTiles(doc,{currentSnapshot=false}={}){
      recorded:k?s('today.k_components',{score:num(k.components[0].value,2),vix:num(k.components[1].value,2),fearAt:writtenAt(k.components[0].as_of),vixDate:k.components[1].date}):null,
      explanation:s('today.k_explanation')},
     {key:'term',label:s('today.term_ratio'),value:OK(ratio)?metricNumber(ratio,2):'—',unit:'',tone:OK(ratio)?(ratio>1?'down':ratio<1?'up':'flat'):'flat',
-     stamp:term.stamp,recorded:term.recorded,note:OK(ratio)?s(ratio>1?'today.macro_vix_stress':ratio<1?'today.macro_vix_calm':'today.macro_vix_equal'):s('today.macro_vix_missing')}];
+     stamp:term.stamp,recorded:term.recorded,note:OK(ratio)?s(ratio>1?'today.macro_vix_stress':ratio<1?'today.macro_vix_calm':'today.macro_vix_equal'):s('today.macro_vix_missing')}].map(tile=>({...tile,help:tile.help||metricHelp(tile)}));
 }
 
 function historyList(rows){
@@ -287,12 +301,12 @@ function currentDashboard(box,overview,doc,digest,state,now){
       tile.key==='vix'?s('today.vix_explanation'):tile.note;
     const date=reading?.date||(Number.isFinite(fngAt)?nySession(new Date(fngAt)):tile.key==='kindex'?kIndexReading(doc)?.date:null);
     metrics.append(el('div.today-dashboard-metric',{'data-tile':tile.key,'data-reading-anchor':'macro-tile:'+tile.key,class:'is-'+tile.tone},
-      el('span.today-macro-label',tile.label),
+      el('div.today-metric-heading',el('span.today-macro-label',tile.label),tile.help),
       el('strong.today-macro-value.mono',tile.value,tile.unit?el('span.today-macro-unit',tile.unit):null),
       note?el('span.today-dashboard-metric-note',note):null,
       stamp?el('span.today-dashboard-metric-date',{title:stamp,'aria-label':stamp},date||stamp):null));
     const detail=el('section.today-dashboard-source-metric',{'data-source-metric':tile.key},
-      el('h3',tile.label,tile.help||null),el('p.small',tile.note),
+      el('h3',tile.label),el('p.small',tile.note),
       tile.stamp?el('p.small.muted',tile.stamp):stamp?el('p.small.muted',stamp):null,
       tile.recorded?el('p.today-macro-recorded.small.muted',tile.recorded):null,
       tile.explanation?el('p.small',tile.explanation):null,
