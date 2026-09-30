@@ -62,7 +62,7 @@ test('earnings surprise and valid benchmark gains are green; pending returns rem
 });
 test('a zero-return seasonality sample remains neutral in both mean and each year',()=>{
  const root=document.createElement('section');renderSeasonality(root,{as_of:'2026-08-31',rows:[{year:2025,month:8,SPY:{return_pct:0},QQQ:{return_pct:0}}]},8);
- const changes=root.querySelectorAll('.numeric-change');assert.equal(root.querySelectorAll('.season-metrics>article>strong.numeric-change,.season-year>.numeric-change').length,4);changes.forEach(node=>tone(node,''));assert.match(root.textContent,/Unchanged 0.0%/);
+ const changes=root.querySelectorAll('.numeric-change');assert.equal(root.querySelectorAll('.season-comparison strong.numeric-change,.season-year>.numeric-change').length,4);changes.forEach(node=>tone(node,''));assert.match(root.textContent,/Unchanged 0.0%/);
 });
 test('creator chart inspection colors each actual return independently and preserves selected date',()=>{
  const chart=priceChart({ticker:'NVDA',ret:2,spy_ret:0,path:[{d:'2026-09-24',stock:-1,spy:3},{d:'2026-09-25',stock:2,spy:0}]});

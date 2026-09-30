@@ -40,7 +40,7 @@ test('50 stocks show capacity and selection before attempting an add; each succe
  try{
   assert.match(root.querySelector('#watch-count').textContent,/50.*50/);
   assert.equal(root.querySelector('.watch-capacity').hidden,false);
-  assert.match(root.querySelector('.watch-capacity').textContent,/50-stock limit/);
+  assert.match(root.querySelector('.watch-capacity').textContent,/Limit: 50 stocks/);
   assert.equal(root.querySelector('form button').disabled,true);
   assert.equal(root.querySelectorAll('[data-watch-select]').length,51);
   assert.equal(root.querySelector('.watch-remove-selected').disabled,true);

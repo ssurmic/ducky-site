@@ -1,9 +1,17 @@
 # Change log
 
+## Consistent desktop and phone workspace density · 2026-09-30
+
+Unify page titles, subtitles, spacing and desktop content edges; replace oversized historical-return cards with a compact SPY/QQQ table while retaining full history and methods. Align stock actions and profile fields. Preserve the four prominent research/source choices and Insider filters/metrics. Broad bilingual layout and first-use workflow checks are recorded in [the acceptance report](reports/WORKSPACE-DENSITY-2026-09-30.md). Publication is authorized through PR #128; its deployment receipt is recorded separately.
+
+
 ## Insider transaction controls and compact source facts · 2026-09-30 (candidate)
 
 Insider filings use immediate All / Buy / Sell controls, exact market-cap chips and visible advanced-filter constraints. New visits no longer silently apply the verified-open-market threshold. Compact records preserve source dates, security units, strict optional price/holding metrics and full filing access; source-reader labels follow the actual reported side. Existing bookmarks, language changes and asynchronous query/account fences remain. [Contract, checks and release boundary](reports/INSIDER-FILTER-UX-2026-09-30.md).
 
+## Prominent research and company activity entrances · 2026-09-29 (candidate)
+
+Show all four Watchlist views and all four company activity categories without sideways navigation. Separate search from view choice, lead Explore with Companies & capital, and retain All activity as a secondary route. Plain company activity visits start on Insiders; existing scoped links keep their meaning. Repair the inherited desktop category hiding rule. Phone choices fit one compact row with 12px labels, 18px headings and 44px targets; tighter record spacing brings more facts into the first screen. Integrated Insider metrics and buy/sell controls remain, with direction and market-cap controls sharing a phone row. [Design, validation and release boundary](reports/DISCOVERABLE-VIEWS-2026-09-29.md).
 
 ## Reviewed video views beside stock maps · 2026-09-29 (released PR #125)
 

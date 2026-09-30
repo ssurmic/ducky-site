@@ -56,23 +56,25 @@ export function renderSeasonality(root, data, initialMonth = Number(new Intl.Dat
     clear(results);
     if(!rows.length){results.append(el('p.data-notice',s('season.empty')));return;}
     const reading=savedReading(data,rows,month,midterm,after);
-    const summary=el('div.season-reading',el('h3',s('season.reading_title',{period:windowName})),
+    const summary=el('details.season-reading',el('summary',s('season.reading_title',{period:windowName})),
       el('p',reading?.summary?.[isZh?'zh':'en']||s('season.reading_fallback')));
-    results.append(summary);
     if(midterm)results.append(el('p.small.muted',s('season.midterm_note')));
-    const metrics=el('div.season-metrics');
-    for(const ticker of ['SPY','QQQ']) {
+    const metrics=el('table.season-comparison',{'aria-label':s('season.reading_title',{period:windowName})},
+      el('thead',el('tr',el('th',{scope:'col'},s('season.comparison_metric')),...['SPY','QQQ'].map(ticker=>el('th',{scope:'col'},s('season.name_'+ticker.toLowerCase()))))));
+    const values=['SPY','QQQ'].map(ticker=>{
       const st=stats(rows.map(r=>r[ticker])),down=rows.filter(r=>r[ticker]<0).length,flat=st.n-st.positive-down;
       const worst=rows.find(r=>r[ticker]===st.worst),best=rows.find(r=>r[ticker]===st.best);
-      const distribution=el('div.season-distribution',{'aria-hidden':'true'},
-        el('i.season-up',{style:{width:(100*st.positive/st.n)+'%'}}),el('i.season-down',{style:{width:(100*down/st.n)+'%'}}),
-        el('i.season-flat',{style:{width:(100*flat/st.n)+'%'}}));
-      metrics.append(el('article',el('b',s('season.name_'+ticker.toLowerCase())),el('span.muted.small',s('season.average_for',{period:windowName})),
-        el('strong',{class:numericChangeClass(st.mean)},move(st.mean)),distribution,
-        el('p.small',s('season.counts',{n:st.n,up:st.positive,down})+(flat?' · '+s('season.flat_count',{n:flat}):'')),
-        el('p.muted.small',changeParts('season.extremes',{worstYear:worst.year,bestYear:best.year},{worst:{value:st.worst,format:move},best:{value:st.best,format:move}}))));
-    }
-    results.append(metrics,el('p.season-limit.small.muted',s('season.limit_short')));
+      return {st,down,flat,worst,best};
+    });
+    const comparisonRow=(label,cells)=>el('tr',el('th',{scope:'row'},label),...cells.map(cell=>el('td',cell)));
+    const extreme=(row,kind)=>el('span.season-extreme',el('span',String(row[kind].year)),
+      el('span',{class:numericChangeClass(row.st[kind])},move(row.st[kind])));
+    metrics.append(el('tbody',
+      comparisonRow(s('season.average_for',{period:windowName}),values.map(({st})=>el('strong',{class:numericChangeClass(st.mean)},move(st.mean)))),
+      comparisonRow(s('season.comparison_years'),values.map(({st,down,flat})=>el('span',s('season.counts',{n:st.n,up:st.positive,down})+(flat?' · '+s('season.flat_count',{n:flat}):'')))),
+      comparisonRow(s('season.comparison_worst'),values.map(row=>extreme(row,'worst'))),
+      comparisonRow(s('season.comparison_best'),values.map(row=>extreme(row,'best')))));
+    results.append(metrics,el('p.season-limit.small.muted',s('season.limit_short')),summary);
     const detail=el('details.season-details',el('summary',s('season.table_count',{n:rows.length})));
     const yearSelect=el('select.season-year-select',{'aria-label':s('season.years')},el('option',{value:'all'},s('season.all_years')));
     const decades=[...new Set(rows.map(r=>Math.floor(r.year/10)*10))].sort((a,b)=>b-a);

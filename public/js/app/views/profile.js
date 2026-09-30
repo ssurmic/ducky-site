@@ -67,7 +67,7 @@ export async function mount(root, params = {}) {
     lang.value = prof.lang || (document.documentElement.lang || "zh").slice(0, 2);
     const country = input("country", "text", prof.country || "", s("profile.country"), false);
     const opt = el("label.check", el("input", { type: "checkbox", name: "marketing_opt_in", checked: prof.marketing_opt_in ? "" : null }), " " + s("profile.marketing"));
-    const optional = el('div', name.wrap, field(s("profile.lang"), lang), country.wrap, opt);
+    const optional = el('div.profile-optional', name.wrap, field(s("profile.lang"), lang), country.wrap, opt);
     form.append(email.wrap, setup ? el('details', el('summary', s('profile.optional')), optional) : optional,
       el("p.muted.small", s("profile.privacy")),
       el("div.cta-row", el("button.btn.btn-primary", { type: "submit" }, s(setup && !prof.email_verified ? "profile.setup_save" : "profile.save"))));

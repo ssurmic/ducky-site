@@ -172,14 +172,24 @@ test('official lowercase live and revision provenance never reuse a historical-b
  finally{cleanup();}
 });
 
-test('compact category tabs remain visible with selection and keyboard focus preserved',async()=>{
- globalThis.fetch=async()=>response({items:sample,sectors:[],filter_version:3});
- const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams('board=insider')});
+test('four primary categories default to insiders, retain keyboard focus and expose cross-source browsing separately',async()=>{
+ const calls=[];globalThis.fetch=async url=>{calls.push(String(url));return response({items:sample,sectors:[],filter_version:3});};
+ const root=document.createElement('section');document.body.append(root);const cleanup=await mount(root,{query:new URLSearchParams()});
  assert.equal(root.querySelector('.radar-category-toggle'),null);
- assert.deepEqual([...root.querySelectorAll('.radar-category')].map(node=>node.dataset.board),['all','insider','funds','political','company']);
+ assert.deepEqual([...root.querySelectorAll('.radar-categories .radar-category')].map(node=>node.dataset.board),['insider','funds','political','company']);
+ assert.equal(root.querySelector('[data-board=insider]').getAttribute('aria-pressed'),'true');
+ assert.ok(calls.some(url=>new URL(url,'https://ducky.test').searchParams.get('kind')==='insider,cluster'));
+ assert.equal(root.querySelector('select[aria-label="Transaction venue"]').value,'all');
+ assert.ok(calls.some(url=>{const params=new URL(url,'https://ducky.test').searchParams;return params.get('kind')==='insider,cluster'&&params.get('content')==='all';}));
+ assert.equal(root.querySelector('.insider-active-filters').children.length,0);
+ assert.ok(root.querySelector('.radar-other-categories [data-board=all]'));
  const political=root.querySelector('.radar-categories [data-board=political]');political.focus();political.click();await flush();
  const selected=root.querySelector('.radar-categories [data-board=political]');
  assert.equal(document.activeElement,selected);assert.equal(selected.getAttribute('aria-pressed'),'true');
  assert.equal(new URLSearchParams(location.hash.split('?')[1]).get('board'),'political');
+ const all=root.querySelector('[data-board=all]');all.focus();all.click();await flush();
+ assert.equal(document.activeElement,root.querySelector('[data-board=all]'));
+ assert.equal(root.querySelector('[data-board=all]').getAttribute('aria-pressed'),'true');
+ assert.equal(new URLSearchParams(location.hash.split('?')[1]).get('board'),'all');
  cleanup();root.remove();
 });

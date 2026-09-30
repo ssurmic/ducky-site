@@ -1,5 +1,10 @@
 # UX change and integration register
 
+## Workspace density and discoverable research · 2026-09-30 (PR #128)
+
+Four visible Watchlist/source choices, compact phone navigation and prominent Company activity are combined with a shared title/subtitle/spacing scale across desktop and phone. Calendar monthly history is a compact comparison table with full interpretation and annual records on expansion. Stock actions/profile alignment and the English record count are repaired. [Discoverability evidence](../../reports/DISCOVERABLE-VIEWS-2026-09-29.md) and [full workspace/first-use acceptance](../../reports/WORKSPACE-DENSITY-2026-09-30.md) distinguish local checks from the authorized production release.
+
+
 ## Insider transaction controls and compact source facts · 2026-09-30 (candidate)
 
 Insider filings use immediate All / Buy / Sell controls, exact market-cap chips and visible advanced-filter constraints. New visits no longer silently apply the verified-open-market threshold. Compact records preserve source dates, security units, strict optional price/holding metrics and full filing access; source-reader labels follow the actual reported side. Existing bookmarks, language changes and asynchronous query/account fences remain. [Contract, checks and release boundary](../../reports/INSIDER-FILTER-UX-2026-09-30.md).

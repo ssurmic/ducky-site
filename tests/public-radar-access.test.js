@@ -16,7 +16,7 @@ const response=data=>new Response(JSON.stringify(data),{headers:{'content-type':
 test('free radar reads current authenticated records without an artificial delay',async()=>{
  store.set('me',{tier:'free'});const calls=[];
  globalThis.fetch=async(url,options)=>{calls.push(String(url));return response(String(url).includes('archive.json')?{filter_version:3,items:[{id:1,ts:new Date().toISOString(),kind:'stake',ticker:'EX',summary:'Current source'}],access:{mode:'current',delay_days:0}}:{items:[]});};
- const root=document.createElement('section');document.body.append(root);const dispose=await mount(root,{query:new URLSearchParams()});
+ const root=document.createElement('section');document.body.append(root);const dispose=await mount(root,{query:new URLSearchParams('board=company')});
  assert.ok(calls.some(url=>url.startsWith('/radar/archive.json')));assert.ok(!calls.some(url=>url.startsWith('/public/radar')));
  assert.match(root.textContent,/Current source/);assert.equal(root.querySelector('.radar-access-note'),null);
  dispose();root.remove();

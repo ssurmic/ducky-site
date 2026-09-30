@@ -129,9 +129,11 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
   const layout = el('div.watch-layout', list, detail);
   const modes = el('div.watch-modes', {'role':'group','aria-label':s('watch.display')});
   for (const mode of allowedModes) modes.append(el('button.btn.btn-ghost.btn-sm', {type:'button',
-    'data-mode':mode, 'aria-pressed':String(view===mode), onclick:()=>{
+    'data-mode':mode, 'aria-pressed':String(view===mode), 'aria-label':s('watch.view_'+mode),
+    'aria-describedby':'watch-mode-'+mode, onclick:()=>{
       view=mode;render();
-    }},s('watch.view_'+mode)));
+    }},el('span.watch-mode-title',s('watch.view_'+mode)),
+      el('span.watch-mode-purpose',{id:'watch-mode-'+mode},s('watch.purpose_'+mode))));
   const offer = el('div.watch-search-offer',{hidden:true,'aria-live':'polite'});
   let filterTimer=null;
   const filter = el('input.input.watch-filter',{type:'search',value:query,placeholder:s('watch.filter'), 'aria-label':s('watch.filter'),autocomplete:'off',spellcheck:'false',
@@ -186,7 +188,7 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
   }
   head.append(addOptions);
   tourTarget(head,'watchlist.home');
-  root.append(head, freeGuide() || "", usage, capacity, starterHost, controls, modeNote, offer, bulk, removeResult, readNotice, strip, layout,
+  root.append(head, freeGuide() || "", usage, starterHost, controls, modeNote, capacity, offer, bulk, removeResult, readNotice, strip, layout,
     el('div.chips',el('a.chip',{href:'#/updates'},s('updates.entry_title'))));
 
   async function onAdd(e) {
@@ -319,7 +321,7 @@ export async function mount(root,{signal,query:routeQuery=new URLSearchParams()}
     if (selected && !items.includes(selected)) {selected=null;renderDetail();}
     modes.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.mode===view)));
     controls.hidden=focused&&(!items.length||keepStarters);
-    modeNote.hidden=!focused||!items.length||keepStarters;
+    modeNote.hidden=!focused||!items.length||keepStarters||view!=='metrics';
     layout.hidden=keepStarters;
     modeNote.replaceChildren(s('watch.ux_mode_'+view));
     if(focused&&view==='metrics')modeNote.append(' ',el('a',{href:'#/today'},s('watch.ux_market_context')));
