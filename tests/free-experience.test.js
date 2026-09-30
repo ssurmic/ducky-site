@@ -2,6 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
+import {opinionsFixture} from './fixtures/qa-creator-opinions.js';
 const dom=new JSDOM('<html data-lang="en"><body><div id="modal" hidden></div></body></html>',{url:'http://localhost/app/#/evidence/AVGO'});
 for(const k of ['window','document','Node','location','history'])globalThis[k]=dom.window[k];
 const copy=JSON.parse(readFileSync('i18n/en.json'));
@@ -45,13 +46,15 @@ test('a chosen free map stays locked until explicit save; unavailable data costs
  store.set('me',me());let saved=false,ready=false,calls=[];
  globalThis.fetch=async(url,opts)=>{
   calls.push([url,opts.method]);
+  if(url.startsWith('/kol/opinions?'))return response(opinionsFixture({ticker:'AVGO',items:[]}));
   if(url==='/me/evidence')return response({selected:[],cap:3});
   if(url==='/me/evidence/AVGO'){saved=ready;return response({status:ready?'ready':'unavailable',selected:ready?['AVGO']:[]});}
   if(url==='/evidence/AVGO'){assert.ok(saved);return response({ticker:'AVGO',nodes:[{id:'one',title:{en:'Saved evidence'},stance:'context',evidence:[]}],status:'ready'});}
   throw Error('Unexpected request '+url);
  };
  const root=document.createElement('div');document.body.append(root);const stop=await mount(root,{ticker:'AVGO'});
- assert.deepEqual(calls,[['/me/evidence','GET']]);
+ // The independent reviewed-video preview grants no access to an unselected map.
+ assert.deepEqual(calls,[['/me/evidence','GET'],['/kol/opinions?topic=all&scope=discover&limit=30&ticker=AVGO','GET']]);
  root.querySelector('.card .btn-primary').click();await tick();assert.match(root.textContent,/No slot was used/);
  assert.ok(!calls.some(([u])=>u==='/evidence/AVGO'));
  ready=true;root.querySelector('.card .btn-primary').click();await tick();await tick();

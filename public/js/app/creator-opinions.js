@@ -80,9 +80,10 @@ export function opinionRow(row,{from='explore'}={}){
   return body;
 }
 
-function opinionPreview(row,{from,onOpen}={}){
+function opinionPreview(row,{from,onOpen,showAuthor=false}={}){
   const key='opinion:'+row.display_group_id;
   const button=el('button.opinion-preview-open',{type:'button','data-reading-key':key+':preview',onclick:()=>onOpen(row)},
+    showAuthor?el('span.small.opinion-preview-author',row.author):null,
     el('span.opinion-subject',text(row.subject)),
     row.speaker.kind!=='creator'?el('span.opinion-speaker',s('opinions.speaker_'+row.speaker.kind,{name:row.speaker.name||s('opinions.unnamed')})):null,
     el('span.opinion-claim',text(row.claim)),
@@ -97,7 +98,7 @@ function opinionPreview(row,{from,onOpen}={}){
     button);
 }
 
-export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creator=null,from='explore',rail=false,initial=rail?12:3,compactEmpty=false}={}){
+export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creator=null,from='explore',rail=false,initial=rail?12:3,compactEmpty=false,title:customTitle=null}={}){
   const epoch=store.epoch(),scope=account(),stateKey=JSON.stringify([topic,ticker,creator]);
   if(controlScope!==scope){controls.clear();controlScope=scope;}
   if(newest.scope!==scope)newest={scope,revision:null,at:-Infinity};
@@ -108,7 +109,7 @@ export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creato
   let disposed=false,loading=false,readFailed=false,seq=0,rows=[],doc=null,pages=0,showAll=!!saved?.showAll,restoreSaved=true;
   const current=()=>!disposed&&!signal?.aborted&&epoch===store.epoch()&&account()===scope;
   const visible=()=>document.visibilityState!=='hidden'&&window.navigator?.onLine!==false&&!host.closest('[hidden]');
-  const title=s(ticker?'opinions.stock_title':topic==='macro'?'opinions.macro_title':'opinions.latest_title',{ticker});
+  const title=customTitle||s(ticker?'opinions.stock_title':topic==='macro'?'opinions.macro_title':'opinions.latest_title',{ticker});
   const list=el('div.creator-opinions-list'),notice=el('div.opinions-notice',{role:'status'}),heading=el('h2',{tabindex:'-1'},title);
   const refresh=el('button.btn.btn-ghost.btn-sm',{type:'button','data-reading-key':'opinions:refresh',onclick:()=>load()},s('opinions.refresh'));
   const more=el('button.btn.btn-ghost.opinions-more',{type:'button',hidden:true,'data-reading-key':'opinions:more',onclick:()=>{
@@ -136,7 +137,7 @@ export function mountCreatorOpinions(host,{signal,topic='all',ticker=null,creato
     railUI?.dispose();railUI=null;
     const selected=showAll?rows:rows.slice(0,initial);
     if(rail&&selected.length){
-      railUI=creatorRail(selected.map(row=>({id:row.display_group_id,node:opinionPreview(row,{from,onOpen:openPreview})})),{key:'native:'+stateKey,label:title,state:railState});
+      railUI=creatorRail(selected.map(row=>({id:row.display_group_id,node:opinionPreview(row,{from,onOpen:openPreview,showAuthor:creator===null})})),{key:'native:'+stateKey,label:title,state:railState});
       replaceReading(list,railUI.node);
     }else replaceReading(list,...selected.map(row=>opinionRow(row,{from})));
     if(restoreSaved){for(const node of list.querySelectorAll('details[data-reading-key]'))if(saved?.opened?.includes(node.dataset.readingKey))node.open=true;restoreSaved=false;}
