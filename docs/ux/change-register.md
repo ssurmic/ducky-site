@@ -1,8 +1,10 @@
 # UX change and integration register
 
-## Video views in current research maps · 2026-09-29 (candidate)
+## Video views in current research maps · 2026-09-29 (released PR #125)
 
 Both the stock Map tab and standalone map expose the same exact-ticker reviewed video views as Overview, with visible author attribution and complete source details. The shelf stays outside transcript evidence, graph counts and archived versions. Existing access and shared-read withdrawal rules remain. [Implementation and validation](../../reports/NATIVE-MAP-VIEWS-2026-09-29.md).
+
+Production now serves `e2f36595` from Pages `75f859f1`, verified with the expected CSP at 2026-09-30 03:34:19 UTC. The publisher repeated the 975-test Node gate; Chrome fixture checks covered phone source dialogs/focus and the corrected desktop connector clipping. This is UI deployment acceptance; actual new-video publication remains pending. Repository receipt updates do not replace the deployed artifact. [Exact release receipt](../../reports/NATIVE-MAP-VIEWS-2026-09-29.md#production-release-receipt).
 
 ## Four-view creator shelves and signed changes · 2026-09-29
 

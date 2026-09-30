@@ -1,8 +1,10 @@
 # Change log
 
-## Reviewed video views beside stock maps · 2026-09-29 (candidate)
+## Reviewed video views beside stock maps · 2026-09-29 (released PR #125)
 
 Stock Map and standalone research maps now expose exact-ticker video views through a compact attributed shelf and a direct reading button. Full conditions and sources remain accessible; historical maps and graph support counts stay separate. The existing shared read requires no creator follow and adds no write or processing action. [Checks and release boundary](reports/NATIVE-MAP-VIEWS-2026-09-29.md).
+
+Released as `e2f36595` on Pages `75f859f1`; production version and expected CSP verified September 30 at 03:34:19 UTC (September 29 Pacific). The publisher reran 975 Node tests successfully. Phone source/focus checks and the corrected desktop SVG boundary passed with fixtures; actual new-video publication acceptance remains pending. The receipt-only documentation update does not redeploy the site.
 
 ## Four-view creator shelves and signed changes · 2026-09-29
 
