@@ -1,5 +1,10 @@
 # Change log
 
+## Consistent desktop and phone workspace density · 2026-09-30
+
+Unify page titles, subtitles, spacing and desktop content edges; replace oversized historical-return cards with a compact SPY/QQQ table while retaining full history and methods. Align stock actions and profile fields. Preserve the four prominent research/source choices and Insider filters/metrics. Broad bilingual layout and first-use workflow checks are recorded in [the acceptance report](reports/WORKSPACE-DENSITY-2026-09-30.md). Publication is authorized through PR #128; its deployment receipt is recorded separately.
+
+
 ## Insider transaction controls and compact source facts · 2026-09-30 (candidate)
 
 Insider filings use immediate All / Buy / Sell controls, exact market-cap chips and visible advanced-filter constraints. New visits no longer silently apply the verified-open-market threshold. Compact records preserve source dates, security units, strict optional price/holding metrics and full filing access; source-reader labels follow the actual reported side. Existing bookmarks, language changes and asynchronous query/account fences remain. [Contract, checks and release boundary](reports/INSIDER-FILTER-UX-2026-09-30.md).

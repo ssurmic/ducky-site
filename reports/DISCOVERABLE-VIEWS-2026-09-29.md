@@ -1,6 +1,6 @@
 # Discoverable research views and company activity · September 29, 2026
 
-Status: implemented locally; not merged or deployed. Synthetic records validate layout and navigation, not current production content.
+Status at this acceptance: implemented locally; publication was subsequently authorized by the owner. The same PR now includes the [full workspace review](WORKSPACE-DENSITY-2026-09-30.md). Synthetic records validate layout and navigation, not current production content.
 
 ## Problem and resulting behavior
 
@@ -38,4 +38,4 @@ Local screenshots and machine-readable measurements: `/tmp/ducky-discoverable-in
 
 ## Release and rollback
 
-Base after integration: frontend `0de3829e0812d9d91f7afe5babcefa1cf2111d15` on `origin/main`. No API, source ownership, authentication, trading rule, notification or inference changes. Candidate is for review only. Rollback is a source revert and normal frontend publication; no data migration is needed. Shared architecture/status/continuation records live in the private backend repository.
+Base after integration: frontend `0de3829e0812d9d91f7afe5babcefa1cf2111d15` on `origin/main`. No API, source ownership, authentication, trading rule, notification or inference changes. The owner has authorized frontend publication after the combined validation. Rollback is a source revert and normal frontend publication; no data migration is needed. Shared architecture/status/continuation records live in the private backend repository.

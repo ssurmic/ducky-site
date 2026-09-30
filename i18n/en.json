@@ -1358,7 +1358,7 @@
   "app.season.sample": "{from}–{to} · {n} complete years (N={n})",
   "app.season.stats": "Median {median} · Positive in {up}/{n} years",
   "app.season.table": "View annual observations",
-  "app.season.title": "How did this month play out?",
+  "app.season.title": "Historical monthly returns",
   "app.season.unavailable": "Historical months are temporarily unavailable. You can still use the investment calendar; please try again later.",
   "app.season.window": "Period",
   "app.season.year": "Year",
@@ -1582,7 +1582,7 @@
   "app.radar.guide_hiring": "Hiring is a lead, not proof of orders or revenue.",
   "app.radar.guide_volscan": "Compare IV/HV periods. A low ratio does not predict a rally.",
   "app.radar.guide_industry": "Industry news for context. Company links need verification.",
-  "app.radar.result_count": "{n} matching records · {stocks} stocks",
+  "app.radar.result_count": "Matching records: {n} · Stocks: {stocks}",
   "app.radar.recent_scope": "Newest first. See Full archive for earlier records.",
   "app.radar.recent_capped": "Latest 200 records only. Search Full archive for the rest.",
   "app.radar.archive_scope": "More records are available below.",
@@ -5760,5 +5760,9 @@
   "app.radar.ux.short_insider": "Insiders",
   "app.radar.ux.short_funds": "Funds",
   "app.radar.ux.short_political": "Political",
-  "app.radar.ux.short_company": "Company"
+  "app.radar.ux.short_company": "Company",
+  "app.season.comparison_metric": "Measure",
+  "app.season.comparison_years": "Up / down years",
+  "app.season.comparison_worst": "Worst year",
+  "app.season.comparison_best": "Best year"
 }

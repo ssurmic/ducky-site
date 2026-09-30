@@ -262,7 +262,14 @@ window.fetch=async(input,options={})=>{
  if(mode==='first-use'&&path==='/radar/social.json')return Response.json({status:'ready',collected_at:clock,items:
   ['NVDA','AMD','GLW','AVGO','MU','SPY'].map((ticker,i)=>({ticker,rank:i+1,name:{NVDA:'NVIDIA Corporation',AMD:'Advanced Micro Devices, Inc.',GLW:'Corning Incorporated',AVGO:'Broadcom Inc.',MU:'Micron Technology, Inc.',SPY:'SPDR S&P 500 ETF Trust'}[ticker],mentions:i===5?0:1240-i*181,change_pct:i===4?null:i%2?-10:35,
    ...(i<2?{overall:{en:'Sample author expects orders to grow if customer spending continues.',zh:'示例作者认为，若客户支出持续，订单有望增长。'},overall_as_of:clock}:{})}))});
+ if(path==='/auth/providers')return Response.json({google:false,telegram:false});
+ if(path==='/me/profile')return Response.json({email:'qa@example.test',email_verified:true,display_name:'QA Reader',lang:query.get('lang')||'zh',country:'',marketing_opt_in:false});
+ if(path==='/me/notifications')return Response.json({email_enabled:false,telegram_enabled:false,email_available:false,telegram_available:false,email_status:'disabled',telegram_status:'unlinked'});
+ if(path==='/push/config')return Response.json({enabled:false});
+ if(mode==='first-use'&&path==='/me/kols')return Response.json({subs:[],cap:50,analysis:{}});
+ if(mode==='first-use'&&path==='/kol/discover')return Response.json(uxReview.reply(path,url.searchParams));
  if(mode==='first-use'&&path==='/kol/opinions')return Response.json(opinionsFixture({items:[]}));
+ if(path==='/kol/opinions')return Response.json(opinionsFixture({topic:url.searchParams.get('topic')||'all',ticker:url.searchParams.get('ticker'),creator:url.searchParams.get('creator'),before:url.searchParams.get('before')}));
  if(path==='/radar/social.json')return Response.json({status:'ready',collected_at:new Date(Date.now()-1800000).toISOString(),items:[
   {ticker:'NVDA',name:'NVIDIA Corporation',rank:1,mentions:1240,change_pct:35,overall:READINGS.NVDA.overall},{ticker:'AMD',name:'Advanced Micro Devices, Inc.',rank:2,mentions:910,change_pct:-10,overall:READINGS.AMD.overall},
   {ticker:'GLW',name:'Corning Incorporated',rank:3,mentions:302,change_pct:120},{ticker:'AVGO',name:'Broadcom Inc.',rank:4,mentions:180}]});
@@ -275,7 +282,7 @@ window.fetch=async(input,options={})=>{
   return Response.json({items:watches.map(stockSummary),watchlist_count:watches.length});
  }
  if(path==='/me/research-changes'){
-  const items=(mode==='empty'||mode==='no-watch'?[]:Array.from({length:url.searchParams.has('q')?1:3},(_,i)=>record(i)))
+  const items=(mode==='empty'||mode==='no-watch'||mode==='first-use'?[]:Array.from({length:url.searchParams.has('q')?1:3},(_,i)=>record(i)))
    .filter(row=>url.searchParams.get('earlier')!=='false'||!row.earlier_content);
   return Response.json({items,next_cursor:!url.searchParams.has('before')&&mode==='pages'?'next-page':null,scope:url.searchParams.get('scope')});
  }
@@ -284,7 +291,7 @@ window.fetch=async(input,options={})=>{
   analysis_status:mode==='pending'?'pending':mode==='previous'?'refresh_pending':'ready',analysis:mode==='pending'?null:analysis,
   analysis_generated_at:mode==='previous'?previousClock:clock,...(mode==='previous'?{analysis_nodes:previousNodes,analysis_snapshot_id:'synthetic-old'}:{})}});}
  if(path.startsWith('/snapshot/')){const ticker=path.split('/').at(-1);return mode==='pending'?Response.json({ticker,status:'building'},{status:202}):Response.json({ticker,built_at:'2026-09-25T22:00:00Z',snapshot:{ok:true,ticker,spot:223.67,gamma:{put_wall:215,call_wall:240,scope:{expiries:['2026-10-02'],retrieved_at:'2026-09-25T21:55:00Z'}},vol:{iv:31,hv:35,ratio:.89},retrace:{d20:{lo:210.96,hi:230.10}}}});}
- if(path.startsWith('/bars/'))return Response.json({bars:mode==='pending'?[]:Array.from({length:90},(_,i)=>({t:new Date(Date.UTC(2026,5,1+i)).toISOString().slice(0,10),c:170+i*.48+Math.sin(i*.18)*12}))});
+ if(path.startsWith('/bars/'))return Response.json({bars:mode==='pending'?[]:Array.from({length:90},(_,i)=>{const c=170+i*.48+Math.sin(i*.18)*12;return {t:new Date(Date.UTC(2026,5,1+i)).toISOString().slice(0,10),o:c-1,h:c+2,l:c-2,c,v:1000000+i*10000};})});
  if(path==='/public/symbols'){
  if(mode==='autocomplete-watchlist'){
   const q=(url.searchParams.get('q')||'').trim().toUpperCase().replace(/^\$/,'');
@@ -343,8 +350,8 @@ window.fetch=async(input,options={})=>{
  return Response.json({items:[],posts:[]});
 };
 const store=await import('/js/app/store.js'),router=await import('/js/app/router.js');
-store.set('me',{user_id:8888,tier:'pro',access:{billing_enabled:false},watch_cap:50,
- ...(query.get('research')==='off'?{entitlement:{capabilities:{research:false}}}:{})});store.set('token','synthetic-fixture-only');store.set('watchlist',watches);
+store.set('me',query.get('auth')==='out'?null:{user_id:8888,tier:'pro',access:{billing_enabled:false},watch_cap:50,
+ ...(query.get('research')==='off'?{entitlement:{capabilities:{research:false}}}:{})});store.set('token',query.get('auth')==='out'?null:'synthetic-fixture-only');store.set('watchlist',watches);
 const {renderBrandNavigation}=await import('/js/app/navigation.js');renderBrandNavigation(store.get('me'));
 if(!location.hash)history.replaceState(null,'',location.pathname+location.search+'#/'+(query.get('route')||'today'));
 const language=document.querySelector('[data-lang-toggle]');if(language){const next=new URLSearchParams(query);next.set('lang',query.get('lang')==='en'?'zh':'en');language.href='/qa-frame?'+next+location.hash;}

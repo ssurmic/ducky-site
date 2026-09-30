@@ -1358,7 +1358,7 @@
   "app.season.sample": "{from}–{to} 年 · 共 {n} 个完整年份（N={n}）",
   "app.season.stats": "中位数 {median} · 上涨 {up}/{n} 年",
   "app.season.table": "展开逐年数据",
-  "app.season.title": "往年这个月，美股怎么走？",
+  "app.season.title": "月度历史表现",
   "app.season.unavailable": "历史月份数据暂时无法加载。投资日历仍可使用，请稍后重试。",
   "app.season.window": "比较时段",
   "app.season.year": "年份",
@@ -5760,5 +5760,9 @@
   "app.radar.ux.short_insider": "高管交易",
   "app.radar.ux.short_funds": "基金持仓",
   "app.radar.ux.short_political": "政客披露",
-  "app.radar.ux.short_company": "公司事件"
+  "app.radar.ux.short_company": "公司事件",
+  "app.season.comparison_metric": "比较项",
+  "app.season.comparison_years": "涨跌年份",
+  "app.season.comparison_worst": "最差年份",
+  "app.season.comparison_best": "最好年份"
 }

@@ -1,0 +1,87 @@
+/* Shared app typography and rhythm. Loaded after route styles so page chrome has one scale. */
+body.page-app {
+ --app-title:24px; --app-section:16px; --app-subtitle:13px; --app-body:14px;
+ --app-caption:12px; --app-panel:16px; --app-gap:12px; --app-section-gap:20px;
+}
+body.page-app .app-view {font-size:var(--app-body);line-height:1.55}
+body.page-app .app-view .route-page h1 {font-size:var(--app-title);line-height:1.3;letter-spacing:-.025em;margin:0}
+body.page-app .app-view .route-page h2 {font-size:var(--app-section);line-height:1.4;letter-spacing:0}
+body.page-app .app-view .route-page h3 {font-size:var(--app-body);line-height:1.45}
+body.page-app .app-view .route-page :is(.view-intro,.calendar-intro,.chart-picker-note),
+body.page-app .app-view .route-page :is(.focus-heading,.evidence-page-head,.radar-heading)>div>p:not(.today-date),
+body.page-app .app-view .route-page :is(.focus-heading,.radar-heading)>p,
+body.page-app .app-view .route-page h1+p.muted {
+ font-size:var(--app-subtitle);line-height:1.5;margin:4px 0 12px;
+}
+body.page-app .card {padding:var(--app-panel);margin-bottom:var(--app-gap)}
+body.page-app .app-view :is(.calendar-view,.creators-view,.radar-workspace,.evidence-view) {padding:0;background:none;border:0}
+body.page-app .app-view .route-page :is(.focus-heading,.evidence-page-head,.radar-heading,.calendar-heading,.view-head) {gap:8px 12px;margin-top:0;margin-bottom:var(--app-gap)}
+body.page-app .app-view :is(.focus-today,.focus-stock,.focus-explore) {max-width:none}
+body.page-app:is([data-route=profile],[data-route=billing],[data-route=alerts]) .app-view {max-width:1120px}
+body.page-app .app-main {scroll-padding-top:16px}
+body.page-app .app-view .focus-latest {margin-top:var(--app-section-gap)}
+body.page-app .app-view .focus-chart {margin:var(--app-section-gap) 0}
+body.page-app .app-view .focus-empty {padding:var(--app-panel);font-size:var(--app-body);line-height:1.55}
+body.page-app .app-view .empty {padding:16px 12px;font-size:var(--app-subtitle)}
+body.page-app .app-view .profile :is(.verify,.pwsec):empty {display:none}
+body.page-app .app-view .profile>.form {max-width:720px;gap:10px}
+body.page-app .app-view .profile .form>.profile-optional {display:contents}
+body.page-app .app-view .profile .form>details .profile-optional {display:grid;gap:10px;padding-top:8px}
+body.page-app .app-view .profile .profile-optional>.check {grid-column:1/-1}
+body.page-app .app-view .profile .form label {font-size:var(--app-subtitle)}
+body.page-app .app-view .profile .form .cta-row {margin:10px 0 0}
+body.page-app .app-view .profile>p.muted {margin-bottom:12px}
+body.page-app .app-view .alert-draft {padding:var(--app-panel)}
+body.page-app .app-view .stock-workspace-tabs {margin:8px 0 12px}
+body.page-app .app-view .focus-stock>.focus-heading {justify-content:flex-start}
+body.page-app .app-view .focus-stock>.focus-heading>[data-stock-watch] {margin-left:auto}
+body.page-app .app-view .focus-stock>.focus-heading p {margin:4px 0 0}
+body.page-app .app-view .focus-stock .evidence-analysis {margin:12px 0 16px}
+body.page-app .app-view .creator-feed-heading {margin:10px 0 8px}
+body.page-app .app-view .creator-views-group {padding-top:8px;padding-bottom:12px}
+body.page-app .app-view .creators-ux-author-views {margin:12px 0 16px}
+
+/* Historical comparison is a compact data table; the complete interpretation remains expandable. */
+body.page-app .app-view .seasonality-view {margin-top:var(--app-section-gap)}
+body.page-app .app-view .seasonality-view h2 {margin:0 0 4px}
+body.page-app .app-view .seasonality-view>p {font-size:var(--app-caption);line-height:1.5;margin:4px 0 8px}
+body.page-app .app-view .seasonality-view .season-controls {display:flex;align-items:end;gap:8px;margin:12px 0 8px}
+body.page-app .app-view .season-controls label {flex:0 1 220px;font-size:var(--app-caption);gap:4px}
+body.page-app .app-view .season-controls select {min-height:44px;padding:6px 10px}
+body.page-app .app-view .season-controls>.btn {align-self:end;min-height:44px}
+.season-comparison {width:100%;border-collapse:collapse;table-layout:fixed;margin:8px 0;font-size:13px;font-variant-numeric:tabular-nums}
+.season-comparison th,.season-comparison td {padding:8px 12px;border-bottom:1px solid var(--border);text-align:left;vertical-align:middle;overflow-wrap:anywhere}
+.season-comparison thead th {background:var(--surface-2);font-size:13px;font-weight:650}
+.season-comparison th:first-child {width:26%;font-weight:500;color:var(--muted)}
+.season-comparison strong {font-size:17px;font-weight:650}
+.season-extreme {display:flex;gap:5px 12px;flex-wrap:wrap}
+.season-extreme>span:first-child {color:var(--muted)}
+body.page-app .app-view .season-reading {border:0;border-top:1px solid var(--border);padding:0;margin:8px 0 0;max-width:none}
+body.page-app .app-view .season-reading>summary,
+body.page-app .app-view .season-details>summary {font-size:var(--app-subtitle);min-height:44px;padding:10px 0;cursor:pointer;color:var(--accent-text,var(--accent))}
+body.page-app .app-view .season-reading>p {font-size:var(--app-body);line-height:1.6;margin:0 0 12px;max-width:80ch}
+body.page-app .app-view .season-limit {font-size:var(--app-caption);line-height:1.5;margin:8px 0}
+body.page-app .app-view .season-details {margin-top:0}
+body.page-app .app-view .season-details>p {font-size:var(--app-subtitle);line-height:1.6}
+body.page-app .app-view .season-table th,body.page-app .app-view .season-table td {padding:8px}
+
+@media(min-width:1000px) {
+ body.page-app .app-main {padding:24px clamp(24px,3vw,44px) 32px}
+ body.page-app .app-view .calendar-view {padding:0;background:none;border:0}
+ body.page-app .app-view .cal-grid .cal-cell {min-height:120px}
+}
+@media(max-width:760px) {
+ body.page-app {--app-title:18px;--app-section:14px;--app-subtitle:12px;--app-body:13px;--app-caption:11px;--app-panel:10px;--app-gap:8px;--app-section-gap:14px}
+ body.page-app .app-view .route-page :is(input:not([type=checkbox]):not([type=radio]),select,textarea) {font-size:16px}
+ body.page-app .app-view .route-page :is(.btn,.btn-sm) {min-height:44px}
+ body.page-app .app-view .route-page :is(.focus-heading,.evidence-page-head,.radar-heading,.calendar-heading,.view-head) {gap:4px 8px}
+ body.page-app .app-view .focus-stock>.focus-heading>[data-stock-watch] {margin-left:0}
+ body.page-app .app-view .seasonality-view .season-controls {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:8px 0}
+ body.page-app .app-view .season-controls>.btn {grid-column:1/-1;justify-self:start;font-size:12px;padding:6px 9px}
+ .season-comparison {font-size:12px}
+ .season-comparison th,.season-comparison td {padding:7px 6px}
+ .season-comparison thead th {font-size:12px}
+ .season-comparison th:first-child {width:25%}
+ .season-comparison strong {font-size:14px;white-space:nowrap}
+ .season-extreme {gap:2px 6px}
+}

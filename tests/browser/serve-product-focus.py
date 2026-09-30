@@ -20,7 +20,7 @@ class Handler(SimpleHTTPRequestHandler):
    lang='en' if parse_qs(u.query).get('lang')==['en'] else 'zh'
    value=(root/'dist'/lang/'app/index.html').read_text()
    value=re.sub(r'<script\b(?![^>]*type="application/json")[^>]*>[\s\S]*?</script>','',value)
-   value=value.replace('</body>','<script type="module" src="/tests/fixtures/product-focus-browser.js"></script></body>')
+   value=value.replace('</body>','<script src="/vendor/lightweight-charts/lightweight-charts.standalone.production.js"></script><script type="module" src="/tests/fixtures/product-focus-browser.js"></script></body>')
    raw=value.encode();self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(raw)));self.end_headers();self.wfile.write(raw);return
   super().do_GET()
  def translate_path(self,path):
