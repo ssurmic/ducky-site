@@ -140,9 +140,10 @@ export async function mount(root, route={}) {
   const currentAccess=!!store.get('me');
   const readingNow=()=>Date.now()-(currentAccess?0:5*86400000);
   let accessInfo=null, purchasesExplicit=params.has('purchases');
-  const insiderEntry=params.get('board')==='insider';
+  const insiderEntry=params.get('board')==='insider'||(!reports&&!params.size);
   const state={reports,mode:['archive','excerpts'].includes(params.get('mode'))?params.get('mode'):'recent',
-    board:BOARDS.some(b=>b.key===params.get('board'))?params.get('board'):'all',
+    // A plain visit starts with one source. Existing scoped links retain their cross-source meaning.
+    board:BOARDS.some(b=>b.key===params.get('board'))?params.get('board'):reports||params.size?'all':'insider',
     q:params.get('q') || '',ticker:params.get('ticker') || '',
     content:['all','missing','readable'].includes(params.get('content'))?params.get('content'):(insiderEntry?'all':'readable'),
     direction:['-1','0','1'].includes(params.get('direction'))?params.get('direction'):'',
@@ -170,6 +171,7 @@ export async function mount(root, route={}) {
   const coverage=el('details.radar-coverage',{'aria-label':s('radar.coverage')});
   const pelosiJump=el('button.btn.btn-ghost.btn-sm.radar-pelosi',{type:'button',onclick:showPelosi},s('radar.pelosi_history'));
   const nav=el('nav.radar-categories',{'aria-label':s('radar.categories')});
+  const otherCategories=el('div.radar-other-categories');
   nav.id='radar-categories';
   const categoryLabel=el('span');
   const categoryToggle=reports?el('button.radar-category-toggle',{type:'button','aria-expanded':'false','aria-controls':nav.id,onclick:()=>{
@@ -181,10 +183,10 @@ export async function mount(root, route={}) {
       sidebar.classList.remove('categories-open');categoryToggle.setAttribute('aria-expanded','false');categoryToggle.focus({preventScroll:true});
     }
     selectBoard(key);
-    if(!reports)nav.querySelector('[data-board="'+key+'"]')?.focus({preventScroll:true});
+    if(!reports)card.querySelector('[data-board="'+key+'"]')?.focus({preventScroll:true});
   };
   const tabs=el('div.radar-tabs',{'aria-label':s('radar.record_scope')},...['recent','archive','excerpts'].map(mode=>el('button',
-    {type:'button','data-mode':mode,onclick:()=>{state.mode=mode;state.start='';state.end='';start.value='';end.value='';apply();}},s('radar.mode_'+mode))));
+    {type:'button','data-mode':mode,'aria-label':s('radar.mode_'+mode),onclick:()=>{state.mode=mode;state.start='';state.end='';start.value='';end.value='';apply();}},s(reports?'radar.mode_'+mode:'radar.ux.scope_'+mode))));
   const input=(name,type,placeholder)=>el('input.input',{name,type,placeholder,'aria-label':s('radar.'+name),maxlength:name==='q'?100:12});
   const query=input('q','search',s('radar.search_hint'));query.value=state.q;
   const ticker=input('ticker','search','NVDA');ticker.value=state.ticker;
@@ -227,7 +229,8 @@ export async function mount(root, route={}) {
   const note=el('p.radar-scope-note.muted');
   const rows=el('div.radar-records');
   const more=el('button.btn.btn-ghost.radar-more',{type:'button',onclick:()=>loadArchive(false)},s('creators.load_more'));
-  const main=el('section.radar-main',tabs,guide,quick,filter,activeFilters,summary,activeRule,rows,more,note);
+  const scopeBar=reports?tabs:el('div.radar-scope-bar',tabs,otherCategories);
+  const main=el('section.radar-main',scopeBar,guide,quick,filter,activeFilters,summary,activeRule,rows,more,note);
   // Explicit screening links lead with their destination. Market data arriving later
   // stays below it, so it cannot push the focused form out of the viewport.
   card.append(header,...(currentAccess?[]:[accessNote]),...(screenEntry?[screenPanel]:[]),el('div.radar-layout',sidebar,main),
@@ -355,23 +358,26 @@ export async function mount(root, route={}) {
     const shown=filterRecords(source,state,readingNow()), available=filterRecords(source,{...state,board:'all'},readingNow());
     const missingCount=filterRecords(source,{...state,content:'missing'},readingNow()).length;
     const hasError=state.mode==='recent'?recentFailed:state.mode==='excerpts'?historyFailed:failed;
-    const focusedBoard=nav.contains(document.activeElement)?document.activeElement.dataset.board:null;
-    clear(nav);
+    const focusedBoard=nav.contains(document.activeElement)||otherCategories.contains(document.activeElement)?document.activeElement.dataset.board:null;
+    clear(nav);clear(otherCategories);
     const selectedLegacy=state.board!=='all'&&!availableBoards.some(board=>board.key===state.board)?BOARDS.filter(board=>board.key===state.board):[];
     for(const board of [{key:'all'},...availableBoards,...selectedLegacy]){
       const count=board.key==='all'?available.length:available.filter(r=>matchesBoard(r,board.key)).length;
-      nav.append(el('button.radar-category',{type:'button','aria-pressed':String(board.key===state.board),'data-board':board.key,onclick:()=>chooseCategory(board.key)},
-        icon(board.icon || (board.key==='all'?'boards':board.key)),el('span',boardLabel(board.key)),
+      const primary=!reports&&EVENT_BOARDS.some(item=>item.key===board.key);
+      const destination=reports||primary?nav:otherCategories;
+      destination.append(el('button.radar-category',{type:'button','aria-pressed':String(board.key===state.board),'data-board':board.key,onclick:()=>chooseCategory(board.key)},
+        icon(board.icon || (board.key==='all'?'boards':board.key)),
+        primary?el('span.radar-category-copy',el('strong',boardLabel(board.key)),el('span',s('radar.ux.purpose_'+board.key))):el('span',s(!reports&&board.key==='all'?'radar.ux.all_activity':board.key==='all'?'radar.all':'boards.t_'+board.key)),
         // Archive counts cover the current server query only; don't imply other categories are empty.
         state.mode!=='excerpts'?null:el('span.radar-count',hasError?'—':String(count))));
     }
-    if(focusedBoard)nav.querySelector('[data-board="'+focusedBoard+'"]')?.focus({preventScroll:true});
+    if(focusedBoard)card.querySelector('[data-board="'+focusedBoard+'"]')?.focus({preventScroll:true});
     for(const tab of tabs.children)tab.setAttribute('aria-pressed',String(tab.dataset.mode===state.mode));
     dayField.hidden=state.mode!=='recent';dateFields.hidden=state.mode==='recent';
     guide.hidden=state.board==='all';
     pelosiJump.hidden=state.board!=='political';
     guide.dataset.board=state.board;
-    if(state.board==='all'||insider)main.append(guide);else filter.before(guide);
+    if(!reports||state.board==='all')main.append(guide);else filter.before(guide);
     clear(guide);guide.append(el(reports?'strong':'summary',reports?s(state.board==='all'?'radar.guide_title':'boards.t_'+state.board):s('radar.ux.about_category',{category:boardLabel(state.board)})),
       el('p',s(insider?'insider.about':['funds','company'].includes(state.board)?'radar.ux.guide_'+state.board:'radar.guide_'+state.board)));
     if(state.board==='all')guide.append(el('details.radar-purchase-rule',el('summary',s('market.details')),el('p',s('radar.purchase_rule'))));

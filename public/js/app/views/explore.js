@@ -21,9 +21,13 @@ export async function mount(root,{signal}={}){
   input.addEventListener('input',()=>{query=input.value;remember();});
   const picker=symbolPicker(input,()=>[],{allowWatched:true,onSelect:row=>{remember();location.hash=stockHref(row.ticker,'explore');}});
   const tools=el('nav.explore-primary-tools',{'aria-label':s('explore.destinations')},
-    el('a',{href:'#/explore','aria-current':'page'},icon('evidence'),s('explore.stock_research')),
-    el('a',{href:'#/boards'},icon('boards'),s('explore.company_activity')),
-    el('a',{href:'#/creators?scope=discover'},icon('creators'),s('focus.explore_creators')));
+    el('a.explore-activity-entry',{href:'#/boards'},icon('boards'),
+      el('span.explore-destination-copy',el('strong',s('explore.company_activity')),el('span',s('explore.activity_purpose'))),
+      el('span.explore-entry-arrow',{'aria-hidden':'true'},'›')),
+    el('a',{href:'#/explore','aria-current':'page'},icon('evidence'),
+      el('span.explore-destination-copy',el('strong',s('explore.stock_research')),el('span',s('explore.research_purpose')))),
+    el('a',{href:'#/creators?scope=discover'},icon('creators'),
+      el('span.explore-destination-copy',el('strong',s('focus.explore_creators')),el('span',s('explore.creators_purpose')))));
   root.append(el('header.focus-heading',el('h1',s('focus.explore'))),tools,picker.wrap);
 
   const notice=el('div.explore-read-notice',{'aria-live':'polite'}),list=el('div.explore-stock-list',{id:'explore-ranking'});
