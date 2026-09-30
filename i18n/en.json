@@ -5786,7 +5786,7 @@
   "app.today.help_fng_meaning": "CNN’s Fear & Greed Index combines seven equally weighted measures of market behavior into a score from 0 to 100.",
   "app.today.help_fng_reading": "Lower scores indicate more fear; higher scores indicate more greed. The word under the number shows the sentiment band for that reading.",
   "app.today.help_fng_limits": "It describes market sentiment. It does not predict the next price move or tell you when to trade.",
-  "app.today.help_kindex_meaning": "Ducky’s K index is the CNN Fear & Greed score divided by VIX. For example, a score of 40 and VIX of 20 give K = 2.",
+  "app.today.help_kindex_meaning": "Ducky’s K index is the CNN Fear & Greed score divided by VIX. For example, a score of 40 and VIX of 20 give K = 2. Calculations use unrounded readings, so dividing the rounded card values can give a slightly different result.",
   "app.today.help_kindex_reading": "K falls when the sentiment score falls or VIX rises, and rises when the opposite happens. Read both inputs alongside the ratio.",
   "app.today.help_kindex_limits": "K is not IV/HV or a standalone trading signal. We show it only when both validated inputs cover the same New York date; their observation times can differ.",
   "app.today.help_term_meaning": "VIX / VIX3M compares the S&P 500’s 30-day implied volatility with its three-month implied volatility.",

@@ -17,6 +17,12 @@ parser.add_argument('--port',type=int,default=8920)
 parser.add_argument('--product-focus',action='store_true',help='accepted for compatibility; the product-focus fixture is the only mode')
 args = parser.parse_args()
 DIST = (ROOT / 'dist').resolve()
+FIXTURE_MODULES = {
+    '/' + name: ROOT / 'tests/fixtures' / name
+    for name in ('today-close-data.js', 'today-current-data.js',
+                 'today-dashboard-data.js', 'qa-creator-opinions.js',
+                 'insider-ux-data.js')
+}
 
 class Handler(SimpleHTTPRequestHandler):
     def end_headers(self):
@@ -37,6 +43,8 @@ class Handler(SimpleHTTPRequestHandler):
             self.out(body,'text/html; charset=utf-8'); return
         if url.path == '/qa-close-data.js':
             self.out((ROOT / 'tests/fixtures/today-close-data.js').read_text(), 'text/javascript; charset=utf-8'); return
+        if url.path in FIXTURE_MODULES:
+            self.out(FIXTURE_MODULES[url.path].read_text(), 'text/javascript; charset=utf-8'); return
         if url.path == '/qa-main.js':
             module = (ROOT / 'tests/fixtures/product-focus-browser.js').read_text()
             version = json.loads((DIST / 'app-release.json').read_text())['version']
