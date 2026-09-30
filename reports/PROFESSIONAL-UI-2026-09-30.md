@@ -1,6 +1,7 @@
 # Professional reading system and persistent navigation · 2026-09-30
 
-Status: local acceptance passed; release verification pending. Base: frontend `5cb29008`.
+Status: released in PR #129; canonical version/CSP verified at 2026-09-30T07:28:20Z.
+The separate indicator-badge follow-up remains tracked below. Original base: frontend `5cb29008`.
 The owner authorized this deeper UI/UX pass, installed skill, mandatory phone/desktop ×
 dark/light acceptance and frontend publication. This follows the earlier density release.
 
