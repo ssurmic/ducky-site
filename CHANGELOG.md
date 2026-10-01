@@ -1,5 +1,12 @@
 # Change log
 
+## 2026-09-30 — Readable daily stock commentary
+
+Prefer the source-backed research summary over concatenated daily status labels.
+Disclosure-only investment commentary explains the missing valuation basis and
+keeps complete records available on expansion. Chinese and English, both themes
+and narrow layouts checked; [acceptance](reports/STOCK-SNIPPET-2026-09-30.md).
+
 ## 2026-09-30 — Phone table scrolling and full readings
 
 Keep one reading column visible beside the fixed stock identity, bound long phone table paragraphs to four-line previews, and open complete text in a ticker-labelled reader. Preserve native scrolling, 44px actions, source dates and the original reading position on close. Short touch-screen landscape layouts use the same compact treatment; desktop retains full inline text. [Acceptance](reports/MOBILE-TABLE-SCROLL-2026-09-30.md).

@@ -280,3 +280,23 @@ test('daily view states distinguish valuation, trend and signed momentum; unknow
  assert.deepEqual(sortRows([...rows],'valuation','desc',{viewsFor:t=>pool[t]}).map(r=>r.ticker),['CHEAP','RICH','MISSING','OLD']);
  assert.deepEqual(sortRows([...rows],'valuation','asc',{viewsFor:t=>pool[t]}).map(r=>r.ticker),['RICH','CHEAP','MISSING','OLD']);
 });
+
+test('daily state labels do not replace source-backed research; disclosure-only details remain complete',async()=>{
+ const {viewCell,replaceReading}=await import('../public/js/app/stock-reading.js');
+ const views={status:'ready',session:'2026-09-30',fact_key:'snapshot',states:{valuation:'insufficient',trend:'bearish',bias:'bearish',momentum:'down_accelerating'},
+  left_basis:'disclosures',left:{en:'Filed August 14; 273,645 shares at June 30. Quarter-end holdings, not trades or current holdings.',zh:'期末持仓。'},
+  right:{en:'The price is below the moving averages.',zh:'股价低于均线。'},overall:{en:'Insufficient valuation evidence; bearish price structure.',zh:'估值依据不足。'}};
+ const item={ticker:'ZM',status:'ready',as_of:'2026-09-30T23:00:00Z',overview:{en:'A specific attributed research view.',zh:'有来源的观点。',citations:['s1']},sources:[{id:'s1',title:{en:'Source',zh:'来源'}}]};
+ const summary=reading(item,{views,columns:true});
+ assert.equal(summary.querySelector('.stock-overall'),null);
+ assert.match(summary.querySelector('.stock-one-sentence').textContent,/specific attributed/);
+ const left=viewCell(views,'left'),details=left.querySelector('details');
+ assert.ok(details&&!details.open);assert.equal(details.querySelector('p').textContent,views.left.en);
+ assert.match(left.querySelector('.watch-view-text').textContent,/do not establish value/);
+ assert.equal(viewCell({...views,left_basis:'research'},'left').querySelector('details'),null);
+ assert.equal(viewCell(views,'right').querySelector('details'),null);
+ const host=document.createElement('div');document.body.append(host);host.append(left);
+ details.open=true;details.querySelector('summary').focus();
+ replaceReading(host,viewCell(views,'left'));
+ assert.ok(host.querySelector('details').open);assert.equal(document.activeElement,host.querySelector('summary'));host.remove();
+});

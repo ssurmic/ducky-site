@@ -5820,5 +5820,7 @@
   "app.watch.bias_unknown": "Direction unconfirmed",
   "app.watch.read_full": "Read full",
   "app.watch.read_full_view": "Read {ticker} · {view} in full",
-  "app.watch.phone_indicators": "Stats"
+  "app.watch.phone_indicators": "Stats",
+  "app.watch.disclosure_basis": "Quarter-end fund holdings do not establish value at today’s price. This commentary lacks a comparable valuation basis.",
+  "app.watch.view_evidence": "View supporting records"
 }
