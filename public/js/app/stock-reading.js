@@ -54,6 +54,9 @@ export function writtenAt(views,now=new Date()){
 // The one-line verdict (总评): the newest creator view or record first, then where the stock sits.
 // It never goes blank once written: a reading whose facts have moved on keeps its own date under it.
 export function overallLine(views){
+  // Daily typed states already have their own columns. Their concatenated
+  // labels must not displace the reviewed research summary in the list.
+  if(views?.states)return null;
   const text=pick(views?.overall);
   if(!text)return null;
   return el('div.stock-overall',views.stale?{class:'is-stale'}:{},el('p.stock-overall-text',text),
@@ -76,7 +79,13 @@ export function viewState(views,side){
 export function viewCell(views,side){
   const text=pick(views?.[side]);
   if(!text)return el('p.small.muted.watch-view-pending',s('watch.view_pending'));
-  return el('div.watch-view',{class:'is-'+side},viewState(views,side),el('p.watch-view-text',text),
+  const disclosures=side==='left'&&views.left_basis==='disclosures'&&views.states?.valuation==='insufficient';
+  const content=disclosures?[
+    el('p.watch-view-text',s('watch.disclosure_basis')),
+    el('details.watch-view-evidence',{'data-reading-key':`${views.fact_key||views.session}:left:evidence`},
+      el('summary',s('watch.view_evidence')),el('p.watch-view-text',text))
+  ]:[el('p.watch-view-text',text)];
+  return el('div.watch-view',{class:'is-'+side},viewState(views,side),...content,
     views.price_basis?el('p.small.muted.watch-view-basis',views.price_basis.basis==='intraday_quote'?
       s('watch.view_intraday_quote',{time:localTime(views.price_basis.quote_at)}):s('watch.view_daily_close',{date:views.price_basis.session||'—'})):null,
     el('p.small.muted.watch-view-date',s(views.stale?'watch.view_as_of':'watch.view_written',views.stale?{date:asOf(views)}:{time:writtenAt(views)})));

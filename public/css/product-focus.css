@@ -943,3 +943,7 @@ button.watch-signal:hover,button.watch-signal:focus-visible{background:color-mix
 .today-preview-sources>summary::before{content:'▸';}.today-preview-sources[open]>summary::before{content:'▾';}
 .today-preview-sources p{margin:3px 0;font-size:12px;line-height:1.45;}
 .today-preview-heading h3{font-size:16px;}
+
+/* Preserve complete disclosure qualifications behind a readable first line. */
+.watch-view-evidence>summary{box-sizing:border-box;min-height:44px;padding:10px 0;cursor:pointer;color:var(--accent);font-size:13px;line-height:24px}
+.watch-view-evidence[open]>summary{margin-bottom:4px}

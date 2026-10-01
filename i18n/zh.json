@@ -5820,5 +5820,7 @@
   "app.watch.bias_unknown": "方向依据不足",
   "app.watch.read_full": "阅读全文",
   "app.watch.read_full_view": "阅读 {ticker} 的完整{view}",
-  "app.watch.phone_indicators": "指标"
+  "app.watch.phone_indicators": "指标",
+  "app.watch.disclosure_basis": "机构期末持仓不能证明现价便宜；这份评论尚缺少可比估值依据。",
+  "app.watch.view_evidence": "查看完整依据"
 }
