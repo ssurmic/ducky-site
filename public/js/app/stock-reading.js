@@ -83,7 +83,7 @@ export function viewCell(views,side){
   const content=disclosures?[
     el('p.watch-view-text',s('watch.disclosure_basis')),
     el('details.watch-view-evidence',{'data-reading-key':`${views.fact_key||views.session}:left:evidence`},
-      el('summary',s('watch.view_evidence')),el('p.watch-view-text',text))
+      el('summary',{'data-reading-key':`${views.fact_key||views.session}:left:evidence-toggle`},s('watch.view_evidence')),el('p.watch-view-text',text))
   ]:[el('p.watch-view-text',text)];
   return el('div.watch-view',{class:'is-'+side},viewState(views,side),...content,
     views.price_basis?el('p.small.muted.watch-view-basis',views.price_basis.basis==='intraday_quote'?
