@@ -357,3 +357,16 @@ test('the first mount after boot reuses the boot read of /watchlist once and sti
  const again=await mount(root);assert.equal(calls.filter(u=>u==='/watchlist').length,3);again();
  refresh.stop();root.replaceChildren();
 });
+
+
+test('same-session postmarket trades pass only with calendar evidence; daily closes still beat regular trades',async()=>{
+ const {displayQuote}=await import('../public/js/app/display-price.js');
+ for(const [date,close,trade] of [['2026-09-30','20:00:00','20:27:50'],['2026-11-27','18:00:00','18:00:01'],['2026-12-01','21:00:00','21:00:01']]){
+  const q={status:'stale',price:228.96,quote_at:date+'T'+trade+'Z',session_date:date,market_session:'postmarket',regular_close_at:date+'T'+close+'Z'};
+  const row={price:228.38,price_session:date,quote:q},now=Date.parse(date+'T23:00:00Z');
+  assert.equal(displayQuote(row,now),q);
+  for(const patch of [{market_session:'regular'},{regular_close_at:null},{session_date:'2020-01-01'},{quote_at:q.regular_close_at}])assert.equal(displayQuote({...row,quote:{...q,...patch}},now),null);
+  assert.equal(displayQuote({...row,price_session:'2027-01-01'},now),null);
+  assert.equal(displayQuote(row,Date.parse(q.quote_at)-1),null);
+ }
+});

@@ -266,3 +266,12 @@ Implemented candidate: structured fluorescent ticker leaves in light/dark; compa
 ## Daily research perspectives — 2026-09-30
 
 Implemented candidate: Investment case / 布局逻辑 and Trend & momentum / 趋势与动能, separate valuation/price-bias/trend/momentum states, sortable headers with unknown and stale values last, and original price-basis dates. The backend supplies shared reviewed editions; no browser inference. The 12-case fixture viewport sweep covered both languages and themes at 320/390/1440 px with working sort clicks, no page overflow or JavaScript errors. Physical-device and live publication acceptance remain separate. [Evidence](../../reports/STOCK-VIEWS-2026-09-30.md).
+
+## 2026-10-01 — Consistent current prices and reference distances
+
+Same-day after-hours quotes can supersede a settled close when the API supplies
+exchange-calendar evidence. Regular-session trades cannot. All current wall and
+support comparisons use that displayed price, including saved digests and detail
+cards. Source levels and reviewed research keep their dates. Quotes show actual
+trade time and pre-/post-market context; older closes no longer say "today".
+[Validation and release](../../reports/QUOTE-SESSION-CONSISTENCY-2026-10-01.md).

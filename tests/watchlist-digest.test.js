@@ -22,7 +22,7 @@ const sig={
  politicians:{status:'ready',count:7,buys:4,sells:3,trades:[{side:'sell',date:'2026-08-18',politician:'Gil Cisneros',amount:'$1,001 - $15,000'}]},
  walls:{status:'ready',call:240,put:221,price:227.38,expiries:['2026-09-21']},
  support:{status:'ready',refs:[{key:'put_wall',value:221,gap:-2.8}],low:208.25,high:230.1,price:227.38,sessions:20}};
-const row={ticker:'NVDA',metrics:{ytd:{status:'ready',value:22.2},drawdown:{status:'ready',value:-3.3},relative:{status:'stale',value:-24.1,as_of:'2026-09-21',symbols:['AMD']},iv_hv:{status:'ready',value:0.58,expiry:'2026-09-28'},attention:{status:'insufficient'},degen:{status:'insufficient'}}};
+const row={ticker:'NVDA',price:227.38,metrics:{ytd:{status:'ready',value:22.2},drawdown:{status:'ready',value:-3.3},relative:{status:'stale',value:-24.1,as_of:'2026-09-21',symbols:['AMD']},iv_hv:{status:'ready',value:0.58,expiry:'2026-09-28'},attention:{status:'insufficient'},degen:{status:'insufficient'}}};
 
 test('the digest starts with today\'s close and the price against its references, then activity; it never names a floor or target',()=>{
  const text=digest.digestText(row,sig);
@@ -33,11 +33,11 @@ test('the digest starts with today\'s close and the price against its references
  const near=digest.nearestWall({status:'ready',call:228,put:200,price:227.38});
  assert.equal(near.kind,'call');assert.ok(near.gap>0&&near.gap<0.3);
  // A pulled-back stock within 3% of a reference below, with no insider net selling, gets the plain reading.
- const back={ticker:'AMD',change_pct:-1.2,price_status:'ready',metrics:{ytd:{status:'ready',value:-4},drawdown:{status:'ready',value:-14.5},iv_hv:{status:'ready',value:1.35}}};
+ const back={ticker:'AMD',price:143.2,change_pct:-1.2,price_status:'ready',metrics:{ytd:{status:'ready',value:-4},drawdown:{status:'ready',value:-14.5},iv_hv:{status:'ready',value:1.35}}};
  const quiet={insider:{status:'none'},funds:{status:'ready',adds:[{}],trims:[]},politicians:{status:'none'},
   walls:{status:'ready',call:170,put:140,price:143.2},support:{status:'ready',refs:[{key:'put_wall',value:140,gap:-2.2},{key:'range_low',value:139,gap:-2.9}],low:139,high:171,price:143.2,sessions:20}};
  const parts=digest.digestParts(back,quiet);
- assert.equal(parts[0],'Closed down -1.20% today');
+ assert.equal(parts[0],'Closed down -1.20%');
  assert.equal(parts[1],'2.3% above the put wall $140');
  assert.ok(parts.includes('at the low end of its 20-day range'));
  assert.ok(parts.includes('options price more movement than the last 20 sessions (IV/HV 1.35×)'));
@@ -68,7 +68,7 @@ test('a pending stock summary shows the digest with the pending state as a capti
 
 test('the strip counts stocks, not filings, and hides until any signal column has loaded',()=>{
  const map=new Map([['NVDA',sig],['AMD',{insider:{status:'ready',count:1,buys:1,sells:0,bought:5e5,sold:0},funds:{status:'ready',adds:[],trims:[{}]},walls:{status:'ready',call:150,put:100,price:120}}]]);
- const summary=digest.listSummary([{ticker:'NVDA'},{ticker:'AMD'},{ticker:'ZZZ'}],map);
+ const summary=digest.listSummary([{ticker:'NVDA',price:227.38},{ticker:'AMD',price:120},{ticker:'ZZZ'}],map);
  assert.deepEqual(summary,{n:3,sells:1,buys:1,funds:0,walls:1,loaded:true});
  assert.equal(digest.listSummary([{ticker:'NVDA'}],new Map()).loaded,false);
 });
@@ -128,20 +128,20 @@ test('digest values keep the colour of their column: price up/down, buys green, 
  assert.ok(toned.some(([c,v])=>c==='is-sell'&&v==='$410.5M'));
  assert.ok(toned.some(([c,v])=>c==='is-buy'&&v==='6 added')&&toned.some(([c,v])=>c==='is-sell'&&v==='7 trimmed'));
  assert.ok(toned.some(([c,v])=>c==='is-buy'&&v==='4 buys')&&toned.some(([c,v])=>c==='is-sell'&&v==='3 sales'));
- assert.equal(host.textContent,'Closed up +1.20% today · '+digest.digestText(row,sig));
+ assert.equal(host.textContent,'Closed up +1.20% · '+digest.digestText(row,sig));
  // The table preview and the reading cell carry the same coloured line.
  const cell=reading({ticker:'NVDA',status:'pending',records:3},{digest:nodes});
  assert.equal(cell.querySelectorAll('.stock-digest .stock-digest-value.is-sell').length,3);
 });
 
-test('a digest saved on the projection row wins over the browser pass, and unknown keys or copy are dropped',()=>{
+test('saved activity survives but unbound old price clauses and unknown keys cannot win',()=>{
  const saved={ticker:'NVDA',digest:{session:'2026-09-19',parts:[{key:'watch.digest_close_up',vars:{n:{v:2.5,f:'pct2',tone:'up'}}},
   {key:'watch.digest_above_reference',vars:{n:{v:1.234,f:'num1'},price:{v:221,f:'strike'},kind:{key:'watch.digest_ref_put',tone:'put'}}},
   {key:'watch.digest_funds',vars:{moves:{join:[{count:2,one:'watch.signal_adds_one',many:'watch.signal_adds_many',tone:'buy'},'']}}},
   {key:'nav.today',vars:{}},{key:'watch.digest_ytd',vars:{n:{key:'billing.title'}}},{key:'watch.digest_ytd',vars:{n:'<b>x</b>'}}]}};
- assert.equal(digest.digestText(saved,sig),'Closed up +2.50% today · 1.2% above the put wall $221 · Funds: 2 added ·  YTD · <b>x</b> YTD');
+ assert.equal(digest.digestText(saved,sig),'Funds: 2 added ·  YTD · <b>x</b> YTD');
  const host=document.createElement('p');host.append(...digest.digestNodes(saved,sig));
- assert.equal(host.querySelector('b'),null);assert.equal(host.querySelector('.is-put').textContent,'put wall');
+ assert.equal(host.querySelector('b'),null);assert.equal(host.querySelector('.is-put'),null);
  assert.equal(digest.serverItems({parts:[]}),null);assert.equal(digest.serverItems({parts:[{key:'nav.today'}]}),null);
  assert.equal(digest.digestText({...row,digest:{parts:'nope'}},sig),digest.digestText(row,sig));
 });
@@ -299,4 +299,24 @@ test('daily state labels do not replace source-backed research; disclosure-only 
  details.open=true;details.querySelector('summary').focus();
  replaceReading(host,viewCell(views,'left'));
  assert.ok(host.querySelector('details').open);assert.equal(document.activeElement,host.querySelector('summary'));host.remove();
+});
+
+
+test('a newer after-hours quote drives digest and signal distances without rewriting research inputs',()=>{
+ const old=structuredClone(sig);old.walls.put=230;old.walls.call=232.5;old.walls.price=230.25;
+ old.support.price=230.25;old.support.refs=[{key:'put_wall',value:230,gap:-0.1}];
+ const q={status:'stale',price:228.96,change_pct:0.77,quote_at:'2026-09-30T20:27:50Z',session_date:'2026-09-30',market_session:'postmarket',regular_close_at:'2026-09-30T20:00:00Z'};
+ const r={...row,price:228.38,price_session:'2026-09-30',quote:q,digest:{parts:[
+  {key:'watch.digest_above_reference',vars:{n:{v:0.1,f:'num1'},price:{v:230,f:'strike'},kind:{key:'watch.digest_ref_put'}}},
+  {key:'watch.digest_insider_sell',vars:{value:'$7M',filings:'5 filings'}}]}};
+ const before=JSON.stringify(old),text=digest.digestText(r,old);
+ assert.ok(text.includes('+0.77% vs previous close'));assert.ok(text.includes('1.5% under the call wall $232.50'));
+ assert.ok(!text.includes('above the put'));assert.ok(!text.includes('Closed'));assert.ok(text.includes('Insiders net selling'));
+ const cell=signals.signalCell('walls',old,{ticker:'NVDA',price:q.price,session:q.quote_at});
+ assert.ok(cell.textContent.includes('230'));assert.ok(cell.textContent.includes('232.50'));
+ const card=signals.signalCard('support',old,'NVDA',{price:q.price});
+ assert.ok(card.textContent.includes('0.5% above'));
+ assert.equal(JSON.stringify(old),before);
+ const missing=signals.signalCard('walls',old,'NVDA',{price:null});
+ assert.ok(!missing.textContent.includes('% above')&&!missing.textContent.includes('% below'));
 });

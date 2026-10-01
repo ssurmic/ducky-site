@@ -9,7 +9,8 @@
 // Both languages format the same numbers the way the table cells do, and a tone colours a value
 // like its column (price up/down, buy/sell, put/call). The shared projection can carry the same
 // shape computed once after the close (`row.digest.parts`); that copy is the same for every viewer
-// and wins over the browser's own pass.
+// retains source activity; current-price comparisons are rebound to the displayed value.
+import {display,displayQuote,signalsAtPrice} from './display-price.js';
 import {s,LANG} from './strings.js';
 import {el,pct,px} from './ui.js';
 
@@ -77,7 +78,7 @@ export function priceContext(sig){
   const support=sig?.support,walls=sig?.walls;
   const price=finite(support?.price)?support.price:finite(walls?.price)?walls.price:null;
   if(!finite(price)||price<=0)return null;
-  const below=(support?.status==='ready'?support.refs||[]:[]).filter(r=>finite(r.value)&&r.value<=price)
+  const below=(support?.status==='ready'?support.refs||[]:[]).filter(r=>finite(r.value)&&r.value>0&&r.value<=price)
     .map(r=>({kind:r.key,level:r.value,gap:(price/r.value-1)*100})).sort((a,b)=>a.gap-b.gap)[0]||null;
   const call=walls?.status==='ready'&&finite(walls.call)&&walls.call>=price?{level:walls.call,gap:(walls.call/price-1)*100}:null;
   const span=support?.status==='ready'&&finite(support.low)&&finite(support.high)&&support.high>support.low?(price-support.low)/(support.high-support.low)*100:null;
@@ -86,10 +87,12 @@ export function priceContext(sig){
 
 // The browser's own pass over a row and its signals, in the reading order the owner asked for.
 export function digestItems(row,sig){
+  const quote=displayQuote(row),shown=quote||row;
+  sig=signalsAtPrice(sig,shown?.price);
   const items=[],part=(key,vars={})=>items.push({key,vars});
-  // 1. Today's close and where it sits against the row's references.
-  const change=row?.change_pct;
-  if(finite(change)&&row?.price_status!=='missing')part(change>0?'watch.digest_close_up':change<0?'watch.digest_close_down':'watch.digest_close_flat',change?{n:value(change,'pct2',change>0?'up':'down')}:{});
+  // 1. The displayed quote/close and its distances to dated source references.
+  const change=shown?.change_pct;
+  if(finite(shown?.price)&&shown.price>0&&finite(change))part(quote?'watch.digest_quote_change':change>0?'watch.digest_close_up':change<0?'watch.digest_close_down':'watch.digest_close_flat',change||quote?{n:value(change,'pct2',change>0?'up':change<0?'down':null)}:{});
   const context=priceContext(sig);
   if(context?.below){
     const put=context.below.kind==='put_wall';
@@ -129,7 +132,15 @@ export function serverItems(digest){
   const items=digest.parts.filter(p=>p&&typeof p.key==='string'&&KEYS.test(p.key)).map(p=>({key:p.key,vars:p.vars&&typeof p.vars==='object'?p.vars:{}}));
   return items.length?items:null;
 }
-export const digestItemsFor=(row,sig)=>serverItems(row?.digest)||digestItems(row,sig);
+const pricePart=p=>/^watch\.digest_(close_|quote_change|above_reference|at_reference|below_call|at_call|range_|pullback)/.test(p.key);
+export function digestItemsFor(row,sig){
+  const current=digestItems(row,sig),saved=serverItems(row?.digest);
+  if(!saved)return current;
+  // Stored factual activity remains shared. Never reuse price distances or a
+  // 'closed today' clause computed against another value/session.
+  return [...current.filter(p=>pricePart(p)&&p.key!=='watch.digest_pullback'),
+    ...saved.filter(p=>!pricePart(p)),...current.filter(p=>p.key==='watch.digest_pullback')];
+}
 export const digestParts=(row,sig)=>digestItemsFor(row,sig).map(partText);
 export const digestText=(row,sig)=>digestParts(row,sig).join(' · ');
 export function digestNodes(row,sig){
@@ -143,7 +154,7 @@ export function listSummary(rows,signals){
   const out={n:0,sells:0,buys:0,funds:0,walls:0,loaded:false};
   for(const row of rows){
     if(!row?.ticker)continue;out.n++;
-    const sig=signals?.get?.(row.ticker);if(!sig)continue;
+    const sig=signalsAtPrice(signals?.get?.(row.ticker),display(row)?.price);if(!sig)continue;
     if(sig.insider?.status==='ready'||sig.funds?.status==='ready'||sig.walls?.status==='ready')out.loaded=true;
     const net=insiderNet(sig.insider);if(net!==null&&net<0)out.sells++;if(net!==null&&net>0)out.buys++;
     if(sig.funds?.status==='ready'&&(sig.funds.adds?.length||0)>(sig.funds.trims?.length||0))out.funds++;

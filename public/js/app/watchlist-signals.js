@@ -1,3 +1,4 @@
+import {signalsAtPrice} from './display-price.js';
 import {changeParts} from './numeric-change.js';
 // watchlist-signals.js — dated disclosure and options references beside each watched stock.
 // Presentation only: reads saved stock-brief facts (GET /briefing/stocks) and archived Form 4
@@ -248,7 +249,8 @@ function mixChip(adds,trims,addOne='watch.signal_adds_one',addMany='watch.signal
 // A complete page allows a plain "none"; a truncated one only says where the stock was not found.
 const fundsNone=m=>m.complete?s('watch.signal_funds_none_tracked'):m.count?s('watch.signal_funds_none_page',{n:m.count}):s('watch.signal_funds_none');
 
-export function signalCell(key,sig,{ticker='',price=null,session=''}={}){
+export function signalCell(key,sig,{ticker='',price=undefined,session=''}={}){
+  if(price!==undefined)sig=signalsAtPrice(sig,price);
   const m=sig?.[key]||{status:'missing'},state=m.status||'missing';
   // The whole cell is one tap target: it opens the same flashcard the "?" explains, with the records behind the number.
   const cell=el(state==='missing'?'span.watch-metric.watch-signal':'button.watch-metric.watch-signal',{'data-metric':key,'data-status':state,
@@ -331,7 +333,8 @@ export function sinceLine(ref,price,key,vars={}){
   return el('p.small.watch-since',{class:move>0?'is-up':move<0?'is-down':''},changeParts(key,vars,{n:move}));
 }
 const filingAverage=filing=>{const shares=filing.transactions.reduce((a,x)=>a+x.shares,0);return shares>0?filing.transactions.reduce((a,x)=>a+x.price*x.shares,0)/shares:null;};
-export function signalCard(key,sig,ticker,{price=null,session=''}={}){
+export function signalCard(key,sig,ticker,{price=undefined,session=''}={}){
+  if(price!==undefined)sig=signalsAtPrice(sig,price);
   const m=sig?.[key]||{},body=el('div.watch-signal-card',{'data-signal':key});
   const list=el('div.watch-signal-items');
   if(finite(price)&&price>0&&['insider','funds','politicians'].includes(key))body.append(el('p.small.muted.watch-since-note',s('watch.since_note',{price:px(price),session:session||'—'})));

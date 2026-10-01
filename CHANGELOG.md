@@ -1,5 +1,15 @@
 # Change log
 
+## 2026-10-01 — Consistent current prices and reference distances
+
+Same-day after-hours quotes can supersede a settled close when the API supplies
+exchange-calendar evidence. Regular-session trades cannot. All current wall and
+support comparisons use that displayed price, including saved digests and detail
+cards. Source levels and reviewed research keep their dates. Quotes show actual
+trade time and pre-/post-market context; older closes no longer say "today".
+[Validation and release](reports/QUOTE-SESSION-CONSISTENCY-2026-10-01.md).
+
+
 ## 2026-09-30 — Readable daily stock commentary
 
 Prefer the source-backed research summary over concatenated daily status labels.
