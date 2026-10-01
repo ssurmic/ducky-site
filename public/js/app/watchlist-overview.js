@@ -34,17 +34,8 @@ export function syncWatchViewDialog(root){
     closeModal();if(root)toast(s('focus.source_updated'));
   }
 }
-// Keep the newest dated value during provider outages/after the close. Never
-// replace a completed day's close with an earlier intraday trade on that day.
-export function displayQuote(row, now=Date.now()) {
-  const q=row?.quote, at=Date.parse(q?.quote_at);
-  if(!q||!['current','stale'].includes(q.status)||!finite(q.price)||q.price<=0||!finite(at)||at>now)return null;
-  const session=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(at));
-  if(finite(row.price)&&row.price>0&&row.price_session&&session<=row.price_session)return null;
-  return q;
-}
-// Every surface (list rows, map tiles, breadth) shows the same number for a stock.
-export const display=row=>displayQuote(row)||row;
+import {displayQuote,display,signalsAtPrice} from './display-price.js';
+export {displayQuote,display} from './display-price.js';
 // Quote age in seconds. With the server's own age and the moment the response arrived, the
 // browser clock only measures time since arrival; otherwise it compares trade clocks directly.
 export function quoteAgeSeconds(q, now=Date.now(), received=null) {
@@ -53,7 +44,7 @@ export function quoteAgeSeconds(q, now=Date.now(), received=null) {
   return finite(at)?Math.max(0,(now-at)/1000):null;
 }
 export const quoteFresh=(q,age)=>q?.status==='current'&&finite(age)&&age<=180;
-export const quoteLabel=(q,age=quoteAgeSeconds(q))=>s(quoteFresh(q,age)?'watch.latest_quote':'watch.saved_quote');
+export const quoteLabel=(q,age=quoteAgeSeconds(q))=>[s(quoteFresh(q,age)?'watch.latest_quote':'watch.saved_quote'),['premarket','postmarket'].includes(q?.market_session)?s('watch.quote_'+q.market_session):''].filter(Boolean).join(' · ');
 export const quoteTime=q=>new Intl.DateTimeFormat(LANG==='zh'?'zh-CN':'en-US',{
   month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'America/New_York',timeZoneName:'short'}).format(new Date(q.quote_at));
 // Relative age up to six hours, then the New York time of the print itself.
@@ -67,13 +58,13 @@ export function quoteAgeText(q, age=quoteAgeSeconds(q)) {
 // One clock line per quote. Data attributes let the view re-time it without a re-render.
 export function quoteNote(q, {received=null, tag='small.muted'}={}) {
   const age=quoteAgeSeconds(q,Date.now(),received);
-  return el(tag+'.watch-quote-time',{'data-quote-at':q.quote_at,'data-quote-status':q.status||'',
+  return el(tag+'.watch-quote-time',{'data-quote-at':q.quote_at,'data-quote-session':q.market_session||'','data-quote-status':q.status||'',
     'data-quote-age':finite(q.age_seconds)?String(q.age_seconds):'','data-quote-received':finite(received)?String(received):'',
     title:[q.provider,q.feed,quoteTime(q)].filter(Boolean).join(' · ')},quoteLabel(q,age)+' · '+quoteAgeText(q,age));
 }
 export function retimeQuotes(root, now=Date.now()) {
   for(const node of root.querySelectorAll('.watch-quote-time[data-quote-at]')){
-    const q={quote_at:node.dataset.quoteAt,status:node.dataset.quoteStatus,age_seconds:node.dataset.quoteAge===''?null:Number(node.dataset.quoteAge)};
+    const q={quote_at:node.dataset.quoteAt,market_session:node.dataset.quoteSession,status:node.dataset.quoteStatus,age_seconds:node.dataset.quoteAge===''?null:Number(node.dataset.quoteAge)};
     const received=node.dataset.quoteReceived===''?null:Number(node.dataset.quoteReceived);
     const age=quoteAgeSeconds(q,now,received),text=quoteLabel(q,age)+' · '+quoteAgeText(q,age);
     if(node.textContent!==text)node.textContent=text;
@@ -343,7 +334,7 @@ export function overviewView(rows, options) {
             el('span.watch-change',{class:'watch-'+changeClass(shown.change_pct)},pct(shown.change_pct,2)),
             q?quoteNote(q,{received:quoteReceived}):el('small.muted',row.price_session||session||'—')),
           ...shownMetrics.map(key=>el('td.watch-metric-cell',metricCell(key,row.metrics?.[key]))),
-          ...shownSignals.map((key,i)=>el('td.watch-signal-cell',{class:i?'':'is-first','data-signal':key},signalCell(key,signals?.get(row.ticker),{ticker:row.ticker,price:Number.isFinite(shown.price)&&shown.price>0?shown.price:null,session:row.price_session||''}))),
+          ...shownSignals.map((key,i)=>el('td.watch-signal-cell',{class:i?'':'is-first','data-signal':key},signalCell(key,signals?.get(row.ticker),{ticker:row.ticker,price:Number.isFinite(shown.price)&&shown.price>0?shown.price:null,session:q?quoteTime(q):row.price_session||''}))),
           ...(compact?[]:[el('td.mono.watch-cap-col',row.security_type==='ETF'?'ETF':capText(row.market_cap))]),
           ...(showNarrative?narrativeCells(row):[])));
       }
@@ -363,7 +354,7 @@ export function overviewView(rows, options) {
 }
 
 export function sortRows(rows,key,direction='desc',{signals=null,viewsFor=null}={}){
-  const value=row=>['valuation','trend'].includes(key)?viewSortValue(viewsFor?.(row.ticker),key):signalKeys.includes(key)?signalSortValue(signals?.get(row.ticker),key):metricKeys.includes(key)?metricSortValue(row,key):['price','change_pct'].includes(key)?(displayQuote(row)||row)[key]:row[key];
+  const value=row=>['valuation','trend'].includes(key)?viewSortValue(viewsFor?.(row.ticker),key):signalKeys.includes(key)?signalSortValue(signalsAtPrice(signals?.get(row.ticker),display(row)?.price),key):metricKeys.includes(key)?metricSortValue(row,key):['price','change_pct'].includes(key)?(displayQuote(row)||row)[key]:row[key];
   return rows.sort((a,b)=>{
     if(key==='ticker')return a.ticker.localeCompare(b.ticker)*(direction==='asc'?1:-1);
     const x=value(a),y=value(b);
