@@ -5,14 +5,6 @@
       "ticker": "NVDA",
       "bars": [
         {
-          "t": "2026-08-18",
-          "o": 220.4499969482422,
-          "h": 221.63999938964844,
-          "l": 218.69000244140625,
-          "c": 219.74000549316406,
-          "v": 103128200
-        },
-        {
           "t": "2026-08-19",
           "o": 221.6699981689453,
           "h": 222.8699951171875,
@@ -242,34 +234,34 @@
           "h": 232.82000732421875,
           "l": 227.02999877929688,
           "c": 227.2100067138672,
-          "v": 101203000
+          "v": 101494900
+        },
+        {
+          "t": "2026-09-30",
+          "o": 229.0,
+          "h": 232.3699951171875,
+          "l": 228.1699981689453,
+          "c": 228.3800048828125,
+          "v": 117687772
         }
       ],
-      "last_d": "2026-09-29",
+      "last_d": "2026-09-30",
       "session_context": {
         "status": "current",
-        "price_session": "2026-09-29",
-        "expected_session": "2026-09-29",
-        "market_date": "2026-09-29",
+        "price_session": "2026-09-30",
+        "expected_session": "2026-09-30",
+        "market_date": "2026-09-30",
         "closures": [],
-        "checked_at": "2026-09-30T02:15:31.279009+00:00",
+        "checked_at": "2026-10-01T02:15:27.617021+00:00",
         "basis": "completed_regular_session",
         "calendar_source": "https://www.nyse.com/markets/hours-calendars"
       },
       "source_url": "https://api.duckybot.app/public/prices/NVDA.json?limit=30",
-      "retrieved_at": "2026-09-30T02:15:31+00:00"
+      "retrieved_at": "2026-10-01T02:15:27+00:00"
     },
     {
       "ticker": "SPY",
       "bars": [
-        {
-          "t": "2026-08-18",
-          "o": 768.7000122070312,
-          "h": 769.5,
-          "l": 766.9199829101562,
-          "c": 767.4500122070312,
-          "v": 43920900
-        },
         {
           "t": "2026-08-19",
           "o": 770.3599853515625,
@@ -500,34 +492,34 @@
           "h": 766.97998046875,
           "l": 762.3499755859375,
           "c": 764.2000122070312,
-          "v": 36832600
+          "v": 36910500
+        },
+        {
+          "t": "2026-09-30",
+          "o": 766.4500122070312,
+          "h": 769.4099731445312,
+          "l": 762.1799926757812,
+          "c": 762.6300048828125,
+          "v": 61884900
         }
       ],
-      "last_d": "2026-09-29",
+      "last_d": "2026-09-30",
       "session_context": {
         "status": "current",
-        "price_session": "2026-09-29",
-        "expected_session": "2026-09-29",
-        "market_date": "2026-09-29",
+        "price_session": "2026-09-30",
+        "expected_session": "2026-09-30",
+        "market_date": "2026-09-30",
         "closures": [],
-        "checked_at": "2026-09-30T02:15:31.629201+00:00",
+        "checked_at": "2026-10-01T02:15:27.962164+00:00",
         "basis": "completed_regular_session",
         "calendar_source": "https://www.nyse.com/markets/hours-calendars"
       },
       "source_url": "https://api.duckybot.app/public/prices/SPY.json?limit=30",
-      "retrieved_at": "2026-09-30T02:15:31+00:00"
+      "retrieved_at": "2026-10-01T02:15:27+00:00"
     },
     {
       "ticker": "NOK",
       "bars": [
-        {
-          "t": "2026-08-18",
-          "o": 10.300000190734863,
-          "h": 10.529999732971191,
-          "l": 10.210000038146973,
-          "c": 10.390000343322754,
-          "v": 111844400
-        },
         {
           "t": "2026-08-19",
           "o": 10.710000038146973,
@@ -758,22 +750,30 @@
           "h": 10.510000228881836,
           "l": 10.239999771118164,
           "c": 10.359999656677246,
-          "v": 55452400
+          "v": 55520900
+        },
+        {
+          "t": "2026-09-30",
+          "o": 10.359999656677246,
+          "h": 10.4399995803833,
+          "l": 10.079999923706055,
+          "c": 10.140000343322754,
+          "v": 63993036
         }
       ],
-      "last_d": "2026-09-29",
+      "last_d": "2026-09-30",
       "session_context": {
         "status": "current",
-        "price_session": "2026-09-29",
-        "expected_session": "2026-09-29",
-        "market_date": "2026-09-29",
+        "price_session": "2026-09-30",
+        "expected_session": "2026-09-30",
+        "market_date": "2026-09-30",
         "closures": [],
-        "checked_at": "2026-09-30T02:15:31.964866+00:00",
+        "checked_at": "2026-10-01T02:15:28.293727+00:00",
         "basis": "completed_regular_session",
         "calendar_source": "https://www.nyse.com/markets/hours-calendars"
       },
       "source_url": "https://api.duckybot.app/public/prices/NOK.json?limit=30",
-      "retrieved_at": "2026-09-30T02:15:32+00:00"
+      "retrieved_at": "2026-10-01T02:15:28+00:00"
     }
   ]
 }
