@@ -164,7 +164,10 @@ export async function mount(root,params={}){
     unreadChip.hidden=!(state.source==='feed'&&state.unread>0);unreadChip.textContent=s('alertfeed.unread_count',{n:state.unread});
     if(state.error&&!state.items.length){list.append(errorBox(state.error,()=>load(false)));return;}
     if(state.source==='inbox')list.append(el('p.small.muted.alert-rollout',s('alertfeed.pending_rollout'),' ',el('a',{href:'#/updates'},s('alertfeed.history_link'))));
-    const visible=state.source==='inbox'&&filter!=='all'?state.items.filter(i=>i.kind===FILTERS.find(([k])=>k===filter)[1]):state.items;
+    // Delivery history carries no materiality tier, so company newsroom rows show only under the 公告 filter there;
+    // the feed route applies the backend gate itself (news only when material).
+    const wanted=FILTERS.find(([k])=>k===filter)[1];
+    const visible=state.source==='inbox'?state.items.filter(i=>filter==='all'?i.kind!=='news':i.kind===wanted):state.items;
     if(state.ready&&!visible.length)list.append(el('div.alert-empty',el('p',s(filter==='all'?'alertfeed.empty':'alertfeed.empty_filtered')),
       filter==='all'?el('a.btn.btn-ghost.btn-sm',{href:'#/explore'},s('alertfeed.browse')):null));
     for(const group of groupByDay(visible)){list.append(el('h2.alert-day',group.label));for(const item of group.items)list.append(itemCard(item,{seenThrough:state.seenThrough}));}
