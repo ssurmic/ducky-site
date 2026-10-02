@@ -47,6 +47,11 @@ test('feed rows render in the account language with direction, badges, note deta
  assert.match(gone.textContent,/corrected this record/);assert.equal(gone.querySelector('a[target=_blank]'),null);
  const macro=feed.itemCard(normalized.items[3]);
  assert.equal(macro.querySelector('.alert-ticker').textContent,copy['app.alertfeed.macro_label']);assert.equal(macro.querySelector('.alert-kind').textContent,copy['app.alertfeed.kind_macro_regime']);
+ const creator=feed.itemCard(feed.normalizeFeed(doc([item({id:'firehose:kol',kind:'kol',direction:-1,signal:{direction:'sell',strength:'notable',badges:['view_changed','conditional']},headline:{zh:'商浩金 谈 NVDA：看空，观点有变',en:'Shanghao Jin on NVDA: bearish, a changed view'},note:null})])).items[0]);
+ assert.ok(creator.classList.contains('is-sell'));assert.equal(creator.querySelector('.alert-direction').textContent,copy['app.alertfeed.direction_kol_sell']);
+ assert.equal(creator.querySelector('.alert-kind').textContent,copy['app.alertfeed.kind_kol']);
+ assert.deepEqual([...creator.querySelectorAll('.alert-badge')].map(b=>b.textContent),[copy['app.alertfeed.badge_view_changed'],copy['app.alertfeed.badge_conditional']]);
+ assert.ok(feed.FILTERS.some(([k,v])=>k==='creators'&&v==='kol'));
  assert.ok(Object.keys(copy).filter(k=>k.startsWith('app.alertfeed.')).every(k=>typeof zh[k]==='string'&&zh[k].length));
 });
 

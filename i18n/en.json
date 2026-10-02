@@ -5875,5 +5875,13 @@
   "app.alertfeed.badge_first_buy_6m": "First buy in 6 months",
   "app.alertfeed.badge_cluster_buy": "Several insiders buying",
   "app.alertfeed.badge_c_suite": "C-suite",
-  "app.alertfeed.badge_indirect": "Indirect holding"
+  "app.alertfeed.badge_indirect": "Indirect holding",
+  "app.alertfeed.filter_creators": "Creators",
+  "app.alertfeed.kind_kol": "Creator view",
+  "app.alertfeed.direction_kol_buy": "Bullish",
+  "app.alertfeed.direction_kol_sell": "Bearish",
+  "app.alertfeed.direction_macro_regime_buy": "Turning supportive",
+  "app.alertfeed.direction_macro_regime_sell": "Turning tighter",
+  "app.alertfeed.badge_view_changed": "Changed view",
+  "app.alertfeed.badge_conditional": "Conditional"
 }

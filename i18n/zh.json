@@ -5875,5 +5875,13 @@
   "app.alertfeed.badge_first_buy_6m": "6 个月首次买入",
   "app.alertfeed.badge_cluster_buy": "多位内部人买入",
   "app.alertfeed.badge_c_suite": "高管",
-  "app.alertfeed.badge_indirect": "间接持有"
+  "app.alertfeed.badge_indirect": "间接持有",
+  "app.alertfeed.filter_creators": "博主",
+  "app.alertfeed.kind_kol": "博主观点",
+  "app.alertfeed.direction_kol_buy": "看多",
+  "app.alertfeed.direction_kol_sell": "看空",
+  "app.alertfeed.direction_macro_regime_buy": "转向宽松",
+  "app.alertfeed.direction_macro_regime_sell": "转向偏紧",
+  "app.alertfeed.badge_view_changed": "观点有变",
+  "app.alertfeed.badge_conditional": "有条件"
 }
