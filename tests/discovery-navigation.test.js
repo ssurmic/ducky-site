@@ -34,16 +34,17 @@ test('new destinations survive sign-in and radar links select one matching categ
  selectNavigation('stock');assert.equal(nav.querySelector('[aria-current=page]').dataset.route,'watchlist');
  nav.remove();
 });
-test('phone navigation is the same five tabs in both languages and never grows a More menu',()=>{
+test('phone navigation is the same six tabs in both languages and never grows a More menu',()=>{
  assert.ok(!readFileSync('dist/config.js','utf8').includes('RESEARCH_BRIEF_ENABLED'),'the research brief switch no longer ships');
  for(const prefix of ['zh/', 'en/']){
   const shell=new JSDOM(readFileSync(`dist/${prefix}app/index.html`,'utf8')).window.document;
   const nav=document.importNode(shell.querySelector('.app-nav'),true);document.body.append(nav);
   const primary=[...nav.querySelectorAll(':scope > [data-mobile-primary]')];
   assert.ok(nav.classList.contains('focus-nav'));
-  assert.deepEqual(primary.map(a=>a.dataset.route),['today','watchlist','explore','calendar','creators']);
+  assert.deepEqual(primary.map(a=>a.dataset.route),['today','watchlist','explore','calendar','creators','alerts']);
   assert.equal(nav.querySelector('.nav-more,.nav-tree,[data-route=research-brief],[data-route=market],[data-route=degen]'),null);
-  for(const route of ['today','watchlist','explore','calendar','creators']){selectNavigation(route);assert.equal(nav.querySelector('[aria-current=page]').dataset.route,route);}
+  for(const route of ['today','watchlist','explore','calendar','creators','alerts']){selectNavigation(route);assert.equal(nav.querySelector('[aria-current=page]').dataset.route,route);}
+  selectNavigation('updates');assert.equal(nav.querySelector('[aria-current=page]').dataset.route,'alerts','the delivery history belongs to 提醒');
   for(const route of ['opportunities','vibe','macro','reports']){selectNavigation(route);assert.equal(nav.querySelector('[aria-current=page]').dataset.route,'explore');}
   nav.remove();
  }

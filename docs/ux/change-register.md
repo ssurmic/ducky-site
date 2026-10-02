@@ -275,3 +275,15 @@ support comparisons use that displayed price, including saved digests and detail
 cards. Source levels and reviewed research keep their dates. Quotes show actual
 trade time and pre-/post-market context; older closes no longer say "today".
 [Validation and release](../../reports/QUOTE-SESSION-CONSISTENCY-2026-10-01.md).
+
+## 2026-10-02 — 「我的提醒」 in the left navigation
+
+Implemented candidate: sixth focus destination 提醒 / Alerts with an unread badge polled from
+`GET /me/alerts/feed?limit=1`; `#/alerts` renders the shared event feed (day groups, direction
+rail, headline/summary in the account language, signal badges, expandable note with facts,
+context, watch, notes and source), type filters, cursor paging and a one-time seen marker;
+custom price alerts move to the page's second tab; the delivery history (`#/updates`) stays
+linked. API compatibility: the backend feed contract (`docs/api/ALERT-FEED.md`, PR #311) with
+a documented fallback to `/signals/inbox` (+ `note`) while the route is not served.
+[Validation and release](../../reports/ALERT-FEED-UI-2026-10-02.md).
+

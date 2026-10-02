@@ -14,6 +14,7 @@ import { rememberTarget, takeTarget, safeTarget, signedInTarget, needsEmailSetup
 import {watchRelease} from './release-recovery.js';
 import {legacyAuthLocaleTarget} from './locale-route.js';
 import {renderBrandNavigation} from './navigation.js';
+import {startAlertBadge,stopAlertBadge} from './alert-badge.js';
 
 async function boot() {
   watchRelease(document.querySelector('.app-main')||document.body);
@@ -24,6 +25,8 @@ async function boot() {
   const logoutBtn = document.getElementById("logout");
   if (logoutBtn) logoutBtn.addEventListener("click", (e) => { e.preventDefault(); auth.logout(); });
   store.subscribe("me", (me) => { renderBrandNavigation(me); renderAccountAvatar(me); ui.renderTierBadge(); if (logoutBtn) logoutBtn.hidden = !me || tg.inTG; });
+  let badgeFor=null;
+  store.subscribe("me", (me) => { const id=me?.user_id??me?.id??null; if(id===badgeFor)return; badgeFor=id; if(me)startAlertBadge(); else stopAlertBadge(); });
 
   startEntitlements();
   startOnboarding();

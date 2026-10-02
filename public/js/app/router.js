@@ -28,7 +28,7 @@ const ROUTES = {
   reset: () => import("./views/recovery.js"),
   watchlist: () => import("./views/watchlist.js"),
   briefing: () => import("./views/briefing.js"),
-  alerts: () => import("./views/alerts.js"),
+  alerts: () => import("./views/alert-feed.js"),
   updates: () => import("./views/updates.js"),
   chart: () => import("./views/chart.js"),
   billing: () => store.billingEnabled() ? import("./views/billing.js") : import("./views/profile.js"),
@@ -42,7 +42,7 @@ export function isPublic(hash) { return PUBLIC.has(parse(hash).name); }
 let current = null, currentEpoch = null, cleanup = null, seq = 0, controller = null;
 const scrollPositions=new Map();
 let previousPageKey=null,previousHash=null;
-const safeOrigin=href=>typeof href==='string'&&/^#\/(today|explore|watchlist|creators|calendar|boards)(?:\?|$)/.test(href);
+const safeOrigin=href=>typeof href==='string'&&/^#\/(today|explore|watchlist|creators|calendar|boards|alerts)(?:\?|$)/.test(href);
 const safeArchive=href=>typeof href==='string'&&/^#\/(boards|reports)(?:\?|$)/.test(href);
 const safeStock=(href,ticker)=>typeof href==='string'&&/^#\/stock\/[A-Z][A-Z0-9.-]{0,9}(?:\?|$)/.test(href)&&parse(href).params.ticker===ticker;
 function keepRouteState(){

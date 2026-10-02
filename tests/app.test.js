@@ -151,7 +151,7 @@ test('both app shells carry every navigation icon locally',()=>{
   const html=readFileSync(`dist/${lang}app/index.html`,'utf8');const page=new JSDOM(html).window.document;
   const links=[...page.querySelectorAll('.app-nav a')];
   assert.ok(page.querySelector('.focus-nav'));
-  assert.deepEqual(links.map(a=>a.dataset.route),['today','watchlist','explore','calendar','creators']);
+  assert.deepEqual(links.map(a=>a.dataset.route),['today','watchlist','explore','calendar','creators','alerts']);
   assert.equal(page.querySelector('.nav-more,.nav-tree'),null);
   for(const a of links){assert.ok(a.textContent.trim());assert.ok(a.querySelector('svg[aria-hidden="true"] use'));}
   for(const use of page.querySelectorAll('.app-nav use')) {

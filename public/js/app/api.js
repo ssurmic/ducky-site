@@ -236,6 +236,10 @@ export const alerts = {
   add: (ticker, condition) => post("/alerts", { ticker, condition }),
   remove: (id) => del("/alerts/" + encodeURIComponent(id)),
 };
+export const alertFeed = {
+  list: (params={}, opts) => get('/me/alerts/feed?' + new URLSearchParams(params), opts),
+  seen: (seen_through, opts) => post('/me/alerts/seen', { seen_through }, opts),
+};
 export const profile = {
   get: (opts) => get("/me/profile", opts),
   save: (body, opts) => post("/me/profile", body, opts),

@@ -7,13 +7,15 @@ for(const key of ['window','document','Node','location','history'])globalThis[ke
 const {selectNavigation}=await import('../public/js/app/navigation.js');
 const active=()=>[...document.querySelectorAll('.app-nav a.on')].map(a=>a.dataset.route);
 
-test('the five-destination bar lights the tab a route belongs to, and nothing for account pages',()=>{
+test('the six-destination bar lights the tab a route belongs to, and nothing for account pages',()=>{
  assert.ok(document.querySelector('.focus-nav'));
  selectNavigation('today');assert.deepEqual(active(),['today']);
  selectNavigation('stock',new URLSearchParams('from=today'));assert.deepEqual(active(),['today']);
  selectNavigation('stock',new URLSearchParams('from=explore'));assert.deepEqual(active(),['explore']);
  selectNavigation('stock');assert.deepEqual(active(),['watchlist']);
- for(const route of ['evidence','chart','alerts','briefing','research'])selectNavigation(route),assert.deepEqual(active(),['watchlist'],route);
+ for(const route of ['evidence','chart','briefing','research'])selectNavigation(route),assert.deepEqual(active(),['watchlist'],route);
+ for(const route of ['alerts','updates'])selectNavigation(route),assert.deepEqual(active(),['alerts'],route);
+ selectNavigation('stock',new URLSearchParams('from=alerts'));assert.deepEqual(active(),['alerts']);
  for(const route of ['boards','opportunities','vibe','market','macro','screens','reports','record'])selectNavigation(route),assert.deepEqual(active(),['explore'],route);
  selectNavigation('creators');assert.deepEqual(active(),['creators']);
  selectNavigation('calendar');assert.deepEqual(active(),['calendar']);

@@ -1,0 +1,57 @@
+/* 「我的提醒」 feed: one card per shared event, colour by filing direction, unread by Ducky's record clock. */
+.alert-feed{max-width:760px;}
+.alert-feed-head{align-items:flex-start;gap:12px;flex-wrap:wrap;}
+.alert-feed-head .view-intro{margin:4px 0 0;max-width:620px;}
+.alert-feed-actions{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.alert-unread-chip{background:var(--accent);color:var(--accent-ink,#fff);border-color:transparent;}
+.alert-tabs{display:flex;gap:6px;margin:14px 0 12px;}
+.alert-tabs button{min-height:36px;padding:0 14px;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--text);font:inherit;font-size:14px;cursor:pointer;}
+.alert-tabs button[aria-selected=true]{background:var(--accent);color:var(--accent-ink,#fff);border-color:var(--accent);}
+.alert-filters{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 16px;}
+.alert-filters button{min-height:32px;padding:0 12px;border:1px solid var(--border);border-radius:999px;background:transparent;color:var(--muted);font:inherit;font-size:13px;cursor:pointer;}
+.alert-filters button[aria-pressed=true]{color:var(--text);border-color:var(--text);}
+.alert-day{margin:20px 0 8px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+.alert-day:first-child{margin-top:4px;}
+.alert-item{position:relative;padding:14px 16px 12px 20px;margin:0 0 10px;border:1px solid var(--border);border-radius:12px;background:var(--surface);}
+.alert-item::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:4px;border-radius:0 4px 4px 0;background:var(--border);}
+.alert-item.is-buy::before{background:var(--green);}
+.alert-item.is-sell::before{background:var(--red);}
+.alert-item.is-unread{border-color:color-mix(in srgb,var(--accent) 45%,var(--border));}
+.alert-item.is-superseded{opacity:.72;}
+.alert-item-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted);}
+.alert-ticker{font-weight:600;color:var(--text);text-decoration:none;}
+.alert-ticker:hover{text-decoration:underline;}
+.alert-direction{font-weight:600;}
+.alert-item.is-buy .alert-direction{color:var(--green);}
+.alert-item.is-sell .alert-direction{color:var(--red);}
+.alert-time{margin-left:auto;font-variant-numeric:tabular-nums;}
+.alert-unread{width:8px;height:8px;border-radius:50%;background:var(--accent);}
+.alert-headline{margin:6px 0 4px;font-size:16px;line-height:1.5;font-weight:600;}
+.alert-summary{margin:0 0 8px;font-size:14px;line-height:1.65;}
+.alert-badges{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px;}
+.alert-badge{font-size:11px;line-height:1.6;padding:1px 8px;border:1px solid var(--border);border-radius:999px;color:var(--muted);}
+.alert-note{margin:4px 0 2px;}
+.alert-note>summary{display:flex;align-items:center;min-height:32px;cursor:pointer;font-size:13px;color:var(--accent-text,var(--accent));list-style:none;}
+.alert-note>summary::-webkit-details-marker{display:none;}
+.alert-note>summary::before{content:"▸";margin-right:6px;font-size:11px;}
+.alert-note[open]>summary::before{content:"▾";}
+.alert-note-facts{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 14px;margin:8px 0 4px;font-size:13px;line-height:1.55;}
+.alert-note-facts dt{color:var(--muted);}
+.alert-note-facts dd{margin:0;overflow-wrap:anywhere;}
+.alert-note h4{margin:10px 0 4px;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);}
+.alert-note ul{margin:0;padding-left:18px;font-size:13px;line-height:1.6;}
+.alert-note p{margin:0;font-size:13px;line-height:1.6;}
+.alert-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.alert-rollout{margin:0 0 12px;}
+.alert-empty{padding:28px 20px;text-align:center;border:1px dashed var(--border);border-radius:12px;color:var(--muted);}
+.alert-empty p{margin:0 0 12px;}
+.alert-more{width:100%;margin:6px 0 20px;}
+.app-nav a[data-route=alerts]{position:relative;}
+.nav-badge{position:absolute;top:4px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:var(--accent-ink,#fff);font-size:11px;font-weight:600;line-height:18px;text-align:center;}
+@media(max-width:600px){
+ .alert-item{padding:12px 12px 10px 16px;}
+ .alert-note-facts{grid-template-columns:1fr;gap:2px;}
+ .alert-note-facts dd{margin-bottom:6px;}
+ .alert-feed-actions{margin-left:0;}
+ .nav-badge{top:2px;left:calc(50% + 4px);}
+}
