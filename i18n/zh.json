@@ -5883,5 +5883,7 @@
   "app.alertfeed.direction_macro_regime_buy": "转向宽松",
   "app.alertfeed.direction_macro_regime_sell": "转向偏紧",
   "app.alertfeed.badge_view_changed": "观点有变",
-  "app.alertfeed.badge_conditional": "有条件"
+  "app.alertfeed.badge_conditional": "有条件",
+  "app.alertfeed.badge_creator_sold": "创作者已卖出",
+  "app.alertfeed.badge_creator_bought": "创作者已买入"
 }

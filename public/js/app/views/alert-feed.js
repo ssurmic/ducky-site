@@ -14,7 +14,7 @@ const tickerPattern=/^[A-Z][A-Z0-9.-]{0,9}$/;
 const recordPattern=/^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,149}$/;
 const PAGE=30;
 export const FILTERS=[['all',null],['insider','insider'],['creators','kol'],['news','news'],['index','index'],['macro','macro-regime']];
-const BADGES=['open_market','largest_buy_90d','only_buy_12m','first_buy_6m','cluster_buy','c_suite','indirect','view_changed','conditional'];
+const BADGES=['open_market','largest_buy_90d','only_buy_12m','first_buy_6m','cluster_buy','c_suite','indirect','view_changed','conditional','creator_sold','creator_bought'];
 const locale=LANG==='en'?'en-US':'zh-CN';
 
 const text=value=>typeof value==='string'?value:'';

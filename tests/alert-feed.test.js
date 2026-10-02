@@ -13,6 +13,7 @@ const response=(body,status=200)=>new Response(JSON.stringify(body),{status,head
 const flush=async()=>{for(let i=0;i<6;i++)await new Promise(r=>setTimeout(r,0));};
 const now=new Date();
 const iso=(minutesAgo)=>new Date(now.getTime()-minutesAgo*60000).toISOString();
+const yesterdayNoon=(()=>{const d=new Date(now);d.setDate(d.getDate()-1);d.setHours(12,0,0,0);return d.toISOString();})(); // a 'yesterday' row that stays yesterday in the first hours of a local day
 const note={headline:{zh:'Oracle Corporation 董事买入 348 万美元，通过信托',en:'Oracle Corporation director buys $3.48M via a trust'},
  summary:{zh:'Stephen H. Rusckowski 于 2026-09-29 买入 25,000 股。申报未确认为公开市场买入。',en:'Stephen H. Rusckowski bought 25,000 shares on 2026-09-29. The filing does not confirm an open-market purchase.'},
  facts:[{label:{zh:'申报人',en:'Reporting person'},value:{zh:'Stephen H. Rusckowski（董事）',en:'Stephen H. Rusckowski (Director)'}},{label:{zh:'金额',en:'Value'},value:{zh:'348 万美元',en:'$3.48M'}}],
@@ -25,7 +26,7 @@ const item=(over={})=>({id:'firehose:orcl',topic:'ticker',ticker:'ORCL',kind:'in
 const doc=(items,over={})=>({items,next_cursor:null,unread_count:1,seen_through:iso(120),watch_tickers:['ORCL'],...over});
 
 test('feed rows render in the account language with direction, badges, note details and source links',()=>{
- const normalized=feed.normalizeFeed(doc([item(),item({id:'firehose:sell',direction:-1,signal:{direction:'sell',badges:[]},observed_at:iso(26*60),note:null}),
+ const normalized=feed.normalizeFeed(doc([item(),item({id:'firehose:sell',direction:-1,signal:{direction:'sell',badges:[]},observed_at:yesterdayNoon,note:null}),
   item({id:'firehose:old',content_status:'superseded',headline:{zh:'',en:''},observed_at:iso(3*24*60)}),item({id:'firehose:macro',topic:'macro',ticker:null,kind:'macro-regime',direction:0,signal:null,note:null})]));
  assert.equal(normalized.items.length,4);
  const groups=feed.groupByDay(normalized.items,now);
@@ -47,10 +48,10 @@ test('feed rows render in the account language with direction, badges, note deta
  assert.match(gone.textContent,/corrected this record/);assert.equal(gone.querySelector('a[target=_blank]'),null);
  const macro=feed.itemCard(normalized.items[3]);
  assert.equal(macro.querySelector('.alert-ticker').textContent,copy['app.alertfeed.macro_label']);assert.equal(macro.querySelector('.alert-kind').textContent,copy['app.alertfeed.kind_macro_regime']);
- const creator=feed.itemCard(feed.normalizeFeed(doc([item({id:'firehose:kol',kind:'kol',direction:-1,signal:{direction:'sell',strength:'notable',badges:['view_changed','conditional']},headline:{zh:'商浩金 谈 NVDA：看空，观点有变',en:'Shanghao Jin on NVDA: bearish, a changed view'},note:null})])).items[0]);
+ const creator=feed.itemCard(feed.normalizeFeed(doc([item({id:'firehose:kol',kind:'kol',direction:-1,signal:{direction:'sell',strength:'notable',badges:['view_changed','conditional','creator_sold']},headline:{zh:'商浩金 谈 NVDA：看空，观点有变',en:'Shanghao Jin on NVDA: bearish, a changed view'},note:null})])).items[0]);
  assert.ok(creator.classList.contains('is-sell'));assert.equal(creator.querySelector('.alert-direction').textContent,copy['app.alertfeed.direction_kol_sell']);
  assert.equal(creator.querySelector('.alert-kind').textContent,copy['app.alertfeed.kind_kol']);
- assert.deepEqual([...creator.querySelectorAll('.alert-badge')].map(b=>b.textContent),[copy['app.alertfeed.badge_view_changed'],copy['app.alertfeed.badge_conditional']]);
+ assert.deepEqual([...creator.querySelectorAll('.alert-badge')].map(b=>b.textContent),[copy['app.alertfeed.badge_view_changed'],copy['app.alertfeed.badge_conditional'],copy['app.alertfeed.badge_creator_sold']]);
  assert.ok(feed.FILTERS.some(([k,v])=>k==='creators'&&v==='kol'));
  const legacy=feed.itemCard(feed.normalizeFeed(doc([item({id:'firehose:nvdev',kind:'nvdev',direction:1,signal:null,headline:{zh:'Monitoring production agent lifecycle',en:'Monitoring production agent lifecycle'},note:null})])).items[0]);
  assert.ok(!legacy.classList.contains('is-buy'));assert.equal(legacy.querySelector('.alert-direction'),null,'a legacy record never reads as an insider purchase');
