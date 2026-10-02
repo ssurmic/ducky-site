@@ -1,83 +1,11 @@
 {
  "schema": "calendar/1",
- "generated_at": "2026-09-24T09:03:06+00:00",
- "as_of": "2026-09-24T09:03:06+00:00",
+ "generated_at": "2026-10-02T08:09:49+00:00",
+ "as_of": "2026-10-02T08:09:49+00:00",
  "window_days": 90,
  "partial": true,
  "source": "static-fallback",
  "events": [
-  {
-   "date": "2026-09-23",
-   "type": "geo",
-   "tickers": [],
-   "title": "习近平对美国进行国事访问",
-   "title_en": "Xi Jinping state visit to the United States",
-   "note": "9 月 24 日白宫会谈与国宴；贸易休战延期、稀土出口、关税是议题。以白宫与外交部通报为准。",
-   "note_en": "White House summit and state dinner on Sep 24; the trade-truce extension, rare-earth exports and tariffs are on the table. Official readouts govern.",
-   "source_url": "https://www.whitehouse.gov/briefings-statements/2026/09/first-lady-melania-trump-releases-details-ahead-of-his-excellency-xi-jinping-president-of-the-peoples-republic-of-china-and-madame-peng-liyuans-visit-to-the-white-house/",
-   "short": "习近平访美",
-   "short_en": "Xi in Washington",
-   "span": {
-    "start": "2026-09-23",
-    "end": "2026-09-25",
-    "day": 1,
-    "days": 3
-   }
-  },
-  {
-   "date": "2026-09-23",
-   "type": "macro",
-   "title": "标普全球 美国 PMI 初值",
-   "title_en": "S&P Global flash US PMI",
-   "tickers": [],
-   "note": "09:45 ET 公布本月制造业 / 服务业 PMI 初值；当月最早的景气读数。",
-   "note_en": "Flash manufacturing and services PMI for the current month at 09:45 ET; the month's first activity read."
-  },
-  {
-   "date": "2026-09-24",
-   "type": "geo",
-   "tickers": [],
-   "title": "习近平对美国进行国事访问",
-   "title_en": "Xi Jinping state visit to the United States",
-   "note": "9 月 24 日白宫会谈与国宴；贸易休战延期、稀土出口、关税是议题。以白宫与外交部通报为准。",
-   "note_en": "White House summit and state dinner on Sep 24; the trade-truce extension, rare-earth exports and tariffs are on the table. Official readouts govern.",
-   "source_url": "https://www.whitehouse.gov/briefings-statements/2026/09/first-lady-melania-trump-releases-details-ahead-of-his-excellency-xi-jinping-president-of-the-peoples-republic-of-china-and-madame-peng-liyuans-visit-to-the-white-house/",
-   "short": "习近平访美",
-   "short_en": "Xi in Washington",
-   "span": {
-    "start": "2026-09-23",
-    "end": "2026-09-25",
-    "day": 2,
-    "days": 3
-   }
-  },
-  {
-   "date": "2026-09-24",
-   "type": "macro",
-   "title": "初请失业金",
-   "title_en": "Initial jobless claims",
-   "tickers": [],
-   "note": "08:30 ET 公布每周首次申请失业救济金人数。",
-   "note_en": "Weekly initial jobless claims at 08:30 ET."
-  },
-  {
-   "date": "2026-09-25",
-   "type": "geo",
-   "tickers": [],
-   "title": "习近平对美国进行国事访问",
-   "title_en": "Xi Jinping state visit to the United States",
-   "note": "9 月 24 日白宫会谈与国宴；贸易休战延期、稀土出口、关税是议题。以白宫与外交部通报为准。",
-   "note_en": "White House summit and state dinner on Sep 24; the trade-truce extension, rare-earth exports and tariffs are on the table. Official readouts govern.",
-   "source_url": "https://www.whitehouse.gov/briefings-statements/2026/09/first-lady-melania-trump-releases-details-ahead-of-his-excellency-xi-jinping-president-of-the-peoples-republic-of-china-and-madame-peng-liyuans-visit-to-the-white-house/",
-   "short": "习近平访美",
-   "short_en": "Xi in Washington",
-   "span": {
-    "start": "2026-09-23",
-    "end": "2026-09-25",
-    "day": 3,
-    "days": 3
-   }
-  },
   {
    "date": "2026-09-30",
    "type": "macro",
@@ -657,6 +585,91 @@
    ],
    "note": "纳斯达克 100 年度成分调整参考日期；名单和生效时间以纳斯达克公告为准。",
    "note_en": "Nasdaq-100 annual constituent-change reference date. Check Nasdaq notices for the list and effective time."
+  },
+  {
+   "date": "2026-12-24",
+   "type": "early_close",
+   "session": "early_close",
+   "title": "美股提前收盘 · 平安夜",
+   "title_en": "US markets close early · Christmas Eve",
+   "tickers": [],
+   "note": "股票常规交易于 13:00 美东时间结束，部分期权至 13:15。",
+   "note_en": "Regular stock trading ends at 13:00 ET; eligible options close at 13:15 ET.",
+   "close_et": "13:00",
+   "url": "https://www.nyse.com/trade/hours-calendars",
+   "schedule_status": "source_scheduled",
+   "impacts": [
+    {
+     "title": "交易时间缩短",
+     "title_en": "A shorter trading session",
+     "body": "处理到期合约、调整仓位和行权的时间更短；节日前后成交可能变少，买卖价差可能扩大。券商截止时间及盘后时段按具体市场核对。",
+     "body_en": "There is less time to adjust positions or manage expiring contracts. Holiday trading can be thinner, with wider spreads. Check broker deadlines and each venue’s extended-hours schedule."
+    }
+   ]
+  },
+  {
+   "date": "2026-12-24",
+   "type": "macro",
+   "title": "初请失业金",
+   "title_en": "Initial jobless claims",
+   "tickers": [],
+   "note": "08:30 ET 公布每周首次申请失业救济金人数。",
+   "note_en": "Weekly initial jobless claims at 08:30 ET."
+  },
+  {
+   "date": "2026-12-25",
+   "type": "holiday",
+   "session": "closed",
+   "title": "美股休市 · 圣诞节",
+   "title_en": "US markets closed · Christmas",
+   "tickers": [],
+   "note": "美股及股票期权全天休市；下次常规开盘为 2026-12-28 09:30（美东时间）。",
+   "note_en": "US stocks and equity options are closed all day. Next regular open: 2026-12-28 at 09:30 ET.",
+   "next_open_date": "2026-12-28",
+   "next_open_et": "09:30",
+   "url": "https://www.nyse.com/trade/hours-calendars",
+   "schedule_status": "source_scheduled",
+   "impacts": [
+    {
+     "title": "短期期权：时间仍在流逝",
+     "title_en": "Short-dated options: time still passes",
+     "body": "买入 Call 或 Put 后，即使休市，合约也在接近到期，时间价值仍可能减少（Theta）。越接近到期越要留意；假期影响可能已提前反映在报价中，不能直接按「一天 Theta × 休市天数」算实际亏损。",
+     "body_en": "Long calls and puts move closer to expiry while markets are closed, so time value can erode (Theta), especially near expiry. Quotes can reflect the holiday in advance; daily Theta multiplied by days closed is not a reliable measure of the actual loss.",
+     "url": "https://www.optionseducation.org/advancedconcepts/theta"
+    },
+    {
+     "title": "无法交易调整，复市可能跳空",
+     "title_en": "No exchange trading; reopening prices can gap",
+     "body": "美股及股票期权休市期间不能在这些交易所平仓。假期消息可能让复市价格跳离前收盘；卖出期权也仍有价格跳空和指派风险。",
+     "body_en": "You cannot close stock or equity-option positions on these exchanges during the closure. Holiday news can move reopening prices away from the prior close. Short options still carry gap and assignment risk."
+    },
+    {
+     "title": "核对到期和行权截止时间",
+     "title_en": "Check expiry and exercise deadlines",
+     "body": "不同合约的最后交易日、结算和券商行权截止时间可能不同。看具体合约通知；期货、部分指数期权和其他市场不一定一起休市。",
+     "body_en": "Last trading dates, settlement and broker exercise deadlines vary by contract. Check the contract notice; futures, some index options and other markets can follow different schedules."
+    }
+   ]
+  },
+  {
+   "date": "2026-12-31",
+   "type": "macro",
+   "title": "初请失业金",
+   "title_en": "Initial jobless claims",
+   "tickers": [],
+   "note": "08:30 ET 公布每周首次申请失业救济金人数。",
+   "note_en": "Weekly initial jobless claims at 08:30 ET."
+  },
+  {
+   "date": "2026-12-31",
+   "type": "rebal",
+   "title": "月末调仓 · 养老金/基金再平衡",
+   "title_en": "Month-end rebalance (pension/fund)",
+   "tickers": [
+    "SPY"
+   ],
+   "note": "月末再平衡观察日期；各基金是否调仓及调整规模以其披露为准。",
+   "note_en": "Month-end rebalancing reference date. Fund disclosures determine whether and how much each fund adjusts."
   }
  ]
 }

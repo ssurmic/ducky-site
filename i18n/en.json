@@ -5883,5 +5883,7 @@
   "app.alertfeed.direction_macro_regime_buy": "Turning supportive",
   "app.alertfeed.direction_macro_regime_sell": "Turning tighter",
   "app.alertfeed.badge_view_changed": "Changed view",
-  "app.alertfeed.badge_conditional": "Conditional"
+  "app.alertfeed.badge_conditional": "Conditional",
+  "app.alertfeed.badge_creator_sold": "Creator sold",
+  "app.alertfeed.badge_creator_bought": "Creator bought"
 }
