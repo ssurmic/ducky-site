@@ -55,4 +55,12 @@ Screenshots (synthetic records, loopback only): [phone zh light](alert-feed-ui-2
 
 ## Production release receipt
 
-_To be filled at release: merged revision, gate counts, Pages deployment id, live VERSION._
+- Frontend [PR #138](https://github.com/ssurmic/ducky-site/pull/138) merged into `main` on 2026-10-02 at
+  **03:03 UTC**; exact merged revision `d1e519523` (short `d1e51952`).
+- `scripts/deploy_pages.sh` ran its gate on that revision at 03:04:21 UTC: **1009 Node tests and 14 Python
+  tests passed**, copy lint and internal-link checks passed. No test failure was waived.
+- Published at 03:04:54 UTC as Pages deployment `8ef2cb92` (https://8ef2cb92.ducky-site.pages.dev);
+  https://duckybot.app served VERSION `d1e51952` at 03:05:06 UTC and the live `/zh/app/` shell carries the
+  `data-route="alerts"` destination.
+- Backend at release time: `9e14564f` (shared insider notes live on `/signals/inbox`); `GET /me/alerts/feed`
+  still pending (ssurmic/ducky-bot#311), so the page runs on the documented fallback until that lands.
