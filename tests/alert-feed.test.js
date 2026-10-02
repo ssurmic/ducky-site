@@ -52,6 +52,8 @@ test('feed rows render in the account language with direction, badges, note deta
  assert.equal(creator.querySelector('.alert-kind').textContent,copy['app.alertfeed.kind_kol']);
  assert.deepEqual([...creator.querySelectorAll('.alert-badge')].map(b=>b.textContent),[copy['app.alertfeed.badge_view_changed'],copy['app.alertfeed.badge_conditional']]);
  assert.ok(feed.FILTERS.some(([k,v])=>k==='creators'&&v==='kol'));
+ const legacy=feed.itemCard(feed.normalizeFeed(doc([item({id:'firehose:nvdev',kind:'nvdev',direction:1,signal:null,headline:{zh:'Monitoring production agent lifecycle',en:'Monitoring production agent lifecycle'},note:null})])).items[0]);
+ assert.ok(!legacy.classList.contains('is-buy'));assert.equal(legacy.querySelector('.alert-direction'),null,'a legacy record never reads as an insider purchase');
  assert.ok(Object.keys(copy).filter(k=>k.startsWith('app.alertfeed.')).every(k=>typeof zh[k]==='string'&&zh[k].length));
 });
 

@@ -21,7 +21,11 @@ const text=value=>typeof value==='string'?value:'';
 const clock=value=>{const t=Date.parse(text(value));return Number.isFinite(t)?t:NaN;};
 export const pick=value=>value&&typeof value==='object'?text(value[LANG])||text(value.zh)||text(value.en):text(value);
 export function sourceURL(value){try{const u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch{return null;}}
+// Only kinds whose direction means something to a reader get a rail and a label: an insider's side, a creator's stance, a
+// macro regime turn. A legacy record's +1/−1 is not an insider purchase.
+export const DIRECTIONAL_KINDS=['insider','kol','macro-regime'];
 export function directionOf(item){
+  if(!DIRECTIONAL_KINDS.includes(item?.kind))return '';
   const signal=item?.signal?.direction;
   if(signal==='buy'||item?.direction===1)return 'buy';
   if(signal==='sell'||item?.direction===-1)return 'sell';
