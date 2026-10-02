@@ -1,5 +1,19 @@
 # Change log
 
+## 2026-10-02 — 「我的提醒」 joins the left navigation
+
+The focus navigation gains a sixth destination, 提醒 / Alerts (`#/alerts`), with an unread
+count badge. The page lists one shared row per source event for the stocks the reader
+follows — insider trades, company filings, index changes and macro regime changes — newest
+first, grouped by day, in the account language only: ticker, event type, insider bought /
+sold rail, headline, summary, signal badges, and an expandable note with key facts, context,
+what to watch, notes and the source link. Type filters, "load earlier" paging and a one-time
+"seen" marker come from the backend feed contract (`GET /me/alerts/feed`, `POST
+/me/alerts/seen`); until that route is served, the page reads the account's delivery
+history (`/signals/inbox`, which now carries the shared note) and says so. Custom price
+alerts keep their page as the second tab. Delivery history stays reachable from the page.
+[Validation and release](reports/ALERT-FEED-UI-2026-10-02.md).
+
 ## 2026-10-01 — Consistent current prices and reference distances
 
 Same-day after-hours quotes can supersede a settled close when the API supplies

@@ -217,6 +217,33 @@ const uxReview=(()=>{
  return {reply};
 })();
 const insiderQA=mode==='insider-ux'?insiderFixture():null;
+// 「我的提醒」 feed rows: shared per event, both languages, newest first (docs/api/ALERT-FEED.md in the backend).
+let alertSeen='';
+const hoursAgo=h=>new Date(Date.now()-h*3600000).toISOString();
+const alertNote=(ticker)=>({headline:{zh:ticker+' 董事买入 348 万美元，通过信托',en:ticker+' director buys $3.48M via a trust'},
+ summary:{zh:'Sample Director 于 '+hoursAgo(3*24).slice(0,10)+' 买入 25,000 股，均价 $139.35，合计 348 万美元。申报未确认为公开市场买入。',
+  en:'Sample Director bought 25,000 shares at an average $139.35 on '+hoursAgo(3*24).slice(0,10)+', $3.48M in total. The filing does not confirm an open-market purchase.'},
+ facts:[{label:{zh:'申报人',en:'Reporting person'},value:{zh:'Sample Director（董事）',en:'Sample Director (Director)'}},{label:{zh:'交易',en:'Transaction'},value:{zh:'买入 25,000 股，均价 $139.35',en:'Bought 25,000 shares at an average $139.35'}},
+  {label:{zh:'金额',en:'Value'},value:{zh:'348 万美元（$3,483,800）',en:'$3.48M ($3,483,800)'}},{label:{zh:'持有方式',en:'Ownership'},value:{zh:'间接持有（Sample Living Trust）',en:'Indirect (Sample Living Trust)'}}],
+ context:{zh:['交易日前 90 天内，公司其他内部人申报卖出 2 笔，合计 382 万美元。','交易日前 12 个月，公司其他内部人申报卖出 13 笔、买入 0 笔。'],en:['In the 90 days before the trade, other company insiders reported 2 sales totalling $3.82M.','In the 12 months before the trade, other company insiders reported 13 sales and no purchases.']},
+ watch:{zh:'如同一申报人有后续申报或修正，Ducky 会继续记录。',en:'Ducky keeps recording any further filings or amendments by the same reporting person.'},
+ caveats:{zh:['申报未标明为公开市场买入，请以 SEC 原文为准。','这是 SEC 申报记录的整理，不构成投资建议。'],en:['The filing does not confirm an open-market purchase; see the SEC source.','This is a summary of an SEC filing, not investment advice.']},
+ source:{label:{zh:'SEC Form 4',en:'SEC Form 4'},url:'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany'},event_at:hoursAgo(3*24).slice(0,10),filed_at:hoursAgo(24).slice(0,10),app_path:'/app/#/alerts'});
+const alertRows=[
+ {id:'firehose:qa-insider-orcl',topic:'ticker',ticker:'ORCL',kind:'insider',observed_at:hoursAgo(1),published_at:hoursAgo(24),direction:1,headline:alertNote('ORCL').headline,summary:alertNote('ORCL').summary,
+  signal:{direction:'buy',strength:'notable',badges:['only_buy_12m','indirect']},materiality_tier:'push',source_record_id:'sec:qa:orcl:P',source_url:'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany',content_status:'current',note:alertNote('ORCL')},
+ {id:'firehose:qa-news-nvda',topic:'ticker',ticker:'NVDA',kind:'news',observed_at:hoursAgo(5),published_at:hoursAgo(6),direction:0,headline:{zh:'NVDA：公司公布与 Sample Partner 的多年期供应协议',en:'NVDA: company announces a multi-year supply agreement with Sample Partner'},
+  summary:{zh:'来源：公司新闻稿，'+hoursAgo(6).slice(0,10)+'。协议金额未披露。',en:'Source: company press release, '+hoursAgo(6).slice(0,10)+'. Contract value not disclosed.'},signal:null,materiality_tier:'feed',source_record_id:'issuer-news:qa:nvda',source_url:'https://www.sec.gov/',content_status:'current',note:null},
+ {id:'firehose:qa-insider-amd-sell',topic:'ticker',ticker:'AMD',kind:'insider',observed_at:hoursAgo(26),published_at:hoursAgo(30),direction:-1,headline:{zh:'AMD：首席执行官卖出 1,250 万美元',en:'AMD: Chief Executive Officer sells $12.5M'},
+  summary:{zh:'Sample Executive 于 '+hoursAgo(48).slice(0,10)+' 卖出 75,000 股。',en:'Sample Executive sold 75,000 shares on '+hoursAgo(48).slice(0,10)+'.'},signal:{direction:'sell',strength:'notable',badges:['c_suite']},materiality_tier:'push',source_record_id:'sec:qa:amd:S',source_url:'https://www.sec.gov/',content_status:'current',note:null},
+ {id:'firehose:qa-index-avgo',topic:'ticker',ticker:'AVGO',kind:'index',observed_at:hoursAgo(30),published_at:hoursAgo(31),direction:0,headline:{zh:'AVGO 纳入 Sample 100 指数，'+hoursAgo(-5*24).slice(0,10)+' 盘前生效',en:'AVGO joins the Sample 100 index on '+hoursAgo(-5*24).slice(0,10)+' before market open'},
+  summary:{zh:'来源：指数公司公告。',en:'Source: index provider notice.'},signal:null,materiality_tier:'push',source_record_id:'index-change:qa:avgo',source_url:'https://www.sec.gov/',content_status:'current',note:null},
+ {id:'firehose:qa-macro',topic:'macro',ticker:null,kind:'macro-regime',observed_at:hoursAgo(50),published_at:hoursAgo(50),direction:-1,headline:{zh:'宏观环境转为偏紧：资金面评分降至 42',en:'Macro regime turns tighter: funding score down to 42'},
+  summary:{zh:'Ducky 的宏观 beta 评分从 57 降到 42；来源为已记录的流动性与利率指标。',en:'Ducky\'s macro beta score moved from 57 to 42, from the recorded liquidity and rate readings.'},signal:{direction:'sell',strength:'notable',badges:[]},materiality_tier:'push',source_record_id:'macro:qa',source_url:'',content_status:'current',note:null},
+ {id:'firehose:qa-superseded',topic:'ticker',ticker:'GLW',kind:'insider',observed_at:hoursAgo(3*24+2),published_at:hoursAgo(3*24+4),direction:1,headline:{zh:'',en:''},summary:{zh:'',en:''},signal:null,materiality_tier:'push',source_record_id:'sec:qa:glw:P',source_url:'',content_status:'superseded',note:null},
+ ...Array.from({length:30},(_,i)=>({id:'firehose:qa-older-'+i,topic:'ticker',ticker:['NVDA','AMD','AVGO','GLW'][i%4],kind:i%3?'news':'insider',observed_at:hoursAgo(4*24+i*7),published_at:hoursAgo(4*24+i*7),direction:i%3?0:1,
+  headline:{zh:['NVDA','AMD','AVGO','GLW'][i%4]+'：较早记录 '+(i+1),en:['NVDA','AMD','AVGO','GLW'][i%4]+': earlier record '+(i+1)},summary:{zh:'合成的较早记录，用于分页。',en:'Synthetic earlier record for paging.'},signal:null,materiality_tier:'feed',source_record_id:'qa:older:'+i,source_url:'https://www.sec.gov/',content_status:'current',note:null})),
+];
 const fixtureAssetFetch=window.fetch.bind(window);
 window.fetch=async(input,options={})=>{
  const url=new URL(String(input),location.origin);requests.push({path:url.pathname+url.search,method:options.method||'GET',
@@ -254,7 +281,17 @@ window.fetch=async(input,options={})=>{
     return Response.json({error:'watch_ineligible',reason:'leveraged_instrument',ticker},{status:400});
    const added=!watches.includes(ticker);if(added)watches.push(ticker);return Response.json({ticker,added});
   }
+  if(method==='POST'&&path==='/me/alerts/seen'){alertSeen=JSON.parse(options.body).seen_through;return Response.json({seen_through:alertSeen});}
   throw Error('Writes forbidden in synthetic fixture');
+ }
+ if(path==='/me/alerts/feed'){
+  if(query.get('alerts')==='unavailable')return Response.json({error:'not_found'},{status:404});
+  const kinds=(url.searchParams.get('kinds')||'').split(',').filter(Boolean),limit=Number(url.searchParams.get('limit')||30),before=url.searchParams.get('before');
+  let rows=alertRows.filter(r=>!kinds.length||kinds.includes(r.kind));
+  if(before)rows=rows.filter(r=>r.observed_at<before.split('|')[0]);
+  const page=rows.slice(0,limit),last=page.at(-1);
+  return Response.json({items:page.map(r=>url.searchParams.get('fields')==='full'?r:{...r,note:undefined}),next_cursor:rows.length>limit&&last?last.observed_at+'|'+last.id:null,
+   unread_count:alertSeen?rows.filter(r=>r.observed_at>alertSeen).length:Math.min(rows.length,3),seen_through:alertSeen||hoursAgo(48),watch_tickers:watches});
  }
  if(['ux-review','creator-rails'].includes(mode)){const value=uxReview.reply(path,url.searchParams);if(value)return Response.json(value);}
  if(mode==='failure'&&path.includes('research'))return Response.json({error:'fixture_unavailable'},{status:503});

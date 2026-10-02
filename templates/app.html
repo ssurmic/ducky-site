@@ -60,6 +60,7 @@
 <link rel="stylesheet" href="/css/app-creator-rails.css">
 <link rel="stylesheet" href="/css/app-numeric-change.css">
 <link rel="stylesheet" href="/css/app-workspace-density.css">
+<link rel="stylesheet" href="/css/app-alert-feed.css">
 
 <link rel="preload" href="/fonts/Manrope-variable-d0639be4.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/professional-ui.css">
@@ -82,7 +83,7 @@
   {%- endmacro %}
   {% if cfg.get('product_focus', false) %}
   <nav class="app-nav focus-nav no-glossary" aria-label="{{ t('app.nav.label') }}">
-    {% for route, image in [('today','digest'),('watchlist','watchlist'),('explore','boards'),('calendar','calendar'),('creators','creators')] %}
+    {% for route, image in [('today','digest'),('watchlist','watchlist'),('explore','boards'),('calendar','calendar'),('creators','creators'),('alerts','alerts')] %}
     <a href="#/{{ route }}" data-route="{{ route }}" data-mobile-primary>{{ nav_icon(image) }}<span>{{ t('app.nav.' ~ route) }}</span></a>
     {% endfor %}
   </nav>
