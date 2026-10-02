@@ -1,6 +1,6 @@
 # Change log
 
-## 2026-10-02 — 「我的提醒」 joins the left navigation
+## 2026-10-02 — 「我的提醒」 joins the left navigation (deployed `d1e51952` / Pages `8ef2cb92`)
 
 The focus navigation gains a sixth destination, 提醒 / Alerts (`#/alerts`), with an unread
 count badge. The page lists one shared row per source event for the stocks the reader
