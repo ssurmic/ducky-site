@@ -13,8 +13,8 @@ import {markAlertsSeen} from '../alert-badge.js';
 const tickerPattern=/^[A-Z][A-Z0-9.-]{0,9}$/;
 const recordPattern=/^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,149}$/;
 const PAGE=30;
-export const FILTERS=[['all',null],['insider','insider'],['news','news'],['index','index'],['macro','macro-regime']];
-const BADGES=['open_market','largest_buy_90d','only_buy_12m','first_buy_6m','cluster_buy','c_suite','indirect'];
+export const FILTERS=[['all',null],['insider','insider'],['creators','kol'],['news','news'],['index','index'],['macro','macro-regime']];
+const BADGES=['open_market','largest_buy_90d','only_buy_12m','first_buy_6m','cluster_buy','c_suite','indirect','view_changed','conditional'];
 const locale=LANG==='en'?'en-US':'zh-CN';
 
 const text=value=>typeof value==='string'?value:'';
@@ -106,7 +106,7 @@ export function itemCard(item,{seenThrough='',now=new Date()}={}){
   if(item.ticker)top.append(el('a.alert-ticker.mono',{href:'#/stock/'+encodeURIComponent(item.ticker)},el('span.ticker-symbol','$'+item.ticker)));
   else if(item.topic==='macro')top.append(el('span.alert-ticker',s('alertfeed.macro_label')));
   top.append(el('span.chip.alert-kind',kindLabel(item.kind)));
-  if(dir)top.append(el('span.alert-direction',s('alertfeed.direction_'+dir)));
+  if(dir)top.append(el('span.alert-direction',s(has('alertfeed.direction_'+String(item.kind).replace(/-/g,'_')+'_'+dir)?'alertfeed.direction_'+String(item.kind).replace(/-/g,'_')+'_'+dir:'alertfeed.direction_'+dir)));
   const when=timeLabel(item.observed_at);
   top.append(el('time.alert-time',{datetime:item.observed_at||null},when));
   if(unread)top.append(el('span.alert-unread',{role:'img','aria-label':s('alertfeed.unread_one')}));
