@@ -80,7 +80,8 @@ test('before the feed route ships, a 404 falls back to the delivery history with
  globalThis.fetch=async(url,opts={})=>{const u=new URL(String(url),'https://ducky.test');calls.push(u.pathname+u.search);
   if(u.pathname==='/me/alerts/feed')return response({error:'not_found'},404);
   if(u.pathname==='/signals/inbox')return response({items:[{id:1205,event_id:'firehose:x',ticker:'ORCL',kind:'insider',queued_at:iso(10),source_record_id:'sec:0001341439-26-000099:P',
-   source_url:'https://www.sec.gov/Archives/x',title:'Oracle Corporation 董事买入 348 万美元，通过信托',title_en:'Oracle Corporation director buys $3.48M via a trust',published_at:'2026-10-01T00:00:00Z',observed_at:iso(10),content_status:'current',delivery:{status:'sent'},note}],next_cursor:null});
+   source_url:'https://www.sec.gov/Archives/x',title:'Oracle Corporation 董事买入 348 万美元，通过信托',title_en:'Oracle Corporation director buys $3.48M via a trust',published_at:'2026-10-01T00:00:00Z',observed_at:iso(10),content_status:'current',delivery:{status:'sent'},note},
+   {id:1206,event_id:'firehose:y',ticker:'NVDA',kind:'news',queued_at:iso(12),source_record_id:'issuer-news:x',source_url:'https://www.sec.gov/',title:'NVIDIA Newsroom 发布：Fall Into 25 New Games on GeForce NOW',title_en:'NVIDIA Newsroom: Fall Into 25 New Games on GeForce NOW',published_at:iso(13),observed_at:iso(12),content_status:'current',delivery:{status:'sent'},note:null}],next_cursor:null});
   if(u.pathname==='/alerts')return response({items:[]});
   return response({},404);};
  const root=document.getElementById('view');root.replaceChildren();
@@ -88,12 +89,15 @@ test('before the feed route ships, a 404 falls back to the delivery history with
  try{
   assert.ok(calls.includes('/signals/inbox?limit=30'));
   assert.match(root.querySelector('.alert-rollout').textContent,/rolling out/);
+  assert.equal(root.querySelectorAll('.alert-item').length,1,'newsroom rows stay out of the default history view');
   const card=root.querySelector('.alert-item');assert.ok(card.classList.contains('is-buy'));
   assert.equal(card.querySelector('.alert-headline').textContent,'Oracle Corporation director buys $3.48M via a trust');
   assert.equal(root.querySelector('.alert-unread-chip').hidden,true);assert.ok(!calls.some(c=>c.includes('/me/alerts/seen')));
   root.querySelector('[data-alert-tab=custom]').click();await flush();await flush();
   assert.equal(location.hash,'#/alerts?view=custom');assert.equal(root.querySelector('.alert-custom-panel').hidden,false);
   assert.ok(root.querySelector('.alert-custom-panel h1'));assert.ok(calls.includes('/alerts'));
+  root.querySelector('[data-alert-tab=feed]').click();root.querySelector('[data-alert-filter=news]').click();await flush();
+  assert.equal(root.querySelectorAll('.alert-item').length,1);assert.match(root.querySelector('.alert-headline').textContent,/GeForce NOW/);
  }finally{dispose();root.replaceChildren();history.replaceState(null,'','#/alerts');}
 });
 
